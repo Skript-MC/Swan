@@ -1,0 +1,38 @@
+{
+  "name": "skriptmcbot",
+  "version": "1.0.0",
+  "description": "Bot discord de skript-mc.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node ./src/main.js"
+  },
+  "authors": [
+    "AlexLew",
+    "Uiytt"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "discord.js": "^11.4.2",
+    "fs-extra": "^7.0.1",
+    "fs-readdir-promise": "^1.0.1",
+    "module-alias": "^2.1.0",
+    "node-gyp": "^3.8.0",
+    "opusscript": "0.0.6",
+    "rebuild": "^0.1.2",
+    "ytdl-core": "^0.29.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "nodemon": "^1.18.9"
+  },
+  "_moduleAliases": {
+    "@commands": "src/commands",
+    "@helpers": "src/helpers"
+  }
+}
