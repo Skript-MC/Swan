@@ -1,5 +1,5 @@
 {
-  "name": "skriptmcbot",
+  "name": "swan",
   "version": "1.0.0",
   "description": "Bot discord de skript-mc.",
   "main": "src/main.js",
