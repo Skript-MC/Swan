@@ -16,4 +16,4 @@ export default {
 		return message.channel.send(embed);
 	}
 
-}
+};
