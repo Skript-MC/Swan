@@ -6,18 +6,18 @@ export default {
 	regex: 'add?dons?',
 
 	execute: async message => {
-		if (args === undefined || args.length == 0) {
+		if (!args || args.length == 0) {
 			addonspage(1, message);
 		} else {
-			addonname(message,args[0]);
+			addonname(message, args[0]);
 		}
 	}
-}
+};
 
 function addonname(message, name) {
 	axios.get('https://api.skripttools.net/v4/addons', {
 		responseType: 'json'
-	}).then(async function (response) {
+	}).then(async response => {
 		if (response.status === 200) {
 			size = Object.keys(response.data.data).length;
 			embed = new Discord.RichEmbed()
@@ -37,5 +37,5 @@ function addonname(message, name) {
 			}
 			return message.channel.send(embed);			
 		}
-	})
+	});
 };
