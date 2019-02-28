@@ -7,7 +7,7 @@ export default {
 	execute: async message => {
 		let args = message.content.toLowerCase().split(" ");
 
-		if (args[0] != undefined) {
+		if (args[0]) {
 
 			let errors =  {
 				wrongVars: [],
