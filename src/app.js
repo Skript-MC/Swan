@@ -4,7 +4,7 @@ import fs from "fs-extra";
 
 import to from "@helpers/To";
 
-export default class  {
+export default class {
 
 	constructor(config) {
 		this.config = config;
