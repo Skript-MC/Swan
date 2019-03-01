@@ -2,7 +2,7 @@ import 'module-alias/register';
 
 import Config from '../config/config.json';
 import app from './app';
-import to from "@helpers/To";
+import to from '@helpers/To';
 
 const App =  new app(Config);
 
@@ -19,9 +19,7 @@ const App =  new app(Config);
 
 	discord.on('message', async payload => {
 
-		if (payload.author.bot) return;
-		if (payload.channel.type === 'dm') return;
-		if (payload.channel.id !== Config.bot.channel) return;
+		if (payload.author.bot || payload.channel.type === 'dm' || payload.channel.id !== Config.bot.channel) return;
 
 		const message = payload.content.toLowerCase().split(" ");
 		for (let command of commands) {
