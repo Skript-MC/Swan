@@ -1,55 +1,54 @@
-import Discord from "discord.js";
-import Config from "../../config/config.json";
-import poll from "./poll.js";
+/* eslint-disable camelcase */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-console */
+/* eslint-disable sort-keys */
+import Discord from 'discord.js';
 
 export default {
 
-	regex: '(poll|vote)',
-	permissions: [],
+	regex: /poll|vote/mu,
+	permissions: ['Staff'],
 
-	execute: async message => {
-		if (poll.permissions.length < 1 || message.member.roles.find(role => poll.permissions.includes(role.name))) {
-			const times = [
-				/s(econd(e)s?)?/gm, 
-				/m(inutes?)?/gm, 
-				/h((our|eure)s?)?/gm, 
-				/(d(ays?)?)|(j(ours?)?)/gm,
-				/w(eeks?)/gm,
-				/months?/gm,
-				/y(ears?)?/gm
-			];
-			const filter = (reaction, user) => reaction.emoji.name === '✅' || reaction.emoji.name === '❌' && user.id !==  Config.bot.id;
-			let args = message.content.toLowerCase().split(" ");
-			let index = 1;
+	execute: async (message, command, args) => {
 
-			args.shift();
-			times.forEach(time => {
-				
-				if (args[0].match(time)) {
-					
-					let t = args[0].split("");
-					const duration = t[0] * (Math.pow(60, index) * 1000);
+		const durations = {
+			's(econd)?e?': 1,
+			'min(ute)?': 60,
+			'h(our|eure?)?': 3600,
+			'(d(ay)?)|(j(our)?)': 86400,
+			'mo(is|nth)?': 2.628000000,
+			'(a(nn(é|e)e)?)|(y(ear)?)': 3.1540000000
+		};
 
-				}
+		let msg;
 
-				index ++;
+		for (let duration of Object.keys(durations)) {
+			if (args[0].match(new RegExp(duration, 'gmu'))) {
 
-			});
+				const mult = durations[duration],
+					time = args[0].split(/[a-zA-Z]+/gmu)[0],
+					embed = {
+						embed: {
+							color: 3447003,
+							author: {
+								name: `Vote de ${message.author.username} (${message.author.id})`,
+								icon_url: message.author.avatarURL
+							},
+							title: args[1].replace(/_/gmu, ' '),
+							description: `${args.splice(2, args.length).join(' ')}\n\nCe vote dure: ${args[0]}`,
+							timestamp: new Date()
+						}
+					};
 
-			let embed = new Discord.RichEmbed()
-				.setAuthor("Sondage de " + message.author, message.author.avatarURL)
-				.setDescription(args[1]);
-			
-			message.channel.send(embed)
-				.then(() => message.react("✅"))
-				.then(() => message.react("❌"))
-
-			message.awaitReactions(filter, {time: duration})
-				.then(collected => console.log(`Collected ${collected.size} reactions`))
-				.catch(console.error);
-
-		} else {
-			return message.reply("Vous n'avez pas la permission d'executer cette commande.");
+				msg = message.channel.send(embed);
+				break;
+			}
 		}
+
+		return msg.react('✅')
+			.then(msg.react('❌'))
+			.catch(error => console.error(`One of the emojis failed to react: ${error}`));
+
 	}
-}
+
+};
