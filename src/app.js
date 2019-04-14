@@ -1,10 +1,10 @@
-import Discord from "discord.js";
-import readdir from "fs-readdir-promise";
-import fs from "fs-extra";
+import Discord from 'discord.js';
+import readdir from 'fs-readdir-promise';
+import fs from 'fs-extra';
 
-import to from "@helpers/To";
+import to from '@helpers/To';
 
-export default class  {
+export default class {
 
 	constructor(config) {
 		this.config = config;
@@ -40,6 +40,7 @@ export default class  {
 		if (err) throw err;
 
 		for (let file of files) {
+			// eslint-disable-next-line no-undef
 			const module = require(`@commands/${file}`);
 			if (err) throw err;
 			commands.push(module.default);
