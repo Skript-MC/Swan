@@ -1,51 +1,58 @@
-import Discord from 'discord.js';
-import readdir from 'fs-readdir-promise';
-import fs from 'fs-extra';
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-statements */
 
-import to from '@helpers/To';
+import 'module-alias/register';
 
-export default class {
+import Config from '../config/config.json';
+import app from './app';
+import to from "@helpers/To";
 
-	constructor(config) {
-		this.config = config;
-	}
+const App =  new app(Config);
 
-	async loadDiscord() {
-		const discord = new Discord.Client();
-		discord.login(this.config.bot.token);
+(async function f() {
 
-		return discord;
-	}
+	let err, commands, discord;
 
-	async loadPlaylists() {
-		const playlist = [];
+	[err, commands] = await to(App.loadCommands());
+	if (err) throw err;
+	[err, discord] = await to(App.loadDiscord());
+	if (err) throw err;
 
-		let [err, files] = await to(readdir('./playlists'));
-		if (err) throw err;
+	// eslint-disable-next-line no-console
+	console.log('Client discord lancé');
 
-		for (let file of files) {
-			[err, file] = await to(fs.readJson(`./playlists/${file}`));
-			if (err) throw err;
+	discord.on('message', async payload => {
 
-			playlist.push(file);
+		if (payload.author.bot) return;
+		if (payload.channel.type === 'dm') return;
+		if (payload.channel.id !== Config.bot.channel) return;
+
+		const message = payload.content.toLowerCase().split(" ");
+
+		for (let command of commands) {
+
+			const search = message[0].search(new RegExp(`^${Config.bot.prefix}${command.regex.source}`, command.regex.flags));
+			let hasRole = false;
+
+			if (search === -1) continue;
+			if (command.permissions.length > 0) {
+				for (let index = 0; index < command.permissions.length; index += 1) {
+					if (payload.member.roles.find(role => role.name === `${command.permissions[index]}`)) {
+						hasRole = true;
+						break;
+					}
+				}
+			} else {
+				hasRole = true;
+			}
+
+			if (hasRole) {
+				await command.execute(payload, message.splice(0, 1), message.splice(0, message.length));
+			} else {
+				payload.reply('Vous n\'avez pas la permission d\'executer cette commande.');
+			}
+
+			break;
 		}
-
-		return playlist;
-	}
-
-	async loadCommands() {
-		const commands = [];
-
-		let [err, files] = await to(readdir('./src/commands'));
-		if (err) throw err;
-
-		for (let file of files) {
-			// eslint-disable-next-line no-undef
-			const module = require(`@commands/${file}`);
-			if (err) throw err;
-			commands.push(module.default);
-		}
-
-		return commands;
-	}
-}
+	});
+})();
