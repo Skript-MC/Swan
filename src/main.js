@@ -23,9 +23,9 @@ const App =  new app(Config);
 
 	discord.on('message', async payload => {
 
-		if (payload.author.bot ||
-		    payload.channel.type === 'dm' ||
-		    payload.channel.id !== Config.bot.channel) return;
+		if (payload.author.bot) return;
+		if (payload.channel.type === 'dm') return;
+		if (payload.channel.id !== Config.bot.channel) return;
 
 		const message = payload.content.toLowerCase().split(" ");
 
@@ -36,8 +36,8 @@ const App =  new app(Config);
 
 			if (search === -1) continue;
 			if (command.permissions.length > 0) {
-				for (let i = 0; i < command.permissions.length; i ++) {
-					if (payload.member.roles.find(role => role.name === `${command.permissions[i]}`)) {
+				for (let index = 0; index < command.permissions.length; index += 1) {
+					if (payload.member.roles.find(role => role.name === `${command.permissions[index]}`)) {
 						hasRole = true;
 						break;
 					}
