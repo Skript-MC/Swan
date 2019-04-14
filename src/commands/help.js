@@ -3,7 +3,8 @@ import Config from '../../config/config.json';
 
 export default {
 
-	regex: '(help|aide)',
+	regex: /aide|help/mu,
+	permissions: [],
 
 	execute: async message => {
 		const embed = new Discord.RichEmbed()
@@ -16,4 +17,4 @@ export default {
 		return message.channel.send(embed);
 	}
 
-}
+};
