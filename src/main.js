@@ -55,4 +55,12 @@ const App =  new app(Config);
 			break;
 		}
 	});
+	
+	  discord.on("messageReactionAdd", async (messageReaction, user) => {
+    doMessageReaction(messageReaction, user);
+  });
+
+  discord.on("messageReactionRemove", async (messageReaction, user) => {
+    doMessageReaction(messageReaction, user);
+  });
 })();
