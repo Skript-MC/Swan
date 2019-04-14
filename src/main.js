@@ -57,10 +57,10 @@ const App =  new app(Config);
 	});
 	
 	  discord.on("messageReactionAdd", async (messageReaction, user) => {
-    doMessageReaction(messageReaction, user);
-  });
+	  	doMessageReaction(messageReaction, user);
+	  });
 
-  discord.on("messageReactionRemove", async (messageReaction, user) => {
-    doMessageReaction(messageReaction, user);
-  });
+	  discord.on("messageReactionRemove", async (messageReaction, user) => {
+	  	doMessageReaction(messageReaction, user);
+	  });
 })();
