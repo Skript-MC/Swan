@@ -1,31 +1,34 @@
 {
-	"bot": {
-		"token": "",
-		"id": "",
-		"prefix": ".",
-		"channel": "",
-		"color": "#4286f4"
-	},
+  "bot": {
+    "token": "",
+    "id": "",
+    "prefix": ".",
+    "channel": "",
+    "color": "#4286f4"
+  },
 
-	"logs": {
-		"guild": "",
-		"channel": [
-			{
-				"origin": "",
-				"destination": ""
-			}
-		],
-		"color": "#4a64d6"
-	},
-	"messages": {
-		"errors": {
-			"command": "Aïe cette commande n'existe pas, essayez en une autre :wink:",
-			"permission": "Vous n'avez pas la permission d'utilier cette commande :confused:",
-			"color": "#fc3e25"
-		},
-
-		"success": {
-			"color": "#8cff44"
-		}
-	}
+  "logs": {
+    "guild": "",
+    "channel": [{
+      "origin": "",
+      "destination": ""
+    }],
+    "color": "#4a64d6"
+  },
+  "messages": {
+    "errors": {
+      "command": "Aïe cette commande n'existe pas, essayez-en une autre :wink:",
+      "permission": "Vous n'avez pas la permission d'utiliser cette commande :confused:",
+      "color": "#fc3e25"
+    },
+    "success": {
+      "color": "#8cff44"
+    },
+    "notifRole": {
+      "messageContent": "Cliquez sur :tada: dans les réactions de ce message pour être notifier des évènements sur le discord !"
+    }
+  },
+  "miscellaneous": {
+    "notifRoleName": "Notifications Evènement"
+  }
 }
