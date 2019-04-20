@@ -9,12 +9,13 @@
   "authors": [
     "AlexLew",
     "Uiytt",
+    "Noftaly",
     "Uneo7"
   ],
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^11.4.2",
     "fs-extra": "^7.0.1",
     "fs-readdir-promise": "^1.0.1",
     "module-alias": "^2.1.0",
