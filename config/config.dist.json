@@ -19,13 +19,20 @@
 	},
 	"messages": {
 		"errors": {
-			"command": "Aïe cette commande n'existe pas, essayez en une autre :wink:",
-			"permission": "Vous n'avez pas la permission d'utilier cette commande :confused:",
+			"command": "Aïe cette commande n'existe pas, essayez-en une autre :wink:",
+			"permission": "Vous n'avez pas la permission d'utiliser cette commande :confused:",
 			"color": "#fc3e25"
 		},
 
 		"success": {
 			"color": "#8cff44"
-		}
-	}
+		},
+		
+		"notifRole": {
+			"messageContent": "Cliquez sur \":tada:\" dans les réactions de ce message pour être notifier des évènements sur le discord !"
+		  }
+	},
+	"miscellaneous": {
+		"notifRoleName": "Notifications Evènement"
+	  }
 }

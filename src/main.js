@@ -1,3 +1,7 @@
+/* eslint-disable no-undef */
+/* eslint-disable multiline-comment-style */
+/* eslint-disable no-inline-comments */
+/* eslint-disable line-comment-position */
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-statements */
 
@@ -5,9 +9,10 @@ import 'module-alias/register';
 
 import Config from '../config/config.json';
 import app from './app';
-import to from "@helpers/To";
+import to from '@helpers/To';
+import notifRole from './commands/notifRole.js';
 
-const App =  new app(Config);
+const App = new app(Config);
 
 (async function f() {
 
@@ -21,13 +26,20 @@ const App =  new app(Config);
 	// eslint-disable-next-line no-console
 	console.log('Client discord lancé');
 
+	discord.on('ready', () => {
+		discord.user.setActivity('Skript-Mc', {type: 'WATCHING'});
+
+		// const a = discord.channels.get(''); // A remplacer par l'ID du canal
+		// a.fetchMessages(); // limit = nombre de messages à mettre en cache dans le canal
+	});
+
 	discord.on('message', async payload => {
 
 		if (payload.author.bot) return;
 		if (payload.channel.type === 'dm') return;
 		if (payload.channel.id !== Config.bot.channel) return;
 
-		const message = payload.content.toLowerCase().split(" ");
+		const message = payload.content.split(' ');
 
 		for (let command of commands) {
 
@@ -55,4 +67,16 @@ const App =  new app(Config);
 			break;
 		}
 	});
+
+	discord.on('messageReactionAdd', (messageReaction, user) => {
+		if (!user.bot) notifRole.doMessageReaction(messageReaction, user);
+	});
+
+	discord.on('messageReactionRemove', (messageReaction, user) => {
+		if (!user.bot) notifRole.doMessageReaction(messageReaction, user);
+	});
+
+	exports.discord = discord;
+	exports.commands = commands;
+
 })();

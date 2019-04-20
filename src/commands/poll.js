@@ -6,6 +6,9 @@ import Discord from 'discord.js';
 
 export default {
 
+	title: "Sondage",
+	description: "Lancer un sondage",
+	example: "poll",
 	regex: /poll|vote/mu,
 	permissions: ['Staff'],
 
