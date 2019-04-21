@@ -34,23 +34,18 @@ export default {
 		for (let r of reactions) await msgHelp.react(r);
 
 		const collector = msgHelp.createReactionCollector((reaction, user) => user.id === message.author.id && reactions.includes(reaction.emoji.name)).once("collect", reaction => {
-			const clicked = reaction.emoji.name;
-			if (clicked === '⏮') {
-				msgHelp.delete();
+			msgHelp.delete();
+			if (reaction.emoji.name === '⏮') {
 				commands.find(c => c.title === "Aide").execute(message, 0);
-			} else if (clicked === '◀') {
-				msgHelp.delete();
+			} else if (reaction.emoji.name === '◀') {
 				const prevPage = page <= 0 ? commands.length - 1 : page - 1;
 				commands.find(c => c.title === "Aide").execute(message, prevPage);
-			} else if (clicked === '🇽') {
-				msgHelp.delete();
+			} else if (reaction.emoji.name === '🇽') {
 				message.delete();
-			} else if (clicked === '▶') {
-				msgHelp.delete();
+			} else if (reaction.emoji.name === '▶') {
 				const nextPage = page + 1 >= commands.length ? 0 : page + 1;
 				commands.find(c => c.title === "Aide").execute(message, nextPage);
-			} else if (clicked === '⏭') {
-				msgHelp.delete();
+			} else if (reaction.emoji.name === '⏭') {
 				commands.find(c => c.title === "Aide").execute(message, commands.length - 1);
 			}
 			collector.stop();
