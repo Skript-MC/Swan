@@ -33,7 +33,7 @@ export default {
 		let msgHelp = await message.channel.send(embed);
 		for (let r of reactions) await msgHelp.react(r);
 
-		const collector = msgHelp.createReactionCollector((reaction, user) => user.id === message.author.id && reactions.includes(reaction.emoji.name)).once("collect", (reaction, user) => {
+		const collector = msgHelp.createReactionCollector((reaction, user) => user.id === message.author.id && reactions.includes(reaction.emoji.name)).once("collect", reaction => {
 			const clicked = reaction.emoji.name;
 			if (clicked === '⏮') {
 				msgHelp.delete();
