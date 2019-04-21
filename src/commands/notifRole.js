@@ -1,52 +1,66 @@
-import main from '../main.js';
+/* eslint-disable sort-keys */
+/* eslint-disable no-console */
+/* eslint-disable max-statements */
+
 import Config from '../../config/config.json';
 
-const roleName = Config.Miscellaneous.notifRoleName;
-const msgContent = Config.messages.notifRole.messageContent;
-const emoji = "🎉";
+const roleName = Config.miscellaneous.notifRoleName,
+		msgContent = Config.messages.notifRole.messageContent,
+		emoji = "🎉";
 
 export default {
 
-  regex: /notifRole/gmu,
-  permissions: ['Staff', 'Organisateur'],
+	title: "Notif role",
+	description: "Créer le message permettant de s'ajouter le rôle \"Notifications Événement\".",
+	example: "notifrole",
+	regex: /notif-?[Rr]ole/mu,
+	permissions: ['Staff', 'Organisateur'],
 
-  execute: async (message, command, args) => {
-    // Vu que c'est déjà dans un channel ou faut une perm pour parler, c'est facultatif :
-    // if (!message.member.hasPermission("ADD_ROLE")) return message.channel.send(":x: Vous n'avez pas la permission de faire cela !");
+	execute: async message => {
 
-    message.channel.send(msgContent)
-      .then(msg => {
-        msg.react(emoji);
-      }).catch(err => {
-        console.error(err);
-      });
-    message.delete();
-  }
+		/*
+		 * Vu que c'est déjà dans un channel ou faut une perm pour parler, c'est facultatif :
+		 * if (!message.member.hasPermission("ADD_ROLE")) return message.channel.send(":x: Vous n'avez pas la permission de faire cela !");
+		 */
+
+		message.channel.send(msgContent)
+			.then(m => {
+				m.react(emoji);
+			})
+			.catch(err => {
+				console.error(err);
+			});
+		message.delete();
+	},
+
+	doMessageReaction: async (messageReaction, user) => {
+		if (messageReaction.message.content === msgContent &&
+			messageReaction.message.author.bot &&
+			messageReaction.emoji.name === emoji) {
+
+			let role = messageReaction.message.guild.roles.find(r => r.name === roleName),
+				targetUser = await messageReaction.message.guild.fetchMember(user);
+
+			if (!role) {
+				try {
+					role = await messageReaction.message.guild.createRole({
+						permissions: [],
+						name: roleName,
+						mentionable: true
+					});
+				} catch (err) {
+					// eslint-disable-next-line no-console
+					console.error(`Error while attempting to create the role : ${err}`);
+				}
+			}
+
+      if (!targetUser.roles.has(role.id)) {
+				await targetUser.addRole(role);
+				targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"${Config.miscellaneous.notifRoleName}"* vous a été ajouté !`);
+			} else if (targetUser.roles.has(role.id)) {
+				await targetUser.removeRole(role);
+				targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"${Config.miscellaneous.notifRoleName}"* vous a été enlevé !`);
+			}
+		}
+	}
 };
-
-global.doMessageReaction = async function(messageReaction, user) {
-  if (messageReaction.message.content === msgContent &&
-    messageReaction.message.author.bot &&
-    messageReaction._emoji.name === emoji) {
-    let role = messageReaction.message.guild.roles.find(r => r.name === roleName);
-    if (!role) {
-      try {
-        role = await messageReaction.message.guild.createRole({
-          name: roleName,
-          permissions: [],
-          mentionable: true
-        });
-      } catch (err) {
-        console.error(`Error while attempting to create the role : ${err}`);
-      }
-    }
-    let targetUser = await messageReaction.message.guild.fetchMember(user);
-    if (!targetUser.roles.has(role.id) && !user.bot) {
-      await targetUser.addRole(role);
-      targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"Notifications Evénement"* vous a été ajouté !`);
-    } else if (targetUser.roles.has(role.id) && !user.bot) {
-      await targetUser.removeRole(role);
-      targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"Notifications Evénement"* vous a été enlevé !`);
-    }
-  }
-}
