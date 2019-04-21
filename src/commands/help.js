@@ -1,9 +1,7 @@
 /* eslint-disable sort-keys */
 import Discord from 'discord.js';
 import Config from '../../config/config.json';
-import {
-	commands
-} from '../main.js';
+import { commands } from '../main.js';
 
 export default {
 
