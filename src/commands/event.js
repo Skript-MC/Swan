@@ -5,8 +5,8 @@ export default {
 
 	title: "Skript Event",
 	description: "Lancer un événement Skript-MC.",
-	example: "skript-event",
-	regex: /skript-event/gmu,
+	examples: ['skript-event'],
+	regex: /skript-event/gmui,
 	permissions: ['Staff', 'Membre Actif'],
 
 	execute: async (message, command, args) => {
