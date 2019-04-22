@@ -37,7 +37,7 @@ export default {
 				break;
 			case 4:
 				embed.addField(":speech_left: Discord Skript-MC : https://bit.ly/2XvahGH", "Lien officiel de ce discord.", true)
-					.addField(":speech_left: Discord Skript Chat : https://bit.ly/2XvahGH", "Lien du discord \"Skript Chat\", qui est le discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons", true)
+					.addField(":speech_left: Discord Skript Chat : https://bit.ly/2PnvbVm", "Lien du discord \"Skript Chat\", qui est le discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons", true)
 				break;
 			case 5:
 				embed.addField(":speech_balloon: Forum SkriptMC : https://bit.ly/2DlvqeP", "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !", true)
