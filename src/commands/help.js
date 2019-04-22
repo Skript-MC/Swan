@@ -1,21 +1,18 @@
-/* eslint-disable sort-keys */
 import Discord from 'discord.js';
 import Config from '../../config/config.json';
-import {
-	commands
-} from '../main.js';
+import { commands } from '../main.js';
 
 export default {
 
 	title: "Aide",
 	description: "Afficher la page d'aide des commandes de Swan.",
-	example: "help",
-	regex: /aide|help/mu,
+	examples: ['help'],
+	regex: /aide|help/gmui,
 	permissions: [],
 
 	execute: async (message, page) => {
 
-		page = page == ".help" ? 0 : page;
+		page = Number.isInteger(page) ? page : 0;
 
 		const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 		const embed = new Discord.RichEmbed()
@@ -24,18 +21,24 @@ export default {
 			.setDescription('‌‌ ') // Caractère invisible (‌‌ )
 			.setFooter("Executé par " + message.author.username);
 
-		let perms = '',
-			cmd = commands[page];
+		const cmd = commands[page];
+
+		let perms = '';
 		for (let perm of cmd.permissions) perms = `${perms}, ${perm}`;
 		perms = perms.slice(2); // Enlève la virgule et l'espace au début
 		perms = perms === "" ? "Tout le monde." : `${perms}.`;
 
-		embed.addField(`:star: **${cmd.title}**`, `**Description :** ${cmd.description}\n**Exemple d'utilisation :** \`.${cmd.example}\`\n**Utilisable par :** ${perms}\n‌‌ `, true);
+		let ex = '';
+		for (let e of cmd.examples) ex = `${ex} | \`.${e}\``;
+		ex = ex.slice(3, ex.length - 1); // Enlève les espaces et la barre au début, et l'espace et le ` à la fin.
+		ex = ex === "" ? "Aucun exemple disponible." : `${ex}`;
+
+		embed.addField(`:star: **${cmd.title}**`, `**Description :** ${cmd.description}\n**Exemple d'utilisation :** ${ex}\`\n**Utilisable par :** ${perms}\n‌‌ `, true);
 
 		let msgHelp = await message.channel.send(embed);
 		for (let r of reactions) await msgHelp.react(r);
 
-		const collector = msgHelp.createReactionCollector((reaction, user) => user.id === message.author.id && reactions.includes(reaction.emoji.name)).once("collect", (reaction, user) => {
+		const collector = msgHelp.createReactionCollector((reaction, user) => user.id === message.author.id && reactions.includes(reaction.emoji.name)).once("collect", reaction => {
 			msgHelp.delete();
 			if (reaction.emoji.name === '⏮') {
 				commands.find(c => c.title === "Aide").execute(message, 0);
