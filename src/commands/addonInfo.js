@@ -55,15 +55,15 @@ export default {
                             if (data.data.sourcecode) embed.addField(":computer: Code source", `[Voir ici](${data.data.sourcecode})`, true);
                             if (data.data.bytes) embed.addField(":package: Taille", `~${Math.round(data.data.bytes / 1000000)} Mo`, true);
                             if (data.data.depend.softdepend) embed.addField(":link: Dépendences facultatives", data.data.depend.softdepend, true);
-                            if (data.data.depend.depend) embed.addField(":link: Dépendences obligatoires", data.data.depend.depend, true)
-                                .setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
+                            if (data.data.depend.depend) embed.addField(":link: Dépendences obligatoires", data.data.depend.depend, true);
+                            embed.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
 
                             message.channel.send(embed);
                         });
                     }).on("error", err => console.error(err));
 
                 } else {
-                    message.reply(`désolé, mais il est impossible d'acceder à cet addon. Es-tu sur qu'il est disponible sur <https://skripttools.net/addons?q=${args[0]}> ?`);
+                    message.reply(`désolé, mais il est impossible d'acceder à cet addon. Es-tu sur qu'il est disponible sur <https://skripttools.net/addons?q=${args[0]}> ? Il doit être orthographié exactement pareil !`);
                 }
             });
         }).on("error", err => console.error(err));
