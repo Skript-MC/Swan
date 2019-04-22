@@ -10,7 +10,7 @@ export default {
     regex: /poll|vote/gmui,
     permissions: ['Staff', 'Membre Actif', 'Ancien', 'Donateur', 'Retired Staff'], // Tout le monde qui a un rôle
 
-    execute: async (message, command, args) => {
+    execute: async (message, args) => {
         const durations = {
             's(ec(ond)?)?e?': 1,
             'min(ute)?': 60,
