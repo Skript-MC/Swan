@@ -25,23 +25,23 @@ export default {
 		switch (page) {
 			case 1:
 				embed.addField(":books: Doc Skript de SkriptMC : https://bit.ly/2KSZ6pN", "Documentation sur Skript, faite par la communauté de Skript-MC. Elle est en français et est en constante amélioration. Si vous avez une suggestion, ou si vous voyez une erreur, n'hésitez pas à nous en faire part !", true)
-					.addField(":books: Doc Skript officielle : https://bit.ly/2VUGZ3W", "Documentation de Skript officielle. Elle est en anglais, mais est complête, et contient toutes les syntaxes utilisables dans la dernière version de Skript.", true)
+					.addField(":books: Doc Skript officielle : https://bit.ly/2VUGZ3W", "Documentation de Skript officielle. Elle est en anglais, mais est complête, et contient toutes les syntaxes utilisables dans la dernière version de Skript.", true);
 				break;
 			case 2:
 				embed.addField(":books: Doc addons de SkriptMC : https://bit.ly/2viSqq8", "Documentation des addons, faite par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais est en français et est complête.", true)
-					.addField(":books: Doc des addons : https://bit.ly/2UTSlJ6", "Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.", true)
+					.addField(":books: Doc des addons : https://bit.ly/2UTSlJ6", "Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.", true);
 				break;
 			case 3:
 				embed.addField(":inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm", "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 incluses. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est. ", true)
-					.addField(":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH", "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.", true)
+					.addField(":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH", "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.", true);
 				break;
 			case 4:
 				embed.addField(":speech_left: Discord Skript-MC : https://bit.ly/2XvahGH", "Lien officiel de ce discord.", true)
-					.addField(":speech_left: Discord Skript Chat : https://bit.ly/2PnvbVm", "Lien du discord \"Skript Chat\", qui est le discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons", true)
+					.addField(":speech_left: Discord Skript Chat : https://bit.ly/2PnvbVm", "Lien du discord \"Skript Chat\", qui est le discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons", true);
 				break;
 			case 5:
 				embed.addField(":speech_balloon: Forum SkriptMC : https://bit.ly/2DlvqeP", "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !", true)
-					.addField(":computer: GitHub de Skript : https://bit.ly/2W0EJrU", "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour.", true)
+					.addField(":computer: GitHub de Skript : https://bit.ly/2W0EJrU", "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour.", true);
 				break;
 			default:
 				embed.setDescription("Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers des discord importants\n:five: Divers liens importants");
