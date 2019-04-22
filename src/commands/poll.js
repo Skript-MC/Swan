@@ -15,7 +15,7 @@ export default {
             's(ec(ond)?)?e?': 1,
             'min(ute)?': 60,
             'h(our|eure?)?': 3600,
-            '(d(ay)?)|(j(our)?)': 86400,
+            '(d(ay)?)|(j(our)?)': 86400
         };
 
         for (let duration of Object.keys(durations)) {
