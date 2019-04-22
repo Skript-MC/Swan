@@ -36,11 +36,7 @@ export default {
 
                 if (addons.includes(myAddon.toLowerCase())) {
                     let versions;
-                    for (let a of Object.keys(data.data)) {
-                        if (a.toLowerCase() === myAddon.toLowerCase()) {
-                            versions = data.data[a];
-                        }
-                    }
+                    for (let a of Object.keys(data.data)) if (a.toLowerCase() === myAddon.toLowerCase()) versions = data.data[a];
                     let latest = versions[versions.length - 1];
                     latest = latest.replace(" ", "+");
 
@@ -49,20 +45,19 @@ export default {
                         resp2.on('data', chunk => data += chunk);
                         resp2.on('end', () => {
                             data = JSON.parse(data);
-                            const nodata = Config.messages.errors.nodata;
                             const embed = new Discord.RichEmbed()
                                 .setColor(Config.bot.color)
                                 .setAuthor(`Informations sur ${data.data.plugin}`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
-                                .setDescription(data.data.description || "Aucune description disponible.")
-                                .addField(":bust_in_silhouette: Auteur(s)", data.data.author || nodata, true)
-                                .addField(":gear: Dernière version", data.data.version || nodata, true)
-                                .addField(":inbox_tray: Lien de téléchargement", `[Téléchargez ici](${data.data.download})` || nodata, true)
-                                .addField(":computer: Code source", `[Voir ici](${data.data.sourcecode})` || nodata, true)
-                                .addField(":package: Taille", `${Math.round(data.data.bytes / 1000000)} Mo` || nodata, true)
-                                .addField(":link: Dépendences obligatoires", data.data.depend.depend || "Skript", true)
+                                .setDescription(data.data.description || "Aucune description disponible.");
+                            if (data.data.author) embed.addField(":bust_in_silhouette: Auteur(s)", data.data.author, true);
+                            if (data.data.version) embed.addField(":gear: Dernière version", data.data.version, true);
+                            if (data.data.download) embed.addField(":inbox_tray: Lien de téléchargement", `[Téléchargez ici](${data.data.download})`, true);
+                            if (data.data.sourcecode) embed.addField(":computer: Code source", `[Voir ici](${data.data.sourcecode})`, true);
+                            if (data.data.bytes) embed.addField(":package: Taille", `${Math.round(data.data.bytes / 1000000)} Mo`, true);
+                            if (data.data.depend.softdepend) embed.addField(":link: Dépendences facultatives", data.data.depend.softdepend, true);
+                            if (data.data.depend.depend) embed.addField(":link: Dépendences obligatoires", data.data.depend.depend, true)
                                 .setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
 
-                            if (data.data.depend.softdepend) embed.addField(":link: Dépendences facultatives", data.data.depend.softdepend, true)
                             message.channel.send(embed);
                         });
                     }).on("error", err => console.error(err));
