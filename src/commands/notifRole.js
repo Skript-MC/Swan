@@ -11,26 +11,21 @@ const roleName = Config.miscellaneous.notifRoleName,
 export default {
 
 	title: "Notif role",
-	description: "Créer le message permettant de s'ajouter le rôle \"Notifications Événement\"",
-	example: "notifrole",
-	regex: /notif-?[Rr]ole/mu,
+	description: "Créer le message permettant de s'ajouter le rôle \"Notifications Événement\".",
+	examples: ['notifrole'],
+	regex: /notif-?role/gmui,
 	permissions: ['Staff', 'Organisateur'],
 
 	execute: async message => {
 
-		/*
-		 * Vu que c'est déjà dans un channel ou faut une perm pour parler, c'est facultatif :
-		 * if (!message.member.hasPermission("ADD_ROLE")) return message.channel.send(":x: Vous n'avez pas la permission de faire cela !");
-		 */
+		// Vu que c'est déjà dans un channel ou faut une perm pour parler, c'est facultatif :
+		// if (!message.member.hasPermission("ADD_ROLE")) return message.channel.send(":x: Vous n'avez pas la permission de faire cela !");
+
+		message.delete();
 
 		message.channel.send(msgContent)
-			.then(m => {
-				m.react(emoji);
-			})
-			.catch(err => {
-				console.error(err);
-			});
-		message.delete();
+			.then(m => m.react(emoji))
+			.catch(console.error(err));
 	},
 
 	doMessageReaction: async (messageReaction, user) => {
@@ -54,7 +49,7 @@ export default {
 				}
 			}
 
-            if (!targetUser.roles.has(role.id)) {
+			if (!targetUser.roles.has(role.id)) {
 				await targetUser.addRole(role);
 				targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"${Config.miscellaneous.notifRoleName}"* vous a été ajouté !`);
 			} else if (targetUser.roles.has(role.id)) {
@@ -64,4 +59,3 @@ export default {
 		}
 	}
 };
-
