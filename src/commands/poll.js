@@ -6,7 +6,7 @@ export default {
 
     title: "Sondage",
     description: "Lancer un sondage par lequel on peut répondre Oui ou Non.",
-    examples: ['poll'],
+    examples: ['poll 10min Mon_titre Ma description'],
     regex: /poll|vote/gmui,
     permissions: ['Staff', 'Membre Actif', 'Ancien', 'Donateur', 'Retired Staff'], // Tout le monde qui a un rôle
 
