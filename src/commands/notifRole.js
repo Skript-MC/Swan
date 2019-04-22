@@ -12,8 +12,8 @@ export default {
 
 	title: "Notif role",
 	description: "Créer le message permettant de s'ajouter le rôle \"Notifications Événement\".",
-	example: "notifrole",
-	regex: /notif-?[Rr]ole/mu,
+	examples: ['notifrole'],
+	regex: /notif-?[Rr]ole/gmui,
 	permissions: ['Staff', 'Organisateur'],
 
 	execute: async message => {
@@ -24,12 +24,8 @@ export default {
 		 */
 
 		message.channel.send(msgContent)
-			.then(m => {
-				m.react(emoji);
-			})
-			.catch(err => {
-				console.error(err);
-			});
+			.then(m => m.react(emoji))
+			.catch(console.error(err));
 		message.delete();
 	},
 
@@ -53,8 +49,8 @@ export default {
 					console.error(`Error while attempting to create the role : ${err}`);
 				}
 			}
-
-      if (!targetUser.roles.has(role.id)) {
+			
+			if (!targetUser.roles.has(role.id)) {
 				await targetUser.addRole(role);
 				targetUser.send(`${messageReaction.message.guild} | :white_check_mark: Le rôle *"${Config.miscellaneous.notifRoleName}"* vous a été ajouté !`);
 			} else if (targetUser.roles.has(role.id)) {
