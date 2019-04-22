@@ -1,55 +1,62 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-console */
+/* eslint-disable multiline-comment-style */
 /* eslint-disable sort-keys */
+import Discord from 'discord.js';
+
 export default {
 
-	title: "Sondage",
-	description: "Lancer un sondage.",
-	examples: ['poll'],
-	regex: /poll|vote/gmui,
-	permissions: ['Staff'],
+    title: "Sondage",
+    description: "Lancer un sondage par lequel on peut répondre Oui ou Non.",
+    examples: ['poll'],
+    regex: /poll|vote/gmui,
+    permissions: ['Staff', 'Membre Actif', 'Ancien', 'Donateur', 'Retired Staff'], // Tout le monde qui a un rôle
 
-	execute: async (message, command, args) => {
+    execute: async (message, command, args) => {
+        const durations = {
+            's(ec(ond)?)?e?': 1,
+            'min(ute)?': 60,
+            'h(our|eure?)?': 3600,
+            '(d(ay)?)|(j(our)?)': 86400,
+        };
 
-		const durations = {
-			's(econd)?e?': 1,
-			'min(ute)?': 60,
-			'h(our|eure?)?': 3600,
-			'(d(ay)?)|(j(our)?)': 86400,
-			'mo(is|nth)?': 2.628000000,
-			'(a(nn(é|e)e)?)|(y(ear)?)': 3.1540000000
-		};
+        for (let duration of Object.keys(durations)) {
+            if (args[0].match(new RegExp(duration, 'gmui'))) {
+                let msg, wait, embed;
+                let no = 0,
+                    yes = 0;
+                // let mult = durations[duration], time = args[0].split(/[a-zA-Z]+/gmui)[0];
+                // wait = mult * time * 1000;
+                wait = durations[duration] * args[0].split(/[a-zA-Z]+/gmui)[0] * 1000;
+                embed = new Discord.RichEmbed()
+                    .setColor(3447003)
+                    .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
+                    .setTitle(args[1].replace(/_/gmu, ' '))
+                    .setDescription(`${args.splice(2, args.length).join(' ')}\n\nCe vote dure : ${args[0]}`)
+                    .setTimestamp(new Date());
 
-		let msg;
+                msg = await message.channel.send(embed);
+                await msg.react('✅');
+                await msg.react('❌');
+                const collector = msg
+                    .createReactionCollector((reaction, user) => !user.bot && (reaction.emoji.name === '❌' || reaction.emoji.name === '✅'))
+                    .once("collect", reaction => {
+                        if (reaction.emoji.name === '❌') no += 1;
+                        else yes += 1;
+                    });
 
-		for (let duration of Object.keys(durations)) {
-			if (args[0].match(new RegExp(duration, 'gmu'))) {
-
-				const mult = durations[duration],
-					time = args[0].split(/[a-zA-Z]+/gmu)[0],
-					embed = {
-						embed: {
-							color: 3447003,
-							author: {
-								name: `Vote de ${message.author.username} (${message.author.id})`,
-								icon_url: message.author.avatarURL
-							},
-							title: args[1].replace(/_/gmu, ' '),
-							description: `${args.splice(2, args.length).join(' ')}\n\nCe vote dure: ${args[0]}`,
-							timestamp: new Date()
-						}
-					};
-
-				msg = message.channel.send(embed);
-				break;
-			}
-		}
-
-		return msg.react('✅')
-			.then(msg.react('❌'))
-			.catch(error => console.error(`One of the emojis failed to react: ${error}`));
-
-	}
-
+                setTimeout(() => {
+                    embed = new Discord.RichEmbed()
+                        .setColor(0x7FFF00)
+                        .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
+                        .setTitle(args[1].replace(/_/gmu, ' '))
+                        .setDescription(`${args.splice(2, args.length).join(' ')}\n\nCe vote est finit !\n\n**Résultats :**\n:white_check_mark: : ${yes}\n:x: : ${no}`)
+                        .setTimestamp(new Date());
+                    collector.stop();
+                    msg.edit(embed).clearReactions();
+                }, wait);
+                break;
+            } else {
+                message.reply("il doit y avoir un problème dans ta commande... Vérifies qu'elle soit construite de cette façon :\n```.sond DURÉE TITRE DESCRIPTION```\n__DURÉE__ est composée de nombres suivis sans espaces de `s` pour `seconde` ou de `min` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n__TITRE__ est un texte, sans espace. Les \"_\" du titre seront convertis en espaces.\n__DESCRIPTION__ est un texte, avec espace. Ce champs est facultatif.\nExemple : ```.sond 10min Mon_titre Je créé un sondage !```");
+            }
+        }
+    }
 };
