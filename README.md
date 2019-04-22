@@ -23,8 +23,8 @@ Les commandes sont en plusieurs parties:
 
 # Todo
 
- - [ ] Finir le système de vote (command "Poll")
- - [ ] Fixer la commande d'aide (command "Help") (EN COURS: Noftaly)
+ - [x] Finir le système de vote (command "Poll")
+ - [x] Fixer la commande d'aide (command "Help")
  - [ ] Faire la partie musicale:
     - Système de playlist:
         - [ ] Création de playlist
@@ -33,5 +33,7 @@ Les commandes sont en plusieurs parties:
         - [ ] Ajout de titres dans la playlist
     - Système de blindtest:
         - [ ] Pouvoir lancer un blindtest à partir d'une playlist (youtube ou personnel)
+ - [ ] Ajoutez tous les messages a la config
+ - [ ] Convertir le code en TypeScript
 
 Lorsqu'une partie est finie, mettez y une croix (tel que: ``[x]``)
