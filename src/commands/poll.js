@@ -2,14 +2,12 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-console */
 /* eslint-disable sort-keys */
-import Discord from 'discord.js';
-
 export default {
 
 	title: "Sondage",
-	description: "Lancer un sondage",
-	example: "poll",
-	regex: /poll|vote/mu,
+	description: "Lancer un sondage.",
+	examples: ['poll'],
+	regex: /poll|vote/gmui,
 	permissions: ['Staff'],
 
 	execute: async (message, command, args) => {
