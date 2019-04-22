@@ -21,8 +21,7 @@
 		"errors": {
 			"command": "Aïe cette commande n'existe pas, essayez-en une autre :wink:",
 			"permission": "Vous n'avez pas la permission d'utiliser cette commande :confused:",
-			"color": "#fc3e25",
-			"nodata": "Donnée indisponible"
+			"color": "#fc3e25"
 		},
 
 		"success": {
