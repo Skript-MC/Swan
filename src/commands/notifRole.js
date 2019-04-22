@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys */
 /* eslint-disable no-console */
 /* eslint-disable max-statements */
-
 import Config from '../../config/config.json';
 
 const roleName = Config.miscellaneous.notifRoleName,
@@ -41,7 +40,7 @@ export default {
 					role = await messageReaction.message.guild.createRole({
 						permissions: [],
 						name: roleName,
-						mentionable: true
+						mentionable: false
 					});
 				} catch (err) {
 					// eslint-disable-next-line no-console
