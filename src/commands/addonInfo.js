@@ -53,7 +53,7 @@ export default {
                             if (data.data.version) embed.addField(":gear: Dernière version", data.data.version, true);
                             if (data.data.download) embed.addField(":inbox_tray: Lien de téléchargement", `[Téléchargez ici](${data.data.download})`, true);
                             if (data.data.sourcecode) embed.addField(":computer: Code source", `[Voir ici](${data.data.sourcecode})`, true);
-                            if (data.data.bytes) embed.addField(":package: Taille", `${Math.round(data.data.bytes / 1000000)} Mo`, true);
+                            if (data.data.bytes) embed.addField(":package: Taille", `~${Math.round(data.data.bytes / 1000000)} Mo`, true);
                             if (data.data.depend.softdepend) embed.addField(":link: Dépendences facultatives", data.data.depend.softdepend, true);
                             if (data.data.depend.depend) embed.addField(":link: Dépendences obligatoires", data.data.depend.depend, true)
                                 .setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
