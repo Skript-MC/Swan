@@ -8,8 +8,8 @@ export default {
 
 	title: "Sondage",
 	description: "Lancer un sondage.",
-	example: "poll",
-	regex: /poll|vote/mu,
+	examples: ['poll'],
+	regex: /poll|vote/gmui,
 	permissions: ['Staff'],
 
 	execute: async (message, command, args) => {
