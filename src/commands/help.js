@@ -29,7 +29,7 @@ export default {
 		perms = perms === "" ? "Tout le monde." : `${perms}.`;
 
 		let ex = '';
-		for (let e of cmd.examples) ex = `${ex} | \`.${e}\``;
+		for (let e of cmd.examples) ex = `${ex} | \`${Config.bot.prefix}${e}\``;
 		ex = ex.slice(3, ex.length - 1); // Enlève les espaces et la barre au début, et l'espace et le ` à la fin.
 		ex = ex === "" ? "Aucun exemple disponible." : `${ex}`;
 
