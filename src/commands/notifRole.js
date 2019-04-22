@@ -13,7 +13,7 @@ export default {
 	title: "Notif role",
 	description: "Créer le message permettant de s'ajouter le rôle \"Notifications Événement\".",
 	examples: ['notifrole'],
-	regex: /notif-?[Rr]ole/gmui,
+	regex: /notif-?role/gmui,
 	permissions: ['Staff', 'Organisateur'],
 
 	execute: async message => {
