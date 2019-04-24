@@ -10,7 +10,7 @@ abstract class Command {
 	public permissions: string[] = config.bot.default_permissions;
 	public channels: string[] = config.bot.default_channels;
 	public setup: Function = (): void => {};
-	public abstract execute: Function = (message: Message, args: string[]): void => {};
+	public abstract execute: Function = async (message: Message, args: string[]): Promise<void> => {};
 
 }
 
