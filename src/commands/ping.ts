@@ -10,7 +10,7 @@ class Ping extends Command {
 	regex: RegExp = /(?:ping|ms)/gmui;
 
 	execute = async (message: Message, args: string[]): Promise<void> => {
-		const msg: Message = <Message> await message.channel.send("Ping");
+		const msg: Message = <Message> await message.channel.send("Pong !");
 		msg.edit(`Pong ! La latence du bot est de ${msg.createdTimestamp - message.createdTimestamp}ms.`);
 	}
 };

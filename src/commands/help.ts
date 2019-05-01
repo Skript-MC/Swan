@@ -8,7 +8,7 @@ class Help extends Command {
 	name: string = "Aide";
 	description: string = config.messages.commands.help.description;
 	examples: string[] = ["help"];
-	regex: RegExp = /aide|help/gimu;
+	regex: RegExp = /(?:aide|help)/gimu;
 
 	execute = async (message: Message, args: string[], page?: number): Promise<void> => {
 	   

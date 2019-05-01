@@ -1,7 +1,8 @@
-import Discord, { Message, RichEmbed } from "discord.js";
+import { Message, RichEmbed } from "discord.js";
 import Command from '../components/Command';
 import config from "../../config/config.json";
 import https from "https";
+import { discordInfo } from "../components/messages";
 
 const conf: any = config.messages.commands.skriptInfo;
 
@@ -20,14 +21,14 @@ async function sendEmbed(message: Message, data: any) {
 	if (data.data.version)
 		embed.addField(conf.embed.version, `${data.data.version} (1.9 - 1.13)`, true);
 	embed.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
-	const embed2: RichEmbed = new RichEmbed()
+	/*const embed2: RichEmbed = new RichEmbed()
 		.setColor(config.bot.color)
 		.setAuthor(conf.embed.verInfo, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 		.setDescription(conf.embed.verInfo_desc)
 		.setFooter(`Executé par ${message.author.username}`);
-
+	*/
 	message.channel.send(embed);
-	message.channel.send(embed2);
+	discordInfo(conf.embed.verInfo_desc, message);
 }
 
 class SkriptInfo extends Command {
@@ -39,7 +40,7 @@ class SkriptInfo extends Command {
 
 	execute = async (message: Message, args: string[]): Promise<void> => {
 		https.get(config.miscellaneous.api_skript, resp => {
-			let json = "";
+			let json: string = "";
 			resp.on("data", chunk => (json += chunk));
 			resp.on("end", () => {
 				let data = JSON.parse(json);

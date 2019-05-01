@@ -1,4 +1,4 @@
-import Discord, { Message } from "discord.js";
+import { Message, RichEmbed } from "discord.js";
 import https from "https";
 import config from "../../config/config.json";
 import Command from "../components/Command";
@@ -25,7 +25,7 @@ async function sendEmbed(message: Message, data: any) {
 			unit = "Ko";
 		}
 	}
-	const embed: Discord.RichEmbed = new Discord.RichEmbed()
+	const embed: RichEmbed = new RichEmbed()
 		.setColor(config.bot.color)
 		.setAuthor(`Informations sur ${data.data.plugin}`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 		.setDescription(data.data.description || "Aucune description disponible.");
@@ -62,7 +62,7 @@ class AddonInfo extends Command {
 			const addons: Array<any> = [];
 			const myAddon: string = args[0];
 
-			let json = "";
+			let json: string = "";
 
 			https.get(config.miscellaneous.api_addons, resp => {
 				resp.on("data", chunk => (json += chunk));
