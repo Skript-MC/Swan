@@ -38,7 +38,6 @@ Les commandes sont en plusieurs parties:
     - [ ] .warn [pseudo] [raison]
     - [ ] .mute [pseudo] [temps] [raison] (donne le rôle "bâillonné")
     - [ ] .ban [pseudo] [temps] [raison] (créé un canal qui va attribuer la permission au staff de voir et de parler avec le gars en question dans une catégorie spéciale + lui donne le rôle sous-fifre)
-    - [ ] .gban [pseudo] [raison] (ban def comme si on faisait un clique droit et bannir)
     - [ ] Pour chaque interaction de modération faut que ça laisse un log dans un canal configurable
 
 Lorsqu'une partie est finie, mettez y une croix (tel que: ``[x]``)

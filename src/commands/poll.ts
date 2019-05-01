@@ -1,7 +1,8 @@
-import Discord, { Message, RichEmbed, ReactionCollector } from "discord.js";
+import { Message, RichEmbed, ReactionCollector } from "discord.js";
 import Command from '../components/Command';
 import config from "../../config/config.json";
 import { discordError, discordInfo } from "../components/Messages";
+import { formatDate } from "../utils";
 
 const durations: any = {
 	's(ec(ond)?)?e?': 1,
@@ -16,15 +17,10 @@ function endPoll(msg: Message, embed: RichEmbed, collectors: any, results: any) 
         .setDescription('Ce vote est finit !')
         .addField('Résultats :', `:white_check_mark: : ${results.yes} oui (${100 * results.yes / (results.yes + results.no) || 0}%)\n:x: : ${results.no} non (${100 * results.no / (results.yes + results.no) || 0}%)\n:bust_in_silhouette: : ${(results.yes + results.no)} votant(s).`);
     collectors.collector.stop();
+    collectors.collectorInfo.stop();
     collectors.collectorStop.stop();
     msg.clearReactions();
     msg.edit(embed);
-}
-
-// Ajoute des zéros devant un nombre inférieur a 10.
-// Permet d'avoir par exemple 08h08 au lieu de 8h8
-function padNumber(x: number): string {
-	return (x.toString().length < 2 ? "0" + x : x ).toString();
 }
 
 class Poll extends Command {
@@ -46,16 +42,12 @@ class Poll extends Command {
 				let mult = durations[duration],
 					time: any = args[0].split(/[a-zA-Z]+/gmui)[0];
 				wait = mult * time * 1000;
+				if (wait > config.miscellaneous.maxPollDuration) return discordError((config.messages.commands.poll.tooLong).replace("%s", `${config.miscellaneous.maxPollDuration}`), message);
                 //wait = durations[duration] * args[0].split(/[a-zA-Z]+/gmui)[0] * 1000;
                 let date: Date = new Date(Date.now() + wait);
                 let end: string;
 
-				if (date.getDate() === new Date(Date.now()).getDate())
-					end = `aujourd'hui à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-				else if (date.getDate() - 1 === new Date(Date.now()).getDate())
-					end = `demain à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-				else
-					end = `le ${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${padNumber(date.getFullYear())} à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
+				end = formatDate(date);
 
 				let embed: RichEmbed = new RichEmbed()
 					.setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
@@ -74,13 +66,21 @@ class Poll extends Command {
 						(reaction, user) =>
 							!user.bot &&
 							(reaction.emoji.name === '✅' ||
-							reaction.emoji.name === '❌' ||
-							reaction.emoji.name === 'ℹ')
+							reaction.emoji.name === '❌')
 					)
 					.once("collect", reaction => {
 						if (reaction.emoji.name === '❌') no += 1;
 						else if (reaction.emoji.name === '✅') yes += 1;
-						else if (reaction.emoji.name === 'ℹ') discordInfo(config.messages.commands.poll.pollInfos, message);
+					});
+
+				const collectorInfo: ReactionCollector = msg
+					.createReactionCollector((reaction, user) =>
+							!user.bot &&
+							reaction.emoji.name === 'ℹ' &&
+							user.id === message.author.id
+					)
+					.once("collect", () => {
+						discordInfo(config.messages.commands.poll.pollInfos, message);
 					});
 
 				const collectorStop: ReactionCollector = msg
@@ -92,7 +92,7 @@ class Poll extends Command {
 					)
 					.once("collect", () => {
 						const results = { yes, no },
-							collectors = { collector, collectorStop };
+							collectors = { collector, collectorInfo, collectorStop };
 						endPoll(msg, embed, collectors, results);
 						finished = true;
 					});
@@ -100,7 +100,7 @@ class Poll extends Command {
 				setTimeout(() => {
 					if (finished) return;
 					const results = { yes, no },
-						collectors = { collector, collectorStop };
+						collectors = { collector, collectorInfo, collectorStop };
 					return endPoll(msg, embed, collectors, results);
 				}, wait);
 

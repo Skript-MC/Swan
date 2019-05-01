@@ -10,7 +10,7 @@ export function info(info: string): void {
 }
 
 export function error(error: string): void {
-    console.log(`[SkriptMc Bot] [Error] ${error}`)
+    console.error(`[SkriptMc Bot] [Error] ${error}`)
 }
 
 export function discordSuccess(success: string, message: Message): void {
@@ -41,7 +41,7 @@ export function discordWarning(warning: string, message: Message): void {
     const embed: RichEmbed = new Discord.RichEmbed();
     embed.setAuthor(message.author.username, message.author.avatarURL);
     embed.setThumbnail("https://cdn.discordapp.com/attachments/533791418259341315/570722475772608519/warning-icon-md-png-4.png");
-    embed.setTitle('Warning');
+    embed.setTitle('Avertissement');
     embed.setColor(`${config.messages.warning.color}`);
     embed.setDescription(warning);
     embed.setTimestamp(new Date());

@@ -4,7 +4,7 @@
         "id": "550796242624708620",
         "prefix": ".",
         "default_channels": [
-            "533791418259341315"
+            "459996868852711434"
         ],
         "default_permissions": ["Staff"],
         "color": "#4286f4"
@@ -18,6 +18,19 @@
         }],
         "color": "#4a64d6"
     },
+
+    "moderation": {
+        "colors": {
+            "warn": "#ffe200"
+        },
+        "log": {
+            "channelName": "sanctions",
+            "categoryID": "570932407310614548"
+        },
+        "banRole": "Sous-fifre",
+        "muteRole": "Bailloné"
+    },
+
     "messages": {
         "errors": {
             "command": "Aïe cette commande n'existe pas, essayez en une autre :wink:",
@@ -53,6 +66,23 @@
                     "softdepend": ":link: Dépendences facultatives",
                     "unmaintained": ":warning: Addon abandonné",
                     "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement conseillé de ne pas l'utiliser."
+                }
+            },
+            "syntaxInfo": {
+                "description": "Avoir diverses informations sur une syntaxe.",
+                "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
+                "invalidCmd": "Il faut que tu ajoutes le nom d'une syntaxe ! Vérifie qu'il soit disponible sur [la documentation skripthub](<https://skripthub.net/docs>).",
+                "requestError": "Désolé, une erreur est survenue... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur.",
+                "httpError": "Désolé, une erreur est survenue lors de la requete HTTP... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur. Status de la requete : `%e`",
+                "embed": {
+                    "patternTitle": ":pencil: Pattern",
+                    "patternDesc": "```vb\n%s\n```",
+                    "noPattern": "Aucun pattern disponible.",
+                    "descriptionTitle": ":bookmark_tabs: Description",
+                    "noDescription": "Aucune description disponible",
+                    "infos": ":information_source: Informations diverses",
+                    "exampleTitle": ":bulb: Exemple",
+                    "exampleDesc": "```vb\n%s\n```"
                 }
             },
             "skriptInfo": {
@@ -101,20 +131,50 @@
             "poll": {
                 "description": "Lancer un sondage par lequel on peut répondre Oui ou Non.",
                 "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond DURÉE TITRE DESCRIPTION```\n**DURÉE** est composée d'un nombre suivis sans espaces de `s` pour `seconde` ou de `min` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**TITRE** est un texte, sans espace. Les \"_\" du titre seront convertis en espaces.\n**DESCRIPTION** est un texte, avec espace. Ce champs est facultatif.\nExemple de commande : ```.sond 10min Mon_titre Mon sondage !```",
-                "pollInfos": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:."
+                "pollInfos": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours (%sms)."
             },
             "tagNotifEvent": {
                 "description": "Permet de notifier les personnes ayant le rôle \"Notifications Évenement\"."
             },
             "ping": {
                 "description": "Permet de savoir le ping du bot."
+            },
+            "ban": {
+                "description": "Appliquer une restriction du discord à un joueur",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
+                "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
+                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "successfullyBanned": "Vous avez bien banni %u ! \nRaison : %r\nDurée : %d",
+                "alreadyBanned": "%u est déjà banni (ou du moins il a déjà le rôle sous-fifre).",
+                "whyHere": "Bonjour %u ! Si tu te retrouves ici, c'est surement car tu as du enfreindre le réglement.... En tout cas un modérateur a décidé de te punir... de te bannir pour ainsi dire. Essaye de te justifier une dernière fois avant la sanction finale :wink: GLHF\n*(PS: désolé je n'y suis pour rien, je ne fais qu'executer les ordres, je suis un robot après tout.... bip boup bip bip)*"
+            },
+            "mute": {
+                "description": "Rendre muet un joueur !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
+                "unableToSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
+                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "successfullyMuted": "Vous avez bien rendu muet %u ! \nRaison : %r\nDurée : %d",
+                "alreadyMuted": "%u est déjà muet."
+            },
+            "purge": {
+                "description": "Supprimer des messages dans un channel",
+                "missingNumberArgument": "Vous devez spécifier un nombre de messages a supprimer !",
+                "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message a supprimer !"
             }
         }
     },
 
     "miscellaneous": {
         "notifRoleName": "Notifications Evènement",
+        "maxPollDuration": 604800000,
         "api_addons": "https://api.skripttools.net/v4/addons/",
-        "api_skript": "https://api.skripttools.net/v4/skript/"
+        "api_skript": "https://api.skripttools.net/v4/skript/",
+        "api_syntax": "https://skripthub.net/api/v1",
+        "tokenApiSyntax": ""
     }
 }
