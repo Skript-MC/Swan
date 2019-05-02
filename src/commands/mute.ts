@@ -43,9 +43,13 @@ async function createRole(message: Message): Promise<Role> {
 class Mute extends Command {
 
 	name: string = 'Mute';
-	description: string = conf.description;
+	shortDescription: string = conf.shortDesc;
+	longDescription: string = conf.longDesc;
+	usage: string = `${config.bot.prefix}mute <@mention | ID> <durée> [raison]`;
 	examples: string[] = ['mute'];
+	channels: string[] = ['*'];
 	regex: RegExp = /mute/gmui;
+	permissions: string[] = ['Staff'];
 
 	execute = async (message: Message, args: string[]): Promise<any> => {
 		const victim: GuildMember = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);

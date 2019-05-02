@@ -5,7 +5,9 @@ import config from "../../config/config.json";
 class Ping extends Command {
 
 	name: string = 'Ping';
-	description: string = config.messages.commands.tagNotifEvent.description;
+	shortDescription: string = config.messages.commands.ping.shortDesc;
+	longDescription: string = config.messages.commands.ping.longDesc;
+	usage: string = `${config.bot.prefix}ping`;
 	examples: string[] = ['ping'];
 	regex: RegExp = /(?:ping|ms)/gmui;
 

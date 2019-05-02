@@ -8,8 +8,8 @@
   },
   "authors": [
     "AlexLew",
-    "Uiytt",
-    "Noftaly",
+    "uiytt",
+    "noftaly",
     "Uneo7"
   ],
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@types/node": "^11.13.7",
     "axios": "^0.18.0",
     "discord.js": "^11.4.2",
+    "mathjs": "^5.9.0",
     "node-fetch": "^2.5.0",
     "opusscript": "0.0.6",
     "typescript": "^3.4.4"

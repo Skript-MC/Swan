@@ -62,9 +62,13 @@ async function createChan(message: Message, victim: GuildMember): Promise<any> {
 class Ban extends Command {
 
 	name: string = 'Ban';
-	description: string = conf.description;
+	shortDescription: string = conf.shortDesc;
+	longDescription: string = conf.longDesc;
+	usage: string = `${config.bot.prefix}ban <@mention | ID> <durée> [raison]`;
 	examples: string[] = ['ban'];
+	channels: string[] = ['*'];
 	regex: RegExp = /ban/gmui;
+	permissions: string[] = ['Staff'];
 
 	execute = async (message: Message, args: string[]): Promise<any> => {
 		const victim: GuildMember = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);

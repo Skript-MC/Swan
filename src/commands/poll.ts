@@ -26,8 +26,11 @@ function endPoll(msg: Message, embed: RichEmbed, collectors: any, results: any) 
 class Poll extends Command {
 
 	name: string = 'Sondage';
-	description: string = config.messages.commands.poll.description;
+	shortDescription: string = config.messages.commands.poll.shortDesc;
+	longDescription: string = config.messages.commands.poll.longDesc;
+	usage: string = `${config.bot.prefix}poll <durée> <titre_sans_espaces> [description avec espaces]`;
 	examples: string[] = ['poll 10min Mon_titre Ma description'];
+	channels: string[] = ['*']; // Juste accueil, salon pleureuse, bot, salon boss. A modifier avec les bons ID.
 	regex: RegExp = /poll|vote|sond(?:age)?/gmui;
 	permissions: string[] = this.permissions.concat(['Staff', 'Membre Actif']);
 

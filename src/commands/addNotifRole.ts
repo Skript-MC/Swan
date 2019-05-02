@@ -1,14 +1,16 @@
-import Discord, { Message, Role, GuildMember } from "discord.js";
+import { Message, Role, GuildMember } from "discord.js";
 import Command from '../components/Command';
 import config from "../../config/config.json";
 
 const roleName = config.miscellaneous.notifRoleName;
 
-class AddNotifRole extends Command {
+class ToggleNotifRole extends Command {
 
-	name: string = 'Ajout role notification';
-	description: string = config.messages.commands.addNotifRole.description;
-	examples: string[] = ['add-notif-role', 'toggle-notif-role'];
+	name: string = 'Toggle role notification';
+	shortDescription: string = config.messages.commands.addNotifRole.shortDesc;
+	longDescription: string = config.messages.commands.addNotifRole.longDesc;
+	usage: string = `${config.bot.prefix}toggle-notif-role`;
+	examples: string[] = ['toggle-notif-role'];
 	regex: RegExp = /(?:add|give|ask|toggle)-?notif(?:ication)?-?role/gmui;
 
 	execute = async (message: Message, args: string[]): Promise<void> => {
@@ -38,4 +40,4 @@ class AddNotifRole extends Command {
 	}
 };
 
-export default AddNotifRole;
+export default ToggleNotifRole;

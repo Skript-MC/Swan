@@ -11,8 +11,11 @@ const conf = config.messages.commands.links;
 class Links extends Command {
 
 	name: string = "Liens importants";
-	description: string = conf.description;
+	shortDescription: string = conf.shortDesc;
+	longDescription: string = conf.longDesc;
+	usage: string = `${config.bot.prefix}liens`;
 	examples: string[] = ['lien', 'liens', 'links'];
+	channels: string[] = ['*'];
 	regex: RegExp = /(?:link|lien)s?/gmui;
 
 	execute = async (message: Message, args: string[], page?: number): Promise<void> => {

@@ -51,8 +51,11 @@ async function sendEmbed(message: Message, data: any) {
 class AddonInfo extends Command {
 
 	name: string = "Addon";
-	description: string = conf.description;
-	examples: string[] = ["addon-info", "addonsinfos"];
+	shortDescription: string = conf.shortDesc;
+	longDescription: string = conf.longDesc;
+	usage: string = `${config.bot.prefix}addon-info <addon>`;
+	examples: string[] = ["addon-info skquery-lime", "addonsinfos -list"];
+	channels: string[] = ['*'];
 	regex: RegExp = /a(?:dd?ons?)?-?infos?/gimu;
 
 	execute = async (message: Message, args: string[]): Promise<void> => {
@@ -73,6 +76,9 @@ class AddonInfo extends Command {
 					for (let addon of Object.keys(data.data)) {
 						addons.push(addon.toLowerCase());
 					}
+
+					if (args[0] === "-list")
+						return message.channel.send(conf.list.replace('%s', addons.join(', ')));
 
 					if (addons.includes(myAddon.toLowerCase())) {
 						for (let addon of Object.keys(data.data)) {

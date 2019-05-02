@@ -34,19 +34,19 @@ client.then(client => {
 				const regex: RegExp = new RegExp(`^\\${config.bot.prefix}${command.regex.source}`, command.regex.flags);
 
 				if (message.content.match(regex)) {
-					if ((!command.channels) || (!command.channels.includes(message.channel.id)) && !command.channels.includes('*')) {
+					if (!command.channels || (!command.channels.includes(message.channel.id)) && !command.channels.includes('*'))
 						return;
-					}
-					if (command.permissions && command.permissions.length > 0) {
+					else if (config.bot.forbidden_channels.includes(message.channel.id))
+						return message.delete();
+					else if (command.permissions && command.permissions.length > 0) {
 						for (let permission of command.permissions) {
 							if (message.member.roles.find(role => role.name === permission)) {
 								command.execute(message, message.content.split(' ').splice(1, message.content.split(' ').length));
 								break;
 							}
 						}
-					} else {
+					} else
 						command.execute(message, message.content.split(' ').splice(1, message.content.split(' ').length));
-					}
 				}
 			}
 		});

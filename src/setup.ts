@@ -2,7 +2,7 @@ import Discord, { Client } from 'discord.js';
 import { readdirSync } from 'fs';
 import config from '../config/config.json';
 import Command from './components/Command';
-import { error, info, success } from './components/Messages';
+import { error, success } from './components/Messages';
 import fetch from 'node-fetch';
 
 export async function loadSkriptHubAPI(): Promise<any[]> {

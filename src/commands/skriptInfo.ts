@@ -34,7 +34,9 @@ async function sendEmbed(message: Message, data: any) {
 class SkriptInfo extends Command {
 
 	name: string = 'Skript';
-	description: string = config.messages.commands.addonInfo.description;
+	shortDescription: string = config.messages.commands.addonInfo.shortDesc;
+	longDescription: string = config.messages.commands.addonInfo.longDesc;
+	usage: string = `${config.bot.prefix}skript-info`;
 	examples: string[] = ['skriptInfo'];
 	regex: RegExp = /s(?:k|c)(?:ript?)?-?infos?/gimu;
 

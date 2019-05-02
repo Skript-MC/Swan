@@ -11,8 +11,6 @@ const regexType: RegExp = new RegExp(/-t(?:ype)?:/, 'gimu');
 const regexID: RegExp = new RegExp(/-i(?:d)?:/, 'gimu');
 
 function computeScore(score: number): string {
-	console.log(score);
-	console.log(score + 1);
 	if (score < -5) return "Très mauvais";
 	else if (score < 0) return "Mauvais";
 	else if (score === 0) return "Neutre";
@@ -58,8 +56,9 @@ async function sendEmbed(message: Message, data: any) {
 		.setColor(config.bot.color)
 		.setAuthor(`Informations sur "${data.title}"`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 		.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripthub.net`)
-		.addField(conf.embed.patternTitle, conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`) || conf.embed.noPattern, false)
-		.addField(conf.embed.descriptionTitle, data.description || conf.embed.noDescription, false)
+		.setDescription("	‌")
+		.addField(conf.embed.patternTitle, `${conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`) || conf.embed.noPattern}\n	‌`, false)
+		.addField(conf.embed.descriptionTitle, `${data.description || conf.embed.noDescription}\n	‌`, false)
 	if (data.example) {
 		let ex: string = `${conf.embed.exampleDesc.replace('%s', data.example.example_code)}\n`;
 		if (data.example.example_author) ex += `Auteur : ${data.example.example_author}\n`;
@@ -77,7 +76,9 @@ async function sendEmbed(message: Message, data: any) {
 class SyntaxInfo extends Command {
 
 	name: string = 'Syntaxe';
-	description: string = conf.description;
+	shortDescription: string = conf.shortDesc;
+	longDescription: string = conf.longDesc;
+	usage: string = `${config.bot.prefix}syntax-info <syntaxe> [-a:<addon>] [-t:<type>] [-id:<ID skripthub>]`;
 	examples: string[] = ['syntax-info join', 's-info tablist', 'sinfo tablist -addon:skrayfall', 'sinfo -id:2000', 'sinfo join -type:event'];
 	regex: RegExp = /s(?:yntaxe?)?-?infos?/gimu;
 
@@ -116,6 +117,8 @@ class SyntaxInfo extends Command {
 			if (id)
 				matchingSyntaxes = matchingSyntaxes.filter(elt => elt.id === id);
 
+			const results: number = matchingSyntaxes.length;
+			
 			// On limite a 10 élements. Plus simple a gérer pour le moment, on pourra voir + tard si on peut faire sans. (donc multipages et tout)
 			matchingSyntaxes = matchingSyntaxes.slice(0, 10);
 			
@@ -126,7 +129,7 @@ class SyntaxInfo extends Command {
 				msg.delete();
 				return sendEmbed(message, matchingSyntaxes[0]);
 			} else {
-				await msg.edit(`${matchingSyntaxes.length} élements trouvés pour la recherche \`${arg}\`. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
+				await msg.edit(`${results} élements trouvés pour la recherche \`${arg}\`. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
 				for (let i: number = 0; i < matchingSyntaxes.length; i++) {
 					msg = <Message> await msg.edit(`${msg.content}\n${reactionsNumbers[i]} \"${matchingSyntaxes[i].title}\" (${matchingSyntaxes[i].addon})`);
 					await msg.react(reactionsNumbers[i]);
@@ -156,7 +159,6 @@ class SyntaxInfo extends Command {
 						collectorStop.stop();
 					});
 			}
-			
 		}
 	}
 };
