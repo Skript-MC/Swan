@@ -1,6 +1,6 @@
 import { Message, GuildMember, Client, Role, TextChannel, GuildChannel } from "discord.js";
 import Command from '../components/Command';
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 import { modLog } from "../components/Log";
 import { discordError, discordSuccess, error, discordInfo } from "../components/messages";
 import { formatDate } from "../utils";
@@ -62,9 +62,13 @@ async function createChan(message, victim) {
 class Ban extends Command {
 
 	name = 'Ban';
-	description = conf.description;
+	shortDescription = conf.shortDesc;
+	longDescription = conf.longDesc;
+	usage = `${config.bot.prefix}ban <@mention | ID> <durée> [raison]`;
 	examples = ['ban'];
+	channels = ['*'];
 	regex = /ban/gmui;
+	permissions = ['Staff'];
 
 	execute = async (message, args) => {
 		const victim = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);

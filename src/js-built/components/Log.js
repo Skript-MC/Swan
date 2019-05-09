@@ -1,5 +1,5 @@
 import { RichEmbed, Guild } from "discord.js";
-import config from '../../config/config.json';
+import config from '../../../config/config.json';
 import { error } from "./Messages";
 
 /**
@@ -20,7 +20,7 @@ import { error } from "./Messages";
 export async function modLog(info, guild) {
     const embed = new RichEmbed()
         .setColor(info.color)
-        .setTitle(`Cas n°XXX`)
+        .setTitle('Nouveau cas :')
         .addField(":bust_in_silhouette: Utilisateur", `${info.member}\n(${info.member.id})`, true)
         .addField(":cop: Modérateur", `${info.mod}\n(${info.mod.id})`, true)
         .addField(":tools: Action", `${info.action}`, true);
@@ -40,10 +40,10 @@ export async function modLog(info, guild) {
                 VIEW_CHANNEL: false
             });
             chan.overwritePermissions(guild.roles.find(r => r.name === 'Staff'), {
-                VIEW_CHANNEL,
-                ADD_REACTIONS,
-                SEND_MESSAGES,
-                SEND_TTS_MESSAGES,
+                VIEW_CHANNEL: true,
+                ADD_REACTIONS: false,
+                SEND_MESSAGES: false,
+                SEND_TTS_MESSAGES: false,
                 MANAGE_MESSAGES: false
             });
 		} catch (err) {

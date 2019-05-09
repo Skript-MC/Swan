@@ -1,6 +1,6 @@
 import { Message, RichEmbed } from "discord.js";
 import Command from '../components/Command';
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 import https from "https";
 import { discordInfo } from "../components/messages";
 
@@ -34,9 +34,11 @@ async function sendEmbed(message, data) {
 class SkriptInfo extends Command {
 
 	name = 'Skript';
-	description = config.messages.commands.addonInfo.description;
+	shortDescription = config.messages.commands.addonInfo.shortDesc;
+	longDescription = config.messages.commands.addonInfo.longDesc;
+	usage = `${config.bot.prefix}skript-info`;
 	examples = ['skriptInfo'];
-	regex = /s(|c)(?)?-?infos?/gimu;
+	regex = /s(?:k|c)(?:ript?)?-?infos?/gimu;
 
 	execute = async (message, args) => {
 		https.get(config.miscellaneous.api_skript, resp => {

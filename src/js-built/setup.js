@@ -1,8 +1,8 @@
 import Discord, { Client } from 'discord.js';
 import { readdirSync } from 'fs';
-import config from '../config/config.json';
+import config from '../../config/config.json';
 import Command from './components/Command';
-import { error, info, success } from './components/Messages';
+import { error, success } from './components/Messages';
 import fetch from 'node-fetch';
 
 export async function loadSkriptHubAPI() {
@@ -11,10 +11,10 @@ export async function loadSkriptHubAPI() {
 	syntaxes = await fetch(`${config.miscellaneous.api_syntax}/syntax/`, {
 		method: 'GET',
 		headers: {
-			'Authorization': `Token ${config.miscellaneous.tokenApiSyntax}`
+			'Authorization': `Token ${config.bot.tokens.skripthub}`
 		}
 	}).then(response => {
-		if (response.status !== 200) error(`[HTTP request failed] Error : ${response.status}`);
+		if (response.status !== 200) return error(`[HTTP request failed] Error : ${response.status}`);
 		return response.json();
 	}).then(response => {
 		const syntaxes = {};
@@ -27,10 +27,10 @@ export async function loadSkriptHubAPI() {
 	syntaxes = await fetch(`${config.miscellaneous.api_syntax}/syntaxexample/`, {
 		method: 'GET',
 		headers: {
-			'Authorization': `Token ${config.miscellaneous.tokenApiSyntax}`
+			'Authorization': `Token ${config.bot.tokens.skripthub}`
 		}
 	}).then(response => {
-		if (response.status !== 200) error(`[HTTP request failed] Error : ${response.status}`);
+		if (response.status !== 200) return error(`[HTTP request failed] Error : ${response.status}`);
 		return response.json();
 	}).then(response => {
 		for (let example of response) {
@@ -49,17 +49,51 @@ export async function loadSkriptHubAPI() {
 	return back;
 }
 
+export async function loadSkripttoolsAPI() {
+	const allAddons = [];
+
+	// On récupère toutes les versions de tous les addons
+	let allAddonsVersions = await fetch(config.miscellaneous.api_addons, { method: 'GET' })
+	.then(response => {
+		if (response.status !== 200) return error(`[HTTP request failed] Error : ${response.status}`);
+		return response.json();
+	}).then(response => {
+		return response;
+	}).catch(err => error(err));
+
+	// Puis pour chaque addon...
+	for (let addon of Object.keys(allAddonsVersions.data)) {
+		// ...on récupère toutes ses versions...
+		let versions = allAddonsVersions.data[addon];
+		// ...pour ensuite récupérer la dernière...
+		const latest = versions[versions.length - 1].replace(' ', '+');
+		// ...pour ensuite appeler l'API et aller chercher les infos sur l'addon
+		const addonInfo = await fetch(`${config.miscellaneous.api_addons}${latest}`, { method: 'GET' })
+		.then(response => {
+			if (response.status !== 200) return error(`[HTTP request failed] Error : ${response.status}`);
+			return response.json();
+		}).then(response => {
+			return response;
+		}).catch(err => error(err));
+
+		allAddons.push(addonInfo);
+	}
+
+	success('Skripttools\'s api loaded!');
+	return allAddons;
+}
+
 export async function loadDiscord() {
 	const discord = new Discord.Client();
-	discord.login(config.bot.token);
+	discord.login(config.bot.tokens.discord);
 	return discord;
 }
 
 export async function loadCommands() {
 	const commands = [];
-	const files = await readdirSync('./src/commands');
-
+	const files = await readdirSync(`${__dirname}/commands`);
 	for (let file of files) {
+		if (file === '.DS_Store') continue;
 		const command = require(`${__dirname}/commands/${file}`).default;
 		const cmd = new command();
 		cmd.setup();
@@ -69,5 +103,3 @@ export async function loadCommands() {
 	success('All commands have been loaded!')
 	return commands;
 }
-
-export const SkriptHub = {};

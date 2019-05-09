@@ -1,6 +1,6 @@
 import { Message, RichEmbed, ReactionCollector } from "discord.js";
 import Command from '../components/Command';
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 import { discordError, discordInfo } from "../components/Messages";
 import { formatDate } from "../utils";
 
@@ -26,9 +26,12 @@ function endPoll(msg, embed, collectors, results) {
 class Poll extends Command {
 
 	name = 'Sondage';
-	description = config.messages.commands.poll.description;
+	shortDescription = config.messages.commands.poll.shortDesc;
+	longDescription = config.messages.commands.poll.longDesc;
+	usage = `${config.bot.prefix}poll <durée> [description avec espaces]`;
 	examples = ['poll 10min Mon_titre Ma description'];
-	regex = /poll|vote|sond()?/gmui;
+	channels = ['*']; // Juste accueil, salon pleureuse, bot, salon boss. A modifier avec les bons ID.
+	regex = /poll|vote|sond(?:age)?/gmui;
 	permissions = this.permissions.concat(['Staff', 'Membre Actif']);
 
 	execute = async (message, args) => {

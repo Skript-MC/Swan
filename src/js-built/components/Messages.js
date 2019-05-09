@@ -1,5 +1,5 @@
 import Discord, { RichEmbed, Message } from "discord.js";
-import config from '../../config/config.json';
+import config from '../../../config/config.json';
 
 export function success(success) {
     console.log(`[SkriptMc Bot] [Success] ${success}`)
