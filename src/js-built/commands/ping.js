@@ -1,13 +1,15 @@
 import { Message, Client } from "discord.js";
 import Command from '../components/Command';
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 
 class Ping extends Command {
 
 	name = 'Ping';
-	description = config.messages.commands.tagNotifEvent.description;
+	shortDescription = config.messages.commands.ping.shortDesc;
+	longDescription = config.messages.commands.ping.longDesc;
+	usage = `${config.bot.prefix}ping`;
 	examples = ['ping'];
-	regex = /(|ms)/gmui;
+	regex = /(?:ping|ms)/gmui;
 
 	execute = async (message, args) => {
 		const msg = await message.channel.send("Pong !");

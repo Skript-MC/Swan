@@ -1,18 +1,20 @@
 import { Message, RichEmbed, ReactionCollector } from "discord.js";
-import config from "../../config/config.json";
+import config from "../../../config/config.json";
 import Command from "../components/Command";
 import { discordError } from "../components/Messages";
 import { SkriptHubSyntaxes } from '../main';
 
 const conf = config.messages.commands.syntaxInfo;
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-const regexAddon = new RegExp(/-a(?on)?:/, 'gimu');
-const regexType = new RegExp(/-t()?:/, 'gimu');
-const regexID = new RegExp(/-i()?:/, 'gimu');
+const regexAddon = new RegExp(/-a(?:dd?on)?:/, 'gimu');
+const regexType = new RegExp(/-t(?:ype)?:/, 'gimu');
+const regexID = new RegExp(/-i(?:d)?:/, 'gimu');
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+}
 
 function computeScore(score) {
-	console.log(score);
-	console.log(score + 1);
 	if (score < -5) return "Très mauvais";
 	else if (score < 0) return "Mauvais";
 	else if (score === 0) return "Neutre";
@@ -33,7 +35,7 @@ function getInfos(data) {
 	if (data.syntax_type === "type" && data.type_usage)
 		infos.push(`Utilisation du type : \`${data.type_usage}\``);
 	if (data.addon && data.compatible_addon_version)
-		infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version}+)`);
+		infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version.replace(/unknown\s*/gimu, '').replace('(', '').replace(')', '')})`);
 	else if (data.addon)
 		infos.push(`Requiert : ${data.addon}`);
 	if (data.compatible_minecraft_version)
@@ -58,57 +60,80 @@ async function sendEmbed(message, data) {
 		.setColor(config.bot.color)
 		.setAuthor(`Informations sur "${data.title}"`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 		.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripthub.net`)
-		.addField(conf.embed.patternTitle, conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`) || conf.embed.noPattern, false)
-		.addField(conf.embed.descriptionTitle, data.description || conf.embed.noDescription, false)
+		.setDescription("	‌")
+		.addField(conf.embed.patternTitle, `${conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`).replace('%l', '	‌') || conf.embed.noPattern}\n	‌`, false)
+		.addField(conf.embed.descriptionTitle, `${data.description || conf.embed.noDescription}\n	‌`, false)
 	if (data.example) {
-		let ex = `${conf.embed.exampleDesc.replace('%s', data.example.example_code)}\n`;
+		let ex = `${conf.embed.exampleDesc.replace('%s', data.example.example_code).replace('%l', '	‌')}\n`;
 		if (data.example.example_author) ex += `Auteur : ${data.example.example_author}\n`;
 		if (data.example.score) ex += `Appréciation : ${computeScore(data.example.score)}\n`;
 		if (data.example.offical_example === true) ex += 'Exemple officiel.';
-		embed.addField(conf.embed.exampleTitle, ex, false);
+		embed.addField(conf.embed.exampleTitle, `${ex}\n	‌`, false);
 	}
 	const infos = getInfos(data);
 	if (infos.length !== 0)
 		embed.addField(conf.embed.infos, infos, false);
 
-	message.channel.send(embed);
+	let msg = await message.channel.send(embed);
+	
+	const collectorStop = msg
+		.createReactionCollector((reaction, user) =>
+			!user.bot &&
+			user.id === message.author.id &&
+			reaction.emoji.name === '❌'
+		).once("collect", () => {
+			message.delete();
+			msg.delete();
+			collectorStop.stop();
+		});
 }
 
 class SyntaxInfo extends Command {
 
 	name = 'Syntaxe';
-	description = conf.description;
-	examples = ['syntax-info join', 's-info tablist', 'sinfo tablist -addon:skrayfall', 'sinfo -id:2000', 'sinfo join -type:event'];
-	regex = /s(?)?-?infos?/gimu;
+	shortDescription = conf.shortDesc;
+	longDescription = conf.longDesc;
+	usage = `${config.bot.prefix}syntax-info [-a:] [-t:] [-id:<ID skripthub>]`;
+	examples = ['syntax-info join', 'doc tablist', 'sinfo tablist -addon:skrayfall', 'sinfo -id:2000', 'doc join -type:event'];
+	channels = ['*'];
+	regex = /(?:s(?:yntax)?-?infos?|doc(?:umentation)?s?)/gimu;
 
 	execute = async (message, args) => {
 		if (args.length < 1) {
 			discordError(conf.invalidCmd, message);
 		} else {
-			const syntaxes = await SkriptHubSyntaxes;
-
 			let msg = await message.channel.send("Je vais chercher ça...");
-
-			let arg = args.join(' ').toUpperCase();					
+			const syntaxes = await SkriptHubSyntaxes;
+			
+			let arg = args.join(' ').toUpperCase();
+			let search = [];
 			let addon, type, id;
 			for (let a of args) {
 				if (a.match(regexAddon)) {
 					addon = a.replace(regexAddon, "");
-					arg = arg.replace(new RegExp(/\s?-a(?on)?:\w+\s?/, 'gimu'), '');
+					arg = arg.replace(new RegExp(/\s?-a(?:dd?on)?:\w+\s?/, 'gimu'), '');
+					search.push(`addon : ${addon}`);
 				}
 				else if (a.match(regexType)) {
 					type = a.replace(regexType, "");
-					arg = arg.replace(new RegExp(/\s?-t()?:\w+\s?/, 'gimu'), '');
+					arg = arg.replace(new RegExp(/\s?-t(?:ype)?:\w+\s?/, 'gimu'), '');
+					search.push(`type : ${type}`);
 				}
 				else if (a.match(regexID)) {
 					id = Number.parseInt(a.replace(regexID, ""));
-					if (Number.isNaN(id)) id = undefined;
-					arg = arg.replace(new RegExp(/\s?-i()?:\w+\s?/, 'gimu'), '');
+					arg = arg.replace(new RegExp(/\s?-i(?:d)?:\w+\s?/, 'gimu'), '');
+					if (Number.isNaN(id))
+						id = undefined;
+					else
+						search.push(`id : ${id}`);
 				}
 			}
+
+			if (arg === '')
+				return discordError(conf.invalidCmd, message);
+
 			let matchingSyntaxes = syntaxes.filter(elt => elt.title.toUpperCase().includes(arg)) ||
 										syntaxes.filter(elt => elt.description.toUpperCase().includes(arg));
-			
 			if (addon)
 				matchingSyntaxes = matchingSyntaxes.filter(elt => elt.addon.toUpperCase().includes(addon.toUpperCase()));
 			if (type)
@@ -116,6 +141,7 @@ class SyntaxInfo extends Command {
 			if (id)
 				matchingSyntaxes = matchingSyntaxes.filter(elt => elt.id === id);
 
+			const results = matchingSyntaxes.length;
 			// On limite a 10 élements. Plus simple a gérer pour le moment, on pourra voir + tard si on peut faire sans. (donc multipages et tout)
 			matchingSyntaxes = matchingSyntaxes.slice(0, 10);
 			
@@ -126,11 +152,12 @@ class SyntaxInfo extends Command {
 				msg.delete();
 				return sendEmbed(message, matchingSyntaxes[0]);
 			} else {
-				await msg.edit(`${matchingSyntaxes.length} élements trouvés pour la recherche \`${arg}\`. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
+				await msg.edit(`${results} élements trouvés pour la recherche \`${args.join(' ')}\`${search.length > 0 ? ` avec comme paramètres \`${search.join(', ')}\`` : ''}. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
 				for (let i = 0; i < matchingSyntaxes.length; i++) {
-					msg = await msg.edit(`${msg.content}\n${reactionsNumbers[i]} \"${matchingSyntaxes[i].title}\" (${matchingSyntaxes[i].addon})`);
+					msg = await msg.edit(`${msg.content}\n${reactionsNumbers[i]} \"${capitalizeFirstLetter(matchingSyntaxes[i].title)}\" *(${matchingSyntaxes[i].syntax_type}, ${matchingSyntaxes[i].addon})*`);
 					await msg.react(reactionsNumbers[i]);
 				}
+				if (results - 10 > 0) msg = await msg.edit(`${msg.content}\n...et ${results - 10} de plus...`);
 				await msg.react('❌');
 
 				const collectorNumbers = msg
@@ -156,7 +183,6 @@ class SyntaxInfo extends Command {
 						collectorStop.stop();
 					});
 			}
-			
 		}
 	}
 };

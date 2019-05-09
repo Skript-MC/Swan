@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys */
 import Discord, { Message, ReactionCollector, RichEmbed } from 'discord.js';
-import config from '../../config/config.json';
+import config from "../../../config/config.json";
 import Command from '../components/Command';
 
 const maxPage = 5;
@@ -11,9 +11,12 @@ const conf = config.messages.commands.links;
 class Links extends Command {
 
 	name = "Liens importants";
-	description = conf.description;
+	shortDescription = conf.shortDesc;
+	longDescription = conf.longDesc;
+	usage = `${config.bot.prefix}liens`;
 	examples = ['lien', 'liens', 'links'];
-	regex = /(|lien)s?/gmui;
+	channels = ['*'];
+	regex = /(?:link|lien)s?/gmui;
 
 	execute = async (message, args, page) => {
 		page = Number.isInteger(page) ? page : 0;
