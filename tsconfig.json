@@ -2,16 +2,16 @@
   "compilerOptions": {
 	  "baseUrl": ".",
 	  "paths": { "*": ["types/*"] },
-      "target": "es6",
-      "module": "commonjs",
-      "outDir": "./src/js-built",
-      "rootDir": "./src/ts-built",
-      "alwaysStrict": true,
-      "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true,
-      "esModuleInterop": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "resolveJsonModule": true
+    "target": "esnext",
+    "module": "commonjs",
+    "outDir": "./src/js-built",
+    "rootDir": "./src/ts-built",
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
   }
 }
