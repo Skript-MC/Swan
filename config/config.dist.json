@@ -228,8 +228,8 @@
                 "longDesc": "Permet de savoir la latence entre vous et le bot."
             },
             "math": {
-                "shortDesc": "Permet de savoir le ping du bot.",
-                "longDesc": "Permet de savoir la latence entre vous et le bot."
+                "shortDesc": "Permet de tester la mathématique de Skript",
+                "longDesc": "Permet de tester les expressions mathématiques de Skript"
             },
             "statistics": {
                 "shortDesc": "Avoir diverses statistiques sur le bot et le serveur.",
