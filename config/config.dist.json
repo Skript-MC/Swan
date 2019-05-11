@@ -281,6 +281,10 @@
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages a supprimer !",
                 "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message a supprimer !"
             }
+            "code": {
+                "shortDesc": "Permet de mettre votre code de façon claire",
+                "longDesc": "Permet de mettre votre code dans un block de code"
+            }            
         }
     },
 
