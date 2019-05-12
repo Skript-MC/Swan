@@ -1,5 +1,4 @@
-/* eslint-disable sort-keys */
-import Discord, { Message, ReactionCollector, RichEmbed } from 'discord.js';
+import { RichEmbed } from 'discord.js';
 import config from "../../../config/config.json";
 import Command from '../components/Command';
 

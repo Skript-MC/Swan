@@ -1,8 +1,7 @@
-import { Message, RichEmbed, ReactionCollector } from "discord.js";
-import https from "https";
+import { RichEmbed } from "discord.js";
 import config from "../../../config/config.json";
 import Command from "../components/Command";
-import { error, discordError } from "../components/Messages";
+import { discordError } from "../components/Messages";
 import { SkripttoolsSyntaxes } from '../main';
 
 const conf = config.messages.commands.addonInfo;

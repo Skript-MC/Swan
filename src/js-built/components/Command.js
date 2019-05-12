@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import config from '../../../config/config.json'
 
 class Command {
