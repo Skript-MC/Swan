@@ -7,7 +7,7 @@
         "id": "550796242624708620",
         "prefix": ".",
         "default_channels": [
-            "533791418259341315"
+            ""
         ],
         "forbidden_channels": [
             "358653742729396224",
@@ -72,6 +72,7 @@
                 "shortDesc": "Envoyer un message prédéfini.",
                 "longDesc": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
                 "invalidMessage": "Désolé, mais ce message la n'existe pas...",
+                "noArg": "Envoyez un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande.",
                 "commands": {
                     "asktoask": {
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serai capable de répondre a votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre quesetion directement, et si quelqu'un peut vous répondre, il vous répondra."
@@ -152,13 +153,13 @@
                 "httpError": "Désolé, une erreur est survenue lors de la requete HTTP... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur. Status de la requete : `%e`",
                 "embed": {
                     "patternTitle": ":pencil: Pattern",
-                    "patternDesc": "```vb\n%s\n%l```",
+                    "patternDesc": "```vb\n%s\n```",
                     "noPattern": "Aucun pattern disponible.",
                     "descriptionTitle": ":bookmark_tabs: Description",
                     "noDescription": "Aucune description disponible",
                     "infos": ":information_source: Informations diverses",
                     "exampleTitle": ":bulb: Exemple",
-                    "exampleDesc": "```vb\n%s\n%l```"
+                    "exampleDesc": "```vb\n%s\n```"
                 }
             },
             "skriptInfo": {
@@ -171,6 +172,30 @@
                     "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalités de skript.\n\n:black_small_square: La dernière version de skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.x et antérieur ne sont pas et ne seront jamais supportées. Pour utiliser skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
                     "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
+                }
+            },
+            "serverInfo": {
+                "shortDesc": "Afficher des informations sur un serveur.",
+                "longDesc": "Afficher diverses informations sur un certain serveur.",
+                "embed": {
+                    "status": "Statut",
+                    "ip": "Adresse IP",
+                    "players": "Joueurs",
+                    "version": "Version",
+                    "hostname": "Nom d'hôte",
+                    "software": "Software",
+                    "plugins": "Plugins",
+                    "mods": "Mods"
+                }
+            },
+            "playerInfos": {
+                "shortDesc": "Afficher des informations sur un joueur.",
+                "longDesc": "Afficher diverses informations sur un certain joueur, que vous avez définit par son pseudo.",
+                "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit premium...",
+                "noHistory": "Cet utilisateur n'a jamais changé de pseudo !",
+                "embed": {
+                    "pseudo": "Pseudo actuel",
+                    "history": "Historique"
                 }
             },
             "help": {
@@ -224,12 +249,16 @@
                 "invalidRole": "Désolé, mais le rôle '%s' est introuvable... Êtes-vous sûr de l'avoir orthographié de la même façon ?"
             },
             "ping": {
+                "shortDesc": "Permet de tester la mathématique de Skript.",
+                "longDesc": "Permet de tester une expression mathématique en Skript."
+            },
+            "math": {
                 "shortDesc": "Permet de savoir le ping du bot.",
                 "longDesc": "Permet de savoir la latence entre vous et le bot."
             },
-            "math": {
-                "shortDesc": "Permet de tester la mathématique de Skript",
-                "longDesc": "Permet de tester les expressions mathématiques de Skript"
+            "code": {
+                "shortDesc": "Permet de savoir le ping du bot.",
+                "longDesc": "Permet de savoir la latence entre vous et le bot."
             },
             "statistics": {
                 "shortDesc": "Avoir diverses statistiques sur le bot et le serveur.",
@@ -281,10 +310,6 @@
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages a supprimer !",
                 "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message a supprimer !"
             }
-            "code": {
-                "shortDesc": "Permet de mettre votre code de façon claire",
-                "longDesc": "Permet de mettre votre code dans un block de code"
-            }            
         }
     },
 
@@ -294,7 +319,10 @@
         "api_addons": "https://api.skripttools.net/v4/addons/",
         "api_skript": "https://api.skripttools.net/v4/skript/",
         "api_syntax": "https://skripthub.net/api/v1",
-        "cmdPerPagesInHelp": 10,
+        "api_server": "https://api.mcsrvstat.us/2/",
+        "api_mojang_ss": "https://sessionserver.mojang.com/session/minecraft",
+        "api_mojang_api": "https://api.mojang.com",
+        "cmdPerPagesInHelp": 5,
         "purgeLimit": 100,
         "ideaChannelId": "358653742729396224",
         "snippetChannelId": "549333475153412106"

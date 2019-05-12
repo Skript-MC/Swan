@@ -1,4 +1,4 @@
-import { Message, RichEmbed, Client } from "discord.js";
+import { RichEmbed } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 import pkg from "../../../package.json";
@@ -22,7 +22,7 @@ class Statistics extends Command {
 		const hours = Math.floor(totalSeconds / 3600);
 		totalSeconds %= 3600;
 		const minutes = Math.floor(totalSeconds / 60);
-		const seconds = totalSeconds % 60;
+		const seconds = Math.floor(totalSeconds % 60);
 
 		const allCmds = await commands;
 		const cmds = allCmds.length;

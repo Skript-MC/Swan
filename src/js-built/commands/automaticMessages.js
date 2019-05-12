@@ -1,4 +1,3 @@
-import { Message, GuildMember } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 
@@ -15,6 +14,8 @@ class AutomaticMessages extends Command {
 	regex = /auto(?:mati(?:que|c))?-?(?:messages?)?/gmui;
 
 	execute = async (message, args) => {
+		if (!args[0])
+			return message.channel.send(config.messages.commands.auto.noArg.replace('%s', `${Object.keys(config.messages.commands.auto.commands).join(', ')}`));
 		if (args[0] === 'asktoask')
 			return message.channel.send(conf.asktoask.content);
 		else if (args[0] === 'helptemplate')
@@ -28,6 +29,7 @@ class AutomaticMessages extends Command {
 		else if (args[0] === 'gui')
 			return message.channel.send(conf.gui.shortContent);
 		else if (args[0] === 'gui-pv') {
+			message.react('✅');
 			await message.member.send(conf.gui.longContent1);
 			return message.member.send(conf.gui.longContent2);
 		} else if (args[0] === 'everyloop')

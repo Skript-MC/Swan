@@ -12,25 +12,25 @@
   },
   "authors": [
     "AlexLew",
-    "Uiytt",
-    "Noftaly",
-    "Uneo7"
+    "noftaly",
+    "iTrooz_"
   ],
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^11.13.7",
+    "@types/node": "^11.13.10",
     "axios": "^0.18.0",
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.0",
     "mathjs": "^5.10.0",
     "node-fetch": "^2.5.0",
     "opusscript": "0.0.6",
-    "typescript": "^3.4.4"
+    "sharp": "^0.22.1",
+    "typescript": "^3.4.5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.19.0",
     "ts-node": "^8.1.0"
   }
 }
