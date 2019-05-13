@@ -1,4 +1,4 @@
-import { Message, RichEmbed, ReactionCollector } from "discord.js";
+import { RichEmbed } from "discord.js";
 import config from "../../../config/config.json";
 import Command from "../components/Command";
 import { discordError } from "../components/Messages";
@@ -61,10 +61,10 @@ async function sendEmbed(message, data) {
 		.setAuthor(`Informations sur "${data.title}"`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 		.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripthub.net`)
 		.setDescription("	‌")
-		.addField(conf.embed.patternTitle, `${conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`).replace('%l', '	‌') || conf.embed.noPattern}\n	‌`, false)
+		.addField(conf.embed.patternTitle, `${conf.embed.patternDesc.replace('%s', `${data.syntax_pattern}`) || conf.embed.noPattern}\n	‌`, false)
 		.addField(conf.embed.descriptionTitle, `${data.description || conf.embed.noDescription}\n	‌`, false)
 	if (data.example) {
-		let ex = `${conf.embed.exampleDesc.replace('%s', data.example.example_code).replace('%l', '	‌')}\n`;
+		let ex = `${conf.embed.exampleDesc.replace('%s', data.example.example_code)}\n`;
 		if (data.example.example_author) ex += `Auteur : ${data.example.example_author}\n`;
 		if (data.example.score) ex += `Appréciation : ${computeScore(data.example.score)}\n`;
 		if (data.example.offical_example === true) ex += 'Exemple officiel.';
@@ -99,6 +99,7 @@ class SyntaxInfo extends Command {
 	regex = /(?:s(?:yntax)?-?infos?|doc(?:umentation)?s?)/gimu;
 
 	execute = async (message, args) => {
+		console.log(1);
 		if (args.length < 1) {
 			discordError(conf.invalidCmd, message);
 		} else {
@@ -133,7 +134,7 @@ class SyntaxInfo extends Command {
 				return discordError(conf.invalidCmd, message);
 
 			let matchingSyntaxes = syntaxes.filter(elt => elt.title.toUpperCase().includes(arg)) ||
-										syntaxes.filter(elt => elt.description.toUpperCase().includes(arg));
+								   syntaxes.filter(elt => elt.description.toUpperCase().includes(arg));
 			if (addon)
 				matchingSyntaxes = matchingSyntaxes.filter(elt => elt.addon.toUpperCase().includes(addon.toUpperCase()));
 			if (type)

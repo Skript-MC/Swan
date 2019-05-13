@@ -1,7 +1,6 @@
-import Discord, { Client } from 'discord.js';
+import { Client } from 'discord.js';
 import { readdirSync } from 'fs';
 import config from '../../config/config.json';
-import Command from './components/Command';
 import { error, success } from './components/Messages';
 import fetch from 'node-fetch';
 
@@ -84,7 +83,7 @@ export async function loadSkripttoolsAPI() {
 }
 
 export async function loadDiscord() {
-	const discord = new Discord.Client();
+	const discord = new Client();
 	discord.login(config.bot.tokens.discord);
 	return discord;
 }

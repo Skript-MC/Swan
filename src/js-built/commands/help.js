@@ -1,4 +1,4 @@
-import { Message, RichEmbed, ReactionCollector } from "discord.js";
+import { RichEmbed } from "discord.js";
 import config from "../../../config/config.json";
 import Command from "../components/Command";
 import { commands } from "../main";

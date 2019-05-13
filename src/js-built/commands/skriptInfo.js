@@ -1,4 +1,4 @@
-import { Message, RichEmbed } from "discord.js";
+import { RichEmbed } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 import https from "https";

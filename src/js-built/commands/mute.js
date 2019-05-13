@@ -1,4 +1,3 @@
-import { Message, GuildMember, Client, Role, TextChannel, GuildChannel } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 import { modLog } from "../components/Log";
