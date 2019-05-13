@@ -52,7 +52,6 @@ client.then(client => {
 		}
 
 		commands.then(cmds => {
-
 			const commands = cmds;
 			for (let command of commands) {
 				const regex = new RegExp(`^\\${config.bot.prefix}${command.regex.source}`, command.regex.flags);
@@ -69,9 +68,10 @@ client.then(client => {
 								break;
 							}
 						}
-					} else
+					} else {
 						command.execute(message, message.content.split(' ').splice(1, message.content.split(' ').length));
-				}
+					}
+				}	
 			}
 		});
 	});

@@ -1,4 +1,3 @@
-import { Message, ReactionCollector } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 

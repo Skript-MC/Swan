@@ -1,10 +1,8 @@
-import { Message, GuildMember, Client, Role, TextChannel, GuildChannel } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 import { modLog } from "../components/Log";
-import { discordError, discordSuccess, error, discordInfo } from "../components/messages";
+import { discordError, discordSuccess, error } from "../components/messages";
 import { formatDate } from "../utils";
-import { client } from "../main";
 
 const conf = config.messages.commands.ban;
 const durations = {

@@ -1,4 +1,3 @@
-import { Message, Role } from "discord.js";
 import Command from '../components/Command';
 import config from "../../../config/config.json";
 
