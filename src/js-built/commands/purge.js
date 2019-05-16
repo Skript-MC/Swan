@@ -29,8 +29,8 @@ class Purge extends Command {
                 const cli = client;
                 const filterBy = user ? user.id : cli.user.id;
                 messages = messages.filter((m) => m.author.id === filterBy).array().slice(0, amount);
-         }
-        message.channel.bulkDelete(messages).catch(err => console.error(err));
+            }
+            message.channel.bulkDelete(messages).catch(err => console.error(err));
         });
         
 	}
