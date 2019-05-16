@@ -20,7 +20,6 @@ class Links extends Command {
 	execute = async (message, args, page) => {
 		page = Number.isInteger(page) ? page : 0;
 		const embed = new RichEmbed()
-			.setColor(config.bot.color)
 			.setAuthor(`Liens utiles (${page + 1}/${maxPage + 1})`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
 			.setDescription('‌‌ ') // Caractère invisible (‌‌ )
 			.setFooter("Executé par " + message.author.username);
@@ -54,6 +53,9 @@ class Links extends Command {
 		let msgLinks = await message.channel.send(embed);
 		if (page === 0) {
 			for (let r of reactionsNumbers) await msgLinks.react(r);
+			embed.setColor(config.bot.color);
+			msgLinks.edit(embed);
+
 			const collector = msgLinks
 				.createReactionCollector(
 					(reaction, user) => 
@@ -68,6 +70,8 @@ class Links extends Command {
 				});
 		} else {
 			for (let r of reactionsPage) await msgLinks.react(r);
+			embed.setColor(config.bot.color);
+			msgLinks.edit(embed);
 			this.reactionCollector(message, args, msgLinks, page);
 		}
 	};

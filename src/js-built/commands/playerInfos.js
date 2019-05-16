@@ -46,12 +46,14 @@ function sendEmbed(message, data, img, uuid) {
 	if (data.length === 1) {
 		history = conf.noHistory;
 	} else {
+		let i = 1;
 		for (let pseudo of data) {
-			history += `\`${pseudo.name}\``
+			history += `${i} - \`${pseudo.name}\``
 			if (pseudo.changedToAt)
 				history += `(changé ${formatDate(new Date(pseudo.changedToAt))})`;
 
-			history += `\n`
+			history += `\n`;
+			i++;
 		}
 	}
 	embed.addField(conf.embed.history, history, false);

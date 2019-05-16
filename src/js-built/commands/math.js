@@ -36,7 +36,7 @@ class Math extends Command {
 		try {
 			expr = parser.eval(expr)
 		} catch(err) {
-			return discordError("Il semblerai qu'il y ai un problème dans ton expression...", message);
+			return discordError("Impossible de tester cette expression ! Il semblerai qu'il y ai un problème dedans...", message);
 		}
 		message.reply(`\`${expr}\` = \`${expr}\``);
 	}
