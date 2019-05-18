@@ -29,8 +29,10 @@ client.then(client => {
 			const now = new Date(Date.now());
 			if (now.getHours() === 5 && now.getMinutes() === 0) {
 				info("5h00 : Reloading APIs...");
-				SkripttoolsSyntaxes = loadSkripttoolsAPI().catch(err => error(err));
 				SkriptHubSyntaxes = loadSkriptHubAPI().catch(err => error(err));
+				SkripttoolsSyntaxes = loadSkripttoolsAPI()
+					.then(() => info("APIs have been reloaded !"))
+					.catch(err => error(err));
 			}
 		}, 60000);
 	})

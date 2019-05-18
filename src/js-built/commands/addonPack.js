@@ -14,9 +14,13 @@ class AddonPack extends Command {
 	regex = /add?ons?-?pack/gimu;
 
 	execute = async (message, args) => {
-		if (args.length > 0 && args[0].match(/1\.(8|9|10|11|12|13|14)(?:\.\d*)?/gimu)) {
+		if (args.length > 0 && args[0].match(/1\.(7|8|9|10|11|12|13|14)(?:\.\d*)?/gimu)) {
 			const arg = args[0].slice(2);
-			if (arg.includes("9")) {
+			if (arg.includes("7")) {
+				return message.channel.send(conf.messages[0]);
+			} else if (arg.includes("8")) {
+				return message.channel.send(conf.messages[1]);
+			} else if (arg.includes("9")) {
 				return message.channel.send(conf.messages[2]);
 			} else if (arg.includes("10")) {
 				return message.channel.send(conf.messages[3]);
