@@ -32,7 +32,6 @@ class Poll extends Command {
 	examples = ['poll 10min Mon_titre Ma description'];
 	channels = ['*']; // Juste accueil, salon pleureuse, bot, salon boss. A modifier avec les bons ID.
 	regex = /poll|vote|sond(?:age)?/gmui;
-	permissions = this.permissions.concat(['Staff', 'Membre Actif']);
 
 	execute = async (message, args) => {
 		if (args.length < 2) return discordError(config.messages.commands.poll.invalidCmd, message);

@@ -13,7 +13,8 @@ async function sendEmbed(message, command) {
 	const embed = new RichEmbed()
 		.setColor(config.bot.color)
 		.setAuthor(`Informations sur "${command.name}"`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
-		.setFooter(`Executé par ${message.author.username} | Données fournies par https://skripthub.net`)
+		.setFooter(`Executé par ${message.author.username}`)
+		.setTimestamp();
 
 	let perms = "";
 	for (let perm of command.permissions)
@@ -31,7 +32,16 @@ async function sendEmbed(message, command) {
 	if (command.name === 'Messages automatiques') {
 		desc = desc.replace('%s', `${Object.keys(config.messages.commands.auto.commands).join(', ')}`);
 	}
-	embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\`\n**Utilisable par :** ${perms}\n‌‌ `, true);
+
+	let channels = [];
+	if (command.channels.includes("*")) {
+		channels.push("tous");
+	} else {
+		for (let id of command.channels) {
+			channels.push(message.guild.channels.get(id).name);
+		}
+	}
+	embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\`\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(", ")}\n‌‌ `, true);
 
 	message.channel.send(embed);
 }
@@ -54,17 +64,18 @@ class Help extends Command {
 		// S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
 		if (args.length === 0) {
 			const embed = new RichEmbed()
-				.setColor(config.bot.color)
 				.setAuthor(`${allCmds.length} commandes disponibles (page ${page + 1}/${totalPages})`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128" + "")
 				.setDescription(config.messages.commands.help.header)
 				.setFooter("Executé par " + message.author.username);
 			//⁕※⌶⎪►▷◉◈
 			for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= allCmds.length - 1; i++) {
 				const cmd = allCmds[page * cmdPerPage + i];
-				embed.addField(`${cmd.name} ⁕ ${cmd.usage}`, `${cmd.shortDescription}`, false);
+				embed.addField(`${cmd.name} ⁕ ${cmd.usage} ${cmd.permissions.some(role => role === "Staff") > 0 ? ":octagonal_sign:" : ""}`, `${cmd.shortDescription}`, false);
 			}
-			const msgHelp = await message.channel.send(embed);
+			let msgHelp = await message.channel.send(embed);
 			for (let r of reactions) await msgHelp.react(r);
+			embed.setColor(config.bot.color)
+			msgHelp.edit(embed);
 
 			const collector = msgHelp
 				.createReactionCollector(
