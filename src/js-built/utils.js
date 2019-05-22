@@ -2,7 +2,8 @@ export function padNumber(x) {
 	return (x.toString().length < 2 ? "0" + x : x ).toString();
 }
 
-export function formatDate(date) {
+export function formatDate(d) {
+    const date = new Date(d);
     let end;
     if (date.getDate() === new Date(Date.now()).getDate())
         end = `aujourd'hui à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;

@@ -2,15 +2,15 @@ import { RichEmbed, Message } from "discord.js";
 import config from '../../../config/config.json';
 
 export function success(success) {
-    console.log(`[SkriptMc Bot] [Success] ${success}`)
+    console.log(`[SkriptMc Bot] [Success] ${success}`);
 }
 
 export function info(info) {
-    console.log(`[SkriptMc Bot] [Information] ${info}`)
+    console.log(`[SkriptMc Bot] [Information] ${info}`);
 }
 
 export function error(error) {
-    console.error(`[SkriptMc Bot] [Error] ${error}`)
+    new Error(`[SkriptMc Bot] [Error] ${error}`);
 }
 
 export function discordSuccess(success, message) {
