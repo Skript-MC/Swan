@@ -1,7 +1,7 @@
 import { Client } from 'discord.js';
 import { readdirSync } from 'fs';
 import config from '../../config/config.json';
-import { error, success } from './components/Messages';
+import { error, success, info } from './components/Messages';
 import fetch from 'node-fetch';
 
 export async function loadSkriptHubAPI() {
@@ -89,14 +89,24 @@ export async function loadDiscord() {
 }
 
 export async function loadCommands() {
+	info('Loading commands...');
 	const commands = [];
-	const files = await readdirSync(`${__dirname}/commands`);
-	for (let file of files) {
-		if (file === '.DS_Store') continue;
-		const command = require(`${__dirname}/commands/${file}`).default;
-		const cmd = new command();
-		cmd.setup();
-		commands.push(cmd);
+	const subdirs = ['moderation', 'music', 'info', 'basic', 'fun'];
+	for (let subdir of subdirs) {
+		const files = await readdirSync(`${__dirname}/commands/${subdir}`);
+		for (let file of files) {
+			if (file === '.DS_Store') continue;
+			// info(`Loading file ${file}`);
+			try {
+				const command = require(`${__dirname}/commands/${subdir}/${file}`).default;
+				const cmd = new command();
+				cmd.module = subdir;
+				cmd.setup();
+				commands.push(cmd);
+			} catch(err) {
+				console.error(err);
+			}
+		}
 	}
 
 	success('All commands have been loaded!')
