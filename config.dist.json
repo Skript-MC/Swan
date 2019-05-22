@@ -2,7 +2,8 @@
     "bot": {
         "tokens": {
             "discord": "",
-            "skripthub": ""
+            "skripthub": "",
+            "google": ""
         },
         "id": "",
         "prefix": ".",
@@ -221,6 +222,38 @@
             "ticket": {
                 "shortDesc": "Créer un ticket dans le salon des tickets.",
                 "longDesc": "Créer un ticket dans le salon des tickets, selon un modèle d'aide définit."
+            },
+            "join": {
+                "shortDesc": "Amener le bot dans votre canal vocal.",
+                "longDesc": "Amener le bot dans votre canal vocal."
+            },
+            "quit": {
+                "shortDesc": "Faire partir le bot de votre canal vocal.",
+                "longDesc": "Faire partir le bot de votre canal vocal."
+            },
+            "stop": {
+                "shortDesc": "Arrête la musique en cours.",
+                "longDesc": "Arrête la musique en cours."
+            },
+            "pause": {
+                "shortDesc": "Mettre en pause la musique en cours.",
+                "longDesc": "Mettre en pause la musique en cours."
+            },
+            "play": {
+                "shortDesc": "Reprendre la musique en cours.",
+                "longDesc": "Reprendre la musique en cours."
+            },
+            "queue": {
+                "shortDesc": "Voir la liste d'attente des musiques.",
+                "longDesc": "Voir la liste d'attente des musiques."
+            },
+            "search": {
+                "shortDesc": "Chercher une musique sur youtube.",
+                "longDesc": "Chercher une musique sur youtube."
+            },
+            "volume": {
+                "shortDesc": "Modifier ou voir le volume actuel du bot.",
+                "longDesc": "Modifier ou voir le volume actuel du bot."
             },
             "idea": {
                 "shortDesc": "Avoir une idée de skript/d'addon.",
