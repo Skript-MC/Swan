@@ -1,8 +1,8 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
-import { modLog } from "../components/Log";
-import { discordError, discordSuccess, error } from "../components/messages";
-import { formatDate } from "../utils";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
+import { modLog } from "../../components/Log";
+import { discordError, discordSuccess, error } from "../../components/messages";
+import { formatDate } from "../../utils";
 
 const conf = config.messages.commands.mute;
 const durations = {

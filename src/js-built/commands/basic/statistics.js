@@ -1,9 +1,8 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import config from "../../../config/config.json";
-import pkg from "../../../package.json";
-import { client } from "../main";
-import { commands } from "../main";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
+import pkg from "../../../../package.json";
+import { client, commands } from "../../main";
 
 class Statistics extends Command {
 

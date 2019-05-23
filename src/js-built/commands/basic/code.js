@@ -1,6 +1,6 @@
-import Command from '../components/Command';
-import { discordError } from '../components/Messages';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import { discordError } from '../../components/Messages';
+import config from "../../../../config/config.json";
 
 class Code extends Command {
 	

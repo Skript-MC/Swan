@@ -1,8 +1,8 @@
 import { RichEmbed } from "discord.js";
-import config from "../../../config/config.json";
-import Command from "../components/Command";
-import { discordError } from "../components/Messages";
-import { SkriptHubSyntaxes } from '../main';
+import config from "../../../../config/config.json";
+import Command from "../../components/Command";
+import { discordError } from "../../components/Messages";
+import { SkriptHubSyntaxes } from '../../main';
 
 const conf = config.messages.commands.syntaxInfo;
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];

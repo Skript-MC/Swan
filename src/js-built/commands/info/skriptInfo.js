@@ -1,8 +1,8 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
 import https from "https";
-import { discordInfo } from "../components/messages";
+import { discordInfo } from "../../components/messages";
 
 const conf = config.messages.commands.skriptInfo;
 
