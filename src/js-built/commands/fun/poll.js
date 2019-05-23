@@ -1,8 +1,8 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import config from "../../../config/config.json";
-import { discordError, discordInfo } from "../components/Messages";
-import { formatDate } from "../utils";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
+import { discordError, discordInfo } from "../../components/Messages";
+import { formatDate } from "../../utils";
 
 const durations = {
 	's(ec(ond)?)?e?': 1,

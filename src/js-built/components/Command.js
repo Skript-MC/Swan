@@ -20,6 +20,7 @@ class Command {
 	regex;
 	usage;
 	examples;
+	module;
 	//hidden = false;
 	permissions = config.bot.default_permissions;
 	channels = config.bot.default_channels;

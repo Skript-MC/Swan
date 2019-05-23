@@ -1,7 +1,5 @@
 import { loadCommands, loadDiscord, loadSkripttoolsAPI, loadSkriptHubAPI } from './setup';
-import { Client, GuildMember } from 'discord.js';
 import { error, info } from './components/messages';
-import Command from './components/Command';
 import { success } from './components/Messages';
 import config from '../../config/config.json';
 

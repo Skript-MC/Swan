@@ -1,5 +1,5 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
 
 class Ping extends Command {
 

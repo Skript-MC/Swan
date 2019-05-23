@@ -1,6 +1,6 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
-import { discordError } from "../components/Messages";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
+import { discordError } from "../../components/Messages";
 
 class TagRole extends Command {
 

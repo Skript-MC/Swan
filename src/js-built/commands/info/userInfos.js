@@ -1,8 +1,8 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import { discordError } from '../components/Messages';
-import config from "../../../config/config.json";
-import { formatDate } from "../utils";
+import Command from '../../components/Command';
+import { discordError } from '../../components/Messages';
+import config from "../../../../config/config.json";
+import { formatDate } from "../../utils";
 
 const conf = config.messages.commands.userInfos;
 
@@ -58,10 +58,8 @@ class UserInfos extends Command {
 			if (target.presence.game.state)
 				presence += `↳ ${target.presence.game.state}\n`;
 			if (target.presence.game.timestamps)
-				presence += `↳ À commencé ${formatDate(new Date(target.presence.game.timestamps.start))}\n`;
+				presence += `↳ À commencé ${formatDate(target.presence.game.timestamps.start)}\n`;
 		}
-
-		let msg = "";
 
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)

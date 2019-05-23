@@ -1,5 +1,5 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
 
 const conf = config.messages.commands.findmyerror;
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];

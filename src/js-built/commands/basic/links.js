@@ -1,6 +1,6 @@
 import { RichEmbed } from 'discord.js';
-import config from "../../../config/config.json";
-import Command from '../components/Command';
+import config from "../../../../config/config.json";
+import Command from '../../components/Command';
 
 const maxPage = 5;
 const reactionsNumbers = ['🇽', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣'];

@@ -1,6 +1,6 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
 
 class Idea extends Command {
 	

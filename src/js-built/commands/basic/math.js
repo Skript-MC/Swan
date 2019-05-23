@@ -1,7 +1,7 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
 import math from 'mathjs';
-import { discordError } from "../components/Messages";
+import { discordError } from "../../components/Messages";
 const parser = math.parser()
 
 class Math extends Command {

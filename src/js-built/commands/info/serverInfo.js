@@ -1,7 +1,7 @@
 import { RichEmbed } from "discord.js";
-import Command from '../components/Command';
-import { error, discordError } from '../components/Messages';
-import config from "../../../config/config.json";
+import Command from '../../components/Command';
+import { error, discordError } from '../../components/Messages';
+import config from "../../../../config/config.json";
 import fetch from 'node-fetch';
 
 const conf = config.messages.commands.serverInfo;

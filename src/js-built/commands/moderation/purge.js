@@ -1,7 +1,7 @@
-import Command from '../components/Command';
-import config from "../../../config/config.json";
-import { discordError } from "../components/messages";
-import { client } from "../main";
+import Command from '../../components/Command';
+import config from "../../../../config/config.json";
+import { discordError } from "../../components/messages";
+import { client } from "../../main";
 
 class Purge extends Command {
 

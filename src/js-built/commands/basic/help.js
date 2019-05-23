@@ -1,8 +1,8 @@
 import { RichEmbed } from "discord.js";
-import config from "../../../config/config.json";
-import Command from "../components/Command";
-import { commands } from "../main";
-import { discordError } from "../components/Messages";
+import config from "../../../../config/config.json";
+import Command from "../../components/Command";
+import { commands } from "../../main";
+import { discordError } from "../../components/Messages";
 
 const conf = config.messages.commands.help;
 const reactions = ["⏮", "◀", "🇽", "▶", "⏭"];
@@ -41,7 +41,7 @@ async function sendEmbed(message, command) {
 			channels.push(message.guild.channels.get(id).name);
 		}
 	}
-	embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\`\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(", ")}\n‌‌ `, true);
+	embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Module :** ${command.module}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\`\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(", ")}\n‌‌ `, true);
 
 	message.channel.send(embed);
 }
