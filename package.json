@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "babel-node ./src/main.js",
-    "dev": "nodemon --exec babel-node ./src/js-built/main.js",
+    "dev": "nodemon --exec babel-node ./src/main.js",
   },
   "authors": [
     "AlexLew (AlexLew#2001)",
