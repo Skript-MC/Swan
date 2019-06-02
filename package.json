@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^11.13.10",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "discord.js": "^11.5.0",
     "ffmpeg": "^0.0.4",
     "ffmpeg-binaries": "^4.0.0",
