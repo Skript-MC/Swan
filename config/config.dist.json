@@ -10,13 +10,7 @@
             ""
         ],
         "forbidden_channels": [
-            "358653742729396224",
-            "549333475153412106",
-            "317341684369326084",
-            "205091190108848128",
-            "566653849738149898",
-            "570720318050795532",
-            "433720839494434826"
+            ""
         ],
         "default_permissions": [],
         "color": "#4286f4"
@@ -201,7 +195,6 @@
             "help": {
                 "shortDesc": "Afficher la page d'aide.",
                 "longDesc": "Afficher la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
-                "header": "Les tirets (-) dans les commandes sont facultatifs. Les arguments entre chevrons <> sont obligatoires. Ceux entre crochets [] sont facultatifs. Faites `.help <nom de la commande>` pour avoir plus d'informations sur une commande.",
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé."
             },
             "ticket": {
