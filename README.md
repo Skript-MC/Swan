@@ -18,11 +18,11 @@ Les commandes sont en plusieurs parties:
  - **(obligatoire) name:** Le nom de votre commande.
  - **(obligatoire) description:** La description de votre commande.
  - **(obligatoire) regex:** Votre commande, sous la forme d'un regex.
- - **(obligatoire) examples:** Des exemples d'utilisation de votre commande.
- - **(facultatif) permissions:** Une liste de permissions sous forme de string qui permet à l'utilisateur d'executer la commande si il possède le rôle de la permission. Pour ajouter une (ou plusieurs) permission(s) aux permissions par défaut, vous devez utiliser ``this.permissions.concat(['Vos roles en array']);`` (ou ajouter les role à l'aide de la méthode "setup")
- - **(facultatif) channels:** Une liste de channels/salon de discussion sous forme de string qui permet à l'utilisateur d'executer la commande si il est dans le channel adéquate. Pour ajouter une (ou plusieurs) channel(s) aux channels par défaut, vous devez utiliser ``this.channels.concat(['Les id de vos channels en array']);`` (ou ajouter les id des channels à l'aide de la méthode "setup")
- - **(facultatif) setup:** La partie de votre code qui sera executé pendant le chargement de votre commande, sous la forme d'une fonction (fléchée de préférence).
- - **(obligatoire) execute:** Le code de votre commande, sous la forme d'une fonction (fléchée de préférence).
+ - **(obligatoire) example:** Un exemple d'utilisation de votre commande.
+ - **(facultatif) permissions:** Une liste de permissions sous forme de string qui permet à l'utilisateur d'executer la commande si il possède le rôle de la permission. Pour ajouter une (ou plusieurs) permission(s) aux permissions par défaut, vous devez utiliser ``this.permissions.push('Vos roles');`` (ou ajouter les role à l'aide de la méthode "setup")
+ - **(facultatif) channels:** Une liste de channels/salon de discussion sous forme de string qui permet à l'utilisateur d'executer la commande si il est dans le channel adéquate. Pour ajouter une (ou plusieurs) channel(s) aux channels par défaut, vous devez utiliser ``this.channels.push('Les id de vos channels');`` (ou ajouter les id des channels à l'aide de la méthode "setup")
+ - **(facultatif) init:** La partie de votre code qui sera executé pendant le chargement de votre commande.
+ - **(obligatoire) execute:** Le code de votre commande.
 
 # Todo
 
