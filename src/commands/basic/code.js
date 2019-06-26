@@ -6,7 +6,7 @@ class Code extends Command {
 		super('Code');
 		this.regex = /(code|balise)/gmui;
 		this.usage = 'code <votre code>';
-		this.example = 'code command test:\n\ttrigger:\n\t\tbroadcast "Yeah!"'
+		this.example = 'code broadcast "Yeah!"'
 	}
 
 	async execute(message, args) {
