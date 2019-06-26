@@ -14,7 +14,6 @@ class Help extends Command {
 		this.regex = /(help|aide)/gmui;
 		this.usage = 'help [<la commande>]';
 		this.example = 'help help';
-		this.permissions.push('Staff');
 	}
 
 	async execute(message, args, page) {
