@@ -1,10 +1,12 @@
 import Command from '../../components/Command';
 import { discordError } from '../../components/Messages';
+import math from 'mathjs';
+const parser = math.parser()
 
 class Math extends Command {
 
 	constructor () {
-		super('Mathématiques');
+		super('Mathematiques');
 		this.regex = /(math((é|e)matique)?s?|eval(uation)?)/gmui;
 		this.usage = 'math <expression mathématique de skript>';
 		this.example = 'math sqrt(12) + 18 - abs(-13)';
@@ -35,7 +37,7 @@ class Math extends Command {
 		} catch(err) {
 			return discordError('Impossible de tester cette expression ! Il semblerai qu\'il y ai un problème dedans...', message);
 		}
-		message.reply(`\`${expr}\` = \`${expr}\``);
+		message.reply(`\`${args.join(' ')}\` = \`${expr}\``);
 	}
 
 }
