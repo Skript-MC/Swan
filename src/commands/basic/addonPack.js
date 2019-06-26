@@ -1,7 +1,6 @@
 import Command from '../../components/Command';
 
 class AddonPack extends Command {
-
 	constructor () {
 		super('Addon Pack');
 		this.regex = /add?ons?(-|_)?pack|pack(-|_)?add?ons?/gmui;
