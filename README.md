@@ -26,6 +26,11 @@ Les commandes sont en plusieurs parties:
 
 # Todo
 
+ - [ ] Modifier playerInfos.js pour qu'il utilise axios
+ - [ ] Cache les données de skriptInfo
+ - [ ] Ajouter des messages pour FindMyError (il en reste 4)
+ - [ ] Faire les messages de la commande .packaddon (reste 1.7, 1.13)
+ - [ ] Bug : si aucune perm est spécifiée pour une commande, personne ne peux la faire (a vérifier)
  - [ ] Faire la partie musicale:
     - Système de playlist:
         - [ ] Création de playlist
