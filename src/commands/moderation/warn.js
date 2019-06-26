@@ -17,14 +17,13 @@ class Warn extends Command {
 		const victim = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
 		if (!victim) return discordError(this.config.missingUserArgument, message);
 		if (victim.id === message.author.id) return discordError('Ne te warn pas toi même , boulet', message);
-		// if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
+		if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
 		
-		if(args[1]){var ra = args[1]}
-		else{var ra = "Aucune définie";}
+		let ra = args[1] || "Aucune définie"
 
 		ch.send(e);
 
-        modLog({
+        	modLog({
 			"color": "#cc3300",
 			"member": victim,
 			"mod": message.author,
