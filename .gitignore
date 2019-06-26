@@ -1,8 +1,9 @@
-.vscode/*
+src/ts-built/*
 node_modules/*
 playlists/*
-config/config.json
-build/
 playlist/*
+build/
 .idea/
-src/ts-built/*
+.vscode/*
+.env
+.DS_Store
