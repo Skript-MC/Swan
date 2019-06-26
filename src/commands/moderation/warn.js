@@ -9,6 +9,7 @@ class Warn extends Command {
 		super('Warn');
 		this.usage = 'warn <@mention | ID> <durée> <raison>';
 		this.example = 'warn @iTrooz 5d Chut';
+		this.regex = /warn/gmui;
 		this.permissions.push('Staff');
 	}
 
