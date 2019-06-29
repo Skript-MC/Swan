@@ -1,17 +1,15 @@
 import Command from '../../components/Command';
-import config from "../../../../config/config.json";
+import config from "../../../config/config.json";
 import { RichEmbed } from 'discord.js';
 
 class Quit extends Command {
-	
-	name = 'Quitter le canal';
-	shortDescription = config.messages.commands.quit.shortDesc;
-	longDescription = config.messages.commands.quit.longDesc;
-	usage = `${config.bot.prefix}quit`;
-	examples = ['quit'];
-	regex = /quit/gimu;
-
-	execute = async (message, args) => {
+	constructor () {
+		super('quit')
+		this.usage = `${config.bot.prefix}quit`;
+		this.examples = ['quit'];
+		this.regex = /quit/gimu;
+	}
+	async exemple(message, args) {
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
 			.setFooter(`Executé par ${message.author.username}`);

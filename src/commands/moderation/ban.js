@@ -20,6 +20,7 @@ class Ban extends Command {
 		this.usage = 'ban <@mention | ID> <durée> <raison>';
 		this.example = 'ban @AlexLew 5d Test';
 		this.permissions.push('Staff');
+		this.regex = /ban/gmui
 	}
 
 	async execute(message, args) {

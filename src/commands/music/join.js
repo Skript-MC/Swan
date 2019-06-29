@@ -1,17 +1,15 @@
 import Command from '../../components/Command';
-import config from "../../../../config/config.json";
+import config from "../../../config/config.json";
 import { RichEmbed } from 'discord.js';
 
 class Join extends Command {
-	
-	name = 'Rejoindre le canal';
-	shortDescription = config.messages.commands.join.shortDesc;
-	longDescription = config.messages.commands.join.longDesc;
-	usage = `${config.bot.prefix}join`;
-	examples = ['join'];
-	regex = /join/gimu;
-
-	execute = async (message, args) => {
+	constructor (){
+		super('join')
+		this.usage = `${config.bot.prefix}join`;
+		this.examples = ['join'];
+		this.regex = /join/gimu;
+	}
+	async execute(message, args) {
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
 			.setFooter(`Executé par ${message.author.username}`);

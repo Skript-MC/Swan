@@ -1,17 +1,15 @@
 import Command from '../../components/Command';
-import config from "../../../../config/config.json";
+import config from "../../../config/config.json";
 import { RichEmbed } from 'discord.js';
 
 class Stop extends Command {
-	
-	name = 'Arrêter la musique';
-	shortDescription = config.messages.commands.stop.shortDesc;
-	longDescription = config.messages.commands.stop.longDesc;
-	usage = `${config.bot.prefix}stop`;
-	examples = ['stop'];
-	regex = /stop/gimu;
-
-	execute = async (message, args) => {
+	constructor () {
+		super('stop');
+		this.usage = `${config.bot.prefix}stop`;
+		this.examples = ['stop'];
+		this.regex = /stop/gimu;
+	}
+	async execute(message, args) {
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
 			.setFooter(`Executé par ${message.author.username}`);

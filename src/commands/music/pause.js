@@ -1,17 +1,15 @@
 import Command from '../../components/Command';
-import config from "../../../../config/config.json";
+import config from "../../../config/config.json";
 import { RichEmbed } from 'discord.js';
 
 class Pause extends Command {
-	
-	name = 'Mettre sur pause';
-	shortDescription = config.messages.commands.pause.shortDesc;
-	longDescription = config.messages.commands.pause.longDesc;
-	usage = `${config.bot.prefix}pause`;
-	examples = ['pause'];
-	regex = /pause/gimu;
-
-	execute = async (message, args) => {
+	constructor () {
+		super('pause')
+		this.usage = `${config.bot.prefix}pause`;
+		this.examples = ['pause'];
+		this.regex = /pause/gimu;
+	}
+	async execute(message, args) {
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
 			.setFooter(`Executé par ${message.author.username}`);

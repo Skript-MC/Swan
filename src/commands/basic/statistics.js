@@ -1,16 +1,19 @@
 import Command from '../../components/Command';
-import Setup from '../../setup';
+import { commands, client, config } from '../../main';
+import pkg from "../../../package.json";
 import Discord from 'discord.js';
 
 class Statistics extends Command {
 
 	constructor () {
 		super('Statistics');
-		this.regex = /stat(isti(c|que))?s?/gmui;
+		this.regex = /stat(isti(c|que))?s?/gimu;
+		this.usage = 'statistique'
+		this.example = 'statistique'
 	}
 
 	async execute(message, args) {
-		let totalSeconds = (Setup.client.uptime / 1000);
+		let totalSeconds = (client.uptime / 1000);
 		const days = Math.floor(totalSeconds / 86400);
 		const hours = Math.floor(totalSeconds / 3600);
 		totalSeconds %= 3600;
@@ -24,17 +27,17 @@ class Statistics extends Command {
 		const total = totalBots + totalUsers;
 
 		const embed = new Discord.RichEmbed()
-			.setColor(Setup.config.messages.colors.info)
-			.setAuthor(`Statistiques sur le bot`, Setup.client.user.avatarURL)
-			.addField('Préfix', Setup.config.bot.prefix, true)
-			.addField('Version', Setup.pkg.version, true)
+			.setColor(config.bot.color)
+			.setAuthor(`Statistiques sur le bot`, config.bot.avatar)
+			.addField('Préfix', config.bot.prefix, true)
+			.addField('Version', pkg.version, true)
 			.addField('Temps de fonctionnement', `${days}j, ${hours}h, ${minutes}min et ${seconds}s`, true)
-			.addField('Commandes', Setup.commands.length, true)
+			.addField('Commandes', commands.length, true)
 			.addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bots`, true)
 			.addField('Total', `${total} membres`, true)
-			.addField('Développeurs', `${Setup.pkg.authors.join(', ')}`, true)
-			.setFooter(`Executé par ${message.author.username}`, message.author.avatarURL)
-			.setTimestamp(new Date());
+			.addField('Développeurs', `${pkg.authors.join(', ')}`, true)
+			.setFooter(`Executé par ${message.author.username}`)
+			.setTimestamp();
 		message.channel.send(embed);
 	}
 

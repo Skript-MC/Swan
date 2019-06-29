@@ -1,6 +1,6 @@
 import Command from '../../components/Command';
-import Setup from '../../setup';
 import Discord from 'discord.js';
+import { config } from '../../main';
 
 const reactionsNumbers = ['🇽', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣'];
 const reactionsPage = ['⏮', '◀', '🇽', '▶', '⏭'];
@@ -19,10 +19,9 @@ class Links extends Command {
 		page = args[0] ? args[0] : page;
 		page = isNaN(page) ? 0 : page;
 		const embed = new Discord.RichEmbed()
-			.setAuthor(`Liens utiles (${page}/${maxPage})`, Setup.client.user.avatarURL)
-			.setDescription('⚠ Attendez que l\'embed soit vert ⚠')
-			.setFooter(`Executé par ${message.author.username}`, message.author.avatarURL)
-			.setTimestamp(new Date());
+			.setAuthor(`Liens utiles (${page}/${maxPage})`, config.bot.avatar)
+			.setFooter(`Executé par ${message.author.username}`)
+			.setTimestamp();
 
 		switch (Number(page)) {
 			case 1:
@@ -46,14 +45,14 @@ class Links extends Command {
 					.addField(this.config.embed.gitSk_title, this.config.embed.gitSk_desc, true);
 				break;
 			default:
-				embed.setDescription(`${embed.description}\n\n${this.config.embed.summary}`);
+				embed.setDescription(this.config.embed.summary);
 				break;
 		}
 
 		let msgLinks = await message.channel.send(embed);
 		if (page === 0) {
 			for (let r of reactionsNumbers) await msgLinks.react(r);
-			embed.setColor(Setup.config.messages.colors.success);
+			embed.setColor(config.bot.color)
 			msgLinks.edit(embed);
 
 			const collector = msgLinks
@@ -61,8 +60,7 @@ class Links extends Command {
 					(reaction, user) => 
 						user.id === message.author.id &&
 						reactionsNumbers.includes(reaction.emoji.name)
-				)
-				.once("collect", reaction => {
+				).once("collect", reaction => {
 					msgLinks.delete();
 					if (reaction.emoji.name === '🇽') message.delete();
 					else this.execute(message, args, reactionsNumbers.indexOf(reaction.emoji.name));
@@ -70,7 +68,7 @@ class Links extends Command {
 				});
 		} else {
 			for (let r of reactionsPage) await msgLinks.react(r);
-			embed.setColor(Setup.config.messages.colors.success);
+			embed.setColor(config.bot.color)
 			msgLinks.edit(embed);
 			this.reactionCollector(message, args, msgLinks, page);
 		}
@@ -84,8 +82,7 @@ class Links extends Command {
 					!user.bot &&
 					user.id === message.author.id &&
 					reactionsPage.includes(reaction.emoji.name)
-			)
-			.once("collect", reaction => {
+			).once("collect", reaction => {
 				msgLinks.delete();
 				if (reaction.emoji.name === '⏮') {
 					this.execute(message, args, 0);
