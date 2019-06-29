@@ -14,7 +14,7 @@
     "WeeskyBDW (WeeskyBDW#6172)",
     "Olyno (Olyno#2001)"
   ],
-  "license": "ISC",
+  "license": "GNUv3",
   "dependencies": {
     "axios": "^0.19.0",
     "discord.js": "^11.5.1",
