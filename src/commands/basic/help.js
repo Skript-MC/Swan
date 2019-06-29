@@ -1,139 +1,142 @@
-import { RichEmbed } from "discord.js";
+import { RichEmbed } from 'discord.js';
 import Command from '../../components/Command';
 import { commands, config } from '../../main';
-import { discordError } from "../../components/Messages";
+import { discordError } from '../../components/Messages';
 
-const reactions = ["⏮", "◀", "🇽", "▶", "⏭"];
+const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 const cmdPerPage = config.miscellaneous.cmdPerPagesInHelp;
 
 class Help extends Command {
+  constructor() {
+    super('help');
+    this.regex = /(help|aide)/gmui;
+    this.usage = 'help [<commande | page>]';
+    this.examples.push('help ping', 'help', 'help 4');
+  }
 
-	constructor () {
-		super('help');
-		this.regex = /(help|aide)/gmui;
-		this.usage = 'help [<la commande>]';
-		this.example = 'help help';
-	}
+  async execute(message, args, page) {
+    // eslint-disable-next-line no-nested-ternary
+    page = page ? parseInt(page, 10) : args[0] ? parseInt(args[0] - 1, 10) : 0;
+    page = isNaN(page) ? 0 : page;
 
-	async execute(message, args, page) {
-		page = Number.isInteger(page) ? page : 0;
-		const totalPages = Math.ceil(commands.length / cmdPerPage);
+    const totalPages = Math.ceil(commands.length / cmdPerPage);
 
-		// S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
-		if (args.length === 0) {
-			const embed = new RichEmbed()
-				.setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
-				.setDescription(config.messages.commands.help.header)
-				.setFooter("Executé par " + message.author.username);
-			for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
-				const cmd = commands[page * cmdPerPage + i];
-				embed.addField(`${cmd.name} ⁕ ${cmd.usage} ${cmd.permissions.some(role => role === "Staff") > 0 ? ":octagonal_sign:" : ""}`, `${cmd.help}`, false);
-			}
+    // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
+    if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
+      const embed = new RichEmbed()
+        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
+        .setDescription(config.messages.commands.help.header)
+        .setFooter(`Executé par ${message.author.username}`)
+        .setTimestamp();
 
-			// Envoyer l'embed, ajouter les réactions, puis modifier sa couleur en bleu
-			let helpEmbed = await message.channel.send(embed);
-			for (let r of reactions) await helpEmbed.react(r);
-			embed.setColor(config.bot.color)
-			helpEmbed.edit(embed);
+      for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
+        const cmd = commands[page * cmdPerPage + i];
+        embed.addField(`${cmd.name} ⁕ ${cmd.usage} ${cmd.permissions.some(role => role === 'Staff') > 0 ? ':octagonal_sign:' : ''}`, `${cmd.help}`, false);
+      }
 
-			const collector = helpEmbed
-				.createReactionCollector(
-					(reaction, user) =>
-						user.id === message.author.id &&
-						reactions.includes(reaction.emoji.name)
-				).once("collect", reaction => {
-					helpEmbed.delete();
-					if (reaction.emoji.name === "⏮") {
-						this.execute(message, args, 0);
-					} else if (reaction.emoji.name === "◀") {
-						const prevPage = page <= 0 ? totalPages - 1 : page - 1;
-						this.execute(message, args, prevPage);
-					} else if (reaction.emoji.name === "🇽") {
-						message.delete();
-					} else if (reaction.emoji.name === "▶") {
-						const nextPage = page + 1 >= totalPages ? 0 : page + 1;
-						this.execute(message, args, nextPage);
-					} else if (reaction.emoji.name === "⏭") {
-						this.execute(message, args, totalPages - 1);
-					}
-					collector.stop();
-				});
-		} else {
-			let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
-			const results = cmds.length;
+      // Envoyer l'embed, ajouter les réactions, puis modifier sa couleur en bleu
+      const helpEmbed = await message.channel.send(embed);
+      for (const r of reactions) await helpEmbed.react(r);
+      embed.setColor(config.colors.default);
+      helpEmbed.edit(embed);
 
-			// On limite a 10 élements. Plus simple a gérer pour le moment, on pourra voir + tard si on peut faire sans. (donc multipages et tout)
-			cmds = cmds.slice(0, 10);
-			
-			if (results === 0) {
-				return discordError(config.messages.commands.help.cmdDoesntExist, message);
-			} else if (results === 1) {
-				return this.sendDetails(message, cmds[0]);
-			} else {
-				let selectorMsg = await message.channel.send(`${results} élements trouvés pour la recherche \`${args.join(' ')}\`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
-				for (let i = 0; i < results; i++) {
-					selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} \"${cmds[i].name}\" (\`${cmds[i].usage}\`)`);
-					await selectorMsg.react(reactionsNumbers[i]);
-				}
-				await selectorMsg.react('❌');
+      const collector = helpEmbed
+        .createReactionCollector((reaction, user) => user.id === message.author.id
+            && reactions.includes(reaction.emoji.name))
+        .once('collect', (reaction) => {
+          helpEmbed.delete();
+          if (reaction.emoji.name === '⏮') {
+            this.execute(message, args, 0);
+          } else if (reaction.emoji.name === '◀') {
+            const prevPage = page <= 0 ? totalPages - 1 : page - 1;
+            this.execute(message, args, prevPage);
+          } else if (reaction.emoji.name === '🇽') {
+            message.delete();
+          } else if (reaction.emoji.name === '▶') {
+            const nextPage = page + 1 >= totalPages ? 0 : page + 1;
+            this.execute(message, args, nextPage);
+          } else if (reaction.emoji.name === '⏭') {
+            this.execute(message, args, totalPages - 1);
+          }
+          collector.stop();
+        });
+    } else {
+      let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
+      const results = cmds.length;
 
-				const collectorNumbers = selectorMsg
-					.createReactionCollector((reaction, user) =>
-						!user.bot &&
-						user.id === message.author.id &&
-						reactionsNumbers.includes(reaction.emoji.name)
-					).once("collect", reaction => {
-						selectorMsg.delete();
-						this.sendDetails(message, cmds[reactionsNumbers.indexOf(reaction.emoji.name)]);
-						collectorNumbers.stop();
-					});
+      // Limite à 10 élements. + simple à gérer pour le moment, on pourra voir + tard si on peut faire sans. (donc multipages)
+      cmds = cmds.slice(0, 10);
 
-				const collectorStop = selectorMsg
-					.createReactionCollector((reaction, user) =>
-						!user.bot &&
-						user.id === message.author.id &&
-						reaction.emoji.name === '❌'
-					).once("collect", () => {
-						message.delete();
-						selectorMsg.delete();
-						collectorNumbers.stop();
-						collectorStop.stop();
-					});
-			}
-		}
-	}
+      if (results === 0) {
+        return discordError(config.messages.commands.help.cmdDoesntExist, message);
+      } else if (results === 1) {
+        return this.sendDetails(message, cmds[0]);
+      } else {
+        let selectorMsg = await message.channel.send(`${results} élements trouvés pour la recherche \`${args.join(' ')}\`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
+        for (let i = 0; i < results; i++) {
+          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} \"${cmds[i].name}\" (\`${cmds[i].usage}\`)`);
+          await selectorMsg.react(reactionsNumbers[i]);
+        }
+        await selectorMsg.react('❌');
 
-	async sendDetails(message, command) {
-		const embed = new RichEmbed()
-			.setColor(config.bot.color)
-			.setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
-			.setFooter(`Executé par ${message.author.username}`)
-			.setTimestamp();
+        const collectorNumbers = selectorMsg
+          .createReactionCollector((reaction, user) => !user.bot
+            && user.id === message.author.id
+            && reactionsNumbers.includes(reaction.emoji.name))
+          .once('collect', (reaction) => {
+            selectorMsg.delete();
+            this.sendDetails(message, cmds[reactionsNumbers.indexOf(reaction.emoji.name)]);
+            collectorNumbers.stop();
+          });
 
-		let perms = "Tout le monde.";
-		if (command.permissions.length > 0)
-			perms = command.permissions.join(', ');
-		
-		let ex = command.example || "Aucun exemple disponible.";
-	
-		let desc = command.description
-		if (command.name === 'Automatic Messages') {
-			desc = desc.replace('%s', `${Object.keys(config.messages.commands.automatic_messages.commands).join(', ')}`);
-		}
+        const collectorStop = selectorMsg
+          .createReactionCollector((reaction, user) => !user.bot
+            && user.id === message.author.id
+            && reaction.emoji.name === '❌')
+          .once('collect', () => {
+            message.delete();
+            selectorMsg.delete();
+            collectorNumbers.stop();
+            collectorStop.stop();
+          });
+      }
+    }
+  }
 
-		let channels = [];
-		if (command.allowedChannels.length === 0) {
-			channels.push("Tous");
-		} else {
-			for (let id of command.allowedChannels) {
-				channels.push(message.guild.channels.get(id).name);
-			}
-		}
-		embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Catégorie :** ${command.category}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(", ")}\n‌‌ `, true);
-	
-		message.channel.send(embed);
-	}
+  async sendDetails(message, command) {
+    const embed = new RichEmbed()
+      .setColor(config.colors.default)
+      .setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
+      .setFooter(`Executé par ${message.author.username}`)
+      .setTimestamp();
+
+    let perms = 'Tout le monde.';
+    if (command.permissions.length > 0) perms = command.permissions.join(', ');
+
+    let ex = '';
+    for (const e of command.examples) ex = `${ex} | \`${config.bot.prefix}${e}\``;
+    ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace  à la fin.
+    ex = ex === '' ? 'Aucun exemple disponible.' : `${ex}`;
+  
+
+    let desc = command.description;
+    if (command.name === 'Automatic Messages') {
+      desc = desc.replace('%s', `${Object.keys(config.messages.commands.automatic_messages.messages).join(', ')}`);
+    }
+
+    const channels = [];
+    if (command.requiredChannels.length === 0) {
+      channels.push('Tous');
+    } else {
+      for (const id of command.requiredChannels) {
+        channels.push(message.guild.channels.get(id).name);
+      }
+    }
+    embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Catégorie :** ${command.category}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(', ')}\n‌‌ `, true);
+
+    message.channel.send(embed);
+  }
 }
 
 export default Help;
