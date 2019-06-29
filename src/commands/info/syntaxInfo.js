@@ -124,7 +124,7 @@ class SyntaxInfo extends Command {
           content += `\n${reactionsNumbers[i]} \"${capitalize(matchingSyntaxes[i].title)}\" *(${matchingSyntaxes[i].syntax_type}, ${matchingSyntaxes[i].addon})*`;
           await msg.react(reactionsNumbers[i]);
         }
-        if (results - 10 > 0) content += `${msg.content}\n...et ${results - 10} de plus...`;
+        if (results - 10 > 0) content += `\n...et ${results - 10} de plus...`;
         await msg.edit(content);
         await msg.react('❌');
 
