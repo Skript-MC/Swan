@@ -1,54 +1,66 @@
 {
     "bot": {
-        "id": "550796242624708620",
+        "id": "",
+        "guild": "",
         "prefix": ".",
         "default_channels": [],
         "forbidden_channels": [],
-        "default_permissions": [],
-        "color": "#4286f4",
-        "avatar": "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128"
+        "avatar": "https://cdn.discordapp.com/attachments/459996868852711434/594454850951970867/logo_skmc.png"
     },
-    "logs": {
-        "guild": "",
-        "channel": [{
-            "origin": 123456789,
-            "destination": 123456789
-        }],
-        "color": "#4a64d6"
+
+    "colors": {
+        "default": "#4286f4",
+        "warn": "#ffe200",
+        "warning": "#ecef1c",
+        "log": "#4a64d6",
+        "success": "#1fc622",
+        "error": "#db2c23"
+    },
+
+    "channels": {
+        "helpSkript": "",
+        "helpSkript2": "",
+        "snippet": "",
+        "idea": "",
+        "suggestion": ""
     },
 
     "moderation": {
-        "colors": {
-            "warn": "#ffe200"
-        },
         "log": {
             "channelName": "sanctions",
-            "categoryID": "570932407310614548"
+            "categoryID": ""
+        },
+        "roles": {
+            "ban": "",
+            "baillone": ""
         },
         "banRole": "Sous-fifre",
         "muteRole": "Bailloné",
+        "banChannelPrefix": "b-",
         "muteRolePosition": 3,
-        "banRolePosition": 3,
-        "channelIdHelpOther": "ID CHANNEL AIDE #AUTRE",
-        "channelIdHelpServer": "ID CHANNEL AIDE #SERVEUR",
-        "channelIdHelpSkript": "ID CHANNEL AIDE #SKRIPT",
-        "channelIdHelpSkript2": "ID CHANNEL AIDE #SKRIPT-2"
+        "banRolePosition": 3
+    },
+
+    "miscellaneous": {
+        "notifRoleName": "Notifications Evènement",
+        "maxPollDuration": 604800000,
+        "cmdPerPagesInHelp": 5,
+        "purgeLimit": 100
+    },
+
+    "apis": {
+        "addons": "https://api.skripttools.net/v4/addons/",
+        "skript": "https://api.skripttools.net/v4/skript/",
+        "syntax": "https://skripthub.net/api/v1",
+        "server": "https://api.mcsrvstat.us/2/",
+        "mojang_api": "https://api.mojang.com",
+        "skin": "http://cravatar.eu/helmavatar/"
     },
 
     "messages": {
         "errors": {
             "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles :wink:",
-            "permission": "Vous n'avez pas la permission d'utilier cette commande :confused:",
-            "color": "#db2c23"
-        },
-        "warning": {
-            "color": "#ecef1c"
-        },
-        "info": {
-            "color": "#4286f4"
-        },
-        "success": {
-            "color": "#1fc622"
+            "permission": "Vous n'avez pas la permission d'utilier cette commande :confused:"
         },
         "commands": {
             "toggle_role_notification": {
@@ -60,7 +72,7 @@
                 "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
                 "invalidMessage": "Désolé, mais ce message la n'existe pas...",
                 "noArg": "Envoyez un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande.",
-                "commands": {
+                "messages": {
                     "asktoask": {
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serai capable de répondre a votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre quesetion directement, et si quelqu'un peut vous répondre, il vous répondra."
                     },
@@ -79,7 +91,7 @@
                         "longContent2": "Il y a aussi la possibilité de gerer rapidement les types de clique. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs cliques différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clique droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clique gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous cliquerez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complet et moins bugués."
                     },
                     "everyloop": {
-                        "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que toutes les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveurs ? Si vous êtes 4 ca va, mais si vous êtes une 30aine ? une 50aine ? UNE 100AINE ????? Non, ca fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative a votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile players is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracte, c'est une solution préférable a la précédente, car plutôt de regardez tous les joueurs tous les X temps, chaque joueur à sa boucle qui se raffraichit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
+                        "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que toutes les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveurs ? Si vous êtes 4 ca va, mais si vous êtes une 30aine ? une 50aine ? UNE 100AINE ????? Non, ca fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative a votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt de regardez tous les joueurs tous les X temps, chaque joueur à sa boucle qui se raffraichit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
                     },
                     "longcode": {
                         "content": "Pour poster vos longs codes, il est conseillé d'utiliser un de ces sites : <https://hastebin.com>, <https://pastebin.com>, <https://gist.github.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
@@ -106,18 +118,17 @@
                     "cantunderstand": "Ce message apparait généralement lorsque Skript ne reconnait pas la syntaxe que vous avez entré. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse:\n\n- Il peut manquer un \":\" à la fin de la ligne\n\n- La syntaxe a été ajouté par un addon ou par Skript, mais elle n'existe pas dans la version que vous avez. Pensez à toujours garder vos addons et Skript à jour.\n\n- La syntaxe vient d'un addon que vous n'avez pas installé. Pour savoir quel addon nécessite une syntaxe, utilisez la commande `.syntax-info <syntaxe>`\n\n- Vous vous êtes trompé dans la ligne, par exemple vous avez mal orthographié des mots ou vous en avez oublié/rajouté. Pour connaîter le pattern exacte d'une syntaxe, utilisez la commande `.syntax-info <syntaxe>`.",
                     "emptysection": "Ce message apparait généralement lorsqu'il vous manque des tabulations après une ligne qui finit par un \":\", comme dans cet exemple : ```vb\nif {_variable} is 3:\n\tif {player::%player%} is set:\n\tmesage \"bravo\"\n\tmessage\"T'es le meilleur\"``` Pour régler ce problème, ajoutez simplement des tabulations aux ligne que vous vouliez indenter.",
                     "invalidquotes": "Ce message apparait généralement lorsqu'il y a une incohérence dans les guillements (\"). Ce la peut arriver dans plusieurs cas :\n\n- Lorsque vous voulez utiliser des guillemets dans un texte, sans les doubler, comme dans cet exemple : ```vb\non join:\n\tmessage \"Bienvenue au \"grand\" %player%\"```Pour utiliser des guillemets dans du texte, doublez-les, tel que : `message \"Bienvenue au \"\"grand\"\" %player%\"`. Cela fonctionnera.\n\n- Lorsque vous avez oublié un guillement en fin de ligne, tel que `message \"Bonjour`",
-                    "noloopmatch": "Erreur pas encore supportée, désolé. Si vous connaissez la cause précise de cette erreur et que vous savez la résoudre, merci de nous contacter pour que les instructions soient ajoutées !",
+                    "noloopmatch": "Ce message indique que la loop que vous avez sélectionné  n'est pas compatible avec le loop-* que vous avez spécifié. Par exemple, la loop `loop 10 times:` n'est pas compatib le avec le `loop-player` ou le `loop-index`",
                     "elseafterif": "Ce message apparait généralement lorsque vous avez un `else` ou un `else if` sans `if` avant, ou alors avec un `if` mais qui n'est pas reconnu. Il est conseillé de corriger en dernier cette erreur car généralement elle découle d'un autre problème. Si c'est la seule erreur que vous avez, alors vérifiez que vous avez bien un `if` avant.",
-                    "cantcompare": "Erreur pas encore supportée, désolé. Si vous connaissez la cause précise de cette erreur et que vous savez la résoudre, merci de nous contacter pour que les instructions soient ajoutées !",
-                    "notvaliditemdata": "Erreur pas encore supportée, désolé. Si vous connaissez la cause précise de cette erreur et que vous savez la résoudre, merci de nous contacter pour que les instructions soient ajoutées !",
-                    "cantbeadded": "Erreur pas encore supportée, désolé. Si vous connaissez la cause précise de cette erreur et que vous savez la résoudre, merci de nous contacter pour que les instructions soient ajoutées !",
+                    "cantcompare": "Ce message signifie que vous essayez de comparer deux types de données différents , qui ne peuvent pas être comparés. Par exemple, vous ne pouvez pas comparer `loop-entity` avec `\"Toto\"` ( une entité avec un texte )",
+                    "cantbeadded": "Cette erreur se produit quand tu essayes d'ajouter une valeur un type de données non supportée à une expression ( par exemple `add \"aaa\" to players` causera cette erreur , car l'expression `players` n'est pas faite pour qu'on lui ajoute une donnée de type texte",
                     "other": "**__All code has to be put in triggers :__**\nCette erreur peut survenir si une ligne n'a aucune indentation, tel que ceci : ```vb\non join:\nmessage \"Bonjour\" # Cette ligne va générer un \"all code has to be put in triggers\"```\n\n**__Can't loop XX because it's a single value :__**\nCette erreur peut arriver lorsque vous essayer de faire une boucle sur une variable qui n'est pas une variable liste par exemple. Vérifiez donc que vous essayez de loop une expression/variable contenant plusieurs valeurs\n\nBeaucoup d'autre erreur existe dans Skript. Si vous avez une erreur qui n'est pas cité si dessous, essayez de la traduire, cela vous aidera déjà à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
                 }
             },
             "addoninfo": {
                 "help": "Avoir diverses informations sur un addon.",
                 "description": "Obtenir diverses informations sur un addon, telles que son auteur, sa dernière version, un lien de téléchargement, si l'addon est déprecié, les dépendances...",
-                "addonDoesntExist": "Désolé, mais il est impossible d'accéder à cet addon. Es-tu sur qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q=%s>) ? Il doit être orthographié exactement pareil !",
+                "addonDoesntExist": "Désolé, mais il est impossible d'accéder à cet addon. Es-tu sur qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q=%s>) ?",
                 "invalidCmd": "Il faut que tu ajoutes le nom d'un addon ! Vérifie qu'il soit disponible sur [skripttools](<https://skripttools.net/>) et orthographie-le de la même manière. Les majuscules n'importes pas.",
                 "list": "Liste des addons disponibles : `%s`",
                 "embed": {
@@ -162,8 +173,8 @@
                 }
             },
             "serverinfo": {
-                "help": "Afficher des informations sur un serveur.",
-                "description": "Afficher diverses informations sur un certain serveur.",
+                "help": "Afficher des informations sur un serveur minecraft.",
+                "description": "Afficher diverses informations sur un certain serveur minecraft, selon son IP.",
                 "embed": {
                     "status": "Statut",
                     "ip": "Adresse IP",
@@ -176,8 +187,8 @@
                 }
             },
             "playerinfo": {
-                "help": "Afficher des informations sur un joueur.",
-                "description": "Afficher diverses informations sur un certain joueur, que vous avez définit par son pseudo.",
+                "help": "Afficher des informations sur un joueur minecraft.",
+                "description": "Afficher diverses informations sur un certain joueur, que vous avez définit par son pseudo minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit premium...",
                 "noHistory": "Cet utilisateur n'a jamais changé de pseudo !",
                 "embed": {
@@ -201,7 +212,7 @@
                 "help": "Afficher la page d'aide.",
                 "description": "Afficher la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé.",
-                "header": "Les syntaxes des commandes se lisent comme un pattern skript."
+                "header": "Les syntaxes des commandes se lisent comme un pattern skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`"
             },
             "ticket": {
                 "help": "Créer un ticket dans le salon des tickets.",
@@ -247,6 +258,14 @@
                 "invalidCmd": "Il faut ajouter un rôle a mentionner !",
                 "invalidRole": "Désolé, mais le rôle '%s' est introuvable... Êtes-vous sûr de l'avoir orthographié de la même façon ?"
             },
+            "rules": {
+                "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
+                "description": "Permet de notifier un rôle qui n'est pas mentionnable.",
+                "messages": [
+                    "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, etc.).",
+                    "Rester clément même avec les débutants. Tout le monde n'est pas un expert en Skript."
+                ]
+            },
             "ping": {
                 "help": "Permet de savoir le ping du bot.",
                 "description": "Permet de savoir la latence entre vous et le bot."
@@ -257,7 +276,8 @@
             },
             "code": {
                 "help": "Permet de mettre votre code de façon claire.",
-                "description": "Permet de mettre votre code dans un block de code."
+                "description": "Permet de mettre votre code dans un block de code.",
+                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères)"
             },
             "statistics": {
                 "help": "Avoir diverses statistiques sur le bot et le serveur.",
@@ -266,9 +286,8 @@
             "addon_pack": {
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
                 "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.",
-                "invalidCmd": "Ajoute une version de minecraft valide et récente (1.9+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
+                "invalidVersion": "Ajoute une version de minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
                 "messages": [
-                    "Version des addons conseillées pour la 1.7 :\nSkript : 2.1.2",
                     "Version des addons conseillées pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
                     "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
@@ -283,25 +302,50 @@
                 "description": "Appliquer une restriction du discord à un joueur.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u ! \nRaison : %r\nDurée : %d",
-                "alreadyBanned": "%u est déjà banni (ou du moins il a déjà le rôle sous-fifre).",
-                "whyHere": "Bonjour %u ! Si tu te retrouves ici, c'est surement car tu as du enfreindre le réglement.... En tout cas un modérateur a décidé de te punir... de te bannir pour ainsi dire. Essaye de te justifier une dernière fois avant la sanction finale :wink: GLHF\n*(PS: désolé je n'y suis pour rien, je ne fais qu'executer les ordres, je suis un robot après tout.... bip boup bip bip)*"
+                "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
+                "whyHere": "Bonjour %u ! Tu es là pour avoir enfrein le règlement. Tu peux essayer de t'expliquer avec les modérateurs."
+            },
+            "unban": {
+                "help": "Retirer une restriction du discord à un joueur.",
+                "description": "Retirer une restriction du discord à un joueur.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "successfullyUnbanned": "Vous avez bien débanni %u ! \nRaison : %r",
+                "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données)."
             },
             "mute": {
                 "help": "Rendre muet un joueur.",
-                "description": "Rendre muet un joueur.",
+                "description": "Rendre muet un joueur dans les salons d'aide.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
-                "missingTypeArgument": "Vous n'avez pas spécifié de type de mute ! Choisissez parmis `skript`, `serveur`, `autre` et `global`.",
-                "invalidTypeArgument": "Le type de mute spécifié n'est pas valide ! Choisissez parmis `skript`, `serveur`, `autre` et `global`.",
-                "unableToSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u ! \nRaison : %r\nDurée : %d",
-                "alreadyMuted": "%u est déjà muet."
+                "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données)."
+            },
+            "unmute": {
+                "help": "Redonner la parole à un joueur.",
+                "description": "Redonner la parole à un joueur dans les salons d'aide.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "successfullyUnmuted": "Vous avez bien rendu la parole à %u ! \nRaison : %r",
+                "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données)."
+            },
+            "warn": {
+                "help": "Avertir un joueur.",
+                "description": "Donner un avertissement à un joueur.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "noSelfWarn": "Ne te warn pas toi même , boulet",
+                "successfullyWarned": "Vous avez bien averti %u ! \nRaison : %r",
+                "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc a revoir ton comportement."
             },
             "purge": {
                 "help": "Supprimer des messages dans un channel.",
@@ -310,20 +354,5 @@
                 "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message a supprimer !"
             }
         }
-    },
-
-    "miscellaneous": {
-        "notifRoleName": "Notifications Evènement",
-        "maxPollDuration": 604800000,
-        "api_addons": "https://api.skripttools.net/v4/addons/",
-        "api_skript": "https://api.skripttools.net/v4/skript/",
-        "api_syntax": "https://skripthub.net/api/v1",
-        "api_server": "https://api.mcsrvstat.us/2/",
-        "api_mojang_ss": "https://sessionserver.mojang.com/session/minecraft",
-        "api_mojang_api": "https://api.mojang.com",
-        "cmdPerPagesInHelp": 5,
-        "purgeLimit": 100,
-        "ideaChannelId": "358653742729396224",
-        "snippetChannelId": "549333475153412106"
     }
 }
