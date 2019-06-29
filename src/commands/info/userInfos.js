@@ -4,8 +4,6 @@ import { discordError } from '../../components/Messages';
 import config from "../../../config/config.json";
 import { formatDate } from "../../utils";
 
-const conf = config.messages.commands.userInfos;
-
 function explain(status) {
 	if (status === 'online')
 		return "En ligne";
@@ -20,17 +18,15 @@ function explain(status) {
 }
 
 class UserInfos extends Command {
-	
-	name = 'Info membre';
-	shortDescription = conf.shortDesc;
-	longDescription = conf.longDesc;
-	usage = `${config.bot.prefix}user-info <@mention | ID>`;
-	examples = ['userinfo @noftaly', 'user-infos 188341077902753794'];
-	regex = /(?:user|utilisateur)-?info(?:rmation)?s?-?(?:utilisateur)?s?/gmui;
-
-	execute = async (message, args) => {
+	constructor () {
+		super('userinfo')
+		this.usage = `${config.bot.prefix}user-info <@mention | ID>`;
+		this.examples = ['userinfo @noftaly', 'user-infos 188341077902753794'];
+		this.regex = /(?:user|utilisateur)-?info(?:rmation)?s?-?(?:utilisateur)?s?/gmui;
+	}
+	async execute(message, args) {
 		const target = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
-		if (!target) return discordError(conf.pseudoNotFound, message);
+		if (!target) return discordError(this.config.pseudoNotFound, message);
 
 		let roles = [];
 		for (let role of target.roles.array()) {
@@ -38,7 +34,7 @@ class UserInfos extends Command {
 				roles.push(role);
 			}
 		}
-		
+
 		let presence = '';
 		presence += `Statut : ${explain(target.presence.status)}\n`;
 		if (target.presence.game) {
@@ -63,12 +59,14 @@ class UserInfos extends Command {
 
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
-			.setAuthor(`Informations sur le membre ${target.user.username}`, "https://cdn.discordapp.com/avatars/434031863858724880/296e69ea2a7f0d4e7e82bc16643cdc60.png?size=128")
+			.setAuthor(`Informations sur le membre ${target.user.username}`, config.bot.avatar)
 			.setFooter(`Executé par ${message.author.username}`)
-			.addField(conf.embed.names, `Pseudo : ${target.user.username}\nSurnom : ${target.displayName}\nIdentifiant : ${target.id}\n`, true)
-			.addField(conf.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
-			.addField(conf.embed.roles, `${target.roles.array().length - 1} : ${roles.join(", ")}`, true)
-			.addField(conf.embed.presence, presence, true);
+			.setTimestamp()
+			.addField(this.config.embed.names, `Pseudo : ${target.user.username}\nSurnom : ${target.displayName}\nIdentifiant : ${target.id}\n`, true)
+			.addField(this.config.embed.created, formatDate(target.user.createdAt), true)
+			.addField(this.config.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
+			.addField(this.config.embed.roles, `${target.roles.array().length - 1} : ${roles.join(", ")}`, true)
+			.addField(this.config.embed.presence, presence, true);
 		
 		message.channel.send(embed);
 	}

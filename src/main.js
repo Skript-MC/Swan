@@ -3,7 +3,7 @@ import { success, discordError } from './components/Messages';
 
 export const config = require(`${__dirname}/../config/config.json`);
 export const pkg = require(`${__dirname}/../package.json`);
-export const client = loadBot(config.bot.tokens.discord);
+export const client = loadBot();
 export const SkriptHubSyntaxes = loadSkriptHubAPI();
 export const SkripttoolsAPI = loadSkripttoolsAPI();
 
@@ -13,12 +13,11 @@ export const sanctions = [];
 async function start() {
 
 	loadCommands();
-
 	client.on('ready', () => {
 		client.user.setActivity('.aide | Skript-MC', {type: 'WATCHING'});
 		setInterval(() => {
 			for (let sanction of sanctions) {
-				sanction.time --;
+				sanction.time--;
 				if (sanction.time === 0) {
 					if (sanction.role) sanction.victim.removeRole(sanction.role);
 				}

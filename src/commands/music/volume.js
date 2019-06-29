@@ -1,17 +1,15 @@
 import Command from '../../components/Command';
-import config from "../../../../config/config.json";
+import config from "../../../config/config.json";
 import { RichEmbed } from 'discord.js';
 
 class Volume extends Command {
-
-	name = 'Volume';
-	shortDescription = config.messages.commands.volume.shortDesc;
-	longDescription = config.messages.commands.volume.longDesc;
-	usage = `${config.bot.prefix}volume [volume%]`;
-	examples = ['volume', 'volume 50%'];
-	regex = /volume/gimu;
-
-	execute = async (message, args) => {
+	constructor () {
+		super('volume')
+		this.usage = `${config.bot.prefix}volume [volume%]`;
+		this.examples = ['volume', 'volume 50%'];
+		this.regex = /volume/gimu;
+	}
+	async execute(message, args) {
 		const embed = new RichEmbed()
 			.setColor(config.bot.color)
 			.setFooter(`Executé par ${message.author.username}`)

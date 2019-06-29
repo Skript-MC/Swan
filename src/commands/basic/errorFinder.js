@@ -1,6 +1,4 @@
 import Command from '../../components/Command';
-import Discord from 'discord.js';
-import Setup from '../../setup';
 
 class ErrorFinder extends Command {
 
@@ -13,40 +11,28 @@ class ErrorFinder extends Command {
 
 	async execute(message, args) {
 		const arg = args.join(' ').toLowerCase();
-		const embed = new Discord.RichEmbed()
-			.setAuthor('Trouve mon erreur', Setup.client.user.avatarURL)
-			.setColor(Setup.config.messages.colors.success)
-			.setFooter(`Executé par ${message.author.username}`, message.author.avatarURL)
-			.setTimestamp(new Date());
-		if (arg.match(/indentation/gmui)) {
-			embed.setDescription(this.config.messages.indentation);
-		} else if (arg.match(/can't understand this/gmui)) {
-			embed.setDescription(this.config.messages.cantunderstand);
-		} else if (arg.match(/empty configuration section/gmui)) {
-			embed.setDescription(this.config.messages.emptysection);
-		} else if (arg.match(/invalid use of quotes/gmui)) {
-			embed.setDescription(this.config.messages.invalidquotes);
-		} else if (arg.match(/there's no loop that match/gmui)) {
-			embed.setDescription(this.config.messages.noloopmatch);
-		} else if (arg.match(/"else" has to be place just after an "if"/gmui)) {
-			embed.setDescription(this.config.messages.elseafterif);
-		} else if (arg.match(/can't compare/gmui)) {
-			embed.setDescription(this.config.messages.cantcompare);
-		} else if (arg.match(/is not a valid item data/gmui)) {
-			embed.setDescription(this.config.messages.notvaliditemdata);
-		} else if (arg.match(/can't be added to/gmui)) {
-			embed.setDescription(this.config.messages.cantbeadded);
-		} else {
-			embed.setColor(Setup.config.messages.colors.error);
-		}
 
-		if (embed.color === Setup.config.messages.colors.error) {
-			embed.setDescription(this.config.messages.other);
+		if (arg.match(/indentation/gmui)) {
+			message.channel.send(this.config.error.indentation);
+		} else if (arg.match(/can't understand this/gmui)) {
+			message.channel.send(this.config.error.cantunderstand);
+		} else if (arg.match(/empty configuration section/gmui)) {
+			message.channel.send(this.config.error.emptysection);
+		} else if (arg.match(/invalid use of quotes/gmui)) {
+			message.channel.send(this.config.error.invalidquotes);
+		} else if (arg.match(/there's no loop that match/gmui)) {
+			message.channel.send(this.config.error.noloopmatch);
+		} else if (arg.match(/"else" has to be place just after an "if"/gmui)) {
+			message.channel.send(this.config.error.elseafterif);
+		} else if (arg.match(/can't compare/gmui)) {
+			message.channel.send(this.config.error.cantcompare);
+		} else if (arg.match(/is not a valid item data/gmui)) {
+			message.channel.send(this.config.error.notvaliditemdata);
+		} else if (arg.match(/can't be added to/gmui)) {
+			message.channel.send(this.config.error.cantbeadded);
 		} else {
-			embed.setDescription(`**__Nous avons trouvé votre erreur mais:__**\n\n${this.config.messages.other}`);
+			message.channel.send(this.config.error.other);
 		}
-		
-		message.channel.send(embed);
 	}
 
 }

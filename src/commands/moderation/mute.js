@@ -19,6 +19,7 @@ class Mute extends Command {
 		super('Mute');
 		this.usage = 'mute <@mention | ID> <durée> <raison>';
 		this.example = 'mute @AlexLew 5d Test';
+		this.regex = /mute/gmui;
 	}
 
 	async execute(message, args) {

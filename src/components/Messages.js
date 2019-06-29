@@ -1,16 +1,8 @@
-import { RichEmbed, Message } from "discord.js";
+import { RichEmbed } from "discord.js";
 import { config } from '../main';
 
 export function success(success) {
-	console.log(`[SkriptMc Bot] ✔️\t${success}`);
-}
-
-export function info(info) {
-	console.log(`[SkriptMc Bot] ℹ️\t${info}`);
-}
-
-export function error(error) {
-	throw new Error(error);
+	console.log(`[SkriptMc Bot] ✔️  ${success}`);
 }
 
 export function discordSuccess(success, message) {
@@ -20,7 +12,7 @@ export function discordSuccess(success, message) {
 		.setTitle('Succès')
 		.setColor(`${config.messages.success.color}`)
 		.setDescription(success)
-		.setTimestamp(new Date())
+		.setTimestamp()
 		.setFooter(`Executé par ${message.author.username}`);
 	message.channel.send(embed);
 }
@@ -32,7 +24,7 @@ export function discordInfo(info, message) {
 		.setTitle('Information')
 		.setColor(`${config.messages.info.color}`)
 		.setDescription(info)
-		.setTimestamp(new Date())
+		.setTimestamp()
 		.setFooter(`Executé par ${message.author.username}`);
 	message.channel.send(embed);
 }
@@ -44,7 +36,7 @@ export function discordWarning(warning, message) {
 		.setTitle('Avertissement')
 		.setColor(`${config.messages.warning.color}`)
 		.setDescription(warning)
-		.setTimestamp(new Date())
+		.setTimestamp()
 		.setFooter(`Executé par ${message.author.username}`);
 	message.channel.send(embed);
 }
@@ -56,7 +48,7 @@ export function discordError(error, message) {
 		.setTitle('Erreur')
 		.setColor(`${config.messages.errors.color}`)
 		.setDescription(error)
-		.setTimestamp(new Date())
+		.setTimestamp()
 		.setFooter(`Executé par ${message.author.username}`);
 	message.channel.send(embed);
 }
