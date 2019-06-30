@@ -7,10 +7,9 @@ import Datastore from 'nedb';
 import { RichEmbed } from 'discord.js';
 import { loadBot, loadCommands, loadSkriptHubAPI, loadSkripttoolsAddons, loadSkripttoolsSkript } from './setup';
 import { success, discordError } from './components/Messages';
-import { removeSanction } from './components/Log';
+import { removeSanction, isBan, hardBan } from './components/Moderation';
 
 export const config = require('../config/config.json');
-export const pkg = require('../package.json');
 
 export const client = loadBot();
 export const SkriptHubSyntaxes = loadSkriptHubAPI();
@@ -115,4 +114,10 @@ export const sanctions = [];
       }
     }
   });
+
+  client.on('guildMemberRemove', async (member) => {
+    if (await isBan(member.id)) hardBan(member, true);
+  });
+
+  client.on('error', error => console.error(error));
 })();

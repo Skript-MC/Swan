@@ -1,6 +1,6 @@
 import Command from '../../components/Command';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { modLog } from '../../components/Log';
+import { modLog } from '../../components/Moderation';
 
 class Warn extends Command {
   constructor() {
