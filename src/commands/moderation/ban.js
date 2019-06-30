@@ -28,8 +28,8 @@ class Ban extends Command {
     if (!victim) return discordError(this.config.missingUserArgument, message);
     if (!args[1]) return discordError(this.config.missingTimeArgument, message);
     if (!args[2]) return discordError(this.config.missingReasonArgument, message);
-    // if (victim.id === message.author.id) return discordError(this.config.unableToSelfBan, message);
-    // if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
+    if (victim.id === message.author.id) return discordError(this.config.unableToSelfBan, message);
+    if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
     // Regarde dans la database si le joueur est ban :
     database.find({ member: victim.id, sanction: 'ban' }, async (err, results) => {
       if (err) console.error(err);
