@@ -1,5 +1,6 @@
 import Command from '../../components/Command';
 import { discordError } from '../../components/Messages';
+import { config } from '../../main';
 
 class Rules extends Command {
   constructor() {
@@ -14,7 +15,7 @@ class Rules extends Command {
 
     const rule = parseInt(args[0], 10);
     if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) return discordError("Le numéro de la règle n'est pas valide !", message);
-    message.channel.send(this.config.messages[rule - 1]);
+    return message.channel.send(this.config.messages[rule - 1]);
   }
 }
 
