@@ -1,3 +1,4 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 import { RichEmbed } from 'discord.js';
 import Command from '../../components/Command';
@@ -67,7 +68,7 @@ class UserInfos extends Command {
       .addField(this.config.embed.names, `Pseudo : ${target.user.username}\nSurnom : ${target.displayName}\nIdentifiant : ${target.id}\n`, true)
       .addField(this.config.embed.created, formatDate(target.user.createdAt), true)
       .addField(this.config.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
-      .addField(this.config.embed.roles, `${target.roles.array().length - 1} : ${roles.join(', ')}`, true)
+      .addField(this.config.embed.roles, `${target.roles.array().length - 1 === 0 ? 'Aucun' : `${target.roles.array().length - 1} : ${roles.join(', ')}`}`, true)
       .addField(this.config.embed.presence, presence, true);
 
     message.channel.send(embed);
