@@ -7,3 +7,4 @@ build/
 .env
 .DS_Store
 database.db
+package-lock.json

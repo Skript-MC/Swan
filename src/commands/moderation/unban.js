@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import Command from '../../components/Command';
-import { removeSanction } from '../../components/Log';
+import { removeSanction } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { database } from '../../main';
+import { database, config } from '../../main';
 
 class Unban extends Command {
   constructor() {
@@ -24,6 +24,9 @@ class Unban extends Command {
       if (!result) return discordError(this.config.notBanned.replace('%u', victim), message);
 
       const reason = args.splice(1).join(' ') || 'Aucune raison spécifiée';
+
+      const chan = message.guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${victim.user.username.replace(/[^a-zA-Z]/gimu, '').toLowerCase()}` && c.type === 'text');
+      if (chan) chan.delete();
 
       const success = this.config.successfullyUnbanned
         .replace('%u', `${victim.user.username}`)

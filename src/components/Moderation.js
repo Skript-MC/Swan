@@ -1,12 +1,13 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
 import { RichEmbed } from 'discord.js';
-import { config, database } from '../main';
+import { config, client, database } from '../main';
 import { formatDate, secondToDuration } from '../utils';
 
 async function sendLog(info, guild, result = undefined) {
   let action;
   if (info.sanction === 'ban') action = 'Restriction du discord';
+  else if (info.sanction === 'hardban') action = 'Banissement';
   else if (info.sanction === 'mute') action = "Mute des channels d'aide";
   else if (info.sanction === 'avertissement') action = 'Avertissement';
 
@@ -30,40 +31,24 @@ async function sendLog(info, guild, result = undefined) {
   embed.addField(':scroll: Raison', `${info.reason}`, true);
   if (info.privateChannel) embed.addField(':speech_left: Channel privé', `${info.privateChannel}`, true);
 
-  // Création du channel log
-  let logChannel = guild.channels.find(c => c.name === config.moderation.log.channelName && c.type === 'text');
-  if (!logChannel) {
-    try {
-      logChannel = await guild.createChannel(config.moderation.log.channelName, 'text');
-      logChannel.setParent(config.moderation.log.categoryID);
-      logChannel.overwritePermissions(guild.roles.find(r => r.name === '@everyone'), { VIEW_CHANNEL: false });
-      logChannel.overwritePermissions(guild.roles.find(r => r.name === 'Staff'), {
-        VIEW_CHANNEL: true,
-        ADD_REACTIONS: false,
-        SEND_MESSAGES: false,
-        SEND_TTS_MESSAGES: false,
-        MANAGE_MESSAGES: false,
-      });
-    } catch (e) {
-      console.error(`Error while attempting to create the channel : ${e}`);
-    }
-  }
+  // Channel log
+  const logChannel = guild.channels.find(c => c.name === config.moderation.log.channelName && c.type === 'text');
   logChannel.send(embed);
 }
 
 /**
  * Fonction qui envoie un log des actions de modération
  * @param {Object} info - Informations sur l'action de modération:
- * - log: {boolean} si l'action doit être stockée dans la database
- * - sanction: {string} type de sanction appliquée
- * - color: {string} couleur de l'embed
- * - member: {GuildMember} utilisateur qui a été sanctionné
- * - mod: {User} modérateur qui a sanctionné
- * - duration: {string} durée de la sanction
- * - finish: {string} fin de la sanciton
- * - reason: {string} raison de la sanction
- * - privateChannel?: {GuildChannel} (facultatif) Channel privé créé entre le staff et l'utilisateur
- * @param {Guild} guild - Guild dans laquelle la sanction a été appliquée
+ * - info.log: {boolean} si l'action doit être stockée dans la database
+ * - info.sanction: {string} type de sanction appliquée
+ * - info.color: {string} couleur de l'embed
+ * - info.member: {GuildMember} utilisateur qui a été sanctionné
+ * - info.mod: {User} modérateur qui a sanctionné
+ * - info.duration: {string} durée de la sanction
+ * - info.finish: {string} fin de la sanciton
+ * - info.reason: {string} raison de la sanction
+ * - info.privateChannel?: {GuildChannel} (facultatif) Channel privé créé entre le staff et l'utilisateur
+ * @param {Guild} guild
  */
 export function modLog(info, guild) {
   // Ajout à la database
@@ -96,11 +81,11 @@ export function modLog(info, guild) {
  * - sanction: {string} type de sanction à retirer (ban/mute)
  * - reason: {string} raison de la sanction
  * - id: {string} ID de la sanction dans la database
- * @param {Guild} guild - Guild dans laquelle la sanction doit être retirée
+ * @param {Guild} guild
  */
 export function removeSanction(info, guild) {
-  database.remove({ _id: info.id }, {}, (err2) => {
-    if (err2) console.error(err2);
+  database.remove({ _id: info.id }, {}, (err) => {
+    if (err) console.error(err);
 
     const role = info.sanction === 'ban'
       ? guild.roles.find(r => r.name === config.moderation.banRole)
@@ -124,4 +109,40 @@ export function removeSanction(info, guild) {
       .addField(':scroll: Raison', `${info.reason}\nID : ${info.id}`, true);
     logChannel.send(embed);
   });
+}
+
+// Si sous-fifre
+export function isBan(id) {
+	return new Promise(resolve => {
+    database.findOne({ member: id, sanction: 'ban' }, (err, result) => {
+      if (err) console.error(err);
+      resolve(!!result); // Cast result en boolean. Donc si il y a un résultat : true, sinon : false
+    });
+  });
+}
+
+// Bannir vraiment du discord
+export function hardBan(member, ban) {
+  // Ban
+  if (ban) member.ban();
+
+  // Suppression de la database
+  database.remove({ _id: member.id }, {}, (err) => {
+    if (err) console.error(err);
+  });
+
+  // Suppression du channel perso
+  const guild = client.guilds.get(config.bot.guild);
+  const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${member.user.username.replace(/[^a-zA-Z]/gimu, '').toLowerCase()}` && c.type === 'text');
+  if (chan) chan.delete();
+
+  // Envoie d'un log
+  return modLog({
+    log: false,
+    sanction: 'hardban',
+    color: '#000000',
+    member,
+    mod: client.user,
+    reason: ban ? "Déconnexion du discord lors d'un banissement" : 'Banni par un modérateur',
+  }, guild);
 }
