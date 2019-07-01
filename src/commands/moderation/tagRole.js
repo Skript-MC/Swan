@@ -23,7 +23,7 @@ class TagRole extends Command {
           console.error(`An error occured while attempting to set the mentionable state of role ${role} to true.\nError : ${err.msg}`);
         }
       }
-      await message.channel.send(`${role}`);
+      await message.channel.send(`${role} :arrow_up: `);
       if (role.mentionable) {
         try {
           role.setMentionable(false);

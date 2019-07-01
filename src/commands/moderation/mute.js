@@ -1,5 +1,5 @@
 import Command from '../../components/Command';
-import { modLog } from '../../components/Log';
+import { modLog } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
 import { config, database } from '../../main';
 import { secondToDate } from '../../utils';

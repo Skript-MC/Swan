@@ -10,7 +10,8 @@ Bot discord de Skript-MC.
  - 3 Aller dans le répertoir du projet à partir de la console (command prompt pour Windows, shell pour linux, terminal pour macOS)
  - 4 Faire `npm i` dans la console 
  - 5 Renommer `.env.dist` en `.env`, puis y mettre vos tokens d'API
- - 6 Executer le bot à l'aide de la commande `npm start`
+ - 6 Remplissez les champs dans la config
+ - 7 Executer le bot à l'aide de la commande `npm start`
 
 # Report des bugs / Suggestions
 
