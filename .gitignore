@@ -1,0 +1,10 @@
+node_modules/*
+playlists/*
+playlist/*
+build/
+.idea/
+.vscode/*
+.env
+.DS_Store
+database.db
+package-lock.json
