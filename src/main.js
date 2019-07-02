@@ -58,7 +58,11 @@ export const sanctions = [];
 
   client.on('message', async (message) => {
     if (message.author.bot || message.system) return;
-
+    if (message.member.roles.has('269479421998530561') && message.content.includes('docs.skunity.com') {
+        embed = New RichEmbed().setColor('AQUA')
+            .setDescription('Petit Membre Actif: \n \n Tu semble manquer de neurones, pas de lien Skunity. Tu bouge ton cul et tu modifie la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
+        message.author.send(embed);
+    }
     // Channel "idée" : on ajoute les réactions
     if (message.channel.id === config.channels.idea) {
       message.react('✅').then(() => message.react('❌'));
