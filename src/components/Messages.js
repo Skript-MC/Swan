@@ -52,3 +52,10 @@ export function discordError(description, message) {
     .setFooter(`Executé par ${message.author.username}`);
   message.channel.send(embed);
 }
+export function ez_ma(message) {
+  if(message.channel.parentID == '533791418259341314' && message.member.roles.has('595353983816564805') && message.content.includes("docs.skunity.com")){
+    if(message.deletable) message.delete().catch(e => console.log(e))
+    let embed = new RichEmbed().setColor('AQUA').setDescription(`Petit Membre Actif: \n \n Tu semble manquer de neurones, pas de lien Skunity. Tu bouge ton cul et tu modifie la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi`);
+    message.author.send(embed)
+  }
+}

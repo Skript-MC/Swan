@@ -6,7 +6,7 @@
 import Datastore from 'nedb';
 import { RichEmbed } from 'discord.js';
 import { loadBot, loadCommands, loadSkriptHubAPI, loadSkripttoolsAddons, loadSkripttoolsSkript } from './setup';
-import { success, discordError } from './components/Messages';
+import { success, discordError, ez_ma } from './components/Messages';
 import { removeSanction, isBan, hardBan } from './components/Moderation';
 
 export const config = require('../config/config.json');
@@ -58,6 +58,9 @@ export const sanctions = [];
 
   client.on('message', async (message) => {
     if (message.author.bot || message.system) return;
+
+    // Anti envoi de liens vers la doc de skunity (pour les MA uniquement)
+    ez_ma(message)
 
     // Channel "idée" : on ajoute les réactions
     if (message.channel.id === config.channels.idea) {
