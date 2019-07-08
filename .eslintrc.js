@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     "extends": "airbnb-base",
     "rules": {
         "no-console": "off",
@@ -9,5 +9,6 @@ export default {
         "no-restricted-syntax": "off",
         "class-methods-use-this": "off",
         "no-restricted-globals": "off",
+        "max-len": "off",
     }
 };
