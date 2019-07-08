@@ -36,9 +36,7 @@
         },
         "banRole": "Sous-fifre",
         "muteRole": "Bailloné",
-        "banChannelPrefix": "b-",
-        "muteRolePosition": 3,
-        "banRolePosition": 3
+        "banChannelPrefix": "b-"
     },
 
     "miscellaneous": {
