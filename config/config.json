@@ -45,8 +45,7 @@
         "notifRoleName": "Notifications Evènement",
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
-        "purgeLimit": 100,
-        "marole": "269479421998530561"
+        "purgeLimit": 100
     },
 
     "apis": {
