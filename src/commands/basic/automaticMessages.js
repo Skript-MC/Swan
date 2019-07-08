@@ -29,6 +29,7 @@ class AutomaticMessages extends Command {
       message.react('✅');
       return message.member.send(this.config.messages.list.pvContent);
     } else if (arg.match(/liste?/gimu)) return message.channel.send(this.config.messages.list.content);
+    else if (arg.match(/§/gimu)) return message.channel.send(this.config.messages.uselesscommand.content);
     else return discordError(this.config.invalidMessage, message);
   }
 }
