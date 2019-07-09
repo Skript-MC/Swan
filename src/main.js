@@ -62,7 +62,7 @@ export const sanctions = [];
         message.delete();
         const embed = new RichEmbed()
             .setColor('AQUA')
-            .setDescription('Petit Membre Actif: \n \n Tu sembles manquer de neurones, pas de lien Skunity. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
+            .setDescription('Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
         message.author.send(embed);
     }
 
