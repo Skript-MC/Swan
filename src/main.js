@@ -58,11 +58,14 @@ export const sanctions = [];
 
   client.on('message', async (message) => {
     if (message.author.bot || message.system) return;
-    if (message.member.roles.has('269479421998530561') && message.content.includes('docs.skunity.com') {
-        const embed = new RichEmbed().setColor('AQUA')
-            .setDescription('Petit Membre Actif: \n \n Tu semble manquer de neurones, pas de lien Skunity. Tu bouge ton cul et tu modifie la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
+    if (message.member.roles.has('269479421998530561') && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
+        message.delete();
+        const embed = new RichEmbed()
+            .setColor('AQUA')
+            .setDescription('Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
         message.author.send(embed);
     }
+
     // Channel "idée" : on ajoute les réactions
     if (message.channel.id === config.channels.idea) {
       message.react('✅').then(() => message.react('❌'));
