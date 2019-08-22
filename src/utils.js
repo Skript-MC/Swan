@@ -35,3 +35,36 @@ export function secondToDuration(n) {
 
   return result;
 }
+
+/*
+Utilisation :
+
+import {timestamp} from '../../utils'
+const votrevar = timestamp('3j5h15m');
+
+Informations :
+a = Année
+mo = Mois
+s = semaine
+j = jour
+h = heure
+m = minute
+
+Nota: les lettres peuvent être en majuscule, ça sera pareil (le code fait pas la différence entre minuscule et majuscule)
+
+ */
+export function timestamp (str) {
+    const regexs = new Map();
+    regexs.set(/a/i, 29030400);
+    regexs.set(/mo/i, 2419200);
+    regexs.set(/s/i, 604800);
+    regexs.set(/j/i, 86400);
+    regexs.set(/h/i, 3600);
+    regexs.set(/m/i, 60);
+    String(str).replace(/ /, '');
+    regexs.forEach(function (valeur, regex) {
+        str = String(str).replace(regex, valeur + '*');
+    })
+    
+    return eval(str.slice(0, -1));
+}
