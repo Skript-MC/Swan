@@ -18,29 +18,27 @@
     },
 
     "channels": {
-        "helpSkript": "",
-        "helpSkript2": "",
-        "snippet": "",
-        "idea": "",
-        "suggestion": ""
+        "helpSkript": "215217809687445504",
+        "helpSkript2": "483673337223184394",
+        "helpSkript3": "598042593447641088",
+        "snippet": "549333475153412106",
+        "idea": "358653742729396224",
+        "suggestion": "589545763046948955",
+        "reunion": "509462709579022336"
     },
 
     "moderation": {
         "log": {
             "channelName": "sanctions",
-            "categoryID": ""
+            "categoryID": "593832460144607233"
         },
-        "roles": {
-            "ban": "",
-            "baillone": ""
-        },
-        "banRole": "Sous-fifre",
-        "muteRole": "Bailloné",
+        "banRole": "Sous Fifre",
+        "muteRole": "Bâillonné - Aide Skript",
         "banChannelPrefix": "b-"
     },
 
     "miscellaneous": {
-        "notifRoleName": "Notifications Evènement",
+        "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
         "purgeLimit": 100
@@ -69,7 +67,7 @@
                 "help": "Envoyer un message prédéfini.",
                 "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
                 "invalidMessage": "Désolé, mais ce message la n'existe pas...",
-                "noArg": "Envoyez un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande.",
+                "noArg": "Envoyez un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande.",
                 "messages": {
                     "asktoask": {
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serai capable de répondre a votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre quesetion directement, et si quelqu'un peut vous répondre, il vous répondra."
@@ -102,13 +100,17 @@
                         "pvContent": "Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coups avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%}Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est à dire que plutôt d'avoir 1 variable par joueur, il y a 1 variable, qui stocke tous les joueurs.Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simple variable même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."
                     },
                     "uselesscommand": {
-                        "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ca. Ca sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : http://bit.ly/30lSOBL et là : http://bit.ly/2Xv2oWd.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des Mods, des glitchs ou autre. Cela peut vraiment nuire a votre serveur, surtout si des fonctionnalités importantes reposes sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
+                        "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ca. Ca sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des Mods, des glitchs ou autre. Cela peut vraiment nuire a votre serveur, surtout si des fonctionnalités importantes reposes sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
+                    },
+                    "18": {
+                        "content": "La 1.8.x et antérieur ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://bit.ly/2KXlrm9>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise-à-jour avec les dernières fonctionnalités de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
                     }
                 }
             },
             "8ball": {
                 "help": "Répond par Oui ou Non à une question que vous lui posez.",
-                "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%"
+                "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%",
+                "noQuestion": "Vous devez ajouter une question !"
             },
             "error_finder": {
                 "help": "Permet de vous aider a régler les erreurs de vos scripts",
@@ -144,24 +146,6 @@
                     "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement conseillé de ne pas l'utiliser."
                 }
             },
-            "syntaxinfo": {
-                "help": "Avoir diverses informations sur une syntaxe.",
-                "description": "Avoir diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
-                "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
-                "invalidCmd": "Il faut que tu ajoutes le nom d'une syntaxe !",
-                "requestError": "Désolé, une erreur est survenue... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur.",
-                "httpError": "Désolé, une erreur est survenue lors de la requete HTTP... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur. Status de la requete : `%e`",
-                "embed": {
-                    "patternTitle": ":pencil: Pattern",
-                    "patternDesc": "```vb\n%s\n```",
-                    "noPattern": "Aucun pattern disponible.",
-                    "descriptionTitle": ":bookmark_tabs: Description",
-                    "noDescription": "Aucune description disponible",
-                    "infos": ":information_source: Informations diverses",
-                    "exampleTitle": ":bulb: Exemple",
-                    "exampleDesc": "```vb\n%s\n```"
-                }
-            },
             "skriptinfo": {
                 "help": "Avoir diverses informations sur Skript.",
                 "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version minecraft...",
@@ -169,7 +153,7 @@
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalités de skript.\n\n:black_small_square: La dernière version de skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.x et antérieur ne sont pas et ne seront jamais supportées. Pour utiliser skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalités de skript.\n\n:black_small_square: La dernière version de skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.x et antérieur ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise-à-jour avec les dernières fonctionnalités de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
                     "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
@@ -201,6 +185,7 @@
             "userinfo": {
                 "shortDesc": "Afficher des informations sur un membre.",
                 "longDesc": "Afficher diverses informations sur un certain membre du discord Skript-Mc, que vous avez définit par son ID ou en le mentionnant (évitez de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites clique-droit sur son pseudo > Copier l'Identifiant).",
+                "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
                 "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce discord !",
                 "embed": {
                     "joined": "❯ A rejoint le serveur",
@@ -219,6 +204,11 @@
             "ticket": {
                 "help": "Créer un ticket dans le salon des tickets.",
                 "description": "Créer un ticket dans le salon des tickets, selon un modèle d'aide définit."
+            },
+            "reunion": {
+                "help": "Créer un ticket dans le salon des tickets.",
+                "description": "Créer un ticket dans le salon des tickets, selon un modèle d'aide définit.",
+                "announce": "Réunion %s commence"
             },
             "links": {
                 "help": "Avoir plusieurs liens importants relatifs à Skript.",
@@ -250,8 +240,12 @@
             "poll": {
                 "help": "Lancer un sondage.",
                 "description": "Lancer un sondage temporaire par lequel on peut répondre Oui ou Non.",
-                "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond DURÉE TITRE DESCRIPTION```\n**DURÉE** est composée d'un nombre suivis sans espaces de `s` pour `seconde` ou de `min` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**TITRE** est un texte, sans espace. Les \"_\" du titre seront convertis en espaces.\n**DESCRIPTION** est un texte, avec espace. Ce champs est facultatif.\nExemple de commande : ```.sond 10min Mon_titre Mon sondage !```",
-                "pollInfos": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "invalidDuration": "La durée marquée est invalide ! Impossible de la lire...",
+                "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivis sans espaces de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** Est une option de réponse, entre guillement. Ce champs est facultatif, car si vous ne mettez aucune réponse, on devra répondre a votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
+                "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
+                "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
+                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vont convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
                 "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours (%sms)."
             },
             "tag_role": {
@@ -305,12 +299,13 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
                 "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u ! \nRaison : %r\nDurée : %d",
                 "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
-                "whyHere": "Bonjour %u ! Tu es là pour avoir enfrein le règlement. Tu peux essayer de t'expliquer avec les modérateurs."
+                "whyHere": "Bonjour %u ! Tu es là pour avoir enfrein le règlement. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %t"
             },
             "unban": {
                 "help": "Retirer une restriction du discord à un joueur.",
@@ -318,7 +313,8 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "successfullyUnbanned": "Vous avez bien débanni %u ! \nRaison : %r",
-                "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données)."
+                "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
+                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez-donc pas la gérer."
             },
             "mute": {
                 "help": "Rendre muet un joueur.",
@@ -326,9 +322,10 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
+                "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
                 "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "wrongDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `s` (seconde), `min` (minute), `h` (heure), `j` ou `d` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u ! \nRaison : %r\nDurée : %d",
                 "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données)."
             },
@@ -338,7 +335,8 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "successfullyUnmuted": "Vous avez bien rendu la parole à %u ! \nRaison : %r",
-                "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données)."
+                "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
+                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez-donc pas la gérer."
             },
             "warn": {
                 "help": "Avertir un joueur.",
