@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
 import { RichEmbed } from 'discord.js';
-import { config, client, database } from '../main';
+import { config, client, sanctionDb } from '../main';
 import { formatDate, secondToDuration } from '../utils';
 
 async function sendLog(info, guild, result = undefined) {
@@ -53,7 +53,7 @@ async function sendLog(info, guild, result = undefined) {
 export function modLog(info, guild) {
   // Ajout à la database
   if (info.log) {
-    database.insert({
+    sanctionDb.insert({
       sanction: info.sanction,
       reason: info.reason,
       member: info.member.user.id,
@@ -63,7 +63,7 @@ export function modLog(info, guild) {
       finish: info.finish,
     });
     // On retrouve la sanction qu'on vient d'ajouter pour avoir son ID
-    database.findOne({ member: info.member.id, sanction: info.sanction }, (err, result) => {
+    sanctionDb.findOne({ member: info.member.id, sanction: info.sanction }, (err, result) => {
       if (err) console.error(err);
       sendLog(info, guild, result);
     });
@@ -84,7 +84,7 @@ export function modLog(info, guild) {
  * @param {Guild} guild
  */
 export function removeSanction(info, guild) {
-  database.remove({ _id: info.id }, {}, (err) => {
+  sanctionDb.remove({ _id: info.id }, {}, (err) => {
     if (err) console.error(err);
 
     const role = info.sanction === 'ban'
@@ -97,6 +97,9 @@ export function removeSanction(info, guild) {
         console.error(e);
       }
     }
+
+    const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${info.member.user.username.replace(/[^a-zA-Z0-9]/gimu, '').toLowerCase()}` && c.type === 'text');
+    if (chan) chan.delete();
 
     const logChannel = guild.channels.find(c => c.name === config.moderation.log.channelName && c.type === 'text');
     const embed = new RichEmbed()
@@ -113,8 +116,8 @@ export function removeSanction(info, guild) {
 
 // Si sous-fifre
 export function isBan(id) {
-	return new Promise(resolve => {
-    database.findOne({ member: id, sanction: 'ban' }, (err, result) => {
+  return new Promise((resolve) => {
+    sanctionDb.findOne({ member: id, sanction: 'ban' }, (err, result) => {
       if (err) console.error(err);
       resolve(!!result); // Cast result en boolean. Donc si il y a un résultat : true, sinon : false
     });
@@ -127,7 +130,7 @@ export function hardBan(member, ban) {
   if (ban) member.ban();
 
   // Suppression de la database
-  database.remove({ _id: member.id }, {}, (err) => {
+  sanctionDb.remove({ _id: member.id }, {}, (err) => {
     if (err) console.error(err);
   });
 
