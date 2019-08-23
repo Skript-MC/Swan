@@ -1,16 +1,17 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 import Command from '../../components/Command';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { database } from '../../main';
+import { sanctionDb } from '../../main';
 import { removeSanction } from '../../components/Moderation';
 
 class Unmute extends Command {
   constructor() {
     super('Unmute');
+    this.regex = /unmute/gimu;
     this.usage = 'unmute <@mention | ID> <raison>';
     this.examples.push('unmute @4rno G mété tronpé hé');
     this.permissions.push('Staff');
-    this.regex = /unmute/gmui;
   }
 
   async execute(message, args) {
@@ -18,10 +19,11 @@ class Unmute extends Command {
     if (!victim) return discordError(this.config.missingUserArgument, message);
     if (!args[1]) return discordError(this.config.missingReasonArgument, message);
     // Regarde dans la database si le joueur est mute :
-    database.findOne({ member: victim.id, sanction: 'mute' }, (err, result) => {
+    sanctionDb.findOne({ member: victim.id, sanction: 'mute' }, (err, result) => {
       if (err) console.error(err);
 
       if (!result) return discordError(this.config.notMuted.replace('%u', victim), message);
+      if (result.modid !== message.author.id) return discordError(this.config.notYou, message);
 
       const reason = args.splice(1).join(' ') || 'Aucune raison spécifiée';
 
