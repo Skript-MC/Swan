@@ -8,9 +8,9 @@ import { config } from '../../main';
 class ServerInfo extends Command {
   constructor() {
     super('serverinfo');
+    this.regex = /se?rv(?:eu?r)?-?info(?:rmation)?s?/gimu;
     this.usage = `${config.bot.prefix}serveur-info <IP>`;
     this.examples.push('serv-info hypixel.net');
-    this.regex = /se?rv(?:eu?r)?-?info(?:rmation)?s?/gmui;
   }
 
   async execute(message, args) {
