@@ -3,7 +3,7 @@ import Command from '../../components/Command';
 class Code extends Command {
   constructor() {
     super('Code');
-    this.regex = /(code|balise)/gmui;
+    this.regex = /(code|balise)/gimu;
     this.usage = 'code <votre code>';
     this.examples.push('code broadcast "Yeah!"');
   }
