@@ -1,22 +1,32 @@
+/* eslint-disable no-loop-func */
 /* eslint-disable consistent-return */
 import { RichEmbed } from 'discord.js';
 import Command from '../../components/Command';
 import { config } from '../../main';
 import { discordError, discordInfo } from '../../components/Messages';
-import { formatDate } from '../../utils';
+import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
 
-const durations = {
-  's(ec(ond)?)?e?': 1,
-  'min(ute)?': 60,
-  'h(our|eure?)?': 3600,
-  '(d(ay)?)|(j(our)?)': 86400,
+const reactions = {
+  yesno: ['✅', '❌'],
+  multiple: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟', '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭'],
+  basic: ['ℹ', '🛑'],
 };
-const reactions = ['✅', '❌', 'ℹ', '🛑'];
 
-function endPoll(msg, embed, collectors, results) {
+function endPoll(msg, embed, collectors, votes, answers, questionType) {
+  const voters = votes.reduce((acc, cur) => acc + cur);
+  let results = '';
+  if (questionType === 0) {
+    results = `:white_check_mark: : ${votes[0]} oui (${100 * votes[0] / voters || 0}%)\n:x: : ${votes[1]} non (${100 * votes[1] / voters || 0}%)\n:bust_in_silhouette: : ${voters} votant(s).`;
+  } else if (questionType === 1) {
+    for (let i = 0; i < votes.length; i++) {
+      results += `${reactions.multiple[i]} : ${votes[i]} ${answers[i]} (${100 * votes[i] / voters || 0}%)\n`;
+    }
+    results += `\n:bust_in_silhouette: : ${voters} votant(s).`;
+  }
+
   embed.setColor(config.colors.success)
-    .setDescription('Ce vote est finit !')
-    .addField('Résultats :', `:white_check_mark: : ${results.yes} oui (${100 * results.yes / (results.yes + results.no) || 0}%)\n:x: : ${results.no} non (${100 * results.no / (results.yes + results.no) || 0}%)\n:bust_in_silhouette: : ${(results.yes + results.no)} votant(s).`);
+    .setTitle('Ce vote est finit !')
+    .addField('Résultats :', results);
   collectors.collector.stop();
   collectors.collectorInfo.stop();
   collectors.collectorStop.stop();
@@ -27,80 +37,89 @@ function endPoll(msg, embed, collectors, results) {
 class Poll extends Command {
   constructor() {
     super('poll');
-    this.usage = `${config.bot.prefix}poll <durée> [description avec espaces]`;
-    this.examples.push('poll 10min Mon_titre Ma description');
-    this.regex = /poll|vote|sond(?:age)?/gmui;
+    this.regex = /poll|vote|sond(?:age)?/gimu;
+    this.usage = `${config.bot.prefix}poll <durée> "<sondage>" ["réponse 1"] ["réponse 2"] ...`;
+    this.examples.push('poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'poll 10m "votre sondage"');
   }
 
   async execute(message, args) {
-    if (args.length < 2) return discordError(config.messages.commands.poll.invalidCmd, message);
-    for (const duration of Object.keys(durations)) {
-      if (args[0].match(new RegExp(duration, 'gmui'))) {
-        let finished;
-        let no = 0;
-        let yes = 0;
+    if (args.length < 1) return discordError(this.config.invalidCmd, message);
 
-        const mult = durations[duration];
-        const time = args[0].split(/[a-zA-Z]+/gmui)[0];
-        const wait = mult * time * 1000;
-        if (wait > config.miscellaneous.maxPollDuration) {
-          return discordError((config.messages.commands.poll.tooLong).replace('%s', `${config.miscellaneous.maxPollDuration}`), message);
-        }
-        // wait = durations[duration] * args[0].split(/[a-zA-Z]+/gmui)[0] * 1000;
-        const date = new Date(Date.now() + wait);
-        const end = formatDate(date);
+    const duration = args.shift(); // Extraction de la durée
+    const answers = extractQuotedText(args.join(' ')); // Array de toutes les réponses
+    const question = answers.shift(); // Extraction de la question
+    const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
-        const embed = new RichEmbed()
-          .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
-          .setTitle(args[1].replace(/_/gmui, ' '))
-          .setDescription(`${args.splice(2, args.length).join(' ')}\n\nCe vote dure : ${args[0]} (Finit ${end})`)
-          .setFooter(`Executé par ${message.author.username}`)
-          .setTimestamp();
+    if (answers.length === 1) return discordError(this.config.notEnoughAnswers, message);
+    if (answers.length >= 18) return discordError(this.config.tooManyAnswers, message);
 
-        const msg = await message.channel.send(embed);
-        for (const r of reactions) await msg.react(r);
+    const wait = toTimestamp(duration);
+    if (wait === -1) return discordError(this.config.invalidDuration, message);
+    if (wait > config.miscellaneous.maxPollDuration) return discordError((this.config.tooLong).replace('%s', `${config.miscellaneous.maxPollDuration}`), message);
+    const end = formatDate(new Date(Date.now() + wait));
 
-        embed.setColor(config.colors.default);
-        await msg.edit(embed);
-
-        const collector = msg
-          .createReactionCollector((reaction, user) => !user.bot
-            && (reaction.emoji.name === '✅'
-            || reaction.emoji.name === '❌'))
-          .once('collect', (reaction) => {
-            if (reaction.emoji.name === '❌') no += 1;
-            else if (reaction.emoji.name === '✅') yes += 1;
-          });
-
-        const collectorInfo = msg
-          .createReactionCollector((reaction, user) => !user.bot
-            && reaction.emoji.name === 'ℹ'
-            && user.id === message.author.id)
-          .once('collect', () => {
-            discordInfo(config.messages.commands.poll.pollInfos, message);
-          });
-
-        const collectorStop = msg
-          .createReactionCollector((reaction, user) => !user.bot
-            && reaction.emoji.name === '🛑'
-            && user.id === message.author.id)
-          .once('collect', () => {
-            const results = { yes, no };
-            const collectors = { collector, collectorInfo, collectorStop };
-            endPoll(msg, embed, collectors, results);
-            finished = true;
-          });
-
-        setTimeout(() => {
-          if (finished) return;
-          const results = { yes, no };
-          const collectors = { collector, collectorInfo, collectorStop };
-          endPoll(msg, embed, collectors, results);
-        }, wait);
-        return;
+    let possibleAnswers = '';
+    if (questionType === 0) {
+      possibleAnswers = ':white_check_mark: Oui\n:x: Non';
+    } else {
+      for (let i = 0; i < answers.length; i++) {
+        possibleAnswers += `${reactions.multiple[i]} ${answers[i]}\n`;
       }
     }
-    discordError(config.messages.commands.poll.invalidCmd, message);
+
+    const embed = new RichEmbed()
+      .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
+      .addField('Question', question)
+      .addField('Réponses possibles', possibleAnswers)
+      .addField('Durée', `Ce vote dure : ${duration} (Finit ${end})`)
+      .setFooter(`Executé par ${message.author.username}`)
+      .setTimestamp();
+
+    const msg = await message.channel.send(embed);
+    if (questionType === 0) for (const r of reactions.yesno) await msg.react(r);
+    else if (questionType === 1) for (let i = 0; i < answers.length; i++) await msg.react(reactions.multiple[i]);
+
+    for (const r of reactions.basic) await msg.react(r);
+
+    embed.setColor(config.colors.default);
+    await msg.edit(embed);
+
+    const len = questionType === 0 ? 2 : answers.length;
+    const votes = new Array(len).fill(0);
+    let finished = false;
+
+    const collector = msg
+      .createReactionCollector((reaction, user) => !user.bot
+        && ((questionType === 0 && reactions.yesno.includes(reaction.emoji.name))
+          || (questionType === 1 && reactions.multiple.includes(reaction.emoji.name))))
+      .once('collect', (reaction) => {
+        if (questionType === 0) votes[reactions.yesno.indexOf(reaction.emoji.name)] += 1;
+        else if (questionType === 1) votes[reactions.multiple.indexOf(reaction.emoji.name)] += 1;
+      });
+
+    const collectorInfo = msg
+      .createReactionCollector((reaction, user) => !user.bot
+        && reaction.emoji.name === 'ℹ'
+        && user.id === message.author.id)
+      .once('collect', () => {
+        discordInfo(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message);
+      });
+
+    const collectorStop = msg
+      .createReactionCollector((reaction, user) => !user.bot
+        && reaction.emoji.name === '🛑'
+        && user.id === message.author.id)
+      .once('collect', () => {
+        const collectors = { collector, collectorInfo, collectorStop };
+        endPoll(msg, embed, collectors, votes, answers, questionType);
+        finished = true;
+      });
+
+    setTimeout(() => {
+      if (finished) return;
+      const collectors = { collector, collectorInfo, collectorStop };
+      endPoll(msg, embed, collectors, votes, answers, questionType);
+    }, wait);
   }
 }
 
