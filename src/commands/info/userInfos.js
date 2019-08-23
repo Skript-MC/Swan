@@ -22,12 +22,13 @@ function explain(status) {
 class UserInfos extends Command {
   constructor() {
     super('userinfo');
+    this.regex = /(?:user|utilisateur)-?info(?:rmation)?s?-?(?:utilisateur)?s?/gimu;
     this.usage = `${config.bot.prefix}user-info <@mention | ID>`;
     this.examples.push('userinfo @noftaly', 'user-infos 188341077902753794');
-    this.regex = /(?:user|utilisateur)-?info(?:rmation)?s?-?(?:utilisateur)?s?/gmui;
   }
 
   async execute(message, args) {
+    if (args.length < 1) return discordError(this.config.invalidCmd, message);
     const target = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
     if (!target) return discordError(this.config.pseudoNotFound, message);
 
