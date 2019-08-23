@@ -5,9 +5,9 @@ import { modLog } from '../../components/Moderation';
 class Warn extends Command {
   constructor() {
     super('Warn');
+    this.regex = /warn/gimu;
     this.usage = 'warn <@mention | ID> <raison>';
     this.examples.push('warn @polymeth Langage incorrect');
-    this.regex = /warn/gmui;
     this.permissions.push('Staff');
   }
 
