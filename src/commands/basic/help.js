@@ -10,7 +10,7 @@ const cmdPerPage = config.miscellaneous.cmdPerPagesInHelp;
 class Help extends Command {
   constructor() {
     super('help');
-    this.regex = /(help|aide)/gmui;
+    this.regex = /(help|aide)/gimu;
     this.usage = 'help [<commande | page>]';
     this.examples.push('help ping', 'help', 'help 4');
   }
