@@ -58,7 +58,7 @@ export const sanctions = [];
           }, guild);
         }
       });
-    });
+    }, 1000);
   });
 
   client.on('message', async (message) => {
