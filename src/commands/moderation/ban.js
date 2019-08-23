@@ -1,25 +1,17 @@
+/* eslint-disable no-bitwise */
 import Command from '../../components/Command';
 import { modLog } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { config, database } from '../../main';
-import { secondToDuration } from '../../utils';
-
-const durations = {
-  '(\\d+)s(econde?s?)?': 1,
-  '(\\d+)min(ute?)?': 60,
-  '(\\d+)h((e|o)ure?s?)?': 3600,
-  '(\\d+)(d(ay)?|j(our)?)s?': 86400,
-  '(\\d+)mo(is|onths?)?': 2629800,
-  'def(initi(f|ve))?': -1,
-};
+import { config, sanctionDb } from '../../main';
+import { secondToDuration, toTimestamp } from '../../utils';
 
 class Ban extends Command {
   constructor() {
     super('Ban');
+    this.regex = /ban/gimu;
     this.usage = 'ban <@mention | ID> <durée> <raison>';
-    this.examples.push('ban @AlexLew 5d Une raison valable... ou non');
+    this.examples.push('ban @Uneo7 5j Mouahaha');
     this.permissions.push('Staff');
-    this.regex = /ban/gmui;
   }
 
   async execute(message, args) {
@@ -31,30 +23,27 @@ class Ban extends Command {
     if (victim.id === message.author.id) return discordError(this.config.unableToSelfBan, message);
     if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
     // Regarde dans la database si le joueur est ban :
-    database.find({ member: victim.id, sanction: 'ban' }, async (err, results) => {
+    sanctionDb.find({ member: victim.id, sanction: 'ban' }, async (err, results) => {
       if (err) console.error(err);
 
       if (results.length > 0) return discordError(this.config.alreadyBanned.replace('%u', victim), message);
 
       const reason = args.splice(2).join(' ') || 'Aucune raison spécifiée';
+      const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
+      if (duration === -1 && args[1] !== 'def') return discordError(this.config.invalidDuration, message);
 
-      let duration;
-      for (const durationRegex of Object.keys(durations)) {
-        const match = new RegExp(durationRegex, 'gimu').exec(args[1]);
-        if (match) {
-          duration = parseInt(args[1].replace(new RegExp(durationRegex, 'gimu'), '$1'), 10) * durations[durationRegex] || -1;
-          break;
-        }
-      }
+      // Durée maximale des sanctions des modos forum : 2h
+      if (message.member.roles.has('274282181537431552') && (duration === -1 || duration > 7200)) return discordError(this.config.durationTooLong);
 
       // Créer un channel perso
-      let chan = message.guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${victim.user.username.replace(/[^a-zA-Z]/gimu, '').toLowerCase()}` && c.type === 'text');
+      let chan = message.guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${victim.user.username.replace(/[^a-zA-Z0-9]/gimu, '').toLowerCase()}` && c.type === 'text');
       if (!chan) {
         try {
           chan = await message.guild.createChannel(`${config.moderation.banChannelPrefix}${victim.user.username.replace(/[^a-zA-Z0-9]/gimu, '').toLowerCase()}`, { type: 'text' });
           chan.setParent(config.moderation.log.categoryID);
           await chan.overwritePermissions(message.guild.roles.find(r => r.name === '@everyone'), { VIEW_CHANNEL: false });
-          await chan.overwritePermissions(message.guild.roles.find(r => r.name === 'Staff'), { VIEW_CHANNEL: true });
+          await chan.overwritePermissions(message.guild.roles.find(r => r.name === 'Staff'), { MANAGE_CHANNELS: false, VIEW_CHANNEL: true });
+          await chan.overwritePermissions(message.author, { MANAGE_CHANNELS: true });
           await chan.overwritePermissions(victim, { VIEW_CHANNEL: true });
         } catch (e) {
           console.error('Error while attempting to create the channel :');
@@ -75,7 +64,7 @@ class Ban extends Command {
         .replace('%d', secondToDuration(duration));
 
       discordSuccess(success, message);
-      chan.send(this.config.whyHere.replace('%u', `${victim.user.username}`));
+      chan.send(this.config.whyHere.replace('%u', `${victim.user.username}`).replace('%t', secondToDuration(duration)));
 
       return modLog({
         log: true,
