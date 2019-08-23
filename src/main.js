@@ -5,19 +5,24 @@
 /* eslint-disable import/no-cycle */
 import Datastore from 'nedb';
 import { RichEmbed } from 'discord.js';
-import { loadBot, loadCommands, loadSkriptHubAPI, loadSkripttoolsAddons, loadSkripttoolsSkript } from './setup';
+import { loadBot, loadCommands, loadSkripttoolsAddons, loadSkripttoolsSkript } from './setup';
 import { success, discordError } from './components/Messages';
 import { removeSanction, isBan, hardBan } from './components/Moderation';
 
 export const config = require('../config/config.json');
 
 export const client = loadBot();
-export const SkriptHubSyntaxes = loadSkriptHubAPI();
 export const SkripttoolsAddons = loadSkripttoolsAddons();
 export const SkripttoolsSkript = loadSkripttoolsSkript();
 
-export const database = new Datastore('database.db');
-database.loadDatabase();
+export const sanctionDb = new Datastore('sanctions.db');
+sanctionDb.loadDatabase((err) => {
+  if (err) {
+    console.warn("Impossible de charger la BDD 'sanctions.db' :");
+    return console.error(err);
+  }
+  return success('Database "Sanctions" loaded!');
+});
 
 export const commands = [];
 export const sanctions = [];
@@ -39,7 +44,7 @@ export const sanctions = [];
           $not: { finish: -1 },
         }],
       };
-      database.find(query, (err, results) => {
+      sanctionDb.find(query, (err, results) => {
         if (err) console.error(err);
 
         for (const result of results) {
@@ -53,17 +58,17 @@ export const sanctions = [];
           }, guild);
         }
       });
-    }, 10000);
+    });
   });
 
   client.on('message', async (message) => {
     if (message.author.bot || message.system) return;
     if (message.member.roles.has('269479421998530561') && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
-        message.delete();
-        const embed = new RichEmbed()
-            .setColor('AQUA')
-            .setDescription('Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
-        message.author.send(embed);
+      message.delete();
+      const embed = new RichEmbed()
+        .setColor('AQUA')
+        .setDescription('Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi');
+      message.author.send(embed);
     }
 
     // Channel "idée" : on ajoute les réactions
