@@ -7,9 +7,9 @@ import { SkripttoolsSkript, config } from '../../main';
 class SkriptInfo extends Command {
   constructor() {
     super('skriptinfo');
+    this.regex = /s(?:k|c)(?:ript?)?-?infos?/gimu;
     this.usage = `${config.bot.prefix}skript-info`;
     this.examples.push('skriptInfo');
-    this.regex = /s(?:k|c)(?:ript?)?-?infos?/gimu;
   }
 
   async execute(message, _args) {
