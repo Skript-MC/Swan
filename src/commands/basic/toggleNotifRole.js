@@ -4,9 +4,9 @@ import { config } from '../../main';
 class ToggleNotifRole extends Command {
   constructor() {
     super('Toggle role notification');
+    this.regex = /(add|give|ask|toggle|remove)(-|_)?notif(ication)?(-|_)?role/gimu;
     this.usage = 'toggle-notif-role';
     this.examples.push('toggle-notif-role');
-    this.regex = /(add|give|ask|toggle|remove)(-|_)?notif(ication)?(-|_)?role/gmui;
   }
 
   async execute(message, _args) {
