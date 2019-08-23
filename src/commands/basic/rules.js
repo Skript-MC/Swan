@@ -5,7 +5,7 @@ import { config } from '../../main';
 class Rules extends Command {
   constructor() {
     super('Rules');
-    this.regex = /(rule|r(e|è)gle)s?/gmui;
+    this.regex = /(rule|r(e|è)gle)s?/gimu;
     this.usage = 'rule <règle>';
     this.examples.push('rule 2');
   }
