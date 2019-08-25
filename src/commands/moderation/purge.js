@@ -5,7 +5,7 @@ import { config, client } from '../../main';
 class Purge extends Command {
   constructor() {
     super('Purge');
-    this.regex = /purge/gmui;
+    this.regex = /purge/gimu;
     this.usage = 'purge [<@mention>]';
     this.examples.push('purge @utilisateur 20');
     this.permissions.push('Staff');

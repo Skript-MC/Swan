@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "3.0.1",
+  "version": "1.0.0",
   "description": "Bot discord de Skript-Mc.",
   "main": "src/main.js",
   "scripts": {
@@ -18,8 +18,8 @@
   "dependencies": {
     "axios": "^0.19.0",
     "discord.js": "^11.5.1",
-    "dotenv": "^8.0.0",
-    "mathjs": "^6.0.2",
+    "dotenv": "^8.1.0",
+    "mathjs": "^6.1.0",
     "nedb": "^1.8.0"
   },
   "devDependencies": {

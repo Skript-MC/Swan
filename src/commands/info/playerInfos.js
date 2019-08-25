@@ -9,9 +9,9 @@ import { formatDate } from '../../utils';
 class PlayerInfos extends Command {
   constructor() {
     super('playerinfo');
+    this.regex = /(?:player|joueur)-?info(?:rmation)?s?/gimu;
     this.usage = `${config.bot.prefix}player-info <pseudo>`;
     this.examples.push('player-info noftaly');
-    this.regex = /(?:player|joueur)-?info(?:rmation)?s?/gmui;
   }
 
   async execute(message, args) {
@@ -20,7 +20,7 @@ class PlayerInfos extends Command {
     // On récupère l'UUID du joueur a partir de son pseudo
     const uuid = await axios(`${config.apis.mojang_api}/users/profiles/minecraft/${args[0]}`, { method: 'GET' })
       .then(async (response) => {
-        if (response.status === 204) { discordError('Impossible de trouver ce joueur, désolé', message); return -1; }
+        if ([204, 400, 404].includes(response.status)) { discordError('Impossible de trouver ce joueur, désolé', message); return -1; }
         if (response.status !== 200) { this.httpError(response, message); return -1; }
         return response.data.id;
       }).catch(err => console.error(err));

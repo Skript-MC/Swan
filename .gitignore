@@ -6,5 +6,5 @@ build/
 .vscode/*
 .env
 .DS_Store
-database.db
+sanctions.db
 package-lock.json
