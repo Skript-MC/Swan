@@ -3,7 +3,7 @@ import Command from '../../components/Command';
 class Ping extends Command {
   constructor() {
     super('Ping');
-    this.regex = /(ping|ms)/gmui;
+    this.regex = /(ping|ms)/gimu;
     this.usage = 'ping';
     this.examples.push('ping');
   }

@@ -11,16 +11,9 @@ require('dotenv').config();
 
 const apikeys = {
   discord: process.env.DISCORD_API,
-  skripthub: process.env.SKRIPTHUB_API,
 };
 
 const GET = { method: 'GET' };
-const GETtoken = {
-  method: 'GET',
-  headers: {
-    Authorization: `Token ${apikeys.skripthub}`,
-  },
-};
 
 export function loadBot() {
   const client = new Discord.Client();
@@ -28,9 +21,7 @@ export function loadBot() {
   return client;
 }
 
-
-export async function loadCommands(path) {
-  if (!path) path = 'commands';
+export async function loadCommands(path = 'commands') {
   console.log(`loading : ${path}`);
   fs.readdir(`${__dirname}/${path}`, (err, files) => {
     if (err) throw err;
@@ -54,28 +45,6 @@ export async function loadCommands(path) {
       }
     }
   });
-}
-
-export async function loadSkriptHubAPI() {
-  const syntaxes = [];
-  await axios(`${config.apis.syntax}/syntax/`, GETtoken)
-    .then((response) => {
-      for (const syntax of response.data) {
-        syntaxes[syntax.id] = syntax;
-      }
-    }).catch(err => console.error(err.message));
-
-  await axios(`${config.apis.syntax}/syntaxexample/`, GETtoken)
-    .then((response) => {
-      for (const example of response.data) {
-        if (syntaxes[example.syntax_element]) {
-          syntaxes[example.syntax_element].example = example;
-        }
-      }
-    }).catch(err => console.error(err.message));
-
-  success('SkriptHub\'s api loaded!');
-  return syntaxes;
 }
 
 export async function loadSkripttoolsAddons() {

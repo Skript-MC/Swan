@@ -3,7 +3,7 @@ import Command from '../../components/Command';
 class AddonPack extends Command {
   constructor() {
     super('Addon Pack');
-    this.regex = /add?ons?(-|_)?pack|pack(-|_)?add?ons?/gmui;
+    this.regex = /add?ons?(-|_)?pack|pack(-|_)?add?ons?/gimu;
     this.usage = 'addon-pack <votre version de serveur>';
     this.examples.push('addon-pack 1.14');
   }

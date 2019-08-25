@@ -1,24 +1,17 @@
+/* eslint-disable no-bitwise */
+/* eslint-disable consistent-return */
 import Command from '../../components/Command';
 import { modLog } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { config, database } from '../../main';
-import { secondToDate } from '../../utils';
-
-const durations = {
-  '(\\d+)s(econde?s?)?': 1,
-  '(\\d+)min(ute?)?': 60,
-  '(\\d+)h((e|o)ure?s?)?': 3600,
-  '(\\d+)(d(ay)?|j(our)?)s?': 86400,
-  '(\\d+)mo(is|onths?)?': 2629800,
-  'def(initi(f|ve))?': -1,
-};
+import { config, sanctionDb } from '../../main';
+import { secondToDuration, toTimestamp } from '../../utils';
 
 class Mute extends Command {
   constructor() {
     super('Mute');
+    this.regex = /mute/gimu;
     this.usage = 'mute <@mention | ID> <durée> <raison>';
     this.examples.push('mute @AlexLew 5d Une raison plus ou moins valable');
-    this.regex = /mute/gmui;
     this.permissions.push('Staff');
   }
 
@@ -30,21 +23,18 @@ class Mute extends Command {
     if (victim.id === message.author.id) return discordError(this.config.noSelfMute, message);
     if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
     // Regarde dans la database si le joueur est mute :
-    database.find({ member: victim.id, sanction: 'mute' }, (err, results) => {
+    sanctionDb.find({ member: victim.id, sanction: 'mute' }, (err, results) => {
       if (err) console.error(err);
 
       if (results.length > 0) return discordError(this.config.alreadyMuted.replace('%u', victim), message);
 
-      let duration;
-      for (const durationRegex of Object.keys(durations)) {
-        const match = new RegExp(durationRegex, 'gimu').exec(args[1]);
-        if (match) {
-          duration = parseInt(args[1].replace(new RegExp(durationRegex, 'gimu'), '$1'), 10) * durations[durationRegex] || -1;
-          break;
-        }
-      }
-
       const reason = args.splice(2).join(' ') || 'Aucune raison spécifiée';
+      const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
+      if (duration === -1 && args[1] !== 'def') return discordError(this.config.invalidDuration, message);
+
+      // Durée maximale des sanctions des modos forum : 2h
+      if (message.member.roles.has('274282181537431552') && (!~duration || duration > 7200)) return discordError(this.config.durationTooLong, message);
+
       const role = message.guild.roles.find(r => r.name === config.moderation.muteRole);
       try {
         victim.addRole(role);
@@ -56,7 +46,7 @@ class Mute extends Command {
       const success = this.config.successfullyMuted
         .replace('%u', `${victim.user.username}`)
         .replace('%r', reason)
-        .replace('%d', secondToDate(duration));
+        .replace('%d', secondToDuration(duration));
       discordSuccess(success, message);
 
       return modLog({

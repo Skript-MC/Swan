@@ -4,7 +4,7 @@ import { discordError } from '../../components/Messages';
 class TagRole extends Command {
   constructor() {
     super('Tag Role');
-    this.regex = /(tag|mention|notif)(-|_)?role/gmui;
+    this.regex = /(tag|mention|notif)(-|_)?role/gimu;
     this.usage = 'tag-role <rôle>';
     this.examples.push('tagrole Notifications Évènements');
     this.permissions.push('Staff');

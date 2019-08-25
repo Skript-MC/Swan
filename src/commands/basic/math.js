@@ -8,7 +8,7 @@ const parser = math.parser();
 class Math extends Command {
   constructor() {
     super('Mathematiques');
-    this.regex = /(math((é|e)matique)?s?|eval(uation)?)/gmui;
+    this.regex = /(math((é|e)matique)?s?|eval(uation)?)/gimu;
     this.usage = 'math <expression mathématique de skript>';
     this.examples.push('math sqrt(12) + 18 - abs(-13)');
   }
@@ -19,7 +19,10 @@ class Math extends Command {
     let expr = args.join(' ');
     expr = expr
       .replace(/log\((\d+)\)/gimu, 'log($1, 10)') // on précise la base si pas précisée car base par défaut du parser : e, base par défaut de skript : 10
-      .replace(/ceiling\(/gimu, 'ceil(');
+      .replace(/ceiling\(/gimu, 'ceil(')
+      // skript-math :
+      .replace(/factorial\((\d+)\)/gimu, '!$1')
+      .replace(/gamma\(/gimu, 'math.gamma(');
 
     try {
       expr = parser.evaluate(expr);

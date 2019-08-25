@@ -18,9 +18,9 @@ const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣'
 class AddonInfo extends Command {
   constructor() {
     super('addonInfo');
+    this.regex = /a(?:dd?ons?)?-?infos?/gimu;
     this.usage = `${config.bot.prefix}addon-info <addon>`;
     this.examples.push('addon-info skquery-lime', 'addonsinfos -list', 'addoninfo mirror');
-    this.regex = /a(?:dd?ons?)?-?infos?/gimu;
   }
 
   async execute(message, args) {

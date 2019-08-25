@@ -9,7 +9,7 @@ const maxPage = 5;
 class Links extends Command {
   constructor() {
     super('Links');
-    this.regex = /(link|lien)s?/gmui;
+    this.regex = /(link|lien)s?/gimu;
     this.usage = 'link [<la page que vous souhaitez>]';
     this.examples.push('link 3');
   }

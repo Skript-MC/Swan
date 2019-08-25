@@ -23,16 +23,12 @@ Si jamais vous avez des bases en nodejs et que vous avez une idée pour le bot, 
 
 # Todo
 
- - [ ] Faire la partie musicale:
-    - Système de playlist:
-        - [ ] Création de playlist
-        - [ ] Suppression de playlist
-        - [ ] Sauvegarde de playlist
-        - [ ] Ajout de titres dans la playlist
-    - Système de blindtest:
-        - [ ] Pouvoir lancer un blindtest à partir d'une playlist (youtube ou personnel)
- - [x] Faire la partie modération:
-    - [x] .warn [pseudo] [raison]
-    - [x] .mute [pseudo] [temps] [raison] (donne le rôle "bâillonné")
-    - [x] .ban [pseudo] [temps] [raison] (créé un canal qui va attribuer la permission au staff de voir et de parler avec le gars en question dans une catégorie spéciale + lui donne le rôle sous-fifre)
-    - [x] Pour chaque interaction de modération faut que ça laisse un log dans un canal configurable
+__Par ordre de priorité :__
+ - [ ] Refaire la commande .doc dès que l'api de la doc skript-mc est dispo
+ - [ ] Ajouter système de musique
+ - [ ] Gestion d'évènements (blindtests etc)
+ - [ ] Commande de réunion `.reunion date heure raison`. Ex : `.reunion 20/05 18h le texte de l'annonce de la reunion`, et ça poste tout les x jours avant la réuninon a x heure un rappel pour la réunion. Puis ça poste un message le jour x et l'heure x.
+ - [ ] Hook avec le site, par exemple :
+        • Poster un message quand y'a une nouvelle ressource
+        • Avoir une commande pour rechercher des posts genre `.forum <section> <forum> recherche` ex: `.forum Skript Aide gui`, avec pourquoi pas un argument `-resolved` pour chercher que parmis les posts résolus
+ - [ ] Ajouter un argument dans le .unban pour que le channel ne soit pas supprimé
