@@ -30,7 +30,7 @@
     "moderation": {
         "log": {
             "channelName": "sanctions",
-            "categoryID": "593832460144607233"
+            "categoryID": ""
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -183,14 +183,14 @@
                 }
             },
             "userinfo": {
-                "shortDesc": "Afficher des informations sur un membre.",
-                "longDesc": "Afficher diverses informations sur un certain membre du discord Skript-Mc, que vous avez définit par son ID ou en le mentionnant (évitez de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites clique-droit sur son pseudo > Copier l'Identifiant).",
+                "help": "Afficher des informations sur un membre.",
+                "description": "Afficher diverses informations sur un certain membre du discord Skript-Mc, que vous avez définit par son ID ou en le mentionnant (évitez de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites clique-droit sur son pseudo > Copier l'Identifiant).",
                 "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
                 "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce discord !",
                 "embed": {
                     "joined": "❯ A rejoint le serveur",
                     "created": "❯ A créé son compte",
-                    "roles": "❯ Roles",
+                    "roles": "❯ Rôles",
                     "names": "❯ Noms",
                     "presence": "❯ Présence"
                 }
