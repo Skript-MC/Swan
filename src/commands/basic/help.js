@@ -73,9 +73,9 @@ class Help extends Command {
       } else if (results === 1) {
         return this.sendDetails(message, cmds[0]);
       } else {
-        let selectorMsg = await message.channel.send(`${results} élements trouvés pour la recherche \`${args.join(' ')}\`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
+        let selectorMsg = await message.channel.send(this.config.searchResults.replace('%r', results).replace('%s', args.join(' ')));
         for (let i = 0; i < results; i++) {
-          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} \"${cmds[i].name}\" (\`${cmds[i].usage}\`)`);
+          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} "${cmds[i].name}" (\`${cmds[i].usage}\`)`);
           await selectorMsg.react(reactionsNumbers[i]);
         }
         await selectorMsg.react('❌');
@@ -111,14 +111,14 @@ class Help extends Command {
       .setFooter(`Executé par ${message.author.username}`)
       .setTimestamp();
 
-    let perms = 'Tout le monde.';
+    let perms = this.config.details.everyone;
     if (command.permissions.length > 0) perms = command.permissions.join(', ');
 
     let ex = '';
     for (const e of command.examples) ex = `${ex} | \`${config.bot.prefix}${e}\``;
     ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace  à la fin.
-    ex = ex === '' ? 'Aucun exemple disponible.' : `${ex}`;
-  
+    ex = ex === '' ? this.config.details.noExample : `${ex}`;
+
 
     let desc = command.description;
     if (command.name === 'Automatic Messages') {
@@ -127,13 +127,13 @@ class Help extends Command {
 
     const channels = [];
     if (command.requiredChannels.length === 0) {
-      channels.push('Tous');
+      channels.push(this.config.details.all);
     } else {
       for (const id of command.requiredChannels) {
         channels.push(message.guild.channels.get(id).name);
       }
     }
-    embed.addField(`:star: **${command.name}**`, `**Description :** ${desc}\n**Catégorie :** ${command.category}\n**Utilisation :** ${command.usage}\n**Exemple d'utilisation :** ${ex}\n**Utilisable par :** ${perms}\n**Channels :** ${channels.join(', ')}\n‌‌ `, true);
+    embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);
 
     message.channel.send(embed);
   }
