@@ -1,5 +1,6 @@
 import Command from '../../components/Command';
 import { discordError } from '../../components/Messages';
+import { config } from '../../main';
 
 class AutomaticMessages extends Command {
   constructor() {
@@ -23,7 +24,7 @@ class AutomaticMessages extends Command {
         return message.react('✅');
       } catch (e) {
         message.react('❌');
-        return message.reply("Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils soient activés et que tu ne m'aies pas bloqué.");
+        return message.reply(config.messages.errors.privatemessage);
       }
     } else if (arg.match(/gui/gimu)) return message.channel.send(this.config.messages.gui.shortContent);
     else if (arg.match(/every\s?loop/gimu)) return message.channel.send(this.config.messages.everyloop.content);
@@ -36,11 +37,12 @@ class AutomaticMessages extends Command {
         return message.react('✅');
       } catch (e) {
         message.react('❌');
-        return message.reply("Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils soient activés et que tu ne m'aies pas bloqué.");
+        return message.reply(config.messages.errors.privatemessage);
       }
     } else if (arg.match(/liste?/gimu)) return message.channel.send(this.config.messages.list.content);
     else if (arg.match(/(?:§|uselesscommand)/gimu)) return message.channel.send(this.config.messages.uselesscommand.content);
     else if (arg.match(/1.?8(?:.\d*)?/gimu)) return message.channel.send(this.config.messages['18'].content);
+    else if (arg.match(/contains?/gimu)) return message.channel.send(this.config.messages.contains.content);
     else return discordError(this.config.invalidMessage, message);
   }
 }
