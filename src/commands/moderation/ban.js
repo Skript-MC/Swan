@@ -2,7 +2,7 @@
 import Command from '../../components/Command';
 import { modLog } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { config, sanctionDb } from '../../main';
+import { config, db } from '../../main';
 import { secondToDuration, toTimestamp } from '../../utils';
 
 class Ban extends Command {
@@ -23,17 +23,17 @@ class Ban extends Command {
     if (victim.id === message.author.id) return discordError(this.config.unableToSelfBan, message);
     if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
     // Regarde dans la database si le joueur est ban :
-    sanctionDb.find({ member: victim.id, sanction: 'ban' }, async (err, results) => {
+    db.sanctions.find({ member: victim.id, sanction: 'ban' }, async (err, results) => {
       if (err) console.error(err);
 
       if (results.length > 0) return discordError(this.config.alreadyBanned.replace('%u', victim), message);
 
-      const reason = args.splice(2).join(' ') || 'Aucune raison spécifiée';
+      const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
       const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
       if (duration === -1 && args[1] !== 'def') return discordError(this.config.invalidDuration, message);
 
       // Durée maximale des sanctions des modos forum : 2h
-      if (message.member.roles.has('274282181537431552') && (duration === -1 || duration > 7200)) return discordError(this.config.durationTooLong);
+      if (message.member.roles.has(config.roles.forumMod) && (duration === -1 || duration > 7200)) return discordError(this.config.durationTooLong);
 
       // Créer un channel perso
       let chan = message.guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${victim.user.username.replace(/[^a-zA-Z0-9]/gimu, '').toLowerCase()}` && c.type === 'text');
@@ -54,7 +54,7 @@ class Ban extends Command {
       try {
         victim.addRole(role);
       } catch (e) {
-        discordError("Impossible d'ajouter le rôle à ce membre !", message);
+        discordError(this.config.cantAddRole, message);
         console.error(e);
       }
 

@@ -1,3 +1,4 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 import { RichEmbed } from 'discord.js';
 import Command from '../../components/Command';
@@ -27,7 +28,7 @@ class AddonInfo extends Command {
     if (args.length < 1) {
       discordError(this.config.invalidCmd, message);
     } else {
-      let msg = await message.channel.send('Je vais chercher ça...');
+      let msg = await message.channel.send(this.config.searching);
       const addons = await SkripttoolsAddons;
 
       const myAddon = args.join(' ');
@@ -49,7 +50,7 @@ class AddonInfo extends Command {
         msg.delete();
         return this.sendDetails(message, matchingAddons[0]);
       } else {
-        await msg.edit(`${results} élements trouvés pour la recherche \`${myAddon}\`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**`);
+        await msg.edit(this.config.searchResults.replace('%r', results).replace('%s', myAddon));
         for (let i = 0; i < matchingAddons.length; i++) {
           msg = await msg.edit(`${msg.content}\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`);
           await msg.react(reactionsNumbers[i]);

@@ -3,7 +3,7 @@
 import Command from '../../components/Command';
 import { modLog } from '../../components/Moderation';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { config, sanctionDb } from '../../main';
+import { config, db } from '../../main';
 import { secondToDuration, toTimestamp } from '../../utils';
 
 class Mute extends Command {
@@ -23,23 +23,23 @@ class Mute extends Command {
     if (victim.id === message.author.id) return discordError(this.config.noSelfMute, message);
     if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
     // Regarde dans la database si le joueur est mute :
-    sanctionDb.find({ member: victim.id, sanction: 'mute' }, (err, results) => {
+    db.sanctions.find({ member: victim.id, sanction: 'mute' }, (err, results) => {
       if (err) console.error(err);
 
       if (results.length > 0) return discordError(this.config.alreadyMuted.replace('%u', victim), message);
 
-      const reason = args.splice(2).join(' ') || 'Aucune raison spécifiée';
+      const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
       const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
       if (duration === -1 && args[1] !== 'def') return discordError(this.config.invalidDuration, message);
 
       // Durée maximale des sanctions des modos forum : 2h
-      if (message.member.roles.has('274282181537431552') && (!~duration || duration > 7200)) return discordError(this.config.durationTooLong, message);
+      if (message.member.roles.has(config.roles.forumMod) && (!~duration || duration > 7200)) return discordError(this.config.durationTooLong, message);
 
       const role = message.guild.roles.find(r => r.name === config.moderation.muteRole);
       try {
         victim.addRole(role);
       } catch (e) {
-        discordError("Impossible d'ajouter ce rôle à ce membre ! Soit le rôle n'est pas créé, soit je n'ai pas les permissions nécessaires. Il se peut que le problème vienne d'autre part, auquel cas vous pouvez vous réferrer à l'erreur, disponible dans la console.", message);
+        discordError(this.config.cantAddRole, message);
         console.error(e);
       }
 

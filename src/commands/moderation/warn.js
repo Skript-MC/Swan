@@ -17,7 +17,7 @@ class Warn extends Command {
     if (!args[1]) return discordError(this.config.missingReasonArgument, message);
     if (victim.id === message.author.id) return discordError(this.config.noSelfWarn, message);
     if (victim.highestRole.position >= message.member.highestRole.position) return discordError(this.config.userTooPowerful, message);
-    const reason = args.splice(1).join(' ') || 'Aucune raison spécifiée';
+    const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 
     const success = this.config.successfullyWarned
       .replace('%u', `${victim.user.username}`)
