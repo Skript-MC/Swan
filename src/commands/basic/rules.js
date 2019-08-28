@@ -11,10 +11,10 @@ class Rules extends Command {
   }
 
   async execute(message, args) {
-    if (message.channel.id !== config.channels.helpSkript || message.channel.id !== config.channels.helpSkript2) return discordError("Cette commande est disponible uniquement dans les salons d'aide skript", message);
+    if (message.channel.id !== config.channels.helpSkript || message.channel.id !== config.channels.helpSkript2 || message.channel.id !== config.channels.helpSkript3) return discordError(this.config.onlyInHelp, message);
 
     const rule = parseInt(args[0], 10);
-    if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) return discordError("Le numéro de la règle n'est pas valide !", message);
+    if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) return discordError(this.config.invalidRule, message);
     return message.channel.send(this.config.messages[rule - 1]);
   }
 }
