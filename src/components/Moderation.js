@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-underscore-dangle */
 import { RichEmbed } from 'discord.js';
-import { config, client, sanctionDb } from '../main';
+import { config, client, db } from '../main';
 import { formatDate, secondToDuration } from '../utils';
 
 async function sendLog(info, guild, result = undefined) {
@@ -53,7 +53,7 @@ async function sendLog(info, guild, result = undefined) {
 export function modLog(info, guild) {
   // Ajout à la database
   if (info.log) {
-    sanctionDb.insert({
+    db.sanctions.insert({
       sanction: info.sanction,
       reason: info.reason,
       member: info.member.user.id,
@@ -63,7 +63,7 @@ export function modLog(info, guild) {
       finish: info.finish,
     });
     // On retrouve la sanction qu'on vient d'ajouter pour avoir son ID
-    sanctionDb.findOne({ member: info.member.id, sanction: info.sanction }, (err, result) => {
+    db.sanctions.findOne({ member: info.member.id, sanction: info.sanction }, (err, result) => {
       if (err) console.error(err);
       sendLog(info, guild, result);
     });
@@ -84,7 +84,7 @@ export function modLog(info, guild) {
  * @param {Guild} guild
  */
 export function removeSanction(info, guild) {
-  sanctionDb.remove({ _id: info.id }, {}, (err) => {
+  db.sanctions.remove({ _id: info.id }, {}, (err) => {
     if (err) console.error(err);
 
     const role = info.sanction === 'ban'
@@ -114,23 +114,28 @@ export function removeSanction(info, guild) {
   });
 }
 
-// Si sous-fifre
+/**
+ * Regarde si le membre est sous-fifre
+ * @async
+ */
 export function isBan(id) {
   return new Promise((resolve) => {
-    sanctionDb.findOne({ member: id, sanction: 'ban' }, (err, result) => {
+    db.sanctions.findOne({ member: id, sanction: 'ban' }, (err, result) => {
       if (err) console.error(err);
       resolve(!!result); // Cast result en boolean. Donc si il y a un résultat : true, sinon : false
     });
   });
 }
 
-// Bannir vraiment du discord
+/**
+ * Bannir vraiment du discord
+ */
 export function hardBan(member, ban) {
   // Ban
   if (ban) member.ban();
 
   // Suppression de la database
-  sanctionDb.remove({ _id: member.id }, {}, (err) => {
+  db.sanctions.remove({ _id: member.id }, {}, (err) => {
     if (err) console.error(err);
   });
 
@@ -146,6 +151,6 @@ export function hardBan(member, ban) {
     color: '#000000',
     member,
     mod: client.user,
-    reason: ban ? "Déconnexion du discord lors d'un banissement" : 'Banni par un modérateur',
+    reason: ban ? config.messages.miscellaneous.hardBanAutomatic : config.messages.miscellaneous.hardBanModerator,
   }, guild);
 }

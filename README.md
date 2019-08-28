@@ -24,11 +24,20 @@ Si jamais vous avez des bases en nodejs et que vous avez une idée pour le bot, 
 # Todo
 
 __Par ordre de priorité :__
- - [ ] Refaire la commande .doc dès que l'api de la doc skript-mc est dispo
+ - [ ] (PAS ENCORE FAISABLE) Refaire la commande .doc dès que l'api de la doc skript-mc est dispo
+ - [ ] Commande de réunion `.reunion date heure raison`. Ex : `.reunion 20/05 18h le texte de l'annonce de la reunion`, et ça poste tout les x jours avant la réuninon a x heure un rappel pour la réunion. Puis ça poste un message le jour x et l'heure x.
+ - [ ] Ajouter une commande permettant d'ajouter des sanctions plus rapidement/facilement, avec des durées précises selon le motif choisi (parmis une liste par exemple)
  - [ ] Ajouter système de musique
  - [ ] Gestion d'évènements (blindtests etc)
- - [ ] Commande de réunion `.reunion date heure raison`. Ex : `.reunion 20/05 18h le texte de l'annonce de la reunion`, et ça poste tout les x jours avant la réuninon a x heure un rappel pour la réunion. Puis ça poste un message le jour x et l'heure x.
- - [ ] Hook avec le site, par exemple :
+ - [ ] (PAS ENCORE FAISABLE) Hook avec le site, par exemple :
         • Poster un message quand y'a une nouvelle ressource
         • Avoir une commande pour rechercher des posts genre `.forum <section> <forum> recherche` ex: `.forum Skript Aide gui`, avec pourquoi pas un argument `-resolved` pour chercher que parmis les posts résolus
- - [ ] Ajouter un argument dans le .unban pour que le channel ne soit pas supprimé
+
+
+ - En vrac (Priorité minimale) :
+       - [x] Ajouter un argument dans le `.unban` pour que le channel ne soit pas supprimé
+       - [x] Charger les databases dans `setup.js`, et non dans `main.js`
+       - [x] Ajouter un .automaticMessage sur le contains (en skript) (200x plus lent que le loop pour trouver une valeur, ne fonctionne pas toujours, etc https://github.com/SkriptLang/Skript/issues/2393)
+       - [ ] Quand une commande est inconnue, ajouter une suggestion, genre `.hekp` : "Vouliez-vous dire .help ?"
+       - [ ] Ajouter une commande pour pouvoir parse un code (il dit les erreurs etc)
+       - [ ] Utiliser `this.requiredChannels` pour les channels de `.rule`, mais aussi ajouter un message personnaliser lorsque ce n'est pas le bon channel `this.invalidChannel` ?

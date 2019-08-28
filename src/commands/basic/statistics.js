@@ -30,7 +30,7 @@ class Statistics extends Command {
       .addField('Commandes', commands.length, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
-      .addField('Développeurs', `${pkg.authors.join(', ')}`, true)
+      .addField('Développeurs', `${pkg.authors.join(', ')}. Merci aussi aux différents contributeurs.`, true)
       .addField('Report des bugs et problèmes', `${pkg.bugs.url}`, true)
       .setFooter(`Executé par ${message.author.username}`)
       .setTimestamp();

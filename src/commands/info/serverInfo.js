@@ -1,3 +1,4 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 import { RichEmbed } from 'discord.js';
 import axios from 'axios';
@@ -14,7 +15,7 @@ class ServerInfo extends Command {
   }
 
   async execute(message, args) {
-    const msg = await message.channel.send('Je vais chercher ça...');
+    const msg = await message.channel.send(this.config.searching);
     const data = await axios(`${config.apis.server}${args[0]}`, { method: 'GET' })
       .then(async (response) => {
         if (response.status !== 200) {
@@ -24,7 +25,7 @@ class ServerInfo extends Command {
         return response.data;
       }).catch(err => console.error(err));
 
-    if (!data) return discordError('Aucun serveur ne correspond à votre requête !', message);
+    if (!data) return discordError(this.config.noServerFound, message);
     return this.sendDetails(message, msg, data, args[0]);
   }
 

@@ -14,7 +14,7 @@ class Math extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return discordError('Il faut que tu ajoutes une expression mathématique !', message);
+    if (args.length === 0) return discordError(this.config.addMath, message);
 
     let expr = args.join(' ');
     expr = expr
@@ -27,7 +27,7 @@ class Math extends Command {
     try {
       expr = parser.evaluate(expr);
     } catch (err) {
-      return discordError('Impossible de tester cette expression ! Il semblerait qu\'il y ait un problème dedans...', message);
+      return discordError(this.config.error, message);
     }
     return message.reply(`\`${args.join(' ')}\` = \`${expr}\``);
   }
