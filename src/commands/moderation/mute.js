@@ -39,7 +39,7 @@ class Mute extends Command {
       try {
         victim.addRole(role);
       } catch (e) {
-        discordError("Impossible d'ajouter ce rôle à ce membre ! Soit le rôle n'est pas créé, soit je n'ai pas les permissions nécéssaires. Il se peut que le problème vienne d'autrepart, auquel cas vous pouvez vous réferrer à l'erreur, disponible dans la console.", message);
+        discordError("Impossible d'ajouter ce rôle à ce membre ! Soit le rôle n'est pas créé, soit je n'ai pas les permissions nécessaires. Il se peut que le problème vienne d'autre part, auquel cas vous pouvez vous réferrer à l'erreur, disponible dans la console.", message);
         console.error(e);
       }
 
