@@ -9,8 +9,8 @@ class Ping extends Command {
   }
 
   async execute(message, _args) {
-    const msg = await message.channel.send('Ping !');
-    msg.edit(`Pong ! La latence du bot est de ${msg.createdTimestamp - message.createdTimestamp}ms.`);
+    const msg = await message.channel.send(this.config.firstMessage);
+    msg.edit(this.config.secondMessage.replace('%x', msg.createdTimestamp - message.createdTimestamp));
   }
 }
 
