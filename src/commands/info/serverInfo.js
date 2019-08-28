@@ -24,7 +24,7 @@ class ServerInfo extends Command {
         return response.data;
       }).catch(err => console.error(err));
 
-    if (!data) return discordError('Aucun serveur ne correspond a votre reqûete !', message);
+    if (!data) return discordError('Aucun serveur ne correspond à votre requête !', message);
     return this.sendDetails(message, msg, data, args[0]);
   }
 
