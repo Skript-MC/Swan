@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import Command from '../../components/Command';
 import { discordError, discordSuccess } from '../../components/Messages';
-import { sanctionDb } from '../../main';
+import { db } from '../../main';
 import { removeSanction } from '../../components/Moderation';
 
 class Unmute extends Command {
@@ -19,13 +19,13 @@ class Unmute extends Command {
     if (!victim) return discordError(this.config.missingUserArgument, message);
     if (!args[1]) return discordError(this.config.missingReasonArgument, message);
     // Regarde dans la database si le joueur est mute :
-    sanctionDb.findOne({ member: victim.id, sanction: 'mute' }, (err, result) => {
+    db.sanctions.findOne({ member: victim.id, sanction: 'mute' }, (err, result) => {
       if (err) console.error(err);
 
       if (!result) return discordError(this.config.notMuted.replace('%u', victim), message);
       if (result.modid !== message.author.id) return discordError(this.config.notYou, message);
 
-      const reason = args.splice(1).join(' ') || 'Aucune raison spécifiée';
+      const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 
       const success = this.config.successfullyUnmuted
         .replace('%u', `${victim.user.username}`)
