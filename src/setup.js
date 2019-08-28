@@ -3,6 +3,7 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import axios from 'axios';
+import Datastore from 'nedb';
 import Discord from 'discord.js';
 import { success } from './components/Messages';
 import { config, commands } from './main';
@@ -15,6 +16,15 @@ const apikeys = {
 
 const GET = { method: 'GET' };
 
+function dbCallback(err, name) {
+  if (err) {
+    console.warn(`Impossible de charger la BDD "${name}" :`);
+    console.error(err);
+  } else {
+    success(`Database "${name}" loaded!`);
+  }
+}
+
 export function loadBot() {
   const client = new Discord.Client();
   client.login(apikeys.discord);
@@ -22,7 +32,8 @@ export function loadBot() {
 }
 
 export async function loadCommands(path = 'commands') {
-  console.log(`loading : ${path}`);
+  if (path !== 'commands') console.log(`loading : ${path}`);
+
   fs.readdir(`${__dirname}/${path}`, (err, files) => {
     if (err) throw err;
     for (const file of files) {
@@ -52,17 +63,17 @@ export async function loadSkripttoolsAddons() {
 
   const allAddons = await axios(config.apis.addons, GET)
     .then(response => response.data.data)
-    .catch(err => console.error(err.message));
+    .catch(err => console.error(err));
 
   for (let addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
     const latest = versions[versions.length - 1];
     addon = await axios(`${config.apis.addons}${latest}`, GET)
       .then(response => response.data.data)
-      .catch(err => console.error(err.message));
+      .catch(err => console.error(err));
     addons.push(addon);
   }
-  success('Skripttools\'s addons loaded!');
+  success('Skripttools : addons loaded!');
   return addons;
 }
 
@@ -77,6 +88,13 @@ export async function loadSkripttoolsSkript() {
     .then(response => response.data)
     .catch(err => console.error(err));
 
-  success('Skripttools\'s skript infos loaded!');
+  success('Skripttools : skript infos loaded!');
   return infos;
+}
+
+export function loadDatabases() {
+  const db = {};
+  db.sanctions = new Datastore('sanctions.db');
+  db.sanctions.loadDatabase(err => dbCallback(err, 'sanctions'));
+  return db;
 }
