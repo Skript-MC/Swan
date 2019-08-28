@@ -10,7 +10,7 @@ class ErrorFinder extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return discordError("Tu n'as pas défini d'erreur !", message);
+    if (args.length === 0) return discordError(this.config.noError, message);
 
     const arg = args.join(' ').toLowerCase();
 
