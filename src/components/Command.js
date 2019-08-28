@@ -48,7 +48,7 @@ class Command {
      * Pattern Regex qui déclenche la commande
      * @type {RegExp}
      */
-    this.regex = (this.config && this.config.regex) ? this.config.regex : new RegExp(name, 'gmui');
+    this.regex = (this.config && this.config.regex) ? this.config.regex : new RegExp(name, 'gimu');
 
     /**
      * ID des rôles pouvant éxecuter la commande
@@ -77,7 +77,7 @@ class Command {
      * Catégorie de la commande (= le dossier dans lequel elle se trouve)
      * @type {string}
      */
-    this.category = (this.config && this.config.category) ? this.config.category : 'Aucune catégorie';
+    this.category = (this.config && this.config.category) ? this.config.category : config.messages.miscellaneous.noCategory;
   }
 
   /**
