@@ -1,3 +1,4 @@
+/* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 import { RichEmbed } from 'discord.js';
 import Command from '../../components/Command';
