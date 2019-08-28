@@ -49,7 +49,7 @@ class AddonInfo extends Command {
         msg.delete();
         return this.sendDetails(message, matchingAddons[0]);
       } else {
-        await msg.edit(`${results} élements trouvés pour la recherche \`${myAddon}\`. Quel addon vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
+        await msg.edit(`${results} élements trouvés pour la recherche \`${myAddon}\`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**`);
         for (let i = 0; i < matchingAddons.length; i++) {
           msg = await msg.edit(`${msg.content}\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`);
           await msg.react(reactionsNumbers[i]);
