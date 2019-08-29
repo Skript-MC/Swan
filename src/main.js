@@ -126,7 +126,7 @@ export const sanctions = [];
       }
     }
     // Si la commande est inconnue
-    discordError(config.messages.errors.unknowncommand, message);
+    if (cmd.startsWith(config.bot.prefix)) discordError(config.messages.errors.unknowncommand, message);
   });
 
   client.on('guildMemberRemove', async (member) => {
