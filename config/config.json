@@ -165,24 +165,24 @@
                     "depend": ":link: Dépendences obligatoires",
                     "softdepend": ":link: Dépendences facultatives",
                     "unmaintained": ":warning: Addon abandonné",
-                    "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement conseillé de ne pas l'utiliser."
+                    "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser."
                 }
             },
             "skriptinfo": {
                 "help": "Avoir diverses informations sur Skript.",
-                "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version minecraft...",
+                "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
                 "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalités de skript.\n\n:black_small_square: La dernière version de skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.x et antérieur ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise-à-jour avec les dernières fonctionnalités de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
                     "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
             },
             "serverinfo": {
-                "help": "Afficher des informations sur un serveur minecraft.",
-                "description": "Afficher diverses informations sur un certain serveur minecraft, selon son IP.",
+                "help": "Afficher des informations sur un serveur Minecraft.",
+                "description": "Afficher diverses informations sur un certain serveur Minecraft, selon son IP.",
                 "searching": "Je vais chercher ça...",
                 "noServerFound": "Aucun serveur ne correspond à votre requête !",
                 "embed": {
@@ -197,9 +197,9 @@
                 }
             },
             "playerinfo": {
-                "help": "Afficher des informations sur un joueur minecraft.",
-                "description": "Afficher diverses informations sur un certain joueur, que vous avez définit par son pseudo minecraft.",
-                "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit premium...",
+                "help": "Afficher des informations sur un joueur Minecraft.",
+                "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
+                "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
                 "searching1": "Je vais chercher ça... (1/2)",
                 "searching2": "Je vais chercher ça... (2/2)",
                 "error": "Une erreur est survenue, désolé.",
@@ -211,9 +211,9 @@
             },
             "userinfo": {
                 "help": "Afficher des informations sur un membre.",
-                "description": "Afficher diverses informations sur un certain membre du discord Skript-Mc, que vous avez définit par son ID ou en le mentionnant (évitez de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites clic-droit sur son pseudo > Copier l'Identifiant).",
+                "description": "Afficher diverses informations sur un certain membre du Discord Skript-MC, que vous avez défini par son ID ou en le mentionnant (Merci d'éviter de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites un clic-droit sur son pseudo > Copier l'Identifiant).",
 	            "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
-                "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce discord !",
+                "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce Discord !",
                 "embed": {
                     "joined": "❯ A rejoint le serveur",
                     "created": "❯ A créé son compte",
@@ -227,7 +227,7 @@
                 "description": "Afficher la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé.",
                 "header": "Les syntaxes des commandes se lisent comme un pattern skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`",
-                "searchResults": "%r élements trouvés pour la recherche `%s`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**",
+                "searchResults": "%r élements trouvés pour la recherche `%s`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**",
                 "details": {
                     "everyone": "Tout le monde.",
                     "noExample": "Aucun exemple disponible.",
@@ -237,32 +237,32 @@
                     "utilisation": "**Utilisation :**",
                     "examples": "**Exemple(s) d'utilisation :**",
                     "usable": "**Utilisable par :**",
-                    "channels": "**Channels :**"
+                    "channels": "**Salons :**"
                 }
             },
             "links": {
                 "help": "Avoir plusieurs liens importants relatifs à Skript.",
                 "description": "Avoir plusieurs liens importants relatifs à Skript, tels que des documentations, des forums, des liens de téléchargement, des discords...",
                 "embed": {
-                    "summary": "Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers des discord importants\n:five: Divers liens importants",
-                    "docSkSkMc_title": ":books: Doc Skript de SkriptMC : https://bit.ly/2KSZ6pN",
-                    "docSkSkMc_desc": "Documentation sur Skript, faite par la communauté de Skript-MC. Elle est en français et est en constante amélioration. Si vous avez une suggestion, ou si vous voyez une erreur, n'hésitez pas à nous en faire part !",
-                    "docSkOffi_title": ":books: Doc Skript officielle : https://bit.ly/2VUGZ3W",
-                    "docSkOffi_desc": "Documentation de Skript officielle. Elle est en anglais, mais est complête, et contient toutes les syntaxes utilisables dans la dernière version de Skript.",
-                    "docAddSkMc_title": ":books: Doc addons de SkriptMC : https://bit.ly/2viSqq8",
-                    "docAddSkMc_desc": "Documentation des addons, faite par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais est en français et est complête.",
-                    "docAdd_title": ":books: Doc des addons : https://bit.ly/2UTSlJ6",
+                    "summary": "Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers quelques Discord importants\n:five: Divers liens importants",
+                    "docSkSkMc_title": ":books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN",
+                    "docSkSkMc_desc": "Documentation sur Skript, faite par la communauté de Skript-MC. Elle est en français et elle est en constante amélioration. Si vous avez une suggestion, ou si vous voyez une erreur, n'hésitez pas à nous en faire part !",
+                    "docSkOffi_title": ":books: Documentation Skript officielle : https://bit.ly/2VUGZ3W",
+                    "docSkOffi_desc": "Documentation de Skript officielle. Elle est en anglais mais est complête. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.",
+                    "docAddSkMc_title": ":books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8",
+                    "docAddSkMc_desc": "Documentation des addons, faite par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais est en français et elle est complête.",
+                    "docAdd_title": ":books: Documentation des addons : https://bit.ly/2UTSlJ6",
                     "docAdd_desc": "Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.",
                     "dlSk_title": ":inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm",
-                    "dlSk_desc": "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 incluses. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
+                    "dlSk_desc": "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
                     "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
                     "dlAdd_desc": "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.",
                     "discSkMc_title": ":speech_left: Discord Skript-MC : https://discordapp.com/invite/J3NSGaE",
-                    "discSkMc_desc": "Lien officiel de ce discord.",
+                    "discSkMc_desc": "Lien officiel de ce Discord.",
                     "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
-                    "discSkCh_desc": "Lien du discord \"Skript Chat\", qui est le discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+                    "discSkCh_desc": "Lien du discord \"Skript Chat\", qui est le Discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
                     "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
-                    "forumSkMc_desc": "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
+                    "forumSkMc_desc": "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, Java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
                     "gitSk_title": ":computer: GitHub de Skript : https://bit.ly/2W0EJrU",
                     "gitSk_desc": "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour."
                 }
@@ -271,22 +271,22 @@
                 "help": "Lancer un sondage.",
                 "description": "Lancer un sondage temporaire par lequel on peut répondre Oui ou Non.",
                 "invalidDuration": "La durée marquée est invalide ! Impossible de la lire...",
-                "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivis sans espaces de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** Est une option de réponse, entre guillement. Ce champs est facultatif, car si vous ne mettez aucune réponse, on devra répondre a votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
-                "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
-                "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
-                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clic sur :octagonal_sign:.",
-	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vont convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clic sur :octagonal_sign:.",
+                "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivi (sans espaces) de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** C'est une option de réponse, entre guillemets. Ce champ est facultatif, car si vous ne mettez aucune réponse, on devra répondre à votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
+                "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre à ton sondage par oui et non, soit au moins 2 réponses.",
+                "tooManyAnswers": "Il y a trop de réponses ! Le maximum est de 18.",
+                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la première ajoutée qui sera comptée. Le vote commence lorsque le message devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
+	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vont convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la première ajoutée qui sera comptée. Le vote commence lorsque le message devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
 	            "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours (%sms)."
             },
             "tag_role": {
                 "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
                 "description": "Permet de notifier un rôle qui n'est pas mentionnable.",
-                "invalidCmd": "Il faut ajouter un rôle a mentionner !",
+                "invalidCmd": "Il faut ajouter un rôle à mentionner !",
                 "invalidRole": "Désolé, mais le rôle '%s' est introuvable... Êtes-vous sûr de l'avoir orthographié de la même façon ?"
             },
             "rules": {
-                "help": "Permet d'afficher les règles des channels d'aide Skript.",
-                "description": "Permet d'afficher les règles des channels d'aide Skript.",
+                "help": "Permet d'afficher les règles des salons d'aide Skript.",
+                "description": "Permet d'afficher les règles des salons d'aide Skript.",
                 "onlyInHelp": "Cette commande est disponible uniquement dans les salons d'aide skript",
                 "invalidRule": "Le numéro de la règle n'est pas valide !",
                 "messages": [
@@ -308,8 +308,8 @@
             },
             "code": {
                 "help": "Permet de mettre votre code de façon claire.",
-                "description": "Permet de mettre votre code dans un block de code.",
-                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères)"
+                "description": "Permet de mettre votre code dans un bloc de code.",
+                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères)."
             },
             "statistics": {
                 "help": "Avoir diverses statistiques sur le bot et le serveur.",
@@ -318,27 +318,27 @@
             "addon_pack": {
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
                 "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.",
-                "invalidVersion": "Ajoute une version de minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
+                "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
                 "messages": [
-                    "Version des addons conseillées pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.11 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.12 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.13 :\nSkript : 2.3.6\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.14 :\nSkript : Pas encore supportée (ou dernière version Skript 2.4-alpha)\nAddons :\n- Addon : version"
+                    "Version des addons conseillés pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.11 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.12 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.13 :\nSkript : 2.3.6\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillés pour la 1.14 :\nSkript : Pas encore supporté (ou dernière version Skript 2.4-alpha)\nAddons :\n- Addon : version"
                 ]
             },
             "ban": {
-                "help": "Appliquer une restriction du discord à un joueur.",
-                "description": "Appliquer une restriction du discord à un joueur.",
+                "help": "Appliquer une restriction du Discord à un joueur.",
+                "description": "Appliquer une restriction du Discord à un joueur.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
                 "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u ! \nRaison : %r\nDurée : %d",
                 "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
                 "whyHere": "Bonjour %u ! Tu es là pour avoir enfrein le règlement. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %t",
@@ -346,13 +346,13 @@
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
             },
             "unban": {
-                "help": "Retirer une restriction du discord à un joueur.",
-                "description": "Retirer une restriction du discord à un joueur. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.",
+                "help": "Retirer une restriction du Discord à un joueur.",
+                "description": "Retirer une restriction du Discord à un joueur. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "successfullyUnbanned": "Vous avez bien débanni %u ! \nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez-donc pas la gérer.",
+                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "mute": {
@@ -364,7 +364,7 @@
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
                 "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivis sans espaces de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
+                "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u ! \nRaison : %r\nDurée : %d",
                 "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
                 "noReasonSpecified": "Aucune raison spécifiée",
@@ -377,7 +377,7 @@
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "successfullyUnmuted": "Vous avez bien rendu la parole à %u ! \nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez-donc pas la gérer.",
+                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "warn": {
@@ -385,16 +385,16 @@
                 "description": "Donner un avertissement à un joueur.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
-                "noSelfWarn": "Ne te warn pas toi même , boulet",
+                "noSelfWarn": "Ne te warn pas toi même , boulet.",
                 "successfullyWarned": "Vous avez bien averti %u ! \nRaison : %r",
-                "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc a revoir ton comportement.",
+                "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc à revoir ton comportement.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "purge": {
                 "help": "Supprimer des messages dans un channel.",
                 "description": "Supprimer X messages dans un channel, selon un certain utilisateur ou non. La limite est fixée à 100.",
-                "missingNumberArgument": "Vous devez spécifier un nombre de messages a supprimer !",
-                "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message a supprimer !"
+                "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
+                "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message à supprimer !"
             },
             "ghostping": {
                 "help": "Tagger un membre, sans laisser de trace.",
