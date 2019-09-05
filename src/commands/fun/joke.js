@@ -58,12 +58,12 @@ const jokes = [
 class Joke extends Command {
     constructor() {
         super('Joke');
-        this.regex = (/joke|blague|rire/gimu);
-        this.usage = `joke`;
+        this.regex = /(joke|blague|rire)/gimu;
+        this.usage = 'joke';
         this.examples.push('joke');
     }
 
-    async execute(message, args) {
+    async execute(message, _args) {
         const joke = jokes[Math.floor(Math.random() * jokes.length)];
         const embed = new Discord.RichEmbed()
             .setColor(config.colors.default)
