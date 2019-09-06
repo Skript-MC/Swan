@@ -1,5 +1,6 @@
 import Command from '../../components/Command';
 import { config } from '../../main';
+import { RichEmbed } from 'discord.js';
 
 const jokes = [
     '**Un mec rentre dans un café.**\nEt plouf !',
