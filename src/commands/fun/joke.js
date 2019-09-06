@@ -66,7 +66,7 @@ class Joke extends Command {
 
     async execute(message, _args) {
         const joke = jokes[Math.floor(Math.random() * jokes.length)];
-        const embed = new Discord.RichEmbed()
+        const embed = new RichEmbed()
             .setColor(config.colors.default)
             .setTimestamp()
             .setDescription(joke)
