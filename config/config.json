@@ -5,7 +5,9 @@
         "prefix": ".",
         "default_channels": [],
         "forbidden_channels": [],
-        "avatar": "https://cdn.discordapp.com/attachments/459996868852711434/594454850951970867/logo_skmc.png"
+        "avatar": "https://cdn.discordapp.com/attachments/459996868852711434/594454850951970867/logo_skmc.png",
+        "checkInterval": 1000,
+        "activity": ".aide | Skript-MC"
     },
 
     "colors": {
@@ -14,34 +16,46 @@
         "warning": "#ecef1c",
         "log": "#4a64d6",
         "success": "#1fc622",
-        "error": "#db2c23"
+        "error": "#db2c23",
+        "blacklist": "#000000",
+        "musicrestriction": "#2c02b5",
+        "mute": "#ff6b61",
+        "ban": "cc3300"
     },
 
     "channels": {
-        "helpSkript": "215217809687445504",
-        "helpSkript2": "483673337223184394",
-        "helpSkript3": "598042593447641088",
-        "snippet": "549333475153412106",
-        "idea": "358653742729396224",
-        "suggestion": "589545763046948955",
-        "reunion": "509462709579022336"
+        "helpSkript": ["", "", ""],
+        "helpOther": ["", "", ""],
+        "snippet": "",
+        "idea": "",
+        "suggestion": "",
+        "reunion": ""
     },
 
     "roles": {
-        "owner": "206452455507099650",
-        "forumMod": "274282181537431552",
-        "staff": "205089851387805696",
-        "ma": "269479421998530561"
+        "owner": "",
+        "forumMod": "",
+        "staff": "",
+        "ma": "",
+        "everyone": ""
     },
 
     "moderation": {
         "log": {
-            "channelName": "sanctions",
+            "channelName": "logs",
             "categoryID": ""
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
-        "banChannelPrefix": "b-"
+        "banChannelPrefix": "b-",
+        "purgeLimit": 100
+    },
+    
+    "music": {
+        "queueLimit": 10,
+        "canUseMusicCommandsIfNotInChannel": false,
+        "minRoleToClearQueue": "",
+        "restrictedVocal": [""]
     },
 
     "apis": {
@@ -56,8 +70,7 @@
     "miscellaneous": {
         "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
-        "cmdPerPagesInHelp": 5,
-        "purgeLimit": 100
+        "cmdPerPagesInHelp": 5
     },
 
     "messages": {
@@ -66,20 +79,40 @@
             "hardBanModerator": "Banni par un modérateur",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi",
-            "noSpam": "Merci d'éviter le spam dans le channel Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>"
+            "noSpam": "Merci d'éviter le spam dans le canal Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
+            "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?"
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles :wink:",
             "permission": "Vous n'avez pas la permission d'utiliser cette commande :confused:",
+            "notInHelpChannels": "Vous ne pouvez pas utiliser cette commande dans les channels d'aide. Allez dans #bot.",
+            "erroroccured": "Une erreur s'est produite... Veuillez réessayer plus tard !",
             "unknowncommand": "Commande inconnue ! Tape .help pour avoir la liste des commandes disponible.",
-            "privatemessage": "Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils soient activés et que tu ne m'aies pas bloqué."
+            "privatemessage": "Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils soient activés et que tu ne m'aies pas bloqué.",
+            "cantplaymusic": "Impossible de jouer cette musique, désolé.",
+            "cooldown": "Attendez un peu avant de pouvoir refaire cette commande !",
+            "music": [
+                "Tu n'es pas dans un canal vocal !",
+                "Je ne suis pas dans un canal vocal !",
+                "Tu n'es pas dans mon canal vocal !",
+                "Je ne joue aucune musique !",
+                "La queue est vide !",
+                "Impossible car tu as une restriction des commandes de musique !"
+            ],
+            "joinErrors": {
+                "notInChannel": "Tu n'es pas dans un canal vocal !",
+                "restrictedChannel": "Désolé, mais je ne peux pas te rejoindre dans ce canal là !",
+                "channelFull": "Je ne peux pas rejoindre ce canal car il est plein !",
+                "notSpeakable": "Je ne peux pas rejoindre ce canal car je ne peux pas y parler !",
+                "notJoinable": "Je ne peux pas rejoindre ce canal !"
+            }
         },
         "commands": {
-            "toggle_role_notification": {
+            "togglerolenotification": {
                 "help": "Mettre ou enlever le rôle Notifications Évenement.",
                 "description": "Permet de vous mettre ou de vous enlever le rôle Notifications Évenement."
             },
-            "automatic_messages": {
+            "automaticmessages": {
                 "help": "Envoyer un message prédéfini.",
                 "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
                 "invalidMessage": "Désolé, mais ce message là n'existe pas...",
@@ -123,7 +156,10 @@
 	                },
                     "contains": {
                         "content": "Il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`. Ces problèmes ont déjà été report sur Github (<https://github.com/SkriptLang/Skript/issues/2393>), et les développeurs de Skript sont en train d'essayer de le régler."
-	                }
+                    },
+                    "skellett14": {
+                        "content": "Pour faire fonctionner Skellett en 1.14, il faut procéder de cette façon :\nInstalle Skellet et reload ton serveur pour avoir les fichiers. \nEnsuite va dans le dossier Skellett, puis ouvre SyntaxToggles.yml.\nFait CTRL + F et recherche \"Packets\".\nChange `true` à `false`\nRedémarre ton serveur."
+                    }
                 }
             },
             "8ball": {
@@ -131,21 +167,21 @@
                 "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%",
                 "noQuestion": "Vous devez ajouter une question !"
             },
-            "error_finder": {
+            "errordetails": {
                 "help": "Permet de vous aider à régler les erreurs de vos scripts",
                 "description": "Commande qui permet de vous aider à régler les erreurs que vous pouvez avoir lorsque vous faites /sk reload. Attention, cette commande est en BETA, donc le pourcentage de précision n'est pas garanti à 100%. Il se peut aussi que certaines erreur ne soit pas disponibles.",
                 "hub": "**Quelle erreur encontres-tu ?**\n:one: Indentation error\n:two: Can't understand this XX\n:three: Empty configuration section !\n:four: Invalid use of quotes\n:five: There's no loop that match XX\n:six: \"else\" have to be placed just after an \"if\"\n:seven: Can't compare XX with XX\n:eight: XX is not a valid item data\n:nine: XX can't be added to XX because the former is not an object\n:keycap_ten: Autre",
                 "noError": "Tu n'as pas défini d'erreur !",
                 "error": {
                     "indentation": "Ce message apparait généralement lorsqu'il y a une incohérence dans les tabulations. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse :\n\n- Lorsque vous utilisez un mélange d'espaces et de tabulation. Dans ces cas la, enlevez tous les espaces/tabulations de la ligne, et refaite-les. Cela peut aussi arriver lorsque vous copier collez le code de quelqu'un alors qu'il ne l'a pas formatté dans des blocs de codes (discord ou forum), et que des caractères spéciaux bizarres et invisibles se sont introduits.\n\n- Cela peut aussi arriver lorsque il manque une tabulation, comme dans ce cas : ```vb\nif {_variable} is equal to 3:\n\tif {player::%player%} is set:\n\tmessage \"Bravo !\"```**Rappel :** lorsqu'une ligne se *finit* par un \":\", la ligne suivante est *toujours* indenté d'un cran de plus.\n\n- Dernier cas de figure, directement en relation avec le précédent : la ligne précédente ne finit pas par un \":\" alors qu'elle devrait, comme dans ce cas de figure :```vb\nif {_variable} is equal to 3:\n\tif {player::%player%} is set\n\tmessage \"Bravo !\" # Vous n'avez pas indenté car la ligne précédente ne finit pas par \":\", alors qu'elle est censé.```Corriger un problème d'oubli de \":\" à la fin d'une ligne peut corriger plusieurs erreurs d'un coups.",
-                    "cantunderstand": "Ce message apparait généralement lorsque Skript ne reconnait pas la syntaxe que vous avez entré. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse:\n\n- Il peut manquer un \":\" à la fin de la ligne\n\n- La syntaxe a été ajouté par un addon ou par Skript, mais elle n'existe pas dans la version que vous avez. Pensez à toujours garder vos addons et Skript à jour.\n\n- La syntaxe vient d'un addon que vous n'avez pas installé. Pour savoir quel addon nécessite une syntaxe, utilisez la commande `.syntax-info <syntaxe>`\n\n- Vous vous êtes trompé dans la ligne, par exemple vous avez mal orthographié des mots ou vous en avez oublié/rajouté. Pour connaîter le pattern exacte d'une syntaxe, utilisez la commande `.syntax-info <syntaxe>`.",
+                    "cantunderstand": "Ce message apparait généralement lorsque Skript ne reconnait pas la syntaxe que vous avez entré. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse:\n\n- Il peut manquer un \":\" à la fin de la ligne\n\n- La syntaxe a été ajouté par un addon ou par Skript, mais elle n'existe pas dans la version que vous avez. Pensez à toujours garder vos addons et Skript à jour.\n\n- La syntaxe vient d'un addon que vous n'avez pas installé. Pour savoir quel addon nécessite une syntaxe, utilisez la commande `.syntax-info <syntaxe>` (SOON)\n\n- Vous vous êtes trompé dans la ligne, par exemple vous avez mal orthographié des mots ou vous en avez oublié/rajouté. Pour connaîter le pattern exacte d'une syntaxe, utilisez la commande `.syntax-info <syntaxe>` (SOON).",
                     "emptysection": "Ce message apparait généralement lorsqu'il vous manque des tabulations après une ligne qui finit par un \":\", comme dans cet exemple : ```vb\nif {_variable} is 3:\n\tif {player::%player%} is set:\n\tmesage \"bravo\"\n\tmessage\"T'es le meilleur\"``` Pour régler ce problème, ajoutez simplement des tabulations aux ligne que vous vouliez indenter.",
                     "invalidquotes": "Ce message apparait généralement lorsqu'il y a une incohérence dans les guillements (\"). Ce la peut arriver dans plusieurs cas :\n\n- Lorsque vous voulez utiliser des guillemets dans un texte, sans les doubler, comme dans cet exemple : ```vb\non join:\n\tmessage \"Bienvenue au \"grand\" %player%\"```Pour utiliser des guillemets dans du texte, doublez-les, tel que : `message \"Bienvenue au \"\"grand\"\" %player%\"`. Cela fonctionnera.\n\n- Lorsque vous avez oublié un guillement en fin de ligne, tel que `message \"Bonjour`",
                     "noloopmatch": "Ce message indique que la loop que vous avez sélectionné  n'est pas compatible avec le loop-* que vous avez spécifié. Par exemple, la loop `loop 10 times:` n'est pas compatib le avec le `loop-player` ou le `loop-index`",
                     "elseafterif": "Ce message apparait généralement lorsque vous avez un `else` ou un `else if` sans `if` avant, ou alors avec un `if` mais qui n'est pas reconnu. Il est conseillé de corriger en dernier cette erreur car généralement elle découle d'un autre problème. Si c'est la seule erreur que vous avez, alors vérifiez que vous avez bien un `if` avant.",
                     "cantcompare": "Ce message signifie que vous essayez de comparer deux types de données différents , qui ne peuvent pas être comparés. Par exemple, vous ne pouvez pas comparer `loop-entity` avec `\"Toto\"` ( une entité avec un texte )",
                     "cantbeadded": "Cette erreur se produit quand tu essayes d'ajouter une valeur un type de données non supportée à une expression ( par exemple `add \"aaa\" to players` causera cette erreur , car l'expression `players` n'est pas faite pour qu'on lui ajoute une donnée de type texte",
-                    "periodicalevent": "Cette erreur signifie que dans votre code, vous utilisez un joueur, alors que l'évènement n'en contient pas. Par exemple, dans un `on join:`, il y a bien un joueur concerné. Mais dans un `every minute:`, il n'y a pas de joueur. Pour remédier a cela, vous pouvez donc utiliser un `loop all players:`, même si rappelez-vous qu'un `every X: loop all players:` n'est pas conseillé. Pour en savoir plus : .automsg everyloop",
+                    "noplayer": "Cette erreur signifie que dans votre code, vous utilisez un joueur, alors que l'évènement n'en contient pas. Par exemple, dans un `on join:`, il y a bien un joueur concerné. Mais dans un `every minute:`, ou dans une fonction, il n'y a pas de joueur. Pour remédier a cela, vous pouvez donc utiliser un `loop all players:`, même si rappelez-vous qu'un `every X: loop all players:` n'est pas conseillé. Pour en savoir plus : .automsg everyloop",
                     "other": "**__All code has to be put in triggers :__**\nCette erreur peut survenir si une ligne n'a aucune indentation, tel que ceci : ```vb\non join:\nmessage \"Bonjour\" # Cette ligne va générer un \"all code has to be put in triggers\"```\n\n**__Can't loop XX because it's a single value :__**\nCette erreur peut arriver lorsque vous essayer de faire une boucle sur une variable qui n'est pas une variable liste par exemple. Vérifiez donc que vous essayez de loop une expression/variable contenant plusieurs valeurs\n\nBeaucoup d'autre erreur existe dans Skript. Si vous avez une erreur qui n'est pas cité si dessous, essayez de la traduire, cela vous aidera déjà à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
                 }
             },
@@ -166,23 +202,24 @@
                     "softdepend": ":link: Dépendences facultatives",
                     "unmaintained": ":warning: Addon abandonné",
                     "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser."
-                }
+	            }
             },
             "skriptinfo": {
                 "help": "Avoir diverses informations sur Skript.",
                 "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
-                "embed": {
+	            "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.13. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
-                    "download": ":inbox_tray: Lien de téléchargement",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.14. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+	                "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
             },
             "serverinfo": {
                 "help": "Afficher des informations sur un serveur Minecraft.",
                 "description": "Afficher diverses informations sur un certain serveur Minecraft, selon son IP.",
+                "invalidCmd": "Il faut que tu ajoutes un serveur !",
                 "searching": "Je vais chercher ça...",
                 "noServerFound": "Aucun serveur ne correspond à votre requête !",
                 "embed": {
@@ -200,6 +237,7 @@
                 "help": "Afficher des informations sur un joueur Minecraft.",
                 "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
+                "invalidCmd": "Il faut que tu ajoutes un pseudo !",
                 "searching1": "Je vais chercher ça... (1/2)",
                 "searching2": "Je vais chercher ça... (2/2)",
                 "error": "Une erreur est survenue, désolé.",
@@ -212,9 +250,9 @@
             "userinfo": {
                 "help": "Afficher des informations sur un membre.",
                 "description": "Afficher diverses informations sur un certain membre du Discord Skript-MC, que vous avez défini par son ID ou en le mentionnant (Merci d'éviter de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites un clic-droit sur son pseudo > Copier l'Identifiant).",
-	            "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
+		        "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
                 "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce Discord !",
-                "embed": {
+	                "embed": {
                     "joined": "❯ A rejoint le serveur",
                     "created": "❯ A créé son compte",
                     "roles": "❯ Rôles",
@@ -228,7 +266,7 @@
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé.",
                 "header": "Les syntaxes des commandes se lisent comme un pattern skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`",
                 "searchResults": "%r élements trouvés pour la recherche `%s`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**",
-                "details": {
+	            "details": {
                     "everyone": "Tout le monde.",
                     "noExample": "Aucun exemple disponible.",
                     "all": "Tous",
@@ -238,7 +276,7 @@
                     "examples": "**Exemple(s) d'utilisation :**",
                     "usable": "**Utilisable par :**",
                     "channels": "**Salons :**"
-                }
+	            }
             },
             "links": {
                 "help": "Avoir plusieurs liens importants relatifs à Skript.",
@@ -255,30 +293,35 @@
                     "docAdd_desc": "Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.",
                     "dlSk_title": ":inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm",
                     "dlSk_desc": "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
-                    "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
+	                "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
                     "dlAdd_desc": "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.",
                     "discSkMc_title": ":speech_left: Discord Skript-MC : https://discordapp.com/invite/J3NSGaE",
                     "discSkMc_desc": "Lien officiel de ce Discord.",
-                    "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
+	                "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
                     "discSkCh_desc": "Lien du discord \"Skript Chat\", qui est le Discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
-                    "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
+	                "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
                     "forumSkMc_desc": "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, Java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
-                    "gitSk_title": ":computer: GitHub de Skript : https://bit.ly/2W0EJrU",
+	                "gitSk_title": ":computer: GitHub de Skript : https://bit.ly/2W0EJrU",
                     "gitSk_desc": "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour."
                 }
             },
             "poll": {
                 "help": "Lancer un sondage.",
-                "description": "Lancer un sondage temporaire par lequel on peut répondre Oui ou Non.",
+                "description": "Lancer un sondage temporaire par lequel on peut répondre Oui/Non ou une réponse personnalisée.",
                 "invalidDuration": "La durée marquée est invalide ! Impossible de la lire...",
-                "invalidCmd": "Il doit y avoir un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivi (sans espaces) de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** C'est une option de réponse, entre guillemets. Ce champ est facultatif, car si vous ne mettez aucune réponse, on devra répondre à votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
-                "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre à ton sondage par oui et non, soit au moins 2 réponses.",
-                "tooManyAnswers": "Il y a trop de réponses ! Le maximum est de 18.",
-                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la première ajoutée qui sera comptée. Le vote commence lorsque le message devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
-	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vont convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la première ajoutée qui sera comptée. Le vote commence lorsque le message devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
-	            "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours (%sms)."
+                "invalidCmd": "Il y a un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivis sans espaces de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** Est une option de réponse, entre guillement. Ce champs est facultatif, car si vous ne mettez aucune réponse, on devra répondre a votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
+                "quoteProblem": "Il y a un problème dans les guillemets (\") !",
+                "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
+                "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
+                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
+	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
+	            "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
             },
-            "tag_role": {
+            "joke": {
+                "help": "Envoie une blague aléatoire.",
+                "description": "Envoie aléatoirement une blague drôle (ou pas)."
+            },
+            "tagrole": {
                 "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
                 "description": "Permet de notifier un rôle qui n'est pas mentionnable.",
                 "invalidCmd": "Il faut ajouter un rôle à mentionner !",
@@ -290,15 +333,15 @@
                 "onlyInHelp": "Cette commande est disponible uniquement dans les salons d'aide skript",
                 "invalidRule": "Le numéro de la règle n'est pas valide !",
                 "messages": [
-                    "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, etc.).",
+                    "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, vos erreurs si vous en avez (pensez à regarder la console), etc.).",
                     "Rester clément même avec les débutants. Tout le monde n'est pas un expert en Skript."
                 ]
             },
             "ping": {
                 "help": "Permet de savoir le ping du bot.",
-                "description": "Permet de savoir la latence entre vous et le bot.",
+                "description": "Permet de savoir la latence entre vous et le bot, et le bot et l'API Discord.",
                 "firstMessage": "Pong !",
-                "secondMessage": "Pong ! La latence du bot est de %xms."
+                "secondMessage": "Pong ! La latence du bot est de %sms. La latence avec l'API Discord est de %xms."
             },
             "mathematiques": {
                 "help": "Permet de tester la mathématique de Skript.",
@@ -307,26 +350,27 @@
                 "error": "Impossible de tester cette expression ! Il semblerait qu'il y ait un problème dedans..."
             },
             "code": {
-                "help": "Permet de mettre votre code de façon claire.",
+                "help": "Permet de présenter votre code de façon claire.",
                 "description": "Permet de mettre votre code dans un bloc de code.",
-                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères)."
+                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères).",
+                "noCode": "Veuillez ajouter un code ! Il faut que la première ligne soit sur la même ligne que la commande `.code`"
             },
             "statistics": {
                 "help": "Avoir diverses statistiques sur le bot et le serveur.",
                 "description": "Avoir diverses statistiques sur le bot et le serveur."
             },
-            "addon_pack": {
+            "addonpack": {
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
-                "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.",
+                "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot).",
                 "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
-                "messages": [
-                    "Version des addons conseillés pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.11 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.12 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.13 :\nSkript : 2.3.6\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillés pour la 1.14 :\nSkript : Pas encore supporté (ou dernière version Skript 2.4-alpha)\nAddons :\n- Addon : version"
+	            "messages": [
+                    "Version des addons conseillées pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.11 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.12 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.13 :\nSkript : 2.3.6\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.14 :\nSkript : Pas encore supporté (ou dernière version Skript 2.4-beta)\nAddons :\nListe à venir. Si vous connaissez des addons supportant cette version, veuillez contacter les devs ou vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot)"
                 ]
             },
             "ban": {
@@ -339,9 +383,9 @@
                 "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
-                "successfullyBanned": "Vous avez bien banni %u ! \nRaison : %r\nDurée : %d",
+	            "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
                 "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
-                "whyHere": "Bonjour %u ! Tu es là pour avoir enfrein le règlement. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %t",
+                "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
             },
@@ -349,8 +393,7 @@
                 "help": "Retirer une restriction du Discord à un joueur.",
                 "description": "Retirer une restriction du Discord à un joueur. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
-                "successfullyUnbanned": "Vous avez bien débanni %u ! \nRaison : %r",
+                "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
@@ -365,7 +408,7 @@
                 "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
-                "successfullyMuted": "Vous avez bien rendu muet %u ! \nRaison : %r\nDurée : %d",
+	            "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
                 "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
@@ -374,8 +417,7 @@
                 "help": "Redonner la parole à un joueur.",
                 "description": "Redonner la parole à un joueur dans les salons d'aide.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
-                "successfullyUnmuted": "Vous avez bien rendu la parole à %u ! \nRaison : %r",
+                "successfullyUnmuted": "Vous avez bien rendu la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
@@ -384,22 +426,124 @@
                 "help": "Avertir un joueur.",
                 "description": "Donner un avertissement à un joueur.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
-                "noSelfWarn": "Ne te warn pas toi même , boulet.",
-                "successfullyWarned": "Vous avez bien averti %u ! \nRaison : %r",
+                "noSelfWarn": "Ne te warn pas toi même, boulet.",
+                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
                 "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc à revoir ton comportement.",
+	            "noReasonSpecified": "Aucune raison spécifiée"
+            },
+            "removemusicrestriction": {
+                "help": "Enlever les restrictions de musique d'un joueur.",
+                "description": "Redonner à un joueur l'accès à la commande `.play`.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "notRestricted": "%u n'a aucune restriction des commandes de musique (ou du moins ce n'est pas inscrit dans la base de données).",
+                "successfullyRemoveRestr": "Vous avez bien enlevé les restrictions à %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "purge": {
-                "help": "Supprimer des messages dans un channel.",
-                "description": "Supprimer X messages dans un channel, selon un certain utilisateur ou non. La limite est fixée à 100.",
+                "help": "Supprimer des messages dans un canal.",
+                "description": "Supprimer X messages dans un canal, selon un certain utilisateur ou non. La limite est fixée à 100.",
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
                 "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message à supprimer !"
-            },
+	        },
             "ghostping": {
                 "help": "Tagger un membre, sans laisser de trace.",
                 "description": "Permet de mentionner un membre sans laisser aucune trace.",
                 "missingUserArgument": "Vous devez ajouter un utilisateur à mentionner."
+            },
+            "play": {
+                "help": "Jouer une musique.",
+                "description": "Permet de jouer une musique ou une playlist avec le bot, selon son nom, son URL youtube ou l'URL d'une playlist. Ajouter `--first` pour choisir automatiquement le premier résultat, si vous cherchez une musique par son nom.",
+                "restrictedUser": "Impossible de faire cette commande car vous avez reçu une restriction des commandes de musique !",
+                "notInChannel": "Tu n'es pas dans un canal vocal !",
+                "restrictedChannel": "Désolé, mais je ne peux pas te rejoindre dans ce canal là !",
+                "comming": "J'arrive dans ton canal vocal !",
+                "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre canal... Rejoint moi dans le canal %s !",
+                "noArgumentGiven": "Tu n'as donné aucune musique à jouer, et la queue est vide !",
+                "queueLimited": "Impossible d'ajouter cet élément à la queue car elle est pleine (limitée à %s)",
+                "playlistNotFound": "La Playlist n'a pas été trouvée ! As-tu vérifié qu'elle existe bien et qu'elle n'est pas privée ?",
+                "blacklistedMusic": "Impossible de jouer cette musique car elle a été ajoutée à la blacklist !",
+                "blacklistedChannel": "Impossible de jouer cette musique car elle provient d'une chaîne blacklist !",
+                "1ElementCouldntBeAdd": "Désolé, mais 1 élément de la playlist n'a pu être ajouté car il est sûrement blacklist.",
+                "SeveralElementCouldntBeAdd": "Désolé, mais %s éléments de la playlist n'ont pu être ajoutés car ils sont sûrement blacklist.",
+                "noLiveStream": "Je ne supporte pas encore les livestreams !",
+                "songTooLong": "Je ne peux pas jouer de musique d'une heure ou plus !",
+                "playlistAdded": "Playlist : :musical_note: %s :musical_note: ajoutée à la queue !",
+                "songAdded": "Musique : :musical_note: %s :musical_note: ajoutée à la queue ! Elle se trouve en position %p.",
+                "queueFinished": "Je n'ai plus rien a jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine :wink:",
+                "error": "Une erreur s'est produite... Veuillez réessayer plus tard !",
+                "chooseSong": "Choisis une musique en cliquant sur la réaction correspondante :",
+                "nowPlaying": "Je joue maintenant : :musical_note: %t :musical_note: (%d)",
+                "noMusicFound": "Désolé, mais je n'ai trouvé aucune musique correspondant à la recherche `%s`"
+            },
+            "queue": {
+                "help": "Permet d'afficher la queue.",
+                "description": "Permet d'afficher la liste de toutes les musiques dans la queue.",
+                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que ce soit un nombre, et que la queue contienne cette musique",
+                "removedSong": "Musique %s retirée de la queue !",
+                "cleared": "La queue à bien été entièrement vidée !"
+            },
+            "shuffle": {
+                "help": "Permet de mélanger la queue.",
+                "description": "Permet de mélanger l'ordre des musiques dans la queue.",
+                "queueShuffled": "Ordre des musiques mélangé ! Pour voir la nouvelle queue, faites `.queue`."
+            },
+            "pause": {
+                "help": "Permet de mettre/enlever la pause d'une musique.",
+                "description": "Permet de mettre ou d'enlever la pause d'une musique.",
+                "paused": ":pause_button: Musique mise en pause !",
+                "resumed": ":arrow_forward: Musique reprise !"
+            },
+            "leave": {
+                "help": "Faire quitter le bot du canal vocal.",
+                "description": "Permet de faire partir le bot du canal vocal.",
+                "left": "Je suis bien parti du canal vocal ! À la prochaine :wink:"
+            },
+            "stop": {
+                "help": "Faire quitter le bot du canal vocal.",
+                "description": "Permet de faire partir le bot du canal vocal.",
+                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue."
+            },
+            "skip": {
+                "help": "Passer une ou plusieurs musique.",
+                "description": "Permet de passer une ou plusieurs musique.",
+                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que ce soit un nombre, et que la queue contienne cette musique",
+                "skippedOne": "Musique passée !",
+                "skippedSeveral": "J'ai passé %s musiques !"
+            },
+            "volume": {
+                "help": "Modifier le volume de la musique.",
+                "description": "Modifier le volume de la musique. Pour éviter de géner les autres utilisateurs, veuillez plutôt baisser le volume du bot, en faisant un `clique droit` dessus, puis en baissant le curseur `Volume de l'utilisateur`.",
+                "invalidVolume": "Le volume entré n'est pas valide ! Vérifiez que ce soit un nombre, et qu'il soit compris entre 1 et 10",
+                "currentVolume": "Le volume actuel est à %s/10",
+                "changed": "Le volume a bien été modifié à %v"
+            },
+            "join": {
+                "help": "Ammener le bot dans votre canal.",
+                "description": "Ammener le bot dans votre canal s'il n'est pas occupé ailleurs, ou s'il n'y ai pas déjà.",
+                "comming": "J'arrive dans ton canal vocal !",
+                "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre canal... Rejoint moi dans le canal %s !",
+                "alreadyInChannel": "Hé ! Ouvre les yeux ! Je suis déjà là !"
+            },
+            "nowplaying": {
+                "help": "Affiche des informations sur la musique en cours.",
+                "description": "Affiche des informations sur la musique en cours.",
+                "successfullyReported": "Vous avez bien signalé cette musique ! Les modérateurs pourront soit la blacklist, soit blacklist la chaîne YT d'où elle provient. Si vous abusez de l'option 'signaler', vous pourrez être sanctionné.",
+                "noSongPlaying": "Il y a aucune musique en train de jouer !",
+                "alreadyLiked": "Tu as déjà like cette musique !",
+                "alreadyDisliked": "Tu as déjà dislike cette musique !",
+                "liked": "Vous avez bien liké cette musique ! :thumbsup:",
+                "disliked": "Vous avez bien disliké cette musique ! :thumbsdown:"
+            },
+            "loop": {
+                "help": "Permet de changer le mode de répétition des musiques.",
+                "description": "Permet de faire en sorte que le bot répète une musique, ou ne répète pas.",
+                "noLooping": "Actuellement, je ne répète pas les musiques !",
+                "loopingMusic": "Actuellement, je répète la musique que je joue !",
+                "disabled": "J'ai bien désactivé la répétition",
+                "changed": "D'accord, je vais répeter cette musique ! `.loop off` pour arrêter la répétition.",
+                "alreadyEnabled": "La répétition est déjà activée !",
+                "alreadyDisabled": "La répétition est déjà désactivée !"
             }
         }
     }
