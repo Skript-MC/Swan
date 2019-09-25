@@ -4,9 +4,10 @@ import { config } from '../../main';
 class ToggleNotifRole extends Command {
   constructor() {
     super('Toggle role notification');
-    this.regex = /(add|give|ask|toggle|remove)(-|_)?notif(ication)?(-|_)?role/gimu;
+    this.aliases = ['toggle-notif-role', 'togglenotifrole', 'toggle_notif_role'];
     this.usage = 'toggle-notif-role';
-    this.examples.push('toggle-notif-role');
+    this.examples = ['toggle-notif-role'];
+    this.activeInHelpChannels = false;
   }
 
   async execute(message, _args) {
@@ -27,10 +28,10 @@ class ToggleNotifRole extends Command {
     }
 
     if (!message.member.roles.has(role.id)) {
-      await message.member.addRole(role);
+      await message.member.roles.add(role);
       message.member.send(`**(${message.guild})** Le rôle *"${rolename}"* vous a été ajouté !`);
     } else if (message.member.roles.has(role.id)) {
-      await message.member.removeRole(role);
+      await message.member.roles.remove(role);
       message.member.send(`**(${message.guild})** Le rôle *"${rolename}"* vous a été enlevé !`);
     }
   }

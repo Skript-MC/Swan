@@ -1,5 +1,4 @@
 import Command from '../../components/Command';
-import { config } from '../../main';
 import { discordError } from '../../components/Messages';
 
 const affirmative = ['Oui.', 'Oui !', 'D\'après moi, oui !', 'Je le pense', 'C\'est une chose sûre !', 'C\'est certain.', 'Sans aucun doute', 'Il me semble...', 'Pourquoi demander ? La réponse parait évidente ! Oui !', 'ET C\'EST UN OUI !', 'Oui ! NAN J\'AI PERDU :sob: Je suis vraiment nul au ni-oui ni-non :weary: ', 'Affirmatif, chef.', 'Positif.'];
@@ -8,13 +7,13 @@ const negative = ['Non.', 'MDR NON', 'C\'est un non.', 'Mes sources me confirmen
 class EightBall extends Command {
   constructor() {
     super('8ball');
-    this.regex = /(?:8|eight)-?ball/gimu;
-    this.usage = `${config.bot.prefix}8ball <question>`;
-    this.examples.push('8ball suis-je le plus beau ?');
+    this.aliases = ['8ball'];
+    this.usage = '8ball <question>';
+    this.examples = ['8ball suis-je le plus beau ?'];
   }
 
   async execute(message, args) {
-    if (args.length < 1) return discordError(this.config.noQuestion, message);
+    if (args.length < 1) return message.channel.send(discordError(this.config.noQuestion, message));
     let answer;
     if (Math.random() < 0.5) {
       answer = affirmative[Math.floor(Math.random() * affirmative.length)];

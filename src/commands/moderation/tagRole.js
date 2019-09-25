@@ -4,14 +4,14 @@ import { discordError } from '../../components/Messages';
 class TagRole extends Command {
   constructor() {
     super('Tag Role');
-    this.regex = /(tag|mention|notif)(-|_)?role/gimu;
+    this.aliases = ['tagrole', 'tag-role', 'tag_role'];
     this.usage = 'tag-role <rôle>';
-    this.examples.push('tagrole Notifications Évènements');
-    this.permissions.push('Staff');
+    this.examples = ['tagrole Notifications Évènements'];
+    this.permissions = ['Staff'];
   }
 
   async execute(message, args) {
-    if (args.length === 0) return discordError(this.config.invalidCmd);
+    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
 
     message.delete();
     const role = message.guild.roles.find(r => r.name.toUpperCase() === args.join(' ').toUpperCase());

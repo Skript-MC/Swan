@@ -1,5 +1,4 @@
-/* eslint-disable consistent-return */
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../components/Command';
 import { discordError } from '../../components/Messages';
@@ -8,45 +7,46 @@ import { formatDate } from '../../utils';
 
 class PlayerInfos extends Command {
   constructor() {
-    super('playerinfo');
-    this.regex = /(?:player|joueur)-?info(?:rmation)?s?/gimu;
-    this.usage = `${config.bot.prefix}player-info <pseudo>`;
-    this.examples.push('player-info noftaly');
+    super('Player Info');
+    this.aliases = ['playerinfo', 'player_info', 'player-info'];
+    this.usage = 'player-info <pseudo>';
+    this.examples = ['player-info noftaly'];
   }
 
   async execute(message, args) {
+    if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
     const msg = await message.channel.send('Je vais chercher ça... (1/2)');
 
     // On récupère l'UUID du joueur a partir de son pseudo
-    const uuid = await axios(`${config.apis.mojang_api}/users/profiles/minecraft/${args[0]}`, { method: 'GET' })
+    const uuid = await axios(`${config.apis.mojang_api}/users/profiles/minecraft/${args[0]}`)
       .then(async (response) => {
-        if ([204, 400, 404].includes(response.status)) { discordError('Impossible de trouver ce joueur, désolé.', message); return -1; }
+        if ([204, 400, 404].includes(response.status)) { message.channel.send(discordError('Impossible de trouver ce joueur, désolé.', message)); return -1; }
         if (response.status !== 200) { this.httpError(response, message); return -1; }
         return response.data.id;
-      }).catch(err => console.error(err));
+      }).catch(console.error);
 
     if (uuid === -1) return;
-    if (!uuid) return discordError('Une erreur est survenue, désolé.', message);
+    if (!uuid) return message.channel.send(discordError('Une erreur est survenue, désolé.', message));
 
     msg.edit('Je vais chercher ça... (2/2)');
     // On récupère l'historique des pseudos du joueur
-    const nameHystory = await axios(`${config.apis.mojang_api}/user/profiles/${uuid}/names`, { method: 'GET' })
+    const nameHystory = await axios(`${config.apis.mojang_api}/user/profiles/${uuid}/names`)
       .then(async (response) => {
         if (response.status !== 200) return this.httpError(response, message);
         return response.data;
-      }).catch(err => console.error(err));
+      }).catch(console.error);
 
-    if (!nameHystory) return discordError('Une erreur est survenue, désolé.', message);
+    if (!nameHystory) return message.channel.send(discordError('Une erreur est survenue, désolé.', message));
 
     msg.delete();
     this.sendDetails(message, nameHystory, uuid);
   }
 
   sendDetails(message, data, uuid) {
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur l'UUID ${uuid}`, config.bot.avatar)
-      .setFooter(`Executé par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
+      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
       .setTimestamp()
       .addField(this.config.embed.pseudo, `\`${data[data.length - 1].name}\``, false);
 
@@ -71,7 +71,7 @@ class PlayerInfos extends Command {
 
   httpError(response, message) {
     console.error(`[HTTP request failed] Error : ${response.status}`);
-    discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status} ${response.status === 429 ? 'Trop de requêtes ! Attendez un peu...' : ''}`, message)
+    message.channel.send(discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status} ${response.status === 429 ? 'Trop de requêtes ! Attendez un peu...' : ''}`, message));
   }
 }
 
