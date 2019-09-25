@@ -4,11 +4,22 @@ module.exports = {
         "no-console": "off",
         "no-plusplus": "off",
         "no-continue": "off",
-        "no-else-return": "off",
         "no-await-in-loop": "off",
-        "no-restricted-syntax": "off",
+        "no-loop-func": "off",
+        "no-underscore-dangle": "off",
+        "consistent-return": "off",
+        "prefer-destructuring": "off",
         "class-methods-use-this": "off",
-        "no-restricted-globals": "off",
         "max-len": "off",
+        "no-restricted-syntax": "off",
+        "no-restricted-globals": "off",
+        "no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^_" }
+        ],
+        "object-curly-newline": [
+            "error",
+            { "ImportDeclaration": "never" }
+        ],
     }
 };
