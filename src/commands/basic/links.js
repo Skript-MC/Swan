@@ -1,4 +1,5 @@
-import Discord from 'discord.js';
+/* eslint-disable no-param-reassign */
+import { MessageEmbed } from 'discord.js';
 import Command from '../../components/Command';
 import { config } from '../../main';
 
@@ -9,9 +10,9 @@ const maxPage = 5;
 class Links extends Command {
   constructor() {
     super('Links');
-    this.regex = /(link|lien)s?/gimu;
+    this.aliases = ['links', 'liens', 'link', 'lien'];
     this.usage = 'link [<la page que vous souhaitez>]';
-    this.examples.push('link 3');
+    this.examples = ['link 3'];
   }
 
   async execute(message, args, page) {
@@ -19,9 +20,9 @@ class Links extends Command {
     page = page ? parseInt(page, 10) : args[0] ? parseInt(args[0], 10) : 0;
     page = isNaN(page) ? 0 : page;
 
-    const embed = new Discord.RichEmbed()
+    const embed = new MessageEmbed()
       .setAuthor(`Liens utiles (${page}/${maxPage})`, config.bot.avatar)
-      .setFooter(`Executé par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
     switch (Number(page)) {
