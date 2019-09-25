@@ -102,7 +102,7 @@ export const sanctions = [];
         .setTimestamp();
 
       const msg = await message.channel.send(embed);
-      msg.react('✅').then(() => message.react('❌'));
+      msg.react('✅').then(() => msg.react('❌'));
     }
 
     // Command Manager
