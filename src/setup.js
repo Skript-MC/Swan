@@ -1,10 +1,9 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb';
-import Discord from 'discord.js';
+import { Client } from 'discord.js';
 import { success } from './components/Messages';
 import { config, commands } from './main';
 
@@ -14,24 +13,18 @@ const apikeys = {
   discord: process.env.DISCORD_API,
 };
 
-const GET = { method: 'GET' };
-
 function dbCallback(err, name) {
-  if (err) {
-    console.warn(`Impossible de charger la BDD "${name}" :`);
-    console.error(err);
-  } else {
-    success(`Database "${name}" loaded!`);
-  }
+  if (err) console.error(`Unable to load db "${name}" :\n`, err);
+  else success(`Databases : "${name}.db" loaded!`);
 }
 
 export function loadBot() {
-  const client = new Discord.Client();
+  const client = new Client();
   client.login(apikeys.discord);
   return client;
 }
 
-export async function loadCommands(path = 'commands') {
+export function loadCommands(path = 'commands') {
   if (path !== 'commands') console.log(`loading : ${path}`);
 
   fs.readdir(`${__dirname}/${path}`, (err, files) => {
@@ -44,11 +37,13 @@ export async function loadCommands(path = 'commands') {
         continue;
       } else {
         try {
-          const Module = require(`${__dirname}/${path}/${file}`).default;
+          const Module = require(`${__dirname}/${path}/${file}`).default; // eslint-disable-line global-require
           const command = new Module();
-          command.init();
-          command.category = path.replace('commands/', '');
-          commands.push(command);
+          if (command.enabled) {
+            command.init();
+            command.category = path.replace('commands/', '');
+            commands.push(command);
+          }
         } catch (e) {
           console.error(`Unable to load this command: ${file}`);
           console.error(e);
@@ -61,16 +56,17 @@ export async function loadCommands(path = 'commands') {
 export async function loadSkripttoolsAddons() {
   const addons = [];
 
-  const allAddons = await axios(config.apis.addons, GET)
-    .then(response => response.data.data)
-    .catch(err => console.error(err));
+  const allAddons = await axios(config.apis.addons)
+    .then(response => (response ? response.data.data : undefined))
+    .catch(console.error);
+  if (typeof allAddons === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.addons}`);
 
   for (let addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
     const latest = versions[versions.length - 1];
-    addon = await axios(`${config.apis.addons}${latest}`, GET)
+    addon = await axios(`${config.apis.addons}${latest}`)
       .then(response => response.data.data)
-      .catch(err => console.error(err));
+      .catch(console.error);
     addons.push(addon);
   }
   success('Skripttools : addons loaded!');
@@ -78,15 +74,16 @@ export async function loadSkripttoolsAddons() {
 }
 
 export async function loadSkripttoolsSkript() {
-  const data = await axios(config.apis.skript, GET)
-    .then(response => response.data)
-    .catch(err => console.error(err));
+  const data = await axios(config.apis.skript)
+    .then(response => (response ? response.data : undefined))
+    .catch(console.error);
+  if (typeof data === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.skript}`);
 
   const latest = data.data[data.data.length - 1].replace(/\s/gimu, '+');
 
-  const infos = await axios(`${config.apis.skript}${latest}`, GET)
+  const infos = await axios(`${config.apis.skript}${latest}`)
     .then(response => response.data)
-    .catch(err => console.error(err));
+    .catch(console.error);
 
   success('Skripttools : skript infos loaded!');
   return infos;
@@ -94,7 +91,15 @@ export async function loadSkripttoolsSkript() {
 
 export function loadDatabases() {
   const db = {};
-  db.sanctions = new Datastore('sanctions.db');
+  // Store all sanctions
+  db.sanctions = new Datastore('./databases/sanctions.db');
   db.sanctions.loadDatabase(err => dbCallback(err, 'sanctions'));
+  // Store all blacklisted musics
+  db.musics = new Datastore('./databases/musics.db');
+  db.musics.loadDatabase(err => dbCallback(err, 'musics'));
+  // Store all music stats
+  db.musicsStats = new Datastore('./databases/musicsStats.db');
+  db.musicsStats.loadDatabase(err => dbCallback(err, 'musicsStats'));
+
   return db;
 }
