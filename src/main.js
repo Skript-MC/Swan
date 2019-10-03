@@ -62,6 +62,7 @@ export const sanctions = [];
         }
       }
     }, config.bot.checkInterval);
+    }, 1000);
   });
 
   client.on('message', async (message) => {
