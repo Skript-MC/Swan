@@ -11,14 +11,27 @@ class Command {
   constructor(name) {
     /**
      * Configuration de la commande (config.messages.commands.la_commande)
+     * @type {Object}
      */
-    this.config = config.messages.commands[name.toLowerCase().replace(/\s/gmui, '_')];
+    this.config = config.messages.commands[name.toLowerCase().replace(/\s/gimu, '')];
 
     /**
      * Nom de la commande
      * @type {string}
      */
     this.name = name;
+
+    /**
+     * Si la commande est activée
+     * @type {boolean}
+     */
+    this.enabled = true;
+
+    /**
+     * Si la commande est activée dans les channels d'aide
+     * @type {boolean}
+     */
+    this.activeInHelpChannels = true;
 
     /**
      * Longue description de la commande
@@ -45,10 +58,10 @@ class Command {
     this.examples = (this.config && this.config.examples) ? this.config.examples : [];
 
     /**
-     * Pattern Regex qui déclenche la commande
-     * @type {RegExp}
+     * Aliases des commandes.
+     * @type {string[]}
      */
-    this.regex = (this.config && this.config.regex) ? this.config.regex : new RegExp(name, 'gimu');
+    this.aliases = (this.config && this.config.aliases) ? this.config.aliases : [];
 
     /**
      * ID des rôles pouvant éxecuter la commande
@@ -78,21 +91,33 @@ class Command {
      * @type {string}
      */
     this.category = (this.config && this.config.category) ? this.config.category : config.messages.miscellaneous.noCategory;
+
+    /**
+     * Cooldown de la commande
+     * @type {Timestamp}
+     */
+    this.cooldown = (this.config && this.config.cooldown) ? this.config.cooldown : 0;
+
+    /**
+     * Map des utilisateurs ayant un cooldown sur la commande (utilisateur mappés par leur ID discord)
+     * @type {Map<Snowflake, Timestamp>)}
+     */
+    this.userCooldowns = new Map();
   }
 
   /**
    * Fonction qui s'execute lors du chargement du bot
    * @async
    */
-  async init() {}
+  async init() {} // eslint-disable-line no-empty-function
 
   /**
    * Fonction qui s'execute lorsque l'on fait la commande
-   * @param {Message} message - Message qui a déclenché la commande
-   * @param {string[]} args - Arguments de la commande.
+   * @param {Message} _message - Message qui a déclenché la commande
+   * @param {string[]} _args - Arguments de la commande.
    * @async
    */
-  async execute(message, args) {}
+  async execute(_message, _args) {} // eslint-disable-line no-empty-function
 }
 
 export default Command;

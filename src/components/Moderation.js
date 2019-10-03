@@ -1,23 +1,24 @@
 /* eslint-disable import/no-cycle */
-/* eslint-disable no-underscore-dangle */
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import { config, client, db } from '../main';
-import { formatDate, secondToDuration } from '../utils';
+import { formatDate, secondToDuration, prunePseudo } from '../utils';
 
-async function sendLog(info, guild, result = undefined) {
+export async function sendLog(info, guild, result = undefined) {
   let action;
   if (info.sanction === 'ban') action = 'Restriction du discord';
   else if (info.sanction === 'hardban') action = 'Banissement';
   else if (info.sanction === 'mute') action = "Mute des channels d'aide";
   else if (info.sanction === 'avertissement') action = 'Avertissement';
+  else if (info.sanction === 'music_restriction') action = 'Restriction des commandes de musiques';
+  else if (info.sanction === 'music_restriction_prolongation') action = 'Prolongation de la restriction des commandes de musiques';
 
   // Création de l'embed
-  const embed = new RichEmbed()
+  const embed = new MessageEmbed()
     .setColor(info.color)
     .setTitle('Nouveau cas :')
     .setTimestamp()
-    .addField(':bust_in_silhouette: Utilisateur', `${info.member}\n(${info.member.id})`, true)
-    .addField(':cop: Modérateur', `${info.mod}\n(${info.mod.id})`, true)
+    .addField(':bust_in_silhouette: Utilisateur', `${info.member.toString()}\n(${info.member.id})`, true)
+    .addField(':cop: Modérateur', `${info.mod.toString()}\n(${info.mod.id})`, true)
     .addField(':tools: Action', `${action}`, true);
 
   if (result) embed.setFooter(`ID : ${result._id}`);
@@ -29,9 +30,8 @@ async function sendLog(info, guild, result = undefined) {
   }
 
   embed.addField(':scroll: Raison', `${info.reason}`, true);
-  if (info.privateChannel) embed.addField(':speech_left: Channel privé', `${info.privateChannel}`, true);
+  if (info.privateChannel) embed.addField(':speech_left: Channel privé', `${info.privateChannel.toString()}`, true);
 
-  // Channel log
   const logChannel = guild.channels.find(c => c.name === config.moderation.log.channelName && c.type === 'text');
   logChannel.send(embed);
 }
@@ -87,28 +87,37 @@ export function removeSanction(info, guild) {
   db.sanctions.remove({ _id: info.id }, {}, (err) => {
     if (err) console.error(err);
 
+    // On enlève le rôle de la victime
     const role = info.sanction === 'ban'
       ? guild.roles.find(r => r.name === config.moderation.banRole)
       : guild.roles.find(r => r.name === config.moderation.muteRole);
+
     if (info.member.roles.has(role.id)) {
       try {
-        info.member.removeRole(role);
+        info.member.roles.remove(role);
       } catch (e) {
         console.error(e);
       }
     }
 
-    const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${info.member.user.username.replace(/[^a-zA-Z0-9]/gimu, '').toLowerCase()}` && c.type === 'text');
+    // On supprime le channel s'il y en a un
+    const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(info.member)}` && c.type === 'text');
     if (chan) chan.delete();
 
+    // On envoie le message de log
+    let action;
+    if (info.sanction === 'ban') action = 'Unban';
+    else if (info.sanction === 'mute') action = 'Unmute';
+    else if (info.sanction === 'music_restriction') action = 'Suppression de la restriction des commandes de musiques';
+
     const logChannel = guild.channels.find(c => c.name === config.moderation.log.channelName && c.type === 'text');
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       .setColor(config.colors.success)
       .setTitle(info.title)
       .setTimestamp()
-      .addField(':bust_in_silhouette: Utilisateur', `${info.member}\n(${info.member.id})`, true)
-      .addField(':cop: Modérateur', `${info.mod}\n(${info.mod.id})`, true)
-      .addField(':tools: Action', `Un${info.sanction}`, true)
+      .addField(':bust_in_silhouette: Utilisateur', `${info.member.toString()}\n(${info.member.id})`, true)
+      .addField(':cop: Modérateur', `${info.mod.toString()}\n(${info.mod.id})`, true)
+      .addField(':tools: Action', `${action}`, true)
       .addField(':scroll: Raison', `${info.reason}\nID : ${info.id}`, true);
     logChannel.send(embed);
   });
@@ -119,9 +128,9 @@ export function removeSanction(info, guild) {
  * @async
  */
 export function isBan(id) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     db.sanctions.findOne({ member: id, sanction: 'ban' }, (err, result) => {
-      if (err) console.error(err);
+      if (err) reject(err);
       resolve(!!result); // Cast result en boolean. Donc si il y a un résultat : true, sinon : false
     });
   });
@@ -141,7 +150,7 @@ export function hardBan(member, ban) {
 
   // Suppression du channel perso
   const guild = client.guilds.get(config.bot.guild);
-  const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${member.user.username.replace(/[^a-zA-Z]/gimu, '').toLowerCase()}` && c.type === 'text');
+  const chan = guild.channels.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(member)}` && c.type === 'text');
   if (chan) chan.delete();
 
   // Envoie d'un log
