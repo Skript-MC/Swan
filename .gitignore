@@ -1,10 +1,8 @@
+TODO/*
 node_modules/*
-playlists/*
-playlist/*
-build/
 .idea/
 .vscode/*
 .env
 .DS_Store
-sanctions.db
 package-lock.json
+*.db

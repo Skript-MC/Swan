@@ -3,9 +3,9 @@ import Command from '../../components/Command';
 class AddonPack extends Command {
   constructor() {
     super('Addon Pack');
-    this.regex = /add?ons?(-|_)?pack|pack(-|_)?add?ons?/gimu;
+    this.aliases = ['addonpack', 'addon_pack', 'addon-pack'];
     this.usage = 'addon-pack <votre version de serveur>';
-    this.examples.push('addon-pack 1.14');
+    this.examples = ['addon-pack 1.14'];
   }
 
   async execute(message, args) {

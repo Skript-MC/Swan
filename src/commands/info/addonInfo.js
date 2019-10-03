@@ -1,6 +1,4 @@
-/* eslint-disable nonblock-statement-body-position */
-/* eslint-disable curly */
-import { RichEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import Command from '../../components/Command';
 import { discordError } from '../../components/Messages';
 import { SkripttoolsAddons, config } from '../../main';
@@ -18,24 +16,22 @@ const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣'
 
 class AddonInfo extends Command {
   constructor() {
-    super('addonInfo');
-    this.regex = /a(?:dd?ons?)?-?infos?/gimu;
-    this.usage = `${config.bot.prefix}addon-info <addon>`;
-    this.examples.push('addon-info skquery-lime', 'addonsinfos -list', 'addoninfo mirror');
+    super('Addon Info');
+    this.aliases = ['addoninfo', 'addon_info', 'addon-info'];
+    this.usage = 'addon-info <addon>';
+    this.examples = ['addon-info skquery-lime', 'addonsinfos -list', 'addoninfo mirror'];
   }
 
   async execute(message, args) {
     if (args.length < 1) {
-      discordError(this.config.invalidCmd, message);
+      message.channel.send(discordError(this.config.invalidCmd, message));
     } else {
       let msg = await message.channel.send(this.config.searching);
       const addons = await SkripttoolsAddons;
 
       const myAddon = args.join(' ');
 
-      if (myAddon.toLowerCase() === '-list') {
-        return message.channel.send(this.config.list.replace('%s', addons.join(', ')));
-      }
+      if (myAddon.toLowerCase() === '-list') return message.channel.send(this.config.list.replace('%s', addons.join(', ')));
 
       let matchingAddons = addons.filter(elt => elt.plugin.toUpperCase().includes(myAddon.toUpperCase()));
       const results = matchingAddons.length;
@@ -45,10 +41,10 @@ class AddonInfo extends Command {
 
       if (matchingAddons.length === 0) {
         await msg.delete();
-        return discordError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message);
+        message.channel.send(discordError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message));
       } else if (matchingAddons.length === 1) {
         msg.delete();
-        return this.sendDetails(message, matchingAddons[0]);
+        this.sendDetails(message, matchingAddons[0]);
       } else {
         await msg.edit(this.config.searchResults.replace('%r', results).replace('%s', myAddon));
         for (let i = 0; i < matchingAddons.length; i++) {
@@ -56,9 +52,7 @@ class AddonInfo extends Command {
           await msg.react(reactionsNumbers[i]);
         }
         await msg.react('❌');
-        if (results - 10 > 0) {
-          msg = await msg.edit(`${msg.content}\n...et ${results - 10} de plus...`);
-        }
+        if (results - 10 > 0) msg = await msg.edit(`${msg.content}\n...et ${results - 10} de plus...`);
 
         const collectorNumbers = msg
           .createReactionCollector((reaction, user) => !user.bot
@@ -94,27 +88,20 @@ class AddonInfo extends Command {
         unit = 'Ko';
       }
     }
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur ${addon.plugin}`, config.bot.avatar)
       .setTimestamp()
       .setDescription(addon.description || 'Aucune description disponible.')
-      .setFooter(`Executé par ${message.author.username} | Données fournies par https://skripttools.net`);
+      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`);
 
-    if (addon.unmaintained)
-      embed.addField(this.config.embed.unmaintained, this.config.embed.unmaintained_desc, true);
-    if (addon.author)
-      embed.addField(this.config.embed.author, addon.author, true);
-    if (addon.version)
-      embed.addField(this.config.embed.version, addon.version, true);
-    if (addon.download)
-      embed.addField(this.config.embed.download, `[Téléchargez ici](${addon.download}) ${size.toFixed(2)} ${unit}`, true);
-    if (addon.sourcecode)
-      embed.addField(this.config.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
-    if (addon.depend && addon.depend.depend)
-      embed.addField(this.config.embed.depend, addon.depend.depend, true);
-    if (addon.depend && addon.depend.softdepend)
-      embed.addField(this.config.embed.softdepend, addon.depend.softdepend, true);
+    if (addon.unmaintained) embed.addField(this.config.embed.unmaintained, this.config.embed.unmaintained_desc, true);
+    if (addon.author) embed.addField(this.config.embed.author, addon.author, true);
+    if (addon.version) embed.addField(this.config.embed.version, addon.version, true);
+    if (addon.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${addon.download}) ${size.toFixed(2)} ${unit}`, true);
+    if (addon.sourcecode) embed.addField(this.config.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
+    if (addon.depend && addon.depend.depend) embed.addField(this.config.embed.depend, addon.depend.depend.join(', '), true);
+    if (addon.depend && addon.depend.softdepend) embed.addField(this.config.embed.softdepend, addon.depend.softdepend.join(', '), true);
 
     message.channel.send(embed);
   }

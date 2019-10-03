@@ -1,4 +1,5 @@
-import { RichEmbed } from 'discord.js';
+/* eslint-disable no-param-reassign */
+import { MessageEmbed } from 'discord.js';
 import Command from '../../components/Command';
 import { commands, config } from '../../main';
 import { discordError } from '../../components/Messages';
@@ -9,10 +10,11 @@ const cmdPerPage = config.miscellaneous.cmdPerPagesInHelp;
 
 class Help extends Command {
   constructor() {
-    super('help');
-    this.regex = /(help|aide)/gimu;
+    super('Help');
+    this.aliases = ['help', 'aide'];
     this.usage = 'help [<commande | page>]';
-    this.examples.push('help ping', 'help', 'help 4');
+    this.examples = ['help ping', 'help', 'help 4'];
+    this.activeInHelpChannels = false;
   }
 
   async execute(message, args, page) {
@@ -24,15 +26,15 @@ class Help extends Command {
 
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
-      const embed = new RichEmbed()
+      const embed = new MessageEmbed()
         .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
         .setDescription(config.messages.commands.help.header)
-        .setFooter(`Executé par ${message.author.username}`)
+        .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
 
       for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
         const cmd = commands[page * cmdPerPage + i];
-        embed.addField(`${cmd.name} ⁕ ${cmd.usage} ${cmd.permissions.some(role => role === 'Staff') > 0 ? ':octagonal_sign:' : ''}`, `${cmd.help}`, false);
+        embed.addField(`${cmd.name} ⁕ ${config.bot.prefix}${cmd.usage} ${cmd.permissions.some(role => role === 'Staff') > 0 ? ':octagonal_sign:' : ''}`, `${cmd.help}`, false);
       }
 
       // Envoyer l'embed, ajouter les réactions, puis modifier sa couleur en bleu
@@ -69,9 +71,9 @@ class Help extends Command {
       cmds = cmds.slice(0, 10);
 
       if (results === 0) {
-        return discordError(config.messages.commands.help.cmdDoesntExist, message);
+        message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
       } else if (results === 1) {
-        return this.sendDetails(message, cmds[0]);
+        this.sendDetails(message, cmds[0]);
       } else {
         let selectorMsg = await message.channel.send(this.config.searchResults.replace('%r', results).replace('%s', args.join(' ')));
         for (let i = 0; i < results; i++) {
@@ -105,10 +107,10 @@ class Help extends Command {
   }
 
   async sendDetails(message, command) {
-    const embed = new RichEmbed()
+    const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
-      .setFooter(`Executé par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
     let perms = this.config.details.everyone;
@@ -116,7 +118,7 @@ class Help extends Command {
 
     let ex = '';
     for (const e of command.examples) ex = `${ex} | \`${config.bot.prefix}${e}\``;
-    ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace  à la fin.
+    ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace à la fin.
     ex = ex === '' ? this.config.details.noExample : `${ex}`;
 
 
@@ -133,7 +135,7 @@ class Help extends Command {
         channels.push(message.guild.channels.get(id).name);
       }
     }
-    embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);
+    embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${config.bot.prefix}${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);
 
     message.channel.send(embed);
   }

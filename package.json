@@ -5,22 +5,29 @@
   "main": "src/main.js",
   "scripts": {
     "start": "babel-node ./src/main.js",
-    "lint": "eslint ./src/ ./src/commands",
-    "dev": "nodemon --exec babel-node ./src/main.js"
+    "lint": "eslint .",
+    "dev": "nodemon --exec babel-node ./src/main.js --ignore node_modules/* -e js,json"
   },
   "authors": [
     "noftaly (noftaly#0359)",
-    "iTrooz (iTrooz_#1456)",
     "WeeskyBDW (WeeskyBDW#6172)",
-    "Olyno (Olyno#2001)"
+    "Olyno (Olyno#2001)",
+    "iTrooz (iTrooz_#1456)"
   ],
-  "license": "GNUv3",
+  "contributors": [
+    "Romitou (Romitou#9685)"
+  ],
+  "license": "GPL-3.0-only",
   "dependencies": {
     "axios": "^0.19.0",
-    "discord.js": "^11.5.1",
+    "discord.js": "github:discordjs/discord.js",
     "dotenv": "^8.1.0",
-    "mathjs": "^6.2.0",
-    "nedb": "^1.8.0"
+    "ffmpeg-static": "^2.6.0",
+    "mathjs": "^6.2.2",
+    "nedb": "^1.8.0",
+    "opusscript": "^0.0.7",
+    "simple-youtube-api": "^5.2.1",
+    "ytdl-core": "^0.29.7"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -29,7 +36,7 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.2"
   },
   "repository": {
     "type": "git",
