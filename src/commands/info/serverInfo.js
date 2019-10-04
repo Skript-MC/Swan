@@ -32,7 +32,8 @@ class ServerInfo extends Command {
   sendDetails(message, msg, data, ip) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Informations sur ${ip}`, config.bot.avatar)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Informations sur ${ip}`, 'attachment://logo.png')
       .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
       .setTimestamp();
 

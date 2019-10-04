@@ -18,7 +18,8 @@ class SkriptInfo extends Command {
     if (skriptInfos.data.bytes) size = skriptInfos.data.bytes / 1000000;
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor('Informations sur Skript', config.bot.avatar)
+      .attachFiles([config.bot.avatar])
+      .setAuthor('Informations sur Skript', 'attachment://logo.png')
       .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
       .setTimestamp();
 
