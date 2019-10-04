@@ -1,12 +1,12 @@
 {
     "bot": {
-        "id": "",
-        "guild": "",
+        "id": "582208998594314240",
+        "guild": "533791418259341313",
         "prefix": ".",
         "default_channels": [],
         "forbidden_channels": [],
         "avatar": "https://cdn.discordapp.com/attachments/459996868852711434/594454850951970867/logo_skmc.png",
-        "checkInterval": 1000,
+        "checkInterval": 10000,
         "activity": ".aide | Skript-MC"
     },
 
@@ -24,26 +24,26 @@
     },
 
     "channels": {
-        "helpSkript": ["", "", ""],
-        "helpOther": ["", "", ""],
-        "snippet": "",
-        "idea": "",
-        "suggestion": "",
-        "reunion": ""
+        "helpSkript": ["534045927359643664", "483673337223184394", "598042593447641088"],
+        "helpOther": ["600329318559776781", "396976352487669762", "483673411394994177"],
+        "snippet": "622763793575051275",
+        "idea": "622763878249529355",
+        "suggestion": "622763906892562482",
+        "reunion": "509462709579022336"
     },
 
     "roles": {
-        "owner": "",
-        "forumMod": "",
-        "staff": "",
-        "ma": "",
-        "everyone": ""
+        "owner": "533792036827037726",
+        "forumMod": "606594094378254427",
+        "staff": "534042428903129098",
+        "ma": "595353983816564805",
+        "everyone": "533791418259341313"
     },
 
     "moderation": {
         "log": {
             "channelName": "logs",
-            "categoryID": ""
+            "categoryID": "593832460144607233"
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -54,8 +54,8 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearQueue": "",
-        "restrictedVocal": [""]
+        "minRoleToClearQueue": "595353983816564805",
+        "restrictedVocal": ["618481368896241664"]
     },
 
     "apis": {
@@ -70,7 +70,8 @@
     "miscellaneous": {
         "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
-        "cmdPerPagesInHelp": 5
+        "cmdPerPagesInHelp": 5,
+        "commandSimilarity": 0.7
     },
 
     "messages": {
@@ -152,7 +153,7 @@
                         "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
 	                },
                     "18": {
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://bit.ly/2KXlrm9>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
 	                },
                     "contains": {
                         "content": "Il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`. Ces problèmes ont déjà été report sur Github (<https://github.com/SkriptLang/Skript/issues/2393>), et les développeurs de Skript sont en train d'essayer de le régler."
@@ -182,7 +183,9 @@
                     "cantcompare": "Ce message signifie que vous essayez de comparer deux types de données différents , qui ne peuvent pas être comparés. Par exemple, vous ne pouvez pas comparer `loop-entity` avec `\"Toto\"` ( une entité avec un texte )",
                     "cantbeadded": "Cette erreur se produit quand tu essayes d'ajouter une valeur un type de données non supportée à une expression ( par exemple `add \"aaa\" to players` causera cette erreur , car l'expression `players` n'est pas faite pour qu'on lui ajoute une donnée de type texte",
                     "noplayer": "Cette erreur signifie que dans votre code, vous utilisez un joueur, alors que l'évènement n'en contient pas. Par exemple, dans un `on join:`, il y a bien un joueur concerné. Mais dans un `every minute:`, ou dans une fonction, il n'y a pas de joueur. Pour remédier a cela, vous pouvez donc utiliser un `loop all players:`, même si rappelez-vous qu'un `every X: loop all players:` n'est pas conseillé. Pour en savoir plus : .automsg everyloop",
-                    "other": "**__All code has to be put in triggers :__**\nCette erreur peut survenir si une ligne n'a aucune indentation, tel que ceci : ```vb\non join:\nmessage \"Bonjour\" # Cette ligne va générer un \"all code has to be put in triggers\"```\n\n**__Can't loop XX because it's a single value :__**\nCette erreur peut arriver lorsque vous essayer de faire une boucle sur une variable qui n'est pas une variable liste par exemple. Vérifiez donc que vous essayez de loop une expression/variable contenant plusieurs valeurs\n\nBeaucoup d'autre erreur existe dans Skript. Si vous avez une erreur qui n'est pas cité si dessous, essayez de la traduire, cela vous aidera déjà à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
+                    "codeintriggers": "Cette erreur peut survenir si une ligne n'a aucune indentation, tel que ceci : ```vb\non join:\nmessage \"Bonjour\" # Cette ligne va générer un \"all code has to be put in triggers\"```",
+                    "cantloopsinglevalue": "Cette erreur peut arriver lorsque vous essayer de faire une boucle sur une variable qui n'est pas une variable liste par exemple. Vérifiez donc que vous essayez de loop une expression/variable contenant plusieurs valeurs",
+                    "unknown": "Désolé, mais je ne connais pas cette erreur... Beaucoup d'autre erreur existe dans Skript. Pour vous aider a corriger votre erreur, essayez déjà de la traduire, cela vous aidera à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
                 }
             },
             "addoninfo": {
@@ -365,11 +368,11 @@
                 "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
 	            "messages": [
                     "Version des addons conseillées pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.11 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.12 :\nSkript : 2.3.6 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.13 :\nSkript : 2.3.6\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.11 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.12 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    "Version des addons conseillées pour la 1.13 :\nSkript : 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     "Version des addons conseillées pour la 1.14 :\nSkript : Pas encore supporté (ou dernière version Skript 2.4-beta)\nAddons :\nListe à venir. Si vous connaissez des addons supportant cette version, veuillez contacter les devs ou vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot)"
                 ]
             },
@@ -444,7 +447,8 @@
                 "help": "Supprimer des messages dans un canal.",
                 "description": "Supprimer X messages dans un canal, selon un certain utilisateur ou non. La limite est fixée à 100.",
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
-                "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message à supprimer !"
+                "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message à supprimer !",
+                "tooOld": "Des messages que vous tentez de supprimer ont été envoyé il y a plus de 14 jours. Désolé, mais il m'est impossible de les supprimer."
 	        },
             "ghostping": {
                 "help": "Tagger un membre, sans laisser de trace.",
