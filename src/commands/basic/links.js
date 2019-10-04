@@ -21,7 +21,8 @@ class Links extends Command {
     page = isNaN(page) ? 0 : page;
 
     const embed = new MessageEmbed()
-      .setAuthor(`Liens utiles (${page}/${maxPage})`, config.bot.avatar)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Liens utiles (${page}/${maxPage})`, 'attachment://logo.png')
       .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 

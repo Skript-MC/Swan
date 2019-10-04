@@ -27,7 +27,8 @@ class Help extends Command {
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
-        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
+        .attachFiles([config.bot.avatar])
+        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
         .setDescription(config.messages.commands.help.header)
         .setFooter(`Éxécuté par ${message.author.username}`)
         .setTimestamp();
@@ -109,7 +110,8 @@ class Help extends Command {
   async sendDetails(message, command) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Informations sur "${command.name}"`, 'attachment://logo.png')
       .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 
