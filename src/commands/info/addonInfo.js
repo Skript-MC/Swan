@@ -81,7 +81,8 @@ class AddonInfo extends Command {
     }
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Informations sur ${addon.plugin}`, config.bot.avatar)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Informations sur ${addon.plugin}`, 'attachment://logo.png')
       .setTimestamp()
       .setDescription(addon.description || 'Aucune description disponible.')
       .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://skripttools.net`);
