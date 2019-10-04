@@ -1,12 +1,12 @@
 {
     "bot": {
-        "id": "582208998594314240",
-        "guild": "533791418259341313",
+        "id": "",
+        "guild": "",
         "prefix": ".",
         "default_channels": [],
         "forbidden_channels": [],
-        "avatar": "https://cdn.discordapp.com/attachments/459996868852711434/594454850951970867/logo_skmc.png",
-        "checkInterval": 10000,
+        "avatar": "./assets/logo.png",
+        "checkInterval": 1000,
         "activity": ".aide | Skript-MC"
     },
 
@@ -24,26 +24,26 @@
     },
 
     "channels": {
-        "helpSkript": ["534045927359643664", "483673337223184394", "598042593447641088"],
-        "helpOther": ["600329318559776781", "396976352487669762", "483673411394994177"],
-        "snippet": "622763793575051275",
-        "idea": "622763878249529355",
-        "suggestion": "622763906892562482",
-        "reunion": "509462709579022336"
+        "helpSkript": ["", "", ""],
+        "helpOther": ["", "", ""],
+        "snippet": "",
+        "idea": "",
+        "suggestion": "",
+        "reunion": ""
     },
 
     "roles": {
-        "owner": "533792036827037726",
-        "forumMod": "606594094378254427",
-        "staff": "534042428903129098",
-        "ma": "595353983816564805",
-        "everyone": "533791418259341313"
+        "owner": "",
+        "forumMod": "",
+        "staff": "",
+        "ma": "",
+        "everyone": ""
     },
 
     "moderation": {
         "log": {
             "channelName": "logs",
-            "categoryID": "593832460144607233"
+            "categoryID": ""
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -54,8 +54,8 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearQueue": "595353983816564805",
-        "restrictedVocal": ["618481368896241664"]
+        "minRoleToClearQueue": "",
+        "restrictedVocal": [""]
     },
 
     "apis": {
