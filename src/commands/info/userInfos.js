@@ -54,7 +54,7 @@ class UserInfos extends Command {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur le membre ${target.user.username}`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp()
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
       .addField(this.config.embed.created, formatDate(target.user.createdAt), true)

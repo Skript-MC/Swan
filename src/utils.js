@@ -1,6 +1,7 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
-import { commands } from './main';
+import { commands, config } from './main';
 
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
@@ -174,7 +175,7 @@ export function findMatches(command) {
   const matches = [];
   for (const cmd of commands) {
     for (const alias of cmd.aliases) {
-      if (jkDistance(command, alias) >= 0.7) {
+      if (jkDistance(command, alias) >= config.miscellaneous.commandSimilarity) {
         matches.push(cmd);
         break;
       }

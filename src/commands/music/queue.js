@@ -41,7 +41,7 @@ class Queue extends Command {
       const embed = new MessageEmbed()
         .setColor(config.colors.default)
         .setTitle("File d'attente des musiques")
-        .setFooter(`Exécuté par ${message.author.username}`)
+        .setFooter(`Éxécuté par ${message.author.username}`)
         .setTimestamp();
       if (MusicBot.nowPlaying) embed.addField('En train de jouer :', `${MusicBot.loop === MusicBot.enums.MUSIC ? ':repeat: ' : ''}[${MusicBot.nowPlaying.title}](${MusicBot.nowPlaying.video.shortURL})`);
       else embed.setDescription('Pour lancer la queue, faites simplement `.play`.');

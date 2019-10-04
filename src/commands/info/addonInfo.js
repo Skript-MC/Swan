@@ -5,15 +5,6 @@ import { SkripttoolsAddons, config } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
-/*
- * Variables :
- * currentData : Objet contenant tous les addons, chaque addons contenant 1 tableau
- * Object.keys(data.data) : Tableau contenant tous les addons (avec case)
- * addons : Tableau contenant tous les addons (sans case)
- * myAddon : String avec le nom de l'addon recherché (avec case)
- * versions : Liste de toutes les versions de l'addon recherché
- */
-
 class AddonInfo extends Command {
   constructor() {
     super('Addon Info');
@@ -93,7 +84,7 @@ class AddonInfo extends Command {
       .setAuthor(`Informations sur ${addon.plugin}`, config.bot.avatar)
       .setTimestamp()
       .setDescription(addon.description || 'Aucune description disponible.')
-      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`);
+      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://skripttools.net`);
 
     if (addon.unmaintained) embed.addField(this.config.embed.unmaintained, this.config.embed.unmaintained_desc, true);
     if (addon.author) embed.addField(this.config.embed.author, addon.author, true);

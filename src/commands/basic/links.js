@@ -22,7 +22,7 @@ class Links extends Command {
 
     const embed = new MessageEmbed()
       .setAuthor(`Liens utiles (${page}/${maxPage})`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 
     switch (Number(page)) {
