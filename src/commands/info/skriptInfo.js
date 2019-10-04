@@ -19,7 +19,7 @@ class SkriptInfo extends Command {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor('Informations sur Skript', config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
+      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
       .setTimestamp();
 
     if (skriptInfos.data.author) embed.addField(this.config.embed.author, skriptInfos.data.author, true);

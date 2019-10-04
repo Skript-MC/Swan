@@ -1,5 +1,6 @@
 /* eslint-disable one-var-declaration-per-line */
 /* eslint-disable one-var */
+import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
 import Command from '../../components/Command';
@@ -71,7 +72,7 @@ class Play extends Command {
         }
 
         const url = `https://www.youtube.com/watch?v=${video.raw.id}`;
-        const title = video.raw.snippet.title;
+        const title = he.decode(video.raw.snippet.title);
         const duration = `${video.duration.minutes ? padNumber(video.duration.minutes) : '00'}:${video.duration.seconds ? padNumber(video.duration.seconds) : '00'}`;
         const song = {
           url,
@@ -123,11 +124,11 @@ class Play extends Command {
 
         const videosNames = [];
 
-        for (let i = 0; i < videos.length; i++) videosNames.push(`${i + 1}: ${videos[i].title}`);
+        for (let i = 0; i < videos.length; i++) videosNames.push(`${i + 1}: ${he.decode(videos[i].title)}`);
 
         const embed = new MessageEmbed()
           .setTitle(this.config.chooseSong)
-          .setFooter(`Exécuté par ${message.author.username}`)
+          .setFooter(`Éxécuté par ${message.author.username}`)
           .setTimestamp();
 
         for (let i = 0; i < videosNames.length; i++) embed.addField(`Musique ${i + 1}`, videosNames[i], true);
@@ -186,7 +187,7 @@ class Play extends Command {
     if (video.duration.hours !== 0) return message.channel.send(this.config.songTooLong);
 
     const url = `https://www.youtube.com/watch?v=${video.raw.id}`;
-    const title = video.title;
+    const title = he.decode(video.title);
     const duration = `${video.duration.minutes ? padNumber(video.duration.minutes) : '00'}:${video.duration.seconds ? padNumber(video.duration.seconds) : '00'}`;
     const song = {
       url,

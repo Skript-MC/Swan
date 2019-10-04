@@ -20,14 +20,13 @@ class Purge extends Command {
     if (!amount && !user) return message.channel.send(discordError(this.config.wrongUsage, message));
     if (amount > config.moderation.purgeLimit) amount = config.moderation.purgeLimit;
 
-    message.channel.messages.fetch({
-      limit: amount,
-    }).then((messages) => {
-      if (user) {
-        const filterBy = user ? user.id : client.user.id;
-        messages = messages.filter(m => m.author.id === filterBy).array().slice(0, amount);
-      }
-      message.channel.bulkDelete(messages).catch(console.error);
+    let messages = await message.channel.messages.fetch({ limit: amount }).catch(console.error);
+    if (user) {
+      messages = messages.filter(m => m.author.id === (user ? user.id : client.user.id)).array().slice(0, amount);
+    }
+    message.channel.bulkDelete(messages).catch((err) => {
+      if (err.message.includes('14 days old')) message.channel.send(discordError(this.config.tooOld, message));
+      else console.error(err);
     });
   }
 }

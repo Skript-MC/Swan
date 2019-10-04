@@ -39,7 +39,7 @@ class NowPlaying extends Command {
       .setDescription(`\n \`${progressBar.join('')}\` ${duration} \n\nAjoutée sur YouTube ${formatDate(new Date(music.video.publishedAt).getTime())} \n\nEn train de jouer dans le canal : \`${message.guild.voice.connection.channel.name}\`\n\nMusique demandée par : ${music.requestedBy.toString()}\n`)
       .setThumbnail(music.video.thumbnails.medium.url)
       .setColor(config.colors.default)
-      .setFooter(`Exécuté par ${message.author.username}. Réagissez avec ⚠️ pour signaler cette musique`)
+      .setFooter(`Éxécuté par ${message.author.username}. Réagissez avec ⚠️ pour signaler cette musique`)
       .setTimestamp();
 
     const users = { requestedBy: music.requestedBy, reportedBy: undefined, moderator: undefined };

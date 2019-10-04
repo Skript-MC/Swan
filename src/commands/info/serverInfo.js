@@ -33,7 +33,7 @@ class ServerInfo extends Command {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur ${ip}`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
+      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
       .setTimestamp();
 
     if (typeof data.online !== 'undefined') embed.addField(this.config.embed.status, (data.online ? 'En ligne' : 'Hors ligne'), true);

@@ -23,7 +23,9 @@ class ErrorDetails extends Command {
     else if (arg.match(/can't compare/gimu)) message.channel.send(this.config.error.cantcompare);
     else if (arg.match(/can't be added to/gimu)) message.channel.send(this.config.error.cantbeadded);
     else if (arg.match(/There's no player in/gimu)) message.channel.send(this.config.error.noplayer);
-    else message.channel.send(this.config.error.other);
+    else if (arg.match(/code has to be put in triggers/gimu)) message.channel.send(this.config.error.codeintriggers);
+    else if (arg.match(/because it's a single value/gimu)) message.channel.send(this.config.error.cantloopsinglevalue);
+    else message.channel.send(discordError(this.config.error.other, message));
   }
 }
 

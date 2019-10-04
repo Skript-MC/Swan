@@ -29,7 +29,7 @@ class Help extends Command {
       const embed = new MessageEmbed()
         .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
         .setDescription(config.messages.commands.help.header)
-        .setFooter(`Exécuté par ${message.author.username}`)
+        .setFooter(`Éxécuté par ${message.author.username}`)
         .setTimestamp();
 
       for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
@@ -110,7 +110,7 @@ class Help extends Command {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 
     let perms = this.config.details.everyone;

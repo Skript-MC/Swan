@@ -71,7 +71,7 @@ class Joke extends Command {
       .setColor(config.colors.default)
       .setTimestamp()
       .setDescription(joke)
-      .setFooter(`Exécuté par ${message.author.username}`);
+      .setFooter(`Éxécuté par ${message.author.username}`);
     message.channel.send(embed);
   }
 }

@@ -34,7 +34,7 @@ class Statistics extends Command {
       .addField('Total', `${total} membres`, true)
       .addField('Développeurs', `${pkg.authors.join(', ')}. Merci aussi aux contributeurs !`, true)
       .addField('Signalement des bugs/problèmes, et suggestions', `${pkg.bugs.url}`, true)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
     message.channel.send(embed);
   }
