@@ -24,6 +24,9 @@ class Help extends Command {
 
     const totalPages = Math.ceil(commands.length / cmdPerPage);
 
+    if (page < 0) page = 0;
+    if (page > totalPages) page = totalPages;
+    
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
