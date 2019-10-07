@@ -45,8 +45,9 @@ class PlayerInfos extends Command {
   sendDetails(message, data, uuid) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Informations sur l'UUID ${uuid}`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Informations sur l'UUID ${uuid}`, 'attachment://logo.png')
+      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
       .setTimestamp()
       .addField(this.config.embed.pseudo, `\`${data[data.length - 1].name}\``, false);
 
