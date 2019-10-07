@@ -24,12 +24,16 @@ class Help extends Command {
 
     const totalPages = Math.ceil(commands.length / cmdPerPage);
 
+    if (page < 0) page = 0;
+    if (page > totalPages) page = totalPages;
+    
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
-        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, config.avatar)
+        .attachFiles([config.bot.avatar])
+        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
         .setDescription(config.messages.commands.help.header)
-        .setFooter(`Exécuté par ${message.author.username}`)
+        .setFooter(`Éxécuté par ${message.author.username}`)
         .setTimestamp();
 
       for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
@@ -109,8 +113,9 @@ class Help extends Command {
   async sendDetails(message, command) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Informations sur "${command.name}"`, config.bot.avatar)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .attachFiles([config.bot.avatar])
+      .setAuthor(`Informations sur "${command.name}"`, 'attachment://logo.png')
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 
     let perms = this.config.details.everyone;

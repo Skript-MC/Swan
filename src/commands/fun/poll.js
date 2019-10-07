@@ -73,7 +73,7 @@ class Poll extends Command {
       .addField('Question', question)
       .addField('Réponses possibles', possibleAnswers)
       .addField('Durée', `Ce vote dure : ${duration} (Finit ${end})`)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(`Éxécuté par ${message.author.username}`)
       .setTimestamp();
 
     const msg = await message.channel.send(embed);
