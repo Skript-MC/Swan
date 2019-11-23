@@ -2,7 +2,7 @@
 /* eslint-disable prefer-destructuring */
 import ytdl from 'ytdl-core';
 import { config, db } from './main';
-import { success, discordError } from './components/Messages';
+import { success, discordError } from './helpers/Messages';
 
 class MusicBotApp {
   constructor() {
@@ -99,15 +99,13 @@ class MusicBotApp {
   }
 
   canUseCommand(message, options = { songPlaying: false, queueNotEmpty: false, notRestricted: false }) {
-    if (!message.member.roles.has(config.roles.staff)) { // Si on est pas un staff
-      if (!config.music.canUseMusicCommandsIfNotInChannel) { // Si l'option "pouvoir utiliser les commandes de musiques si on est pas dans le channel" est désactivé
-        if (!message.member.voice.channel) return 0; // Si on est pas dans un channel
-        if (!message.guild.voice || !message.guild.voice.connection || !message.guild.voice.channel) return 1; // Si le bot n'est pas dans un channel
-        if (message.member.voice.channel !== message.guild.voice.channel) return 2; // Si on est pas dans le channel du bot
-        if (options.songPlaying && !this.nowPlaying) return 3; // Si il faut qu'une musique soit en train d'être jouée
-        if (options.queueNotEmpty && this.queue.length < 1) return 4; // Si il faut que la queue ne soit pas vide
-        if (options.notRestricted && this.restricted.includes(message.author.id)) return 5; // Si il faut que l'utilisateur n'ai pas de restriction de commandes
-      }
+    if (!config.music.canUseMusicCommandsIfNotInChannel) { // Si l'option "pouvoir utiliser les commandes de musiques si on est pas dans le channel" est désactivé
+      if (!message.member.voice.channel) return 0; // Si on est pas dans un channel
+      if (!message.guild.voice || !message.guild.voice.connection || !message.guild.voice.channel) return 1; // Si le bot n'est pas dans un channel
+      if (message.member.voice.channel !== message.guild.voice.channel) return 2; // Si on est pas dans le channel du bot
+      if (options.songPlaying && !this.nowPlaying) return 3; // Si il faut qu'une musique soit en train d'être jouée
+      if (options.queueNotEmpty && this.queue.length < 1) return 4; // Si il faut que la queue ne soit pas vide
+      if (options.notRestricted && this.restricted.includes(message.author.id)) return 5; // Si il faut que l'utilisateur n'ai pas de restriction de commandes
     }
     return true;
   }
