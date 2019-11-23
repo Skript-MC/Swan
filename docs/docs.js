@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import { commands } from '../src/main';
-import { success } from '../src/components/Messages';
+import { success } from '../src/helpers/Messages';
 
 const template = `
 #### $name\n

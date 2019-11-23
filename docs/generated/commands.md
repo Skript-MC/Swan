@@ -1,6 +1,6 @@
 # Documentation
 
-Documentation de toutes les commandes de Swan (39)
+Documentation de toutes les commandes de Swan (41)
 
 ## Index
 
@@ -18,6 +18,7 @@ Documentation de toutes les commandes de Swan (39)
 - [Leave](####-Leave)
 - [Links](####-Links)
 - [Loop](####-Loop)
+- [Lyrics](####-Lyrics)
 - [Mathematiques](####-Mathematiques)
 - [Mute](####-Mute)
 - [Now Playing](####-Now-Playing)
@@ -35,6 +36,7 @@ Documentation de toutes les commandes de Swan (39)
 - [Skip](####-Skip)
 - [Skript Info](####-Skript-Info)
 - [Statistics](####-Statistics)
+- [Status](####-Status)
 - [Stop](####-Stop)
 - [Tag Role](####-Tag-Role)
 - [Toggle role notification](####-Toggle-role-notification)
@@ -226,6 +228,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Cooldown :** aucun
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ❌
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
+  - Canaux requis / interdits : aucun / aucun
+
+#### Lyrics
+
+- **Catégorie :** music
+- **Description :** Commande Lyrics
+- **Aliases :** `lyric` | `lyrics` | `parole` | `paroles`
+- **Usage :** `lyrics`
+- **Exemples :** `lyrics` | `paroles`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
   - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
   - Canaux requis / interdits : aucun / aucun
 
@@ -448,6 +463,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ❌
   - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
+  - Canaux requis / interdits : aucun / aucun
+
+#### Status
+
+- **Catégorie :** moderation
+- **Description :** Permet de voir le status du bot, ou de l'activer/désactiver.
+- **Aliases :** `status` | `statut`
+- **Usage :** `status [<on/off>]`
+- **Exemples :** `status` | `status off`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : Gérant, Modérateur Discord 
   - Canaux requis / interdits : aucun / aucun
 
 #### Stop
