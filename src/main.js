@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
 import { loadBot, loadCommands, loadSkripttoolsAddons, loadSkripttoolsSkript, loadDatabases } from './setup';
-import { success, error, discordError } from './components/Messages';
-import { removeSanction, isBan, hardBan } from './components/Moderation';
+import { success, error, discordError } from './helpers/Messages';
+import { removeSanction, isBan, hardBan } from './helpers/Moderation';
 import { findMatches, uncapitalize } from './utils';
 import generateDocs from '../docs/docs';
 
@@ -20,12 +20,15 @@ export const SkripttoolsSkript = loadSkripttoolsSkript();
 let generated = false;
 
 client.on('ready', () => {
-  client.user.setActivity(config.bot.activity, { type: 'WATCHING' });
+  client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   success('Skript-MC bot loaded!');
   if (!generated) {
     generated = true;
     generateDocs();
   }
+
+  client.config = {};
+  client.config.activated = true;
 
   const guild = client.guilds.get(config.bot.guild);
   setInterval(() => {
@@ -68,6 +71,15 @@ client.on('ready', () => {
 client.on('message', async (message) => {
   if (message.author.bot || message.system || message.guild.id !== config.bot.guild) return;
 
+  // Command Manager
+  const args = message.content.split(' ');
+  let cmd = args.shift();
+
+  if (cmd === config.bot.prefix
+    || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)
+    || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
+
+
   // Empêche les MA de mettre des liens d'autres docs
   if (message.member.roles.has(config.roles.ma) && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
     message.delete();
@@ -105,12 +117,6 @@ client.on('message', async (message) => {
     const msg = await message.channel.send(embed);
     msg.react('✅').then(() => msg.react('❌'));
   }
-
-  // Command Manager
-  const args = message.content.split(' ');
-  let cmd = args.shift();
-
-  if (cmd === config.bot.prefix || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)) return;
 
   if (cmd.startsWith(config.bot.prefix)) {
     cmd = cmd.substr(config.bot.prefix.length);
