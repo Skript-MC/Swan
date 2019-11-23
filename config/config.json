@@ -34,17 +34,17 @@
     },
 
     "roles": {
-        "owner": "533792036827037726",
-        "forumMod": "606594094378254427",
-        "staff": "534042428903129098",
-        "ma": "595353983816564805",
-        "everyone": "533791418259341313"
+        "owner": "",
+        "forumMod": "",
+        "staff": "",
+        "ma": "",
+        "everyone": ""
     },
 
     "moderation": {
         "log": {
             "channelName": "logs",
-            "categoryID": "593832460144607233"
+            "categoryID": ""
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -55,8 +55,8 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearQueue": "595353983816564805",
-        "restrictedVocal": ["205088975461810177", "506534362414710785"]
+        "minRoleToClearQueue": "",
+        "restrictedVocal": ["", ""]
     },
 
     "apis": {
