@@ -6,8 +6,9 @@
         "default_channels": [],
         "forbidden_channels": [],
         "avatar": "./assets/logo.png",
-        "checkInterval": 1000,
-        "activity": ".aide | Skript-MC"
+        "checkInterval": 10000,
+        "activity_on": ".aide | Skript-MC",
+        "activity_off": "Désactivé"
     },
 
     "colors": {
@@ -20,30 +21,30 @@
         "blacklist": "#000000",
         "musicrestriction": "#2c02b5",
         "mute": "#ff6b61",
-        "ban": "cc3300"
+        "ban": "#cc3300"
     },
 
     "channels": {
-        "helpSkript": ["", "", ""],
-        "helpOther": ["", "", ""],
-        "snippet": "",
-        "idea": "",
-        "suggestion": "",
-        "reunion": ""
+        "helpSkript": ["215217809687445504", "483673337223184394", "598042593447641088"],
+        "helpOther": ["600329318559776781", "396976352487669762", "483673411394994177"],
+        "snippet": "549333475153412106",
+        "idea": "358653742729396224",
+        "suggestion": "589545763046948955",
+        "reunion": "509462709579022336"
     },
 
     "roles": {
-        "owner": "",
-        "forumMod": "",
-        "staff": "",
-        "ma": "",
-        "everyone": ""
+        "owner": "533792036827037726",
+        "forumMod": "606594094378254427",
+        "staff": "534042428903129098",
+        "ma": "595353983816564805",
+        "everyone": "533791418259341313"
     },
 
     "moderation": {
         "log": {
             "channelName": "logs",
-            "categoryID": ""
+            "categoryID": "593832460144607233"
         },
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -54,8 +55,8 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearQueue": "",
-        "restrictedVocal": [""]
+        "minRoleToClearQueue": "595353983816564805",
+        "restrictedVocal": ["205088975461810177", "506534362414710785"]
     },
 
     "apis": {
@@ -64,7 +65,8 @@
         "syntax": "https://skripthub.net/api/v1",
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
-        "skin": "http://cravatar.eu/helmavatar/"
+        "skin": "http://cravatar.eu/helmavatar/",
+        "lyrics": "https://api.ksoft.si/lyrics/"
     },
 
     "miscellaneous": {
@@ -323,6 +325,11 @@
             "joke": {
                 "help": "Envoie une blague aléatoire.",
                 "description": "Envoie aléatoirement une blague drôle (ou pas)."
+            },
+            "status": {
+                "help": "Voir ou définir le statut du bot.",
+                "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
+                "status": "Statut actuel du bot : %s"
             },
             "tagrole": {
                 "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
