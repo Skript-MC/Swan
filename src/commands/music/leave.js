@@ -1,4 +1,4 @@
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import MusicBot from '../../music';
 import { config } from '../../main';
 

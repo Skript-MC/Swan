@@ -1,6 +1,6 @@
-import Command from '../../components/Command';
-import { removeSanction } from '../../components/Moderation';
-import { discordError, discordSuccess } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { removeSanction } from '../../helpers/Moderation';
+import { discordError, discordSuccess } from '../../helpers/Messages';
 import { db, config } from '../../main';
 import { prunePseudo } from '../../utils';
 

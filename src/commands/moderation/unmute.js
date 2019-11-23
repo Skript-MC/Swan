@@ -1,7 +1,7 @@
-import Command from '../../components/Command';
-import { discordError, discordSuccess } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError, discordSuccess } from '../../helpers/Messages';
 import { db } from '../../main';
-import { removeSanction } from '../../components/Moderation';
+import { removeSanction } from '../../helpers/Moderation';
 
 class Unmute extends Command {
   constructor() {

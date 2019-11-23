@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
 
 const reactionsNumbers = ['🇽', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣'];

@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { commands, client, config } from '../../main';
 import pkg from '../../../package.json';
 import { secondToDuration } from '../../utils';

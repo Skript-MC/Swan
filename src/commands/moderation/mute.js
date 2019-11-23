@@ -1,6 +1,6 @@
-import Command from '../../components/Command';
-import { modLog } from '../../components/Moderation';
-import { discordError, discordSuccess } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { modLog } from '../../helpers/Moderation';
+import { discordError, discordSuccess } from '../../helpers/Messages';
 import { config, db } from '../../main';
 import { secondToDuration, toTimestamp } from '../../utils';
 

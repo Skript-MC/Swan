@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/Messages';
 import { config } from '../../main';
 import { formatDate } from '../../utils';
 

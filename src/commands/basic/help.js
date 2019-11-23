@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { commands, config } from '../../main';
-import { discordError } from '../../components/Messages';
+import { discordError } from '../../helpers/Messages';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -24,9 +24,6 @@ class Help extends Command {
 
     const totalPages = Math.ceil(commands.length / cmdPerPage);
 
-    if (page < 0) page = 0;
-    if (page > totalPages) page = totalPages;
-    
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()

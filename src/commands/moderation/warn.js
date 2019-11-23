@@ -1,6 +1,6 @@
-import Command from '../../components/Command';
-import { discordError, discordSuccess } from '../../components/Messages';
-import { modLog } from '../../components/Moderation';
+import Command from '../../helpers/Command';
+import { discordError, discordSuccess } from '../../helpers/Messages';
+import { modLog } from '../../helpers/Moderation';
 import { config } from '../../main';
 
 class Warn extends Command {

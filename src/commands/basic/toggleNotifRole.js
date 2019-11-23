@@ -1,4 +1,4 @@
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
 
 class ToggleNotifRole extends Command {

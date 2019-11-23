@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
-import { modLog, sendLog } from '../../components/Moderation';
+import Command from '../../helpers/Command';
+import { modLog, sendLog } from '../../helpers/Moderation';
 import MusicBot from '../../music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
