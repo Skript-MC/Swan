@@ -1,8 +1,5 @@
-/* eslint-disable no-bitwise */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
-import { commands, config } from './main';
-
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
 }
@@ -169,19 +166,6 @@ export function jkDistance(s1, s2) {
   }
 
   return weight;
-}
-
-export function findMatches(command) {
-  const matches = [];
-  for (const cmd of commands) {
-    for (const alias of cmd.aliases) {
-      if (jkDistance(command, alias) >= config.miscellaneous.commandSimilarity) {
-        matches.push(cmd);
-        break;
-      }
-    }
-  }
-  return matches;
 }
 
 export function slugify(string) {

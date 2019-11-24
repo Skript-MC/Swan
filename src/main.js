@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import { loadBot, loadCommands, loadSkripttoolsAddons, loadSkripttoolsSkript, loadDatabases } from './setup';
 import { success, error, discordError } from './helpers/Messages';
 import { removeSanction, isBan, hardBan } from './helpers/Moderation';
-import { findMatches, uncapitalize } from './utils';
+import { uncapitalize, jkDistance } from './utils';
 import generateDocs from '../docs/docs';
 
 export const config = require('../config/config.json'); // eslint-disable-line global-require
@@ -120,6 +120,7 @@ client.on('message', async (message) => {
 
   if (cmd.startsWith(config.bot.prefix)) {
     cmd = cmd.substr(config.bot.prefix.length);
+
     for (const command of commands) {
       if (command.aliases.includes(cmd)) {
         if (canExecute(command, message)) { // eslint-disable-line no-use-before-define
@@ -130,10 +131,19 @@ client.on('message', async (message) => {
       }
     }
 
-    // Si la commande est inconnue
-    const matches = findMatches(cmd);
+    const matches = [];
+    for (const elt of commands) {
+      for (const alias of elt.aliases) {
+        if (jkDistance(cmd, alias) >= config.miscellaneous.commandSimilarity) {
+          matches.push(elt);
+          break;
+        }
+      }
+    }
+
     if (matches.length !== 0) {
-      const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', cmd).replace('%m', matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.')));
+      const cmdList = matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.');
+      const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', cmd).replace('%m', cmdList));
 
       const reactions = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
       if (matches.length === 1) msg.react('✅');
