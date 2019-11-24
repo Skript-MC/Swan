@@ -2,6 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import Command from '../../helpers/Command';
 import { discordError } from '../../helpers/Messages';
 import { SkripttoolsAddons, config } from '../../main';
+import { uncapitalize, jkDistance } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -32,7 +33,33 @@ class AddonInfo extends Command {
 
       if (matchingAddons.length === 0) {
         await msg.delete();
-        message.channel.send(discordError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message));
+
+        // Si l'addon est inconnu
+        const matches = [];
+        for (const elt of addons.map(addon => addon.plugin)) {
+          if (jkDistance(args.join(''), elt) >= this.config.similarity) matches.push(elt);
+        }
+
+        if (matches.length === 0) {
+          message.channel.send(discordError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message));
+        } else {
+          const addonsList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.addoninfo ');
+          const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', addonsList));
+
+          if (matches.length === 1) suggestion.react('✅');
+          else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await suggestion.react(reactionsNumbers[i]);
+
+          const collector = suggestion
+            .createReactionCollector((reaction, user) => !user.bot
+                && user.id === message.author.id
+                && (reaction.emoji.name === '✅' || reactionsNumbers.includes(reaction.emoji.name)))
+            .once('collect', (reaction) => {
+              collector.stop();
+              suggestion.delete();
+              const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
+              return this.sendDetails(message, addons.filter(elt => elt.plugin === matches[index])[0]);
+            });
+        }
       } else if (matchingAddons.length === 1) {
         msg.delete();
         this.sendDetails(message, matchingAddons[0]);
