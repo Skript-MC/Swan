@@ -3,6 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import Command from '../../helpers/Command';
 import { commands, config } from '../../main';
 import { discordError } from '../../helpers/Messages';
+import { uncapitalize, jkDistance } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -19,13 +20,13 @@ class Help extends Command {
 
   async execute(message, args, page) {
     // eslint-disable-next-line no-nested-ternary
-    page = page ? parseInt(page, 10) : args[0] ? parseInt(args[0] - 1, 10) : 0;
+    page = page ? parseInt(page, 10) : (args[0] ? parseInt(args[0] - 1, 10) : 0);
     page = isNaN(page) ? 0 : page;
 
     const totalPages = Math.ceil(commands.length / cmdPerPage);
-    
+
     if (page < 0) page = 0;
-    if (page > totalPages) page = totalPages;
+    if (page >= totalPages) page = totalPages - 1;
 
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
@@ -75,7 +76,37 @@ class Help extends Command {
       cmds = cmds.slice(0, 10);
 
       if (results === 0) {
-        message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+        // Si la commande est inconnue
+        const matches = [];
+        for (const elt of commands) {
+          for (const alias of elt.aliases) {
+            if (jkDistance(args.join(''), alias) >= config.miscellaneous.commandSimilarity) {
+              matches.push(elt);
+              break;
+            }
+          }
+        }
+
+        if (matches.length === 0) {
+          message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+        } else {
+          const cmdList = matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.');
+          const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));
+
+          if (matches.length === 1) msg.react('✅');
+          else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await msg.react(reactionsNumbers[i]);
+
+          const collector = msg
+            .createReactionCollector((reaction, user) => !user.bot
+                && user.id === message.author.id
+                && (reaction.emoji.name === '✅' || reactionsNumbers.includes(reaction.emoji.name)))
+            .once('collect', (reaction) => {
+              collector.stop();
+              msg.delete();
+              const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
+              return this.sendDetails(message, matches[index]);
+            });
+        }
       } else if (results === 1) {
         this.sendDetails(message, cmds[0]);
       } else {
