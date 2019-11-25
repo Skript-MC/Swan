@@ -4,6 +4,7 @@ import { modLog, sendLog } from '../../helpers/Moderation';
 import MusicBot from '../../music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
+import { discordError } from '../../helpers/Messages';
 
 const PROGRESS_BAR_SIZE = 30;
 
@@ -21,6 +22,42 @@ class NowPlaying extends Command {
 
     const music = MusicBot.nowPlaying;
 
+    const users = { requestedBy: music.requestedBy, reportedBy: undefined, moderator: undefined };
+    const embed = this.buildEmbed(message);
+    const playingEmbed = await message.channel.send(embed);
+
+    await playingEmbed.react('👍');
+    await playingEmbed.react('👎');
+    await playingEmbed.react('🔄');
+
+    playingEmbed
+      .createReactionCollector((_reaction, user) => {
+        users.reportedBy = user;
+        return message.guild.voice.connection && !user.bot && message.guild.voice.connection.channel.members.has(user.id);
+      }).on('collect', async (reaction) => {
+        if (reaction.emoji.name === '⚠') {
+          this.report(message, users, music);
+        } else if (reaction.emoji.name === '👍' || reaction.emoji.name === '👎') {
+          this.like(message, playingEmbed, reaction.emoji.name === '👍' ? 'like' : 'dislike', users, music);
+        } else if (reaction.emoji.name === '🔄') {
+          const reactionUsers = await reaction.users.fetch();
+          for (const user of reactionUsers.array()) {
+            if (user.bot) continue;
+            reaction.users.remove(user);
+          }
+
+          if (MusicBot.nowPlaying) {
+            playingEmbed.edit(this.buildEmbed(message));
+          } else {
+            playingEmbed.edit(discordError('Plus de musique en train de jouer ni de musique dans la queue !', message));
+          }
+        }
+      });
+  }
+
+  buildEmbed(message) {
+    const music = MusicBot.nowPlaying;
+
     const startAt = new Date(MusicBot.dispatcher.startTime).getTime();
     const elapsed = new Date(Date.now() - startAt);
 
@@ -32,7 +69,7 @@ class NowPlaying extends Command {
     const cursorPos = Math.round((PROGRESS_BAR_SIZE / (music.video.durationSeconds * 1000)) * elapsed.getTime());
     progressBar[cursorPos] = '🔘';
 
-    const embed = new MessageEmbed()
+    return new MessageEmbed()
       .setAuthor('Actuellement en train de jouer :', config.avatar)
       .setTitle(music.title)
       .setURL(music.video.shortURL)
@@ -41,24 +78,6 @@ class NowPlaying extends Command {
       .setColor(config.colors.default)
       .setFooter(`Éxécuté par ${message.author.username}. Réagissez avec ⚠️ pour signaler cette musique`)
       .setTimestamp();
-
-    const users = { requestedBy: music.requestedBy, reportedBy: undefined, moderator: undefined };
-    const playingEmbed = await message.channel.send(embed);
-
-    await playingEmbed.react('👍');
-    await playingEmbed.react('👎');
-
-    playingEmbed
-      .createReactionCollector((_reaction, _user) => {
-        users.reportedBy = _user;
-        return message.guild.voice.connection && !_user.bot && message.guild.voice.connection.channel.members.has(_user.id);
-      }).on('collect', async (reaction) => {
-        if (reaction.emoji.name === '⚠') {
-          this.report(message, users, music);
-        } else if (reaction.emoji.name === '👍' || reaction.emoji.name === '👎') {
-          this.like(message, playingEmbed, reaction.emoji.name === '👍' ? 'like' : 'dislike', users, music);
-        }
-      });
   }
 
   async updateDbAsync(database, query, update, options = { returnUpdatedDocs: true }) {
