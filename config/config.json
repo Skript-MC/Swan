@@ -76,20 +76,20 @@
 
     "messages": {
         "miscellaneous": {
-            "hardBanAutomatic": "Déconnexion du discord lors d'un banissement",
+            "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement",
             "hardBanModerator": "Banni par un modérateur",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi",
-            "noSpam": "Merci d'éviter le spam dans le canal Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
+            "noSpam": "Merci d'éviter de spam dans le canal #snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
             "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?"
         },
         "errors": {
-            "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles :wink:",
-            "permission": "Vous n'avez pas la permission d'utiliser cette commande :confused:",
-            "notInHelpChannels": "Vous ne pouvez pas utiliser cette commande dans les channels d'aide. Allez dans #bot.",
+            "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles. :wink:",
+            "permission": "Vous n'avez pas la permission d'utiliser cette commande. :confused:",
+            "notInHelpChannels": "Vous ne pouvez pas utiliser cette commande dans les channels d'aide, merci de vous rendre dans #bot.",
             "erroroccured": "Une erreur s'est produite... Veuillez réessayer plus tard !",
-            "unknowncommand": "Commande inconnue ! Tape .help pour avoir la liste des commandes disponible.",
-            "privatemessage": "Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils soient activés et que tu ne m'aies pas bloqué.",
+            "unknowncommand": "Commande inconnue ! Tapez .help pour avoir la liste des commandes disponibles.",
+            "privatemessage": "Désolé, mais je ne peux pas t'envoyer de message privé ! Vérifie qu'ils sont activés et que tu ne m'aies pas bloqué.",
             "cantplaymusic": "Impossible de jouer cette musique, désolé.",
             "cooldown": "Attendez un peu avant de pouvoir refaire cette commande !",
             "music": [
@@ -110,26 +110,26 @@
         },
         "commands": {
             "togglerolenotification": {
-                "help": "Mettre ou enlever le rôle Notifications Évenement.",
-                "description": "Permet de vous mettre ou de vous enlever le rôle Notifications Évenement."
+                "help": "Ajouter ou retirer le rôle Notifications Évenements.",
+                "description": "Permet de vous ajouter ou de vous retirer le rôle Notifications Évenements."
             },
             "automaticmessages": {
                 "help": "Envoyer un message prédéfini.",
-                "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
-                "invalidMessage": "Désolé, mais ce message là n'existe pas...",
-                "noArg": "Envoyez un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande.",
+                "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande et de l'utiliser seulement en cas de besoin.",
+                "invalidMessage": "Désolé, mais ce message n'existe pas.",
+                "noArg": "Envoyez un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande et de l'utiliser seulement en cas de besoin.",
                 "messages": {
                     "asktoask": {
-                        "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et si quelqu'un peut vous répondre, il vous répondra."
+                        "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est une pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et quelqu'un vous répondra s'il le peut."
                     },
                     "helptemplate": {
-                        "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aidez au mieux:\n__Ma version de skript__ (`/ver skript`): <la version>\n__Ma version de serveur__ (`/ver`): <la version>\n__Mes addons__ (`/plugins`):  <les plugins>\n__Mon problème__: <decrivez votre problème clairement>\n__Mon code:__\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
+                        "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aider au mieux:\n__Ma version de skript__ (`/ver skript`) : <ma version>\n__Ma version de serveur__ (`/ver`) : <ma version>\n__Mes addons__ (`/plugins`) :  <mes plugins>\n__Mon problème__ : <decrivez votre problème clairement>\n__Mon code__ :\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
 	                },
                     "internalerror": {
-                        "content": "Une internal error veut simplement dire qu'il y a eu une erreur java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
+                        "content": "Une internal error veut simplement dire qu'il y a eu une erreur Java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
                     },
                     "deprecated": {
-                        "content": "Les addons suivants sont vieux, et sont abandonnés par leur auteur. Cela veut dire qu'il n'y a **plus de mises à jour, qu'ils sont donc bugués et qu'ils peuvent être nuisibles** à votre serveur. Merci de ne pas les utiliser. Voici la liste des principaux; pour savoir si un certain addon est déprecié, faites `.addon-info <addon>` :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
+                        "content": "Les addons suivants sont vieux et abandonnés par leur développeur. Cela signifie qu'il n'y a **plus aucune mise à jour**, qu'ils sont donc **bugués et dépréciés** et qu'ils peuvent être **nuisibles à votre serveur**. Nous vous conseillons de ne pas les utiliser, pour savoir si un certain addon est déprecié, faites `.addon-info <addon>`. Voici la liste des principaux : \nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
 	                },
                     "gui": {
                         "shortContent": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
