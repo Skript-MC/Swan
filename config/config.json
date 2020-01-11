@@ -52,9 +52,9 @@
     },
     
     "music": {
-        "fileLimit": 10,
+        "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearfile": "",
+        "minRoleToClearQueue": "",
         "restrictedVocal": [""]
     },
 
@@ -461,7 +461,7 @@
                 "comming": "J'arrive dans ton salon vocal !",
                 "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre salon... Rejoins-moi dans le salon %s !",
                 "noArgumentGiven": "Tu ne m'as donné aucune musique à jouer, et la file est vide !",
-                "fileLimited": "Impossible d'ajouter cet élément à la file car elle est pleine (limitée à %s).",
+                "queueLimited": "Impossible d'ajouter cet élément à la file car elle est pleine (limitée à %s).",
                 "playlistNotFound": "La playlist n'a pas été trouvée ! As-tu vérifié qu'elle existe bien et qu'elle n'est pas privée ?",
                 "blacklistedMusic": "Impossible de jouer cette musique car elle a été ajoutée à la blacklist !",
                 "blacklistedChannel": "Impossible de jouer cette musique car elle provient d'une chaîne blacklistée !",
@@ -471,13 +471,13 @@
                 "songTooLong": "Je ne peux pas jouer de musique d'une heure ou plus !",
                 "playlistAdded": "Playlist : :musical_note: %s :musical_note: ajoutée à la file !",
                 "songAdded": "Musique : :musical_note: %s :musical_note: ajoutée à la file ! Elle se trouve en position %p.",
-                "fileFinished": "Je n'ai plus rien à jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine :wink:",
+                "queueFinished": "Je n'ai plus rien à jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine :wink:",
                 "error": "Une erreur s'est produite... Veuillez réessayer plus tard !",
                 "chooseSong": "Choisis une musique en cliquant sur la réaction correspondante :",
                 "nowPlaying": "Je joue maintenant : :musical_note: %t :musical_note: (%d)",
                 "noMusicFound": "Désolé, mais je n'ai trouvé aucune musique correspondante à la recherche `%s`."
             },
-            "file": {
+            "queue": {
                 "help": "Permet d'afficher la file.",
                 "description": "Permet d'afficher la liste de toutes les musiques dans la file.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que ce soit un nombre, et que la file contienne cette musique.",
@@ -487,7 +487,7 @@
             "shuffle": {
                 "help": "Permet de mélanger la file.",
                 "description": "Permet de mélanger l'ordre des musiques dans la file.",
-                "fileShuffled": "Ordre des musiques mélangé ! Pour voir la nouvelle file, faites `.queue`."
+                "queueShuffled": "Ordre des musiques mélangé ! Pour voir la nouvelle file, faites `.queue`."
             },
             "pause": {
                 "help": "Mettre en pause ou continuer la lecture.",
