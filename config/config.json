@@ -6,8 +6,9 @@
         "default_channels": [],
         "forbidden_channels": [],
         "avatar": "./assets/logo.png",
-        "checkInterval": 1000,
-        "activity": ".aide | Skript-MC"
+        "checkInterval": 10000,
+        "activity_on": ".aide | Skript-MC",
+        "activity_off": "Désactivé"
     },
 
     "colors": {
@@ -20,7 +21,7 @@
         "blacklist": "#000000",
         "musicrestriction": "#2c02b5",
         "mute": "#ff6b61",
-        "ban": "cc3300"
+        "ban": "#cc3300"
     },
 
     "channels": {
@@ -29,7 +30,10 @@
         "snippet": "",
         "idea": "",
         "suggestion": "",
-        "reunion": ""
+        "reunion": "",
+        "main": "",
+        "modMain": "",
+        "logs": ""
     },
 
     "roles": {
@@ -41,13 +45,13 @@
     },
 
     "moderation": {
-        "log": {
-            "channelName": "logs",
-            "categoryID": ""
-        },
+        "logCategory": "",
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
         "banChannelPrefix": "b-",
+        "warnLimitBeforeBan": 2,
+        "warnBanReason": "2 avertissements",
+        "warnBanTime": 86400,
         "purgeLimit": 100
     },
     
@@ -55,7 +59,7 @@
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
         "minRoleToClearQueue": "",
-        "restrictedVocal": [""]
+        "restrictedVocal": ["", ""]
     },
 
     "apis": {
@@ -64,7 +68,8 @@
         "syntax": "https://skripthub.net/api/v1",
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
-        "skin": "http://cravatar.eu/helmavatar/"
+        "skin": "http://cravatar.eu/helmavatar/",
+        "lyrics": "https://api.ksoft.si/lyrics/"
     },
 
     "miscellaneous": {
@@ -118,47 +123,62 @@
                 "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'utiliser seulement si besoin.",
                 "invalidMessage": "Désolé, mais ce message là n'existe pas...",
                 "noArg": "Envoyez un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande.",
+                "cmdSuggestion": "Le message %c n'a pas été trouvé. Voulais-tu dire `.automsg %m` ?",
+                "similarity": 0.8,
                 "messages": {
                     "asktoask": {
+                        "templates": ["asktoask", "ask to ask"],
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et si quelqu'un peut vous répondre, il vous répondra."
                     },
                     "helptemplate": {
+                        "templates": ["helptemplate", "help template"],
                         "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aidez au mieux:\n__Ma version de skript__ (`/ver skript`): <la version>\n__Ma version de serveur__ (`/ver`): <la version>\n__Mes addons__ (`/plugins`):  <les plugins>\n__Mon problème__: <decrivez votre problème clairement>\n__Mon code:__\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
 	                },
                     "internalerror": {
+                        "templates": ["internal", "internalerror", "internal error"],
                         "content": "Une internal error veut simplement dire qu'il y a eu une erreur java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
                     },
                     "deprecated": {
+                        "templates": ["deprecated", "oldaddon", "old addon"],
                         "content": "Les addons suivants sont vieux, et sont abandonnés par leur auteur. Cela veut dire qu'il n'y a **plus de mises à jour, qu'ils sont donc bugués et qu'ils peuvent être nuisibles** à votre serveur. Merci de ne pas les utiliser. Voici la liste des principaux; pour savoir si un certain addon est déprecié, faites `.addon-info <addon>` :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
 	                },
                     "gui": {
+                        "templates": ["gui"],
                         "shortContent": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
 	                    "longContent1": "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
                         "longContent2": "Il y a aussi la possibilité de gérer rapidement les types de clic. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs clics différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clic droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clic gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous clicrez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complets et moins bugués."
                     },
                     "everyloop": {
+                        "templates": ["everyloop", "every loop"],
                         "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que tous les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveur ? Si vous êtes 4 ça va, mais si vous êtes une trentaine, une cinquantaine ? UNE CENTAINE ? Non, ça fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative à votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt de regarder tous les joueurs tous les X temps, chaque joueur à sa boucle qui se rafraîchit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
 	                },
                     "longcode": {
+                        "templates": ["longcode", "long code"],
                         "content": "Pour poster vos codes longs, il est conseillé d'utiliser un de ces sites : <https://hastebin.com>, <https://pastebin.com>, <https://gist.github.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
 	                },
                     "version": {
+                        "templates": ["ver", "version"],
                         "content": "Pour connaître la version de votre serveur, utilisez /version ou /ver. Pour connaître la version d'un plugin, utilisez `/version <nom du plugin>` ou `/ver <nom du plugin>`."
                     },
                     "list": {
+                        "templates": ["list", "liste"],
                         "content": "Il est plus que fortement conseillé d'utiliser des variables \"listes\" dans vos codes, plutôt que de simples variables à point (`.`). Les raisons sont multiples : convention, optimisation, facilité de certaines tâches... Pour en savoir plus, faites .auto list-pv",
                         "pvContent": "Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coup avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%} Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est-à-dire que plutôt d'avoir une variable par joueur, il y a une variable, qui stocke tous les joueurs. Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simples variables même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."
                     },
                     "uselesscommand": {
+                        "templates": ["§", "uselesscommand", "useless command", "commandfunction", "command function"],
                         "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
 	                },
-                    "18": {
+                    "1.8": {
+                        "templates": ["1.8", "1.8.x", "1.8.X"],
                         "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
 	                },
                     "contains": {
+                        "templates": ["contain", "contains"],
                         "content": "Il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`. Ces problèmes ont déjà été report sur Github (<https://github.com/SkriptLang/Skript/issues/2393>), et les développeurs de Skript sont en train d'essayer de le régler."
                     },
-                    "skellett14": {
+                    "skellett1.14": {
+                        "templates": ["skellett14", "skellett1.14", "skellett 14", "skellett 1.14"],
                         "content": "Pour faire fonctionner Skellett en 1.14, il faut procéder de cette façon :\nInstalle Skellet et reload ton serveur pour avoir les fichiers. \nEnsuite va dans le dossier Skellett, puis ouvre SyntaxToggles.yml.\nFait CTRL + F et recherche \"Packets\".\nChange `true` à `false`\nRedémarre ton serveur."
                     }
                 }
@@ -174,8 +194,8 @@
                 "hub": "**Quelle erreur encontres-tu ?**\n:one: Indentation error\n:two: Can't understand this XX\n:three: Empty configuration section !\n:four: Invalid use of quotes\n:five: There's no loop that match XX\n:six: \"else\" have to be placed just after an \"if\"\n:seven: Can't compare XX with XX\n:eight: XX is not a valid item data\n:nine: XX can't be added to XX because the former is not an object\n:keycap_ten: Autre",
                 "noError": "Tu n'as pas défini d'erreur !",
                 "error": {
-                    "indentation": "Ce message apparait généralement lorsqu'il y a une incohérence dans les tabulations. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse :\n\n- Lorsque vous utilisez un mélange d'espaces et de tabulation. Dans ces cas la, enlevez tous les espaces/tabulations de la ligne, et refaite-les. Cela peut aussi arriver lorsque vous copier collez le code de quelqu'un alors qu'il ne l'a pas formatté dans des blocs de codes (discord ou forum), et que des caractères spéciaux bizarres et invisibles se sont introduits.\n\n- Cela peut aussi arriver lorsque il manque une tabulation, comme dans ce cas : ```vb\nif {_variable} is equal to 3:\n\tif {player::%player%} is set:\n\tmessage \"Bravo !\"```**Rappel :** lorsqu'une ligne se *finit* par un \":\", la ligne suivante est *toujours* indenté d'un cran de plus.\n\n- Dernier cas de figure, directement en relation avec le précédent : la ligne précédente ne finit pas par un \":\" alors qu'elle devrait, comme dans ce cas de figure :```vb\nif {_variable} is equal to 3:\n\tif {player::%player%} is set\n\tmessage \"Bravo !\" # Vous n'avez pas indenté car la ligne précédente ne finit pas par \":\", alors qu'elle est censé.```Corriger un problème d'oubli de \":\" à la fin d'une ligne peut corriger plusieurs erreurs d'un coups.",
-                    "cantunderstand": "Ce message apparait généralement lorsque Skript ne reconnait pas la syntaxe que vous avez entré. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse:\n\n- Il peut manquer un \":\" à la fin de la ligne\n\n- La syntaxe a été ajouté par un addon ou par Skript, mais elle n'existe pas dans la version que vous avez. Pensez à toujours garder vos addons et Skript à jour.\n\n- La syntaxe vient d'un addon que vous n'avez pas installé. Pour savoir quel addon nécessite une syntaxe, utilisez la commande `.syntax-info <syntaxe>` (SOON)\n\n- Vous vous êtes trompé dans la ligne, par exemple vous avez mal orthographié des mots ou vous en avez oublié/rajouté. Pour connaîter le pattern exacte d'une syntaxe, utilisez la commande `.syntax-info <syntaxe>` (SOON).",
+                    "indentation": "Ce message apparait généralement lorsqu'il y a une incohérence dans les tabulations. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse :\n\n- Lorsque vous utilisez un mélange d'espaces et de tabulation. Dans ces cas la, enlevez tous les espaces/tabulations de la ligne, et refaite-les. Cela peut aussi arriver lorsque vous copier collez le code de quelqu'un alors qu'il ne l'a pas formatté dans des blocs de codes (discord ou forum), et que des caractères spéciaux bizarres et invisibles se sont introduits.\n\n- Cela peut aussi arriver lorsque il manque une tabulation, comme dans ce cas : ```applescript\nif {_variable} is equal to 3:\n\tif {player::%player%} is set:\n\tmessage \"Bravo !\"```**Rappel :** lorsqu'une ligne se *finit* par un \":\", la ligne suivante est *toujours* indenté d'un cran de plus.\n\n- Dernier cas de figure, directement en relation avec le précédent : la ligne précédente ne finit pas par un \":\" alors qu'elle devrait, comme dans ce cas de figure :```applescript\nif {_variable} is equal to 3:\n\tif {player::%player%} is set\n\tmessage \"Bravo !\" # Vous n'avez pas indenté car la ligne précédente ne finit pas par \":\", alors qu'elle est censé.```Corriger un problème d'oubli de \":\" à la fin d'une ligne peut corriger plusieurs erreurs d'un coups.",
+                    "cantunderstand": "Ce message apparait généralement lorsque Skript ne reconnait pas la syntaxe que vous avez entré. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse:\n\n- Il peut manquer un \":\" à la fin de la ligne\n\n- La syntaxe a été ajouté par un addon ou par Skript, mais elle n'existe pas dans la version que vous avez. Pensez à toujours garder vos addons et Skript à jour.\n\n- La syntaxe vient d'un addon que vous n'avez pas installé. Pour savoir quel addon nécessite une syntaxe, utilisez la commande `.doc <syntaxe>`\n\n- Vous vous êtes trompé dans la ligne, par exemple vous avez mal orthographié des mots ou vous en avez oublié/rajouté. Pour connaîter le pattern exacte d'une syntaxe, utilisez la commande `.doc <syntaxe>`.",
                     "emptysection": "Ce message apparait généralement lorsqu'il vous manque des tabulations après une ligne qui finit par un \":\", comme dans cet exemple : ```vb\nif {_variable} is 3:\n\tif {player::%player%} is set:\n\tmesage \"bravo\"\n\tmessage\"T'es le meilleur\"``` Pour régler ce problème, ajoutez simplement des tabulations aux ligne que vous vouliez indenter.",
                     "invalidquotes": "Ce message apparait généralement lorsqu'il y a une incohérence dans les guillements (\"). Ce la peut arriver dans plusieurs cas :\n\n- Lorsque vous voulez utiliser des guillemets dans un texte, sans les doubler, comme dans cet exemple : ```vb\non join:\n\tmessage \"Bienvenue au \"grand\" %player%\"```Pour utiliser des guillemets dans du texte, doublez-les, tel que : `message \"Bienvenue au \"\"grand\"\" %player%\"`. Cela fonctionnera.\n\n- Lorsque vous avez oublié un guillement en fin de ligne, tel que `message \"Bonjour`",
                     "noloopmatch": "Ce message indique que la loop que vous avez sélectionné  n'est pas compatible avec le loop-* que vous avez spécifié. Par exemple, la loop `loop 10 times:` n'est pas compatib le avec le `loop-player` ou le `loop-index`",
@@ -192,10 +212,11 @@
                 "help": "Avoir diverses informations sur un addon.",
                 "description": "Obtenir diverses informations sur un addon, telles que son auteur, sa dernière version, un lien de téléchargement, si l'addon est déprecié, les dépendances...",
                 "addonDoesntExist": "Désolé, mais il est impossible d'accéder à cet addon. Es-tu sur qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q=%s>) ?",
-                "invalidCmd": "Il faut que tu ajoutes le nom d'un addon ! Vérifie qu'il soit disponible sur [skripttools](<https://skripttools.net/>) et orthographie-le de la même manière. Les majuscules n'importes pas.",
-                "list": "Liste des addons disponibles : `%s`",
+                "invalidCmd": "Il faut que tu ajoutes le nom d'un addon ! Vérifie qu'il soit disponible sur [skripttools](<https://skripttools.net/>) et orthographie-le de la même manière. Les majuscules n'importent pas.",
                 "searching": "Je vais chercher ça...",
                 "searchResults": "%r élements trouvés pour la recherche `%s`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**",
+                "cmdSuggestion": "L'addon %c n'a pas été trouvé. Voulais-tu dire `.addoninfo %m` ?",
+                "similarity": 0.9,
                 "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
@@ -214,9 +235,27 @@
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.14. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple.\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est conseillée. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
 	                "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
+                }
+            },
+            "syntaxinfo": {
+                "help": "Avoir diverses informations sur une syntaxe.",
+                "description": "Avoir diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
+                "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
+                "invalidCmd": "Il faut que tu ajoutes le nom d'une syntaxe !",
+                "requestError": "Désolé, une erreur est survenue... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur.",
+                "httpError": "Désolé, une erreur est survenue lors de la requete HTTP... Réessayez plus tard. Si cela ne fonctionne toujours pas, veuillez contacter un administrateur. Status de la requete : `%e`",
+                "embed": {
+                    "patternTitle": ":pencil: Pattern",
+                    "patternDesc": "```vb\n%s\n```",
+                    "noPattern": "Aucun pattern disponible.",
+                    "descriptionTitle": ":bookmark_tabs: Description",
+                    "noDescription": "Aucune description disponible",
+                    "infos": ":information_source: Informations diverses",
+                    "exampleTitle": ":bulb: Exemple",
+                    "exampleDesc": "```vb\n%s\n```"
                 }
             },
             "serverinfo": {
@@ -311,18 +350,23 @@
             "poll": {
                 "help": "Lancer un sondage.",
                 "description": "Lancer un sondage temporaire par lequel on peut répondre Oui/Non ou une réponse personnalisée.",
-                "invalidDuration": "La durée marquée est invalide ! Impossible de la lire...",
-                "invalidCmd": "Il y a un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivis sans espaces de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillement, qui explique votre sondage.\n**[\"réponse X\"]** Est une option de réponse, entre guillement. Ce champs est facultatif, car si vous ne mettez aucune réponse, on devra répondre a votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
+                "invalidDuration": "La durée marquée est invalide !",
+                "invalidCmd": "Il y a un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivi sans espace de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillemets, qui explique votre sondage.\n**[\"réponse X\"]** est une option de réponse, entre guillemets. Ce champ est facultatif, car si vous ne mettez aucune réponse on devra répondre à votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
                 "quoteProblem": "Il y a un problème dans les guillemets (\") !",
                 "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
                 "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
-                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
-	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps définit, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réaction, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, clique sur :octagonal_sign:.",
+                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
 	            "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
             },
             "joke": {
                 "help": "Envoie une blague aléatoire.",
                 "description": "Envoie aléatoirement une blague drôle (ou pas)."
+            },
+            "status": {
+                "help": "Voir ou définir le statut du bot.",
+                "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
+                "status": "Statut actuel du bot : %s"
             },
             "tagrole": {
                 "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
@@ -365,20 +409,20 @@
             "addonpack": {
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
                 "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot).",
-                "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.8+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
+                "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.9+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
 	            "messages": [
-                    "Version des addons conseillées pour la 1.8 :\nSkript : 2.2-dev27\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.0-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.2\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.0\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.9 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.10 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.11 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.12 :\nSkript : 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.13 :\nSkript : 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    "Version des addons conseillées pour la 1.14 :\nSkript : Pas encore supporté (ou dernière version Skript 2.4-beta)\nAddons :\nListe à venir. Si vous connaissez des addons supportant cette version, veuillez contacter les devs ou vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot)"
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.9 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.10 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.11 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.12 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.13 :\nSkript : 2.4.1 ou 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.14 :\nSkript : 2.4.1\nAddons :\nListe à venir.",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.14 :\nSkript : 2.4.1 (ou dernière version Skript 2.5-beta)\nAddons :\nListe à venir."
                 ]
             },
             "ban": {
-                "help": "Appliquer une restriction du Discord à un joueur.",
-                "description": "Appliquer une restriction du Discord à un joueur.",
+                "help": "Appliquer une restriction du Discord à un membre.",
+                "description": "Appliquer une restriction du Discord à un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
@@ -393,8 +437,8 @@
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
             },
             "unban": {
-                "help": "Retirer une restriction du Discord à un joueur.",
-                "description": "Retirer une restriction du Discord à un joueur. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.",
+                "help": "Retirer une restriction du Discord à un membre.",
+                "description": "Retirer une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
@@ -402,8 +446,8 @@
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "mute": {
-                "help": "Rendre muet un joueur.",
-                "description": "Rendre muet un joueur dans les salons d'aide.",
+                "help": "Rendre muet un membre.",
+                "description": "Rendre muet un membre dans les salons d'aide.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
@@ -417,8 +461,8 @@
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
             },
             "unmute": {
-                "help": "Redonner la parole à un joueur.",
-                "description": "Redonner la parole à un joueur dans les salons d'aide.",
+                "help": "Redonner la parole à un membre.",
+                "description": "Redonner la parole à un membre dans les salons d'aide.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "successfullyUnmuted": "Vous avez bien rendu la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
@@ -426,18 +470,25 @@
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "warn": {
-                "help": "Avertir un joueur.",
-                "description": "Donner un avertissement à un joueur.",
+                "help": "Avertir un membre.",
+                "description": "Donner un avertissement à un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
                 "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc à revoir ton comportement.",
-	            "noReasonSpecified": "Aucune raison spécifiée"
+                "noReasonSpecified": "Aucune raison spécifiée",
+                "warnLimitReached": "C'est le 2ème avertissement pour ce membre, il a donc été sanctionné."
+            },
+            "history": {
+                "help": "Voir l'historique des sanctions d'un membre.",
+                "description": "Voir l'historique des sanctions d'un membre.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+	            "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
             "removemusicrestriction": {
-                "help": "Enlever les restrictions de musique d'un joueur.",
-                "description": "Redonner à un joueur l'accès à la commande `.play`.",
+                "help": "Enlever les restrictions de musique d'un membre.",
+                "description": "Redonner à un membre l'accès à la commande `.play`.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "notRestricted": "%u n'a aucune restriction des commandes de musique (ou du moins ce n'est pas inscrit dans la base de données).",
                 "successfullyRemoveRestr": "Vous avez bien enlevé les restrictions à %u !\nRaison : %r",

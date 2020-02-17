@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/messages';
 import { config } from '../../main';
 import { formatDate } from '../../utils';
 
@@ -47,7 +47,7 @@ class PlayerInfos extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor(`Informations sur l'UUID ${uuid}`, 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
+      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mojang.com/ et http://cravatar.eu/`)
       .setTimestamp()
       .addField(this.config.embed.pseudo, `\`${data[data.length - 1].name}\``, false);
 

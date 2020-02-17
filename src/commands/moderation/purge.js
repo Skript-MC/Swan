@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/messages';
 import { config, client } from '../../main';
 
 class Purge extends Command {

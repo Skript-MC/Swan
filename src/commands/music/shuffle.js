@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class ShuffleQueue extends Command {
@@ -8,7 +8,7 @@ class ShuffleQueue extends Command {
     this.aliases = ['shuffle', 'mix', 'melanger', 'mélanger'];
     this.usage = 'shuffle';
     this.examples = ['shuffle'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, _args) {

@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
-import { discordError, discordInfo } from '../../components/Messages';
+import { discordError, discordInfo } from '../../helpers/messages';
 import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {
@@ -23,12 +23,12 @@ function endPoll(msg, embed, collectors, votes, answers, questionType) {
   results += `\n:bust_in_silhouette: : ${voters} votant${voters > 1 ? 's' : ''}.`;
 
   embed.setColor(config.colors.success)
-    .setTitle('Ce vote est finit !')
+    .setTitle('Ce vote est fini !')
     .addField('Résultats :', results);
   collectors.collector.stop();
   collectors.collectorInfo.stop();
   collectors.collectorStop.stop();
-  msg.reactions.clear();
+  msg.reactions.removeAll();
   msg.edit(embed);
 }
 
@@ -38,7 +38,7 @@ class Poll extends Command {
     this.aliases = ['poll', 'vote', 'sondage'];
     this.usage = 'poll <durée> "<sondage>" ["réponse 1"] ["réponse 2"] [...]';
     this.examples = ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'poll 10m "votre sondage"'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {
@@ -49,14 +49,14 @@ class Poll extends Command {
     const question = answers.shift() || args.join(' '); // Extraction de la question
     const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
+    const wait = toTimestamp(duration);
+    if (wait < Date.now() || wait === -1) return message.channel.send(discordError(this.config.invalidDuration, message));
+    if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
     if (!question) return message.channel.send(discordError(this.config.invalidCmd, message));
     if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.send(discordError(this.config.quoteProblem, message));
     if (answers.length === 1) return message.channel.send(discordError(this.config.notEnoughAnswers, message));
     if (answers.length >= 18) return message.channel.send(discordError(this.config.tooManyAnswers, message));
 
-    const wait = toTimestamp(duration);
-    if (wait === -1) return message.channel.send(discordError(this.config.invalidDuration, message));
-    if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
     const end = formatDate(new Date(Date.now() + wait));
 
     let possibleAnswers = '';
@@ -73,7 +73,7 @@ class Poll extends Command {
       .addField('Question', question)
       .addField('Réponses possibles', possibleAnswers)
       .addField('Durée', `Ce vote dure : ${duration} (Finit ${end})`)
-      .setFooter(`Éxécuté par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
     const msg = await message.channel.send(embed);

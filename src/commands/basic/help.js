@@ -1,8 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { commands, config } from '../../main';
-import { discordError } from '../../components/Messages';
+import { discordError } from '../../helpers/messages';
+import { uncapitalize, jkDistance } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -14,31 +15,31 @@ class Help extends Command {
     this.aliases = ['help', 'aide'];
     this.usage = 'help [<commande | page>]';
     this.examples = ['help ping', 'help', 'help 4'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args, page) {
     // eslint-disable-next-line no-nested-ternary
-    page = page ? parseInt(page, 10) : args[0] ? parseInt(args[0] - 1, 10) : 0;
+    page = page ? parseInt(page, 10) : (args[0] ? parseInt(args[0] - 1, 10) : 0);
     page = isNaN(page) ? 0 : page;
 
     const totalPages = Math.ceil(commands.length / cmdPerPage);
 
     if (page < 0) page = 0;
-    if (page > totalPages) page = totalPages;
-    
+    if (page >= totalPages) page = totalPages - 1;
+
     // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
         .attachFiles([config.bot.avatar])
         .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
         .setDescription(config.messages.commands.help.header)
-        .setFooter(`Éxécuté par ${message.author.username}`)
+        .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
 
       for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
         const cmd = commands[page * cmdPerPage + i];
-        embed.addField(`${cmd.name} ⁕ ${config.bot.prefix}${cmd.usage} ${cmd.permissions.some(role => role === 'Staff') > 0 ? ':octagonal_sign:' : ''}`, `${cmd.help}`, false);
+        embed.addField(`${cmd.name} ⁕ ${config.bot.prefix}${cmd.usage}`, `${cmd.permissions.some(role => role === 'Staff' || role === 'Modérateur Discord' || role === 'Gérant') > 0 ? ':octagonal_sign:' : ''} ${cmd.help}`, false);
       }
 
       // Envoyer l'embed, ajouter les réactions, puis modifier sa couleur en bleu
@@ -68,23 +69,52 @@ class Help extends Command {
           collector.stop();
         });
     } else {
-      let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
+      const cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
       const results = cmds.length;
 
-      // Limite à 10 élements. + simple à gérer pour le moment, on pourra voir + tard si on peut faire sans. (donc multipages)
-      cmds = cmds.slice(0, 10);
-
       if (results === 0) {
-        message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+        // Si la commande est inconnue
+        const matches = [];
+        for (const elt of commands) {
+          for (const alias of elt.aliases) {
+            if (jkDistance(args.join(''), alias) >= config.miscellaneous.commandSimilarity) {
+              matches.push(elt);
+              break;
+            }
+          }
+        }
+
+        if (matches.length === 0) {
+          message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+        } else {
+          const cmdList = matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.');
+          const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));
+
+          if (matches.length === 1) msg.react('✅');
+          else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await msg.react(reactionsNumbers[i]);
+
+          const collector = msg
+            .createReactionCollector((reaction, user) => !user.bot
+                && user.id === message.author.id
+                && (reaction.emoji.name === '✅' || reactionsNumbers.includes(reaction.emoji.name)))
+            .once('collect', (reaction) => {
+              collector.stop();
+              msg.delete();
+              const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
+              return this.sendDetails(message, matches[index]);
+            });
+        }
       } else if (results === 1) {
         this.sendDetails(message, cmds[0]);
       } else {
         let selectorMsg = await message.channel.send(this.config.searchResults.replace('%r', results).replace('%s', args.join(' ')));
-        for (let i = 0; i < results; i++) {
-          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} "${cmds[i].name}" (\`${cmds[i].usage}\`)`);
+        const max = results > 10 ? 10 : results;
+        for (let i = 0; i < max; i++) {
+          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} "${cmds[i].name}" (\`.${cmds[i].usage}\`)`);
           await selectorMsg.react(reactionsNumbers[i]);
         }
         await selectorMsg.react('❌');
+        if (results - 10 > 0) selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n...et ${results - 10} de plus...`);
 
         const collectorNumbers = selectorMsg
           .createReactionCollector((reaction, user) => !user.bot
@@ -115,7 +145,7 @@ class Help extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor(`Informations sur "${command.name}"`, 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
     let perms = this.config.details.everyone;
@@ -137,7 +167,7 @@ class Help extends Command {
       channels.push(this.config.details.all);
     } else {
       for (const id of command.requiredChannels) {
-        channels.push(message.guild.channels.get(id).name);
+        channels.push(message.guild.channels.cache.get(id).name);
       }
     }
     embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${config.bot.prefix}${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);

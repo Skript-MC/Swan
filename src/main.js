@@ -1,10 +1,10 @@
 /* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
-import { loadBot, loadCommands, loadSkripttoolsAddons, loadSkripttoolsSkript, loadDatabases } from './setup';
-import { success, error, discordError } from './components/Messages';
-import { removeSanction, isBan, hardBan } from './components/Moderation';
-import { findMatches, uncapitalize } from './utils';
+import { loadBot, loadCommands, loadSkriptHubAPI, loadSkripttoolsAddons, loadSkripttoolsSkript, loadDatabases } from './setup';
+import { success, error, discordError } from './helpers/messages';
+import { uncapitalize, jkDistance } from './utils';
 import generateDocs from '../docs/docs';
+
 
 export const config = require('../config/config.json'); // eslint-disable-line global-require
 
@@ -14,48 +14,24 @@ export const sanctions = [];
 loadCommands();
 export const db = loadDatabases();
 export const client = loadBot();
+export const SkriptHubSyntaxes = loadSkriptHubAPI();
 export const SkripttoolsAddons = loadSkripttoolsAddons();
 export const SkripttoolsSkript = loadSkripttoolsSkript();
 
 let generated = false;
 
 client.on('ready', () => {
-  client.user.setActivity(config.bot.activity, { type: 'WATCHING' });
+  client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   success('Skript-MC bot loaded!');
   if (!generated) {
     generated = true;
     generateDocs();
   }
 
-  const guild = client.guilds.get(config.bot.guild);
-  setInterval(() => {
-    /* --- Sanctions --- */
-    // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) pas égale ($not) à -1 (=ban def)
-    const query = {
-      $and: [{
-        finish: { $lt: Date.now() },
-      }, {
-        $not: { finish: -1 },
-      }],
-    };
-    db.sanctions.find(query, (err, results) => {
-      if (err) console.error(err);
-      if (!guild) {
-        console.error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
-      } else {
-        for (const result of results) {
-          removeSanction({
-            member: guild.members.get(result.member),
-            title: 'Action automatique',
-            mod: client.user,
-            sanction: result.sanction,
-            reason: 'Sanction expirée (automatique).',
-            id: result._id,
-          }, guild);
-        }
-      }
-    });
+  client.config = {};
+  client.config.activated = true;
 
+  setInterval(() => {
     /* --- Tri dans les cooldowns des commandes --- */
     for (const cmd of commands) {
       for (const [id, lastuse] of cmd.userCooldowns) {
@@ -68,8 +44,17 @@ client.on('ready', () => {
 client.on('message', async (message) => {
   if (message.author.bot || message.system || message.guild.id !== config.bot.guild) return;
 
+  // Command Manager
+  const args = message.content.split(' ');
+  let cmd = args.shift();
+
+  if (cmd === config.bot.prefix
+    || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)
+    || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
+
+
   // Empêche les MA de mettre des liens d'autres docs
-  if (message.member.roles.has(config.roles.ma) && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
+  if (message.member.roles.cache.has(config.roles.ma) && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
     message.delete();
     const embed = new MessageEmbed()
       .setColor('AQUA')
@@ -83,7 +68,7 @@ client.on('message', async (message) => {
   }
 
   // Antispam channel Snippet
-  if (message.channel.id === config.channels.snippet && !message.member.roles.has(r => r.id === config.roles.staff)) {
+  if (message.channel.id === config.channels.snippet && !message.member.roles.cache.has(r => r.id === config.roles.staff)) {
     // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2k charactères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
     const previousAuthorId = await message.channel.messages.fetch({ before: message.channel.lastMessageID, limit: 1 })
       .then(elt => elt.first().author.id);
@@ -95,7 +80,7 @@ client.on('message', async (message) => {
 
   // Channel "vos-suggestions" : on créé l'embed et ajoute les réactions
   if (message.channel.id === config.channels.suggestion) {
-    message.delete();
+    await message.delete().catch(console.error);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setTitle(`Suggestion de ${message.author.username} (${message.author.id})`, message.author.avatarURL)
@@ -106,16 +91,14 @@ client.on('message', async (message) => {
     msg.react('✅').then(() => msg.react('❌'));
   }
 
-  // Command Manager
-  const args = message.content.split(' ');
-  let cmd = args.shift();
-
-  if (cmd === config.bot.prefix || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)) return;
-
   if (cmd.startsWith(config.bot.prefix)) {
     cmd = cmd.substr(config.bot.prefix.length);
+
     for (const command of commands) {
-      if (command.aliases.includes(cmd)) {
+      const aliases = [];
+      for (const alias of command.aliases) aliases.push(alias.toLowerCase());
+
+      if (aliases.includes(cmd.toLowerCase())) {
         if (canExecute(command, message)) { // eslint-disable-line no-use-before-define
           command.execute(message, args);
           if (command.cooldown !== 0) command.userCooldowns.set(message.author.id, Date.now());
@@ -124,10 +107,19 @@ client.on('message', async (message) => {
       }
     }
 
-    // Si la commande est inconnue
-    const matches = findMatches(cmd);
+    const matches = [];
+    for (const elt of commands) {
+      for (const alias of elt.aliases) {
+        if (jkDistance(cmd, alias) >= config.miscellaneous.commandSimilarity) {
+          matches.push(elt);
+          break;
+        }
+      }
+    }
+
     if (matches.length !== 0) {
-      const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', cmd).replace('%m', matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.')));
+      const cmdList = matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.');
+      const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', cmd).replace('%m', cmdList));
 
       const reactions = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
       if (matches.length === 1) msg.react('✅');
@@ -152,24 +144,36 @@ client.on('message', async (message) => {
   }
 });
 
-client.on('guildMemberRemove', async (member) => {
-  if (await isBan(member.id)) hardBan(member, true);
+client.on('messageReactionAdd', async (reaction, _user) => {
+  if (reaction.message.channel.id === config.channels.suggestion) {
+    const guild = client.guilds.cache.get(config.bot.guild);
+    const link = `https://discordapp.com/channels/${guild.id}/${config.channels.suggestion}/${reaction.message.id}`;
+    if (reaction.emoji.name === '✅') {
+      const positive = reaction.count;
+      if (positive === 20) {
+        guild.channels.cache.get(config.channels.main).send(`:fire: La suggestion de ${reaction.message.embeds[0].title.replace(/Suggestion de (\w+) \(\d+\)/, '$1')} devient populaire ! Elle a déjà 20 avis positifs !\nAvez-vous pensé à y jeter un oeil ? Qu'en pensez-vous ?\nLien : ${link}`);
+      }
+    } else if (reaction.emoji.name === '❌') {
+      const negative = reaction.count;
+      if (negative === 10) {
+        guild.channels.cache.get(config.channels.modMain).send(`:warning: La suggestion de ${reaction.message.embeds[0].title.replace(/Suggestion de (\w+) \(\d+\)/, '$1')} a reçu beaucoup de réactions négatives ! Elle a 10 avis contre.\nLien : ${link}`);
+      }
+    }
+  }
 });
 
-client.on('error', err => console.error(err));
-client.on('warn', warn => console.warn(warn));
+client.on('error', console.error);
+client.on('warn', console.warn);
 client.on('disconnect', () => error('Bot deconnected...'));
 client.on('reconnecting', () => error('Bot is reconnecting...'));
 
-process.on('unhandledRejection', err => console.error(`Uncaught Promise Error:\n${err}`));
-
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
-  if (message.member.roles.has(config.roles.owner)) return true;
+  if (message.member.roles.cache.has(config.roles.owner)) return true;
   // Check des permissions
   if (command.permissions.length > 0) {
     for (const perm of command.permissions) {
-      if (!message.member.roles.find(role => role.name === perm)) {
+      if (!message.member.roles.cache.find(role => role.name === perm)) {
         message.channel.send(discordError(config.messages.errors.permission, message));
         return false;
       }
@@ -187,7 +191,7 @@ function canExecute(command, message) {
   // Check des channels requis par la commande
   if (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id)) return false;
   // Check des channels d'aide
-  if ((config.channels.helpSkript.includes(message.channel.id) || config.channels.helpOther.includes(message.channel.id)) && !command.activeInHelpChannels) {
+  if ((config.channels.helpSkript.includes(message.channel.id) || config.channels.helpOther.includes(message.channel.id)) && !command.enabledInHelpChannels) {
     message.channel.send(discordError(config.messages.errors.notInHelpChannels, message));
     return false;
   }
