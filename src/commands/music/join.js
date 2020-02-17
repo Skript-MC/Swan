@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class Join extends Command {
@@ -8,11 +8,11 @@ class Join extends Command {
     this.aliases = ['join', 'rejoindre'];
     this.usage = 'join';
     this.examples = ['join'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, _args) {
-    if (message.member.roles.has(config.roles.owner)) {
+    if (message.member.roles.cache.has(config.roles.owner)) {
       message.member.voice.channel.join();
       message.channel.send(this.config.comming);
     } else if (!message.guild.voice || !message.guild.voice.connection || (message.guild.voice.connection.channel.id !== message.member.voice.channel.id && !MusicBot.nowPlaying)) {

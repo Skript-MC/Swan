@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
 
 const reactionsNumbers = ['🇽', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣'];
@@ -23,7 +23,7 @@ class Links extends Command {
     const embed = new MessageEmbed()
       .attachFiles([config.bot.avatar])
       .setAuthor(`Liens utiles (${page}/${maxPage})`, 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
     switch (Number(page)) {

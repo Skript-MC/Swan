@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { commands, client, config } from '../../main';
 import pkg from '../../../package.json';
 import { secondToDuration } from '../../utils';
@@ -10,16 +10,16 @@ class Statistics extends Command {
     this.aliases = ['statistique', 'statistiques', 'statistic', 'statistics', 'stats', 'stat'];
     this.usage = 'statistique';
     this.examples = ['statistique'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, _args) {
     const uptime = secondToDuration(client.uptime / 1000);
 
-    const onlineUsers = message.guild.members.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;
-    const totalUsers = message.guild.members.filter(m => !m.user.bot).size;
+    const onlineUsers = message.guild.members.cache.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;
+    const totalUsers = message.guild.members.cache.filter(m => !m.user.bot).size;
     const offlineUsers = totalUsers - onlineUsers;
-    const totalBots = message.guild.members.filter(m => m.user.bot).size;
+    const totalBots = message.guild.members.cache.filter(m => m.user.bot).size;
     const total = totalBots + totalUsers;
 
     const embed = new MessageEmbed()
@@ -33,9 +33,9 @@ class Statistics extends Command {
       .addField('Commandes', commands.length, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
-      .addField('Développeurs', `${pkg.authors.join(', ')}. Merci aussi aux contributeurs !`, true)
+      .addField('Développeurs', `${pkg.authors.join(', ')}. Merci aussi aux contributeurs (Romitou, iTrooz_) !`, true)
       .addField('Signalement des bugs/problèmes, et suggestions', `${pkg.bugs.url}`, true)
-      .setFooter(`Éxécuté par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
     message.channel.send(embed);
   }

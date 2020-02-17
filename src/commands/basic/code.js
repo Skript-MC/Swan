@@ -1,4 +1,4 @@
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 
 class Code extends Command {
   constructor() {
@@ -10,27 +10,39 @@ class Code extends Command {
   }
 
   async execute(message, args) {
-    message.delete();
-    if (args.join('').length === 0) {
-      message.channel.send(this.config.noCode);
-    } else if (args.join(' ').length > 2000) {
-      // En théorie on n'a pas besoin de tester, vu qu'il ne peut pas l'envoyer s'il fait plus de 2000 chars... Mais on ne sait jamais ^^ (vu que ca fait crash le bot)
-      message.channel.send(this.config.tooLong);
-    } else {
-      const msg1 = await message.channel.send(`**Code de ${message.author.username} :**`);
-      const msg2 = await message.channel.send(args.join(' '), { code: 'applescript' });
-      await msg2.react('❌');
+    if (args.join('').length === 0) return message.channel.send(this.config.noCode);
 
-      const collector = msg2
-        .createReactionCollector((reaction, user) => user.id === message.author.id
-          && !user.bot
-          && reaction.emoji.name === '❌')
-        .once('collect', () => {
-          msg1.delete();
-          msg2.delete();
-          collector.stop();
-        });
+    // En théorie on n'a pas besoin de tester, vu qu'il ne peut pas l'envoyer s'il fait plus de 2000 chars... Mais on ne sait jamais ^^ (vu que ca fait crash le bot)
+    if (args.join(' ').length > 2000) return message.channel.send(this.config.tooLong);
+
+    message.delete();
+    const lines = args.join(' ').split('\n');
+    let code = '';
+
+    for (const [i, line] of lines.entries()) {
+      const space = lines.length.toString().length - (i + 1).toString().length;
+      code += `\n${i + 1}${' '.repeat(space)} | ${line}`;
     }
+
+    const msgTitle = await message.channel.send(`**Code de ${message.author.username} :**`);
+    const codeSplit = code.match(/(.|[\r\n]){1,1900}/g);
+    const codeBlocks = [];
+
+    codeBlocks[0] = await message.channel.send(codeSplit[0], { code: 'applescript' });
+    for (let i = 1; i < codeSplit.length; i++) codeBlocks.push(await message.channel.send(codeSplit[i], { code: 'applescript' }));
+
+    const lastMessage = codeBlocks[codeBlocks.length - 1];
+    lastMessage.react('🗑️');
+
+    const collector = lastMessage
+      .createReactionCollector((reaction, user) => user.id === message.author.id
+        && !user.bot
+        && reaction.emoji.name === '🗑️')
+      .once('collect', () => {
+        msgTitle.delete();
+        for (const block of codeBlocks) block.delete();
+        collector.stop();
+      });
   }
 }
 
