@@ -1,34 +1,34 @@
 {
   "name": "swan",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Bot discord de Skript-Mc.",
   "main": "src/main.js",
   "scripts": {
     "start": "babel-node ./src/main.js",
     "lint": "eslint .",
-    "dev": "nodemon --exec babel-node ./src/main.js --ignore node_modules/* -e js,json"
+    "dev": "nodemon --exec babel-node ./src/main.js"
   },
   "authors": [
     "noftaly (noftaly#0359)",
     "WeeskyBDW (WeeskyBDW#6172)",
-    "Olyno (Olyno#2001)",
-    "iTrooz (iTrooz_#1456)"
+    "Olyno (Olyno#2001)"
   ],
   "contributors": [
-    "Romitou (Romitou#9685)"
+    "Romitou (Romitou#9685)",
+    "iTrooz_ (iTrooz_#2050)"
   ],
   "license": "GPL-3.0-only",
   "dependencies": {
     "axios": "^0.19.0",
     "discord.js": "github:discordjs/discord.js",
-    "dotenv": "^8.1.0",
-    "ffmpeg-static": "^2.6.0",
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^2.7.0",
     "he": "^1.2.0",
-    "mathjs": "^6.2.2",
+    "mathjs": "^6.3.0",
     "nedb": "^1.8.0",
-    "opusscript": "^0.0.7",
+    "opusscript": "0.0.7",
     "simple-youtube-api": "^5.2.1",
-    "ytdl-core": "^0.29.7"
+    "ytdl-core": "^1.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -36,7 +36,7 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-import": "^2.19.1",
     "nodemon": "^1.19.3"
   },
   "repository": {
