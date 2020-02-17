@@ -1,7 +1,5 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
-import { commands } from '../src/main';
-import { success } from '../src/helpers/messages';
 
 const template = `
 #### $name\n
@@ -17,7 +15,58 @@ const template = `
   - Canaux requis / interdits : $requiredChannels / $prohibitedChannels
 `;
 
-function generateDocs() {
+async function softLoadCommands(path) {
+  const commands = await new Promise((resolve, _reject) => {
+    fs.readdir(`${__dirname}/../src/${path}`, (err, files) => {
+      if (err) throw err;
+      const cmds = [];
+
+      for (const file of files) {
+        const stat = fs.statSync(`${__dirname}/../src/${path}/${file}`);
+        if (stat.isDirectory() || file === '.DS_Store') continue;
+
+        try {
+          const Module = require(`${__dirname}/../src/${path}/${file}`).default; // eslint-disable-line global-require, import/no-dynamic-require
+          const command = new Module();
+          if (command.enabled) {
+            command.category = path.replace('commands/', '');
+            cmds.push(command);
+          }
+        } catch (e) {
+          console.error(`Unable to load this command: ${file}`);
+          console.error(e);
+        }
+      }
+
+      resolve(cmds);
+    });
+  });
+  return commands;
+}
+
+async function getAllCommands() {
+  const commands = await new Promise((resolve, _reject) => {
+    fs.readdir(`${__dirname}/../src/commands`, async (err, files) => {
+      if (err) throw err;
+      const cmds = [];
+
+      for (const file of files) {
+        const stat = fs.statSync(`${__dirname}/../src/commands/${file}`);
+
+        if (stat.isDirectory()) {
+          const someCommands = await softLoadCommands(`commands/${file}`);
+          for (const cmd of someCommands) cmds.push(cmd);
+        }
+      }
+      resolve(cmds);
+    });
+  });
+
+  return commands;
+}
+
+async function generateDocs() {
+  const commands = await getAllCommands();
   let header = `# Documentation\n\nDocumentation de toutes les commandes de Swan (${commands.length})\n\n## Index\n\n`;
   let content = '\n## Commandes\n';
 
@@ -44,11 +93,12 @@ function generateDocs() {
   try {
     fs.writeFile(path, header + content, (err) => {
       if (err) return console.error(err);
-      success('Documentation updated!');
+      console.log('Documentation updated!');
+      process.exit(0);
     });
   } catch (err) {
     return console.error(err);
   }
 }
 
-export default generateDocs;
+generateDocs();

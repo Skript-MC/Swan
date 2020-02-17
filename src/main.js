@@ -3,8 +3,6 @@ import { MessageEmbed } from 'discord.js';
 import { loadBot, loadCommands, loadSkriptHubAPI, loadSkripttoolsAddons, loadSkripttoolsSkript, loadDatabases } from './setup';
 import { success, error, discordError } from './helpers/messages';
 import { uncapitalize, jkDistance } from './utils';
-import generateDocs from '../docs/docs';
-
 
 export const config = require('../config/config.json'); // eslint-disable-line global-require
 
@@ -18,15 +16,9 @@ export const SkriptHubSyntaxes = loadSkriptHubAPI();
 export const SkripttoolsAddons = loadSkripttoolsAddons();
 export const SkripttoolsSkript = loadSkripttoolsSkript();
 
-let generated = false;
-
 client.on('ready', () => {
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   success('Skript-MC bot loaded!');
-  if (!generated) {
-    generated = true;
-    generateDocs();
-  }
 
   client.config = {};
   client.config.activated = true;
