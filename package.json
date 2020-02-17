@@ -1,12 +1,13 @@
 {
   "name": "swan",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Bot discord de Skript-Mc.",
   "main": "src/main.js",
   "scripts": {
     "start": "babel-node ./src/main.js",
     "lint": "eslint .",
-    "dev": "nodemon --exec babel-node ./src/main.js"
+    "dev": "nodemon --exec babel-node ./src/main.js",
+    "make-docs": "nodemon --exec babel-node ./docs/docs.js"
   },
   "authors": [
     "noftaly (noftaly#0359)",
