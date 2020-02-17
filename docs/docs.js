@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import { commands } from '../src/main';
-import { success } from '../src/components/Messages';
+import { success } from '../src/helpers/messages';
 
 const template = `
 #### $name\n
@@ -12,7 +12,7 @@ const template = `
 - **Exemples :** \`$examples\`
 - **Cooldown :** $cooldown
 - **Informations supplémentaires :**
-  - Activée dans les canaux d'aide : $activeInHelpChannels
+  - Activée dans les canaux d'aide : $enabledInHelpChannels
   - Permission(s) nécéssaire(s) pour éxécuter la commande : $permissions
   - Canaux requis / interdits : $requiredChannels / $prohibitedChannels
 `;
@@ -34,7 +34,7 @@ function generateDocs() {
       .replace('$usage', cmd.usage)
       .replace('$examples', cmd.examples.join('` | `'))
       .replace('$cooldown', cmd.cooldown === 0 ? 'aucun' : `${cmd.cooldown / 1000} secondes`)
-      .replace('$activeInHelpChannels', cmd.activeInHelpChannels ? '✅' : '❌')
+      .replace('$enabledInHelpChannels', cmd.enabledInHelpChannels ? '✅' : '❌')
       .replace('$permissions', cmd.permissions.join(', ') || 'aucune')
       .replace('$requiredChannels', cmd.requiredChannels.length || 'aucun')
       .replace('$prohibitedChannels', cmd.prohibitedChannels.length || 'aucun');

@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class Skip extends Command {
@@ -9,7 +9,7 @@ class Skip extends Command {
     this.usage = 'skip [<nombre>]';
     this.examples = ['skip', 'skip 3'];
     this.cooldown = 3000;
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {

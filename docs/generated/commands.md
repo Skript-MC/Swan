@@ -1,6 +1,6 @@
 # Documentation
 
-Documentation de toutes les commandes de Swan (39)
+Documentation de toutes les commandes de Swan (42)
 
 ## Index
 
@@ -13,6 +13,7 @@ Documentation de toutes les commandes de Swan (39)
 - [Error Details](####-Error-Details)
 - [Ghostping](####-Ghostping)
 - [Help](####-Help)
+- [History](####-History)
 - [Join](####-Join)
 - [Joke](####-Joke)
 - [Leave](####-Leave)
@@ -35,7 +36,9 @@ Documentation de toutes les commandes de Swan (39)
 - [Skip](####-Skip)
 - [Skript Info](####-Skript-Info)
 - [Statistics](####-Statistics)
+- [Status](####-Status)
 - [Stop](####-Stop)
+- [Syntax Info](####-Syntax-Info)
 - [Tag Role](####-Tag-Role)
 - [Toggle role notification](####-Toggle-role-notification)
 - [Unban](####-Unban)
@@ -65,7 +68,7 @@ Documentation de toutes les commandes de Swan (39)
 - **Description :** Obtenir diverses informations sur un addon, telles que son auteur, sa dernière version, un lien de téléchargement, si l'addon est déprecié, les dépendances...
 - **Aliases :** `addoninfo` | `addon_info` | `addon-info`
 - **Usage :** `addon-info <addon>`
-- **Exemples :** `addon-info skquery-lime` | `addonsinfos -list` | `addoninfo mirror`
+- **Exemples :** `addon-info skquery-lime` | `addoninfo mirror`
 - **Cooldown :** aucun
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ✅
@@ -102,7 +105,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Ban
 
 - **Catégorie :** moderation
-- **Description :** Appliquer une restriction du Discord à un joueur.
+- **Description :** Appliquer une restriction du Discord à un membre.
 - **Aliases :** `ban` | `sdb`
 - **Usage :** `ban <@mention | ID> <durée> [<raison>]`
 - **Exemples :** `ban @Uneo7 5j Mouahaha`
@@ -162,6 +165,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ❌
   - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
+  - Canaux requis / interdits : aucun / aucun
+
+#### History
+
+- **Catégorie :** moderation
+- **Description :** Voir l'historique des sanctions d'un membre.
+- **Aliases :** `history` | `historique`
+- **Usage :** `history <@mention | ID>`
+- **Exemples :** `history @Arno`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : Staff
   - Canaux requis / interdits : aucun / aucun
 
 #### Join
@@ -245,7 +261,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Mute
 
 - **Catégorie :** moderation
-- **Description :** Rendre muet un joueur dans les salons d'aide.
+- **Description :** Rendre muet un membre dans les salons d'aide.
 - **Aliases :** `mute`
 - **Usage :** `mute <@mention | ID> <durée> [<raison>]`
 - **Exemples :** `mute @AlexLew 5j Une raison plus ou moins valable`
@@ -362,7 +378,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Remove Music Restriction
 
 - **Catégorie :** moderation
-- **Description :** Redonner à un joueur l'accès à la commande `.play`.
+- **Description :** Redonner à un membre l'accès à la commande `.play`.
 - **Aliases :** `removemusicrestriction` | `remove-music-restriction` | `remove_music_restriction` | `remmusicrestr` | `rem-music-restr` | `rem_music_restr`
 - **Usage :** `removemusicrestriction <@mention | ID> [<raison>]`
 - **Exemples :** `removemusicrestr @4rno En fait c'est une bonne musique`
@@ -450,6 +466,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
   - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
   - Canaux requis / interdits : aucun / aucun
 
+#### Status
+
+- **Catégorie :** moderation
+- **Description :** Permet de voir le status du bot, ou de l'activer/désactiver.
+- **Aliases :** `status` | `statut`
+- **Usage :** `status [<on/off>]`
+- **Exemples :** `status` | `status off`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : Gérant, Modérateur Discord
+  - Canaux requis / interdits : aucun / aucun
+
 #### Stop
 
 - **Catégorie :** music
@@ -460,6 +489,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Cooldown :** aucun
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ❌
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
+  - Canaux requis / interdits : aucun / aucun
+
+#### Syntax Info
+
+- **Catégorie :** info
+- **Description :** Avoir diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.
+- **Aliases :** `syntaxinfo` | `syntax-info` | `syntax_info` | `doc` | `documentation`
+- **Usage :** `doc [-a:<addon>] [-t:<type>] [-id:<ID skripthub>]`
+- **Exemples :** `syntax-info join` | `doc tablist` | `doc tablist -type:effect -addon:skrayfall` | `doc -id:2000` | `doc join -t:event`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
   - Permission(s) nécéssaire(s) pour éxécuter la commande : aucune
   - Canaux requis / interdits : aucun / aucun
 
@@ -492,9 +534,9 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Unban
 
 - **Catégorie :** moderation
-- **Description :** Retirer une restriction du Discord à un joueur. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.
+- **Description :** Retirer une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le canal privé.
 - **Aliases :** `unban`
-- **Usage :** `unban <@mention | ID> [-no-delete] [<raison>]`
+- **Usage :** `unban <@mention | ID> [<raison>]`
 - **Exemples :** `unban @Acenox Oups je voulais ban qqun d'autre`
 - **Cooldown :** aucun
 - **Informations supplémentaires :**
@@ -505,7 +547,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Unmute
 
 - **Catégorie :** moderation
-- **Description :** Redonner la parole à un joueur dans les salons d'aide.
+- **Description :** Redonner la parole à un membre dans les salons d'aide.
 - **Aliases :** `unmute`
 - **Usage :** `unmute <@mention | ID> [<raison>]`
 - **Exemples :** `unmute @4rno G mété tronpé hé`
@@ -532,7 +574,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 
 - **Catégorie :** music
 - **Description :** Modifier le volume de la musique. Pour éviter de géner les autres utilisateurs, veuillez plutôt baisser le volume du bot, en faisant un `clique droit` dessus, puis en baissant le curseur `Volume de l'utilisateur`.
-- **Aliases :** `volume`
+- **Aliases :** `volume` | `vol`
 - **Usage :** `volume [<nombre entre 1 et 10>]`
 - **Exemples :** `volume` | `volume 3`
 - **Cooldown :** aucun
@@ -544,7 +586,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 #### Warn
 
 - **Catégorie :** moderation
-- **Description :** Donner un avertissement à un joueur.
+- **Description :** Donner un avertissement à un membre.
 - **Aliases :** `warn`
 - **Usage :** `warn <@mention | ID> [<raison>]`
 - **Exemples :** `warn @polymeth Langage incorrect`

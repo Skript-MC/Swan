@@ -1,8 +1,5 @@
-/* eslint-disable no-bitwise */
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-param-reassign */
-import { commands, config } from './main';
-
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
 }
@@ -103,7 +100,7 @@ export function toTimestamp(str) {
  * @param {GuildMember} member Le membre
  */
 export function prunePseudo(member) {
-  const name = member.nickname || member.username;
+  const name = member.nickname || member.user.username;
   let cleanPseudo = name.replace(/[^a-zA-Z0-9]/gimu, '');
   if (cleanPseudo.length === 0) cleanPseudo = member.id;
   return cleanPseudo.toLowerCase();
@@ -171,15 +168,17 @@ export function jkDistance(s1, s2) {
   return weight;
 }
 
-export function findMatches(command) {
-  const matches = [];
-  for (const cmd of commands) {
-    for (const alias of cmd.aliases) {
-      if (jkDistance(command, alias) >= config.miscellaneous.commandSimilarity) {
-        matches.push(cmd);
-        break;
-      }
-    }
-  }
-  return matches;
+export function slugify(string) {
+  const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
+  const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnooooooooprrsssssttuuuuuuuuuwxyyzzz------';
+  const p = new RegExp(a.split('').join('|'), 'g');
+
+  return string.toString().toLowerCase()
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
+    .replace(/&/g, '-and-') // Replace & with 'and'
+    .replace(/[^\w-]+/g, '') // Remove all non-word characters
+    .replace(/--+/g, '-') // Replace multiple - with single -
+    .replace(/^-+/, '') // Trim - from start of text
+    .replace(/-+$/, ''); // Trim - from end of text
 }

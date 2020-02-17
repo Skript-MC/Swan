@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/messages';
 import { config } from '../../main';
 import { formatDate } from '../../utils';
 
@@ -29,11 +29,11 @@ class UserInfos extends Command {
 
   async execute(message, args) {
     if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
-    const target = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
+    const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
     if (!target) return message.channel.send(discordError(this.config.pseudoNotFound, message));
 
     const roles = [];
-    for (const role of target.roles.array()) {
+    for (const role of target.roles.cache.array()) {
       if (role.name !== '@everyone') roles.push(role);
     }
 
@@ -55,12 +55,12 @@ class UserInfos extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor(`Informations sur le membre ${target.user.username}`, 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username}`)
+      .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp()
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
       .addField(this.config.embed.created, formatDate(target.user.createdAt), true)
       .addField(this.config.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
-      .addField(this.config.embed.roles, `${target.roles.array().length - 1 === 0 ? 'Aucun' : `${target.roles.array().length - 1} : ${roles.join(', ')}`}`, true)
+      .addField(this.config.embed.roles, `${target.roles.cache.array().length - 1 === 0 ? 'Aucun' : `${target.roles.cache.array().length - 1} : ${roles.join(', ')}`}`, true)
       .addField(this.config.embed.presence, presence, true);
 
     message.channel.send(embed);

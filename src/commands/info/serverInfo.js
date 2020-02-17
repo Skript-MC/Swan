@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/messages';
 import { config } from '../../main';
 
 class ServerInfo extends Command {
@@ -34,7 +34,7 @@ class ServerInfo extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor(`Informations sur ${ip}`, 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
+      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
       .setTimestamp();
 
     if (typeof data.online !== 'undefined') embed.addField(this.config.embed.status, (data.online ? 'En ligne' : 'Hors ligne'), true);
@@ -46,7 +46,8 @@ class ServerInfo extends Command {
     if (data.plugins) embed.addField(this.config.embed.plugins, data.plugin.raw.length, true);
     if (data.mods) embed.addField(this.config.embed.mods, data.mods.raw.length, true);
 
-    msg.edit(embed);
+    msg.delete();
+    message.channel.send(embed);
   }
 }
 

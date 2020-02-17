@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
 
 const jokes = [
@@ -62,7 +62,7 @@ class Joke extends Command {
     this.aliases = ['joke', 'blague', 'rire'];
     this.usage = 'joke';
     this.examples = ['joke'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, _args) {
@@ -71,7 +71,7 @@ class Joke extends Command {
       .setColor(config.colors.default)
       .setTimestamp()
       .setDescription(joke)
-      .setFooter(`Éxécuté par ${message.author.username}`);
+      .setFooter(`Exécuté par ${message.author.username}`);
     message.channel.send(embed);
   }
 }

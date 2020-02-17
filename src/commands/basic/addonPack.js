@@ -1,4 +1,4 @@
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 
 class AddonPack extends Command {
   constructor() {
@@ -10,7 +10,8 @@ class AddonPack extends Command {
 
   async execute(message, args) {
     if (args.length > 0) {
-      const match = /1\.([8-9]|1[0-4])(\.\d*)?/gimu.exec(args[0]);
+      // De la 1.9 à la 1.15 inclus
+      const match = /1\.(9|1[0-5])(\.\d*)?/gimu.exec(args[0]);
       try {
         message.channel.send(this.config.messages[match[1] - 8]);
       } catch (e) {

@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import { discordError } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordError } from '../../helpers/messages';
 
 const math = require('mathjs');
 
