@@ -3,8 +3,8 @@
 import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 import { padNumber } from '../../utils';
 
@@ -28,7 +28,7 @@ class Play extends Command {
     this.usage = 'play [<musique [--first] | URL de musique youtube | URL de playlist youtube>]';
     this.examples = ['play darude sandstorm', 'play gangnamstyle --first', 'play https://youtu.be/y6120QOlsfU', 'play'];
     this.cooldown = 3000;
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {
@@ -128,7 +128,7 @@ class Play extends Command {
 
         const embed = new MessageEmbed()
           .setTitle(this.config.chooseSong)
-          .setFooter(`Éxécuté par ${message.author.username}`)
+          .setFooter(`Exécuté par ${message.author.username}`)
           .setTimestamp();
 
         for (let i = 0; i < videosNames.length; i++) embed.addField(`Musique ${i + 1}`, videosNames[i], true);
@@ -174,7 +174,7 @@ class Play extends Command {
   }
 
   queuePush(song, message) {
-    if (message.member.roles.has(config.roles.owner) && config.music.queueLimit !== 0 && queue.length > config.music.queueLimit) {
+    if (message.member.roles.cache.has(config.roles.owner) && config.music.queueLimit !== 0 && queue.length > config.music.queueLimit) {
       message.channel.send(this.config.queueLimited);
       return false; // Echec
     }
@@ -202,6 +202,8 @@ class Play extends Command {
       return message.channel.send(this.config.queueLimited);
     }
     queue.push(song);
+
+    // console.log('url', video.url);
 
     if (MusicBot.nowPlaying) return message.channel.send(this.config.songAdded.replace('%s', song.title).replace('%p', MusicBot.queue.length));
     return MusicBot.playSong(queue, message);

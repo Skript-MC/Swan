@@ -1,14 +1,14 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class Volume extends Command {
   constructor() {
     super('Volume');
-    this.aliases = ['volume'];
+    this.aliases = ['volume', 'vol'];
     this.usage = 'volume [<nombre entre 1 et 10>]';
     this.examples = ['volume', 'volume 3'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {

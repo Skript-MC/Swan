@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class Pause extends Command {
@@ -8,7 +8,7 @@ class Pause extends Command {
     this.aliases = ['pause', 'resume'];
     this.usage = 'pause';
     this.examples = ['pause', 'resume'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, _args) {

@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
-import { discordInfo } from '../../components/Messages';
+import Command from '../../helpers/Command';
+import { discordInfo } from '../../helpers/messages';
 import { SkripttoolsSkript, config } from '../../main';
 
 class SkriptInfo extends Command {
@@ -20,13 +20,13 @@ class SkriptInfo extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor('Informations sur Skript', 'attachment://logo.png')
-      .setFooter(`Éxécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
+      .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
       .setTimestamp();
 
     if (skriptInfos.data.author) embed.addField(this.config.embed.author, skriptInfos.data.author, true);
     if (skriptInfos.data.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${skriptInfos.data.download}) ${size.toFixed(2)} Mo`, true);
     if (skriptInfos.data.source) embed.addField(this.config.embed.sourcecode, `[Voir ici](${skriptInfos.data.source})`, true);
-    if (skriptInfos.data.version) embed.addField(this.config.embed.version, `${skriptInfos.data.version} (1.9 - 1.14)`, true);
+    if (skriptInfos.data.version) embed.addField(this.config.embed.version, `${skriptInfos.data.version} (1.9 - 1.15)`, true);
 
     message.channel.send(embed);
     message.channel.send(discordInfo(this.config.embed.verInfo_desc, message));

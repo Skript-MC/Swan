@@ -4,13 +4,20 @@ import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb';
 import { Client } from 'discord.js';
-import { success } from './components/Messages';
+import { success } from './helpers/messages';
 import { config, commands } from './main';
 
 require('dotenv').config();
 
 const apikeys = {
   discord: process.env.DISCORD_API,
+  skripthub: process.env.SKRIPTHUB_API,
+};
+const GETtoken = {
+  method: 'GET',
+  headers: {
+    Authorization: `Token ${apikeys.skripthub}`,
+  },
 };
 
 function dbCallback(err, name) {
@@ -53,6 +60,26 @@ export function loadCommands(path = 'commands') {
   });
 }
 
+export async function loadSkriptHubAPI() {
+  const syntaxes = [];
+  await axios(`${config.apis.syntax}/syntax/`, GETtoken)
+    .then((response) => {
+      for (const syntax of response.data) syntaxes[syntax.id] = syntax;
+    }).catch(console.error);
+
+  await axios(`${config.apis.syntax}/syntaxexample/`, GETtoken)
+    .then((response) => {
+      for (const example of response.data) {
+        if (syntaxes[example.syntax_element]) {
+          syntaxes[example.syntax_element].example = example;
+        }
+      }
+    }).catch(console.error);
+
+  success('SkriptHub : api loaded!');
+  return syntaxes;
+}
+
 export async function loadSkripttoolsAddons() {
   const addons = [];
 
@@ -91,9 +118,13 @@ export async function loadSkripttoolsSkript() {
 
 export function loadDatabases() {
   const db = {};
-  // Store all sanctions
+
+  // Store all current sanctions
   db.sanctions = new Datastore('./databases/sanctions.db');
   db.sanctions.loadDatabase(err => dbCallback(err, 'sanctions'));
+  // Store all sanctions history
+  db.sanctionsHistory = new Datastore('./databases/sanctionsHistory.db');
+  db.sanctionsHistory.loadDatabase(err => dbCallback(err, 'sanctionsHistory'));
   // Store all blacklisted musics
   db.musics = new Datastore('./databases/musics.db');
   db.musics.loadDatabase(err => dbCallback(err, 'musics'));

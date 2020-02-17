@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../components/Command';
+import Command from '../../helpers/Command';
 import { config } from '../../main';
-import MusicBot from '../../music';
+import MusicBot from '../../helpers/music';
 import { secondToDuration } from '../../utils';
 
 class Queue extends Command {
@@ -10,7 +10,7 @@ class Queue extends Command {
     this.aliases = ['queue'];
     this.usage = 'queue [<remove <index> | clear>]';
     this.examples = ['queue', 'queue remove 2', 'queue clear'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {
@@ -29,7 +29,7 @@ class Queue extends Command {
       const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
       if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
-      const minRole = message.guild.roles.find(r => r.id === config.music.minRoleToClearQueue).rawPosition;
+      const minRole = message.guild.roles.cache.find(r => r.id === config.music.minRoleToClearQueue).rawPosition;
       if (message.member.roles.highest.rawPosition >= minRole) {
         MusicBot.queue = [];
         return message.channel.send(this.config.cleared);
@@ -41,7 +41,7 @@ class Queue extends Command {
       const embed = new MessageEmbed()
         .setColor(config.colors.default)
         .setTitle("File d'attente des musiques")
-        .setFooter(`Éxécuté par ${message.author.username}`)
+        .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
       if (MusicBot.nowPlaying) embed.addField('En train de jouer :', `${MusicBot.loop === MusicBot.enums.MUSIC ? ':repeat: ' : ''}[${MusicBot.nowPlaying.title}](${MusicBot.nowPlaying.video.shortURL})`);
       else embed.setDescription('Pour lancer la queue, faites simplement `.play`.');

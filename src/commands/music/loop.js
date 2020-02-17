@@ -1,5 +1,5 @@
-import Command from '../../components/Command';
-import MusicBot from '../../music';
+import Command from '../../helpers/Command';
+import MusicBot from '../../helpers/music';
 import { config } from '../../main';
 
 class Loop extends Command {
@@ -8,7 +8,7 @@ class Loop extends Command {
     this.aliases = ['loop', 'boucle', 'repeat'];
     this.usage = 'loop [music | off]';
     this.examples = ['loop', 'loop music', 'loop off'];
-    this.activeInHelpChannels = false;
+    this.enabledInHelpChannels = false;
   }
 
   async execute(message, args) {
@@ -26,6 +26,7 @@ class Loop extends Command {
       case 'this':
       case 'current':
       case 'music':
+      case 'on':
         if (MusicBot.loop === MusicBot.enums.MUSIC) return message.channel.send(this.config.alreadyEnabled);
         MusicBot.loop = MusicBot.enums.MUSIC;
         message.channel.send(this.config.changed);
