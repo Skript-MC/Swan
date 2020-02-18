@@ -59,7 +59,8 @@
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
         "minRoleToClearQueue": "",
-        "restrictedVocal": ["", ""]
+        "restrictedVocal": ["", ""],
+        "shouldAskPermissionForSomeCommands": true
     },
 
     "apis": {
@@ -86,7 +87,8 @@
             "noCategory": "Aucune catégorie",
             "noDocLink": "Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi",
             "noSpam": "Merci d'éviter le spam dans le canal Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
-            "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?"
+            "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?",
+            "musicAskOthers": "%u voudrai effectuer l'action suivante : `%s`. Êtes vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**"
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles :wink:",
@@ -515,7 +517,7 @@
                 "comming": "J'arrive dans ton canal vocal !",
                 "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre canal... Rejoint moi dans le canal %s !",
                 "noArgumentGiven": "Tu n'as donné aucune musique à jouer, et la queue est vide !",
-                "queueLimited": "Impossible d'ajouter cet élément à la queue car elle est pleine (limitée à %s)",
+                "queueLimited": "Impossible d'ajouter cet élément à la queue car elle est pleine (limitée à %d)",
                 "playlistNotFound": "La Playlist n'a pas été trouvée ! As-tu vérifié qu'elle existe bien et qu'elle n'est pas privée ?",
                 "blacklistedMusic": "Impossible de jouer cette musique car elle a été ajoutée à la blacklist !",
                 "blacklistedChannel": "Impossible de jouer cette musique car elle provient d'une chaîne blacklist !",
@@ -573,6 +575,13 @@
                 "currentVolume": "Le volume actuel est à %s/10",
                 "changed": "Le volume a bien été modifié à %v"
             },
+            "bassboost": {
+                "help": "Modifier la puissance des basses.",
+                "description": "Modifier le gain de la musique.",
+                "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que ce soit un nombre, et qu'il soit compris entre 1 et 40",
+                "currentPower": "La puissance actuelle est à %d/40",
+                "changed": "La puissance a bien été modifiée à %d. Elle prendra effet à la prochaine musique."
+            },
             "join": {
                 "help": "Ammener le bot dans votre canal.",
                 "description": "Ammener le bot dans votre canal s'il n'est pas occupé ailleurs, ou s'il n'y ai pas déjà.",
@@ -593,12 +602,12 @@
             "loop": {
                 "help": "Permet de changer le mode de répétition des musiques.",
                 "description": "Permet de faire en sorte que le bot répète une musique, ou ne répète pas.",
-                "noLooping": "Actuellement, je ne répète pas les musiques !",
-                "loopingMusic": "Actuellement, je répète la musique que je joue !",
-                "disabled": "J'ai bien désactivé la répétition",
+                "noLooping": "Actuellement, je ne répète pas les musiques ! `.loop on` pour répéter cette musique",
+                "loopingMusic": "Actuellement, je répète la musique que je joue ! `.loop off` pour arrêter la répétition",
+                "disabled": "J'ai bien désactivé la répétition. `.loop on` pour répéter cette musique",
                 "changed": "D'accord, je vais répeter cette musique ! `.loop off` pour arrêter la répétition.",
-                "alreadyEnabled": "La répétition est déjà activée !",
-                "alreadyDisabled": "La répétition est déjà désactivée !"
+                "alreadyEnabled": "La répétition est déjà activée ! `.loop off` pour répéter une musique",
+                "alreadyDisabled": "La répétition est déjà désactivée ! `.loop on` pour répéter une musique."
             }
         }
     }
