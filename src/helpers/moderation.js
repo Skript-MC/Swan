@@ -197,19 +197,7 @@ class ModerationBotApp {
       let file;
 
       if (chan) {
-        const allMessagesMapped = await chan.messages.fetch().catch(console.error);
-        const allMessages = [];
-        for (const elt of allMessagesMapped) {
-          const infos = elt[1];
-          allMessages.push({
-            id: infos.id,
-            content: infos.content,
-            authorName: infos.author.username,
-            sentAt: infos.createdTimestamp,
-            edited: !!infos.editedTimestamp,
-          });
-        }
-        allMessages.sort((a, b) => a.sentAt - b.sentAt);
+        const allMessages = await this.getAllMessages(chan);
         const originalModerator = message.guild.members.cache.get(result.modid);
         file = this.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
 
@@ -514,6 +502,24 @@ class ModerationBotApp {
     }, guild);
   }
 
+  async getAllMessages(chan) {
+    const allMessagesMapped = await chan.messages.fetch().catch(console.error);
+    const allMessages = [];
+    for (const elt of allMessagesMapped) {
+      const infos = elt[1];
+      allMessages.push({
+        id: infos.id,
+        content: infos.content,
+        authorName: infos.author.username,
+        sentAt: infos.createdTimestamp,
+        edited: !!infos.editedTimestamp,
+      });
+    }
+    allMessages.sort((a, b) => a.sentAt - b.sentAt);
+
+    return allMessages;
+  }
+
   getMessageHistoryFile(infos, messages) {
     let fileContent = `Historique des messages du salon du banni : ${infos.victim.user.username}. Modérateur en charge : ${infos.moderator.user.username}. Raison du banissement : ${infos.reason}.\n\n\nMessages :\n\n`;
 
@@ -564,31 +570,35 @@ success('ModerationBot loaded!');
 
 client.on('ready', () => {
   const guild = client.guilds.resolve(config.bot.guild);
+  if (!guild) return console.error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
 
   setInterval(() => {
     // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) pas égale ($not) à -1 (=ban def)
     const query = {
-      $and: [{
-        finish: { $lt: Date.now() },
-      }, {
-        $not: { finish: -1 },
-      }],
+      $and: [
+        { finish: { $lt: Date.now() } },
+        { $not: { finish: -1 } }],
     };
-    db.sanctions.find(query, (err, results) => {
+    db.sanctions.find(query, async (err, results) => {
       if (err) console.error(err);
-      if (!guild) {
-        console.error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
-      } else {
-        for (const result of results) {
-          ModerationBot.removeSanction({
-            member: guild.members.cache.get(result.member),
-            title: 'Action automatique',
-            mod: client.user,
-            sanction: result.sanction,
-            reason: 'Sanction expirée (automatique).',
-            id: result._id,
-          }, guild);
-        }
+
+      for (const result of results) {
+        const victim = guild.members.cache.get(result.member);
+        const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(victim)}`;
+        const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
+
+        const allMessages = await ModerationBot.getAllMessages(chan);
+        const originalModerator = guild.members.cache.get(result.modid);
+        const file = ModerationBot.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
+        ModerationBot.removeSanction({
+          member: guild.members.cache.get(result.member),
+          title: 'Action automatique',
+          mod: client.user,
+          sanction: result.sanction,
+          reason: 'Sanction expirée (automatique).',
+          id: result._id,
+          file,
+        }, guild);
       }
     });
   }, config.bot.checkInterval);
