@@ -15,11 +15,15 @@ class Pause extends Command {
     const validate = MusicBot.canUseCommand(message, { songPlaying: true, notRestricted: true });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
+    MusicBot.askPermission(this.pause, 'pause/reprendre la musique', message, _args, this.config);
+  }
+
+  pause(message, _args, cmdConfig) {
     if (MusicBot.dispatcher.paused) {
-      message.channel.send(this.config.resumed);
+      message.channel.send(cmdConfig.resumed);
       MusicBot.dispatcher.resume();
     } else {
-      message.channel.send(this.config.paused);
+      message.channel.send(cmdConfig.paused);
       MusicBot.dispatcher.pause();
     }
   }
