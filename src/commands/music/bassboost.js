@@ -12,7 +12,7 @@ class Bassboost extends Command {
   }
 
   async execute(message, args) {
-    const validate = MusicBot.canUseCommand(message, { songPlaying: true });
+    const validate = MusicBot.canUseCommand(message, { songPlaying: false });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
     if (args.length === 0) return message.channel.send(this.config.currentPower.replace('%d', MusicBot.bassboost));
