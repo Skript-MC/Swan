@@ -23,15 +23,20 @@ class Skip extends Command {
     }
     index--;
 
+    MusicBot.askPermission(this.skip, 'passer une/plusieurs musique(s)', message, index, this.config);
+  }
+
+  skip(message, index, cmdConfig) {
     if (!index || index === 1) {
-      message.channel.send(this.config.skippedOne);
+      message.channel.send(cmdConfig.skippedOne);
     } else {
-      message.channel.send(this.config.skippedSeveral.replace('%s', index));
+      message.channel.send(cmdConfig.skippedSeveral.replace('%s', index));
       MusicBot.queue.splice(0, index);
     }
 
     if (MusicBot.loop === MusicBot.enums.MUSIC) MusicBot.loop = MusicBot.enums.NONE;
     MusicBot.endReason = 'skip';
+    // On a juste à arrêter le bot, car comme il y en a encore dans la queue il va reprendre tout seul
     MusicBot.dispatcher.end();
   }
 }

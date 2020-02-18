@@ -15,14 +15,17 @@ class Leave extends Command {
     const validate = MusicBot.canUseCommand(message, { notRestricted: true });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
+    MusicBot.askPermission(this.leave, 'déconnecter le bot du canal vocal', message, _args, this.config);
+  }
+
+  leave(message, _args, cmdConfig) {
     // if (MusicBot.loop === MusicBot.enums.MUSIC) MusicBot.loop = MusicBot.enums.NONE;
     if (MusicBot.nowPlaying) {
       MusicBot.endReason = 'leave';
       MusicBot.dispatcher.end();
     }
     message.guild.voice.connection.disconnect();
-
-    return message.channel.send(this.config.left);
+    message.channel.send(cmdConfig.left);
   }
 }
 
