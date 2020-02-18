@@ -23,7 +23,7 @@ class NowPlaying extends Command {
     const music = MusicBot.nowPlaying;
 
     const users = { requestedBy: music.requestedBy, reportedBy: undefined, moderator: undefined };
-    const embed = this.buildEmbed(message);
+    const embed = await this.buildEmbed(message);
     const playingEmbed = await message.channel.send(embed);
 
     await playingEmbed.react('👍');
@@ -47,7 +47,7 @@ class NowPlaying extends Command {
           }
 
           if (MusicBot.nowPlaying) {
-            playingEmbed.edit(this.buildEmbed(message));
+            playingEmbed.edit(await this.buildEmbed(message));
           } else {
             playingEmbed.edit(discordError('Plus de musique en train de jouer ni de musique dans la queue !', message));
           }
@@ -55,7 +55,7 @@ class NowPlaying extends Command {
       });
   }
 
-  buildEmbed(message) {
+  async buildEmbed(message) {
     const music = MusicBot.nowPlaying;
 
     const startAt = new Date(MusicBot.dispatcher.startTime).getTime();
@@ -69,11 +69,31 @@ class NowPlaying extends Command {
     const cursorPos = Math.round((PROGRESS_BAR_SIZE / (music.video.durationSeconds * 1000)) * elapsed.getTime());
     progressBar[cursorPos] = '🔘';
 
+    const track = await new Promise((resolve, reject) => {
+      db.musicsStats.findOne({ ytid: music.video.id }, (err, doc) => {
+        if (err) reject(err);
+        else resolve(doc);
+      });
+    });
+    const likes = track.likes.length;
+    const dislikes = track.dislikes.length;
+
+    const description = `
+    \`${progressBar.join('')}\` ${duration}
+    
+    Ajoutée sur YouTube ${formatDate(new Date(music.video.publishedAt).getTime())}
+    
+    En train de jouer dans le canal : \`${message.guild.voice.connection.channel.name}\`
+    
+    Musique demandée par : ${music.requestedBy.toString()}
+
+    ${likes} 👍 / ${dislikes} 👎`;
+
     return new MessageEmbed()
       .setAuthor('Actuellement en train de jouer :', config.avatar)
       .setTitle(music.title)
       .setURL(music.video.shortURL)
-      .setDescription(`\n \`${progressBar.join('')}\` ${duration} \n\nAjoutée sur YouTube ${formatDate(new Date(music.video.publishedAt).getTime())} \n\nEn train de jouer dans le canal : \`${message.guild.voice.connection.channel.name}\`\n\nMusique demandée par : ${music.requestedBy.toString()}\n`)
+      .setDescription(description)
       .setThumbnail(music.video.thumbnails.medium.url)
       .setColor(config.colors.default)
       .setFooter(`Exécuté par ${message.author.username}. Réagissez avec ⚠️ pour signaler cette musique`)
@@ -110,7 +130,7 @@ class NowPlaying extends Command {
     logMessage
       .createReactionCollector((reaction, user) => {
         users.moderator = user; // eslint-disable-line no-param-reassign
-        return !user.bot && (reaction.emoji.name === '👤' || reaction.emoji.name === '💽' || reaction.emoji.name === '📺');
+        return !user.bot && ['👤', '💽', '📺'].includes(reaction.emoji.name);
       }).on('collect', (reaction) => {
         switch (reaction.emoji.name) { // eslint-disable-line default-case
           case '💽':

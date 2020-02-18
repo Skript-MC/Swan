@@ -15,25 +15,24 @@ class Loop extends Command {
     const validate = MusicBot.canUseCommand(message, { notRestricted: true });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
+    const reason = args.join(' ') === 'off' ? 'arrêter de ' : '';
     const arg = args.join(' ');
-    switch (arg) {
-      case 'off':
-      case 'disable':
-        if (MusicBot.loop === MusicBot.enums.NONE) return message.channel.send(this.config.alreadyDisabled);
-        MusicBot.loop = MusicBot.enums.NONE;
-        message.channel.send(this.config.disabled);
-        break;
-      case 'this':
-      case 'current':
-      case 'music':
-      case 'on':
-        if (MusicBot.loop === MusicBot.enums.MUSIC) return message.channel.send(this.config.alreadyEnabled);
-        MusicBot.loop = MusicBot.enums.MUSIC;
-        message.channel.send(this.config.changed);
-        break;
-      default:
-        if (MusicBot.loop === MusicBot.enums.NONE) message.channel.send(this.config.noLooping);
-        else if (MusicBot.loop === MusicBot.enums.MUSIC) message.channel.send(this.config.loopingMusic);
+    if (['on', 'off'].includes(arg)) return MusicBot.askPermission(this.loop, `${reason}répéter la musique`, message, args, this.config);
+
+    if (MusicBot.loop === MusicBot.enums.NONE) message.channel.send(this.config.noLooping);
+    else if (MusicBot.loop === MusicBot.enums.MUSIC) message.channel.send(this.config.loopingMusic);
+  }
+
+  loop(message, args, cmdConfig) {
+    const arg = args.join(' ');
+    if (arg === 'off') {
+      if (MusicBot.loop === MusicBot.enums.NONE) return message.channel.send(cmdConfig.alreadyDisabled);
+      MusicBot.loop = MusicBot.enums.NONE;
+      message.channel.send(cmdConfig.disabled);
+    } else if (arg === 'on') {
+      if (MusicBot.loop === MusicBot.enums.MUSIC) return message.channel.send(cmdConfig.alreadyEnabled);
+      MusicBot.loop = MusicBot.enums.MUSIC;
+      message.channel.send(cmdConfig.changed);
     }
   }
 }

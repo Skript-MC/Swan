@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable object-curly-newline */
 /* eslint-disable prefer-destructuring */
-import ytdl from 'ytdl-core';
+import ytdl from 'discord-ytdl-core';
 import { config, db } from '../main';
 import { success, discordError } from './messages';
 
@@ -19,6 +19,7 @@ class MusicBotApp {
     this.dispatcher = undefined;
     this.queue = undefined;
     this.loop = this.enums.NONE;
+    this.bassboost = 0;
 
     this.blacklistedMusics = [];
     this.blacklistedChannels = [];
@@ -32,7 +33,21 @@ class MusicBotApp {
     const voiceChannel = queue[0].voiceChannel;
     queue[0].voiceChannel.join()
       .then(async (co) => {
-        this.dispatcher = co.play(await ytdl(queue[0].url, { filter: () => ['251'], highWaterMark: 33554432 }), { highWaterMark: 12 });
+        const input = ytdl(queue[0].url, {
+          filter: 'audioonly',
+          quality: 'highestaudio',
+          highWaterMark: 1 << 25, // eslint-disable-line no-bitwise
+          passArgs: ['-af', `equalizer=f=40:width_type=h:width=50:g=${this.bassboost}`],
+        });
+
+        this.dispatcher = co.play(
+          input,
+          {
+            highWaterMark: 1,
+            type: 'converted',
+            bitrate: 320000,
+          },
+        );
 
         this.dispatcher.on('start', () => {
           this.queue = queue;
@@ -109,6 +124,90 @@ class MusicBotApp {
       if (options.notRestricted && this.restricted.includes(message.author.id)) return 5; // Si il faut que l'utilisateur n'ai pas de restriction de commandes
     }
     return true;
+  }
+
+  shouldAskOthers(member) {
+    const membersInChannel = member.voice.channel.members;
+    const restrictedMembers = [];
+    for (const restrictedMemberId of this.restricted) {
+      if (membersInChannel.has(restrictedMemberId)) restrictedMembers.push(restrictedMemberId);
+    }
+
+    if (!member.roles.cache.has(config.roles.staff)
+      && membersInChannel.size > 2
+      && membersInChannel.size - restrictedMembers.length > 2
+      && config.music.shouldAskPermissionForSomeCommands) return true;
+    return false;
+  }
+
+  async askPermission(cb, reason, message, args, cmdConfig) {
+    if (this.shouldAskOthers(message.member)) {
+      const messageContent = config.messages.miscellaneous.musicAskOthers
+        .replace('%u', message.member.nickname || message.author.username)
+        .replace('%s', reason);
+
+      const membersInChannel = message.member.voice.channel.members;
+      const restrictedMembers = [];
+      for (const restrictedMemberId of this.restricted) {
+        if (membersInChannel.has(restrictedMemberId)) restrictedMembers.push(restrictedMemberId);
+      }
+
+      const membersCount = membersInChannel.size - restrictedMembers.length - 1;
+      const half = Math.ceil(membersCount / 2);
+      const neededCount = (half % 2 === 0 || half === 1) ? half + 1 : half;
+      const askMsg = await message.channel.send(messageContent.replace('%d', `0/${neededCount}`));
+      let ended = false;
+
+      await askMsg.react('✅');
+      await askMsg.react('❌');
+
+      const collector = askMsg
+        .createReactionCollector((reaction, user) => {
+          if (this.restricted.includes(user.id)) {
+            askMsg.reactions.cache.find(r => r.emoji.name === reaction.emoji.name).users.remove(user);
+            user.send(config.messages.errors.music[5]);
+            return false;
+          }
+          return !user.bot
+            && message.guild.voice.connection.channel.members.has(user.id)
+            && ['✅', '❌'].includes(reaction.emoji.name);
+        }).on('collect', (reaction) => {
+          const inFavour = askMsg.reactions.cache.find(r => r.emoji.name === '✅').users.cache.size - 1;
+          const against = askMsg.reactions.cache.find(r => r.emoji.name === '❌').users.cache.size - 1;
+          if (reaction.emoji.name === '✅') {
+            askMsg.edit(messageContent.replace('%d', `${inFavour}/${neededCount}`));
+            if (inFavour === neededCount) {
+              askMsg.edit(messageContent.replace('%d', `:white_check_mark: Accepté à la majorité (${inFavour}/${neededCount})`));
+              askMsg.reactions.removeAll();
+              collector.stop();
+              ended = true;
+              cb(message, args, cmdConfig);
+            }
+          } else if (reaction.emoji.name === '❌') {
+            if (against >= neededCount) {
+              askMsg.edit(messageContent.replace('%d', ':x: Refusé à la majorité'));
+              askMsg.reactions.removeAll();
+              collector.stop();
+              ended = true;
+            }
+          }
+
+          if (against + inFavour === membersCount && against >= inFavour) {
+            askMsg.edit(messageContent.replace('%d', ':x: Tout le monde a voté, mais les "pour" ne l\'ont pas emporté.'));
+            collector.stop();
+            ended = true;
+          }
+        });
+
+      setTimeout(() => {
+        if (ended) return;
+        askMsg.edit(messageContent.replace('%d', ':x: Le vote a expiré'));
+        collector.stop();
+      }, 60 * 1000);
+      return;
+    }
+
+    cb(message, args, cmdConfig);
   }
 
   fetch() {

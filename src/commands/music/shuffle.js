@@ -15,8 +15,12 @@ class ShuffleQueue extends Command {
     const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
+    MusicBot.askPermission(this.shuffle, 'mélanger la queue', message, _args, this.config);
+  }
+
+  shuffle(message, _args, cmdConfig) {
     MusicBot.shuffleQueue(MusicBot.queue);
-    return message.channel.send(this.config.queueShuffled);
+    return message.channel.send(cmdConfig.queueShuffled);
   }
 }
 
