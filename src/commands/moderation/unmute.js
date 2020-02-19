@@ -1,6 +1,6 @@
 import Command from '../../helpers/Command';
 import { discordError } from '../../helpers/messages';
-import ModerationBot from '../../helpers/moderation';
+import Moderation from '../../helpers/Moderation';
 
 class Unmute extends Command {
   constructor() {
@@ -17,7 +17,7 @@ class Unmute extends Command {
 
     const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 
-    ModerationBot.unmute(victim, reason, message.author, this.config, message, message.guild);
+    Moderation.unmute(victim, reason, message.author, this.config, message, message.guild);
   }
 }
 

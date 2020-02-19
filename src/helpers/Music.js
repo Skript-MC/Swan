@@ -3,7 +3,7 @@
 /* eslint-disable prefer-destructuring */
 import ytdl from 'discord-ytdl-core';
 import { config, db } from '../main';
-import { success, discordError } from './messages';
+import { discordError } from './messages';
 
 class MusicBotApp {
   constructor() {
@@ -236,5 +236,4 @@ class MusicBotApp {
 }
 
 const MusicBot = new MusicBotApp();
-success('MusicBot loaded!');
 export default MusicBot;

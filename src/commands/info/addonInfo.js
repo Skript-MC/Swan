@@ -15,7 +15,7 @@ class AddonInfo extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) {
+    if (args.length === 0) {
       message.channel.send(discordError(this.config.invalidCmd, message));
     } else {
       let msg = await message.channel.send(this.config.searching);

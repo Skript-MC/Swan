@@ -1,7 +1,8 @@
 import Command from '../../helpers/Command';
 import { discordError } from '../../helpers/messages';
 import { toTimestamp } from '../../utils';
-import ModerationBot from '../../helpers/moderation';
+import Moderation from '../../helpers/Moderation';
+import SanctionManager from '../../helpers/SanctionManager';
 
 class Ban extends Command {
   constructor() {
@@ -13,7 +14,7 @@ class Ban extends Command {
   }
 
   async execute(message, args) {
-    const victim = ModerationBot.getMember(message, args[0]);
+    const victim = SanctionManager.getMember(message, args[0]);
     if (!victim) return message.channel.send(discordError(this.config.missingUserArgument, message));
     if (!args[1]) return message.channel.send(discordError(this.config.missingTimeArgument, message));
     if (!args[2]) return message.channel.send(discordError(this.config.missingReasonArgument, message));
@@ -23,7 +24,7 @@ class Ban extends Command {
     const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
     const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
 
-    ModerationBot.ban(victim, reason, duration, message.author, this.config, message, message.guild);
+    Moderation.ban(victim, reason, duration, message.author, this.config, message, message.guild);
   }
 }
 

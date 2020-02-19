@@ -69,7 +69,11 @@ class Help extends Command {
           collector.stop();
         });
     } else {
-      const cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
+      let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
+      if (cmds.length === 0) {
+        cmds = commands.filter(elt => elt.name.toUpperCase().replace(/ /g, '').includes(args.join(' ').toUpperCase()));
+      }
+
       const results = cmds.length;
 
       if (results === 0) {
@@ -87,8 +91,8 @@ class Help extends Command {
         if (matches.length === 0) {
           message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
         } else {
-          const cmdList = matches.map(m => uncapitalize(m.name.replace(/ /g, ''))).join('`, `.');
-          const msg = await message.channel.send(config.messages.miscellaneous.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));
+          const cmdList = matches.map(m => m.name).join('`, `');
+          const msg = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));
 
           if (matches.length === 1) msg.react('✅');
           else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await msg.react(reactionsNumbers[i]);

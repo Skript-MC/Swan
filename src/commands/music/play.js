@@ -4,7 +4,7 @@ import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
 import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/music';
+import MusicBot from '../../helpers/Music';
 import { config } from '../../main';
 import { padNumber } from '../../utils';
 
@@ -175,7 +175,7 @@ class Play extends Command {
 
   queuePush(song, message) {
     if (message.member.roles.cache.has(config.roles.owner) && config.music.queueLimit !== 0 && queue.length > config.music.queueLimit) {
-      message.channel.send(this.config.queueLimited);
+      message.channel.send(this.config.queueLimited.replace('%d', config.music.queueLimit));
       return false; // Echec
     }
     MusicBot.queue.push(song);

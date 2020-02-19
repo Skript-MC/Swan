@@ -13,7 +13,7 @@ class EightBall extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) return message.channel.send(discordError(this.config.noQuestion, message));
+    if (args.length === 0) return message.channel.send(discordError(this.config.noQuestion, message));
     let answer;
     if (Math.random() < 0.5) {
       answer = affirmative[Math.floor(Math.random() * affirmative.length)];
