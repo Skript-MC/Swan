@@ -1,5 +1,5 @@
 import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/music';
+import MusicBot from '../../helpers/Music';
 import { config } from '../../main';
 
 class Pause extends Command {

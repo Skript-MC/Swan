@@ -1,10 +1,10 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/music';
+import MusicBot from '../../helpers/Music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
 import { discordError } from '../../helpers/messages';
-import ModerationBot from '../../helpers/moderation';
+import Moderation from '../../helpers/Moderation';
 
 const PROGRESS_BAR_SIZE = 30;
 
@@ -80,11 +80,11 @@ class NowPlaying extends Command {
 
     const description = `
     \`${progressBar.join('')}\` ${duration}
-    
+
     Ajoutée sur YouTube ${formatDate(new Date(music.video.publishedAt).getTime())}
-    
+
     En train de jouer dans le canal : \`${message.guild.voice.connection.channel.name}\`
-    
+
     Musique demandée par : ${music.requestedBy.toString()}
 
     ${likes} 👍 / ${dislikes} 👎`;
@@ -140,7 +140,7 @@ class NowPlaying extends Command {
             this.blacklistChannel(users, music, logChannel);
             break;
           case '👤':
-            ModerationBot.musicRestriction(users.requestedBy, users.moderator, music, logChannel, message);
+            Moderation.musicRestriction(users.requestedBy, users.moderator, music, logChannel, message);
             break;
         }
       });
