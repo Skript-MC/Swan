@@ -42,7 +42,7 @@ class Poll extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
 
     const duration = args.shift(); // Extraction de la durée
     const answers = extractQuotedText(args.join(' ')); // Array de toutes les réponses
