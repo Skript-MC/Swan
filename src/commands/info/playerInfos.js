@@ -14,7 +14,7 @@ class PlayerInfos extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
     const msg = await message.channel.send('Je vais chercher ça... (1/2)');
 
     // On récupère l'UUID du joueur a partir de son pseudo

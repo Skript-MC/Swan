@@ -67,7 +67,7 @@ class SyntaxInfo extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
 
     const msg = await message.channel.send('Je vais chercher ça...');
     const syntaxes = await SkriptHubSyntaxes;

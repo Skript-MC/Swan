@@ -28,7 +28,7 @@ class UserInfos extends Command {
   }
 
   async execute(message, args) {
-    if (args.length < 1) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
     const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
     if (!target) return message.channel.send(discordError(this.config.pseudoNotFound, message));
 
