@@ -15,12 +15,13 @@
         "default": "#4286f4",
         "warn": "#ffe200",
         "warning": "#ecef1c",
+        "kick": "#ff6b61",
         "log": "#4a64d6",
         "success": "#1fc622",
         "error": "#db2c23",
         "blacklist": "#000000",
         "musicrestriction": "#2c02b5",
-        "mute": "#ff6b61",
+        "mute": "#8100eb",
         "ban": "#cc3300"
     },
 
@@ -54,7 +55,7 @@
         "warnBanTime": 86400,
         "purgeLimit": 100
     },
-    
+
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
@@ -129,58 +130,104 @@
                 "similarity": 0.8,
                 "messages": {
                     "asktoask": {
-                        "templates": ["asktoask", "ask to ask"],
+                        "templates": [
+                            "asktoask",
+                            "ask to ask"
+                        ],
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et si quelqu'un peut vous répondre, il vous répondra."
                     },
                     "helptemplate": {
-                        "templates": ["helptemplate", "help template"],
+                        "templates": [
+                            "helptemplate",
+                            "help template"
+                        ],
                         "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aidez au mieux:\n__Ma version de skript__ (`/ver skript`): <la version>\n__Ma version de serveur__ (`/ver`): <la version>\n__Mes addons__ (`/plugins`):  <les plugins>\n__Mon problème__: <decrivez votre problème clairement>\n__Mon code:__\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
-	                },
+                    },
                     "internalerror": {
-                        "templates": ["internal", "internalerror", "internal error"],
+                        "templates": [
+                            "internal",
+                            "internalerror",
+                            "internal error"
+                        ],
                         "content": "Une internal error veut simplement dire qu'il y a eu une erreur java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
                     },
                     "deprecated": {
-                        "templates": ["deprecated", "oldaddon", "old addon"],
+                        "templates": [
+                            "deprecated",
+                            "oldaddon",
+                            "old addon"
+                        ],
                         "content": "Les addons suivants sont vieux, et sont abandonnés par leur auteur. Cela veut dire qu'il n'y a **plus de mises à jour, qu'ils sont donc bugués et qu'ils peuvent être nuisibles** à votre serveur. Merci de ne pas les utiliser. Voici la liste des principaux; pour savoir si un certain addon est déprecié, faites `.addon-info <addon>` :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
-	                },
+                    },
                     "gui": {
-                        "templates": ["gui"],
+                        "templates": [
+                            "gui"
+                        ],
                         "shortContent": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
-	                    "longContent1": "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
+                        "longContent1": "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
                         "longContent2": "Il y a aussi la possibilité de gérer rapidement les types de clic. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs clics différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clic droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clic gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous clicrez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complets et moins bugués."
                     },
                     "everyloop": {
-                        "templates": ["everyloop", "every loop"],
+                        "templates": [
+                            "everyloop",
+                            "every loop"
+                        ],
                         "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que tous les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveur ? Si vous êtes 4 ça va, mais si vous êtes une trentaine, une cinquantaine ? UNE CENTAINE ? Non, ça fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative à votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt de regarder tous les joueurs tous les X temps, chaque joueur à sa boucle qui se rafraîchit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
-	                },
+                    },
                     "longcode": {
-                        "templates": ["longcode", "long code"],
+                        "templates": [
+                            "longcode",
+                            "long code"
+                        ],
                         "content": "Pour poster vos codes longs, il est conseillé d'utiliser un de ces sites : <https://hastebin.com>, <https://pastebin.com>, <https://gist.github.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
-	                },
+                    },
                     "version": {
-                        "templates": ["ver", "version"],
+                        "templates": [
+                            "ver",
+                            "version"
+                        ],
                         "content": "Pour connaître la version de votre serveur, utilisez /version ou /ver. Pour connaître la version d'un plugin, utilisez `/version <nom du plugin>` ou `/ver <nom du plugin>`."
                     },
                     "list": {
-                        "templates": ["list", "liste"],
+                        "templates": [
+                            "list",
+                            "liste"
+                        ],
                         "content": "Il est plus que fortement conseillé d'utiliser des variables \"listes\" dans vos codes, plutôt que de simples variables à point (`.`). Les raisons sont multiples : convention, optimisation, facilité de certaines tâches... Pour en savoir plus, faites .auto list-pv",
                         "pvContent": "Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coup avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%} Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est-à-dire que plutôt d'avoir une variable par joueur, il y a une variable, qui stocke tous les joueurs. Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simples variables même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."
                     },
                     "uselesscommand": {
-                        "templates": ["§", "uselesscommand", "useless command", "commandfunction", "command function"],
+                        "templates": [
+                            "§",
+                            "uselesscommand",
+                            "useless command",
+                            "commandfunction",
+                            "command function"
+                        ],
                         "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
-	                },
+                    },
                     "1.8": {
-                        "templates": ["1.8", "1.8.x", "1.8.X"],
+                        "templates": [
+                            "1.8",
+                            "1.8.x",
+                            "1.8.X"
+                        ],
                         "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
-	                },
+                    },
                     "contains": {
-                        "templates": ["contain", "contains"],
+                        "templates": [
+                            "contain",
+                            "contains"
+                        ],
                         "content": "Il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`. Ces problèmes ont déjà été report sur Github (<https://github.com/SkriptLang/Skript/issues/2393>), et les développeurs de Skript sont en train d'essayer de le régler."
                     },
                     "skellett1.14": {
-                        "templates": ["skellett14", "skellett1.14", "skellett 14", "skellett 1.14"],
+                        "templates": [
+                            "skellett14",
+                            "skellett1.14",
+                            "skellett 14",
+                            "skellett 1.14"
+                        ],
                         "content": "Pour faire fonctionner Skellett en 1.14, il faut procéder de cette façon :\nInstalle Skellet et reload ton serveur pour avoir les fichiers. \nEnsuite va dans le dossier Skellett, puis ouvre SyntaxToggles.yml.\nFait CTRL + F et recherche \"Packets\".\nChange `true` à `false`\nRedémarre ton serveur."
                     }
                 }
@@ -228,17 +275,17 @@
                     "softdepend": ":link: Dépendences facultatives",
                     "unmaintained": ":warning: Addon abandonné",
                     "unmaintained_desc": "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser."
-	            }
+                }
             },
             "skriptinfo": {
                 "help": "Avoir diverses informations sur Skript.",
                 "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
-	            "embed": {
+                "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
                     "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est conseillée. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
-	                "download": ":inbox_tray: Lien de téléchargement",
+                    "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
             },
@@ -294,9 +341,9 @@
             "userinfo": {
                 "help": "Afficher des informations sur un membre.",
                 "description": "Afficher diverses informations sur un certain membre du Discord Skript-MC, que vous avez défini par son ID ou en le mentionnant (Merci d'éviter de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites un clic-droit sur son pseudo > Copier l'Identifiant).",
-		        "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
+                "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
                 "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce Discord !",
-	                "embed": {
+                "embed": {
                     "joined": "❯ A rejoint le serveur",
                     "created": "❯ A créé son compte",
                     "roles": "❯ Rôles",
@@ -308,9 +355,10 @@
                 "help": "Afficher la page d'aide.",
                 "description": "Afficher la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé.",
+                "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `%m` ?",
                 "header": "Les syntaxes des commandes se lisent comme un pattern skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`",
                 "searchResults": "%r élements trouvés pour la recherche `%s`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**",
-	            "details": {
+                "details": {
                     "everyone": "Tout le monde.",
                     "noExample": "Aucun exemple disponible.",
                     "all": "Tous",
@@ -320,7 +368,7 @@
                     "examples": "**Exemple(s) d'utilisation :**",
                     "usable": "**Utilisable par :**",
                     "channels": "**Salons :**"
-	            }
+                }
             },
             "links": {
                 "help": "Avoir plusieurs liens importants relatifs à Skript.",
@@ -337,15 +385,15 @@
                     "docAdd_desc": "Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.",
                     "dlSk_title": ":inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm",
                     "dlSk_desc": "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
-	                "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
+                    "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
                     "dlAdd_desc": "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.",
                     "discSkMc_title": ":speech_left: Discord Skript-MC : https://discordapp.com/invite/J3NSGaE",
                     "discSkMc_desc": "Lien officiel de ce Discord.",
-	                "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
+                    "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
                     "discSkCh_desc": "Lien du discord \"Skript Chat\", qui est le Discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
-	                "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
+                    "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
                     "forumSkMc_desc": "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, Java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
-	                "gitSk_title": ":computer: GitHub de Skript : https://bit.ly/2W0EJrU",
+                    "gitSk_title": ":computer: GitHub de Skript : https://bit.ly/2W0EJrU",
                     "gitSk_desc": "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour."
                 }
             },
@@ -358,8 +406,8 @@
                 "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
                 "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
                 "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
-	            "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
-	            "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
+                "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
             },
             "joke": {
                 "help": "Envoie une blague aléatoire.",
@@ -412,7 +460,7 @@
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
                 "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot).",
                 "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.9+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
-	            "messages": [
+                "messages": [
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.9 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.10 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.11 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
@@ -432,7 +480,7 @@
                 "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
-	            "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
+                "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
                 "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
                 "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
                 "noReasonSpecified": "Aucune raison spécifiée",
@@ -457,7 +505,7 @@
                 "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
                 "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Veuillez entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
-	            "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
+                "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
                 "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
@@ -482,11 +530,20 @@
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "warnLimitReached": "C'est le 2ème avertissement pour ce membre, il a donc été sanctionné."
             },
+            "kick": {
+                "help": "Expulser un membre.",
+                "description": "Expulser un membre du serveur.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "noSelfKick": "Ne te warn pas toi même, boulet.",
+                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "successfullyKicked": "Vous avez bien averti %u !\nRaison : %r",
+                "noReasonSpecified": "Aucune raison spécifiée"
+            },
             "history": {
                 "help": "Voir l'historique des sanctions d'un membre.",
                 "description": "Voir l'historique des sanctions d'un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-	            "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
+                "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
             "removemusicrestriction": {
                 "help": "Enlever les restrictions de musique d'un membre.",
@@ -502,7 +559,7 @@
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
                 "wrongUsage": "Tu dois spécifier soit un utilisateur et un nombre de message, soit seulement un nombre de message à supprimer !",
                 "tooOld": "Des messages que vous tentez de supprimer ont été envoyé il y a plus de 14 jours. Désolé, mais il m'est impossible de les supprimer."
-	        },
+            },
             "ghostping": {
                 "help": "Tagger un membre, sans laisser de trace.",
                 "description": "Permet de mentionner un membre sans laisser aucune trace.",
