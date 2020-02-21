@@ -131,6 +131,12 @@ export function loadDatabases() {
   // Store all music stats
   db.musicsStats = new Datastore('./databases/musicsStats.db');
   db.musicsStats.loadDatabase(err => dbCallback(err, 'musicsStats'));
+  // Store all commands stats
+  db.commandsStats = new Datastore('./databases/commandsStats.db');
+  db.commandsStats.loadDatabase(err => dbCallback(err, 'commandsStats'));
+  // Store credits
+  db.credits = new Datastore('./databases/credits.db');
+  db.credits.loadDatabase(err => dbCallback(err, 'credits'));
 
   return db;
 }
