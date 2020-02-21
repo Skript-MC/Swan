@@ -7,6 +7,7 @@ class Credits extends Command {
     this.aliases = ['credits', 'credit', 'crédits', 'crédit'];
     this.usage = 'credits [<@mention | ID>]';
     this.examples = ['credits', 'crédits 191495299884122112'];
+    this.enabled = false;
   }
 
   async execute(message, args) {
