@@ -1,8 +1,9 @@
 /* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
-import { client, config, commands } from '../main';
+import { client, config, commands, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
 import { discordError } from '../helpers/messages';
+import CreditsManager from '../helpers/CreditsManager';
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
@@ -36,16 +37,42 @@ function canExecute(command, message) {
 }
 
 export default async function messageHandler(message) {
-  if (message.author.bot || message.system || message.guild.id !== config.bot.guild) return;
-
-  // Command Manager
   const args = message.content.split(' ');
   let cmd = args.shift();
 
-  if (cmd === config.bot.prefix
-    || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)
+  if (message.author.bot
+    || message.system
+    || message.guild.id !== config.bot.guild
     || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
 
+  // Antispam channel Snippet
+  if (message.channel.id === config.channels.snippet
+    && !message.member.roles.cache.has(r => r.id === config.roles.staff)) {
+    // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2k charactères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
+    const previousAuthorId = await message.channel.messages.fetch({ before: message.channel.lastMessageID, limit: 1 })
+      .then(elt => elt.first().author.id);
+    if (previousAuthorId !== message.author.id && !message.content.match(/```((.+|\n))*```/gimu)) {
+      message.delete();
+      message.member.send(config.messages.miscellaneous.noSpam);
+      return;
+    }
+  }
+
+  // On ajoute les crédits (après l'antispam #snippets)
+  if (message.channel.id !== config.channels.bot && !cmd.startsWith(config.bot.prefix)) {
+    let value = config.credits.sendMessageOther;
+    if (message.channel.id === config.channels.snippet) value = config.credits.sendSnippet;
+    if (message.channel.id === config.channels.idea) value = config.credits.sendIdea;
+    if (message.channel.id === config.channels.suggestion) value = config.credits.sendSuggestion;
+    if (config.channels.helpSkript.includes(message.channel.id)
+      || config.channels.helpOther.includes(message.channel.id)) value = config.credits.sendInHelp;
+
+    if (message.member.roles.cache.has(config.roles.nitrobooster)) value *= config.credits.bonuses.nitroBooster;
+    if (message.cleanContent.match(/```(.|\s|\t)*```/gimu)) value += config.credits.bonuses.containsCode;
+    value += Math.round(message.content.length / 100);
+
+    CreditsManager.addToMember(message.member, value);
+  }
 
   // Empêche les MA de mettre des liens d'autres docs
   if (message.member.roles.cache.has(config.roles.ma)
@@ -58,18 +85,6 @@ export default async function messageHandler(message) {
   // Channel "idée" : on ajoute les réactions
   if (message.channel.id === config.channels.idea) {
     message.react('✅').then(() => message.react('❌'));
-  }
-
-  // Antispam channel Snippet
-  if (message.channel.id === config.channels.snippet
-    && !message.member.roles.cache.has(r => r.id === config.roles.staff)) {
-    // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2k charactères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
-    const previousAuthorId = await message.channel.messages.fetch({ before: message.channel.lastMessageID, limit: 1 })
-      .then(elt => elt.first().author.id);
-    if (previousAuthorId !== message.author.id && !message.content.match(/```((.+|\n))*```/gimu)) {
-      message.delete();
-      message.member.send(config.messages.miscellaneous.noSpam);
-    }
   }
 
   // Channel "vos-suggestions" : on créé l'embed et ajoute les réactions
@@ -85,6 +100,9 @@ export default async function messageHandler(message) {
     msg.react('✅').then(() => msg.react('❌'));
   }
 
+  if (cmd === config.bot.prefix
+    || cmd.startsWith(`${config.bot.prefix}${config.bot.prefix}`)) return;
+
   if (cmd.startsWith(config.bot.prefix)) {
     cmd = cmd.substr(config.bot.prefix.length);
 
@@ -95,6 +113,7 @@ export default async function messageHandler(message) {
       if (aliases.includes(cmd.toLowerCase())) {
         if (canExecute(command, message)) {
           command.execute(message, args);
+          db.commandsStats.update({ command: command.name }, { $inc: { used: 1 } }, { upsert: true });
           if (command.cooldown !== 0) command.userCooldowns.set(message.author.id, Date.now());
         }
         return;
