@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Bot discord de Skript-Mc.",
   "main": "src/main.js",
   "scripts": {
