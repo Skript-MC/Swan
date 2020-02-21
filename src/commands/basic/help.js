@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import Command from '../../helpers/Command';
 import { commands, config } from '../../main';
 import { discordError } from '../../helpers/messages';
-import { uncapitalize, jkDistance } from '../../utils';
+import { jkDistance } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -69,9 +69,21 @@ class Help extends Command {
           collector.stop();
         });
     } else {
+      // On cherche parmis les noms des commandes
       let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
       if (cmds.length === 0) {
+        // Et parmis les noms des commandes, sans espaces
         cmds = commands.filter(elt => elt.name.toUpperCase().replace(/ /g, '').includes(args.join(' ').toUpperCase()));
+      }
+      if (cmds.length === 0) {
+        // Et parmis les alias
+        cmds = commands.filter((elt) => {
+          let found = false;
+          elt.aliases.forEach((alias) => {
+            found = alias.toUpperCase().replace(/ /g, '').includes(args.join('').toUpperCase());
+          });
+          return found;
+        });
       }
 
       const results = cmds.length;
@@ -163,7 +175,7 @@ class Help extends Command {
 
     let desc = command.description;
     if (command.name === 'Automatic Messages') {
-      desc = desc.replace('%s', `${Object.keys(config.messages.commands.automatic_messages.messages).join(', ')}`);
+      desc = desc.replace('%s', `${Object.keys(config.messages.commands.automaticmessages.messages).join(', ')}`);
     }
 
     const channels = [];
@@ -174,6 +186,10 @@ class Help extends Command {
         channels.push(message.guild.channels.cache.get(id).name);
       }
     }
+    if (!command.enabledInHelpChannels) {
+      channels.push("sauf les salons d'aide");
+    }
+
     embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${config.bot.prefix}${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);
 
     message.channel.send(embed);
