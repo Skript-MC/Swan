@@ -69,12 +69,7 @@ class NowPlaying extends Command {
     const cursorPos = Math.round((PROGRESS_BAR_SIZE / (music.video.durationSeconds * 1000)) * elapsed.getTime());
     progressBar[cursorPos] = '🔘';
 
-    const track = await new Promise((resolve, reject) => {
-      db.musicsStats.findOne({ ytid: music.video.id }, (err, doc) => {
-        if (err) reject(err);
-        else resolve(doc);
-      });
-    });
+    const track = await db.musicsStats.findOne({ ytid: music.video.id }).catch(console.error);
     const likes = track.likes.length;
     const dislikes = track.dislikes.length;
 
@@ -147,13 +142,8 @@ class NowPlaying extends Command {
   }
 
   async like(message, playingEmbed, type, users, music) {
-    const foundTrack = await new Promise((resolve, reject) => {
-      db.musicsStats.findOne({ ytid: music.video.id }, (err, doc) => {
-        if (err) reject(err);
-        else resolve(doc);
-      });
-    });
-
+    const foundTrack = await db.musicsStats.findOne({ ytid: music.video.id }).catch(console.error);
+    const options = { returnUpdatedDocs: true, multi: false };
     const userId = users.reportedBy.id;
     let updated = false;
     if (foundTrack !== null) {
@@ -165,8 +155,8 @@ class NowPlaying extends Command {
         message.channel.send(this.config.alreadyDisliked).then(msg => msg.delete({ timeout: 5000 }));
       } else if (foundTrack.likes.includes(userId) && type === 'dislike') {
         // On a like et on veut dislike
-        await this.updateDbAsync(db.musicsStats, { _id: foundTrack._id }, { $pull: { likes: userId } }, {});
-        await this.updateDbAsync(db.musicsStats, { _id: foundTrack._id }, { $push: { dislikes: userId } }, {});
+        await db.musicsStats.update({ _id: foundTrack._id }, { $pull: { likes: userId } }, options).catch(console.error);
+        await db.musicsStats.update({ _id: foundTrack._id }, { $push: { dislikes: userId } }, options).catch(console.error);
 
         // Collection des utilisateurs ayant mis la réaction 👍
         const likers = playingEmbed.reactions.cache.find(reaction => reaction.emoji.name === '👍').users;
@@ -175,8 +165,8 @@ class NowPlaying extends Command {
         updated = true;
       } else if (foundTrack.dislikes.includes(userId) && type === 'like') {
         // On a dislike et on veut like
-        await this.updateDbAsync(db.musicsStats, { _id: foundTrack._id }, { $pull: { dislikes: userId } }, {});
-        await this.updateDbAsync(db.musicsStats, { _id: foundTrack._id }, { $push: { likes: userId } }, {});
+        await db.musicsStats.update({ _id: foundTrack._id }, { $pull: { dislikes: userId } }, options).catch(console.error);
+        await db.musicsStats.update({ _id: foundTrack._id }, { $push: { likes: userId } }, options).catch(console.error);
 
         // Collection des utilisateurs ayant mis la réaction 👎
         const dislikers = playingEmbed.reactions.cache.find(reaction => reaction.emoji.name === '👎').users;
@@ -185,73 +175,72 @@ class NowPlaying extends Command {
         updated = true;
       } else if (type === 'like') {
         // On veut like
-        db.musicsStats.update({ _id: foundTrack._id }, { $push: { likes: userId } });
+        await db.musicsStats.update({ _id: foundTrack._id }, { $push: { likes: userId } }).catch(console.error);
         updated = true;
       } else if (type === 'dislike') {
         // On veut dislike
-        db.musicsStats.update({ _id: foundTrack._id }, { $push: { dislikes: userId } });
+        await db.musicsStats.update({ _id: foundTrack._id }, { $push: { dislikes: userId } }).catch(console.error);
         updated = true;
       }
 
       if (updated) {
-        db.musicsStats.loadDatabase(); // Rechargement, pour supprimer la duplication que `update` a créée
-        message.channel.send(type === 'like' ? this.config.liked : this.config.disliked).then(msg => msg.delete({ timeout: 5000 }));
+        // Rechargement de la database, pour supprimer la duplication que `update` a créée
+        await db.musicsStats.load().catch(console.error);
+
+        message.channel.send(type === 'like' ? this.config.liked : this.config.disliked)
+          .then(msg => msg.delete({ timeout: 5000 }));
       }
     }
   }
 
-  blacklistMusic(users, music, logChannel) {
-    db.musics.findOne({ blacklist: true, type: 'music', ytid: music.video.id }, (err, result) => {
-      if (err) console.error(err);
+  async blacklistMusic(users, music, logChannel) {
+    const result = await db.musics.findOne({ blacklist: true, type: 'music', ytid: music.video.id }).catch(console.error);
+    if (result) return logChannel.send(':warning: **Cette musique est déjà blacklist !**');
 
-      if (result) return logChannel.send(':warning: **Cette musique est déjà blacklist !**');
-      MusicBot.blacklistedMusics.push(music.video.id);
-      db.musics.insert({
-        blacklist: true,
-        type: 'music',
-        ytid: music.video.id,
-        moderator: users.moderator.id,
-        requestedBy: users.requestedBy.id,
-        reportedBy: users.reportedBy.id,
-      });
+    MusicBot.blacklistedMusics.push(music.video.id);
+    await db.musics.insert({
+      blacklist: true,
+      type: 'music',
+      ytid: music.video.id,
+      moderator: users.moderator.id,
+      requestedBy: users.requestedBy.id,
+      reportedBy: users.reportedBy.id,
+    }).catch(console.error);
 
-      const logBlacklistEmbed = new MessageEmbed()
-        .setColor(config.colors.blacklist)
-        .setTitle('Blacklist de musique :')
-        .setTimestamp()
-        .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
-        .addField(':persevere: Plaignant', `${users.reportedBy.toString()}\n(${users.reportedBy.id})`, true)
-        .addField(':cop: Modérateur', `${users.moderator.toString()}\n(${users.moderator.id})`, true)
-        .addField(':musical_note: Musique', `[${music.title}](${music.video.shortURL})\nID de la musique : ${music.video.id}`, true);
-      return logChannel.send(logBlacklistEmbed);
-    });
+    const logBlacklistEmbed = new MessageEmbed()
+      .setColor(config.colors.blacklist)
+      .setTitle('Blacklist de musique :')
+      .setTimestamp()
+      .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
+      .addField(':persevere: Plaignant', `${users.reportedBy.toString()}\n(${users.reportedBy.id})`, true)
+      .addField(':cop: Modérateur', `${users.moderator.toString()}\n(${users.moderator.id})`, true)
+      .addField(':musical_note: Musique', `[${music.title}](${music.video.shortURL})\nID de la musique : ${music.video.id}`, true);
+    return logChannel.send(logBlacklistEmbed);
   }
 
-  blacklistChannel(users, music, logChannel) {
-    db.musics.findOne({ blacklist: true, type: 'channel', ytid: music.video.channel.id }, (err, result) => {
-      if (err) console.error(err);
+  async blacklistChannel(users, music, logChannel) {
+    const result = await db.musics.findOne({ blacklist: true, type: 'channel', ytid: music.video.channel.id }).catch(console.error);
+    if (result) return logChannel.send(':warning: **Cette chaîne est déjà blacklist !**');
 
-      if (result) return logChannel.send(':warning: **Cette chaîne est déjà blacklist !**');
-      MusicBot.blacklistedChannels.push(music.video.channel.id);
-      db.musics.insert({
-        blacklist: true,
-        type: 'channel',
-        ytid: music.video.channel.id,
-        moderator: users.moderator.id,
-        requestedBy: users.requestedBy.id,
-        reportedBy: users.reportedBy.id,
-      });
+    MusicBot.blacklistedChannels.push(music.video.channel.id);
+    await db.musics.insert({
+      blacklist: true,
+      type: 'channel',
+      ytid: music.video.channel.id,
+      moderator: users.moderator.id,
+      requestedBy: users.requestedBy.id,
+      reportedBy: users.reportedBy.id,
+    }).catch(console.error);
 
-      const logBlacklistEmbed = new MessageEmbed()
-        .setColor(config.colors.blacklist)
-        .setTitle('Blacklist de chaîne YT :')
-        .setTimestamp()
-        .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
-        .addField(':persevere: Plaignant', `${users.reportedBy.toString()}\n(${users.reportedBy.id})`, true)
-        .addField(':cop: Modérateur', `${users.moderator.toString()}\n(${users.moderator.id})`, true)
-        .addField(':tv: Chaîne', `[${music.video.channel.title}](${music.video.channel.url})\nID de la chaîne : ${music.video.channel.id}`, true);
-      return logChannel.send(logBlacklistEmbed);
-    });
+    const logBlacklistEmbed = new MessageEmbed()
+      .setColor(config.colors.blacklist)
+      .setTitle('Blacklist de chaîne YT :')
+      .setTimestamp()
+      .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
+      .addField(':persevere: Plaignant', `${users.reportedBy.toString()}\n(${users.reportedBy.id})`, true)
+      .addField(':cop: Modérateur', `${users.moderator.toString()}\n(${users.moderator.id})`, true)
+      .addField(':tv: Chaîne', `[${music.video.channel.title}](${music.video.channel.url})\nID de la chaîne : ${music.video.channel.id}`, true);
+    return logChannel.send(logBlacklistEmbed);
   }
 }
 
