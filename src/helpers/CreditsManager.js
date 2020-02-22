@@ -15,12 +15,12 @@ const MILESTONES = [
 class CreditsManager {
   /**
    * Ajouter des crédits à un membre
-   * Désactivé pour le moment (le temps qu'on trouve les rewards)
    * @param {GuildMember} member
    * @param {Number} amount
    */
   static addToMember(member, amount) {
     return;
+    // eslint-disable-next-line no-unreachable, no-useless-return
     if (amount === 0) return;
 
     db.credits.update(
