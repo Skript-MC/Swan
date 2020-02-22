@@ -1,10 +1,6 @@
 {
     "bot": {
-        "id": "",
-        "guild": "",
         "prefix": ".",
-        "default_channels": [],
-        "forbidden_channels": [],
         "avatar": "./assets/logo.png",
         "checkInterval": 10000,
         "activity_on": ".aide | Skript-MC",
@@ -25,28 +21,22 @@
         "ban": "#cc3300"
     },
 
-    "channels": {
-        "helpSkript": ["", "", ""],
-        "helpOther": ["", "", ""],
-        "snippet": "",
-        "idea": "",
-        "suggestion": "",
-        "reunion": "",
-        "main": "",
-        "modMain": "",
-        "logs": ""
-    },
-
-    "roles": {
-        "owner": "",
-        "forumMod": "",
-        "staff": "",
-        "ma": "",
-        "everyone": ""
+    "credits": {
+        "addReaction": 1,
+        "receiveReaction": 3,
+        "sendSnippet": 5,
+        "sendIdea": 3,
+        "sendSuggestion": 3,
+        "sendInHelp": 2,
+        "sendMessageOther": 1,
+        "bonuses": {
+            "containsCode": 1,
+            "messageLength": true,
+            "nitroBooster": 2
+        }
     },
 
     "moderation": {
-        "logCategory": "",
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
         "banChannelPrefix": "b-",
@@ -59,8 +49,6 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "minRoleToClearQueue": "",
-        "restrictedVocal": ["", ""],
         "shouldAskPermissionForSomeCommands": true
     },
 
@@ -89,7 +77,10 @@
             "noDocLink": "Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi",
             "noSpam": "Merci d'éviter le spam dans le canal Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
             "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?",
-            "musicAskOthers": "%u voudrai effectuer l'action suivante : `%s`. Êtes vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**"
+            "musicAskOthers": "%u voudrai effectuer l'action suivante : `%s`. Êtes vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
+            "creditsFirstReward": "Bravo %s, tu viens d'arriver à %d crédits ! Tu gagnes les crédits en participant sur le discord : en envoyant des messages, en partageant du code, en donnant des idées, en aidant les autres, en réagissant aux messages etc. etc. Quand tu arrives à certains paliers, tu peux recevoir des récompenses ! Amuses toi bien ;)",
+            "creditsReward": "Bravo %s, tu viens d'arriver à %d crédits ! Voici ta récompense : %r",
+            "ghostping": ":warning: %s, vous avez été ghostping par %m."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas... Essayez .aide pour voir les commandes disponibles :wink:",
@@ -413,7 +404,8 @@
                 "help": "Envoie une blague aléatoire.",
                 "description": "Envoie aléatoirement une blague drôle (ou pas).",
                 "message": ":small_blue_diamond: **%j**\n%r",
-                "jokes": ["Un mec rentre dans un café.;Et plouf !",
+                "jokes": [
+                    "Un mec rentre dans un café.;Et plouf !",
                     "Pourquoi les crocos sont en prison ?;Car les crocos dealent",
                     "Quelle mamie fait peur aux voleurs ?;Mamie Traillette",
                     "Quel est l'aliment le plus hilarant ?;Le riz",
@@ -465,6 +457,17 @@
                     "Que fait un jardinier quand il ment ?;Il raconte des salades",
                     "Quel est le crustacé le plus léger de la mer ?;La palourde"
                 ]
+            },
+            "ranking": {
+                "help": "Voir les classements.",
+                "description": "Voir les classements des musiques les plus likées/dislikées/écoutées.",
+                "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`",
+                "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`"
+            },
+            "credits": {
+                "help": "Voir le nombre de crédits qu'on a.",
+                "description": "Voir le nombre de crédits que nous ou quelqu'un d'autre à.",
+                "creditsAmount": "%s a %d crédits."
             },
             "status": {
                 "help": "Voir ou définir le statut du bot.",

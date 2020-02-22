@@ -3,8 +3,10 @@ import { MessageEmbed } from 'discord.js';
 import { config } from '../main';
 import { padNumber } from '../utils';
 
+let step = 0;
 export function success(msg) {
-  console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✔️  ${msg}`);
+  step++;
+  console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✔️  (${step}/10) ${msg}`);
 }
 export function error(msg) {
   console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✖️  ${msg}`);

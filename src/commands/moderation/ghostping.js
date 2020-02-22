@@ -3,7 +3,7 @@ import Command from '../../helpers/Command';
 class GhostPing extends Command {
   constructor() {
     super('Ghostping');
-    this.aliases = ['ghostping'];
+    this.aliases = ['ghostping', 'gp'];
     this.usage = 'ghostping @mention';
     this.examples = ['ghostping @Vengelis_ le FISC'];
     this.permissions = ['Staff'];

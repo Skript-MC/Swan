@@ -2,7 +2,7 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import axios from 'axios';
-import Datastore from 'nedb';
+import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
 import { success } from './helpers/messages';
 import { config, commands } from './main';
@@ -20,9 +20,38 @@ const GETtoken = {
   },
 };
 
-function dbCallback(err, name) {
-  if (err) console.error(`Unable to load db "${name}" :\n`, err);
-  else success(`Databases : "${name}.db" loaded!`);
+export function loadConfig() {
+  const conf = require('../config/config.json'); // eslint-disable-line global-require
+  const ids = process.env;
+
+  conf.bot.id = ids.bot;
+  conf.bot.guild = ids.guild;
+  conf.bot.defaultChannels = ids.defaultChannels ? ids.defaultChannels.split(',') : [];
+  conf.bot.forbiddenChannels = ids.forbiddenChannels ? ids.forbiddenChannels.split(',') : [];
+  conf.channels = {
+    helpSkript: ids.helpSkript ? ids.helpSkript.split(',') : [],
+    helpOther: ids.helpOther ? ids.helpOther.split(',') : [],
+    snippet: ids.snippet,
+    idea: ids.idea,
+    suggestion: ids.suggestion,
+    reunion: ids.reunion,
+    main: ids.main,
+    logs: ids.logs,
+    bot: ids.bot,
+  };
+  conf.roles = {
+    owner: ids.owner,
+    forumMod: ids.forumMod,
+    staff: ids.staff,
+    ma: ids.ma,
+    everyone: ids.everyone,
+    nitrobooster: ids.nitrobooster,
+  };
+  conf.moderation.logCategory = ids.logCategory;
+  conf.music.minRoleToClearQueue = ids.minRoleToClearQueue;
+  conf.music.restrictedVocal = ids.restrictedVocal ? ids.restrictedVocal.split(',') : [];
+
+  return conf;
 }
 
 export function loadBot() {
@@ -117,20 +146,29 @@ export async function loadSkripttoolsSkript() {
 }
 
 export function loadDatabases() {
-  const db = {};
+  if (!fs.existsSync('../databases/ban-logs')) fs.mkdirSync('../databases/ban-logs');
 
-  // Store all current sanctions
-  db.sanctions = new Datastore('./databases/sanctions.db');
-  db.sanctions.loadDatabase(err => dbCallback(err, 'sanctions'));
-  // Store all sanctions history
-  db.sanctionsHistory = new Datastore('./databases/sanctionsHistory.db');
-  db.sanctionsHistory.loadDatabase(err => dbCallback(err, 'sanctionsHistory'));
-  // Store all blacklisted musics
-  db.musics = new Datastore('./databases/musics.db');
-  db.musics.loadDatabase(err => dbCallback(err, 'musics'));
-  // Store all music stats
-  db.musicsStats = new Datastore('./databases/musicsStats.db');
-  db.musicsStats.loadDatabase(err => dbCallback(err, 'musicsStats'));
+  const databases = {};
+  const databasesNames = [
+    // Store all current sanctions
+    'sanctions',
+    // Store all sanctions history
+    'sanctionsHistory',
+    // Store all blacklisted musics and channels
+    'musics',
+    // Store all music stats
+    'musicsStats',
+    // Store all commands stats
+    'commandsStats',
+    // Store credits
+    'credits',
+  ];
+  for (const db of databasesNames) {
+    databases[db] = Datastore.create(`./databases/${db}.db`);
+    databases[db].load()
+      .then(() => success(`Databases : "${db}.db" loaded!`))
+      .catch(console.error);
+  }
 
-  return db;
+  return databases;
 }
