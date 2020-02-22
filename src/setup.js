@@ -146,8 +146,6 @@ export async function loadSkripttoolsSkript() {
 }
 
 export function loadDatabases() {
-  if (!fs.existsSync('../databases/ban-logs')) fs.mkdirSync('../databases/ban-logs');
-
   const databases = {};
   const databasesNames = [
     // Store all current sanctions
