@@ -15,8 +15,8 @@ class Ranking extends Command {
   constructor() {
     super('Ranking');
     this.aliases = ['ranking', 'rank', 'ranks', 'classement'];
-    this.usage = 'ranking <music-likes/music-dislikes/music-views/credits>';
-    this.examples = ['classement music-views', 'ranks credits'];
+    this.usage = 'ranking <music-likes/music-dislikes/music-views>';
+    this.examples = ['classement music-views', 'ranks music-dislikes'];
   }
 
   async execute(message, args) {
@@ -26,19 +26,19 @@ class Ranking extends Command {
     let type = '';
 
     switch (args[0]) {
-      case 'credits':
-      case 'credit':
-      case 'crédit':
-      case 'crédits': {
-        type = 'crédits';
-        const topCredits = await this.getTopCredit(3);
+      // case 'credits':
+      // case 'credit':
+      // case 'crédit':
+      // case 'crédits': {
+      //   type = 'crédits';
+      //   const topCredits = await this.getTopCredit(3);
 
-        for (const [i, element] of topCredits.entries()) {
-          const member = message.guild.members.cache.get(element.member);
-          description += `    ${emojis[i]} ${member.nickname || member.user.username} : ${element.credits}\n`;
-        }
-        break;
-      }
+      //   for (const [i, element] of topCredits.entries()) {
+      //     const member = message.guild.members.cache.get(element.member);
+      //     description += `    ${emojis[i]} ${member.nickname || member.user.username} : ${element.credits}\n`;
+      //   }
+      //   break;
+      // }
       case 'musique-like':
       case 'music-like':
       case 'musique-likes':
