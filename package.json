@@ -28,7 +28,7 @@
     "ffmpeg-static": "^2.7.0",
     "he": "^1.2.0",
     "mathjs": "^6.6.0",
-    "nedb": "^1.8.0",
+    "nedb-promises": "^4.0.1",
     "simple-youtube-api": "^5.2.1"
   },
   "devDependencies": {

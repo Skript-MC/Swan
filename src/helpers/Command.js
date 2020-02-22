@@ -74,8 +74,8 @@ class Command {
      * @type {string[]}
      */
     this.requiredChannels = (this.config && this.config.requiredChannels) ? this.config.requiredChannels : [];
-    if (config.bot.default_channels.length > 0) {
-      for (const channel of config.bot.default_channels) {
+    if (config.bot.defaultChannels.length > 0) {
+      for (const channel of config.bot.defaultChannels) {
         this.requiredChannels.push(channel);
       }
     }
