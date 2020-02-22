@@ -488,9 +488,9 @@
             },
             "ranking": {
                 "help": "Voir les classements.",
-                "description": "Voir les classements des crédits, des musiques les plus likées/dislikées/écoutées.",
-                "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `credits`, `musique-like`, `musique-dislike`, `musique-views`",
-                "invalidType": "Type de classement invalide ! Voici les types disponibles : `credits`, `musique-like`, `musique-dislike`, `musique-views`"
+                "description": "Voir les classements des musiques les plus likées/dislikées/écoutées.",
+                "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`",
+                "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`"
             },
             "credits": {
                 "help": "Voir le nombre de crédits qu'on a.",
