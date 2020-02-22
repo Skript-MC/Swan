@@ -469,6 +469,10 @@
                 "description": "Voir le nombre de crédits que nous ou quelqu'un d'autre à.",
                 "creditsAmount": "%s a %d crédits."
             },
+            "discover": {
+                "help": "Découvrir une commande du bot",
+                "description": "Permet de découvrir une des nombreuses commandes du bot."
+            },
             "status": {
                 "help": "Voir ou définir le statut du bot.",
                 "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
