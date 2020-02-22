@@ -210,28 +210,28 @@ class MusicBotApp {
     cb(message, args, cmdConfig);
   }
 
-  fetch() {
-    db.musics.find({ blacklist: true }, (err, results) => {
-      if (err) console.error(err);
-      this.blacklistedMusics = results.filter(result => result.type === 'music').map(result => result.ytid);
-      this.blacklistedChannels = results.filter(result => result.type === 'channel').map(result => result.ytid);
-    });
-    db.sanctions.find({ sanction: 'music_restriction' }, (err, results) => {
-      if (err) console.error(err);
-      this.restricted = results.map(result => result.member);
-    });
+  async fetch() {
+    const results = await db.musics.find({ blacklist: true }).catch(console.error);
+    this.blacklistedMusics = results.filter(elt => elt.type === 'music').map(elt => elt.ytid);
+    this.blacklistedChannels = results.filter(elt => elt.type === 'channel').map(elt => elt.ytid);
+
+    const results2 = await db.sanctions.find({ sanction: 'music_restriction' }).catch(console.error);
+    this.restricted = results2.map(elt => elt.member);
   }
 
   async updateStats(track) {
-    const foundTrack = await new Promise((resolve, reject) => {
-      db.musicsStats.findOne({ ytid: track.video.id }, (err, result) => {
-        if (err) reject(err);
-        else resolve(result);
-      });
-    });
+    const foundTrack = await db.musicsStats.findOne({ ytid: track.video.id }).catch(console.error);
 
-    if (foundTrack !== null) db.musicsStats.update({ _id: foundTrack._id }, { $set: { played: foundTrack.played + 1 } });
-    else db.musicsStats.insert({ ytid: track.video.id, played: 1, likes: [], dislikes: [] });
+    if (foundTrack) {
+      await db.musicsStats.update(
+        { _id: foundTrack._id },
+        { $set: { played: foundTrack.played + 1 } },
+      ).catch(console.error);
+    } else {
+      await db.musicsStats.insert(
+        { ytid: track.video.id, played: 1, likes: [], dislikes: [] },
+      ).catch(console.error);
+    }
   }
 }
 

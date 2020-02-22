@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../helpers/Command';
-import { commands, client, config } from '../../main';
+import { commands, client, config, db } from '../../main';
 import pkg from '../../../package.json';
 import { secondToDuration } from '../../utils';
 
@@ -38,6 +38,17 @@ class Statistics extends Command {
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
     message.channel.send(embed);
+
+    // Send commands stats :
+    if (message.member.roles.highest.position < message.guild.roles.cache.get(config.roles.ma).position) return;
+
+    const docs = await db.commandsStats.find({}).catch(console.error);
+    const commandsStats = docs.sort((a, b) => b.used - a.used);
+    let content = 'Utilisation des commandes :\n```';
+    for (const cmd of commandsStats) content += `${cmd.command} : ${cmd.used}\n`;
+    content += '```';
+
+    message.author.send(content);
   }
 }
 

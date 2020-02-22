@@ -40,56 +40,41 @@ class SanctionManager {
   }
 
   static async addToHistory(info) {
-    db.sanctionsHistory.findOne({ memberId: info.member.user.id }, async (err, result) => {
-      if (err) console.error(err);
+    let result = await db.sanctionsHistory.findOne({ memberId: info.member.user.id }).catch(console.error);
 
-      // Si le membre n'a pas d'historique, on créé un document
-      if (!result) {
-        const document = {
-          memberId: info.member.user.id,
-          sanctions: [],
-          count: 0,
-          currentWarnCount: 0,
-        };
-        // eslint-disable-next-line no-param-reassign
-        result = await new Promise((resolve, reject) => {
-          db.sanctionsHistory.insert(document, (err2, newDoc) => {
-            if (err) reject(err2);
-            else resolve(newDoc);
-          });
-        }).catch(console.error);
-      }
+    // Si le membre n'a pas d'historique, on créé un document
+    if (!result) {
+      result = await db.sanctionsHistory.insert({
+        memberId: info.member.user.id,
+        sanctions: [],
+        count: 0,
+        currentWarnCount: 0,
+      }).catch(console.error);
+    }
 
-      // On ajoute la sanction à l'historique
-      const count = result.count + 1;
-      const sanction = {
-        type: info.sanction,
-        mod: info.mod.id,
-        date: Date.now(),
-      };
-      if (info.reason) sanction.reason = info.reason;
-      if (info.duration) sanction.duration = info.duration;
+    // On ajoute la sanction à l'historique
+    const count = result.count + 1;
+    const sanction = {
+      type: info.sanction,
+      mod: info.mod.id,
+      date: Date.now(),
+    };
+    if (info.reason) sanction.reason = info.reason;
+    if (info.duration) sanction.duration = info.duration;
 
-      db.sanctionsHistory.update({ _id: result._id }, { $push: { sanctions: sanction } }, {}, (err2) => {
-        if (err2) console.error(err2);
-      });
-      db.sanctionsHistory.update({ _id: result._id }, { $set: { count } }, {}, (err2) => {
-        if (err2) console.error(err2);
-      });
+    await db.sanctionsHistory.update({ _id: result._id }, { $push: { sanctions: sanction } }).catch(console.error);
+    await db.sanctionsHistory.update({ _id: result._id }, { $set: { count } }).catch(console.error);
 
-      // Si c'est un avertissement, on met à jour le nombre d'avertissement avant sanction
-      if (info.sanction === 'warn') {
-        let currentWarnCount = result ? result.currentWarnCount + 1 : 1;
-        if (currentWarnCount >= config.moderation.warnLimitBeforeBan) currentWarnCount = 0;
-        db.sanctionsHistory.update({ _id: result._id }, { $set: { currentWarnCount } }, {}, (err2) => {
-          if (err2) console.error(err2);
-        });
-      }
-    });
+    // Si c'est un avertissement, on met à jour le nombre d'avertissement avant sanction
+    if (info.sanction === 'warn') {
+      let currentWarnCount = result ? result.currentWarnCount + 1 : 1;
+      if (currentWarnCount >= config.moderation.warnLimitBeforeBan) currentWarnCount = 0;
+      await db.sanctionsHistory.update({ _id: result._id }, { $set: { currentWarnCount } }).catch(console.error);
+    }
   }
 
-  static addToSanctions(info) {
-    db.sanctions.insert({
+  static async addToSanctions(info) {
+    await db.sanctions.insert({
       sanction: info.sanction,
       reason: info.reason,
       member: info.member.id,
@@ -97,7 +82,7 @@ class SanctionManager {
       start: Date.now(),
       duration: info.duration || 0,
       finish: info.finish,
-    });
+    }).catch(console.error);
   }
 
   static log(infos, guild) {
@@ -132,74 +117,66 @@ class SanctionManager {
     logChannel.send(embed);
   }
 
-  static removeSanction(info, guild) {
-    db.sanctions.remove({ _id: info.id }, {}, (err) => {
-      if (err) console.error(err);
+  static async removeSanction(info, guild) {
+    await db.sanctions.remove({ _id: info.id }).catch(console.error);
 
-      // On enlève le rôle de la victime
-      const role = info.sanction === 'ban'
-        ? guild.roles.cache.find(r => r.name === config.moderation.banRole)
-        : guild.roles.cache.find(r => r.name === config.moderation.muteRole);
+    // On enlève le rôle de la victime
+    const role = info.sanction === 'ban'
+      ? guild.roles.cache.find(r => r.name === config.moderation.banRole)
+      : guild.roles.cache.find(r => r.name === config.moderation.muteRole);
 
-      if (info.member.roles.cache.has(role.id)) {
-        try {
-          info.member.roles.remove(role);
-        } catch (e) {
-          console.error(e);
-        }
+    if (info.member.roles.cache.has(role.id)) {
+      try {
+        info.member.roles.remove(role);
+      } catch (e) {
+        console.error(e);
       }
+    }
 
-      // On supprime le channel s'il y en a un
-      const chan = guild.channels.cache.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(info.member)}` && c.type === 'text');
-      if (chan) chan.delete();
+    // On supprime le channel s'il y en a un
+    const chan = guild.channels.cache.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(info.member)}` && c.type === 'text');
+    if (chan) chan.delete();
 
-      // On envoie le message de log
-      let action;
-      if (info.sanction === 'ban') action = 'Unban';
-      else if (info.sanction === 'mute') action = 'Unmute';
-      else if (info.sanction === 'music_restriction') action = 'Suppression de la restriction des commandes de musiques';
+    // On envoie le message de log
+    let action;
+    if (info.sanction === 'ban') action = 'Unban';
+    else if (info.sanction === 'mute') action = 'Unmute';
+    else if (info.sanction === 'music_restriction') action = 'Suppression de la restriction des commandes de musiques';
 
-      const logChannel = guild.channels.cache.get(config.channels.logs);
-      const embed = new MessageEmbed()
-        .setColor(config.colors.success)
-        .setTitle(info.title)
-        .setTimestamp()
-        .addField(':bust_in_silhouette: Utilisateur', `${info.member.toString()}\n(${info.member.id})`, true)
-        .addField(':cop: Modérateur', `${info.mod.toString()}\n(${info.mod.id})`, true)
-        .addField(':tools: Action', `${action}`, true)
-        .addField(':label: Raison', `${info.reason}\nID : ${info.id}`, true);
-      if (info.file) embed.addField(':scroll: Historique des messages', 'Disponible ci-dessous', true);
+    const logChannel = guild.channels.cache.get(config.channels.logs);
+    const embed = new MessageEmbed()
+      .setColor(config.colors.success)
+      .setTitle(info.title)
+      .setTimestamp()
+      .addField(':bust_in_silhouette: Utilisateur', `${info.member.toString()}\n(${info.member.id})`, true)
+      .addField(':cop: Modérateur', `${info.mod.toString()}\n(${info.mod.id})`, true)
+      .addField(':tools: Action', `${action}`, true)
+      .addField(':label: Raison', `${info.reason}\nID : ${info.id}`, true);
+    if (info.file) embed.addField(':scroll: Historique des messages', 'Disponible ci-dessous', true);
 
-      logChannel.send(embed);
+    logChannel.send(embed);
 
-      if (info.file) {
-        logChannel.send({
-          files: [{
-            attachment: info.file.filePath,
-            name: `${info.file.fileName}.txt`,
-          }],
-        });
-      }
-    });
-  }
-
-  static isBan(id) {
-    return new Promise((resolve, reject) => {
-      db.sanctions.findOne({ member: id, sanction: 'ban' }, (err, result) => {
-        if (err) reject(err);
-        resolve(!!result); // Cast result en boolean. Donc si il y a un résultat : true, sinon : false
+    if (info.file) {
+      logChannel.send({
+        files: [{
+          attachment: info.file.filePath,
+          name: `${info.file.fileName}.txt`,
+        }],
       });
-    });
+    }
   }
 
-  static hardBan(member, ban) {
+  static async isBan(id) {
+    const doc = await db.sanctions.findOne({ member: id, sanction: 'ban' }).catch(console.error);
+    return !!doc;
+  }
+
+  static async hardBan(member, ban) {
     // Ban
     if (ban) member.ban();
 
     // Suppression de la database
-    db.sanctions.remove({ _id: member.id }, {}, (err) => {
-      if (err) console.error(err);
-    });
+    await db.sanctions.remove({ _id: member.id }).catch(console.error);
 
     // Suppression du channel perso
     const guild = client.guilds.cache.get(config.bot.guild);
