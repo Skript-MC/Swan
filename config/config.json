@@ -473,6 +473,11 @@
                 "help": "Découvrir une commande du bot",
                 "description": "Permet de découvrir une des nombreuses commandes du bot."
             },
+            "lyrics": {
+                "enabled": false,
+                "help": "Afficher les paroles d'une musique",
+                "description": "Afficher les paroles de la musique que le bot est en train de jouer."
+            },
             "status": {
                 "help": "Voir ou définir le statut du bot.",
                 "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
