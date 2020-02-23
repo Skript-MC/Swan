@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { SkripttoolsAddons, config } from '../../main';
 import { uncapitalize, jkDistance } from '../../utils';
 

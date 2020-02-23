@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { commands, config } from '../../main';
-import { discordError } from '../../helpers/messages';
+import { discordError } from '../../structures/messages';
 import { jkDistance } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];

@@ -1,5 +1,5 @@
-import Command from '../../helpers/Command';
-import CreditsManager from '../../helpers/CreditsManager';
+import Command from '../../structures/Command';
+import CreditsManager from '../../structures/CreditsManager';
 
 class Credits extends Command {
   constructor() {

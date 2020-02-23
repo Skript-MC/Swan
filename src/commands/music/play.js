@@ -3,8 +3,8 @@
 import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config } from '../../main';
 import { padNumber } from '../../utils';
 

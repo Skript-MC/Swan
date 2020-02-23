@@ -1,5 +1,5 @@
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 import { uncapitalize, jkDistance } from '../../utils';
 

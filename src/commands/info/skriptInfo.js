@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import { discordInfo } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordInfo } from '../../structures/messages';
 import { SkripttoolsSkript, config } from '../../main';
 
 class SkriptInfo extends Command {

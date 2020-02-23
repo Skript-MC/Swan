@@ -1,9 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config } from '../../main';
-import { discordError } from '../../helpers/messages';
+import { discordError } from '../../structures/messages';
 import { slugify } from '../../utils';
 
 class Lyrics extends Command {

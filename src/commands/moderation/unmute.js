@@ -1,6 +1,6 @@
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
-import Moderation from '../../helpers/Moderation';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
+import Moderation from '../../structures/Moderation';
 
 class Unmute extends Command {
   constructor() {

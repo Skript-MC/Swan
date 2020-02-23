@@ -2,8 +2,8 @@
 /* eslint-disable nonblock-statement-body-position */
 /* eslint-disable curly */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { SkriptHubSyntaxes, config } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
