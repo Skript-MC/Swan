@@ -2,8 +2,8 @@
 import { MessageEmbed } from 'discord.js';
 import { client, config, commands, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
-import { discordError } from '../helpers/messages';
-import CreditsManager from '../helpers/CreditsManager';
+import { discordError } from '../structures/messages';
+import CreditsManager from '../structures/CreditsManager';
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions

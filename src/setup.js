@@ -4,7 +4,7 @@ import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
-import { success } from './helpers/messages';
+import { success } from './structures/messages';
 import { config, commands } from './main';
 
 require('dotenv').config();

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import { client, config } from '../main';
-import CreditsManager from '../helpers/CreditsManager';
+import CreditsManager from '../structures/CreditsManager';
 
 export default async function reactionAddHandler(reaction, user) {
   const message = reaction.message;

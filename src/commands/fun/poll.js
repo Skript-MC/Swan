@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { config } from '../../main';
-import { discordError, discordInfo } from '../../helpers/messages';
+import { discordError, discordInfo } from '../../structures/messages';
 import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {

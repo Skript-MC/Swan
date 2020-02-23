@@ -1,10 +1,10 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
-import { discordError } from '../../helpers/messages';
-import Moderation from '../../helpers/Moderation';
+import { discordError } from '../../structures/messages';
+import Moderation from '../../structures/Moderation';
 
 const PROGRESS_BAR_SIZE = 30;
 

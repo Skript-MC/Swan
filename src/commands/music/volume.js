@@ -1,5 +1,5 @@
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config } from '../../main';
 
 class Volume extends Command {

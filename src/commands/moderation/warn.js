@@ -1,7 +1,7 @@
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
-import Moderation from '../../helpers/Moderation';
-import SanctionManager from '../../helpers/SanctionManager';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
+import Moderation from '../../structures/Moderation';
+import SanctionManager from '../../structures/SanctionManager';
 
 class Warn extends Command {
   constructor() {

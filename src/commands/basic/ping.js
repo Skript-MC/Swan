@@ -1,4 +1,4 @@
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { client } from '../../main';
 
 class Ping extends Command {
