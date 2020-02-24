@@ -521,6 +521,12 @@
                 "help": "Avoir diverses statistiques sur le bot et le serveur.",
                 "description": "Avoir diverses statistiques sur le bot et le serveur."
             },
+            "setsshpassword": {
+                "help": "Définir le mot de passe de ssh@skript-mc.fr",
+                "description": "Définir le mot de passe de ssh@skript-mc.fr",
+                "noPassword": "Ajoute un mot de passe !",
+                "successfullyChanged": "Vous avez bien changé le mot de passe !"
+            },
             "addonpack": {
                 "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
                 "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le discord de développement (lien disponible dans les messages pins de #bot).",
