@@ -134,7 +134,7 @@ class SyntaxInfo extends Command {
           && reactionsNumbers.includes(reaction.emoji.name))
         .once('collect', (reaction) => {
           msg.delete();
-          this.sendDetails(message, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
+          this.sendDetails(message, args, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
           collectorNumbers.stop();
         });
 
@@ -151,7 +151,7 @@ class SyntaxInfo extends Command {
     }
   }
 
-  async sendDetails(message, data) {
+  async sendDetails(message, args, data) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -174,14 +174,15 @@ class SyntaxInfo extends Command {
       embed.addField(this.config.embed.infos, infos, false);
 
     const msg = await message.channel.send(embed);
+    await msg.react('⏮️');
 
     const collectorStop = msg
       .createReactionCollector((reaction, user) => !user.bot
         && user.id === message.author.id
-        && reaction.emoji.name === '❌')
+        && reaction.emoji.name === '⏮️')
       .once('collect', () => {
-        message.delete();
         msg.delete();
+        this.execute(message, args);
         collectorStop.stop();
       });
   }
