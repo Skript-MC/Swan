@@ -160,6 +160,8 @@ export function loadDatabases() {
     'commandsStats',
     // Store credits
     'credits',
+    // Miscellaneous
+    'miscellaneous',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);

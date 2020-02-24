@@ -45,6 +45,19 @@ export default async function messageHandler(message) {
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
 
+  if (message.content.startsWith('ssh@skript-mc.fr')) {
+    const guess = message.content.split(' ').pop();
+    const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
+
+    if (guess === password.value) {
+      message.delete();
+      message.channel.send(':white_check_mark: Access Granted: welcome on your server.');
+    } else {
+      message.channel.send('Access Denied: invalid password');
+    }
+    return;
+  }
+
   // Antispam channel Snippet
   if (message.channel.id === config.channels.snippet
     && !message.member.roles.cache.has(r => r.id === config.roles.staff)) {
