@@ -513,7 +513,7 @@
             },
             "code": {
                 "help": "Permet de présenter votre code de façon claire.",
-                "description": "Permet de mettre votre code dans un bloc de code.",
+                "description": "Permet de mettre votre code dans un bloc de code. Ajoutez le paramètre '-l' pour afficher le numéro des lignes.",
                 "tooLong": "Désolé, mais votre code est trop long (+2000 caractères).",
                 "noCode": "Veuillez ajouter un code ! Il faut que la première ligne soit sur la même ligne que la commande `.code`"
             },
