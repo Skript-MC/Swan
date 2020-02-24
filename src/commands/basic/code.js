@@ -4,24 +4,29 @@ class Code extends Command {
   constructor() {
     super('Code');
     this.aliases = ['code', 'balise'];
-    this.usage = 'code <votre code>';
-    this.examples = ['code broadcast "Yeah!"'];
-    this.cooldown = 5000;
+    this.usage = 'code [-l] <votre code>';
+    this.examples = ['code broadcast "Yeah!"', 'code -l on join: message "salut !"'];
   }
 
   async execute(message, args) {
-    if (args.join('').length === 0) return message.channel.send(this.config.noCode);
+    const printLines = args[0] === '-l';
+    if (printLines) args.shift();
+
+    let code = args.join(' ');
+    if (code.length === 0) return message.channel.send(this.config.noCode);
 
     // En théorie on n'a pas besoin de tester, vu qu'il ne peut pas l'envoyer s'il fait plus de 2000 chars... Mais on ne sait jamais ^^ (vu que ca fait crash le bot)
-    if (args.join(' ').length > 2000) return message.channel.send(this.config.tooLong);
+    if (code.length > 2000) return message.channel.send(this.config.tooLong);
 
     message.delete();
-    const lines = args.join(' ').split('\n');
-    let code = '';
 
-    for (const [i, line] of lines.entries()) {
-      const space = lines.length.toString().length - (i + 1).toString().length;
-      code += `\n${i + 1}${' '.repeat(space)} | ${line}`;
+    if (printLines) {
+      const lines = code.split('\n');
+      code = '';
+      for (const [i, line] of lines.entries()) {
+        const space = lines.length.toString().length - (i + 1).toString().length;
+        code += `\n${i + 1}${' '.repeat(space)} | ${line}`;
+      }
     }
 
     const msgTitle = await message.channel.send(`**Code de ${message.author.username} :**`);
