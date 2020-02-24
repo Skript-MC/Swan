@@ -281,6 +281,7 @@
                 }
             },
             "syntaxinfo": {
+                "enabled": false,
                 "help": "Avoir diverses informations sur une syntaxe.",
                 "description": "Avoir diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
                 "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
