@@ -38,7 +38,7 @@ function getInfos(data) {
   if (data.syntax_type === 'type' && data.type_usage)
     infos.push(`Utilisation du type : \`${data.type_usage}\``);
   if (data.addon && data.compatible_addon_version)
-    infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version.replace(/unknown\s*/gimu, '').replace('(', '').replace(')', '')})`);
+    infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version.replace(/unknown\s*/gimu, '').replace(/\(/gimu, '').replace(/\)/gimu, '')})`);
   else if (data.addon)
     infos.push(`Requiert : ${data.addon}`);
   if (data.compatible_minecraft_version)
@@ -80,17 +80,21 @@ class SyntaxInfo extends Command {
     for (const a of args) {
       if (a.match(regexAddon)) {
         addon = a.replace(regexAddon, '');
-        arg = arg.replace(new RegExp(/\s?-a(?:dd?on)?:\w+\s?/, 'gimu'), '');
+        if (addon === 's') addon = 'skript';
+        arg = arg.replace(/\s?-a(?:dd?on)?:\w+\s?/gimu, '');
         search.push(`addon : ${addon}`);
       } else if (a.match(regexType)) {
         type = a.replace(regexType, '');
-        arg = arg.replace(new RegExp(/\s?-t(?:ype)?:\w+\s?/, 'gimu'), '');
+        if (type === 'expr') type = 'expression';
+        else if (type === 'ev') type = 'event';
+        else if (type === 'cond' || type === 'c') type = 'condition';
+        else if (type === 'eff') type = 'effect';
+        arg = arg.replace(/\s?-t(?:ype)?:\w+\s?/gimu, '');
         search.push(`type : ${type}`);
       } else if (a.match(regexID)) {
         id = Number.parseInt(a.replace(regexID, ''), 10);
-        arg = arg.replace(new RegExp(/\s?-i(?:d)?:\w+\s?/, 'gimu'), '');
-        if (Number.isNaN(id)) id = undefined;
-        else search.push(`id : ${id}`);
+        arg = arg.replace(/\s?-i(?:d)?:\w+\s?/gimu, '');
+        if (!Number.isNaN(id)) search.push(`id : ${id}`);
       }
     }
 
