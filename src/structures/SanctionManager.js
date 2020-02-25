@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { MessageEmbed } from 'discord.js';
-import { db, config, client } from '../main';
+import { db, config } from '../main';
 import { prunePseudo, secondToDuration, formatDate, padNumber } from '../utils';
 
 class SanctionManager {
@@ -169,28 +169,6 @@ class SanctionManager {
   static async isBan(id) {
     const doc = await db.sanctions.findOne({ member: id, sanction: 'ban' }).catch(console.error);
     return !!doc;
-  }
-
-  static async hardBan(member, ban) {
-    // Ban
-    if (ban) member.ban();
-
-    // Suppression de la database
-    await db.sanctions.remove({ _id: member.id }).catch(console.error);
-
-    // Suppression du channel perso
-    const guild = client.guilds.cache.get(config.bot.guild);
-    const chan = guild.channels.cache.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(member)}` && c.type === 'text');
-    if (chan) chan.delete();
-
-    // Envoie d'un log
-    this.log({
-      sanction: 'hardban',
-      color: '#000000',
-      member,
-      mod: client.user,
-      reason: ban ? config.messages.miscellaneous.hardBanAutomatic : config.messages.miscellaneous.hardBanModerator,
-    }, guild);
   }
 
   static async getAllMessages(chan) {

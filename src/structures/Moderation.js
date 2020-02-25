@@ -6,16 +6,34 @@ import MusicBot from './Music';
 import SanctionManager from './SanctionManager';
 
 class Moderation {
+  static async hardBan(member, reason, moderator) {
+    // Ban
+    member.ban();
+
+    // Suppression de la database
+    await db.sanctions.remove({ _id: member.id }).catch(console.error);
+
+    // Suppression du channel perso
+    const guild = client.guilds.cache.get(config.bot.guild);
+    const chan = guild.channels.cache.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(member)}` && c.type === 'text');
+    if (chan) chan.delete();
+
+    // Envoie d'un log
+    const infos = {
+      sanction: 'hardban',
+      color: config.colors.hardban,
+      member,
+      mod: moderator,
+      reason,
+    };
+    SanctionManager.addToHistory(infos);
+    SanctionManager.addToSanctions(infos);
+    SanctionManager.log(infos, guild);
+  }
+
   static async ban(victim, reason, duration, moderator, cmdConfig, message, guild) {
     const role = guild.roles.cache.find(r => r.name === config.moderation.banRole);
 
-    // Vérifier dans la bdd si le joueur est déjà banni
-    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
-
-    // Déjà un résultat dans la bdd
-    if (result) {
-      return message.channel.send(discordError(cmdConfig.alreadyBanned.replace('%u', victim), message));
-    }
     // Durée invalide
     if (duration < -1) {
       return message.channel.send(discordError(cmdConfig.invalidDuration, message));
@@ -23,6 +41,14 @@ class Moderation {
     // Durée max des modérateurs forum : 2h
     if (message.member.roles.cache.has(config.roles.forumMod) && (duration === -1 || duration > 7200)) {
       return message.channel.send(discordError(cmdConfig.durationTooLong));
+    }
+
+    if (duration === -1) return this.hardBan(victim, reason, moderator);
+
+    // Vérifier dans la bdd si le joueur est déjà banni
+    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
+    if (result) {
+      return message.channel.send(discordError(cmdConfig.alreadyBanned.replace('%u', victim), message));
     }
 
     // Créer un channel perso
@@ -332,7 +358,7 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberRemove', async (member) => {
-  if (await SanctionManager.isBan(member.id)) SanctionManager.hardBan(member, true);
+  if (await SanctionManager.isBan(member.id)) Moderation.hardBan(member, config.messages.miscellaneous.hardBanAutomatic, client.user);
 });
 
 export default Moderation;

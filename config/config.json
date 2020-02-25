@@ -18,7 +18,8 @@
         "blacklist": "#000000",
         "musicrestriction": "#2c02b5",
         "mute": "#8100eb",
-        "ban": "#cc3300"
+        "ban": "#cc3300",
+        "hardban": "#000000"
     },
 
     "credits": {
@@ -72,7 +73,6 @@
     "messages": {
         "miscellaneous": {
             "hardBanAutomatic": "Déconnexion du discord lors d'un banissement",
-            "hardBanModerator": "Banni par un modérateur",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Petit Membre Actif:\n\nTu sembles manquer de neurones, pas de lien Skunity ou SkriptHub. Tu bouges ton cul et tu modifies la Doc SkriptMC si il manque quelque chose. Si tu as pas les perms, tu les demandes à Vengelis ou Rémi",
             "noSpam": "Merci d'éviter le spam dans le canal Snippet. Votre message ne contient pas de blocs de code... Comment voulez vous partager du code sans bloc de code ?? Si vous ne savez simplement pas faire de bloc de codes, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>",
