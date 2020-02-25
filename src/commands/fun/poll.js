@@ -50,7 +50,9 @@ class Poll extends Command {
     const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
     const wait = toTimestamp(duration);
-    if (wait < Date.now() || wait === -1) return message.channel.send(discordError(this.config.invalidDuration, message));
+    console.log('DEBUG: Poll -> execute -> wait', wait);
+
+    if (Date.now() + wait < Date.now()) return message.channel.send(discordError(this.config.invalidDuration, message));
     if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
     if (!question) return message.channel.send(discordError(this.config.invalidCmd, message));
     if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.send(discordError(this.config.quoteProblem, message));
