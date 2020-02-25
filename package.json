@@ -7,7 +7,7 @@
     "start": "babel-node ./src/main.js",
     "lint": "eslint .",
     "dev": "nodemon --exec babel-node ./src/main.js",
-    "make-docs": "nodemon --exec babel-node ./docs/docs.js"
+    "make-docs": "babel-node ./docs/docs.js"
   },
   "authors": [
     "noftaly (noftaly#0359)",
