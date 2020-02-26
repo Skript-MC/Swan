@@ -50,7 +50,6 @@ class Poll extends Command {
     const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
     const wait = toTimestamp(duration);
-    console.log('DEBUG: Poll -> execute -> wait', wait);
 
     if (Date.now() + wait < Date.now()) return message.channel.send(discordError(this.config.invalidDuration, message));
     if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
