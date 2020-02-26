@@ -183,7 +183,6 @@ class Help extends Command {
       channels.push(this.config.details.all);
     } else {
       for (const id of command.requiredChannels) {
-        console.log('DEBUG: Help -> sendDetails -> command.requiredChannels', command.requiredChannels);
         channels.push(message.guild.channels.cache.get(id).name);
       }
     }

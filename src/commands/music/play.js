@@ -203,8 +203,6 @@ class Play extends Command {
     }
     queue.push(song);
 
-    // console.log('url', video.url);
-
     if (MusicBot.nowPlaying) return message.channel.send(this.config.songAdded.replace('%s', song.title).replace('%p', MusicBot.queue.length));
     return MusicBot.playSong(queue, message);
   }
