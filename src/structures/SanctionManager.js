@@ -21,11 +21,7 @@ class SanctionManager {
             deny: ['VIEW_CHANNEL'],
           }, {
             id: config.roles.staff,
-            deny: ['MANAGE_CHANNELS'],
-            allow: ['VIEW_CHANNEL'],
-          }, {
-            id: moderator.id,
-            allow: ['MANAGE_CHANNELS'],
+            allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
           }, {
             id: victim.id,
             allow: ['VIEW_CHANNEL'],
