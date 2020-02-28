@@ -119,6 +119,9 @@ export async function loadSkripttoolsAddons() {
 
   for (let addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
+    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons, alors il vaut mieux l'éviter)
+    if (!versions) continue;
+
     const latest = versions[versions.length - 1];
     addon = await axios(`${config.apis.addons}${latest}`)
       .then(response => response.data.data)
