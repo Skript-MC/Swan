@@ -1,5 +1,4 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-cycle, no-param-reassign */
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
 }
