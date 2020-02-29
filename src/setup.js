@@ -110,24 +110,25 @@ export async function loadSkriptHubAPI() {
 }
 
 export async function loadSkripttoolsAddons() {
-  const addons = [];
+  let addons = [];
 
   const allAddons = await axios(config.apis.addons)
     .then(response => (response ? response.data.data : undefined))
     .catch(console.error);
   if (typeof allAddons === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.addons}`);
 
-  for (let addon of Object.keys(allAddons)) {
+  for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
-    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons, alors il vaut mieux l'éviter)
+    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons,
+    // alors il vaut mieux l'éviter)
     if (!versions) continue;
 
     const latest = versions[versions.length - 1];
-    addon = await axios(`${config.apis.addons}${latest}`)
+    addons.push(axios(`${config.apis.addons}${latest}`)
       .then(response => response.data.data)
-      .catch(console.error);
-    addons.push(addon);
+      .catch(console.error));
   }
+  addons = await Promise.all(addons);
   success('Skripttools : addons loaded!');
   return addons;
 }
