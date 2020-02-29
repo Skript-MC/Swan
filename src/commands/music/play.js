@@ -1,5 +1,4 @@
-/* eslint-disable one-var-declaration-per-line */
-/* eslint-disable one-var */
+/* eslint-disable one-var-declaration-per-line, one-var */
 import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';

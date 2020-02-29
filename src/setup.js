@@ -1,5 +1,4 @@
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable import/no-cycle */
+/* eslint-disable import/no-dynamic-require, import/no-cycle */
 import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb-promises';

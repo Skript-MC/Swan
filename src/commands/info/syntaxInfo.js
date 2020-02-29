@@ -1,6 +1,4 @@
-/* eslint-disable no-else-return */
-/* eslint-disable nonblock-statement-body-position */
-/* eslint-disable curly */
+/* eslint-disable no-else-return, nonblock-statement-body-position, curly */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
