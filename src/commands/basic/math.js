@@ -1,6 +1,7 @@
-import math from 'mathjs';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
+
+const math = require('mathjs');
 
 const parser = math.parser();
 
