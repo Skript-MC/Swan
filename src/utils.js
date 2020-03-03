@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle, no-param-reassign */
-import math from 'mathjs';
+const math = require('mathjs');
 
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
