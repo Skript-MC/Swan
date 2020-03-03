@@ -9,9 +9,6 @@ export function success(msg) {
   step++;
   console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✔️  (${step}/${maxSteps}) ${msg}`);
 }
-export function error(msg) {
-  console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✖️  ${msg}`);
-}
 
 export function discordSuccess(description, message) {
   const embed = new MessageEmbed()
