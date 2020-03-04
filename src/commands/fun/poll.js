@@ -70,7 +70,7 @@ class Poll extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
+      .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL())
       .addField('Question', question)
       .addField('Réponses possibles', possibleAnswers)
       .addField('Durée', `Ce vote dure : ${duration} (Finit ${end})`)

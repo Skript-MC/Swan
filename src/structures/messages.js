@@ -12,7 +12,7 @@ export function success(msg) {
 
 export function discordSuccess(description, message) {
   const embed = new MessageEmbed()
-    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL)
+    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL())
     .attachFiles(['./assets/success.png'])
     .setThumbnail('attachment://success.png')
     .setTitle('Succès')
@@ -25,7 +25,7 @@ export function discordSuccess(description, message) {
 
 export function discordInfo(description, message) {
   const embed = new MessageEmbed()
-    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL)
+    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL())
     .attachFiles(['./assets/information.png'])
     .setThumbnail('attachment://information.png')
     .setTitle('Information')
@@ -38,7 +38,7 @@ export function discordInfo(description, message) {
 
 export function discordError(description, message) {
   const embed = new MessageEmbed()
-    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL)
+    .setAuthor(message.member.nickname || message.author.username, message.author.avatarURL())
     .attachFiles(['./assets/error.png'])
     .setThumbnail('attachment://error.png')
     .setTitle('Erreur')

@@ -121,7 +121,7 @@ export default async function messageHandler(message) {
     await message.delete().catch(console.error);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setTitle(`Suggestion de ${message.author.username} (${message.author.id})`, message.author.avatarURL)
+      .setTitle(`Suggestion de ${message.author.username} (${message.author.id})`, message.author.avatarURL())
       .setDescription(message.content)
       .setTimestamp();
 
