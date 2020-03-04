@@ -45,6 +45,7 @@ export default async function messageHandler(message) {
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
 
+  // Easter egg "ssh@skript-mc.fr"
   if (message.content.startsWith('ssh@skript-mc.fr')) {
     const guess = message.content.split(' ').pop();
     const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
@@ -56,6 +57,21 @@ export default async function messageHandler(message) {
       message.channel.send('Access Denied: invalid password');
     }
     return;
+  }
+
+  // Système de citation
+  const linkRegex = new RegExp(`discordapp.com/channels/${config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
+  if (message.content.match(linkRegex)) {
+    const [, channelId, messageId] = linkRegex.exec(message.content);
+
+    const channel = await client.channels.fetch(channelId).catch(console.error);
+    const targetedMessage = await channel.messages.fetch(messageId).catch(console.error);
+
+    const embed = new MessageEmbed()
+      .setColor(config.colors.default)
+      .setAuthor(`${message.member.nickname || message.author.username} cite un message de ${targetedMessage.member.nickname || targetedMessage.author.username}`, message.author.avatarURL())
+      .setDescription(targetedMessage.content);
+    message.channel.send(embed);
   }
 
   // Antispam channel Snippet
