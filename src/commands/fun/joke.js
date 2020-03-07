@@ -51,7 +51,7 @@ class Joke extends Command {
     if (joke) {
       await db.jokes.update(
         { _id: joke._id },
-        { $set: { send: joke.views + 1 } },
+        { $set: { views: joke.views + 1 } },
       ).catch(console.error);
     } else {
       await db.jokes.insert(
