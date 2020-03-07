@@ -4,7 +4,7 @@ import { config } from '../main';
 import { padNumber } from '../utils';
 
 let step = 0;
-const maxSteps = 11;
+const maxSteps = 12;
 export function success(msg) {
   step++;
   console.log(`[SkriptMc Bot] (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ✔️  (${step}/${maxSteps}) ${msg}`);
