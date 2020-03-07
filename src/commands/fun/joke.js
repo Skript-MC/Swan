@@ -22,13 +22,11 @@ class Joke extends Command {
     await jokeEmbed.react('🙄');
 
     jokeEmbed
-      .createReactionCollector((_reaction, user) => {
-        return !user.bot;
-      }).on('collect', async (reaction) => {
+      .createReactionCollector((_reaction, user) => !user.bot).on('collect', async (reaction) => {
         if (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') {
           this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', message.author, id);
         }
-    })
+      });
   }
 
   async buildEmbed(message, id) {
@@ -37,9 +35,9 @@ class Joke extends Command {
     const jokeDoc = await db.jokes.findOne({ id }).catch(console.error);
     const likes = jokeDoc.likes.length;
     const dislikes = jokeDoc.dislikes.length;
-    const views = jokeDoc.views
+    const views = jokeDoc.views;
     return new MessageEmbed()
-      .setTitle(":small_blue_diamond: " + split[0])
+      .setTitle(`:small_blue_diamond: ${split[0]}`)
       .setDescription(split[1])
       .setColor(config.colors.default)
       .setFooter(`Exécuté par ${message.author.username}. Statistiques : ${likes} 😄 - ${dislikes} 🙄 - ${views} 👀`)
@@ -55,7 +53,7 @@ class Joke extends Command {
       ).catch(console.error);
     } else {
       await db.jokes.insert(
-        { id: id, views: 1, likes: [], dislikes: [] },
+        { id, views: 1, likes: [], dislikes: [] },
       ).catch(console.error);
     }
   }
@@ -111,6 +109,5 @@ class Joke extends Command {
       }
     }
   }
-
 }
 export default Joke;
