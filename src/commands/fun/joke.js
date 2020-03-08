@@ -22,10 +22,10 @@ class Joke extends Command {
     await jokeEmbed.react('🙄');
 
     jokeEmbed
-      .createReactionCollector((_reaction, user) => !user.bot).on('collect', async (reaction) => {
-        if (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') {
-          this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', message.author, id);
-        }
+      .createReactionCollector((reaction, user) =>
+        (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') && !user.bot
+      ).on('collect', async (reaction) => {
+        this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', message.author, id);
       });
   }
 
@@ -47,14 +47,9 @@ class Joke extends Command {
   async updateStats(id) {
     const joke = await db.jokes.findOne({ id }).catch(console.error);
     if (joke) {
-      await db.jokes.update(
-        { _id: joke._id },
-        { $set: { views: joke.views + 1 } },
-      ).catch(console.error);
+      await db.jokes.update({ _id: joke._id }, { $inc: { views: 1 } }).catch(console.error);
     } else {
-      await db.jokes.insert(
-        { id, views: 1, likes: [], dislikes: [] },
-      ).catch(console.error);
+      await db.jokes.insert({ id, views: 1, likes: [], dislikes: [] }).catch(console.error);
     }
   }
 
