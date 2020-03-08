@@ -75,7 +75,7 @@
             "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Calme-toi, petit garnement. Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (Vengelis ou Rémi) afin d'améliorer la documentation.",
-            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Votre message ne contient aucun bloc de code... Comment voulez-vous partager votre script sans bloc de code ? Si vous ne savez simplement pas faire de bloc de code, regardez ici : <https://support.Discordapp.com/hc/fr/articles/210298617>.",
+            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Votre message ne contient aucun bloc de code... Comment voulez-vous partager votre script sans bloc de code ? Si vous ne savez simplement pas faire de bloc de code, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
             "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
             "creditsFirstReward": "Bravo %s, tu viens d'arriver à %d crédits ! Tu gagnes les crédits en participant sur le Discord : en envoyant des messages, partageant du code, donnant des idées, aidant les autres, réagissant aux messages... Quand tu arrives à certains paliers, tu peux recevoir des récompenses ! Amuses-toi bien ;)",
@@ -96,7 +96,7 @@
                 "Je ne suis pas dans un salon vocal !",
                 "Tu n'es pas dans mon salon vocal !",
                 "Je ne joue aucune musique !",
-                "La file est vide !",
+                "La queue est vide !",
                 "Impossible d'exécuter cette action, tu as une restriction des commandes musicales !"
             ],
             "joinErrors": {
@@ -379,9 +379,9 @@
                     "dlSk_desc": "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
                     "dlAdd_title": ":inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH",
                     "dlAdd_desc": "Lien de téléchargement des dernières versions de tous les addons existant pour Skript.",
-                    "discSkMc_title": ":speech_left: Discord Skript-MC : https://Discordapp.com/invite/J3NSGaE",
+                    "discSkMc_title": ":speech_left: Discord Skript-MC : https://discordapp.com/invite/J3NSGaE",
                     "discSkMc_desc": "Lien officiel de ce Discord.",
-                    "discSkCh_title": ":speech_left: Discord Skript Chat : https://Discord.gg/V4qFVnh",
+                    "discSkCh_title": ":speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh",
                     "discSkCh_desc": "Lien du Discord \"Skript Chat\", qui est le Discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
                     "forumSkMc_title": ":speech_balloon: Forum SkriptMC : https://skript-mc.fr",
                     "forumSkMc_desc": "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, Java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
@@ -666,8 +666,8 @@
                 "restrictedChannel": "Désolé, mais je ne peux pas rejoindre ton salon vocal !",
                 "comming": "J'arrive dans ton salon vocal !",
                 "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre salon... Rejoins-moi vite dans le salon %s !",
-                "noArgumentGiven": "Tu ne m'as donné aucune musique à jouer et la file est vide !",
-                "queueLimited": "Impossible d'ajouter cet élément à la file car elle est pleine (file limitée à %d).",
+                "noArgumentGiven": "Tu ne m'as donné aucune musique à jouer et la queue est vide !",
+                "queueLimited": "Impossible d'ajouter cet élément à la queue car elle est pleine (queue limitée à %d).",
                 "playlistNotFound": "La playlist n'a pas été trouvée ! As-tu vérifié qu'elle existe et qu'elle n'est pas répertoriée en privé ?",
                 "blacklistedMusic": "Impossible de jouer cette musique car elle a été ajoutée à la liste noire !",
                 "blacklistedChannel": "Impossible de jouer cette musique car elle provient d'une chaîne ajoutée à la liste noire !",
@@ -675,8 +675,8 @@
                 "SeveralElementCouldntBeAdd": "Désolé, mais %s éléments de la playlist n'ont pu être ajoutés car ils ont sûrement été ajoutés à la liste noire.",
                 "noLiveStream": "Je ne supporte pas encore les diffusions en direct !",
                 "songTooLong": "Je n'accepte que les musiques durant moins d'une heure !",
-                "playlistAdded": "Playlist : :musical_note: %s :musical_note: ajoutée à la file.",
-                "songAdded": "Musique : :musical_note: %s :musical_note: ajoutée à la file. Elle se trouve en position %p.",
+                "playlistAdded": "Playlist : :musical_note: %s :musical_note: ajoutée à la queue.",
+                "songAdded": "Musique : :musical_note: %s :musical_note: ajoutée à la queue. Elle se trouve en position %p.",
                 "queueFinished": "Je n'ai plus aucune musique à jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine. :wink:",
                 "error": "Une erreur s'est produite... Merci de réessayer plus tard !",
                 "chooseSong": "J'ai trouvé plusieurs musiques, choisis une musique en cliquant sur la réaction correspondante :",
@@ -684,16 +684,16 @@
                 "noMusicFound": "Désolé, mais je n'ai trouvé aucune musique correspondante à ta recherche `%s`."
             },
             "queue": {
-                "help": "Afficher la file.",
-                "description": "Affiche la liste de toutes les musiques actuellement dans la file.",
-                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la file contienne cette musique.",
-                "removedSong": "Musique %s retirée de la file !",
-                "cleared": "La file a entièrement été vidée !"
+                "help": "Afficher la queue.",
+                "description": "Affiche la liste de toutes les musiques actuellement dans la queue.",
+                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
+                "removedSong": "Musique %s retirée de la queue !",
+                "cleared": "La queue a entièrement été vidée !"
             },
             "shuffle": {
-                "help": "Mélanger la file de lecture.",
-                "description": "Mélange l'ordre des musiques dans la file.",
-                "queueShuffled": "Ordre de passage des musiques mélangé ! Pour afficher la nouvelle file, faites `.queue`."
+                "help": "Mélanger la queue de lecture.",
+                "description": "Mélange l'ordre des musiques dans la queue.",
+                "queueShuffled": "Ordre de passage des musiques mélangé ! Pour afficher la nouvelle queue, faites `.queue`."
             },
             "pause": {
                 "help": "Pauser ou reprendre la lecture d'une musique.",
@@ -709,12 +709,12 @@
             "stop": {
                 "help": "Déconnecter le bot du salon vocal.",
                 "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
-                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la file."
+                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue."
             },
             "skip": {
                 "help": "Passer une ou plusieurs musique.",
-                "description": "Passe une ou plusieurs musiques de la file.",
-                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la file contienne cette musique.",
+                "description": "Passe une ou plusieurs musiques de la queue.",
+                "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "skippedOne": "La musique a bien été passée !",
                 "skippedSeveral": "J'ai passé %s musiques !"
             },
