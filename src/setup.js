@@ -165,6 +165,8 @@ export function loadDatabases() {
     'credits',
     // Miscellaneous
     'miscellaneous',
+    // Jokes
+    'jokes',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
