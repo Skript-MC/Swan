@@ -6,7 +6,7 @@ import { loadBot,
   loadSkripttoolsSkript,
   loadDatabases,
   loadConfig } from './setup';
-import { success } from './helpers/messages';
+import { success } from './structures/messages';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';

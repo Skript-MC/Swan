@@ -1,9 +1,9 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config } from '../../main';
-import { discordError } from '../../helpers/messages';
+import { discordError } from '../../structures/messages';
 import { slugify } from '../../utils';
 
 class Lyrics extends Command {
@@ -12,7 +12,7 @@ class Lyrics extends Command {
     this.aliases = ['lyric', 'lyrics', 'parole', 'paroles'];
     this.usage = 'lyrics';
     this.examples.push('lyrics', 'paroles');
-    this.enabled = false;
+    this.cooldown = 10000;
   }
 
   async execute(message, _args) {
@@ -58,7 +58,7 @@ class Lyrics extends Command {
 
     if (lyrics.album_art) embeds[0].setThumbnail(lyrics.album_art);
     embeds[0].setTitle(`${lyrics.name} - ${lyrics.artist} (${lyrics.album})`);
-    embeds[embeds.length - 1].setFooter(`Executé par ${message.author.username} | Données fournies par https://api.ksoft.si`);
+    embeds[embeds.length - 1].setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.ksoft.si`);
 
     for (const embed of embeds) message.channel.send(embed);
   }

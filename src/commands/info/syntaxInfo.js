@@ -1,9 +1,7 @@
-/* eslint-disable no-else-return */
-/* eslint-disable nonblock-statement-body-position */
-/* eslint-disable curly */
+/* eslint-disable no-else-return, nonblock-statement-body-position, curly */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { SkriptHubSyntaxes, config } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -38,7 +36,7 @@ function getInfos(data) {
   if (data.syntax_type === 'type' && data.type_usage)
     infos.push(`Utilisation du type : \`${data.type_usage}\``);
   if (data.addon && data.compatible_addon_version)
-    infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version.replace(/unknown\s*/gimu, '').replace('(', '').replace(')', '')})`);
+    infos.push(`Requiert : ${data.addon} (v${data.compatible_addon_version.replace(/unknown\s*/gimu, '').replace(/\(/gimu, '').replace(/\)/gimu, '')})`);
   else if (data.addon)
     infos.push(`Requiert : ${data.addon}`);
   if (data.compatible_minecraft_version)
@@ -80,17 +78,21 @@ class SyntaxInfo extends Command {
     for (const a of args) {
       if (a.match(regexAddon)) {
         addon = a.replace(regexAddon, '');
-        arg = arg.replace(new RegExp(/\s?-a(?:dd?on)?:\w+\s?/, 'gimu'), '');
+        if (addon === 's') addon = 'skript';
+        arg = arg.replace(/\s?-a(?:dd?on)?:\w+\s?/gimu, '');
         search.push(`addon : ${addon}`);
       } else if (a.match(regexType)) {
         type = a.replace(regexType, '');
-        arg = arg.replace(new RegExp(/\s?-t(?:ype)?:\w+\s?/, 'gimu'), '');
+        if (type === 'expr') type = 'expression';
+        else if (type === 'ev') type = 'event';
+        else if (type === 'cond' || type === 'c') type = 'condition';
+        else if (type === 'eff') type = 'effect';
+        arg = arg.replace(/\s?-t(?:ype)?:\w+\s?/gimu, '');
         search.push(`type : ${type}`);
       } else if (a.match(regexID)) {
         id = Number.parseInt(a.replace(regexID, ''), 10);
-        arg = arg.replace(new RegExp(/\s?-i(?:d)?:\w+\s?/, 'gimu'), '');
-        if (Number.isNaN(id)) id = undefined;
-        else search.push(`id : ${id}`);
+        arg = arg.replace(/\s?-i(?:d)?:\w+\s?/gimu, '');
+        if (!Number.isNaN(id)) search.push(`id : ${id}`);
       }
     }
 
@@ -134,7 +136,7 @@ class SyntaxInfo extends Command {
           && reactionsNumbers.includes(reaction.emoji.name))
         .once('collect', (reaction) => {
           msg.delete();
-          this.sendDetails(message, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
+          this.sendDetails(message, args, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
           collectorNumbers.stop();
         });
 
@@ -151,7 +153,7 @@ class SyntaxInfo extends Command {
     }
   }
 
-  async sendDetails(message, data) {
+  async sendDetails(message, args, data) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -174,14 +176,15 @@ class SyntaxInfo extends Command {
       embed.addField(this.config.embed.infos, infos, false);
 
     const msg = await message.channel.send(embed);
+    await msg.react('⏮️');
 
     const collectorStop = msg
       .createReactionCollector((reaction, user) => !user.bot
         && user.id === message.author.id
-        && reaction.emoji.name === '❌')
+        && reaction.emoji.name === '⏮️')
       .once('collect', () => {
-        message.delete();
         msg.delete();
+        this.execute(message, args);
         collectorStop.stop();
       });
   }

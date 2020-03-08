@@ -1,8 +1,8 @@
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { db, config } from '../../main';
-import { discordError } from '../../helpers/messages';
+import { discordError } from '../../structures/messages';
 
 require('dotenv').config();
 

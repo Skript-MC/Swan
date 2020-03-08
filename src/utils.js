@@ -1,5 +1,6 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-cycle, no-param-reassign */
+const math = require('mathjs');
+
 export function padNumber(x) {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
 }
@@ -88,11 +89,11 @@ export function toTimestamp(str) {
 
   let result;
   try {
-    result = eval(str.slice(0, -1)) * 1000; // eslint-disable-line no-eval
+    result = math.evaluate(str.slice(0, -1));
   } catch (e) {
     result = -1;
   }
-  return result;
+  return result * 1000;
 }
 
 /**

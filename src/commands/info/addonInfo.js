@@ -1,6 +1,7 @@
+/* eslint-disable curly, nonblock-statement-body-position */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { SkripttoolsAddons, config } from '../../main';
 import { uncapitalize, jkDistance } from '../../utils';
 
@@ -18,7 +19,7 @@ class AddonInfo extends Command {
     if (args.length === 0) {
       message.channel.send(discordError(this.config.invalidCmd, message));
     } else {
-      let msg = await message.channel.send(this.config.searching);
+      const msg = await message.channel.send(this.config.searching);
       const addons = await SkripttoolsAddons;
 
       const myAddon = args.join(' ');
@@ -62,13 +63,16 @@ class AddonInfo extends Command {
         msg.delete();
         this.sendDetails(message, matchingAddons[0]);
       } else {
-        await msg.edit(this.config.searchResults.replace('%r', results).replace('%s', myAddon));
-        for (let i = 0; i < matchingAddons.length; i++) {
-          msg = await msg.edit(`${msg.content}\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`);
-          await msg.react(reactionsNumbers[i]);
-        }
+        let content = this.config.searchResults.replace('%r', results).replace('%s', myAddon);
+
+        for (let i = 0; i < matchingAddons.length; i++)
+          content += `\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`;
+
+        if (results - 10 > 0) content += `\n...et ${results - 10} de plus...`;
+        await msg.edit(content);
+
+        for (let i = 0; i < matchingAddons.length; i++) await msg.react(reactionsNumbers[i]);
         await msg.react('❌');
-        if (results - 10 > 0) msg = await msg.edit(`${msg.content}\n...et ${results - 10} de plus...`);
 
         const collectorNumbers = msg
           .createReactionCollector((reaction, user) => !user.bot

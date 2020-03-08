@@ -2,8 +2,8 @@
 import { MessageEmbed } from 'discord.js';
 import { client, config, commands, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
-import { discordError } from '../helpers/messages';
-import CreditsManager from '../helpers/CreditsManager';
+import { discordError } from '../structures/messages';
+import CreditsManager from '../structures/CreditsManager';
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
@@ -44,6 +44,35 @@ export default async function messageHandler(message) {
     || message.system
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
+
+  // Easter egg "ssh@skript-mc.fr"
+  if (message.content.startsWith('ssh@skript-mc.fr')) {
+    const guess = message.content.split(' ').pop();
+    const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
+
+    if (guess === password.value) {
+      message.delete();
+      message.channel.send(':white_check_mark: Access Granted: welcome on your server.');
+    } else {
+      message.channel.send('Access Denied: invalid password');
+    }
+    return;
+  }
+
+  // Système de citation
+  const linkRegex = new RegExp(`discordapp.com/channels/${config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
+  if (message.content.match(linkRegex)) {
+    const [, channelId, messageId] = linkRegex.exec(message.content);
+
+    const channel = await client.channels.fetch(channelId).catch(console.error);
+    const targetedMessage = await channel.messages.fetch(messageId).catch(console.error);
+
+    const embed = new MessageEmbed()
+      .setColor(config.colors.default)
+      .setAuthor(`${message.member.nickname || message.author.username} cite un message de ${targetedMessage.member.nickname || targetedMessage.author.username}`, message.author.avatarURL())
+      .setDescription(targetedMessage.content);
+    message.channel.send(embed);
+  }
 
   // Antispam channel Snippet
   if (message.channel.id === config.channels.snippet
@@ -92,7 +121,7 @@ export default async function messageHandler(message) {
     await message.delete().catch(console.error);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setTitle(`Suggestion de ${message.author.username} (${message.author.id})`, message.author.avatarURL)
+      .setTitle(`Suggestion de ${message.author.username} (${message.author.id})`, message.author.avatarURL())
       .setDescription(message.content)
       .setTimestamp();
 
