@@ -178,13 +178,13 @@ class Ranking extends Command {
     const top = sorted.slice(0, n);
     return top;
   }
-  
-  //async getTopCredit(n) {
-  //  const docs = await db.credits.find({}).catch(console.error);
-  //  const sorted = docs.sort((a, b) => b.credits - a.credits);
-  //  const top = sorted.slice(0, n);
-  //  return top;
-  //}
+
+  async getTopCredit(n) {
+    const docs = await db.credits.find({}).catch(console.error);
+    const sorted = docs.sort((a, b) => b.credits - a.credits);
+    const top = sorted.slice(0, n);
+    return top;
+  }
 
   async getTopLikedMusic(n) {
     const docs = await db.musicsStats.find({}).catch(console.error);
