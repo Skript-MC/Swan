@@ -1,6 +1,4 @@
-/* eslint-disable import/no-cycle */
-/* eslint-disable object-curly-newline */
-/* eslint-disable prefer-destructuring */
+/* eslint-disable import/no-cycle, object-curly-newline, prefer-destructuring */
 import ytdl from 'discord-ytdl-core';
 import { config, db } from '../main';
 import { discordError } from './messages';

@@ -1,8 +1,8 @@
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { toTimestamp } from '../../utils';
-import Moderation from '../../helpers/Moderation';
-import SanctionManager from '../../helpers/SanctionManager';
+import Moderation from '../../structures/Moderation';
+import SanctionManager from '../../structures/SanctionManager';
 
 class Ban extends Command {
   constructor() {

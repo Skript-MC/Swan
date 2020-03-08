@@ -25,7 +25,7 @@ class Command {
      * Si la commande est activée
      * @type {boolean}
      */
-    this.enabled = true;
+    this.enabled = (this.config && typeof this.config.enabled !== 'undefined') ? this.config.enabled : true;
 
     /**
      * Si la commande est activée dans les channels d'aide

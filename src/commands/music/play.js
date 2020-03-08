@@ -1,10 +1,9 @@
-/* eslint-disable one-var-declaration-per-line */
-/* eslint-disable one-var */
+/* eslint-disable one-var-declaration-per-line, one-var */
 import he from 'he';
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
-import Command from '../../helpers/Command';
-import MusicBot from '../../helpers/Music';
+import Command from '../../structures/Command';
+import MusicBot from '../../structures/Music';
 import { config } from '../../main';
 import { padNumber } from '../../utils';
 
@@ -202,8 +201,6 @@ class Play extends Command {
       return message.channel.send(this.config.queueLimited);
     }
     queue.push(song);
-
-    // console.log('url', video.url);
 
     if (MusicBot.nowPlaying) return message.channel.send(this.config.songAdded.replace('%s', song.title).replace('%p', MusicBot.queue.length));
     return MusicBot.playSong(queue, message);

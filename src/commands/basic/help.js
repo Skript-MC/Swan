@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { commands, config } from '../../main';
-import { discordError } from '../../helpers/messages';
+import { discordError } from '../../structures/messages';
 import { jkDistance } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
@@ -183,7 +183,6 @@ class Help extends Command {
       channels.push(this.config.details.all);
     } else {
       for (const id of command.requiredChannels) {
-        console.log('DEBUG: Help -> sendDetails -> command.requiredChannels', command.requiredChannels);
         channels.push(message.guild.channels.cache.get(id).name);
       }
     }

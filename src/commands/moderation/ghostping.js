@@ -1,4 +1,4 @@
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 
 class GhostPing extends Command {
   constructor() {

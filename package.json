@@ -7,7 +7,7 @@
     "start": "babel-node ./src/main.js",
     "lint": "eslint .",
     "dev": "nodemon --exec babel-node ./src/main.js",
-    "make-docs": "nodemon --exec babel-node ./docs/docs.js"
+    "make-docs": "babel-node ./docs/docs.js"
   },
   "authors": [
     "noftaly (noftaly#0359)",
@@ -23,7 +23,7 @@
     "@discordjs/opus": "^0.1.0",
     "axios": "^0.19.2",
     "discord-ytdl-core": "0.0.0",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "^12.0.1",
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^2.7.0",
     "he": "^1.2.0",

@@ -1,4 +1,4 @@
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { commands } from '../../main';
 import Help from './help';
 

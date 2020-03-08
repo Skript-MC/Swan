@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { config } from '../../main';
-import MusicBot from '../../helpers/Music';
+import MusicBot from '../../structures/Music';
 import { secondToDuration } from '../../utils';
 
 class Queue extends Command {

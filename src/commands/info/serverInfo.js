@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
-import Command from '../../helpers/Command';
-import { discordError } from '../../helpers/messages';
+import Command from '../../structures/Command';
+import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 
 class ServerInfo extends Command {

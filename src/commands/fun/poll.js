@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
-import Command from '../../helpers/Command';
+import Command from '../../structures/Command';
 import { config } from '../../main';
-import { discordError, discordInfo } from '../../helpers/messages';
+import { discordError, discordInfo } from '../../structures/messages';
 import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {
@@ -50,7 +50,8 @@ class Poll extends Command {
     const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
     const wait = toTimestamp(duration);
-    if (wait < Date.now() || wait === -1) return message.channel.send(discordError(this.config.invalidDuration, message));
+
+    if (Date.now() + wait < Date.now()) return message.channel.send(discordError(this.config.invalidDuration, message));
     if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
     if (!question) return message.channel.send(discordError(this.config.invalidCmd, message));
     if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.send(discordError(this.config.quoteProblem, message));
@@ -69,7 +70,7 @@ class Poll extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL)
+      .setAuthor(`Vote de ${message.author.username}`, message.author.avatarURL())
       .addField('Question', question)
       .addField('Réponses possibles', possibleAnswers)
       .addField('Durée', `Ce vote dure : ${duration} (Finit ${end})`)

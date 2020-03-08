@@ -1,10 +1,9 @@
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable import/no-cycle */
+/* eslint-disable import/no-dynamic-require, import/no-cycle */
 import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
-import { success } from './helpers/messages';
+import { success } from './structures/messages';
 import { config, commands } from './main';
 
 require('dotenv').config();
@@ -110,21 +109,25 @@ export async function loadSkriptHubAPI() {
 }
 
 export async function loadSkripttoolsAddons() {
-  const addons = [];
+  let addons = [];
 
   const allAddons = await axios(config.apis.addons)
     .then(response => (response ? response.data.data : undefined))
     .catch(console.error);
   if (typeof allAddons === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.addons}`);
 
-  for (let addon of Object.keys(allAddons)) {
+  for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
+    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons,
+    // alors il vaut mieux l'éviter)
+    if (!versions) continue;
+
     const latest = versions[versions.length - 1];
-    addon = await axios(`${config.apis.addons}${latest}`)
+    addons.push(axios(`${config.apis.addons}${latest}`)
       .then(response => response.data.data)
-      .catch(console.error);
-    addons.push(addon);
+      .catch(console.error));
   }
+  addons = await Promise.all(addons);
   success('Skripttools : addons loaded!');
   return addons;
 }
@@ -146,8 +149,6 @@ export async function loadSkripttoolsSkript() {
 }
 
 export function loadDatabases() {
-  if (!fs.existsSync('../databases/ban-logs')) fs.mkdirSync('../databases/ban-logs');
-
   const databases = {};
   const databasesNames = [
     // Store all current sanctions
@@ -162,6 +163,10 @@ export function loadDatabases() {
     'commandsStats',
     // Store credits
     'credits',
+    // Miscellaneous
+    'miscellaneous',
+    // Jokes
+    'jokes',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
