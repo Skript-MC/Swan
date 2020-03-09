@@ -64,7 +64,7 @@ class Ranking extends Command {
 
         if (topJokes) {
           for (const [i, jokes] of topJokes.entries()) {
-            const joke = config.messages.commands.joke.jokes[joke.id];
+            const joke = config.messages.commands.joke.jokes[jokes.id];
             const split = joke.split(';');
             description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.dislikes.length} 🙄\n`;
           }
@@ -80,7 +80,7 @@ class Ranking extends Command {
 
         if (topJokes) {
           for (const [i, jokes] of topJokes.entries()) {
-            const joke = config.messages.commands.joke.jokes[joke.id];
+            const joke = config.messages.commands.joke.jokes[jokes.id];
             const split = joke.split(';');
             description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.views} 👀\n`;
           }

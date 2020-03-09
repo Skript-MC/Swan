@@ -1,6 +1,6 @@
+import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
-import { MessageEmbed } from 'discord.js';
 import { config } from '../../main';
 
 class EightBall extends Command {
