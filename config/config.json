@@ -722,7 +722,8 @@
                 "description": "Affiche la liste de toutes les musiques actuellement dans la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "removedSong": "Musique %s retirée de la queue !",
-                "cleared": "La queue a entièrement été vidée !"
+                "cleared": "La queue a entièrement été vidée !",
+                "startQueue": "Pour lancer la queue, faites simplement `.play`."
             },
             "shuffle": {
                 "help": "Mélanger la queue de lecture.",
