@@ -529,7 +529,8 @@
             "lyrics": {
                 "enabled": false,
                 "help": "Afficher les paroles d'une musique",
-                "description": "Afficher les paroles de la musique que le bot est en train de jouer."
+                "description": "Afficher les paroles de la musique que le bot est en train de jouer.",
+                "error": "Une erreur est survenue, désolé."
             },
             "status": {
                 "help": "Consulter ou définir le statut du bot.",
