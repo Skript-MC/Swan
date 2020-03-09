@@ -534,6 +534,8 @@
             "status": {
                 "help": "Consulter ou définir le statut du bot.",
                 "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
+                "turnon": ":white_check_mark: Vous avez bien activé le bot !",
+                "turnoff": ":white_check_mark: Vous avez bien désactivé le bot !",
                 "status": "Statut actuel du bot : %s"
             },
             "tagrole": {

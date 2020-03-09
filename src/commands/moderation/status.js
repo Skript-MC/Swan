@@ -14,11 +14,11 @@ class Status extends Command {
     if (args[0] === 'on') {
       client.config.activated = true;
       client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
-      message.channel.send(':white_check_mark: Vous avez bien activé le bot !');
+      message.channel.send(this.config.turnon);
     } else if (args[0] === 'off') {
       client.config.activated = false;
       client.user.setActivity(config.bot.activity_off, { type: 'WATCHING' });
-      message.channel.send(':white_check_mark: Vous avez bien désactivé le bot !');
+      message.channel.send(this.config.turnoff);
     } else {
       message.channel.send(this.config.status.replace('%s', client.config.activated ? 'Activé :white_check_mark:' : 'Désactivé :x:'));
     }
