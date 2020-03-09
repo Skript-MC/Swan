@@ -777,11 +777,12 @@
                 "help": "Affiche des informations sur la musique en cours.",
                 "description": "Affiche des informations sur la musique en cours.",
                 "successfullyReported": "Cette musique a bien été signalée. Les modérateurs pourront ajouter la musique ou la chaîne YouTube d'où elle provient à la liste noire. Si vous abusez de cette fonctionnalité, vous risquez d'être sanctionné.",
-                "noSongPlaying": "Aucun musique n'est en cours de lecture.",
+                "noSongPlaying": "Aucun musique n'est en cours de lecture et la queue est vide.",
                 "alreadyLiked": "Tu as déjà aimé cette musique !",
                 "alreadyDisliked": "Tu as déjà dislike cette musique !",
                 "liked": "Vous avez bien aimé cette musique ! :thumbsup:",
-                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:"
+                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:",
+                "alreadyBlacklist": ":warning: **Cette musique est déjà blacklist !**"
             },
             "loop": {
                 "help": "Changer le mode de répétition des musiques.",
