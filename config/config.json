@@ -350,6 +350,7 @@
                 "help": "Afficher des informations sur un joueur Minecraft.",
                 "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
+                "playerNotFound": "Impossible de trouver ce joueur, désolé.",
                 "invalidCmd": "Il faut que tu ajoutes un pseudo !",
                 "searching1": "Je vais chercher ça... (1/2)",
                 "searching2": "Je vais chercher ça... (2/2)",
