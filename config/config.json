@@ -482,7 +482,7 @@
             },
             "ranking": {
                 "help": "Consulter les classements.",
-                "description": "Consulter les classements des musiques les plus likées/dislikées/écoutées/vues.",
+                "description": "Consulter les classements des musiques/blagues les plus likées/dislikées/vues.",
                 "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`",
                 "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`"
             },
