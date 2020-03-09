@@ -22,9 +22,8 @@ class Joke extends Command {
     await jokeEmbed.react('🙄');
 
     jokeEmbed
-      .createReactionCollector((reaction, user) =>
-        (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') && !user.bot
-      ).on('collect', async (reaction) => {
+      .createReactionCollector((reaction, user) => (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') && !user.bot)
+      .on('collect', async (reaction) => {
         this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', message.author, id);
       });
   }
