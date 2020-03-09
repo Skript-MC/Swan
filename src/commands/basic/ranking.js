@@ -15,8 +15,8 @@ class Ranking extends Command {
   constructor() {
     super('Ranking');
     this.aliases = ['ranking', 'rank', 'ranks', 'classement'];
-    this.usage = 'ranking <music-likes/music-dislikes/music-views>';
-    this.examples = ['classement music-views', 'ranks music-dislikes'];
+    this.usage = 'ranking <music-likes/music-dislikes/music-views/joke-likes/joke-dislikes/joke-views>';
+    this.examples = ['classement music-views', 'ranks music-dislikes', 'ranking joke-likes'];
   }
 
   async execute(message, args) {
@@ -39,6 +39,55 @@ class Ranking extends Command {
       //   }
       //   break;
       // }
+      case 'blague-like':
+      case 'joke-like':
+      case 'blague-likes':
+      case 'joke-likes': {
+        type = 'blagues les plus likées';
+        const topJokes = await this.getTopLikedJoke(5);
+
+        if (topJokes) {
+          for (const [i, jokes] of topJokes.entries()) {
+            const joke = config.messages.commands.joke.jokes[jokes.id];
+            const split = joke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.likes.length} 😄\n`;
+          }
+        }
+        break;
+      }
+      case 'blague-dislike':
+      case 'joke-dislike':
+      case 'blague-dislikes':
+      case 'joke-dislikes': {
+        type = 'blagues les plus dislikées';
+        const topJokes = await this.getTopDislikedJoke(5);
+
+        if (topJokes) {
+          for (const [i, jokes] of topJokes.entries()) {
+            const joke = config.messages.commands.joke.jokes[joke.id];
+            const split = joke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.dislikes.length} 🙄\n`;
+          }
+        }
+        break;
+      }
+      case 'blague-view':
+      case 'joke-view':
+      case 'blague-views':
+      case 'joke-views': {
+        type = 'blagues les plus vues';
+        const topJokes = await this.getTopSeenJoke(5);
+
+        if (topJokes) {
+          for (const [i, jokes] of topJokes.entries()) {
+            const joke = config.messages.commands.joke.jokes[joke.id];
+            const split = joke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.views} 👀\n`;
+          }
+        }
+        break;
+      }
+
       case 'musique-like':
       case 'music-like':
       case 'musique-likes':
@@ -98,6 +147,36 @@ class Ranking extends Command {
       .setTimestamp();
 
     message.channel.send(embed);
+  }
+
+  async getTopLikedJoke(n) {
+    const docs = await db.jokes.find({}).catch(console.error);
+    const jokes = docs.filter(elt => elt.likes.length > 0);
+    if (!jokes) return null;
+
+    const sorted = jokes.sort((a, b) => b.likes.length - a.likes.length);
+    const top = sorted.slice(0, n);
+    return top;
+  }
+
+  async getTopDislikedJoke(n) {
+    const docs = await db.jokes.find({}).catch(console.error);
+    const jokes = docs.filter(elt => elt.dislikes.length > 0);
+    if (!jokes) return null;
+
+    const sorted = jokes.sort((a, b) => b.dislikes.length - a.dislikes.length);
+    const top = sorted.slice(0, n);
+    return top;
+  }
+
+  async getTopSeenJoke(n) {
+    const docs = await db.jokes.find({}).catch(console.error);
+    const jokes = docs.filter(elt => elt.views > 0);
+    if (!jokes) return null;
+
+    const sorted = jokes.sort((a, b) => b.views - a.views);
+    const top = sorted.slice(0, n);
+    return top;
   }
 
   async getTopCredit(n) {
