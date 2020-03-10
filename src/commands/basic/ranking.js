@@ -47,10 +47,10 @@ class Ranking extends Command {
         const topJokes = await this.getTopLikedJoke(5);
 
         if (topJokes) {
-          for (const [i, jokes] of topJokes.entries()) {
-            const joke = config.messages.commands.joke.jokes[jokes.id];
-            const split = joke.split(';');
-            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.likes.length} 😄\n`;
+          for (const [i, joke] of topJokes.entries()) {
+            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const split = currentJoke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${joke.likes.length} 😄\n`;
           }
         }
         break;
@@ -63,10 +63,10 @@ class Ranking extends Command {
         const topJokes = await this.getTopDislikedJoke(5);
 
         if (topJokes) {
-          for (const [i, jokes] of topJokes.entries()) {
-            const joke = config.messages.commands.joke.jokes[jokes.id];
-            const split = joke.split(';');
-            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.dislikes.length} 🙄\n`;
+          for (const [i, joke] of topJokes.entries()) {
+            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const split = currentJoke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${joke.dislikes.length} 🙄\n`;
           }
         }
         break;
@@ -79,10 +79,10 @@ class Ranking extends Command {
         const topJokes = await this.getTopSeenJoke(5);
 
         if (topJokes) {
-          for (const [i, jokes] of topJokes.entries()) {
-            const joke = config.messages.commands.joke.jokes[jokes.id];
-            const split = joke.split(';');
-            description += `    ${emojis[i]} \`${split[0]}\` : ${jokes.views} 👀\n`;
+          for (const [i, joke] of topJokes.entries()) {
+            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const split = currentJoke.split(';');
+            description += `    ${emojis[i]} \`${split[0]}\` : ${joke.views} 👀\n`;
           }
         }
         break;
