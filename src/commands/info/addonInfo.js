@@ -1,9 +1,8 @@
-/* eslint-disable curly, nonblock-statement-body-position */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
 import { SkripttoolsAddons, config } from '../../main';
-import { uncapitalize, jkDistance } from '../../utils';
+import { uncapitalize, jkDistance, convertFileSize } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -65,8 +64,7 @@ class AddonInfo extends Command {
       } else {
         let content = this.config.searchResults.replace('%r', results).replace('%s', myAddon);
 
-        for (let i = 0; i < matchingAddons.length; i++)
-          content += `\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`;
+        for (let i = 0; i < matchingAddons.length; i++) content += `\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`;
 
         if (results - 10 > 0) content += `\n...et ${results - 10} de plus...`;
         await msg.edit(content);
@@ -98,16 +96,6 @@ class AddonInfo extends Command {
   }
 
   async sendDetails(message, addon) {
-    let size;
-    let unit;
-    if (addon.bytes) {
-      size = addon.bytes / 1000000;
-      unit = 'Mo';
-      if (size < 1) {
-        size *= 1000;
-        unit = 'Ko';
-      }
-    }
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -119,7 +107,7 @@ class AddonInfo extends Command {
     if (addon.unmaintained) embed.addField(this.config.embed.unmaintained, this.config.embed.unmaintained_desc, true);
     if (addon.author) embed.addField(this.config.embed.author, addon.author, true);
     if (addon.version) embed.addField(this.config.embed.version, addon.version, true);
-    if (addon.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${addon.download}) ${size.toFixed(2)} ${unit}`, true);
+    if (addon.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${addon.download}) (${convertFileSize(addon.bytes)})`, true);
     if (addon.sourcecode) embed.addField(this.config.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
     if (addon.depend && addon.depend.depend) embed.addField(this.config.embed.depend, addon.depend.depend.join(', '), true);
     if (addon.depend && addon.depend.softdepend) embed.addField(this.config.embed.softdepend, addon.depend.softdepend.join(', '), true);

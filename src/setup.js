@@ -118,8 +118,7 @@ export async function loadSkripttoolsAddons() {
 
   for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
-    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons,
-    // alors il vaut mieux l'éviter)
+    // Cas rare (que 1 addon, mais ca lance une erreur et empêche de charger les autres addons, alors il vaut mieux l'éviter)
     if (!versions) continue;
 
     const latest = versions[versions.length - 1];
@@ -130,22 +129,6 @@ export async function loadSkripttoolsAddons() {
   addons = await Promise.all(addons);
   success('Skripttools : addons loaded!');
   return addons;
-}
-
-export async function loadSkripttoolsSkript() {
-  const data = await axios(config.apis.skript)
-    .then(response => (response ? response.data : undefined))
-    .catch(console.error);
-  if (typeof data === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.skript}`);
-
-  const latest = data.data[data.data.length - 1].replace(/\s/gimu, '+');
-
-  const infos = await axios(`${config.apis.skript}${latest}`)
-    .then(response => response.data)
-    .catch(console.error);
-
-  success('Skripttools : skript infos loaded!');
-  return infos;
 }
 
 export function loadDatabases() {
