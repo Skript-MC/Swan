@@ -49,7 +49,7 @@ class NowPlaying extends Command {
           if (MusicBot.nowPlaying) {
             playingEmbed.edit(await this.buildEmbed(message));
           } else {
-            playingEmbed.edit(discordError('Plus de musique en train de jouer ni de musique dans la queue !', message));
+            playingEmbed.edit(discordError(this.config.noSongPlaying, message));
           }
         }
       });
@@ -195,7 +195,7 @@ class NowPlaying extends Command {
 
   async blacklistMusic(users, music, logChannel) {
     const result = await db.musics.findOne({ blacklist: true, type: 'music', ytid: music.video.id }).catch(console.error);
-    if (result) return logChannel.send(':warning: **Cette musique est déjà blacklist !**');
+    if (result) return logChannel.send(this.config.alreadyBlacklist);
 
     MusicBot.blacklistedMusics.push(music.video.id);
     await db.musics.insert({
@@ -220,7 +220,7 @@ class NowPlaying extends Command {
 
   async blacklistChannel(users, music, logChannel) {
     const result = await db.musics.findOne({ blacklist: true, type: 'channel', ytid: music.video.channel.id }).catch(console.error);
-    if (result) return logChannel.send(':warning: **Cette chaîne est déjà blacklist !**');
+    if (result) return logChannel.send(this.config.alreadyBlacklist);
 
     MusicBot.blacklistedChannels.push(music.video.channel.id);
     await db.musics.insert({

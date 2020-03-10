@@ -44,7 +44,7 @@ class Queue extends Command {
         .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
       if (MusicBot.nowPlaying) embed.addField('En train de jouer :', `${MusicBot.loop === MusicBot.enums.MUSIC ? ':repeat: ' : ''}[${MusicBot.nowPlaying.title}](${MusicBot.nowPlaying.video.shortURL})`);
-      else embed.setDescription('Pour lancer la queue, faites simplement `.play`.');
+      else embed.setDescription(this.config.startQueue);
 
       let queue = [];
       for (let i = 0; i < MusicBot.queue.length; i++) {

@@ -226,7 +226,37 @@
             "8ball": {
                 "help": "Répond par Oui ou Non à une question que vous lui posez.",
                 "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%",
-                "noQuestion": "Vous devez ajouter une question !"
+                "noQuestion": "Vous devez ajouter une question !",
+                "affirmative": [
+                    "Oui.",
+                    "Oui !",
+                    "D'après moi, oui !",
+                    "Je le pense",
+                    "C'est une chose sûre !",
+                    "C'est certain.",
+                    "Sans aucun doute",
+                    "Il me semble...",
+                    "Pourquoi demander ? La réponse parait évidente ! Oui !",
+                    "ET C'EST UN OUI !",
+                    "Oui ! NAN J'AI PERDU :sob: Je suis vraiment nul au ni-oui ni-non :weary: ",
+                    "Affirmatif, chef.",
+                    "Positif."
+                ],
+                "negative": [
+                    "Non.",
+                    "MDR NON",
+                    "C'est un non.",
+                    "Mes sources me confirment que non.",
+                    "C'est mieux que tu ne sois pas au courant...",
+                    "Bien sur que non !",
+                    "Je ne suis pas sur de comprendre... Dans le doute je vais dire non.",
+                    "Question très compliquée... Mais je dirai non.",
+                    "Ou... Non ! C'est Non !",
+                    "Bien sur que non...",
+                    "Négatif",
+                    "Je répondrai par la négation. Rah chui trop fort à ni-oui ni-non ! Tu me battras jamais :wink:",
+                    "Sûrement pas."
+                ]
             },
             "errordetails": {
                 "help": "Permet de vous aider à régler les erreurs de vos scripts",
@@ -320,6 +350,7 @@
                 "help": "Afficher des informations sur un joueur Minecraft.",
                 "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
+                "playerNotFound": "Impossible de trouver ce joueur, désolé.",
                 "invalidCmd": "Il faut que tu ajoutes un pseudo !",
                 "searching1": "Je vais chercher ça... (1/2)",
                 "searching2": "Je vais chercher ça... (2/2)",
@@ -498,11 +529,14 @@
             "lyrics": {
                 "enabled": false,
                 "help": "Afficher les paroles d'une musique",
-                "description": "Afficher les paroles de la musique que le bot est en train de jouer."
+                "description": "Afficher les paroles de la musique que le bot est en train de jouer.",
+                "error": "Une erreur est survenue, désolé."
             },
             "status": {
                 "help": "Consulter ou définir le statut du bot.",
                 "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
+                "turnOn": ":white_check_mark: Vous avez bien activé le bot !",
+                "turnOff": ":white_check_mark: Vous avez bien désactivé le bot !",
                 "status": "Statut actuel du bot : %s"
             },
             "tagrole": {
@@ -688,7 +722,9 @@
                 "description": "Affiche la liste de toutes les musiques actuellement dans la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "removedSong": "Musique %s retirée de la queue !",
-                "cleared": "La queue a entièrement été vidée !"
+                "cleared": "La queue a entièrement été vidée !",
+                "startQueue": "Pour lancer la queue, faites simplement `.play`.",
+                "ask": "mélanger la queue"
             },
             "shuffle": {
                 "help": "Mélanger la queue de lecture.",
@@ -699,24 +735,28 @@
                 "help": "Pauser ou reprendre la lecture d'une musique.",
                 "description": "Pause ou reprend la lecture de la musique actuellement lue.",
                 "paused": ":pause_button: Musique mise en pause !",
-                "resumed": ":arrow_forward: Musique reprise !"
+                "resumed": ":arrow_forward: Musique reprise !",
+                "ask": "pause/reprendre la musique"
             },
             "leave": {
                 "help": "Déconnecter le bot du salon vocal.",
                 "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
-                "left": "Je suis bien parti du salon vocal ! À la prochaine. :wink:"
+                "left": "Je suis bien parti du salon vocal ! À la prochaine. :wink:",
+                "ask": "déconnecter le bot du canal vocal"
             },
             "stop": {
                 "help": "Déconnecter le bot du salon vocal.",
                 "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
-                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue."
+                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue.",
+                "ask": "arrêter la musique"
             },
             "skip": {
                 "help": "Passer une ou plusieurs musique.",
                 "description": "Passe une ou plusieurs musiques de la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "skippedOne": "La musique a bien été passée !",
-                "skippedSeveral": "J'ai passé %s musiques !"
+                "skippedSeveral": "J'ai passé %s musiques !",
+                "ask": "passer une/plusieurs musique(s)"
             },
             "volume": {
                 "help": "Modifier le volume de la musique.",
@@ -730,7 +770,8 @@
                 "description": "Modifie le gain de la musique.",
                 "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 1 et 40.",
                 "currentPower": "La puissance actuelle est à %d/40.",
-                "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture."
+                "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture.",
+                "ask": "changer la puissance des basses"
             },
             "join": {
                 "help": "Connecter le bot dans votre salon vocal.",
@@ -743,11 +784,12 @@
                 "help": "Affiche des informations sur la musique en cours.",
                 "description": "Affiche des informations sur la musique en cours.",
                 "successfullyReported": "Cette musique a bien été signalée. Les modérateurs pourront ajouter la musique ou la chaîne YouTube d'où elle provient à la liste noire. Si vous abusez de cette fonctionnalité, vous risquez d'être sanctionné.",
-                "noSongPlaying": "Aucun musique n'est en cours de lecture.",
+                "noSongPlaying": "Aucun musique n'est en cours de lecture et la queue est vide.",
                 "alreadyLiked": "Tu as déjà aimé cette musique !",
                 "alreadyDisliked": "Tu as déjà dislike cette musique !",
                 "liked": "Vous avez bien aimé cette musique ! :thumbsup:",
-                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:"
+                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:",
+                "alreadyBlacklist": ":warning: **Cette musique est déjà blacklist !**"
             },
             "loop": {
                 "help": "Changer le mode de répétition des musiques.",
