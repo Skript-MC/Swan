@@ -59,8 +59,7 @@ class PlayerInfos extends Command {
     } else {
       let i = 1;
       for (const pseudo of data) {
-        history += `${i} - \`${pseudo.name}\``;
-        if (pseudo.changedToAt) history += `(changé ${formatDate(pseudo.changedToAt)})`;
+        history += `${i} - \`${pseudo.name}\` ${pseudo.changedToAt ? `(changé ${formatDate(pseudo.changedToAt)})` : ''}`;
 
         history += '\n';
         i += 1;
