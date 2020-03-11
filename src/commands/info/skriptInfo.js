@@ -1,32 +1,41 @@
+import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordInfo } from '../../structures/messages';
-import { SkripttoolsSkript, config } from '../../main';
+import { convertFileSize } from '../../utils';
+import { config } from '../../main';
 
 class SkriptInfo extends Command {
   constructor() {
     super('Skript Info');
-    this.aliases = ['skriptinfo', 'skript-info', 'skript_info'];
+    this.aliases = ['skriptinfo', 'skript-info', 'skript_info', 'skriptinfos', 'skript-infos', 'skript_infos'];
     this.usage = 'skript-info';
     this.examples = ['skriptInfo'];
   }
 
   async execute(message, _args) {
-    const skriptInfos = await SkripttoolsSkript;
+    const options = { Accept: 'Accept: application/vnd.github.v3+json' };
+    const githubReleases = await axios(`${config.apis.github}/repos/SkriptLang/Skript/releases`, options)
+      .catch(console.error);
 
-    let size = -1;
-    if (skriptInfos.data.bytes) size = skriptInfos.data.bytes / 1000000;
+    const lastRelease = githubReleases.data[0];
+    const lastStableRelease = githubReleases.data.filter(elt => !elt.prerelease).shift();
+
+    let downloadDesc = `
+      [Dernière version : ${lastRelease.tag_name}](${lastRelease.html_url}) (${convertFileSize(lastRelease.assets[0].size)})`;
+
+    if (lastRelease !== lastStableRelease) {
+      downloadDesc += `\n
+        [Dernière version stable : ${lastStableRelease.tag_name}](${lastStableRelease.html_url}) (${convertFileSize(lastStableRelease.assets[0].size)})`;
+    }
+
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor('Informations sur Skript', 'attachment://logo.png')
+      .addField(this.config.embed.download, downloadDesc, true)
       .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
       .setTimestamp();
-
-    if (skriptInfos.data.author) embed.addField(this.config.embed.author, skriptInfos.data.author, true);
-    if (skriptInfos.data.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${skriptInfos.data.download}) ${size.toFixed(2)} Mo`, true);
-    if (skriptInfos.data.source) embed.addField(this.config.embed.sourcecode, `[Voir ici](${skriptInfos.data.source})`, true);
-    if (skriptInfos.data.version) embed.addField(this.config.embed.version, `${skriptInfos.data.version} (1.9 - 1.15)`, true);
 
     message.channel.send(embed);
     message.channel.send(discordInfo(this.config.embed.verInfo_desc, message));
