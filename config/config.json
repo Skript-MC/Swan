@@ -633,6 +633,14 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
+            "movemessage": {
+                "help": "Déplacer un message.",
+                "description": "Déplacer un message vers un salon défini par son identifiant.",
+                "invalidChannel": "Désolé, je n'ai pas pu trouver ce salon. Vérifie que tu l'aies correctement mentionné (#salon).",
+                "sameChannel": "Tu ne peux pas déplacer un message dans le même salon que celui-ci.",
+                "invalidMessage": "Désolé, je n'ai pas pu trouver ce message. Vérifie que tu aies correctement copié son identifiant.",
+                "restrictedChannel": "Désolé, tu ne peux pas exécuter cette commande ou déplacer ce message dans ce salon."
+            },
             "removemusicrestriction": {
                 "help": "Supprimer les restrictions musicales d'un membre.",
                 "description": "Rétabli à un membre l'accès aux commandes musicales.",
