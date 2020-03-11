@@ -175,7 +175,11 @@ export default async function messageHandler(message) {
           collector.stop();
           msg.delete();
           const index = reaction.emoji.name === '✅' ? 0 : reactions.indexOf(reaction.emoji.name);
-          if (canExecute(matches[index], message)) return matches[index].execute(message, args);
+          if (canExecute(matches[index], message)) {
+            // eslint-disable-next-line no-param-reassign
+            message.createdTimestamp = Date.now();
+            return matches[index].execute(message, args);
+          }
         });
       return;
     }

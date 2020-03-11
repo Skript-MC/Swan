@@ -36,7 +36,7 @@ class Lyrics extends Command {
       }).catch(err => console.error(err));
 
     if (apiResult === -1) return;
-    if (!apiResult) return message.channel.send(discordError('Une erreur est survenue, désolé.', message));
+    if (!apiResult) return message.channel.send(discordError(this.config.error, message));
 
     const lyrics = apiResult[0];
     const lyricsSplit = lyrics.lyrics.match(/(.|[\r\n]){1,1900}/g);

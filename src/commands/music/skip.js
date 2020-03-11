@@ -23,7 +23,7 @@ class Skip extends Command {
     }
     index--;
 
-    MusicBot.askPermission(this.skip, 'passer une/plusieurs musique(s)', message, index, this.config);
+    MusicBot.askPermission(this.skip, this.config.ask, message, index, this.config);
   }
 
   skip(message, index, cmdConfig) {

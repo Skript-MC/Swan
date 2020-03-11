@@ -48,7 +48,7 @@ class UserInfos extends Command {
       if (target.presence.activity.details) presence += `↳ ${target.presence.activity.details}\n`;
       if (target.presence.activity.party) presence += `↳ ${target.presence.activity.party}\n`;
       if (target.presence.activity.state) presence += `↳ ${target.presence.activity.state}\n`;
-      if (target.presence.activity.timestamps) presence += `↳ À commencé ${formatDate(target.presence.activity.timestamps.start)}\n`;
+      if (target.presence.activity.timestamps) presence += `↳ A commencé ${formatDate(target.presence.activity.timestamps.start)}\n`;
     }
 
     const embed = new MessageEmbed()

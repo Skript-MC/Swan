@@ -22,7 +22,7 @@ class Bassboost extends Command {
 
     if (isNaN(power) || power < 0 || power > 40) return message.channel.send(this.config.invalidPower);
 
-    MusicBot.askPermission(this.bassboost, 'changer la puissance des basses', message, power, this.config);
+    MusicBot.askPermission(this.bassboost, this.config.ask, message, power, this.config);
   }
 
   bassboost(message, arg, cmdConfig) {

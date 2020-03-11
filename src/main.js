@@ -3,7 +3,6 @@ import { loadBot,
   loadCommands,
   loadSkriptHubAPI,
   loadSkripttoolsAddons,
-  loadSkripttoolsSkript,
   loadDatabases,
   loadConfig } from './setup';
 import { success } from './structures/messages';
@@ -21,7 +20,6 @@ export const db = loadDatabases();
 export const client = loadBot();
 export const SkriptHubSyntaxes = loadSkriptHubAPI();
 export const SkripttoolsAddons = loadSkripttoolsAddons();
-export const SkripttoolsSkript = loadSkripttoolsSkript();
 
 client.on('ready', async () => {
   // Initializing the commands-stats database

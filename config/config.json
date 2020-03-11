@@ -60,7 +60,8 @@
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
         "skin": "http://cravatar.eu/helmavatar/",
-        "lyrics": "https://api.ksoft.si/lyrics/"
+        "lyrics": "https://api.ksoft.si/lyrics/",
+        "github": "https://api.github.com"
     },
 
     "miscellaneous": {
@@ -121,112 +122,102 @@
                 "similarity": 0.8,
                 "messages": {
                     "asktoask": {
-                        "templates": [
-                            "asktoask",
-                            "ask to ask"
-                        ],
+                        "templates": ["asktoask", "ask to ask"],
                         "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et si quelqu'un peut vous répondre, il vous répondra."
                     },
                     "helptemplate": {
-                        "templates": [
-                            "helptemplate",
-                            "help template"
-                        ],
+                        "templates": ["helptemplate", "help template"],
                         "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aidez au mieux:\n__Ma version de skript__ (`/ver skript`): <la version>\n__Ma version de serveur__ (`/ver`): <la version>\n__Mes addons__ (`/plugins`):  <les plugins>\n__Mon problème__: <decrivez votre problème clairement>\n__Mon code:__\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
                     },
                     "internalerror": {
-                        "templates": [
-                            "internal",
-                            "internalerror",
-                            "internal error"
-                        ],
+                        "templates": ["internal", "internalerror", "internal error"],
                         "content": "Une internal error veut simplement dire qu'il y a eu une erreur java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
                     },
                     "deprecated": {
-                        "templates": [
-                            "deprecated",
-                            "oldaddon",
-                            "old addon"
-                        ],
+                        "templates": ["deprecated", "oldaddon", "old addon"],
                         "content": "Les addons suivants sont vieux, et sont abandonnés par leur auteur. Cela veut dire qu'il n'y a **plus de mises à jour, qu'ils sont donc bugués et qu'ils peuvent être nuisibles** à votre serveur. Merci de ne pas les utiliser. Voici la liste des principaux; pour savoir si un certain addon est déprecié, faites `.addon-info <addon>` :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
                     },
                     "gui": {
-                        "templates": [
-                            "gui"
-                        ],
-                        "shortContent": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
-                        "longContent1": "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
-                        "longContent2": "Il y a aussi la possibilité de gérer rapidement les types de clic. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs clics différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clic droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clic gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous clicrez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complets et moins bugués.\n\nPar ailleurs, dans certaines versions assez récente de Minecraft 1.15, peut être même 1.14 dans certains cas, TuSKe ne fonctionne pas. Étant donné qu'il n'est pas maintenu, il est déprécié *dans ces versions*. Ce n'est en aucun cas une excuse pour repasser à SkQuery, mais plutôt pour utiliser les GUIs vanilla de Skript qui sont peut-être un peu plus longs à apprendre mais ne nécéssitent pas d'addon, ne présentent aucun bug et sont tout aussi efficaces."
+                        "templates": ["gui"],
+                        "content": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
+                        "pvContent": [
+                            "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
+                            "Il y a aussi la possibilité de gérer rapidement les types de clic. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs clics différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clic droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clic gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous clicrez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complets et moins bugués.\n\nPar ailleurs, dans certaines versions assez récente de Minecraft 1.15, peut être même 1.14 dans certains cas, TuSKe ne fonctionne pas. Étant donné qu'il n'est pas maintenu, il est déprécié *dans ces versions*. Ce n'est en aucun cas une excuse pour repasser à SkQuery, mais plutôt pour utiliser les GUIs vanilla de Skript qui sont peut-être un peu plus longs à apprendre mais ne nécéssitent pas d'addon, ne présentent aucun bug et sont tout aussi efficaces."
+                        ]
                     },
                     "everyloop": {
-                        "templates": [
-                            "everyloop",
-                            "every loop"
-                        ],
+                        "templates": ["everyloop", "every loop"],
                         "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que tous les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveur ? Si vous êtes 4 ça va, mais si vous êtes une trentaine, une cinquantaine ? UNE CENTAINE ? Non, ça fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative à votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt de regarder tous les joueurs tous les X temps, chaque joueur à sa boucle qui se rafraîchit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
                     },
                     "longcode": {
-                        "templates": [
-                            "longcode",
-                            "long code"
-                        ],
+                        "templates": ["longcode", "long code"],
                         "content": "Pour poster vos codes longs, il est conseillé d'utiliser un de ces sites : <https://hastebin.com>, <https://pastebin.com>, <https://gist.github.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
                     },
                     "version": {
-                        "templates": [
-                            "ver",
-                            "version"
-                        ],
+                        "templates": ["ver", "version"],
                         "content": "Pour connaître la version de votre serveur, utilisez /version ou /ver. Pour connaître la version d'un plugin, utilisez `/version <nom du plugin>` ou `/ver <nom du plugin>`."
                     },
                     "list": {
-                        "templates": [
-                            "list",
-                            "liste"
-                        ],
+                        "templates": ["list", "liste"],
                         "content": "Il est plus que fortement conseillé d'utiliser des variables \"listes\" dans vos codes, plutôt que de simples variables à point (`.`). Les raisons sont multiples : convention, optimisation, facilité de certaines tâches... Pour en savoir plus, faites .auto list-pv",
-                        "pvContent": "Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coup avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%} Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est-à-dire que plutôt d'avoir une variable par joueur, il y a une variable, qui stocke tous les joueurs. Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simples variables même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."
+                        "pvContent": ["Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coup avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%} Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est-à-dire que plutôt d'avoir une variable par joueur, il y a une variable, qui stocke tous les joueurs. Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simples variables même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."]
                     },
                     "uselesscommand": {
-                        "templates": [
-                            "§",
-                            "uselesscommand",
-                            "useless command",
-                            "commandfunction",
-                            "command function"
-                        ],
+                        "templates": ["§", "uselesscommand", "useless command", "commandfunction", "command function"],
                         "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
                     },
                     "1.8": {
-                        "templates": [
-                            "1.8",
-                            "1.8.x",
-                            "1.8.X"
-                        ],
+                        "templates": ["1.8", "1.8.x", "1.8.X"],
                         "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
                     },
                     "contains": {
-                        "templates": [
-                            "contain",
-                            "contains"
-                        ],
-                        "content": "Il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`. Ces problèmes ont déjà été report sur Github (<https://github.com/SkriptLang/Skript/issues/2393>), et les développeurs de Skript sont en train d'essayer de le régler."
+                        "templates": ["contain", "contains"],
+                        "content": "Avant la version 2.5 de Skript, il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`."
                     },
                     "skellett1.14": {
-                        "templates": [
-                            "skellett14",
-                            "skellett1.14",
-                            "skellett 14",
-                            "skellett 1.14"
-                        ],
+                        "templates": ["skellett14", "skellett1.14", "skellett 14", "skellett 1.14"],
                         "content": "Pour faire fonctionner Skellett en 1.14, il faut procéder de cette façon :\nInstalle Skellet et reload ton serveur pour avoir les fichiers. \nEnsuite va dans le dossier Skellett, puis ouvre SyntaxToggles.yml.\nFait CTRL + F et recherche \"Packets\".\nChange `true` à `false`\nRedémarre ton serveur."
+                    },
+                    "paperspigot": {
+                        "templates": ["paperspigot", "paper", "spigot"],
+                        "content": "Il est recommandé d'utiliser **PaperSpigot** plutôt que Spigot, pour plusieurs raisons. Avant tout sachez que ce n'est qu'une fork (une reprise) de Spigot, donc il fonctionnera très bien avec tous vos plugins actuels, pas besoin de les changer ou de les reconfigurés. Ensuite il est très souvent, voire même plus souvent MàJ que Spigot, avec des bugfixes et des améliorations. Voici pourquoi vous devrez le préférer :\n- PaperSpigot est plus performant que Spigot\n- Si vous êtes développeur Java, il vous permettra d'accéder à plus de fonctionnalités, car son API est plus complète.\n- Et justement, les développeurs de Skript s'en servent, donc si vous utiliser PaperSpigot, vous aurez accès à encore plus de syntaxe Skript.\n\nVous pouvez le télécharger ici : <https://papermc.io/downloads>"
                     }
                 }
             },
             "8ball": {
                 "help": "Répond par Oui ou Non à une question que vous lui posez.",
                 "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%",
-                "noQuestion": "Vous devez ajouter une question !"
+                "noQuestion": "Vous devez ajouter une question !",
+                "affirmative": [
+                    "Oui.",
+                    "Oui !",
+                    "D'après moi, oui !",
+                    "Je le pense",
+                    "C'est une chose sûre !",
+                    "C'est certain.",
+                    "Sans aucun doute",
+                    "Il me semble...",
+                    "Pourquoi demander ? La réponse parait évidente ! Oui !",
+                    "ET C'EST UN OUI !",
+                    "Oui ! NAN J'AI PERDU :sob: Je suis vraiment nul au ni-oui ni-non :weary: ",
+                    "Affirmatif, chef.",
+                    "Positif."
+                ],
+                "negative": [
+                    "Non.",
+                    "MDR NON",
+                    "C'est un non.",
+                    "Mes sources me confirment que non.",
+                    "C'est mieux que tu ne sois pas au courant...",
+                    "Bien sur que non !",
+                    "Je ne suis pas sur de comprendre... Dans le doute je vais dire non.",
+                    "Question très compliquée... Mais je dirai non.",
+                    "Ou... Non ! C'est Non !",
+                    "Bien sur que non...",
+                    "Négatif",
+                    "Je répondrai par la négation. Rah chui trop fort à ni-oui ni-non ! Tu me battras jamais :wink:",
+                    "Sûrement pas."
+                ]
             },
             "errordetails": {
                 "help": "Permet de vous aider à régler les erreurs de vos scripts",
@@ -320,6 +311,7 @@
                 "help": "Afficher des informations sur un joueur Minecraft.",
                 "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
+                "playerNotFound": "Impossible de trouver ce joueur, désolé.",
                 "invalidCmd": "Il faut que tu ajoutes un pseudo !",
                 "searching1": "Je vais chercher ça... (1/2)",
                 "searching2": "Je vais chercher ça... (2/2)",
@@ -482,9 +474,9 @@
             },
             "ranking": {
                 "help": "Consulter les classements.",
-                "description": "Consulter les classements des musiques les plus likées/dislikées/écoutées.",
-                "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`",
-                "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views`"
+                "description": "Consulter les classements des musiques/blagues les plus likées/dislikées/vues.",
+                "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`",
+                "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`"
             },
             "credits": {
                 "help": "Consulter le nombre de crédits qu'on a.",
@@ -498,11 +490,14 @@
             "lyrics": {
                 "enabled": false,
                 "help": "Afficher les paroles d'une musique",
-                "description": "Afficher les paroles de la musique que le bot est en train de jouer."
+                "description": "Afficher les paroles de la musique que le bot est en train de jouer.",
+                "error": "Une erreur est survenue, désolé."
             },
             "status": {
                 "help": "Consulter ou définir le statut du bot.",
                 "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
+                "turnOn": ":white_check_mark: Vous avez bien activé le bot !",
+                "turnOff": ":white_check_mark: Vous avez bien désactivé le bot !",
                 "status": "Statut actuel du bot : %s"
             },
             "tagrole": {
@@ -560,7 +555,7 @@
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.12 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.13 :\nSkript : 2.4.1 ou 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
                     ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.14 :\nSkript : 2.4.1\nAddons :\nListe à venir.",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.14 :\nSkript : 2.4.1 (ou dernière version Skript 2.5-beta)\nAddons :\nListe à venir."
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.15 :\nSkript : 2.4.1 (ou dernière version Skript 2.5-beta)\nAddons :\nListe à venir."
                 ]
             },
             "ban": {
@@ -688,7 +683,9 @@
                 "description": "Affiche la liste de toutes les musiques actuellement dans la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "removedSong": "Musique %s retirée de la queue !",
-                "cleared": "La queue a entièrement été vidée !"
+                "cleared": "La queue a entièrement été vidée !",
+                "startQueue": "Pour lancer la queue, faites simplement `.play`.",
+                "ask": "mélanger la queue"
             },
             "shuffle": {
                 "help": "Mélanger la queue de lecture.",
@@ -699,24 +696,28 @@
                 "help": "Pauser ou reprendre la lecture d'une musique.",
                 "description": "Pause ou reprend la lecture de la musique actuellement lue.",
                 "paused": ":pause_button: Musique mise en pause !",
-                "resumed": ":arrow_forward: Musique reprise !"
+                "resumed": ":arrow_forward: Musique reprise !",
+                "ask": "pause/reprendre la musique"
             },
             "leave": {
                 "help": "Déconnecter le bot du salon vocal.",
                 "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
-                "left": "Je suis bien parti du salon vocal ! À la prochaine. :wink:"
+                "left": "Je suis bien parti du salon vocal ! À la prochaine. :wink:",
+                "ask": "déconnecter le bot du canal vocal"
             },
             "stop": {
                 "help": "Déconnecter le bot du salon vocal.",
                 "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
-                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue."
+                "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue.",
+                "ask": "arrêter la musique"
             },
             "skip": {
                 "help": "Passer une ou plusieurs musique.",
                 "description": "Passe une ou plusieurs musiques de la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "skippedOne": "La musique a bien été passée !",
-                "skippedSeveral": "J'ai passé %s musiques !"
+                "skippedSeveral": "J'ai passé %s musiques !",
+                "ask": "passer une/plusieurs musique(s)"
             },
             "volume": {
                 "help": "Modifier le volume de la musique.",
@@ -730,7 +731,8 @@
                 "description": "Modifie le gain de la musique.",
                 "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 1 et 40.",
                 "currentPower": "La puissance actuelle est à %d/40.",
-                "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture."
+                "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture.",
+                "ask": "changer la puissance des basses"
             },
             "join": {
                 "help": "Connecter le bot dans votre salon vocal.",
@@ -743,11 +745,12 @@
                 "help": "Affiche des informations sur la musique en cours.",
                 "description": "Affiche des informations sur la musique en cours.",
                 "successfullyReported": "Cette musique a bien été signalée. Les modérateurs pourront ajouter la musique ou la chaîne YouTube d'où elle provient à la liste noire. Si vous abusez de cette fonctionnalité, vous risquez d'être sanctionné.",
-                "noSongPlaying": "Aucun musique n'est en cours de lecture.",
+                "noSongPlaying": "Aucun musique n'est en cours de lecture et la queue est vide.",
                 "alreadyLiked": "Tu as déjà aimé cette musique !",
                 "alreadyDisliked": "Tu as déjà dislike cette musique !",
                 "liked": "Vous avez bien aimé cette musique ! :thumbsup:",
-                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:"
+                "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:",
+                "alreadyBlacklist": ":warning: **Cette musique est déjà blacklist !**"
             },
             "loop": {
                 "help": "Changer le mode de répétition des musiques.",
