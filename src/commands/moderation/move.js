@@ -19,7 +19,7 @@ class Move extends Command {
     if (!args[0] || !targetedChannel) return message.channel.send(discordError(this.config.invalidChannel, message));
     if (targetedChannel.id === message.channel.id) return message.channel.send(discordError(this.config.sameChannel, message));
     const helpChannels = await config.channels.helpSkript.concat(config.channels.helpOther);
-    if (!helpChannels.includes(message.channel.id)) return message.channel.send(discordError(this.config.restrictedChannel, message));
+    if (!helpChannels.includes(message.channel.id) || !helpChannels.includes(targetedChannel.id)) return message.channel.send(discordError(this.config.restrictedChannel, message));
     const targetedMessage = await message.channel.messages.fetch(args[1]).catch(console.error);
     if (!args[1] || !targetedMessage) return message.channel.send(discordError(this.config.invalidMessage, message));
 
