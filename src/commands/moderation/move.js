@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError, discordInfo } from '../../structures/messages';
+import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 
 class Move extends Command {
@@ -24,7 +24,6 @@ class Move extends Command {
     // On déplace le message dans le salon demandé en supprimant l'ancien (ainsi que l'exécuteur de la commande).
     message.delete();
     targetedMessage.delete();
-    message.channel.send(`**`);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
