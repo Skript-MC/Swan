@@ -9,9 +9,7 @@ class Move extends Command {
     this.aliases = ['move'];
     this.usage = 'move <@mention salon> <ID message>';
     this.examples = ['move #skript-2 687032391075889161'];
-    this.permissions = ['Staff']; // Fonctionne
-    this.permissions = ['ma']; // Ne fonctionne pas
-    this.permissions = ['MA']; // Ne fonctionne pas
+    this.permissions = ['Staff'];
     this.enabledInHelpChannels = true;
   }
 
