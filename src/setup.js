@@ -23,32 +23,32 @@ export function loadConfig() {
   const conf = require('../config/config.json'); // eslint-disable-line global-require
   const ids = process.env;
 
-  conf.bot.id = ids.bot;
-  conf.bot.guild = ids.guild;
-  conf.bot.defaultChannels = ids.defaultChannels ? ids.defaultChannels.split(',') : [];
-  conf.bot.forbiddenChannels = ids.forbiddenChannels ? ids.forbiddenChannels.split(',') : [];
+  conf.bot.id = ids.BOT;
+  conf.bot.guild = ids.GUILD;
+  conf.bot.defaultChannels = ids.DEFAULT_CHANNELS ? ids.DEFAULT_CHANNELS.split(',') : [];
+  conf.bot.forbiddenChannels = ids.FORBIDDEN_CHANNELS ? ids.FORBIDDEN_CHANNELS.split(',') : [];
   conf.channels = {
-    helpSkript: ids.helpSkript ? ids.helpSkript.split(',') : [],
-    helpOther: ids.helpOther ? ids.helpOther.split(',') : [],
-    snippet: ids.snippet,
-    idea: ids.idea,
-    suggestion: ids.suggestion,
-    reunion: ids.reunion,
-    main: ids.main,
-    logs: ids.logs,
-    bot: ids.bot,
+    helpSkript: ids.HELP_SKRIPT ? ids.HELP_SKRIPT.split(',') : [],
+    helpOther: ids.HELP_OTHER ? ids.HELP_OTHER.split(',') : [],
+    snippet: ids.SNIPPET,
+    idea: ids.IDEA,
+    suggestion: ids.SUGGESTION,
+    reunion: ids.REUNION,
+    main: ids.MAIN,
+    logs: ids.LOGS,
+    bot: ids.BOT_CHANNEL,
   };
   conf.roles = {
-    owner: ids.owner,
-    forumMod: ids.forumMod,
-    staff: ids.staff,
-    ma: ids.ma,
-    everyone: ids.everyone,
-    nitrobooster: ids.nitrobooster,
+    owner: ids.OWNER,
+    forumMod: ids.FORUM_MOD,
+    staff: ids.STAFF,
+    ma: ids.MA,
+    everyone: ids.EVERYONE,
+    nitrobooster: ids.NITROBOOSTER,
   };
-  conf.moderation.logCategory = ids.logCategory;
-  conf.music.minRoleToClearQueue = ids.minRoleToClearQueue;
-  conf.music.restrictedVocal = ids.restrictedVocal ? ids.restrictedVocal.split(',') : [];
+  conf.moderation.logCategory = ids.LOG_CATEGORY;
+  conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
+  conf.music.restrictedVocal = ids.RESTRICTER_VOCAL ? ids.RESTRICTER_VOCAL.split(',') : [];
 
   return conf;
 }
