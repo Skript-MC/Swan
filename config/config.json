@@ -640,6 +640,7 @@
                 "sameChannel": "Ce message se trouve déjà dans ce salon, tu ne peux pas le déplacer !",
                 "invalidMessage": "Désolé, je n'ai pas pu trouver ce message. Vérifie que tu aies correctement copié son identifiant.",
                 "restrictedChannel": "Désolé, tu ne peux pas exécuter cette commande ou déplacer ce message dans ce salon.",
+                "targetedUserTooPowerful": "Désolé, tu ne peux pas déplacer le message de cet utilisateur.",
                 "successfullyMoved": ":twisted_rightwards_arrows: **%a, ton message a été déplacé vers %s.**\n\n*Ce salon est sûrement déjà occupé par une autre demande, **%t** a déplacé ton message dans un salon libre ! :smile:*"
             },
             "removemusicrestriction": {
