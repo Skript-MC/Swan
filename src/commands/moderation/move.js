@@ -14,16 +14,23 @@ class Move extends Command {
   }
 
   async execute(message, args) {
-    // On récupère le salon, vérifie qu'il existe et qu'il n'est pas le même avant de faire une requête à l'API Discord.
+    // On récupère le salon, vérifie qu'il existe, qu'il est autorisé et qu'il n'est pas le même avant de faire une requête à l'API Discord.
     const targetedChannel = message.mentions.channels.first();
     if (!args[0] || !targetedChannel) return message.channel.send(discordError(this.config.invalidChannel, message));
     if (targetedChannel.id === message.channel.id) return message.channel.send(discordError(this.config.sameChannel, message));
-    const helpChannels = await config.channels.helpSkript.concat(config.channels.helpOther);
+    const helpChannels = [
+      ...config.channels.helpSkript,
+      ...config.channels.helpOther,
+    ];
     if (!helpChannels.includes(message.channel.id) || !helpChannels.includes(targetedChannel.id)) return message.channel.send(discordError(this.config.restrictedChannel, message));
+
+    // C'est bon ! On envoie la requête à l'API Discord et on vérifie s'il renvoie un message existant.
+    // On vérifie ensuite si le déplacement n'est pas trop puissant (rôle targetedMessage >= exécuteur).
     const targetedMessage = await message.channel.messages.fetch(args[1]).catch(console.error);
     if (!args[1] || !targetedMessage) return message.channel.send(discordError(this.config.invalidMessage, message));
+    if (targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) return message.channel.send(discordError(this.config.targetedUserTooPowerful, message));
 
-    // On déplace le message dans le salon demandé en supprimant l'ancien (ainsi que celui de l'exécuteur de la commande).
+    // On a tout ! On déplace le message dans le salon demandé en supprimant l'ancien (ainsi que celui de l'exécuteur de la commande).
     message.delete();
     targetedMessage.delete();
     const successMessage = this.config.successfullyMoved
@@ -38,6 +45,8 @@ class Move extends Command {
       .setFooter(`Déplacé par ${message.member.nickname || message.author.username}`)
       .setTimestamp();
     const moveEmbed = await targetedChannel.send(embed);
+
+    // On crée un collecteur afin de pouvoir supprimer le message (exécuteur de la command .move).
     const collector = moveEmbed
       .createReactionCollector((reaction, user) => user.id === message.author.id
         && reaction.emoji.name === '🗑️'
