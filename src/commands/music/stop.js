@@ -22,7 +22,7 @@ class Stop extends Command {
     // if (MusicBot.loop === MusicBot.enums.MUSIC) MusicBot.loop = MusicBot.enums.NONE;
     if (MusicBot.nowPlaying) {
       MusicBot.endReason = 'stop';
-      MusicBot.dispatcher.end();
+      MusicBot.dispatcher.destroy();
     }
 
     return message.channel.send(cmdConfig.stopped);
