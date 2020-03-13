@@ -22,21 +22,6 @@
         "hardban": "#000000"
     },
 
-    "credits": {
-        "addReaction": 1,
-        "receiveReaction": 3,
-        "sendSnippet": 5,
-        "sendIdea": 3,
-        "sendSuggestion": 3,
-        "sendInHelp": 2,
-        "sendMessageOther": 1,
-        "bonuses": {
-            "containsCode": 1,
-            "messageLength": true,
-            "nitroBooster": 2
-        }
-    },
-
     "moderation": {
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -477,11 +462,6 @@
                 "description": "Consulter les classements des musiques/blagues les plus likées/dislikées/vues.",
                 "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`",
                 "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`"
-            },
-            "credits": {
-                "help": "Consulter le nombre de crédits qu'on a.",
-                "description": "Consulter son solde de crédit ou celui d'un autre membre.",
-                "creditsAmount": "%s a %d crédits."
             },
             "discover": {
                 "help": "Découvrir une commande du bot",
