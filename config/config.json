@@ -519,8 +519,8 @@
             "ping": {
                 "help": "Permet de savoir le ping du bot.",
                 "description": "Permet de savoir la latence entre vous et le bot, et le bot et l'API Discord.",
-                "firstMessage": "Pong !",
-                "secondMessage": "Pong ! La latence du bot est de %sms. La latence avec l'API Discord est de %xms."
+                "firstMessage": ":incoming_envelope: Calcul en cours ...",
+                "secondMessage": ":hourglass: Swan: %sms\n\n:globe_with_meridians: API Discord: %xms"
             },
             "mathematiques": {
                 "help": "Permet de tester la mathématique de Skript.",
