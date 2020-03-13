@@ -144,8 +144,6 @@ export function loadDatabases() {
     'musicsStats',
     // Store all commands stats
     'commandsStats',
-    // Store credits
-    'credits',
     // Miscellaneous
     'miscellaneous',
     // Jokes
