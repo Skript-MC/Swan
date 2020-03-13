@@ -22,7 +22,7 @@ class Leave extends Command {
     // if (MusicBot.loop === MusicBot.enums.MUSIC) MusicBot.loop = MusicBot.enums.NONE;
     if (MusicBot.nowPlaying) {
       MusicBot.endReason = 'leave';
-      MusicBot.dispatcher.end();
+      MusicBot.dispatcher.destroy();
     }
     message.guild.voice.connection.disconnect();
     message.channel.send(cmdConfig.left);

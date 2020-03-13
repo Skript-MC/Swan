@@ -37,7 +37,7 @@ class Skip extends Command {
     if (MusicBot.loop === MusicBot.enums.MUSIC) MusicBot.loop = MusicBot.enums.NONE;
     MusicBot.endReason = 'skip';
     // On a juste à arrêter le bot, car comme il y en a encore dans la queue il va reprendre tout seul
-    MusicBot.dispatcher.end();
+    MusicBot.dispatcher.destroy();
   }
 }
 
