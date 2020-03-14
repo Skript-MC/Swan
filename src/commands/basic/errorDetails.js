@@ -25,7 +25,7 @@ class ErrorDetails extends Command {
     else if (arg.match(/There's no player in/gimu)) message.channel.send(this.config.error.noplayer);
     else if (arg.match(/code has to be put in triggers/gimu)) message.channel.send(this.config.error.codeintriggers);
     else if (arg.match(/because it's a single value/gimu)) message.channel.send(this.config.error.cantloopsinglevalue);
-    else message.channel.send(discordError(this.config.error.other, message));
+    else message.channel.send(discordError(this.config.error.unknown, message));
   }
 }
 

@@ -13,7 +13,7 @@ class AddonPack extends Command {
       // De la 1.9 à la 1.15 inclus
       const match = /1\.(9|1[0-5])(\.\d*)?/gimu.exec(args[0]);
       try {
-        message.channel.send(this.config.messages[match[1] - 8]);
+        message.channel.send(this.config.messages[match[1] - 9]);
       } catch (e) {
         message.channel.send(this.config.invalidVersion);
       }

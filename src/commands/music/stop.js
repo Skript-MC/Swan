@@ -15,7 +15,7 @@ class Stop extends Command {
     const validate = MusicBot.canUseCommand(message, { songPlaying: true, notRestricted: true });
     if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
-    MusicBot.askPermission(this.stop, 'arrêter la musique', message, _args, this.config);
+    MusicBot.askPermission(this.stop, this.config.ask, message, _args, this.config);
   }
 
   stop(message, _args, cmdConfig) {

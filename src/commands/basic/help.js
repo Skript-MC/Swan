@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { commands, config } from '../../main';
 import { discordError } from '../../structures/messages';
-import { jkDistance } from '../../utils';
+import { jkDistance, selectorMessage } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -123,40 +123,19 @@ class Help extends Command {
       } else if (results === 1) {
         this.sendDetails(message, cmds[0]);
       } else {
-        let selectorMsg = await message.channel.send(this.config.searchResults.replace('%r', results).replace('%s', args.join(' ')));
-        const max = results > 10 ? 10 : results;
-        for (let i = 0; i < max; i++) {
-          selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n${reactionsNumbers[i]} "${cmds[i].name}" (\`.${cmds[i].usage}\`)`);
-          await selectorMsg.react(reactionsNumbers[i]);
-        }
-        await selectorMsg.react('❌');
-        if (results - 10 > 0) selectorMsg = await selectorMsg.edit(`${selectorMsg.content}\n...et ${results - 10} de plus...`);
-
-        const collectorNumbers = selectorMsg
-          .createReactionCollector((reaction, user) => !user.bot
-            && user.id === message.author.id
-            && reactionsNumbers.includes(reaction.emoji.name))
-          .once('collect', (reaction) => {
-            selectorMsg.delete();
-            this.sendDetails(message, cmds[reactionsNumbers.indexOf(reaction.emoji.name)]);
-            collectorNumbers.stop();
-          });
-
-        const collectorStop = selectorMsg
-          .createReactionCollector((reaction, user) => !user.bot
-            && user.id === message.author.id
-            && reaction.emoji.name === '❌')
-          .once('collect', () => {
-            message.delete();
-            selectorMsg.delete();
-            collectorNumbers.stop();
-            collectorStop.stop();
-          });
+        selectorMessage(
+          cmds,
+          args.join(' '),
+          message,
+          this.config,
+          cmd => `"${cmd.name}" (\`.${cmd.usage}\`)`,
+          this.sendDetails,
+        );
       }
     }
   }
 
-  async sendDetails(message, command) {
+  async sendDetails(message, command, thisConfig = this.config) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -170,7 +149,7 @@ class Help extends Command {
     let ex = '';
     for (const e of command.examples) ex = `${ex} | \`${config.bot.prefix}${e}\``;
     ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace à la fin.
-    ex = ex === '' ? this.config.details.noExample : `${ex}`;
+    ex = ex === '' ? thisConfig.details.noExample : `${ex}`;
 
 
     let desc = command.description;
@@ -180,7 +159,7 @@ class Help extends Command {
 
     const channels = [];
     if (command.requiredChannels.length === 0) {
-      channels.push(this.config.details.all);
+      channels.push(thisConfig.details.all);
     } else {
       for (const id of command.requiredChannels) {
         channels.push(message.guild.channels.cache.get(id).name);
@@ -190,7 +169,7 @@ class Help extends Command {
       channels.push("sauf les salons d'aide");
     }
 
-    embed.addField(`:star: **${command.name}**`, `${this.config.details.description} ${desc}\n${this.config.details.category} ${command.category}\n${this.config.details.utilisation} ${config.bot.prefix}${command.usage}\n${this.config.details.examples} ${ex}\n${this.config.details.usable} ${perms}\n${this.config.details.channels} ${channels.join(', ')}\n‌‌ `, true);
+    embed.addField(`:star: **${command.name}**`, `${thisConfig.details.description} ${desc}\n${thisConfig.details.category} ${command.category}\n${thisConfig.details.utilisation} ${config.bot.prefix}${command.usage}\n${thisConfig.details.examples} ${ex}\n${thisConfig.details.usable} ${perms}\n${thisConfig.details.channels} ${channels.join(', ')}\n‌‌ `, true);
 
     message.channel.send(embed);
   }
