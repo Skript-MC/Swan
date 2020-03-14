@@ -22,21 +22,6 @@
         "hardban": "#000000"
     },
 
-    "credits": {
-        "addReaction": 1,
-        "receiveReaction": 3,
-        "sendSnippet": 5,
-        "sendIdea": 3,
-        "sendSuggestion": 3,
-        "sendInHelp": 2,
-        "sendMessageOther": 1,
-        "bonuses": {
-            "containsCode": 1,
-            "messageLength": true,
-            "nitroBooster": 2
-        }
-    },
-
     "moderation": {
         "banRole": "Sous Fifre",
         "muteRole": "Bâillonné - Aide Skript",
@@ -76,22 +61,20 @@
             "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Calme-toi, petit garnement. Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (Vengelis ou Rémi) afin d'améliorer la documentation.",
-            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Votre message ne contient aucun bloc de code... Comment voulez-vous partager votre script sans bloc de code ? Si vous ne savez simplement pas faire de bloc de code, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
-            "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?",
+            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde [ici](<https://support.discordapp.com/hc/fr/articles/210298617>).",
+            "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `.%m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
-            "creditsFirstReward": "Bravo %s, tu viens d'arriver à %d crédits ! Tu gagnes les crédits en participant sur le Discord : en envoyant des messages, partageant du code, donnant des idées, aidant les autres, réagissant aux messages... Quand tu arrives à certains paliers, tu peux recevoir des récompenses ! Amuses-toi bien ;)",
-            "creditsReward": "Bravo %s, tu viens d'arriver à %d crédits ! Voici ta récompense : %r",
-            "ghostping": ":warning: %s, vous avez été ghost-ping par %m."
+            "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:"
         },
         "errors": {
-            "command": "Aïe, cette commande n'existe pas... Essayez `.help` pour afficher les commandes disponibles. :wink:",
-            "permission": "Vous n'avez pas la permission d'exécuter cette commande. :confused:",
-            "notInHelpChannels": "Vous ne pouvez pas exécuter cette commande dans les salons d'aide, merci de vous rendre dans #bot.",
-            "erroroccured": "Une erreur s'est produite... Merci de réessayer plus tard !",
-            "unknowncommand": "Commande inconnue ! Tape `.help` pour avoir la liste des commandes disponible.",
-            "privatemessage": "Oups, je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés et que tu ne m'aies pas bloqué.",
-            "cantplaymusic": "Impossible de jouer cette musique, désolé.",
-            "cooldown": "Attendez un peu avant de pouvoir exécuter à nouveau cette commande !",
+            "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
+            "permission": "Aïe, tu n'as pas les privilèges d'exécuter cette commande. :confused:",
+            "notInHelpChannels": "Désolé, tu ne peux pas exécuter cette commande dans les salons d'aide, rends-toi dans le salon #bot. :wink:",
+            "erroroccured": "Oups ! Une erreur s'est produite... Merci de réessayer plus tard !",
+            "unknowncommand": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
+            "privatemessage": "Oups ! Je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
+            "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
+            "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
             "music": [
                 "Tu n'es pas dans un salon vocal !",
                 "Je ne suis pas dans un salon vocal !",
@@ -111,35 +94,35 @@
         "commands": {
             "togglerolenotification": {
                 "help": "Ajouter ou retirer le rôle des Notifications Évènements.",
-                "description": "Ajouter ou retirer le rôle Notifications Évènements afin d'être notifié lors d'un message lié aux concours."
+                "description": "Ajoute ou retire le rôle Notifications Évènements afin d'être notifié lors d'un message lié aux concours."
             },
             "automaticmessages": {
                 "help": "Envoyer un message prédéfini.",
-                "description": "Envoyer un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'exécuter seulement si besoin.",
-                "invalidMessage": "Désolé, mais ce message là n'existe pas...",
-                "noArg": "Envoyez un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande.",
-                "cmdSuggestion": "Le message %c n'a pas été trouvé. Voulais-tu dire `.automsg %m` ?",
+                "description": "Envoie un message prédéfini parmis ceux-là : `%s`. Merci de ne pas abuser de cette commande, et de l'exécuter seulement si besoin.",
+                "invalidMessage": "Désolé, mais ce message n'existe pas. :confused:",
+                "noArg": "Envoie un message prédéfini parmis ceux-là :\n `%s`. Merci de ne pas abuser de cette commande.",
+                "cmdSuggestion": "Le message `%c` n'a pas été trouvé. Voulais-tu dire `.automsg %m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
                 "similarity": 0.8,
                 "messages": {
                     "asktoask": {
                         "templates": ["asktoask", "ask to ask"],
-                        "content": "Il est inutile de demander si vous pouvez poser une question, ou de demander si quelqu'un serait capable de répondre à votre question.\nCela est de la pure perte de temps, aussi bien pour vous que pour la personne qui va vous dire \"Oui, vas-y, pose ta question\".\nPosez votre question directement, et si quelqu'un peut vous répondre, il vous répondra."
+                        "content": "Afin de vous faire gagner du temps ainsi qu'aux autres membres de ce Discord, merci de poser directement votre question ici. Si quelqu'un est en mesure de vous aider, il vous aidera ! Afin de vous aider au mieux, n'oubliez pas de respecter les modèles de présentation, épinglés dans les salons d'aide. :wink:"
                     },
                     "helptemplate": {
                         "templates": ["helptemplate", "help template"],
-                        "content": "Voici un modèle de demande d'aide, qu'il est très important de respecter, pour pouvoir vous aidez au mieux:\n__Ma version de skript__ (`/ver skript`): <la version>\n__Ma version de serveur__ (`/ver`): <la version>\n__Mes addons__ (`/plugins`):  <les plugins>\n__Mon problème__: <decrivez votre problème clairement>\n__Mon code:__\n```<mettez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, utilisez un hastebin: <https://hastebin.com/>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider"
+                        "content": "Afin que les membres de ce Discord vous aident au mieux, merci de respecter ce modèle de demande d'aide :\n\n__Ma version Skript__ (`/ver skript`) : <ma version>\n__Ma version Minecraft__ (`/ver`) : <ma version>\n__Mes addons__ (`/plugins`) :  <mes plugins>\n__Mon problème__ : <décrivez clairement votre problème>\n__Mon code:__\n```<insérez la partie du code avec le problème>```\nSi votre code dépasse les 2 000 caractères, vous pouvez utiliser un hastebin: <https://hastebin.com>.\nPensez à expliquer de manière précise et courte votre problème, il donnera beaucoup plus envie aux membres de venir vous aider ! :smiley:"
                     },
                     "internalerror": {
                         "templates": ["internal", "internalerror", "internal error"],
-                        "content": "Une internal error veut simplement dire qu'il y a eu une erreur java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
+                        "content": "Une `internal error` veut simplement dire qu'il y a eu une erreur Java. L'erreur est affichée dans la console. Il n'y a jamais de moyen prédéfini d'en régler une, car ça peut être n'importe quelle erreur Java."
                     },
                     "deprecated": {
                         "templates": ["deprecated", "oldaddon", "old addon"],
-                        "content": "Les addons suivants sont vieux, et sont abandonnés par leur auteur. Cela veut dire qu'il n'y a **plus de mises à jour, qu'ils sont donc bugués et qu'ils peuvent être nuisibles** à votre serveur. Merci de ne pas les utiliser. Voici la liste des principaux; pour savoir si un certain addon est déprecié, faites `.addon-info <addon>` :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
+                        "content": "Les addons suivants sont vieux et abandonnés par leur(s) développeur(s). Ce qui signifie qu'**ils ne sont plus mis à jour** : ils sont donc **buggés**, **dépréciés** et peuvent être **nuisibles** à votre serveur. Nous vous conseillons d'éviter de les utiliser. Voici la liste des principaux addons dépréciés (faites `.addon-info <addon>` pour en savoir plus) :\nBiosphere, ExtraSk, LargeSk, PirateSk et PirateSk2, RandomSk, SkAction, SkellettProxy, SkExtras, SkQuery, SkRambled, Umbaska et WildSkript."
                     },
                     "gui": {
                         "templates": ["gui"],
-                        "content": "N'utilisez pas les GUIs de SkQuery, utilisez plutôt les GUIs de Skript ou de TuSKe. Vos codes seront plus optimisés, plus rapides pour l'utilisateur, plus simple à faire, plus complets et moins bugués. Pour plus de détails sur la différence entre les GUIs SkQuery et TuSKe, faites `.auto gui-pv`",
+                        "content": "Il fortement déconseillé d'utiliser les GUI de SkQuery, utilisez plutôt les GUI de Skript ou de TuSKe. Vos codes seront plus **optimisés**, **plus rapides pour l'utilisateur**, **plus simple à coder**, **plus complets** et **moins buggés**. Pour connaître plus de détails sur la différence entre les GUI SkQuery et TuSKe, faites `.auto gui-pv`.",
                         "pvContent": [
                             "S'il vous plaît, n'utilisez pas les GUIs de SkQuery. Préférez utiliser les GUIs de TuSKe ou de Skript (oui c'est possible !). Il y a une multitude de raisons à cela :\n**__1 : Rapidité d'éxecution__**\nQuand vous ouvrez un inventaire avec TuSKe, pas besoin de mettre des wait, ni besoin de mettre wait entre chaque ajout d'item ; alors qu'il faut mettre un wait après l'ouverture d'un GUI SkQuery, et qu'il est conseillé d'en mettre un entre chaque ajout d'item. Donc votre GUI s'ouvrira plus rapidement avec TuSKe.\n\n**__2 : Rapidité de code__**\nPour ajouter plusieurs items similaires avec SkQuery, il faut copier coller la ligne. Alors qu'avec TuSKe, vous pouvez simplement spécifier plusieurs slots, tel que : ```vb\nformat gui slot 0, 1, 2, 3, 4 and 5 of player with 1 dirt named \"test\" with lore \"c'est un lore...\"```\n\n**__3 : Fonctionnalités supplémentaires__**\nTuSKe possède beaucoup plus de fonctionnalités que SkQuery. Par exemple, pour éxecuter plusieurs effets en même temps lorsqu'on clic sur un item, il faut créer une fonction ou une subroutine puis l'appeler. Avec TuSKe, vous pouvez juste faire ceci :```vb\nformat gui slot 0 of player with 1 dirt to run:\n\tmessage \"plusieurs\"\n\tmessage \"effets à la suite\"\n\tmessage \"et on peut en ajouter autant qu'on veut ;)\"```",
                             "Il y a aussi la possibilité de gérer rapidement les types de clic. Avec SkQuery, obligé de passer par un \"on inventory click\". Avec TuSKe, vous pouvez le faire directement lors de la mise en place de l'item, et ajouter plusieurs clics différents pour un seul item, comme ceci : ```vb\n\nformat gui slot 0 of player with 1 dirt to run with right click:\n\tmessage \"éxecuté avec un clic droit\"\nformat gui slot 0 of player with 1 dirt to run with left click:\n\tmessage \"éxecuté avec un clic gauche\"```Aussi, dans TuSKe vous pouvez unformat un slot : `unformat gui slot %numbers% of %players%` ou `unformat all gui slots of %players%`, ou encore savoir si le joueur est dans un GUI : `%player% has a gui`, et plein d'autre encore.\n\n**__4 : Beaucoup moins bugué__**\nC'est un fait : SkQuery présente énormément de bug pour les GUIs. Par exemple, avec SkQuery, ce code vous enverra toujours 10 lorsque vous clicrez sur l'item : ```vb\nset {_s} to 0\nloop 10 times:\n\tformat slot {_s} of player with 1 dirt to run [message \"%{_s}%\"]\n\tadd 1 to {_s}```Alors que tout fonctionne avec TuSke.\nAussi, si l'on met unstealable à un slot dans le GUI, le slot situé à la même position dans l'inventaire du joueur sera aussi imprenable. Enfin, SkQuery présente un bug visuel quand on spamclick. Dans certains cas il est même possible d'arriver à recevoir l'item. Embêtant non ?\n\n:arrow_right_hook: **__Pour conclure :__** n'utilisez pas SkQuery pour vos GUIs, vos codes seront moins lent, plus simple, plus complets et moins bugués.\n\nPar ailleurs, dans certaines versions assez récente de Minecraft 1.15, peut être même 1.14 dans certains cas, TuSKe ne fonctionne pas. Étant donné qu'il n'est pas maintenu, il est déprécié *dans ces versions*. Ce n'est en aucun cas une excuse pour repasser à SkQuery, mais plutôt pour utiliser les GUIs vanilla de Skript qui sont peut-être un peu plus longs à apprendre mais ne nécéssitent pas d'addon, ne présentent aucun bug et sont tout aussi efficaces."
@@ -147,59 +130,59 @@
                     },
                     "everyloop": {
                         "templates": ["everyloop", "every loop"],
-                        "content": "Les codes du types ```vb\nevery X:\n\tloop all players```sont fortements déconseillés pour des questions d'optimisation... Imaginez que tous les ticks (ou autre, ca depend de votre every), vous regardez tous les joueurs du serveur ? Si vous êtes 4 ça va, mais si vous êtes une trentaine, une cinquantaine ? UNE CENTAINE ? Non, ça fait beaucoup trop pour votre serveur.\nEssayez de trouver une alternative à votre code, qui n'utilise pas de `every X: loop all players`. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```vb\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\twait 5 seconds # Déconseillé de le réduire\n\t\t# Votre code </>```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt de regarder tous les joueurs tous les X temps, chaque joueur à sa boucle qui se rafraîchit tous les X.\n\nD'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos code."
+                        "content": "```applescript\nevery X:\n\tloop all players:\n\t\t# Vtore code </>```Les codes de ce type sont fortements déconseillés pour des questions d'**optimisation** et de **performance**. Imaginez que tous les ticks (20 fois par seconde) ou autre délai, vous vérifiez tous les joueurs de votre serveur ? Cela reste correct si vous êtes 4, mais si vous êtes une trentaine ? Skript ferait 120 000 vérifications par minute si vous êtes une centaine, votre serveur ne supporterait pas tous ces calculs !\n\nEssayez de trouver une alternative à votre code, qui n'utilise pas ce type de code. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```applescript\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\t# Votre code </>\n\t\twait 5 seconds # Déconseillé de le réduire```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt que vérifier tous les joueurs tous les X temps, chaque joueur possède sa boucle qui se rafraîchit tous les X.\n\n:arrow_right_hook: **__Pour conclure :__** D'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos codes, essayez d'utiliser des alternatives."
                     },
                     "longcode": {
                         "templates": ["longcode", "long code"],
-                        "content": "Pour poster vos codes longs, il est conseillé d'utiliser un de ces sites : <https://hastebin.com>, <https://pastebin.com>, <https://gist.github.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
+                        "content": "Pour poster vos longs codes, il est conseillé d'utiliser un de ces sites : <https://gist.github.com>, <https://hastebin.com> ou <https://pastebin.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
                     },
                     "version": {
                         "templates": ["ver", "version"],
-                        "content": "Pour connaître la version de votre serveur, utilisez /version ou /ver. Pour connaître la version d'un plugin, utilisez `/version <nom du plugin>` ou `/ver <nom du plugin>`."
+                        "content": "Pour connaître la version de votre serveur, utilisez `/version` ou `/ver`. Pour connaître la version d'un plugin, utilisez `/version <nom du plugin>` ou `/ver <nom du plugin>`."
                     },
                     "list": {
                         "templates": ["list", "liste"],
-                        "content": "Il est plus que fortement conseillé d'utiliser des variables \"listes\" dans vos codes, plutôt que de simples variables à point (`.`). Les raisons sont multiples : convention, optimisation, facilité de certaines tâches... Pour en savoir plus, faites .auto list-pv",
+                        "content": "Il est plus que fortement conseillé d'utiliser des **variables listes** dans vos codes, plutôt que de simples variables à point (`.`). Les raisons sont multiples : **convention**, **optimisation**, **facilité de certaines tâches**... Pour en savoir plus, faites `.auto list-pv`.",
                         "pvContent": ["Pourquoi utiliser des listes plutôt que des variables ?\n\n**Simplicité :** Il est beaucoup plus compliqué de modifier plusieurs valeurs d'un coup avec de simples variables. Prenons l'exemple de cette variable : {joueurs.%player%} Dans cet exemple, pour supprimer nos valeurs nous sommes obligé de loop tout les joueurs, ce qui peut prendre très longtemps selon le nombre de joueur connecté sur votre serveur :```vb\nloop all players:\n\tclear {joueurs.%loop-player%}```Nous ne pouvons pas non plus utiliser des index ou loop notre variable ce qui peut être problématique dans certains cas d'utilisation. Voici donc l'alternative à ces problèmes : {joueurs::%player%}\nLa différence entre les deux variables est simple mais pas des moindres : elle a été transformée en liste. C'est-à-dire que plutôt d'avoir une variable par joueur, il y a une variable, qui stocke tous les joueurs. Cela nous permet de pouvoir loop notre variable, par exemple\n```vb\nloop {joueur::*}:\n\tbroadcast \"Il s'agit du joueur n°%loop-index% nommé %loop-value%\"```\n\n**Rapidité :** Pour certaines raisons internes, il est plus optimisé d'utiliser des variables listes plutôt que de simples variables même pour stocker une seule valeur. Par exemple, il est toujours préférable d'utiliser une variable du type `{variable::nombre-fixe}` plutôt que `{variable.nombre-fixe}`."]
                     },
-                    "uselesscommand": {
-                        "templates": ["§", "uselesscommand", "useless command", "commandfunction", "command function"],
-                        "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un §. Utiliser plutôt une fonction. Plusieurs raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère § dans Minecraft, via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
+                    "command§": {
+                        "templates": ["§", "command§", "uselesscommand", "useless command", "commandfunction", "command function"],
+                        "content": "Il est extrêmement déconseillé d'utiliser des commandes préfixées d'un `§`, utilisez plutôt une fonction. Plusieures raisons à cela :\n\n- D'abord, une fonction est faite pour ça. Cela sera donc plus optimisé. Pour savoir comment utiliser les fonctions, regardez ici : <http://bit.ly/30lSOBL> et là : <http://bit.ly/2Xv2oWd>.\n\n- Ne pensez pas que vous ne risquez rien. Il sera toujours possible d'utiliser le caractère `§` dans Minecraft via des mods, des glitchs ou autre. Cela peut vraiment nuire à votre serveur, surtout si des fonctionnalitées importantes reposent sur ce genre de système.\n\n- Cela rend votre code brouillon. Vous utilisez des techniques inadaptées, et par conséquent défectueuses. Votre code ne s'en portera que mieux si vous utilisez les fonctions."
                     },
                     "1.8": {
-                        "templates": ["1.8", "1.8.x", "1.8.X"],
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : (<https://github.com/Matocolotoe/Skript-1.8/releases/>)"
+                        "templates": ["1.8", "1.8.x", "1.8.X", "18"],
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
                     },
                     "contains": {
                         "templates": ["contain", "contains"],
-                        "content": "Avant la version 2.5 de Skript, il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`."
-                    },
-                    "skellett1.14": {
-                        "templates": ["skellett14", "skellett1.14", "skellett 14", "skellett 1.14"],
-                        "content": "Pour faire fonctionner Skellett en 1.14, il faut procéder de cette façon :\nInstalle Skellet et reload ton serveur pour avoir les fichiers. \nEnsuite va dans le dossier Skellett, puis ouvre SyntaxToggles.yml.\nFait CTRL + F et recherche \"Packets\".\nChange `true` à `false`\nRedémarre ton serveur."
+                        "content": "Avant la version 2.4 de Skript, il est recommandé de ne pas utiliser la condition `contains`, et ce pour plusieurs raisons :\nD'abord, `contains` ne fonctionne pas toujours. Ce problème a déjà été signalé plusieurs fois : souvent, alors qu'un élement se trouve bien dans la liste, `contains` renvoie quand même faux.\nEnsuite, cette condition est exceptionnelement lente. En effet, dans une liste de 3000 élements, utiliser `contains` prend 600ms (plus d'une demie-seconde !) à s'éxecuter, alors qu'utiliser la fonction suivante, ayant la même utilité, prend 3ms ! Fonction : ```vb\nfunction listContains(list: objects, o: object) :: boolean:\n\tloop {_list::*}:\n\t\tif loop-value is {_o}:\n\t\t\treturn true\n\treturn false```\n\nIl est donc préférable d'utiliser la fonction ci-dessus pour rechercher parmis une liste. Utilisation : `listContains({maliste::*}, {_maValeur})`."
                     },
                     "paperspigot": {
                         "templates": ["paperspigot", "paper", "spigot"],
-                        "content": "Il est recommandé d'utiliser **PaperSpigot** plutôt que Spigot, pour plusieurs raisons. Avant tout sachez que ce n'est qu'une fork (une reprise) de Spigot, donc il fonctionnera très bien avec tous vos plugins actuels, pas besoin de les changer ou de les reconfigurés. Ensuite il est très souvent, voire même plus souvent MàJ que Spigot, avec des bugfixes et des améliorations. Voici pourquoi vous devrez le préférer :\n- PaperSpigot est plus performant que Spigot\n- Si vous êtes développeur Java, il vous permettra d'accéder à plus de fonctionnalités, car son API est plus complète.\n- Et justement, les développeurs de Skript s'en servent, donc si vous utiliser PaperSpigot, vous aurez accès à encore plus de syntaxe Skript.\n\nVous pouvez le télécharger ici : <https://papermc.io/downloads>"
+                        "content": "Il est recommandé d'utiliser **PaperSpigot** plutôt que Spigot, pour plusieurs raisons. Avant tout sachez que ce n'est qu'une fork (une reprise) de Spigot, donc Paper fonctionnera très bien avec tous vos plugins actuels, pas besoin de les remplacer ou de les reconfigurer. Ensuite, il est activement, voire même plus souvent mis à jour que Spigot avec des bugfixes et des améliorations. Voici pourquoi vous devrez le préférer :\n- PaperSpigot est plus performant que Spigot ;\n- Si vous êtes développeur Java, il vous permettra d'accéder à plus de fonctionnalités, car son API est plus complète ;\n- Justement, les développeurs de Skript s'en servent, donc si vous utiliser PaperSpigot, vous aurez accès à encore plus de syntaxe Skript (ex: `on jump` ...).\n\nVous pouvez le télécharger ici : <https://papermc.io/downloads>."
+                    },
+                    "recrutement": {
+                        "templates": ["recrutement", "recruting"],
+                        "content": ":warning: Merci de ne pas faire vos demandes de recrutement sur le Discord.\nPour cela, vous pouvez aller dans cette catégorie du forum : <https://skript-mc.fr/forum/forum/14-recrutement-pour-vos-projets/>. Votre demande sera plus fructueuse que sur Discord."
                     }
                 }
             },
             "8ball": {
                 "help": "Répond par Oui ou Non à une question que vous lui posez.",
-                "description": "Le bot répondra par Oui ou Non à une n'importe quelle question que vous lui posez ! Réponse sûre garantie à 7%",
-                "noQuestion": "Vous devez ajouter une question !",
+                "description": "Réponse personnalisée par Oui ou Non à une n'importe quelle question ! Réponse sûre garantie à 7%.",
+                "noQuestion": "Je ne suis pas devin, ajoute une question !",
                 "affirmative": [
                     "Oui.",
-                    "Oui !",
+                    "Oui ! 🥳",
                     "D'après moi, oui !",
-                    "Je le pense",
-                    "C'est une chose sûre !",
+                    "Je le pense...",
+                    "C'est une chose sûre ! 😌",
                     "C'est certain.",
-                    "Sans aucun doute",
+                    "Sans aucun doute ! 😁",
                     "Il me semble...",
                     "Pourquoi demander ? La réponse parait évidente ! Oui !",
                     "ET C'EST UN OUI !",
-                    "Oui ! NAN J'AI PERDU :sob: Je suis vraiment nul au ni-oui ni-non :weary: ",
+                    "Oui ! NAN J'AI PERDU 😭\nJe suis vraiment nul au ni-oui ni-non... 😫",
                     "Affirmatif, chef.",
                     "Positif."
                 ],
@@ -207,21 +190,21 @@
                     "Non.",
                     "MDR NON",
                     "C'est un non.",
-                    "Mes sources me confirment que non.",
-                    "C'est mieux que tu ne sois pas au courant...",
-                    "Bien sur que non !",
-                    "Je ne suis pas sur de comprendre... Dans le doute je vais dire non.",
-                    "Question très compliquée... Mais je dirai non.",
+                    "Mes sources me confirment que non. 🙂",
+                    "C'est mieux que tu ne sois pas au courant... 😏",
+                    "Bien sur que non ! 😱",
+                    "Je ne suis pas sûr de comprendre...\nDans le doute, je vais dire non. 😅",
+                    "Question très compliquée...\nMais je dirai non. 😶",
                     "Ou... Non ! C'est Non !",
                     "Bien sur que non...",
-                    "Négatif",
-                    "Je répondrai par la négation. Rah chui trop fort à ni-oui ni-non ! Tu me battras jamais :wink:",
+                    "Négatif.",
+                    "Je répondrai par la négation. Rah chui trop fort à ni-oui ni-non !\nTu ne me battras jamais. 😉",
                     "Sûrement pas."
                 ]
             },
             "errordetails": {
-                "help": "Permet de vous aider à régler les erreurs de vos scripts",
-                "description": "Commande qui permet de vous aider à régler les erreurs que vous pouvez avoir lorsque vous faites /sk reload. Attention, cette commande est en BETA, donc le pourcentage de précision n'est pas garanti à 100%. Il se peut aussi que certaines erreur ne soit pas disponibles.",
+                "help": "Aide à régler les erreurs de vos scripts",
+                "description": "Aide à régler les erreurs que vous pouvez avoir lorsque vous faites /sk reload. Attention, cette commande est en BETA, donc le pourcentage de précision n'est pas garanti à 100%. Il se peut aussi que certaines erreur ne soit pas disponibles.",
                 "hub": "**Quelle erreur encontres-tu ?**\n:one: Indentation error\n:two: Can't understand this XX\n:three: Empty configuration section !\n:four: Invalid use of quotes\n:five: There's no loop that match XX\n:six: \"else\" have to be placed just after an \"if\"\n:seven: Can't compare XX with XX\n:eight: XX is not a valid item data\n:nine: XX can't be added to XX because the former is not an object\n:keycap_ten: Autre",
                 "noError": "Tu n'as pas défini d'erreur !",
                 "error": {
@@ -240,8 +223,8 @@
                 }
             },
             "addoninfo": {
-                "help": "Avoir diverses informations sur un addon.",
-                "description": "Obtenir diverses informations sur un addon, telles que son auteur, sa dernière version, un lien de téléchargement, si l'addon est déprecié, les dépendances...",
+                "help": "Envoyer diverses informations sur un addon.",
+                "description": "Envoie diverses informations sur un addon, telles que son auteur, sa dernière version, un lien de téléchargement, si l'addon est déprecié, les dépendances...",
                 "addonDoesntExist": "Désolé, mais il est impossible d'accéder à cet addon. Es-tu sur qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q=%s>) ?",
                 "invalidCmd": "Il faut que tu ajoutes le nom d'un addon ! Vérifie qu'il soit disponible sur [skripttools](<https://skripttools.net/>) et orthographie-le de la même manière. Les majuscules n'importent pas.",
                 "searching": "Je vais chercher ça...",
@@ -260,8 +243,8 @@
                 }
             },
             "skriptinfo": {
-                "help": "Avoir diverses informations sur Skript.",
-                "description": "Avoir diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
+                "help": "Envoyer diverses informations sur Skript.",
+                "description": "Envoie diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
                 "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
@@ -273,8 +256,8 @@
             },
             "syntaxinfo": {
                 "enabled": false,
-                "help": "Avoir diverses informations sur une syntaxe.",
-                "description": "Avoir diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
+                "help": "Envoyer diverses informations sur une syntaxe.",
+                "description": "Envoie diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
                 "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
                 "invalidCmd": "Il faut que tu ajoutes le nom d'une syntaxe !",
                 "requestError": "Désolé, une erreur est survenue... Réessayez plus tard. Si cela ne fonctionne toujours pas, merci de contacter un administrateur.",
@@ -292,7 +275,7 @@
             },
             "serverinfo": {
                 "help": "Afficher des informations sur un serveur Minecraft.",
-                "description": "Afficher diverses informations sur un certain serveur Minecraft, selon son IP.",
+                "description": "Envoie diverses informations sur un certain serveur Minecraft, selon son IP.",
                 "invalidCmd": "Il faut que tu ajoutes un serveur !",
                 "searching": "Je vais chercher ça...",
                 "noServerFound": "Aucun serveur ne correspond à votre requête !",
@@ -309,7 +292,7 @@
             },
             "playerinfo": {
                 "help": "Afficher des informations sur un joueur Minecraft.",
-                "description": "Afficher diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
+                "description": "Envoie diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
                 "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
                 "playerNotFound": "Impossible de trouver ce joueur, désolé.",
                 "invalidCmd": "Il faut que tu ajoutes un pseudo !",
@@ -324,7 +307,7 @@
             },
             "userinfo": {
                 "help": "Afficher des informations sur un membre.",
-                "description": "Afficher diverses informations sur un certain membre du Discord Skript-MC, que vous avez défini par son ID ou en le mentionnant (Merci d'éviter de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites un clic-droit sur son pseudo > Copier l'Identifiant).",
+                "description": "Envoie diverses informations sur un certain membre du Discord Skript-MC, que vous avez défini par son ID ou en le mentionnant (Merci d'éviter de mentionner. Pour récupérer l'ID de quelqu'un, activez le mode développeur (Paramètres > Apparence > Avancé > Mode développeur), puis faites un clic-droit sur son pseudo > Copier l'Identifiant).",
                 "invalidCmd": "Vous avez oublié de spécifier un utilisateur ! Vous pouvez soit le mentionner (déconseillé), soit mettre son ID.",
                 "pseudoNotFound": "Ce membre n'existe pas ou n'est pas sur ce Discord !",
                 "embed": {
@@ -337,10 +320,10 @@
             },
             "help": {
                 "help": "Afficher la page d'aide.",
-                "description": "Afficher la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
+                "description": "Envoie la page d'aide de toutes les commandes de Swan, ou donne des informations sur une commande spécifique.",
                 "cmdDoesntExist": "Aucune commande ne correspond a votre recherche...  Désolé.",
-                "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `%m` ?",
-                "header": "Les syntaxes des commandes se lisent comme un pattern skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`",
+                "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `%m` ?",
+                "header": "Les syntaxes des commandes se lisent comme un pattern Skript. Les commandes avec un :octagonal_sign: sont des commandes de modération. Pour avoir plus d'information sur une commande : `.help <commande>`.",
                 "searchResults": "%r élements trouvés pour la recherche `%s`. Quelle commande vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**",
                 "details": {
                     "everyone": "Tout le monde.",
@@ -355,8 +338,8 @@
                 }
             },
             "links": {
-                "help": "Avoir plusieurs liens importants relatifs à Skript.",
-                "description": "Avoir plusieurs liens importants relatifs à Skript, tels que des documentations, des forums, des liens de téléchargement, des Discords...",
+                "help": "Envoie plusieurs liens importants relatifs à Skript.",
+                "description": "Envoie plusieurs liens importants relatifs à Skript, tels que des documentations, des forums, des liens de téléchargement, des Discords...",
                 "embed": {
                     "summary": "Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers quelques Discord importants\n:five: Divers liens importants",
                     "docSkSkMc_title": ":books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN",
@@ -383,7 +366,7 @@
             },
             "poll": {
                 "help": "Lancer un sondage.",
-                "description": "Lancer un sondage temporaire par lequel on peut répondre Oui/Non ou une réponse personnalisée.",
+                "description": "Lance un sondage temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée.",
                 "invalidDuration": "La durée marquée est invalide !",
                 "invalidCmd": "Il y a un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivi sans espace de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillemets, qui explique votre sondage.\n**[\"réponse X\"]** est une option de réponse, entre guillemets. Ce champ est facultatif, car si vous ne mettez aucune réponse on devra répondre à votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
                 "quoteProblem": "Il y a un problème dans les guillemets (\") !",
@@ -394,122 +377,117 @@
                 "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
             },
             "joke": {
-                "help": "Envoie une blague aléatoire.",
+                "help": "Envoyer une blague aléatoire.",
                 "description": "Envoie aléatoirement une blague drôle (ou pas).",
-                "alreadyLiked": "Tu as déjà aimé cette blague !",
-                "alreadyDisliked": "Tu as déjà dislike cette blague !",
-                "liked": "Vous avez bien aimé cette blague ! :thumbsup:",
-                "disliked": "Vous avez bien dislike cette blague ! :thumbsdown:",
+                "alreadyLiked": "Tu as déjà rigolé devant cette blague. :smile:",
+                "alreadyDisliked": "Tu m'as déjà dit que cette blague était nulle. :rolling_eyes:",
+                "liked": "Cette blague est à mourir de rire, n'est-ce pas ? :smile:",
+                "disliked": "Je suis d'accord avec toi, cette blague est nulle ! :rolling_eyes:",
                 "jokes": [
                     "Un mec rentre dans un café.;Et plouf !",
-                    "Pourquoi les crocos sont en prison ?;Car les crocos dealent",
-                    "Quelle mamie fait peur aux voleurs ?;Mamie Traillette",
-                    "Quel est l'aliment le plus hilarant ?;Le riz",
-                    "Pourquoi est-ce que le lapin est bleu ?;Parce qu’on lapin",
-                    "D'où viennent les gens les plus dangereux ?;D’Angers",
-                    "Comment est-ce que les abeilles communiquent entre elles ?;Par e-miel",
-                    "Quel est l'arbre préféré des chômeurs ?;Le bouleau",
-                    "Pourquoi est-ce que les moutons aiment le chewing-gum?;Parce que c’est bon pour la laine",
-                    "Que dit une noisette quand elle tombe à l'eau ?;Je me noix",
+                    "Pourquoi les crocos sont en prison ?;Car les crocos dealent !",
+                    "Quelle mamie fait peur aux voleurs ?;Mamie Traillette !",
+                    "Quel est l'aliment le plus hilarant ?;Le riz !",
+                    "Pourquoi est-ce que le lapin est bleu ?;Parce qu’on lapin !",
+                    "D'où viennent les gens les plus dangereux ?;D’Angers !",
+                    "Comment est-ce que les abeilles communiquent entre elles ?;Par e-miel !",
+                    "Quel est l'arbre préféré des chômeurs ?;Le bouleau !",
+                    "Pourquoi est-ce que les moutons aiment le chewing-gum?;Parce que c’est bon pour la laine !",
+                    "Que dit une noisette quand elle tombe à l'eau ?;« Je me noix ! »",
                     "Quel fruit est assez fort pour couper des arbres?;Le ci-tron",
-                    "Quel est le jambon que tout le monde déteste ?;Le sale ami",
+                    "Quel est le jambon que tout le monde déteste ?;Le sale ami !",
                     "C'est l'histoire d'un papier qui tombe à l'eau.;Il crie « Au secours, j'ai pas pied ! »",
-                    "Que fait une fraise sur un cheval ?;Tagada Tagada",
-                    "Tu connais la blague de la chaise ?;Elle est tellement longue",
-                    "Tu connais l'histoire de la chaise ?;Elle est pliante",
-                    "Comment appelle-t-on une catapulte à salade ?;Un lance-roquette",
-                    "Comment appelle-t-on une bagarre entre une carotte et un petits pois ?;Un bon duel",
-                    "Tu connais l'histoire du lit vertical ?;Elle est à dormir debout.",
-                    "Tu veux une blague à deux balles ?;Pan. Pan.",
-                    "C'est l'histoire d'un Schtroumpfs qui court, qui court... Et il tombe.;Il s'est fait un bleu",
-                    "Tu connais la blague du p'tit déj' ?;Pas de bol",
-                    "Tu connais la blague de l'armoire ?;Elle est pas commode",
-                    "Quel super héros donne le plus vite l'heure ?;Speed heure man",
-                    "La vitamine C ne dira rien.;Mais elle le sais.",
-                    "Qu’est ce que ça veut dire : « I don’t know » ?;« Je sais pas »",
-                    "Quelle est la femelle du hamster ?;L'Amsterdam",
-                    "Que dit un oignon quand il se cogne ?;Aïe",
-                    "Quel est le comble pour un marin ?;Avoir le nez qui coule",
-                    "Quel est le sport le plus silencieux ?;Le para-chuuuut",
-                    "Pourquoi ne faut-il jamais raconter d'histoires drôles à un ballon ?;Parce qu'il pourrait éclater (de rire)",
-                    "Quel est l'animal le plus à la mode ?;La taupe modèle",
-                    "Comment appelle t-on une fleur qui prend sa graine à moitié ?;Une migraine",
-                    "J'ai fait une blague au magasin;Mais elle a pas supermarché",
-                    "Pourquoi est-ce si difficile de conduire dans le Nord ?;Parce que les voitures arrêtent pas de caler",
-                    "Qu'est-ce qu'un tennisman adore faire ?;Rendre des services",
-                    "Pourquoi est-ce que les livres ont-ils toujours chaud ?;Parce qu'ils ont une couverture",
-                    "Que se passe-t-il quand 2 poissons s'énervent ?;Le thon monte",
-                    "Que dit une imprimante dans l'eau ?;J'ai papier",
-                    "Pourquoi est-ce que les bières sont toujours stressées ?;Parce qu'elles ont la pression",
-                    "Pourquoi est-ce que les éoliennes n'ont pas de copain ?;Parce qu’elles se prennent toujours des vents",
-                    "Qu'est ce qu'un cadeau qui s'en va ?;Une surprise party",
-                    "Comment savoir qu'un rat est content ?;Il souris",
-                    "Que fait un geek quand il a peur ?;Il URL",
-                    "Qu'est-ce qui est pire que le vent ?;Un vampire",
-                    "Que dit une mère à son fils geek quand le dîner est servi ?;Alt Tab",
-                    "Quelle est la meilleure heure pour écouter de la musique ?;10h",
-                    "Que fait un geek quand il descend du métro ?;Il libère la RAM",
-                    "Quel est l'animal le plus connecté ?;Le porc USB",
-                    "Que fait un jardinier quand il ment ?;Il raconte des salades",
-                    "Quel est le crustacé le plus léger de la mer ?;La palourde",
-                    "Quel est le comble pour un maître nageur ?;Avoir le nez qui coule.",
-                    "Qu'est-ce qu'un Cheval de Mer qui a des douleurs musculaires ?;Un hippocrampe.",
-                    "Quelle est la monnaie des poissons ?;Les sous-marins.",
-                    "Que dit un donuts à la plage ?;Je vais me beignet.",
-                    "Pourquoi peut-on dire que le chef d'établissement d'un lycée est un sniper ?;Parce que c'est un proviseur.",
-                    "Pourquoi tu fais 20 fois le tour du lycée sans t'arrêter ?;Parce que je poursuis mes études.",
+                    "Que fait une fraise sur un cheval ?;Tagada Tagada !",
+                    "Tu connais la blague de la chaise ?;Elle est tellement longue !",
+                    "Tu connais l'histoire de la chaise ?;Elle est pliante !",
+                    "Comment appelle-t-on une catapulte à salade ?;Un lance-roquette !",
+                    "Comment appelle-t-on une bagarre entre une carotte et un petits pois ?;Un bon duel !",
+                    "Tu connais l'histoire du lit vertical ?;Elle est à dormir debout !",
+                    "Tu veux une blague à deux balles ?;Pan ! Pan !",
+                    "C'est l'histoire d'un Schtroumpfs qui court, qui court... Et il tombe.;Il s'est fait un bleu !",
+                    "Tu connais la blague du p'tit déj' ?;Pas de bol !",
+                    "Tu connais la blague de l'armoire ?;Elle est pas commode !",
+                    "Quel super héros donne le plus vite l'heure ?;Speed heure man !",
+                    "La vitamine C ne dira rien.;Mais elle le sais !",
+                    "Que veux dire « I don’t know » ?;« Je sais pas »",
+                    "Quelle est la femelle du hamster ?;L'Amsterdam !",
+                    "Que dit un oignon quand il se cogne ?;Aïe !",
+                    "Quel est le comble pour un marin ?;Avoir le nez qui coule !",
+                    "Quel est le sport le plus silencieux ?;Le para-chuuuut !",
+                    "Pourquoi ne faut-il jamais raconter d'histoires drôles à un ballon ?;Parce qu'il pourrait éclater (de rire) !",
+                    "Quel est l'animal le plus à la mode ?;La taupe modèle !",
+                    "Comment appelle t-on une fleur qui prend sa graine à moitié ?;Une migraine !",
+                    "J'ai fait une blague au magasin;Mais elle a pas supermarché !",
+                    "Pourquoi est-ce si difficile de conduire dans le Nord ?;Parce que les voitures arrêtent pas de caler !",
+                    "Qu'est-ce qu'un tennisman adore faire ?;Rendre des services !",
+                    "Pourquoi est-ce que les livres ont-ils toujours chaud ?;Parce qu'ils ont une couverture !",
+                    "Que se passe-t-il quand 2 poissons s'énervent ?;Le thon monte !",
+                    "Que dit une imprimante dans l'eau ?;J'ai papier !",
+                    "Pourquoi est-ce que les bières sont toujours stressées ?;Parce qu'elles ont la pression !",
+                    "Pourquoi est-ce que les éoliennes n'ont pas de copain ?;Parce qu’elles se prennent toujours des vents !",
+                    "Qu'est ce qu'un cadeau qui s'en va ?;Une surprise party !",
+                    "Comment savoir qu'un rat est content ?;Il souris !",
+                    "Que fait un geek quand il a peur ?;Il URL !",
+                    "Qu'est-ce qui est pire que le vent ?;Un vampire !",
+                    "Que dit une mère à son fils geek quand le dîner est servi ?;Alt Tab !",
+                    "Quelle est la meilleure heure pour écouter de la musique ?;10h !",
+                    "Que fait un geek quand il descend du métro ?;Il libère la RAM !",
+                    "Quel est l'animal le plus connecté ?;Le porc USB !",
+                    "Que fait un jardinier quand il ment ?;Il raconte des salades !",
+                    "Quel est le crustacé le plus léger de la mer ?;La palourde !",
+                    "Quel est le comble pour un maître nageur ?;Avoir le nez qui coule !",
+                    "Qu'est-ce qu'un Cheval de Mer qui a des douleurs musculaires ?;Un hippocrampe !",
+                    "Quelle est la monnaie des poissons ?;Les sous-marins !",
+                    "Que dit un donuts à la plage ?;Je vais me beignet !",
+                    "Pourquoi peut-on dire que le chef d'établissement d'un lycée est un sniper ?;Parce que c'est un proviseur !",
+                    "Pourquoi tu fais 20 fois le tour du lycée sans t'arrêter ?;Parce que je poursuis mes études !",
                     "Tu connais l'histoire du lit vertical ?;C'est une histoire à dormir debout !",
-                    "Que disent deux planètes dans un parc d'attraction ?;Oulah sa turne.",
-                    "Quelle est le comble pour une pomme de terre ?;Qu'elle s'effrite.",
-                    "Comment appelle-t-on un chien qui s'y connait en médecine ?;Un dogteur.",
-                    "Quel est le sport le plus silencieux ?;Le parachuuuute.",
-                    "Comment appelle-t-on un boomerang qui ne revient pas ?;Un bout de bois.",
-                    "Si une voiture roule à 70 km/h dans un virage à droite, quelle roue va la moins vite ?;La roue de secours.",
-                    "Que mange-t-on à la naissance ?;Du riz cantonais.",
+                    "Que disent deux planètes dans un parc d'attraction ?;Oulah sa turne !",
+                    "Quelle est le comble pour une pomme de terre ?;Qu'elle s'effrite !",
+                    "Comment appelle-t-on un chien qui s'y connait en médecine ?;Un dogteur !",
+                    "Quel est le sport le plus silencieux ?;Le parachuuuute !",
+                    "Comment appelle-t-on un boomerang qui ne revient pas ?;Un bout de bois !",
+                    "Si une voiture roule à 70 km/h dans un virage à droite, quelle roue va la moins vite ?;La roue de secours !",
+                    "Que mange-t-on à la naissance ?;Du riz cantonais !",
                     "Que dit-on à un poisson mal poli ?;Baisse d'un ton !",
-                    "Que fait un vendeur de chaussure qui est curieux ?;Il semelle de tout.",
-                    "Pourquoi il n'y a pas de ballon sur le plateau de Questions pour un Champion ?;Parce que Julien Lepers.",
-                    "Que fait un matheux quand il va au toilette ?;Il fait pipi."
+                    "Que fait un vendeur de chaussure qui est curieux ?;Il semelle de tout !",
+                    "Pourquoi il n'y a pas de ballon sur le plateau de Questions pour un Champion ?;Parce que Julien Lepers !",
+                    "Que fait un matheux quand il va au toilette ?;Il fait pipi !"
                 ]
             },
             "ranking": {
                 "help": "Consulter les classements.",
-                "description": "Consulter les classements des musiques/blagues les plus likées/dislikées/vues.",
+                "description": "Envoie les classements des musiques/blagues les plus likées/dislikées/vues.",
                 "noType": "Il faut ajouter un type de classement ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`",
                 "invalidType": "Type de classement invalide ! Voici les types disponibles : `musique-like`, `musique-dislike`, `musique-views` ou `joke-like`, `joke-dislike`, `joke-views`"
             },
-            "credits": {
-                "help": "Consulter le nombre de crédits qu'on a.",
-                "description": "Consulter son solde de crédit ou celui d'un autre membre.",
-                "creditsAmount": "%s a %d crédits."
-            },
             "discover": {
-                "help": "Découvrir une commande du bot",
-                "description": "Permet de découvrir une des nombreuses commandes du bot."
+                "help": "Découvrir une commande de Swan",
+                "description": "Envoie une des nombreuses commandes de Swan afin de les découvrir."
             },
             "lyrics": {
                 "enabled": false,
                 "help": "Afficher les paroles d'une musique",
-                "description": "Afficher les paroles de la musique que le bot est en train de jouer.",
+                "description": "Envoie les paroles de la musique que Swan est en train de jouer.",
                 "error": "Une erreur est survenue, désolé."
             },
             "status": {
-                "help": "Consulter ou définir le statut du bot.",
-                "description": "Permet de voir le status du bot, ou de l'activer/désactiver.",
-                "turnOn": ":white_check_mark: Vous avez bien activé le bot !",
-                "turnOff": ":white_check_mark: Vous avez bien désactivé le bot !",
-                "status": "Statut actuel du bot : %s"
+                "help": "Consulter ou définir le statut de Swan.",
+                "description": "Consulter le status de Swan, ou de l'activer/désactiver.",
+                "turnOn": ":white_check_mark: Vous avez bien activé Swan !",
+                "turnOff": ":white_check_mark: Vous avez bien désactivé Swan !",
+                "status": "Statut actuel de Swan : %s"
             },
             "tagrole": {
-                "help": "Permet de notifier un rôle qui n'est pas mentionnable.",
-                "description": "Permet de notifier un rôle qui n'est pas mentionnable.",
+                "help": "Notifier un rôle qui n'est pas mentionnable.",
+                "description": "Notifie un rôle qui n'est pas mentionnable.",
                 "invalidCmd": "Il faut ajouter un rôle à mentionner !",
                 "invalidRole": "Désolé, mais le rôle '%s' est introuvable... Êtes-vous sûr de l'avoir orthographié de la même façon ?"
             },
             "rules": {
-                "help": "Permet d'afficher les règles des salons d'aide Skript.",
-                "description": "Permet d'afficher les règles des salons d'aide Skript.",
-                "onlyInHelp": "Cette commande est disponible uniquement dans les salons d'aide skript",
+                "help": "Afficher les règles des salons d'aide Skript.",
+                "description": "Envoie les règles des salons d'aide Skript.",
+                "onlyInHelp": "Cette commande est disponible uniquement dans les salons d'aide Skript.",
                 "invalidRule": "Le numéro de la règle n'est pas valide !",
                 "messages": [
                     "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, vos erreurs si vous en avez (pensez à regarder la console), etc.).",
@@ -517,56 +495,56 @@
                 ]
             },
             "ping": {
-                "help": "Permet de savoir le ping du bot.",
-                "description": "Permet de savoir la latence entre vous et le bot, et le bot et l'API Discord.",
-                "firstMessage": "Pong !",
-                "secondMessage": "Pong ! La latence du bot est de %sms. La latence avec l'API Discord est de %xms."
+                "help": "Afficher la latence de Swan",
+                "description": "Envoie la latence entre vous et Swan ainsi que Swan et l'API Discord.",
+                "firstMessage": ":incoming_envelope: Calcul en cours ...",
+                "secondMessage": ":hourglass: Swan: %sms\n\n:globe_with_meridians: API Discord: %xms"
             },
             "mathematiques": {
                 "help": "Permet de tester la mathématique de Skript.",
-                "description": "Permet de tester une expression mathématique en Skript.",
+                "description": "Teste une expression mathématique en Skript.",
                 "addMath": "Il faut que tu ajoutes une expression mathématique !",
                 "error": "Impossible de tester cette expression ! Il semblerait qu'il y ait un problème dedans..."
             },
             "code": {
                 "help": "Permet de présenter votre code de façon claire.",
-                "description": "Permet de mettre votre code dans un bloc de code. Ajoutez le paramètre '-l' pour afficher le numéro des lignes.",
-                "tooLong": "Désolé, mais votre code est trop long (+2000 caractères).",
-                "noCode": "Merci d'ajouter un code ! Il faut que la première ligne soit sur la même ligne que la commande `.code`"
+                "description": "Mettre votre code dans un bloc. Ajoutez le paramètre '-l' pour afficher le numéro des lignes.",
+                "tooLong": "Désolé, mais votre code est trop long (+2 000 caractères).",
+                "noCode": "Merci d'ajouter un code ! Il faut que la première ligne soit sur la même ligne que la commande `.code`."
             },
             "statistics": {
-                "help": "Avoir diverses statistiques sur le bot et le serveur.",
-                "description": "Avoir diverses statistiques sur le bot et le serveur."
+                "help": "Envoie diverses statistiques.",
+                "description": "Envoie diverses statistiques sur Swan et le serveur."
             },
             "setsshpassword": {
                 "help": "Définir le mot de passe de ssh@skript-mc.fr",
-                "description": "Définir le mot de passe de ssh@skript-mc.fr",
+                "description": "Définit le mot de passe de ssh@skript-mc.fr",
                 "noPassword": "Ajoute un mot de passe !",
                 "successfullyChanged": "Vous avez bien changé le mot de passe !"
             },
             "addonpack": {
-                "help": "Avoir un pack d'addon correspondant à une certaine version MC.",
-                "description": "Permet de d'avoir un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le Discord de développement (lien disponible dans les messages pins de #bot).",
+                "help": "Envoie un pack d'addon correspondant à une certaine version MC.",
+                "description": "Envoie un pack d'addon correspondant à une certaine version de Minecraft.\nSi vous connaissez une version plus récente d'un addon fonctionnant dans une certaine version de minecraft, n'hésitez pas a contacter les devs ou à vous rendre sur le Discord de développement (lien disponible dans les messages épinglés de #bot).",
                 "invalidVersion": "Ajoute une version de Minecraft valide et récente (1.9+) ! Ex: `1.12.2`, `1.10`, `1.14`...",
                 "messages": [
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.9 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.10 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.11 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.12 :\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.13 :\nSkript : 2.4.1 ou 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.14 :\nSkript : 2.4.1\nAddons :\nListe à venir.",
-                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il se peut que les versions dne soient plus bonnes. Prennez juste la dernière version de l'addon. Version des addons conseillées pour la 1.15 :\nSkript : 2.4.1 (ou dernière version Skript 2.5-beta)\nAddons :\nListe à venir."
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.9** :\n\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.10** :\n\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.11** :\n\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- SkStuff : 1.6.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.12** :\n\nSkript : 2.4.1 ou 2.3.7 ou 2.2-dev37c\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.13** :\n\nSkript : 2.4.1 ou 2.3.7\nAddons :\n- MundoSK : 1.8.5\n- SkQuery : 3.6.5-Lime\n- Sk-NBeeT : 2.4.1\n- Skellett : 1.9.6b\n- Tuske : 1.8.3-PikachuPatch-v3\n- SkDragon : 0.15\n- SkRayFall : 1.9.16\n- Skutilities : 0.9.2\n- skript-mirror : 0.19.1",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.14** :\n\nSkript : 2.4.1\nAddons :\n*Liste à venir.*",
+                    ":warning: Attention, cette commande est assez vieille et n'est plus vraiment mise à jour. La liste des addons est toujours correcte mais il est possible que certaines versions ne soient plus compatibles, prennez juste la dernière version de l'addon. Version des addons conseillés pour la **1.15** :\n\nSkript : 2.4.1 (ou dernière version Skript 2.5-alpha)\nAddons :\n*Liste à venir.*"
                 ]
             },
             "ban": {
                 "help": "Appliquer une restriction du Discord à un membre.",
-                "description": "Appliquer une restriction du Discord à un membre.",
+                "description": "Applique une restriction du Discord à un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
-                "unableToSelfBan": "Vous ne pouvez pas vous bannir vous même !",
-                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "unableToSelfBan": "Vous ne pouvez pas vous bannir vous-même !",
+                "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
                 "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
@@ -576,11 +554,11 @@
             },
             "unban": {
                 "help": "Retirer une restriction du Discord à un membre.",
-                "description": "Retirer une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le salon privé.",
+                "description": "Retire une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le salon privé.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
+                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "mute": {
@@ -590,8 +568,8 @@
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
-                "noSelfMute": "Vous ne pouvez pas vous rendre muet vous même !",
-                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "noSelfMute": "Vous ne pouvez pas vous rendre muet vous-même !",
+                "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
                 "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
@@ -600,38 +578,48 @@
             },
             "unmute": {
                 "help": "Redonner la parole à un membre.",
-                "description": "Redonner la parole à un membre dans les salons d'aide.",
+                "description": "Rétabli la parole à un membre dans les salons d'aide.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-                "successfullyUnmuted": "Vous avez bien rendu la parole à %u !\nRaison : %r",
+                "successfullyUnmuted": "Vous avez bien rétabli la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Ce n'est pas vous qui avez appliqué cette sanction, vous ne pouvez donc pas la gérer.",
+                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "warn": {
                 "help": "Avertir un membre.",
-                "description": "Donner un avertissement à un membre.",
+                "description": "Donne un avertissement à un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
-                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
                 "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc à revoir ton comportement.",
                 "noReasonSpecified": "Aucune raison spécifiée",
-                "warnLimitReached": "C'est le 2ème avertissement pour ce membre, il a donc été sanctionné."
+                "warnLimitReached": "C'est le deuxième avertissement pour ce membre, il a automatiquement été sanctionné."
             },
             "kick": {
                 "help": "Expulser un membre.",
-                "description": "Expulser un membre du serveur.",
+                "description": "Expulse un membre du serveur Discord.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
-                "noSelfKick": "Ne te warn pas toi même, boulet.",
-                "userTooPowerful": "Désolé mais je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
+                "noSelfKick": "Ne te kick pas toi même, boulet.",
+                "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyKicked": "Vous avez bien averti %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "history": {
                 "help": "Consulter l'historique des sanctions d'un membre.",
-                "description": "Consulter l'historique de toutes les sanctions d'un membre.",
+                "description": "Envoie l'historique de toutes les sanctions d'un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
+            },
+            "movemessage": {
+                "help": "Déplacer un message.",
+                "description": "Déplace un message vers un salon défini par son identifiant.",
+                "invalidChannel": "Désolé, je n'ai pas pu trouver ce salon. Vérifie que tu l'as correctement mentionné (#salon).",
+                "sameChannel": "Ce message se trouve déjà dans ce salon, tu ne peux pas le déplacer !",
+                "invalidMessage": "Désolé, je n'ai pas pu trouver ce message. Vérifie que tu aies correctement copié son identifiant.",
+                "restrictedChannel": "Désolé, tu ne peux pas exécuter cette commande ou déplacer ce message dans ce salon.",
+                "targetedUserTooPowerful": "Désolé, tu ne peux pas déplacer le message de cet utilisateur.",
+                "successfullyMoved": ":twisted_rightwards_arrows: **%a, ton message a été déplacé vers %s.**\n\n*Ce salon est sûrement déjà occupé par une autre demande, **%t** a déplacé ton message dans un salon libre ! :smile:*"
             },
             "removemusicrestriction": {
                 "help": "Supprimer les restrictions musicales d'un membre.",
@@ -680,7 +668,7 @@
             },
             "queue": {
                 "help": "Afficher la queue.",
-                "description": "Affiche la liste de toutes les musiques actuellement dans la queue.",
+                "description": "Envoie la liste de toutes les musiques actuellement dans la queue.",
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "removedSong": "Musique %s retirée de la queue !",
                 "cleared": "La queue a entièrement été vidée !",
@@ -700,14 +688,14 @@
                 "ask": "pause/reprendre la musique"
             },
             "leave": {
-                "help": "Déconnecter le bot du salon vocal.",
-                "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
+                "help": "Déconnecter Swan du salon vocal.",
+                "description": "Déconnecte Swan du salon vocal auquel il est connecté.",
                 "left": "Je suis bien parti du salon vocal ! À la prochaine. :wink:",
-                "ask": "déconnecter le bot du canal vocal"
+                "ask": "déconnecter Swan du canal vocal"
             },
             "stop": {
-                "help": "Déconnecter le bot du salon vocal.",
-                "description": "Déconnecte le bot du salon vocal auquel il est connecté.",
+                "help": "Arrêter la lecture de la musique.",
+                "description": "Arrête la lecture de la musique actuelle.",
                 "stopped": "J'ai bien arrêté la musique ! `.play` pour continuer la queue.",
                 "ask": "arrêter la musique"
             },
@@ -721,10 +709,10 @@
             },
             "volume": {
                 "help": "Modifier le volume de la musique.",
-                "description": "Modifie le volume de la musique. Afin d'éviter de gêner les autres utilisateurs, préférez plutôt baisser le volume du bot en faisant un `clic-droit` dessus, puis en modifiant le curseur `Volume de l'utilisateur`.",
-                "invalidVolume": "Le volume entré n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 1 et 10",
-                "currentVolume": "Le volume actuel est à %s/10",
-                "changed": "Le volume a bien été modifié à %v"
+                "description": "Modifie le volume de la musique. Afin d'éviter de gêner les autres utilisateurs, préférez plutôt baisser le volume de Swan en faisant un `clic-droit` dessus, puis en modifiant le curseur `Volume de l'utilisateur`.",
+                "invalidVolume": "Le volume entré n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 1 et 10.",
+                "currentVolume": "Le volume actuel est à %s/10.",
+                "changed": "Le volume a bien été modifié à %v."
             },
             "bassboost": {
                 "help": "Modifier la puissance des basses.",
@@ -735,22 +723,22 @@
                 "ask": "changer la puissance des basses"
             },
             "join": {
-                "help": "Connecter le bot dans votre salon vocal.",
-                "description": "Connecte le bot dans votre salon : il ne doit pas être déjà occupé ou être dans votre salon.",
+                "help": "Connecter Swan dans votre salon vocal.",
+                "description": "Connecte le Swan dans votre salon : il ne doit pas être déjà occupé ou être dans votre salon.",
                 "comming": "J'arrive dans ton salon vocal !",
                 "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre salon... Rejoins-moi vite dans le salon %s !",
                 "alreadyInChannel": "Hé, ouvre les yeux ! Je suis déjà dans ton salon !"
             },
             "nowplaying": {
-                "help": "Affiche des informations sur la musique en cours.",
-                "description": "Affiche des informations sur la musique en cours.",
+                "help": "Envoie des informations sur la musique en cours.",
+                "description": "Envoie des informations sur la musique en cours.",
                 "successfullyReported": "Cette musique a bien été signalée. Les modérateurs pourront ajouter la musique ou la chaîne YouTube d'où elle provient à la liste noire. Si vous abusez de cette fonctionnalité, vous risquez d'être sanctionné.",
                 "noSongPlaying": "Aucun musique n'est en cours de lecture et la queue est vide.",
                 "alreadyLiked": "Tu as déjà aimé cette musique !",
                 "alreadyDisliked": "Tu as déjà dislike cette musique !",
                 "liked": "Vous avez bien aimé cette musique ! :thumbsup:",
                 "disliked": "Vous avez bien dislike cette musique ! :thumbsdown:",
-                "alreadyBlacklist": ":warning: **Cette musique est déjà blacklist !**"
+                "alreadyBlacklist": ":warning: **Cette musique est déjà ajoutée dans la liste noire !**"
             },
             "loop": {
                 "help": "Changer le mode de répétition des musiques.",

@@ -26,19 +26,6 @@ class Ranking extends Command {
     let type = '';
 
     switch (args[0]) {
-      // case 'credits':
-      // case 'credit':
-      // case 'crédit':
-      // case 'crédits': {
-      //   type = 'crédits';
-      //   const topCredits = await this.getTopCredit(3);
-
-      //   for (const [i, element] of topCredits.entries()) {
-      //     const member = message.guild.members.cache.get(element.member);
-      //     description += `    ${emojis[i]} ${member.nickname || member.user.username} : ${element.credits}\n`;
-      //   }
-      //   break;
-      // }
       case 'blague-like':
       case 'joke-like':
       case 'blague-likes':
