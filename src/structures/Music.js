@@ -55,7 +55,7 @@ class MusicBotApp {
           message.channel.send(config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));
         });
 
-        this.dispatcher.on('end', () => {
+        this.dispatcher.on('finish', () => {
           const preset = this.presets.get(this.endReason || 'default');
           this.endReason = undefined;
 
