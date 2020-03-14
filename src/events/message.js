@@ -37,12 +37,13 @@ function canExecute(command, message) {
 
 export default async function messageHandler(message) {
   const args = message.content.split(' ');
+  const prefix = config.bot.prefix;
   let cmd = args.shift();
 
   if (message.author.bot
     || message.system
     || message.guild.id !== config.bot.guild
-    || (!client.config.activated && !['.status', '.statut'].includes(cmd))) return;
+    || (!client.config.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
 
   // Easter egg "ssh@skript-mc.fr"
   if (message.content.startsWith('ssh@skript-mc.fr')) {
