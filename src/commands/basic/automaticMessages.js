@@ -51,7 +51,7 @@ class AutomaticMessages extends Command {
 
     if (matches.length === 0) {
       const errorMsg = await message.channel.send(discordError(this.config.invalidMessage, message));
-      errorMsg.delete(10000);
+      errorMsg.delete({ timeout: 10000 });
     } else {
       const messagesList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.automsg ');
       const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', messagesList));

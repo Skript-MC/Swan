@@ -1,23 +1,11 @@
 /* eslint-disable import/no-cycle */
 import { client, config } from '../main';
-import CreditsManager from '../structures/CreditsManager';
 
 export default async function reactionAddHandler(reaction, user) {
   const message = reaction.message;
 
   if (user.bot
     || message.channel.id !== config.channels.suggestion) return;
-
-  // On ajoute les crédits (après l'antispam #snippets)
-  if (message.author.id !== user.id) {
-    let valueAdd = config.credits.addReaction;
-    if (message.member.roles.cache.has(config.roles.nitrobooster)) valueAdd *= config.credits.bonuses.nitroBooster;
-    CreditsManager.addToMember(message.guild.members.cache.get(user.id), valueAdd);
-
-    let valueReceive = config.credits.addReaction;
-    if (message.member.roles.cache.has(config.roles.nitrobooster)) valueReceive *= config.credits.bonuses.nitroBooster;
-    CreditsManager.addToMember(message.member, valueReceive);
-  }
 
   const guild = client.guilds.cache.get(config.bot.guild);
   const link = `https://discordapp.com/channels/${guild.id}/${config.channels.suggestion}/${message.id}`;
