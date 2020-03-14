@@ -1,9 +1,8 @@
-/* eslint-disable curly, nonblock-statement-body-position */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
 import { SkripttoolsAddons, config } from '../../main';
-import { uncapitalize, jkDistance } from '../../utils';
+import { uncapitalize, jkDistance, convertFileSize, selectorMessage } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -25,14 +24,12 @@ class AddonInfo extends Command {
       const myAddon = args.join(' ');
 
       let matchingAddons = addons.filter(elt => elt.plugin.toUpperCase().includes(myAddon.toUpperCase()));
-      const results = matchingAddons.length;
 
       // Limite à 10 élements. + simple à gérer pour le moment, on pourra voir + tard si on peut faire sans.
       matchingAddons = matchingAddons.slice(0, 10);
 
+      await msg.delete();
       if (matchingAddons.length === 0) {
-        await msg.delete();
-
         // Si l'addon est inconnu
         const matches = [];
         for (const elt of addons.map(addon => addon.plugin)) {
@@ -60,54 +57,21 @@ class AddonInfo extends Command {
             });
         }
       } else if (matchingAddons.length === 1) {
-        msg.delete();
         this.sendDetails(message, matchingAddons[0]);
       } else {
-        let content = this.config.searchResults.replace('%r', results).replace('%s', myAddon);
-
-        for (let i = 0; i < matchingAddons.length; i++)
-          content += `\n${reactionsNumbers[i]} ${matchingAddons[i].plugin}`;
-
-        if (results - 10 > 0) content += `\n...et ${results - 10} de plus...`;
-        await msg.edit(content);
-
-        for (let i = 0; i < matchingAddons.length; i++) await msg.react(reactionsNumbers[i]);
-        await msg.react('❌');
-
-        const collectorNumbers = msg
-          .createReactionCollector((reaction, user) => !user.bot
-            && user.id === message.author.id
-            && reactionsNumbers.includes(reaction.emoji.name))
-          .once('collect', (reaction) => {
-            msg.delete();
-            this.sendDetails(message, matchingAddons[reactionsNumbers.indexOf(reaction.emoji.name)]);
-            collectorNumbers.stop();
-          });
-        const collectorStop = msg
-          .createReactionCollector((reaction, user) => !user.bot
-            && user.id === message.author.id
-            && reaction.emoji.name === '❌')
-          .once('collect', () => {
-            message.delete();
-            msg.delete();
-            collectorNumbers.stop();
-            collectorStop.stop();
-          });
+        selectorMessage(
+          matchingAddons,
+          myAddon,
+          message,
+          this.config,
+          addon => addon.plugin,
+          this.sendDetails,
+        );
       }
     }
   }
 
-  async sendDetails(message, addon) {
-    let size;
-    let unit;
-    if (addon.bytes) {
-      size = addon.bytes / 1000000;
-      unit = 'Mo';
-      if (size < 1) {
-        size *= 1000;
-        unit = 'Ko';
-      }
-    }
+  async sendDetails(message, addon, thisConfig = this.config) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -116,13 +80,13 @@ class AddonInfo extends Command {
       .setDescription(addon.description || 'Aucune description disponible.')
       .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`);
 
-    if (addon.unmaintained) embed.addField(this.config.embed.unmaintained, this.config.embed.unmaintained_desc, true);
-    if (addon.author) embed.addField(this.config.embed.author, addon.author, true);
-    if (addon.version) embed.addField(this.config.embed.version, addon.version, true);
-    if (addon.download) embed.addField(this.config.embed.download, `[Téléchargez ici](${addon.download}) ${size.toFixed(2)} ${unit}`, true);
-    if (addon.sourcecode) embed.addField(this.config.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
-    if (addon.depend && addon.depend.depend) embed.addField(this.config.embed.depend, addon.depend.depend.join(', '), true);
-    if (addon.depend && addon.depend.softdepend) embed.addField(this.config.embed.softdepend, addon.depend.softdepend.join(', '), true);
+    if (addon.unmaintained) embed.addField(thisConfig.embed.unmaintained, thisConfig.embed.unmaintained_desc, true);
+    if (addon.author) embed.addField(thisConfig.embed.author, addon.author, true);
+    if (addon.version) embed.addField(thisConfig.embed.version, addon.version, true);
+    if (addon.download) embed.addField(thisConfig.embed.download, `[Téléchargez ici](${addon.download}) (${convertFileSize(addon.bytes)})`, true);
+    if (addon.sourcecode) embed.addField(thisConfig.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
+    if (addon.depend && addon.depend.depend) embed.addField(thisConfig.embed.depend, addon.depend.depend.join(', '), true);
+    if (addon.depend && addon.depend.softdepend) embed.addField(thisConfig.embed.softdepend, addon.depend.softdepend.join(', '), true);
 
     message.channel.send(embed);
   }

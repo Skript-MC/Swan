@@ -183,3 +183,58 @@ export function slugify(string) {
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, ''); // Trim - from end of text
 }
+
+export function convertFileSize(size) {
+  size = Math.abs(parseInt(size, 10));
+  const def = [[1, 'octets'], [1024, 'ko'], [1024 ** 2, 'Mo'], [1024 ** 3, 'Go'], [1024 ** 4, 'To']];
+
+  for (let i = 1; i < def.length; i++) {
+    if (size < def[i][0]) return `${(size / def[i - 1][0]).toFixed(2)} ${def[i - 1][1]}`;
+  }
+}
+
+/**
+ * Create a "selector message", which will send a message from which the user can choose multiple options
+ * @param {Array} results - The array we should itterate
+ * @param {string} query - The query the user passed (basically a args.join(' '))
+ * @param {Message} message - The user's message
+ * @param {Object} cmdConfig - The config of the command (basically this.config)
+ * @param {Function} messageCallback - The callback to print a line
+ * @param {Function} callback - The callback to call when the user has made his choice
+ */
+export async function selectorMessage(results, query, message, cmdConfig, messageCallback, callback) {
+  const conf = {
+    searchResults: '%r élements trouvés pour la recherche `%s`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**',
+  };
+  const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
+  let content = conf.searchResults.replace('%r', results.length).replace('%s', query);
+
+  for (let i = 0; i < results.length; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
+
+  if (results.length - 10 > 0) content += `\n...et ${results - 10} de plus...`;
+  const botMessage = await message.channel.send(content);
+
+  for (let i = 0; i < results.length; i++) await botMessage.react(reactionsNumbers[i]);
+  await botMessage.react('❌');
+
+  const collectorNumbers = botMessage
+    .createReactionCollector((reaction, user) => !user.bot
+      && user.id === message.author.id
+      && reactionsNumbers.includes(reaction.emoji.name))
+    .once('collect', (reaction) => {
+      botMessage.delete();
+      callback(message, results[reactionsNumbers.indexOf(reaction.emoji.name)], cmdConfig);
+      collectorNumbers.stop();
+    });
+
+  const collectorStop = botMessage
+    .createReactionCollector((reaction, user) => !user.bot
+      && user.id === message.author.id
+      && reaction.emoji.name === '❌')
+    .once('collect', () => {
+      message.delete();
+      botMessage.delete();
+      collectorNumbers.stop();
+      collectorStop.stop();
+    });
+}
