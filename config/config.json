@@ -64,8 +64,6 @@
             "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Votre message ne contient aucun bloc de code... Comment voulez-vous partager votre script sans bloc de code ? Si vous ne savez simplement pas faire de bloc de code, regardez ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
             "cmdSuggestion": "La commande %c n'existe pas. Voulais-tu dire `.%m` ?",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
-            "creditsFirstReward": "Bravo %s, tu viens d'arriver à %d crédits ! Tu gagnes les crédits en participant sur le Discord : en envoyant des messages, partageant du code, donnant des idées, aidant les autres, réagissant aux messages... Quand tu arrives à certains paliers, tu peux recevoir des récompenses ! Amuses-toi bien ;)",
-            "creditsReward": "Bravo %s, tu viens d'arriver à %d crédits ! Voici ta récompense : %r",
             "ghostping": ":warning: %s, vous avez été ghost-ping par %m."
         },
         "errors": {
