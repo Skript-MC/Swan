@@ -43,7 +43,7 @@ class Move extends Command {
       .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
       .setDescription(targetedMessage.content)
       .setFooter(`Déplacé par ${message.member.nickname || message.author.username}`)
-      .setTimestamp();
+      .setTimestamp(targetedMessage.createdAt);
     const moveEmbed = await targetedChannel.send(embed);
 
     // On crée un collecteur afin de pouvoir supprimer le message (exécuteur de la command .move).
