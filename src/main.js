@@ -32,6 +32,11 @@ client.on('ready', async () => {
       .catch(console.error);
   }
 
+  // Cache all suggestions
+  const suggestionChannel = client.channels.cache.get(config.channels.suggestion);
+  const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
+  success(`Suggestion messages cached! (${suggestionMessages.size})`);
+
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
 
   success('Skript-MC bot loaded!');
