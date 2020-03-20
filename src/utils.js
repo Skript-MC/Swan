@@ -79,6 +79,7 @@ export function toTimestamp(str) {
   regexs.set(/sem/i, 604800);
   regexs.set(/j/i, 86400);
   regexs.set(/h/i, 3600);
+  regexs.set(/min/i, 60);
   regexs.set(/m/i, 60);
   regexs.set(/s/i, 1);
 

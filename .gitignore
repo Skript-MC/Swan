@@ -7,3 +7,5 @@ databases/*
 .DS_Store
 *.db
 assets/*.psd
+ecosystem.config.js
+update.sh
