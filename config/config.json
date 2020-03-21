@@ -129,7 +129,7 @@
                         ]
                     },
                     "everyloop": {
-                        "templates": ["everyloop", "every loop"],
+                        "templates": ["everyloop", "every loop", "loop", "every"],
                         "content": "```applescript\nevery X:\n\tloop all players:\n\t\t# Vtore code </>```Les codes de ce type sont fortements déconseillés pour des questions d'**optimisation** et de **performance**. Imaginez que tous les ticks (20 fois par seconde) ou autre délai, vous vérifiez tous les joueurs de votre serveur ? Cela reste correct si vous êtes 4, mais si vous êtes une trentaine ? Skript ferait 120 000 vérifications par minute si vous êtes une centaine, votre serveur ne supporterait pas tous ces calculs !\n\nEssayez de trouver une alternative à votre code, qui n'utilise pas ce type de code. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```applescript\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\t# Votre code </>\n\t\twait 5 seconds # Déconseillé de le réduire```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt que vérifier tous les joueurs tous les X temps, chaque joueur possède sa boucle qui se rafraîchit tous les X.\n\n:arrow_right_hook: **__Pour conclure :__** D'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos codes, essayez d'utiliser des alternatives."
                     },
                     "longcode": {
@@ -151,7 +151,7 @@
                     },
                     "1.8": {
                         "templates": ["1.8", "1.8.x", "1.8.X", "18"],
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>), la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
                     },
                     "contains": {
                         "templates": ["contain", "contains"],
@@ -164,6 +164,10 @@
                     "recrutement": {
                         "templates": ["recrutement", "recruting"],
                         "content": ":warning: Merci de ne pas faire vos demandes de recrutement sur le Discord.\nPour cela, vous pouvez aller dans cette catégorie du forum : <https://skript-mc.fr/forum/forum/14-recrutement-pour-vos-projets/>. Votre demande sera plus fructueuse que sur Discord."
+                    },
+                    "spoonfeed": {
+                        "templates": ["spoonfeed", "learntolearn", "searchdoc"],
+                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris le compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
                     }
                 }
             },
@@ -249,7 +253,7 @@
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est conseillée. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25), la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev36](https://github.com/bensku/Skript/releases/tag/dev36), ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est conseillée. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
                     "download": ":inbox_tray: Lien de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
@@ -375,6 +379,11 @@
                 "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
                 "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
                 "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours."
+            },
+            "reactionrole": {
+                "help": "Créer une réaction de rôle",
+                "description": "Envoie un message où la réaction ajoute un rôle à l'utilisateur",
+                "invalidCmd": "Tu n'as mentionné aucun rôle à assigner aux utilisateurs !"
             },
             "joke": {
                 "help": "Envoyer une blague aléatoire.",
