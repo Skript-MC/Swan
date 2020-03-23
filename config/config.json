@@ -167,7 +167,11 @@
                     },
                     "spoonfeed": {
                         "templates": ["spoonfeed", "learntolearn", "searchdoc"],
-                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris le compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
+                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris le compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent afin qu'ils comprennent ce qu'ils font.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
+                    },
+                    "encoding": {
+                        "templates": ["encoding", "utf-8", "utf8"],
+                        "content": "Pour encoder vos scripts, vous pouvez utiliser l'encodage `UTF-8`.\nCet encodage permettra à Skript de lire correctement vos fichiers.\n\n:small_blue_diamond: **NotePad++** : `Encodage` > `Encoder en UTF-8` :white_check_mark: \n:small_blue_diamond: **Visual Studio Code** : `File` > `Preferences` >  `Settings` > `Text Editor` > `Files` > `Encoding` > `utf8` :white_check_mark:\n:small_blue_diamond: **Sublime Text 3** : `File` > `Save with encoding` > `UTF-8` :white_check_mark:"
                     }
                 }
             },
