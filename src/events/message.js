@@ -66,12 +66,32 @@ export default async function messageHandler(message) {
 
     const channel = await client.channels.fetch(channelId).catch(console.error);
     const targetedMessage = await channel.messages.fetch(messageId).catch(console.error);
-
+    if (!targetedMessage.content) return;
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`${message.member.nickname || message.author.username} cite un message de ${targetedMessage.member.nickname || targetedMessage.author.username}`, message.author.avatarURL())
-      .setDescription(targetedMessage.content);
-    message.channel.send(embed);
+      .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
+      .setDescription(targetedMessage.content)
+      .setFooter(`Message cité par ${message.member.nickname || message.author.username}`)
+      .setTimestamp(targetedMessage.createdAt);
+    if (targetedMessage.attachments !== 0) {
+      let loop = 1;
+      if (loop <= 5) {
+        targetedMessage.attachments.forEach((attachment) => {
+          embed.addField(`Attachement n°${loop}`, attachment.url);
+          loop++;
+        });
+      }
+    }
+    const msg = await message.channel.send(embed);
+    await msg.react('🗑️');
+    const collector = msg
+      .createReactionCollector((reaction, user) => user.id === message.author.id
+        && reaction.emoji.name === '🗑️'
+        && !user.bot)
+      .on('collect', () => {
+        msg.delete();
+        collector.stop();
+      });
   }
 
   // Antispam channel Snippet

@@ -61,7 +61,7 @@
             "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Calme-toi, petit garnement. Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (Vengelis ou Rémi) afin d'améliorer la documentation.",
-            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde [ici](<https://support.discordapp.com/hc/fr/articles/210298617>).",
+            "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
             "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `.%m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
             "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:"
@@ -151,7 +151,7 @@
                     },
                     "1.8": {
                         "templates": ["1.8", "1.8.x", "1.8.X", "18"],
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>), la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
                     },
                     "contains": {
                         "templates": ["contain", "contains"],
@@ -164,6 +164,14 @@
                     "recrutement": {
                         "templates": ["recrutement", "recruting"],
                         "content": ":warning: Merci de ne pas faire vos demandes de recrutement sur le Discord.\nPour cela, vous pouvez aller dans cette catégorie du forum : <https://skript-mc.fr/forum/forum/14-recrutement-pour-vos-projets/>. Votre demande sera plus fructueuse que sur Discord."
+                    },
+                    "spoonfeed": {
+                        "templates": ["spoonfeed", "learntolearn", "searchdoc"],
+                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris le compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent afin qu'ils comprennent ce qu'ils font.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
+                    },
+                    "encoding": {
+                        "templates": ["encoding", "utf-8", "utf8"],
+                        "content": "Pour encoder vos scripts, vous pouvez utiliser l'encodage `UTF-8`.\nCet encodage permettra à Skript de lire correctement vos fichiers.\n\n:small_blue_diamond: **NotePad++** : `Encodage` > `Encoder en UTF-8` :white_check_mark: \n:small_blue_diamond: **Visual Studio Code** : `Status Bar (en bas)` > `UTF-8` :white_check_mark:\n:small_blue_diamond: **Sublime Text 3** : `File` > `Save with encoding` > `UTF-8` :white_check_mark:"
                     }
                 }
             },
