@@ -45,7 +45,6 @@
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
         "skin": "http://cravatar.eu/helmavatar/",
-        "lyrics": "https://api.ksoft.si/lyrics/",
         "github": "https://api.github.com"
     },
 
@@ -472,12 +471,6 @@
             "discover": {
                 "help": "Découvrir une commande de Swan",
                 "description": "Envoie une des nombreuses commandes de Swan afin de les découvrir."
-            },
-            "lyrics": {
-                "enabled": false,
-                "help": "Afficher les paroles d'une musique",
-                "description": "Envoie les paroles de la musique que Swan est en train de jouer.",
-                "error": "Une erreur est survenue, désolé."
             },
             "status": {
                 "help": "Consulter ou définir le statut de Swan.",
