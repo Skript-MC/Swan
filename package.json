@@ -40,9 +40,9 @@
     "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.8.7",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.20.1",
