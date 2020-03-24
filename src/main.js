@@ -18,10 +18,25 @@ export const sanctions = [];
 loadCommands();
 export const db = loadDatabases();
 export const client = loadBot();
-export const SkriptHubSyntaxes = loadSkriptHubAPI();
-export const SkripttoolsAddons = loadSkripttoolsAddons();
+
+const shouldLoadSyntaxes = config.messages.commands.syntaxinfo.enabled;
+const shouldLoadAddons = config.messages.commands.addoninfo.enabled;
+export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI() : null;
+export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : null;
 
 client.on('ready', async () => {
+  // Verifying tokens and ids
+  if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
+  if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
+  if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
+  if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
+  for (const value of Object.values(config.channels)) {
+    if (!value) console.warn(`config.channels.${value} is not set. You may want to fill this field to avoid any error.`);
+  }
+  for (const value of Object.values(config.roles)) {
+    if (!value) console.warn(`config.roles.${value} is not set. You may want to fill this field to avoid any error.`);
+  }
+
   // Initializing the commands-stats database
   for (const command of commands) {
     const docs = await db.commandsStats.find({ command: command.name })

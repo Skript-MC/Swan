@@ -62,7 +62,6 @@ class Moderation {
       victim.roles.add(role);
     } catch (e) {
       message.channel.send(discordError(cmdConfig.cantAddRole, message));
-      console.error(e);
     }
 
     // Envoyer les messages
@@ -116,7 +115,6 @@ class Moderation {
       victim.roles.add(role);
     } catch (e) {
       message.channel.send(discordError(cmdConfig.cantAddRole, message));
-      console.error(e);
     }
 
     // Envoyer les messages
@@ -321,7 +319,7 @@ class Moderation {
 
 client.on('ready', () => {
   const guild = client.guilds.resolve(config.bot.guild);
-  if (!guild) return console.error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
+  if (!guild) throw new Error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
 
   setInterval(async () => {
     // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) pas égale ($not) à -1 (=ban def)

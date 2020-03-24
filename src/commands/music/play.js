@@ -58,7 +58,6 @@ class Play extends Command {
         playlist = await youtube.getPlaylistByID(matches[0][1]);
         videos = await playlist.getVideos(config.music.queueLimit);
       } catch (err) {
-        console.error(err);
         return message.channel.send(this.config.playlistNotFound);
       }
 
@@ -102,7 +101,6 @@ class Play extends Command {
 
         this.prepareForPlaying(video, message, voiceChannel);
       } catch (err) {
-        console.error(err);
         return message.channel.send(this.config.error);
       }
     } else { // Nom de Musique
@@ -166,7 +164,6 @@ class Play extends Command {
             collectorStop.stop();
           });
       } catch (err) {
-        console.error(err);
         return message.channel.send(this.config.error);
       }
     }

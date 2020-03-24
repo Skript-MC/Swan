@@ -78,13 +78,13 @@ class MusicBotApp {
         this.dispatcher.on('error', (err) => {
           message.channel.send(config.messages.errors.cantplaymusic);
           voiceChannel.leave();
-          console.error(err);
+          throw new Error(err);
         });
       })
       .catch((err) => {
         message.channel.send(config.messages.errors.erroroccured);
         voiceChannel.leave();
-        console.error(err);
+        throw new Error(err);
       });
   }
 
