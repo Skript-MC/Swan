@@ -30,7 +30,7 @@ class SanctionManager {
       });
     } catch (e) {
       console.error('Error while attempting to create the channel :');
-      console.error(e);
+      throw new Error(e);
     }
     return channel;
   }
@@ -125,7 +125,7 @@ class SanctionManager {
       try {
         info.member.roles.remove(role);
       } catch (e) {
-        console.error(e);
+        throw new Error(e);
       }
     }
 
@@ -220,7 +220,7 @@ class SanctionManager {
     }
 
     fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
 
     return {

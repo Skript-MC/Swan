@@ -26,7 +26,6 @@ class Purge extends Command {
     }
     message.channel.bulkDelete(messages).catch((err) => {
       if (err.message.includes('14 days old')) message.channel.send(discordError(this.config.tooOld, message));
-      else console.error(err);
     });
   }
 }

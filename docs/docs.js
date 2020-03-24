@@ -34,7 +34,7 @@ async function softLoadCommands(path) {
           }
         } catch (e) {
           console.error(`Unable to load this command: ${file}`);
-          console.error(e);
+          throw new Error(e);
         }
       }
 
@@ -92,12 +92,12 @@ async function generateDocs() {
   const path = `${__dirname}/generated/commands.md`;
   try {
     fs.writeFile(path, header + content, (err) => {
-      if (err) return console.error(err);
+      if (err) throw new Error(err);
       console.log('Documentation updated!');
       process.exit(0);
     });
   } catch (err) {
-    return console.error(err);
+    throw new Error(err);
   }
 }
 

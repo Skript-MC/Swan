@@ -12,12 +12,6 @@ const apikeys = {
   discord: process.env.DISCORD_API,
   skripthub: process.env.SKRIPTHUB_API,
 };
-const GETtoken = {
-  method: 'GET',
-  headers: {
-    Authorization: `Token ${apikeys.skripthub}`,
-  },
-};
 
 export function loadConfig() {
   const conf = require('../config/config.json'); // eslint-disable-line global-require
@@ -33,10 +27,8 @@ export function loadConfig() {
     snippet: ids.SNIPPET,
     idea: ids.IDEA,
     suggestion: ids.SUGGESTION,
-    reunion: ids.REUNION,
     main: ids.MAIN,
     logs: ids.LOGS,
-    bot: ids.BOT_CHANNEL,
   };
   conf.roles = {
     owner: ids.OWNER,
@@ -44,11 +36,10 @@ export function loadConfig() {
     staff: ids.STAFF,
     ma: ids.MA,
     everyone: ids.EVERYONE,
-    nitrobooster: ids.NITROBOOSTER,
   };
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
-  conf.music.restrictedVocal = ids.RESTRICTER_VOCAL ? ids.RESTRICTER_VOCAL.split(',') : [];
+  conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
 
   return conf;
 }
@@ -81,7 +72,7 @@ export function loadCommands(path = 'commands') {
           }
         } catch (e) {
           console.error(`Unable to load this command: ${file}`);
-          console.error(e);
+          throw new Error(e);
         }
       }
     }
@@ -89,13 +80,20 @@ export function loadCommands(path = 'commands') {
 }
 
 export async function loadSkriptHubAPI() {
+  const options = {
+    method: 'GET',
+    headers: {
+      Authorization: `Token ${apikeys.skripthub}`,
+    },
+  };
   const syntaxes = [];
-  await axios(`${config.apis.syntax}/syntax/`, GETtoken)
+
+  await axios(`${config.apis.syntax}/syntax/`, options)
     .then((response) => {
       for (const syntax of response.data) syntaxes[syntax.id] = syntax;
     }).catch(console.error);
 
-  await axios(`${config.apis.syntax}/syntaxexample/`, GETtoken)
+  await axios(`${config.apis.syntax}/syntaxexample/`, options)
     .then((response) => {
       for (const example of response.data) {
         if (syntaxes[example.syntax_element]) {
