@@ -14,7 +14,7 @@ class Statistics extends Command {
   }
 
   async execute(message, _args) {
-    const uptime = secondToDuration(client.uptime /	1000);
+    const uptime = secondToDuration(client.uptime / 1000);
 
     const onlineUsers = message.guild.members.cache.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;
     const totalUsers = message.guild.members.cache.filter(m => !m.user.bot).size;
