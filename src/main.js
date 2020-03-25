@@ -47,17 +47,19 @@ client.on('ready', async () => {
       .catch(console.error);
   }
 
-  // Cache all suggestions
+  // Cache all messages that need to be cached
   const suggestionChannel = client.channels.cache.get(config.channels.suggestion);
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
-  success(`Suggestion messages cached! (${suggestionMessages.size})`);
+  success(`Messages cached! (${suggestionMessages.size})`);
 
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
-
-  success('Skript-MC bot loaded!');
-
   client.config = {};
   client.config.activated = true;
+
+  const guild = client.guilds.resolve(config.bot.guild);
+  if (!guild) throw new Error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
+
+  success('Skript-MC bot loaded!');
 
   setInterval(() => {
     // Tri dans les cooldowns des commandes
@@ -72,5 +74,9 @@ client.on('ready', async () => {
 client.on('message', messageHandler);
 client.on('messageDelete', messageDeleteHandler);
 client.on('messageReactionAdd', reactionAddHandler);
+
 client.on('error', console.error);
 client.on('warn', console.warn);
+
+process.on('uncaughtException', (err) => { throw new Error(err); });
+process.on('unhandledRejection', (err) => { throw new Error(err); });
