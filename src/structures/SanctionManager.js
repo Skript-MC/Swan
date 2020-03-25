@@ -9,29 +9,27 @@ class SanctionManager {
   }
 
   static async createChannel(victim, moderator, channelName, guild) {
-    let channel;
-    try {
-      channel = await guild.channels.create(channelName, 'text');
-      channel.setParent(config.moderation.logCategory);
-      channel.setTopic(`Canal privé suite au bannissement de ${victim.user.username}, par ${moderator.username}`);
-      await channel.overwritePermissions({
-        permissionOverwrites: [
-          {
-            id: config.roles.everyone,
-            deny: ['VIEW_CHANNEL'],
-          }, {
-            id: config.roles.staff,
-            allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
-          }, {
-            id: victim.id,
-            allow: ['VIEW_CHANNEL'],
-          },
-        ],
-      });
-    } catch (e) {
+    const channel = await guild.channels.create(channelName, 'text');
+
+    const parent = channel.setParent(config.moderation.logCategory);
+    const topic = channel.setTopic(`Canal privé suite au bannissement de ${victim.user.username}, par ${moderator.username}`);
+    const permissions = channel.overwritePermissions({
+      permissionOverwrites: [{
+        id: config.roles.everyone,
+        deny: ['VIEW_CHANNEL'],
+      }, {
+        id: config.roles.staff,
+        allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
+      }, {
+        id: victim.id,
+        allow: ['VIEW_CHANNEL'],
+      }],
+    });
+
+    await Promise.all([parent, topic, permissions]).catch((err) => {
       console.error('Error while attempting to create the channel :');
-      throw new Error(e);
-    }
+      throw new Error(err);
+    });
     return channel;
   }
 
