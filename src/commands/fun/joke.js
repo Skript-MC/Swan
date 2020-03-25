@@ -12,7 +12,7 @@ class Joke extends Command {
   }
 
   async execute(message, _args) {
-    const jokes = this.config.jokes;
+    const { jokes } = this.config;
     const joke = jokes[Math.floor(Math.random() * jokes.length)];
     const id = jokes.indexOf(joke);
     await this.updateStats(id);
@@ -34,7 +34,7 @@ class Joke extends Command {
     const jokeDoc = await db.jokes.findOne({ id }).catch(console.error);
     const likes = jokeDoc.likes.length;
     const dislikes = jokeDoc.dislikes.length;
-    const views = jokeDoc.views;
+    const { views } = jokeDoc;
     return new MessageEmbed()
       .setTitle(`:small_blue_diamond: ${split[0]}`)
       .setDescription(split[1])

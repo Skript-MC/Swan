@@ -15,7 +15,7 @@ class AutomaticMessages extends Command {
 
   async execute(message, args) {
     const arg = args.join(' ');
-    const messages = this.config.messages;
+    const { messages } = this.config;
 
     if (args.length === 0) {
       const allMessages = Object.keys(this.config.messages).join(', ');
