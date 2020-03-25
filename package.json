@@ -1,8 +1,8 @@
 {
   "name": "swan",
-  "version": "1.2.0",
+  "version": "1.4.1",
   "description": "Bot discord de Skript-Mc.",
-  "main": "src/main.js",
+  "main": "./src/main.js",
   "scripts": {
     "start": "babel-node ./src/main.js",
     "dev": "nodemon --exec babel-node ./src/main.js",
