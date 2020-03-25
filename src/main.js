@@ -19,8 +19,8 @@ loadCommands();
 export const db = loadDatabases();
 export const client = loadBot();
 
-const shouldLoadSyntaxes = config.messages.commands.syntaxinfo.enabled;
-const shouldLoadAddons = config.messages.commands.addoninfo.enabled;
+const shouldLoadSyntaxes = config.messages.commands.syntaxinfo.enabled ?? true;
+const shouldLoadAddons = config.messages.commands.addoninfo.enabled ?? true;
 export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI() : null;
 export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : null;
 
