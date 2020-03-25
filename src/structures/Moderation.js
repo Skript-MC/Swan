@@ -43,7 +43,14 @@ class Moderation {
       return message.channel.send(discordError(cmdConfig.durationTooLong));
     }
 
-    if (duration === -1) return this.hardBan(victim, reason, moderator);
+    if (duration === -1) {
+      const successMessage = cmdConfig.successfullyBanned
+        .replace('%u', victim.user.username)
+        .replace('%r', reason)
+        .replace('%d', secondToDuration(duration));
+      message.channel.send(discordSuccess(successMessage, message));
+      return this.hardBan(victim, reason, moderator);
+    }
 
     // Vérifier dans la bdd si le joueur est déjà banni
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
