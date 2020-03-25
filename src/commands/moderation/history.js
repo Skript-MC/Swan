@@ -31,7 +31,7 @@ class History extends Command {
     const result = await db.sanctionsHistory.findOne({ memberId: target.id }).catch(console.error);
     if (!result) return message.channel.send(this.config.noHistory);
 
-    const sanctions = result.sanctions;
+    const { sanctions } = result;
     const stats = {
       bans: sanctions.some(s => s.type === 'ban') ? sanctions.filter(s => s.type === 'ban').length : 0,
       mutes: sanctions.some(s => s.type === 'mute') ? sanctions.filter(s => s.type === 'mute').length : 0,

@@ -37,7 +37,7 @@ function canExecute(command, message) {
 
 export default async function messageHandler(message) {
   const args = message.content.split(' ');
-  const prefix = config.bot.prefix;
+  const { prefix } = config.bot;
   let cmd = args.shift();
 
   if (message.author.bot

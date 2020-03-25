@@ -120,7 +120,7 @@ class SyntaxInfo extends Command {
     } else {
       await msg.edit(`${results} élements trouvés pour la recherche \`${arg.toLowerCase()}\`${search.length > 0 ? ` avec comme paramètres \`${search.join(', ')}\`` : ''}. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
 
-      let content = msg.content;
+      let { content } = msg;
       for (let i = 0; i < matchingSyntaxes.length; i++)
         content += `\n${reactionsNumbers[i]} "${capitalize(matchingSyntaxes[i].title)}" *(${matchingSyntaxes[i].syntax_type}, ${matchingSyntaxes[i].addon})*`;
 

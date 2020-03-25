@@ -1,6 +1,7 @@
 module.exports = {
-    "extends": "airbnb-base",
-    "rules": {
+    parser: "babel-eslint",
+    extends: "airbnb-base",
+    rules: {
         "no-console": "off",
         "no-plusplus": "off",
         "no-continue": "off",
@@ -8,7 +9,6 @@ module.exports = {
         "no-loop-func": "off",
         "no-underscore-dangle": "off",
         "consistent-return": "off",
-        "prefer-destructuring": "off",
         "class-methods-use-this": "off",
         "max-len": "off",
         "no-restricted-syntax": "off",
