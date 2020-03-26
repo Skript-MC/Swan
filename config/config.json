@@ -152,7 +152,7 @@
                     },
                     "1.8": {
                         "templates": ["1.8", "1.8.x", "1.8.X", "18"],
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>), la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée).\nPour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser :\n- la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>)\n- la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>)\n\nPour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://dev.bukkit.org/projects/skript/files>.\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases>."
                     },
                     "contains": {
                         "templates": ["contain", "contains"],
@@ -542,7 +542,7 @@
             "ban": {
                 "help": "Appliquer une restriction du Discord à un membre.",
                 "description": "Applique une restriction du Discord à un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
@@ -558,7 +558,7 @@
             "unban": {
                 "help": "Retirer une restriction du Discord à un membre.",
                 "description": "Retire une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le salon privé.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
@@ -567,7 +567,7 @@
             "mute": {
                 "help": "Rendre muet un membre.",
                 "description": "Rendre muet un membre dans les salons d'aide.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
@@ -582,7 +582,7 @@
             "unmute": {
                 "help": "Redonner la parole à un membre.",
                 "description": "Rétabli la parole à un membre dans les salons d'aide.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnmuted": "Vous avez bien rétabli la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
@@ -591,7 +591,7 @@
             "warn": {
                 "help": "Avertir un membre.",
                 "description": "Donne un avertissement à un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
@@ -602,7 +602,7 @@
             "kick": {
                 "help": "Expulser un membre.",
                 "description": "Expulse un membre du serveur Discord.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfKick": "Ne te kick pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyKicked": "Vous avez bien averti %u !\nRaison : %r",
@@ -611,7 +611,7 @@
             "history": {
                 "help": "Consulter l'historique des sanctions d'un membre.",
                 "description": "Envoie l'historique de toutes les sanctions d'un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
             "movemessage": {
@@ -627,7 +627,7 @@
             "removemusicrestriction": {
                 "help": "Supprimer les restrictions musicales d'un membre.",
                 "description": "Rétabli à un membre l'accès aux commandes musicales.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "notRestricted": "%u n'a aucune restriction de commandes musicales (ou ce n'est pas inscrit dans la base de données).",
                 "successfullyRemoveRestr": "Vous avez bien supprimé les restrictions à %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée"
