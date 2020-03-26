@@ -29,6 +29,7 @@ export function loadConfig() {
     suggestion: ids.SUGGESTION,
     main: ids.MAIN,
     logs: ids.LOGS,
+    rssFeed: ids.RSS_FEED,
   };
   conf.roles = {
     owner: ids.OWNER,
