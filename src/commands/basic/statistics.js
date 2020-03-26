@@ -21,11 +21,11 @@ class Statistics extends Command {
     const offlineUsers = totalUsers - onlineUsers;
     const totalBots = message.guild.members.cache.filter(m => m.user.bot).size;
     const total = totalBots + totalUsers;
-    
+
     const authors = pkg.authors.join('\n');
     const contributors = pkg.contributors.join('\n')
       .replace('_', '\\_');
-    
+
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
