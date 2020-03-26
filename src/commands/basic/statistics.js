@@ -21,7 +21,11 @@ class Statistics extends Command {
     const offlineUsers = totalUsers - onlineUsers;
     const totalBots = message.guild.members.cache.filter(m => m.user.bot).size;
     const total = totalBots + totalUsers;
-
+    
+    const authors = pkg.authors.join('\n');
+    const contributors = pkg.contributors.join('\n')
+      .replace('_', '\\_');
+    
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -33,9 +37,9 @@ class Statistics extends Command {
       .addField('Commandes', commands.length, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
-      .addField('Développeurs', `${pkg.authors.join('\n')}`, true)
-      .addField('Contributeurs', `${pkg.contributors.join('\n')}`, true)
-      .addField('Signalement des bugs/problèmes, et suggestions', `${pkg.bugs.url} ou sur le [Discord de Swan](https://discord.gg/njSgX3w)`, true)
+      .addField('Développeurs', `${authors}`, true)
+      .addField('Contributeurs', `${contributors}`, true)
+      .addField('Signalement des bugs/problèmes, et suggestions', `Vous pouvez les signaler sur le [GitHub](<${pkg.bugs.url}>) ou sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.`, true)
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
     message.channel.send(embed);
