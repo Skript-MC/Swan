@@ -324,44 +324,6 @@ class Moderation {
   }
 }
 
-client.on('ready', () => {
-  const guild = client.guilds.resolve(config.bot.guild);
-  if (!guild) throw new Error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
-
-  setInterval(async () => {
-    // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) pas égale ($not) à -1 (=ban def)
-    const query = {
-      $and: [
-        { finish: { $lt: Date.now() } },
-        { $not: { finish: -1 } }],
-    };
-    const results = await db.sanctions.find(query).catch(console.error);
-
-    for (const result of results) {
-      let file;
-      if (result.sanction === 'ban') {
-        const victim = guild.members.cache.get(result.member);
-        const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(victim)}`;
-        const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
-
-        const allMessages = await SanctionManager.getAllMessages(chan);
-        const originalModerator = guild.members.cache.get(result.modid);
-        file = SanctionManager.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
-      }
-
-      SanctionManager.removeSanction({
-        member: guild.members.cache.get(result.member),
-        title: 'Action automatique',
-        mod: client.user,
-        sanction: result.sanction,
-        reason: 'Sanction expirée (automatique).',
-        id: result._id,
-        file,
-      }, guild);
-    }
-  }, config.bot.checkInterval);
-});
-
 client.on('guildMemberRemove', async (member) => {
   if (await SanctionManager.isBan(member.id)) Moderation.hardBan(member, config.messages.miscellaneous.hardBanAutomatic, client.user);
 });

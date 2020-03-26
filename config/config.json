@@ -45,7 +45,9 @@
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
         "skin": "http://cravatar.eu/helmavatar/",
-        "github": "https://api.github.com"
+        "github": "https://api.github.com",
+        "rssContentFeed": "https://skript-mc.fr/forum/discover/all.xml/",
+        "rssFilesFeed": "https://skript-mc.fr/forum/files/files.xml/"
     },
 
     "miscellaneous": {

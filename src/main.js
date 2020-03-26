@@ -9,6 +9,8 @@ import { success } from './structures/messages';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
+import SanctionManager from './structures/SanctionManager';
+import loadRssFeed from './structures/RSSFeed';
 
 export const config = loadConfig();
 
@@ -68,6 +70,9 @@ client.on('ready', async () => {
         if (lastuse + cmd.cooldown >= Date.now()) cmd.userCooldowns.delete(id);
       }
     }
+
+    SanctionManager.checkSanctions(guild);
+    loadRssFeed();
   }, config.bot.checkInterval);
 });
 
