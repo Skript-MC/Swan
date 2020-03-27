@@ -11,6 +11,7 @@ import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
+import Command from './structures/Command';
 
 export const config = loadConfig();
 
@@ -65,13 +66,10 @@ client.on('ready', async () => {
 
   setInterval(() => {
     // Tri dans les cooldowns des commandes
-    for (const cmd of commands) {
-      for (const [id, lastuse] of cmd.userCooldowns) {
-        if (lastuse + cmd.cooldown >= Date.now()) cmd.userCooldowns.delete(id);
-      }
-    }
-
+    Command.filterCooldown(commands);
+    // Vérification des sanctions temporaires
     SanctionManager.checkSanctions(guild);
+    // Chargement des flux RSS
     loadRssFeed();
   }, config.bot.checkInterval);
 });
