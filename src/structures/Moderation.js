@@ -43,8 +43,19 @@ class Moderation {
       return message.channel.send(discordError(cmdConfig.durationTooLong));
     }
 
-    // Créer un channel perso
-    const chan = duration !== -1 ? await SanctionManager.createChannel(victim, moderator, guild) : undefined;
+    let chan;
+    if (duration !== -1) {
+      // Ajouter le rôle Sous-Fiffre
+      try {
+        await victim.roles.add(role);
+      } catch (_err) {
+        message.channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+      }
+      // Créer un channel perso
+      chan = await SanctionManager.createChannel(victim, moderator, guild, message);
+    }
+
     const infos = {
       sanction: 'ban',
       color: config.colors.ban,
@@ -78,13 +89,6 @@ class Moderation {
         .replace('%d', secondToDuration(duration));
       message.channel.send(discordSuccess(successMessage, message));
       return this.hardBan(victim, reason, moderator);
-    }
-
-    // Ajout du rôle "Sous-fiffre"
-    try {
-      victim.roles.add(role);
-    } catch (e) {
-      message.channel.send(discordError(cmdConfig.cantAddRole, message));
     }
 
     // Envoyer les messages
@@ -146,9 +150,10 @@ class Moderation {
 
     // Ajout du rôle "Bailloné"
     try {
-      victim.roles.add(role);
+      await victim.roles.add(role);
     } catch (e) {
-      message.channel.send(discordError(cmdConfig.cantAddRole, message));
+      message.channel.send(config.messages.errors.rolePermissions);
+      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
     }
 
     // Envoyer les messages
@@ -280,7 +285,7 @@ class Moderation {
       reason,
       id: result._id,
       file,
-    }, guild);
+    }, guild, message.channel);
   }
 
   static async unmute(victim, reason, moderator, cmdConfig, message, guild) {
@@ -308,7 +313,7 @@ class Moderation {
       sanction: 'mute',
       id: result._id,
       reason,
-    }, guild);
+    }, guild, message.channel);
   }
 
   static async removeMusicRestriction(victim, reason, moderator, cmdConfig, message, guild) {
