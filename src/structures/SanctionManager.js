@@ -88,10 +88,10 @@ class SanctionManager {
   static log(infos, guild) {
     let action;
     if (infos.sanction === 'ban') action = 'Restriction du discord';
-    if (infos.sanction === 'ban_prolongation') action = 'Prolongation de la restriction du discord';
+    if (infos.sanction === 'ban_prolongation') action = 'Modification de la restriction du discord';
     else if (infos.sanction === 'hardban') action = 'Banissement';
     else if (infos.sanction === 'mute') action = "Mute des channels d'aide";
-    else if (infos.sanction === 'mute_prolongation') action = "Prolongation du mute des channels d'aide";
+    else if (infos.sanction === 'mute_prolongation') action = "Modification du mute des channels d'aide";
     else if (infos.sanction === 'kick') action = 'Expulsion';
     else if (infos.sanction === 'warn') action = 'Avertissement';
     else if (infos.sanction === 'music_restriction') action = 'Restriction des commandes de musiques';
