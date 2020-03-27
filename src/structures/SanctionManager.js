@@ -14,18 +14,16 @@ class SanctionManager {
 
     const parent = channel.setParent(config.moderation.logCategory);
     const topic = channel.setTopic(`Canal privé suite au bannissement de ${victim.user.username}, par ${moderator.username}`);
-    const permissions = channel.overwritePermissions({
-      permissionOverwrites: [{
-        id: config.roles.everyone,
-        deny: ['VIEW_CHANNEL'],
-      }, {
-        id: config.roles.staff,
-        allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
-      }, {
-        id: victim.id,
-        allow: ['VIEW_CHANNEL'],
-      }],
-    });
+    const permissions = channel.overwritePermissions([{
+      id: config.roles.everyone,
+      deny: ['VIEW_CHANNEL'],
+    }, {
+      id: config.roles.staff,
+      allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
+    }, {
+      id: victim.id,
+      allow: ['VIEW_CHANNEL'],
+    }]);
 
     await Promise.all([parent, topic, permissions]).catch((err) => {
       console.error('Error while attempting to create the channel :');
