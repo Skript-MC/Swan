@@ -76,6 +76,8 @@
             "privatemessage": "Oups ! Je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
             "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
             "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
+            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission, pas de Swan)",
+            "channelPermissions": ":warning: Impossible de créer ou de modifier le canal privé ! (Problème de permission, pas du bot)",
             "music": [
                 "Tu n'es pas dans un salon vocal !",
                 "Je ne suis pas dans un salon vocal !",
@@ -553,8 +555,7 @@
                 "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u : %d.",
                 "sanctionUpdated": "Ta sanction a été mise à jour. Tu es maintenant bannis : %d",
                 "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
-                "noReasonSpecified": "Aucune raison spécifiée",
-                "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
+                "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unban": {
                 "help": "Retirer une restriction du Discord à un membre.",
@@ -577,8 +578,7 @@
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
                 "durationUpdated": "Vous avez bien mis à jour la durée du mute de %u : %d.",
-                "noReasonSpecified": "Aucune raison spécifiée",
-                "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
+                "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unmute": {
                 "help": "Redonner la parole à un membre.",

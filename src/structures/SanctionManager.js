@@ -9,7 +9,7 @@ class SanctionManager {
     return message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(arg);
   }
 
-  static async createChannel(victim, moderator, guild) {
+  static async createChannel(victim, moderator, guild, message) {
     const pseudo = prunePseudo(victim);
     const channelName = `${config.moderation.banChannelPrefix}${pseudo}`;
 
@@ -32,9 +32,9 @@ class SanctionManager {
       allow: ['VIEW_CHANNEL'],
     }]);
 
-    await Promise.all([parent, topic, permissions]).catch((err) => {
-      console.error('Error while attempting to create the channel :');
-      throw new Error(err);
+    await Promise.all([parent, topic, permissions]).catch((_err) => {
+      message.channel.send(config.messages.errors.channelPermissions);
+      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
     });
     return channel;
   }
@@ -119,7 +119,7 @@ class SanctionManager {
     logChannel.send(embed);
   }
 
-  static async removeSanction(info, guild) {
+  static async removeSanction(info, guild, channel) {
     await db.sanctions.remove({ _id: info.id }).catch(console.error);
 
     // On enlève le rôle de la victime
@@ -131,7 +131,8 @@ class SanctionManager {
       try {
         info.member.roles.remove(role);
       } catch (e) {
-        throw new Error(e);
+        if (channel) channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
       }
     }
 
