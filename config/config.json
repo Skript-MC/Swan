@@ -550,7 +550,8 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
-                "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
+                "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u : %d.",
+                "sanctionUpdated": "Ta sanction a été mise à jour. Tu es maintenant bannis : %d",
                 "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
@@ -575,7 +576,7 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
-                "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
+                "durationUpdated": "Vous avez bien mis à jour la durée du mute de %u : %d.",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
             },

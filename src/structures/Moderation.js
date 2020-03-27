@@ -38,9 +38,37 @@ class Moderation {
     if (duration < -1) {
       return message.channel.send(discordError(cmdConfig.invalidDuration, message));
     }
-    // Durée max des modérateurs forum : 2h
-    if (message.member.roles.cache.has(config.roles.forumMod) && (duration === -1 || duration > 7200)) {
+    // Durée max des modérateurs forum : 2j
+    if (message.member.roles.cache.has(config.roles.forumMod) && (duration === -1 || duration > 172800)) {
       return message.channel.send(discordError(cmdConfig.durationTooLong));
+    }
+
+    // Créer un channel perso
+    const chan = duration !== -1 ? await SanctionManager.createChannel(victim, moderator, guild) : undefined;
+    const infos = {
+      sanction: 'ban',
+      color: config.colors.ban,
+      member: victim,
+      mod: moderator,
+      duration,
+      finish: duration !== -1 ? Date.now() + duration * 1000 : -1,
+      privateChannel: chan,
+      reason,
+    };
+
+    // Vérifier dans la bdd si le joueur est déjà banni
+    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
+    if (result) {
+      // Si oui on mets à jour la durée du ban
+      db.sanctions.update(
+        { _id: result._id },
+        { $set: { duration, finish: infos.finish } },
+      );
+      infos.sanction = 'ban_prolongation';
+      message.channel.send(discordSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message));
+      chan.send(cmdConfig.sanctionUpdated.replace('%d', secondToDuration(duration)));
+      SanctionManager.log(infos, guild);
+      return;
     }
 
     if (duration === -1) {
@@ -51,18 +79,6 @@ class Moderation {
       message.channel.send(discordSuccess(successMessage, message));
       return this.hardBan(victim, reason, moderator);
     }
-
-    // Vérifier dans la bdd si le joueur est déjà banni
-    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
-    if (result) {
-      return message.channel.send(discordError(cmdConfig.alreadyBanned.replace('%u', victim), message));
-    }
-
-    // Créer un channel perso
-    const pseudo = prunePseudo(victim);
-    const channelName = `${config.moderation.banChannelPrefix}${pseudo}`;
-    const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text')
-              || await SanctionManager.createChannel(victim, moderator, channelName, guild);
 
     // Ajout du rôle "Sous-fiffre"
     try {
@@ -84,16 +100,6 @@ class Moderation {
     chan.send(whyHere);
 
     // Envoyer les logs
-    const infos = {
-      sanction: 'ban',
-      color: config.colors.ban,
-      member: victim,
-      mod: moderator,
-      duration,
-      finish: duration !== -1 ? Date.now() + duration * 1000 : -1,
-      privateChannel: chan,
-      reason,
-    };
     SanctionManager.addToHistory(infos);
     SanctionManager.addToSanctions(infos);
     SanctionManager.log(infos, guild);
@@ -102,19 +108,40 @@ class Moderation {
   static async mute(victim, reason, duration, moderator, cmdConfig, message, guild) {
     const role = guild.roles.cache.find(r => r.name === config.moderation.muteRole);
 
-    // Regarde dans la bdd si le joueur est déjà mute
-    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'mute' }).catch(console.error);
-    // Déjà un résultat dans la bdd
-    if (result) {
-      return message.channel.send(discordError(cmdConfig.alreadyMuted.replace('%u', victim), message));
-    }
     // Durée invalide
     if (duration < -1) {
       return message.channel.send(discordError(cmdConfig.invalidDuration, message));
     }
-    // Durée maximale des sanctions des modos forum : 2h
-    if (message.member.roles.cache.has(config.roles.forumMod) && (duration !== -1 || duration > 7200)) {
+    // Durée maximale des sanctions des modos forum : 2j
+    if (message.member.roles.cache.has(config.roles.forumMod) && (duration !== -1 || duration > 172800)) {
       return message.channel.send(discordError(cmdConfig.durationTooLong, message));
+    }
+
+    const infos = {
+      sanction: 'mute',
+      color: config.colors.mute,
+      member: victim,
+      mod: moderator,
+      duration,
+      finish: duration !== -1 ? Date.now() + duration * 1000 : -1,
+      reason,
+    };
+
+    // Vérifier dans la bdd si le joueur est déjà mute
+    const result = await db.sanctions.findOne({ member: victim.id, sanction: 'mute' }).catch(console.error);
+    if (result) {
+      // Si oui on mets à jour la durée du mute
+      db.sanctions.update(
+        { _id: result._id },
+        { $set: {
+          duration,
+          finish: infos.finish,
+        } },
+      );
+      infos.sanction = 'mute_prolongation';
+      message.channel.send(discordSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message));
+      SanctionManager.log(infos, guild);
+      return;
     }
 
     // Ajout du rôle "Bailloné"
@@ -132,15 +159,6 @@ class Moderation {
     message.channel.send(discordSuccess(successMessage, message));
 
     // Envoyer les logs
-    const infos = {
-      sanction: 'mute',
-      color: config.colors.mute,
-      member: victim,
-      mod: moderator,
-      duration,
-      finish: duration !== -1 ? Date.now() + duration * 1000 : -1,
-      reason,
-    };
     SanctionManager.addToHistory(infos);
     SanctionManager.addToSanctions(infos);
     SanctionManager.log(infos, guild);
