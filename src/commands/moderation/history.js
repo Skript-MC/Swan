@@ -5,6 +5,7 @@ import { config, db } from '../../main';
 import { formatDate, secondToDuration } from '../../utils';
 
 const sanctionsName = {
+  hardban: ':bomb: Bannissement Discord',
   ban: ':hammer: Bannissement',
   unban: ':white_check_mark: Débannissement',
   mute: ':mute: Mute',
@@ -33,6 +34,7 @@ class History extends Command {
 
     const { sanctions } = result;
     const stats = {
+      hardbans: sanctions.some(s => s.type === 'hardban') ? sanctions.filter(s => s.type === 'hardban').length : 0,
       bans: sanctions.some(s => s.type === 'ban') ? sanctions.filter(s => s.type === 'ban').length : 0,
       mutes: sanctions.some(s => s.type === 'mute') ? sanctions.filter(s => s.type === 'mute').length : 0,
       kicks: sanctions.some(s => s.type === 'kick') ? sanctions.filter(s => s.type === 'kick').length : 0,
@@ -41,6 +43,7 @@ class History extends Command {
       currentWarns: result.currentWarnCount || 0,
     };
     const description = `
+      :bomb: Ban Discord : ${stats.hardbans}
       :hammer: Ban : ${stats.bans}
       :mute: Mute : ${stats.mutes}
       :door: Kick : ${stats.kicks}
