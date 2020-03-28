@@ -22,9 +22,10 @@ class Statistics extends Command {
     const totalBots = message.guild.members.cache.filter(m => m.user.bot).size;
     const total = totalBots + totalUsers;
 
+    const regex = /_/gm;
     const authors = pkg.authors.join('\n');
     const contributors = pkg.contributors.join('\n')
-      .replace('_', '\\_');
+      .replace(regex, '\\_');
 
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
