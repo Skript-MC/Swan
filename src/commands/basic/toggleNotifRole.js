@@ -20,10 +20,20 @@ class ToggleNotifRole extends Command {
     }
 
     if (!message.member.roles.cache.has(role.id)) {
-      await message.member.roles.add(role);
+      try {
+        await message.member.roles.add(role);
+      } catch (e) {
+        message.channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+      }
       message.member.send(`**(${message.guild.name})** Le rôle *"${rolename}"* vous a été ajouté !`);
     } else if (message.member.roles.cache.has(role.id)) {
-      await message.member.roles.remove(role);
+      try {
+        await message.member.roles.remove(role);
+      } catch (e) {
+        message.channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+      }
       message.member.send(`**(${message.guild.name})** Le rôle *"${rolename}"* vous a été enlevé !`);
     }
   }

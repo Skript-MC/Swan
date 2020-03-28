@@ -9,7 +9,7 @@ class SanctionManager {
     return message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(arg);
   }
 
-  static async createChannel(victim, moderator, guild) {
+  static async createChannel(victim, moderator, guild, message) {
     const pseudo = prunePseudo(victim);
     const channelName = `${config.moderation.banChannelPrefix}${pseudo}`;
 
@@ -32,9 +32,9 @@ class SanctionManager {
       allow: ['VIEW_CHANNEL'],
     }]);
 
-    await Promise.all([parent, topic, permissions]).catch((err) => {
-      console.error('Error while attempting to create the channel :');
-      throw new Error(err);
+    await Promise.all([parent, topic, permissions]).catch((_err) => {
+      message.channel.send(config.messages.errors.channelPermissions);
+      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
     });
     return channel;
   }
@@ -88,10 +88,10 @@ class SanctionManager {
   static log(infos, guild) {
     let action;
     if (infos.sanction === 'ban') action = 'Restriction du discord';
-    if (infos.sanction === 'ban_prolongation') action = 'Prolongation de la restriction du discord';
+    if (infos.sanction === 'ban_prolongation') action = 'Modification de la restriction du discord';
     else if (infos.sanction === 'hardban') action = 'Banissement';
     else if (infos.sanction === 'mute') action = "Mute des channels d'aide";
-    else if (infos.sanction === 'mute_prolongation') action = "Prolongation du mute des channels d'aide";
+    else if (infos.sanction === 'mute_prolongation') action = "Modification du mute des channels d'aide";
     else if (infos.sanction === 'kick') action = 'Expulsion';
     else if (infos.sanction === 'warn') action = 'Avertissement';
     else if (infos.sanction === 'music_restriction') action = 'Restriction des commandes de musiques';
@@ -119,7 +119,7 @@ class SanctionManager {
     logChannel.send(embed);
   }
 
-  static async removeSanction(info, guild) {
+  static async removeSanction(info, guild, channel) {
     await db.sanctions.remove({ _id: info.id }).catch(console.error);
 
     // On enlève le rôle de la victime
@@ -131,7 +131,8 @@ class SanctionManager {
       try {
         info.member.roles.remove(role);
       } catch (e) {
-        throw new Error(e);
+        if (channel) channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
       }
     }
 
