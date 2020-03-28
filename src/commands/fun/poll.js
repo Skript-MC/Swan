@@ -94,7 +94,7 @@ class Poll extends Command {
       .createReactionCollector((reaction, user) => !user.bot
         && ((questionType === 0 && reactions.yesno.includes(reaction.emoji.name))
           || (questionType === 1 && reactions.multiple.includes(reaction.emoji.name))))
-      .once('collect', (reaction) => {
+      .on('collect', (reaction) => {
         if (questionType === 0) votes[reactions.yesno.indexOf(reaction.emoji.name)] += 1;
         else if (questionType === 1) votes[reactions.multiple.indexOf(reaction.emoji.name)] += 1;
       });
@@ -103,7 +103,7 @@ class Poll extends Command {
       .createReactionCollector((reaction, user) => !user.bot
         && reaction.emoji.name === 'ℹ'
         && user.id === message.author.id)
-      .once('collect', () => {
+      .on('collect', () => {
         message.channel.send(discordInfo(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message));
       });
 
