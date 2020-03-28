@@ -31,7 +31,7 @@ export default async function loadRssFeed() {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
-    content = content.replaceAll(/((\\t|\\n|<br \/>)(\n)?){2}/gmu, '\n');
+    content = content.replace(/(\n){3,}/gmu, '\n');
     content = content.length > 500 ? `${content.slice(0, 500)}...` : content;
 
     const embed = new MessageEmbed()
@@ -48,7 +48,7 @@ export default async function loadRssFeed() {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
-    content = content.replaceAll(/((\\t|\\n|<br \/>)(\n)?){2}/gmu, '\n');
+    content = content.replace(/(\n){3,}/gmu, '\n');
     content = content.length > 500 ? `${content.slice(0, 500)}...` : content;
 
     const embed = new MessageEmbed()
