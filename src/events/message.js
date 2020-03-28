@@ -45,16 +45,17 @@ export default async function messageHandler(message) {
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
 
-  // Easter egg "ssh@skript-mc.fr"
-  if (message.content.startsWith('ssh@skript-mc.fr')) {
+  // Easter egg "ssh root@skript-mc.fr"
+  if (message.content.startsWith('ssh root@skript-mc.fr')) {
     const guess = message.content.split(' ').pop();
     const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
-
-    if (guess === password.value) {
+    if (!password) {
+      message.channel.send(':thinking: `Connect to host skript-mc.fr port 22: Connection timed out`');
+    } else if (guess === password.value) {
       message.delete();
-      message.channel.send(':white_check_mark: Access Granted: welcome on your server.');
+      message.channel.send(`:white_check_mark: \`Establishing the connection ...\`\n\`\`\`\n      _____ _         _       _          __  __  _____ \n     / ____| |       (_)     | |        |  \\/  |/ ____|\n    | (___ | | ___ __ _ _ __ | |_ ______| \\  / | |     \n     \\___ \\| |/ / '__| | '_ \\| __|______| |\\/| | |     \n     ____) |   <| |  | | |_) | |_       | |  | | |____ \n    |_____/|_|\\_\\_|  |_| .__/ \\__|      |_|  |_|\\_____|\n                       | |                             \n                       |_|\n\nLast login: ${message.author.username} at ${message.createdAt}.\nYou have mail.\nroot@skript-mc.fr:~#\`\`\``);
     } else {
-      message.channel.send('Access Denied: invalid password');
+      message.channel.send(':x: `Permission denied, please try again.`');
     }
     return;
   }

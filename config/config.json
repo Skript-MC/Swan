@@ -45,7 +45,9 @@
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
         "skin": "http://cravatar.eu/helmavatar/",
-        "github": "https://api.github.com"
+        "github": "https://api.github.com",
+        "rssContentFeeds": ["https://skript-mc.fr/forum/forum/4-annonces.xml/", "https://skript-mc.fr/forum/forum/8-tutoriels.xml/", "https://skript-mc.fr/forum/forum/20-algorithmes.xml/", "https://skript-mc.fr/forum/forum/21-fonctions.xml/", "https://skript-mc.fr/forum/forum/22-fragments-de-code.xml/", "https://skript-mc.fr/forum/forum/6-demandes-de-skripts.xml/", "https://skript-mc.fr/forum/forum/7-aide.xml/"],
+        "rssFilesFeed": "https://skript-mc.fr/forum/files/files.xml/"
     },
 
     "miscellaneous": {
@@ -74,6 +76,8 @@
             "privatemessage": "Oups ! Je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
             "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
             "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
+            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission, pas de Swan)",
+            "channelPermissions": ":warning: Impossible de créer ou de modifier le canal privé ! (Problème de permission, pas du bot)",
             "music": [
                 "Tu n'es pas dans un salon vocal !",
                 "Je ne suis pas dans un salon vocal !",
@@ -132,8 +136,8 @@
                         "content": "```applescript\nevery X:\n\tloop all players:\n\t\t# Vtore code </>```Les codes de ce type sont fortements déconseillés pour des questions d'**optimisation** et de **performance**. Imaginez que tous les ticks (20 fois par seconde) ou autre délai, vous vérifiez tous les joueurs de votre serveur ? Cela reste correct si vous êtes 4, mais si vous êtes une trentaine ? Skript ferait 120 000 vérifications par minute si vous êtes une centaine, votre serveur ne supporterait pas tous ces calculs !\n\nEssayez de trouver une alternative à votre code, qui n'utilise pas ce type de code. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```applescript\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\t# Votre code </>\n\t\twait 5 seconds # Déconseillé de le réduire```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt que vérifier tous les joueurs tous les X temps, chaque joueur possède sa boucle qui se rafraîchit tous les X.\n\n:arrow_right_hook: **__Pour conclure :__** D'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos codes, essayez d'utiliser des alternatives."
                     },
                     "longcode": {
-                        "templates": ["longcode", "long code"],
-                        "content": "Pour poster vos longs codes, il est conseillé d'utiliser un de ces sites : <https://gist.github.com>, <https://hastebin.com> ou <https://pastebin.com> etc.\nNe nous envoyez **pas de screen** de votre code !"
+                        "templates": ["longcode", "long code", "code"],
+                        "content": "Si votre code dépasse les 2 000 caractères, il est conseillé d'utiliser un de ces sites : <https://gist.github.com>, <https://hastebin.com> ou <https://pastebin.com>. Sinon, vous pouvez utiliser la commande `.code <code>`. **Rappel :** ne nous envoyez **pas de screen** de votre code !"
                     },
                     "version": {
                         "templates": ["ver", "version"],
@@ -150,7 +154,7 @@
                     },
                     "1.8": {
                         "templates": ["1.8", "1.8.x", "1.8.X", "18"],
-                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée). Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la 2.2-dev25 (<https://github.com/bensku/Skript/releases/tag/dev25>), la 2.2-dev26 (<https://github.com/bensku/Skript/releases/tag/dev26>), la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>), la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>) ou la 2.2-Fixes V8b (<https://bit.ly/2PtY56f>). Pour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://bit.ly/2oTdr9C>.\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases/>."
+                        "content": "La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées par la fork de bensku (la fork Skript la plus utilisée).\nPour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser :\n- la 2.2-dev27 (<https://github.com/bensku/Skript/releases/tag/dev27>)\n- la 2.2-dev36 (<https://github.com/bensku/Skript/releases/tag/dev36>)\n\nPour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser ces versions : <https://dev.bukkit.org/projects/skript/files>.\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible ici : <https://github.com/Matocolotoe/Skript-1.8/releases>."
                     },
                     "contains": {
                         "templates": ["contain", "contains"],
@@ -171,6 +175,10 @@
                     "encoding": {
                         "templates": ["encoding", "utf-8", "utf8"],
                         "content": "Pour encoder vos scripts, vous pouvez utiliser l'encodage `UTF-8`.\nCet encodage permettra à Skript de lire correctement vos fichiers.\n\n:small_blue_diamond: **NotePad++** : `Encodage` > `Encoder en UTF-8` :white_check_mark: \n:small_blue_diamond: **Visual Studio Code** : `Status Bar (en bas)` > `UTF-8` :white_check_mark:\n:small_blue_diamond: **Sublime Text 3** : `File` > `Save with encoding` > `UTF-8` :white_check_mark:"
+                    },
+                    "pattern": {
+                        "templates": ["pattern", "skriptpattern"],
+                        "content": "Comment utiliser une syntaxe Skript ? Elles sont en réalité extrêmement simples. Voici comment elles sont composées :\n- `[...]` : optionnel\n- `(1|2|3)` : une des propositions (`1`, `2` ou `3`) est obligatoire\n\nSi vous avez toujours besoin d'aide concernant ces syntaxes, prenons comme exemple celle-ci : `[the] (clicked (block|%itemtype/entitydata%)|clicked slot|clicked inventory|click (type|action)|inventory action)`. Pour obtenir la liste des possibilités, vous pouvez accéder à <https://bi0qaw.github.io/skript-pattern-calculator>."
                     }
                 }
             },
@@ -252,12 +260,13 @@
             "skriptinfo": {
                 "help": "Envoyer diverses informations sur Skript.",
                 "description": "Envoie diverses informations sur Skript, telles que sa version actuelle, un lien de téléchargement, les versions de Skript à utiliser selon la version Minecraft...",
+                "invalidCmd": "Il faut que tu ajoutes le nom d'un menu (`download`, `links`) !",
                 "embed": {
                     "author": ":bust_in_silhouette: Auteur(s)",
                     "version": ":gear: Dernière version",
                     "verInfo": "Information sur les versions de Skript",
-                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: La 1.8.X et les versions antérieures ne sont pas et ne seront jamais supportées. Pour utiliser Skript dans ces versions, vous pouvez utiliser une version plus vieille de Skript. Par exemple, pour la 1.8, vous pouvez essayer d'utiliser la [2.2-dev26](https://bit.ly/2KXlrm9), la [2.2-dev27](https://github.com/bensku/Skript/releases/tag/dev27), la [2.2-dev25](https://github.com/bensku/Skript/releases/tag/dev25) ou la [2.2-Fixes V8b](https://bit.ly/2PtY56f). Pour la 1.7 et antérieur, vous pouvez essayer d'utiliser [ces versions](https://bit.ly/2oTdr9C).\n\nIl existe cependant une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est conseillée. Elle est disponible [ici](https://github.com/Matocolotoe/Skript-1.8/releases/)\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
-                    "download": ":inbox_tray: Lien de téléchargement",
+                    "verInfo_desc": ":black_small_square: Skript requiert Spigot pour fonctionner. Il ne fonctionnera donc pas avec Bukkit. Il est cependant conseillé d'utiliser PaperSpigot, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.\n\n:black_small_square: La dernière version de Skript ne supporte que les dernières versions de Minecraft, de la 1.9 à la 1.15. Cela veut dire que la 1.12.2 est supportée, mais pas la 1.12 par exemple (même si elle a de fortes chances de fonctionner).\n\n:black_small_square: Pour utiliser Skript dans ces versions, vous pouvez toutefois utiliser une version plus vieille de Skript. Par exemple, pour la 1.8.X, vous pouvez essayer d'utiliser la [2.2-dev27](<https://github.com/bensku/Skript/releases/tag/dev27>) ou la [2.2-dev36](<https://github.com/bensku/Skript/releases/tag/dev36>).\n\nPour les versions 1.7.X et antérieures, vous pouvez essayer d'utiliser [une de ces versions](<https://dev.bukkit.org/projects/skript/files>).\n\nIl existe aussi une version non-officielle qui est pour le moment activement mise à jour avec les dernières fonctionnalitées de la fork de bensku, et qui est disponible [ici](<https://github.com/Matocolotoe/Skript-1.8/releases>).\n\n:black_small_square: Les dernières versions de Minecraft seront supportées le plus vite possible.",
+                    "download": ":inbox_tray: Liens de téléchargement",
                     "sourcecode": ":computer: Code source"
                 }
             },
@@ -540,7 +549,7 @@
             "ban": {
                 "help": "Appliquer une restriction du Discord à un membre.",
                 "description": "Applique une restriction du Discord à un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
@@ -548,15 +557,15 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
-                "alreadyBanned": "%u est déjà banni (ou du moins c'est inscrit dans la base de données).",
+                "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u : %d.",
+                "sanctionUpdated": "Ta sanction a été mise à jour. Tu es maintenant bannis : %d",
                 "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
-                "noReasonSpecified": "Aucune raison spécifiée",
-                "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
+                "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unban": {
                 "help": "Retirer une restriction du Discord à un membre.",
                 "description": "Retire une restriction du Discord à un membre. Ajoutez l'argument `-no-delete` pour ne pas supprimer le salon privé.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
@@ -565,7 +574,7 @@
             "mute": {
                 "help": "Rendre muet un membre.",
                 "description": "Rendre muet un membre dans les salons d'aide.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "missingTimeArgument": "Vous n'avez pas spécifié de durée !",
                 "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "durationTooLong": "Vous ne pouvez pas appliquer de sanction aussi longue ! Votre maximum est de 2 heures.",
@@ -573,14 +582,13 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
-                "alreadyMuted": "%u est déjà muet (ou du moins c'est inscrit dans la base de données).",
-                "noReasonSpecified": "Aucune raison spécifiée",
-                "cantAddRole": "Impossible d'ajouter le rôle à ce membre !"
+                "durationUpdated": "Vous avez bien mis à jour la durée du mute de %u : %d.",
+                "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unmute": {
                 "help": "Redonner la parole à un membre.",
                 "description": "Rétabli la parole à un membre dans les salons d'aide.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnmuted": "Vous avez bien rétabli la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
                 "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
@@ -589,7 +597,7 @@
             "warn": {
                 "help": "Avertir un membre.",
                 "description": "Donne un avertissement à un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
@@ -600,7 +608,7 @@
             "kick": {
                 "help": "Expulser un membre.",
                 "description": "Expulse un membre du serveur Discord.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfKick": "Ne te kick pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyKicked": "Vous avez bien averti %u !\nRaison : %r",
@@ -609,7 +617,7 @@
             "history": {
                 "help": "Consulter l'historique des sanctions d'un membre.",
                 "description": "Envoie l'historique de toutes les sanctions d'un membre.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
             "movemessage": {
@@ -625,7 +633,7 @@
             "removemusicrestriction": {
                 "help": "Supprimer les restrictions musicales d'un membre.",
                 "description": "Rétabli à un membre l'accès aux commandes musicales.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "notRestricted": "%u n'a aucune restriction de commandes musicales (ou ce n'est pas inscrit dans la base de données).",
                 "successfullyRemoveRestr": "Vous avez bien supprimé les restrictions à %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée"

@@ -35,6 +35,8 @@
     "he": "^1.2.0",
     "mathjs": "^6.6.1",
     "nedb-promises": "^4.0.1",
+    "rss-parser": "^3.7.6",
+    "sanitize-html": "^1.22.1",
     "simple-youtube-api": "^5.2.1",
     "utf-8-validate": "^5.0.2",
     "zlib-sync": "^0.1.6"
