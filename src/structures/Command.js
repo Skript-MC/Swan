@@ -118,6 +118,14 @@ class Command {
    * @async
    */
   async execute(_message, _args) {} // eslint-disable-line no-empty-function
+
+  static filterCooldown(commands) {
+    for (const cmd of commands) {
+      for (const [id, lastuse] of cmd.userCooldowns) {
+        if (lastuse + cmd.cooldown >= Date.now()) cmd.userCooldowns.delete(id);
+      }
+    }
+  }
 }
 
 export default Command;
