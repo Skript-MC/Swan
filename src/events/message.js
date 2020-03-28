@@ -50,10 +50,10 @@ export default async function messageHandler(message) {
     const guess = message.content.split(' ').pop();
     const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
     if (!password) {
-      message.channel.send(':thinking: `Connect to host skript-mc.fr port 22: Connection timed out`')
+      message.channel.send(':thinking: `Connect to host skript-mc.fr port 22: Connection timed out`');
     } else if (guess === password.value) {
       message.delete();
-      message.channel.send(`:white_check_mark: \`Establishing the connection ...\`\n\`\`\`\n      _____ _         _       _          __  __  _____ \n     / ____| |       (_)     | |        |  \\/  |/ ____|\n    | (___ | | ___ __ _ _ __ | |_ ______| \\  / | |     \n     \\___ \\| |/ / \'__| | \'_ \\| __|______| |\\/| | |     \n     ____) |   <| |  | | |_) | |_       | |  | | |____ \n    |_____/|_|\\_\\_|  |_| .__/ \\__|      |_|  |_|\\_____|\n                       | |                             \n                       |_|\n\nLast login: ${message.author.username} at ${message.createdAt}.\nYou have mail.\nroot@skript-mc.fr:~#\`\`\``);
+      message.channel.send(`:white_check_mark: \`Establishing the connection ...\`\n\`\`\`\n      _____ _         _       _          __  __  _____ \n     / ____| |       (_)     | |        |  \\/  |/ ____|\n    | (___ | | ___ __ _ _ __ | |_ ______| \\  / | |     \n     \\___ \\| |/ / '__| | '_ \\| __|______| |\\/| | |     \n     ____) |   <| |  | | |_) | |_       | |  | | |____ \n    |_____/|_|\\_\\_|  |_| .__/ \\__|      |_|  |_|\\_____|\n                       | |                             \n                       |_|\n\nLast login: ${message.author.username} at ${message.createdAt}.\nYou have mail.\nroot@skript-mc.fr:~#\`\`\``);
     } else {
       message.channel.send(':x: `Permission denied, please try again.`');
     }
