@@ -9,6 +9,9 @@ import { success } from './structures/messages';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
+import SanctionManager from './structures/SanctionManager';
+import loadRssFeed from './structures/RSSFeed';
+import Command from './structures/Command';
 
 export const config = loadConfig();
 
@@ -30,11 +33,11 @@ client.on('ready', async () => {
   if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
   if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
-  for (const value of Object.values(config.channels)) {
-    if (!value) console.warn(`config.channels.${value} is not set. You may want to fill this field to avoid any error.`);
+  for (const [key, value] of Object.entries(config.channels)) {
+    if (!value) console.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
   }
-  for (const value of Object.values(config.roles)) {
-    if (!value) console.warn(`config.roles.${value} is not set. You may want to fill this field to avoid any error.`);
+  for (const [key, value] of Object.entries(config.roles)) {
+    if (!value) console.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
   }
 
   // Initializing the commands-stats database
@@ -63,11 +66,11 @@ client.on('ready', async () => {
 
   setInterval(() => {
     // Tri dans les cooldowns des commandes
-    for (const cmd of commands) {
-      for (const [id, lastuse] of cmd.userCooldowns) {
-        if (lastuse + cmd.cooldown >= Date.now()) cmd.userCooldowns.delete(id);
-      }
-    }
+    Command.filterCooldown(commands);
+    // Vérification des sanctions temporaires
+    SanctionManager.checkSanctions(guild);
+    // Chargement des flux RSS
+    loadRssFeed();
   }, config.bot.checkInterval);
 });
 

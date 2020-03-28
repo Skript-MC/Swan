@@ -1,7 +1,5 @@
-import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
-import { config } from '../../main';
 
 class EightBall extends Command {
   constructor() {
@@ -19,12 +17,7 @@ class EightBall extends Command {
     } else {
       answer = this.config.negative[Math.floor(Math.random() * this.config.negative.length)];
     }
-    const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .setAuthor(answer, message.author.avatarURL())
-      .setFooter(`Exécuté par ${message.author.username}`)
-      .setTimestamp();
-    message.channel.send(embed);
+    message.channel.send(answer);
   }
 }
 
