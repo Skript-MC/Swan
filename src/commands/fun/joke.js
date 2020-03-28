@@ -23,8 +23,8 @@ class Joke extends Command {
 
     jokeEmbed
       .createReactionCollector((reaction, user) => (reaction.emoji.name === '😄' || reaction.emoji.name === '🙄') && !user.bot)
-      .on('collect', async (reaction) => {
-        this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', message.author, id);
+      .on('collect', async (reaction, user) => {
+        this.like(message, jokeEmbed, reaction.emoji.name === '😄' ? 'like' : 'dislike', user, id);
       });
   }
 
@@ -52,10 +52,10 @@ class Joke extends Command {
     }
   }
 
-  async like(message, jokeEmbed, type, users, id) {
+  async like(message, jokeEmbed, type, user, id) {
     const joke = await db.jokes.findOne({ id }).catch(console.error);
     const options = { returnUpdatedDocs: true, multi: false };
-    const userId = users.id;
+    const userId = user.id;
     let updated = false;
     if (joke !== null) {
       if (joke.likes.includes(userId) && type === 'like') {
