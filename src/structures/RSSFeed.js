@@ -24,15 +24,16 @@ export default async function loadRssFeed() {
   }
   topics = topics.map(elt => elt.items).flat();
 
-  const lastTopics = topics.filter(item => (Date.now()) - new Date(item.pubDate).getTime() < config.bot.checkInterval);
+  const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval);
   const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval);
 
   for (const item of lastTopics) {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
+    content = content.replace('Hidden Content\n\n\nGive reaction or reply to this topic to see the hidden content.', '');
     content = content.replace(/(\n){3,}/gmu, '\n');
-    content = content.length > 500 ? `${content.slice(0, 500)}...` : content;
+    if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
@@ -48,8 +49,9 @@ export default async function loadRssFeed() {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
+    content = content.replace('Hidden Content\n\n\nGive reaction or reply to this topic to see the hidden content.', '');
     content = content.replace(/(\n){3,}/gmu, '\n');
-    content = content.length > 500 ? `${content.slice(0, 500)}...` : content;
+    if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
