@@ -327,6 +327,7 @@ class Moderation {
 
     const warn = userHistory.sanctions.find(elt => elt.type === 'warn' && elt.date.toString() === id);
     if (!warn) return message.channel.send(discordError(cmdConfig.notWarned.replace('%u', victim).replace('%d', id), message));
+    if (userHistory.revokedWarns.includes(warn.date.toString())) return message.channel.send(discordError(cmdConfig.alreadyRevoked, message));
     if (warn.mod !== message.author.id) return message.channel.send(discordError(cmdConfig.notYou, message));
 
     const successMessage = cmdConfig.successfullyUnwarned
@@ -342,7 +343,13 @@ class Moderation {
       id,
       reason,
     });
-    await db.sanctionsHistory.update({ memberId: victim.id }, { $inc: { currentWarnCount: -1 } }).catch(console.error);
+    await db.sanctionsHistory.update(
+      { memberId: victim.id },
+      {
+        $inc: { currentWarnCount: -1 },
+        $push: { revokedWarns: id.toString() },
+      },
+    ).catch(console.error);
 
     const embed = new MessageEmbed()
       .setColor(config.colors.success)
