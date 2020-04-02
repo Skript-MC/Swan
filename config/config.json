@@ -614,7 +614,8 @@
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "noSanction": "Cet utilisateur n'a aucune sanction.",
                 "notWarned": "Cet utilisateur n'a aucun avertissement.",
-                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer."
+                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
+                "alreadyRevoked": "Cet avertissement est déjà révoqué"
             },
             "kick": {
                 "help": "Expulser un membre.",

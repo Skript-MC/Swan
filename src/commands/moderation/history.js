@@ -58,7 +58,8 @@ class History extends Command {
       .setDescription(description)
       .setTimestamp();
 
-    for (const sanction of result.sanctions) {
+    const lastSanctions = sanctions.slice(Math.max(sanctions.length - 25, 0));
+    for (const sanction of lastSanctions) {
       let infos = `Modérateur : <@${sanction.mod}>\nDate : ${formatDate(sanction.date)}`;
       if (sanction.reason) infos += `\nRaison : ${sanction.reason}`;
       if (sanction.duration) infos += `\nDurée : ${secondToDuration(sanction.duration)}`;

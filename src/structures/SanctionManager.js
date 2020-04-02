@@ -49,6 +49,7 @@ class SanctionManager {
         sanctions: [],
         count: 0,
         currentWarnCount: 0,
+        revokedWarns: [],
       }).catch(console.error);
     }
 
