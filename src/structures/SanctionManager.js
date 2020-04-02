@@ -39,7 +39,7 @@ class SanctionManager {
     return channel;
   }
 
-  static async addToHistory(info) {
+  static async addToHistory(info, date = Date.now()) {
     let result = await db.sanctionsHistory.findOne({ memberId: info.member.user.id }).catch(console.error);
 
     // Si le membre n'a pas d'historique, on créé un document
@@ -57,7 +57,7 @@ class SanctionManager {
     const sanction = {
       type: info.sanction,
       mod: info.mod.id,
-      date: Date.now(),
+      date,
     };
     if (info.reason) sanction.reason = info.reason;
     if (info.duration) sanction.duration = info.duration;
@@ -114,6 +114,8 @@ class SanctionManager {
 
     embed.addField(':label: Raison', `${infos.reason}`, true);
     if (infos.privateChannel) embed.addField(':speech_left: Channel privé', `${infos.privateChannel.toString()}`, true);
+
+    if (infos.id) embed.addField(':hash: ID', `\`${infos.id}\``, true);
 
     const logChannel = guild.channels.cache.get(config.channels.logs);
     logChannel.send(embed);
