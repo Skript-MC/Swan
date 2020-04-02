@@ -9,10 +9,11 @@ const sanctionsName = {
   ban: ':hammer: Bannissement',
   unban: ':white_check_mark: Débannissement',
   mute: ':mute: Mute',
-  kick: ':door: Expulsion',
   unmute: ':loud_sound: Unmute',
-  music_restriction: ':musical_note: Restriction des commandes de musique',
+  kick: ':door: Expulsion',
   warn: ':warning: Avertissement',
+  unwarn: ":repeat: Suppression d'Avertissement",
+  music_restriction: ':musical_note: Restriction des commandes de musique',
   remove_music_restriction: ':musical_note: Suppr. des restr. des com. de musique',
 };
 
@@ -57,10 +58,12 @@ class History extends Command {
       .setDescription(description)
       .setTimestamp();
 
-    for (const sanction of result.sanctions) {
+    const lastSanctions = sanctions.slice(Math.max(sanctions.length - 25, 0));
+    for (const sanction of lastSanctions) {
       let infos = `Modérateur : <@${sanction.mod}>\nDate : ${formatDate(sanction.date)}`;
       if (sanction.reason) infos += `\nRaison : ${sanction.reason}`;
       if (sanction.duration) infos += `\nDurée : ${secondToDuration(sanction.duration)}`;
+      if (sanction.type === 'warn' && sanction.date) infos += `\nID : ${sanction.date}`;
 
       embed.addField(sanctionsName[sanction.type], infos, false);
     }
