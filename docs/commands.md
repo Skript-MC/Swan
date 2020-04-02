@@ -1,6 +1,6 @@
 # Documentation
 
-Documentation de toutes les commandes de Swan (47)
+Documentation de toutes les commandes de Swan (48)
 
 ## Index
 
@@ -35,6 +35,7 @@ Documentation de toutes les commandes de Swan (47)
 - [Queue](####-Queue)
 - [Ranking](####-Ranking)
 - [Remove Music Restriction](####-Remove-Music-Restriction)
+- [Remove Warn](####-Remove-Warn)
 - [Rules](####-Rules)
 - [Server Info](####-Server-Info)
 - [SetSshPassword](####-SetSshPassword)
@@ -452,6 +453,19 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Aliases :** `removemusicrestriction` | `remove-music-restriction` | `remove_music_restriction` | `remmusicrestr` | `rem-music-restr` | `rem_music_restr`
 - **Usage :** `removemusicrestriction <@mention | ID> [<raison>]`
 - **Exemples :** `removemusicrestr @4rno En fait c'est une bonne musique`
+- **Cooldown :** aucun
+- **Informations supplémentaires :**
+  - Activée dans les canaux d'aide : ✅
+  - Permission(s) nécéssaire(s) pour éxécuter la commande : Staff
+  - Canaux requis / interdits : aucun / aucun
+
+#### Remove Warn
+
+- **Catégorie :** moderation
+- **Description :** Enlève un avertissement à un membre, selon l'ID de l'avertissement.
+- **Aliases :** `removewarn` | `remwarn` | `deletewarn` | `delwarn` | `unwarn`
+- **Usage :** `removewarn <@mention | ID utilisateur> <ID warn> [<raison>]`
+- **Exemples :** `removewarn @polymeth 1585832207807 En fait trkl il m'a payé`
 - **Cooldown :** aucun
 - **Informations supplémentaires :**
   - Activée dans les canaux d'aide : ✅
