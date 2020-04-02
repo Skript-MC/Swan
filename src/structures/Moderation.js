@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import { MessageEmbed } from 'discord.js';
 import { discordSuccess, discordError } from './messages';
 import { db, config, client } from '../main';
 import { prunePseudo, secondToDuration } from '../utils';
@@ -171,7 +172,9 @@ class Moderation {
 
   static async warn(victim, reason, moderator, cmdConfig, message, guild) {
     // Envoyer les messages
-    const successMessage = cmdConfig.successfullyWarned.replace('%u', victim.user.username).replace('%r', reason);
+    const date = Date.now();
+
+    const successMessage = cmdConfig.successfullyWarned.replace('%u', victim.user.username).replace('%r', reason).replace('%d', date);
     message.channel.send(discordSuccess(successMessage, message));
     victim.send(cmdConfig.warning.replace('%u', victim.user.username).replace('%r', reason));
 
@@ -189,8 +192,9 @@ class Moderation {
       member: victim,
       mod: moderator,
       reason,
+      id: date,
     };
-    SanctionManager.addToHistory(infos);
+    SanctionManager.addToHistory(infos, date);
     SanctionManager.log(infos, guild);
   }
 
@@ -314,6 +318,48 @@ class Moderation {
       id: result._id,
       reason,
     }, guild, message.channel);
+  }
+
+  static async removeWarn(victim, id, reason, moderator, cmdConfig, message, guild) {
+    // Regarde dans la database si le warn existe
+    const userHistory = await db.sanctionsHistory.findOne({ memberId: victim.id }).catch(console.error);
+    if (!userHistory) return message.channel.send(discordError(cmdConfig.noSanction.replace('%u', victim), message));
+
+    const warn = userHistory.sanctions.find(elt => elt.type === 'warn' && elt.date.toString() === id);
+    if (!warn) return message.channel.send(discordError(cmdConfig.notWarned.replace('%u', victim).replace('%d', id), message));
+    if (userHistory.revokedWarns.includes(warn.date.toString())) return message.channel.send(discordError(cmdConfig.alreadyRevoked, message));
+    if (warn.mod !== message.author.id) return message.channel.send(discordError(cmdConfig.notYou, message));
+
+    const successMessage = cmdConfig.successfullyUnwarned
+      .replace('%u', victim.user.username)
+      .replace('%d', id)
+      .replace('%r', reason);
+    message.channel.send(discordSuccess(successMessage, message));
+
+    SanctionManager.addToHistory({
+      member: victim,
+      mod: moderator,
+      sanction: 'unwarn',
+      id,
+      reason,
+    });
+    await db.sanctionsHistory.update(
+      { memberId: victim.id },
+      {
+        $inc: { currentWarnCount: -1 },
+        $push: { revokedWarns: id.toString() },
+      },
+    ).catch(console.error);
+
+    const embed = new MessageEmbed()
+      .setColor(config.colors.success)
+      .setTitle('Nouveau cas :')
+      .setTimestamp()
+      .addField(':bust_in_silhouette: Utilisateur', `${victim.toString()}\n(${victim.id})`, true)
+      .addField(':cop: Modérateur', `${warn.mod.toString()}\n(${warn.mod.id})`, true)
+      .addField(':tools: Action', "Suppression d'un avertissement", true)
+      .addField(':label: Raison', `${reason}\nID du warn : ${id}`, true);
+    guild.channels.cache.get(config.channels.logs).send(embed);
   }
 
   static async removeMusicRestriction(victim, reason, moderator, cmdConfig, message, guild) {
