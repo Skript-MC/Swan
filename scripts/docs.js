@@ -89,7 +89,7 @@ async function generateDocs() {
       .replace('$prohibitedChannels', cmd.prohibitedChannels.length || 'aucun');
   }
 
-  const path = `${__dirname}/generated/commands.md`;
+  const path = `${__dirname}/../docs/commands.md`;
   try {
     fs.writeFile(path, header + content, (err) => {
       if (err) throw new Error(err);
