@@ -600,10 +600,21 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r",
+                "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r\nID de l'avertissement : %d",
                 "warning": "%u, vous avez été averti par un modérateur pour la raison suivante : %r. Nous t'invitons donc à revoir ton comportement.",
                 "noReasonSpecified": "Aucune raison spécifiée",
                 "warnLimitReached": "C'est le deuxième avertissement pour ce membre, il a automatiquement été sanctionné."
+            },
+            "removewarn": {
+                "help": "Supprimer un avertissement.",
+                "description": "Enlève un avertissement à un membre, selon l'ID de l'avertissement.",
+                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
+                "missingIdArgument": "Vous n'avez pas spécifié d'ID de warn *(visible sur l'embed quand on .warn, dans les logs, ou en faisant .history)* !",
+                "successfullyUnwarned": "Vous avez bien enlevé l'avertissement `%d` de %u !\nRaison : %r",
+                "noReasonSpecified": "Aucune raison spécifiée",
+                "noSanction": "Cet utilisateur n'a aucune sanction.",
+                "notWarned": "Cet utilisateur n'a aucun avertissement.",
+                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer."
             },
             "kick": {
                 "help": "Expulser un membre.",
