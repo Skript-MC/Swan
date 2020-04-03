@@ -10,6 +10,7 @@ import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
 import memberAdd from './events/memberAdd';
+import messageUpdateHandler from './events/messageUpdate';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
 import Command from './structures/Command';
@@ -76,6 +77,7 @@ client.on('ready', async () => {
 
 client.on('message', messageHandler);
 client.on('messageDelete', messageDeleteHandler);
+client.on('messageUpdate', messageUpdateHandler);
 client.on('messageReactionAdd', reactionAddHandler);
 
 client.on('guildMemberAdd', memberAdd);
