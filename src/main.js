@@ -9,7 +9,7 @@ import { success } from './structures/messages';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
-import memberAdd from './events/memberAdd';
+import memberAddHandler from './events/memberAdd';
 import messageUpdateHandler from './events/messageUpdate';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
