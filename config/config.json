@@ -653,7 +653,7 @@
             },
             "purge": {
                 "help": "Supprimer des messages dans un salon.",
-                "description": "Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100.",
+                "description": "Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100. Par défault, les messages des membres ayant le rôle 'Staff' ne serront pas supprimés, pour aussi les supprimer, utiliser l'argument `-f`",
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
                 "wrongUsage": "Tu dois spécifier un nombre de message à supprimer (accompagné d'un utilisateur pour cibler la suppression) !",
                 "tooOld": "Certains messages que vous tentez de supprimer ont été envoyés il y a plus de 14 jours : il m'est impossible de les supprimer."
