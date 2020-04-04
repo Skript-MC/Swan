@@ -80,7 +80,7 @@ client.on('messageDelete', messageDeleteHandler);
 client.on('messageUpdate', messageUpdateHandler);
 client.on('messageReactionAdd', reactionAddHandler);
 
-client.on('guildMemberAdd', memberAdd);
+client.on('guildMemberAdd', memberAddHandler);
 
 client.on('error', console.error);
 client.on('warn', console.warn);
