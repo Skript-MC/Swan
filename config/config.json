@@ -65,7 +65,20 @@
             "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
             "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `.%m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
-            "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:"
+            "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:",
+            "ghostpingPlural": ":warning: %s, vous avez été ghost-ping par %m. :innocent:",
+            "renameList": [
+                "Quiche",
+                "Licorne",
+                "Tarte",
+                "Arachnoïde",
+                "Boulet",
+                "Banjo",
+                "Saperlipopette",
+                "Bizu",
+                "Tarentule"
+            ],
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nNous avons modifié ton pseudonyme car il contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord à être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
@@ -652,7 +665,7 @@
             },
             "purge": {
                 "help": "Supprimer des messages dans un salon.",
-                "description": "Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100.",
+                "description": "Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100. Par défault, les messages des membres ayant le rôle 'Staff' ne serront pas supprimés, pour aussi les supprimer, utiliser l'argument `-f`",
                 "missingNumberArgument": "Vous devez spécifier un nombre de messages à supprimer !",
                 "wrongUsage": "Tu dois spécifier un nombre de message à supprimer (accompagné d'un utilisateur pour cibler la suppression) !",
                 "tooOld": "Certains messages que vous tentez de supprimer ont été envoyés il y a plus de 14 jours : il m'est impossible de les supprimer."
