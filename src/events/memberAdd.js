@@ -2,7 +2,7 @@
 import { prunePseudoJoin } from '../utils';
 import { config } from '../main';
 
-export default async function memberAdd(member) {
+export default async function memberAddHandler(member) {
   // On vérifie si le pseudonyme correspond aux critères.
   if (prunePseudoJoin(member) === true) {
     // On en choisit un futur pseudonyme au hazard dans la liste.
