@@ -36,7 +36,7 @@ class SkriptInfo extends Command {
         .attachFiles([config.bot.avatar])
         .setAuthor('Informations sur Skript', 'attachment://logo.png')
         .addField(this.config.embed.download, downloadDesc, true)
-        .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://skripttools.net`)
+        .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://github.com`)
         .setTimestamp();
 
       message.channel.send(embed);
