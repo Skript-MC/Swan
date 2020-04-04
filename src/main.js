@@ -9,6 +9,7 @@ import { success } from './structures/messages';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
+import memberAddHandler from './events/memberAdd';
 import messageUpdateHandler from './events/messageUpdate';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
@@ -61,7 +62,6 @@ client.on('ready', async () => {
   client.config.activated = true;
 
   const guild = client.guilds.resolve(config.bot.guild);
-  if (!guild) throw new Error('Aucune guilde n\'a été spécifiée dans le config.json. Il est donc impossible de vérifier si des sanctions ont expirées.');
 
   success('Skript-MC bot loaded!');
 
@@ -79,6 +79,8 @@ client.on('message', messageHandler);
 client.on('messageDelete', messageDeleteHandler);
 client.on('messageUpdate', messageUpdateHandler);
 client.on('messageReactionAdd', reactionAddHandler);
+
+client.on('guildMemberAdd', memberAddHandler);
 
 client.on('error', console.error);
 client.on('warn', console.warn);

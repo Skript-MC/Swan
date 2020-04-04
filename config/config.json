@@ -66,7 +66,19 @@
             "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `.%m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
             "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:",
-            "ghostpingPlural": ":warning: %s, vous avez été ghost-ping par %m. :innocent:"
+            "ghostpingPlural": ":warning: %s, vous avez été ghost-ping par %m. :innocent:",
+            "renameList": [
+                "Quiche",
+                "Licorne",
+                "Tarte",
+                "Arachnoïde",
+                "Boulet",
+                "Banjo",
+                "Saperlipopette",
+                "Bizu",
+                "Tarentule"
+            ],
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nNous avons modifié ton pseudonyme car il contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord à être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
