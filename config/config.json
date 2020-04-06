@@ -361,6 +361,7 @@
                     "description": "**Description :**",
                     "category": "**Catégorie :**",
                     "utilisation": "**Utilisation :**",
+                    "aliases": "**Alias :**",
                     "examples": "**Exemple(s) d'utilisation :**",
                     "usable": "**Utilisable par :**",
                     "channels": "**Salons :**"
