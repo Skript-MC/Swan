@@ -169,7 +169,7 @@ class Help extends Command {
       channels.push("sauf les salons d'aide");
     }
 
-    embed.addField(`:star: **${command.name}**`, `${thisConfig.details.description} ${desc}\n${thisConfig.details.category} ${command.category}\n${thisConfig.details.utilisation} ${config.bot.prefix}${command.usage}\n${thisConfig.details.examples} ${ex}\n${thisConfig.details.usable} ${perms}\n${thisConfig.details.channels} ${channels.join(', ')}\n‌‌ `, true);
+    embed.addField(`:star: **${command.name}**`, `${thisConfig.details.description} ${desc}\n${thisConfig.details.category} ${command.category}\n${thisConfig.details.utilisation} ${config.bot.prefix}${command.usage}\n${thisConfig.details.aliases} \`${command.aliases.join('`, `')}\`\n${thisConfig.details.examples} ${ex}\n${thisConfig.details.usable} ${perms}\n${thisConfig.details.channels} ${channels.join(', ')}\n‌‌ `, true);
 
     message.channel.send(embed);
   }
