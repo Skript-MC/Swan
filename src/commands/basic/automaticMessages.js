@@ -8,14 +8,14 @@ const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣'
 class AutomaticMessages extends Command {
   constructor() {
     super('Automatic Messages');
-    this.aliases = ['automaticmessage', 'automatic_message', 'automatic-message', 'automsg', 'auto_msg', 'auto-msg', 'auto'];
+    this.aliases = ['automaticmessage', 'automaticmessages', 'automsg', 'auto_msg', 'auto-msg', 'auto'];
     this.usage = 'automsg <nom du message>';
     this.examples = ['automsg asktoask'];
   }
 
   async execute(message, args) {
     const arg = args.join(' ');
-    const messages = this.config.messages;
+    const { messages } = this.config;
 
     if (args.length === 0) {
       const allMessages = Object.keys(this.config.messages).join(', ');

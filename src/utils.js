@@ -73,20 +73,25 @@ export function extractQuotedText(text) {
  * const votrevar = toTimestamp('3j5h15m'); // -> 278100
  */
 export function toTimestamp(str) {
-  const regexs = new Map();
-  regexs.set(/a/i, 29030400);
-  regexs.set(/mo/i, 2419200);
-  regexs.set(/sem/i, 604800);
-  regexs.set(/j/i, 86400);
-  regexs.set(/h/i, 3600);
-  regexs.set(/min/i, 60);
-  regexs.set(/m/i, 60);
-  regexs.set(/s/i, 1);
+  str = String(str);
 
-  String(str).replace(/\s+/, '');
-  regexs.forEach((value, regex) => {
-    str = String(str).replace(regex, `* ${value} +`);
-  });
+  const regexes = new Map();
+  regexes.set(/a/i, 29030400);
+  regexes.set(/mo/i, 2419200);
+  regexes.set(/sem/i, 604800);
+  regexes.set(/j/i, 86400);
+  regexes.set(/h/i, 3600);
+  regexes.set(/min/i, 60);
+  regexes.set(/m/i, 60);
+  regexes.set(/s/i, 1);
+
+  str.replace(/\s*/g, '');
+  for (const [regex, value] of regexes) {
+    str = str.replace(regex, `*${value}+`);
+  }
+
+  // On regarde s'il reste des lettres
+  if (str.match(/[a-zA-Z]+/g)) return -1;
 
   let result;
   try {
@@ -106,6 +111,15 @@ export function prunePseudo(member) {
   let cleanPseudo = name.replace(/[^a-zA-Z0-9]/gimu, '');
   if (cleanPseudo.length === 0) cleanPseudo = member.id;
   return cleanPseudo.toLowerCase();
+}
+
+/**
+ * @description Élaguer le pseudo d'un membre, pour qu'il puisse être mentionné par tout le monde.
+ * @param {GuildMember} member Le membre
+ */
+export function prunePseudoJoin(member) {
+  const name = member.nickname || member.user.username;
+  return new RegExp(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).test(name);
 }
 
 /**

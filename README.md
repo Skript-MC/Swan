@@ -29,7 +29,7 @@ Enfin, avant de faire votre PR :
 
 Toutes les informations concernant le développement du bot se trouvent maintenant sur ce [trello](https://trello.com/b/aFLW76Fv/swan).
 
-:warning: *Le développement du bot n'est plus aussi actif que maintenant, et c'est pourquoi tous ces choses à faire ne se feront surement pas, ou du moins pas dans cet ordre. Pour avoir des nouveautés plus récentes rendez-vous sur le discord de développement.*
+:warning: *Le développement du bot n'est plus aussi actif qu'avant, et c'est pourquoi tous ces choses à faire ne se feront surement pas, ou du moins pas dans cet ordre. Pour avoir des nouveautés plus récentes rendez-vous sur le discord de développement.*
 
 ## Discords
 
