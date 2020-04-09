@@ -2,7 +2,7 @@
 import { client, config } from '../main';
 
 export default async function reactionAddHandler(reaction, user) {
-  const message = reaction.message;
+  const { message } = reaction;
 
   if (user.bot
     || message.channel.id !== config.channels.suggestion) return;

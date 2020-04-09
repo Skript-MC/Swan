@@ -1,6 +1,7 @@
+/* eslint-disable import/no-cycle */
 import fs from 'fs';
 import { MessageEmbed } from 'discord.js';
-import { db, config } from '../main';
+import { db, config, client } from '../main';
 import { prunePseudo, secondToDuration, formatDate, padNumber } from '../utils';
 
 class SanctionManager {
@@ -8,34 +9,37 @@ class SanctionManager {
     return message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(arg);
   }
 
-  static async createChannel(victim, moderator, channelName, guild) {
-    let channel;
-    try {
-      channel = await guild.channels.create(channelName, 'text');
-      channel.setParent(config.moderation.logCategory);
-      channel.setTopic(`Canal privé suite au bannissement de ${victim.user.username}, par ${moderator.username}`);
-      await channel.overwritePermissions({
-        permissionOverwrites: [
-          {
-            id: config.roles.everyone,
-            deny: ['VIEW_CHANNEL'],
-          }, {
-            id: config.roles.staff,
-            allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
-          }, {
-            id: victim.id,
-            allow: ['VIEW_CHANNEL'],
-          },
-        ],
-      });
-    } catch (e) {
-      console.error('Error while attempting to create the channel :');
-      console.error(e);
+  static async createChannel(victim, moderator, guild, message) {
+    const pseudo = prunePseudo(victim);
+    const channelName = `${config.moderation.banChannelPrefix}${pseudo}`;
+
+    if (guild.channels.cache.some(c => c.name === channelName && c.type === 'text')) {
+      return guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
     }
+
+    const channel = await guild.channels.create(channelName, 'text');
+
+    const parent = channel.setParent(config.moderation.logCategory);
+    const topic = channel.setTopic(`Canal privé suite au bannissement de ${victim.user.username}, par ${moderator.username}`);
+    const permissions = channel.overwritePermissions([{
+      id: config.roles.everyone,
+      deny: ['VIEW_CHANNEL'],
+    }, {
+      id: config.roles.staff,
+      allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
+    }, {
+      id: victim.id,
+      allow: ['VIEW_CHANNEL'],
+    }]);
+
+    await Promise.all([parent, topic, permissions]).catch((_err) => {
+      message.channel.send(config.messages.errors.channelPermissions);
+      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+    });
     return channel;
   }
 
-  static async addToHistory(info) {
+  static async addToHistory(info, date = Date.now()) {
     let result = await db.sanctionsHistory.findOne({ memberId: info.member.user.id }).catch(console.error);
 
     // Si le membre n'a pas d'historique, on créé un document
@@ -45,6 +49,7 @@ class SanctionManager {
         sanctions: [],
         count: 0,
         currentWarnCount: 0,
+        revokedWarns: [],
       }).catch(console.error);
     }
 
@@ -53,7 +58,7 @@ class SanctionManager {
     const sanction = {
       type: info.sanction,
       mod: info.mod.id,
-      date: Date.now(),
+      date,
     };
     if (info.reason) sanction.reason = info.reason;
     if (info.duration) sanction.duration = info.duration;
@@ -84,8 +89,10 @@ class SanctionManager {
   static log(infos, guild) {
     let action;
     if (infos.sanction === 'ban') action = 'Restriction du discord';
+    if (infos.sanction === 'ban_prolongation') action = 'Modification de la restriction du discord';
     else if (infos.sanction === 'hardban') action = 'Banissement';
     else if (infos.sanction === 'mute') action = "Mute des channels d'aide";
+    else if (infos.sanction === 'mute_prolongation') action = "Modification du mute des channels d'aide";
     else if (infos.sanction === 'kick') action = 'Expulsion';
     else if (infos.sanction === 'warn') action = 'Avertissement';
     else if (infos.sanction === 'music_restriction') action = 'Restriction des commandes de musiques';
@@ -109,11 +116,13 @@ class SanctionManager {
     embed.addField(':label: Raison', `${infos.reason}`, true);
     if (infos.privateChannel) embed.addField(':speech_left: Channel privé', `${infos.privateChannel.toString()}`, true);
 
+    if (infos.id) embed.addField(':hash: ID', `\`${infos.id}\``, true);
+
     const logChannel = guild.channels.cache.get(config.channels.logs);
     logChannel.send(embed);
   }
 
-  static async removeSanction(info, guild) {
+  static async removeSanction(info, guild, channel) {
     await db.sanctions.remove({ _id: info.id }).catch(console.error);
 
     // On enlève le rôle de la victime
@@ -125,7 +134,8 @@ class SanctionManager {
       try {
         info.member.roles.remove(role);
       } catch (e) {
-        console.error(e);
+        if (channel) channel.send(config.messages.errors.rolePermissions);
+        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
       }
     }
 
@@ -220,13 +230,46 @@ class SanctionManager {
     }
 
     fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {
-      if (err) console.error(err);
+      if (err) throw new Error(err);
     });
 
     return {
       filePath: `${path}${fileName}.txt`,
       fileName,
     };
+  }
+
+  static async checkSanctions(guild) {
+    // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) pas égale ($not) à -1 (=ban def)
+    const query = {
+      $and: [
+        { finish: { $lt: Date.now() } },
+        { $not: { finish: -1 } }],
+    };
+    const results = await db.sanctions.find(query).catch(console.error);
+
+    for (const result of results) {
+      let file;
+      if (result.sanction === 'ban') {
+        const victim = guild.members.cache.get(result.member);
+        const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(victim)}`;
+        const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
+
+        const allMessages = await SanctionManager.getAllMessages(chan);
+        const originalModerator = guild.members.cache.get(result.modid);
+        file = SanctionManager.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
+      }
+
+      SanctionManager.removeSanction({
+        member: guild.members.cache.get(result.member),
+        title: 'Action automatique',
+        mod: client.user,
+        sanction: result.sanction,
+        reason: 'Sanction expirée (automatique).',
+        id: result._id,
+        file,
+      }, guild);
+    }
   }
 }
 
