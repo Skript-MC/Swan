@@ -75,14 +75,14 @@ client.on('ready', async () => {
   }, config.bot.checkInterval);
 });
 
+// TODO: Automaticly bind events based on files in ./events/
 client.on('message', messageHandler);
 client.on('messageDelete', messageDeleteHandler);
 client.on('messageUpdate', messageUpdateHandler);
 client.on('messageReactionAdd', reactionAddHandler);
-
 client.on('guildMemberAdd', memberAddHandler);
 
-client.on('error', console.error);
+client.on('error', (err) => { throw new Error(err); });
 client.on('warn', console.warn);
 
 process.on('uncaughtException', (err) => { throw new Error(err); });
