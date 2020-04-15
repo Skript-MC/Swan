@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
 import { discordSuccess, discordError } from './messages';
-import { db, config, client } from '../main';
+import { db, config, client, logger } from '../main';
 import { prunePseudo, secondToDuration } from '../utils';
 import MusicBot from './Music';
 import SanctionManager from './SanctionManager';
@@ -51,7 +51,7 @@ class Moderation {
         await victim.roles.add(role);
       } catch (_err) {
         message.channel.send(config.messages.errors.rolePermissions);
-        console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+        logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
       // Créer un channel perso
       chan = await SanctionManager.createChannel(victim, moderator, guild, message);
@@ -154,7 +154,7 @@ class Moderation {
       await victim.roles.add(role);
     } catch (e) {
       message.channel.send(config.messages.errors.rolePermissions);
-      console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
     }
 
     // Envoyer les messages
