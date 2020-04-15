@@ -34,7 +34,7 @@ class SanctionManager {
 
     await Promise.all([parent, topic, permissions]).catch((_err) => {
       message.channel.send(config.messages.errors.channelPermissions);
-      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+      console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
     });
     return channel;
   }
@@ -135,7 +135,7 @@ class SanctionManager {
         info.member.roles.remove(role);
       } catch (e) {
         if (channel) channel.send(config.messages.errors.rolePermissions);
-        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+        console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
     }
 
