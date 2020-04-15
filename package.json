@@ -5,8 +5,8 @@
   "main": "./src/main.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production babel-node ./src/main.js",
-    "start-verbose": "cross-env NODE_ENV=development babel-node ./src/main.js",
-    "dev": "nodemon --exec cross-env NODE_ENV=development babel-node ./src/main.js",
+    "dev": "cross-env NODE_ENV=development babel-node ./src/main.js",
+    "watch:dev": "nodemon --exec cross-env NODE_ENV=development babel-node ./src/main.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "make-docs": "babel-node ./scripts/docs.js",
