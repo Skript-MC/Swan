@@ -3,9 +3,7 @@ import fs from 'fs';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
-import { success } from './structures/messages';
-import { verbose, config, commands } from './main';
-import { padNumber } from './utils';
+import { config, commands, logger } from './main';
 
 require('dotenv').config();
 
@@ -15,7 +13,7 @@ const apikeys = {
 };
 
 export function loadConfig() {
-  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Loading configuration (loadConfig())`);
+  logger.debug('setup.js -> Loading configuration (loadConfig())');
 
   const conf = require('../config/config.json'); // eslint-disable-line global-require
   const ids = process.env;
@@ -44,20 +42,23 @@ export function loadConfig() {
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
   conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
-  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Configuration finished loading`);
+
+  logger.debug('setup.js -> Configuration finished loading');
   return conf;
 }
 
 export function loadBot() {
-  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Loading bot (loadBot())`);
+  logger.debug('setup.js -> Loading bot (loadBot())');
+
   const client = new Client();
   client.login(apikeys.discord);
-  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Bot finished loading (type: ${client.constructor.name})`);
+
+  logger.debug(`setup.js -> Bot finished loading (type: ${client.constructor.name})`);
   return client;
 }
 
 export function loadCommands(path = 'commands') {
-  if (path !== 'commands') console.log(`loading : ${path}`);
+  if (path !== 'commands') logger.step(`loading : ${path}`);
 
   fs.readdir(`${__dirname}/${path}`, (err, files) => {
     if (err) throw err;
@@ -77,7 +78,7 @@ export function loadCommands(path = 'commands') {
             commands.push(command);
           }
         } catch (e) {
-          console.error(`Unable to load this command: ${file}`);
+          logger.error(`Unable to load this command: ${file}`);
           throw new Error(e);
         }
       }
@@ -108,7 +109,7 @@ export async function loadSkriptHubAPI() {
       }
     }).catch(console.error);
 
-  success('SkriptHub : api loaded!');
+  logger.step('SkriptHub : api loaded!');
   return syntaxes;
 }
 
@@ -118,7 +119,7 @@ export async function loadSkripttoolsAddons() {
   const allAddons = await axios(config.apis.addons)
     .then(response => (response ? response.data.data : undefined))
     .catch(console.error);
-  if (typeof allAddons === 'undefined') return console.error(`Unable to retrieve informations from ${config.apis.addons}`);
+  if (typeof allAddons === 'undefined') return logger.error(`Unable to retrieve informations from ${config.apis.addons}`);
 
   for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
@@ -131,7 +132,7 @@ export async function loadSkripttoolsAddons() {
       .catch(console.error));
   }
   addons = await Promise.all(addons);
-  success('Skripttools : addons loaded!');
+  logger.step('Skripttools : addons loaded!');
   return addons;
 }
 
@@ -156,7 +157,7 @@ export function loadDatabases() {
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
     databases[db].load()
-      .then(() => success(`Databases : "${db}.db" loaded!`))
+      .then(() => logger.step(`Databases : "${db}.db" loaded!`))
       .catch(console.error);
   }
 
