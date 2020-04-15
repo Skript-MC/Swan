@@ -51,7 +51,7 @@ class Moderation {
         await victim.roles.add(role);
       } catch (_err) {
         message.channel.send(config.messages.errors.rolePermissions);
-        console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+        console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
       // Créer un channel perso
       chan = await SanctionManager.createChannel(victim, moderator, guild, message);
@@ -154,7 +154,7 @@ class Moderation {
       await victim.roles.add(role);
     } catch (e) {
       message.channel.send(config.messages.errors.rolePermissions);
-      console.log('Swan does not have sufficient permissions to edit GuildMember roles');
+      console.warn('Swan does not have sufficient permissions to edit GuildMember roles');
     }
 
     // Envoyer les messages
