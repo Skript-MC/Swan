@@ -4,7 +4,8 @@ import axios from 'axios';
 import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
 import { success } from './structures/messages';
-import { config, commands } from './main';
+import { verbose, config, commands } from './main';
+import { padNumber } from './utils';
 
 require('dotenv').config();
 
@@ -14,6 +15,8 @@ const apikeys = {
 };
 
 export function loadConfig() {
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Loading configuration (loadConfig())`);
+
   const conf = require('../config/config.json'); // eslint-disable-line global-require
   const ids = process.env;
 
@@ -41,13 +44,15 @@ export function loadConfig() {
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
   conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
-
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Configuration finished loading`);
   return conf;
 }
 
 export function loadBot() {
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Loading bot (loadBot())`);
   const client = new Client();
   client.login(apikeys.discord);
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): setup.js -> Bot finished loading (type: ${client.constructor.name})`);
   return client;
 }
 

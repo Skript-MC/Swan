@@ -5,16 +5,18 @@ import { loadBot,
   loadSkripttoolsAddons,
   loadDatabases,
   loadConfig } from './setup';
+import { padNumber } from './utils';
 import { success } from './structures/messages';
+import SanctionManager from './structures/SanctionManager';
+import loadRssFeed from './structures/RSSFeed';
+import Command from './structures/Command';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
 import memberAddHandler from './events/memberAdd';
 import messageUpdateHandler from './events/messageUpdate';
-import SanctionManager from './structures/SanctionManager';
-import loadRssFeed from './structures/RSSFeed';
-import Command from './structures/Command';
 
+export const verbose = process.env.NODE_ENV === 'development';
 export const config = loadConfig();
 
 export const commands = [];
@@ -30,6 +32,8 @@ export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI() : null;
 export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : null;
 
 client.on('ready', async () => {
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): main.js -> Client is ready (client.on('ready'))`);
+
   // Verifying tokens and ids
   if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
   if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
@@ -41,6 +45,8 @@ client.on('ready', async () => {
   for (const [key, value] of Object.entries(config.roles)) {
     if (!value) console.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
   }
+  // TODO: Also check if channels/roles exists by looking into the bot's guilds
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): main.js -> Checks of tokens and ids finished successfully`);
 
   // Initializing the commands-stats database
   for (const command of commands) {
@@ -51,6 +57,7 @@ client.on('ready', async () => {
     await db.commandsStats.insert({ command: command.name, used: 0 })
       .catch(console.error);
   }
+  if (verbose) console.log(`DEBUG (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}): main.js -> commandsStats database initialized successfully`);
 
   // Cache all messages that need to be cached
   const suggestionChannel = client.channels.cache.get(config.channels.suggestion);
