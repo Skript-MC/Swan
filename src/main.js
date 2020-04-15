@@ -5,7 +5,6 @@ import { loadBot,
   loadSkripttoolsAddons,
   loadDatabases,
   loadConfig } from './setup';
-import { padNumber } from './utils';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
 import Command from './structures/Command';
