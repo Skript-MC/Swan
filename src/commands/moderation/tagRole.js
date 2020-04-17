@@ -1,5 +1,6 @@
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
+import { logger } from '../../main';
 
 class TagRole extends Command {
   constructor() {
@@ -20,7 +21,7 @@ class TagRole extends Command {
         try {
           role.setMentionable(true);
         } catch (err) {
-          console.error(`An error occured while attempting to set the mentionable state of role ${role} to true.\nError : ${err.msg}`);
+          logger.error(`An error occured while attempting to set the mentionable state of role ${role} to true.\nError : ${err.msg}`);
         }
       }
       await message.channel.send(`${role.toString()} :arrow_up: `);
@@ -28,11 +29,11 @@ class TagRole extends Command {
         try {
           role.setMentionable(false);
         } catch (err) {
-          console.error(`An error occured while attempting to set the mentionable state of role ${role} to false.\nError : ${err.msg}`);
+          logger.error(`An error occured while attempting to set the mentionable state of role ${role} to false.\nError : ${err.msg}`);
         }
       }
     } else {
-      return console.error(this.config.invalidRole.replace('%s', args.join(' ')));
+      return logger.error(this.config.invalidRole.replace('%s', args.join(' ')));
     }
   }
 }

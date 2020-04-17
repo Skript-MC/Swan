@@ -2,7 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
-import { config } from '../../main';
+import { config, logger } from '../../main';
 import { formatDate } from '../../utils';
 
 class PlayerInfos extends Command {
@@ -70,7 +70,7 @@ class PlayerInfos extends Command {
   }
 
   httpError(response, message) {
-    console.error(`[HTTP request failed] Error : ${response.status}`);
+    logger.error(`[HTTP request failed] Error : ${response.status}`);
     message.channel.send(discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status} ${response.status === 429 ? 'Trop de requêtes ! Attendez un peu...' : ''}`, message));
   }
 }

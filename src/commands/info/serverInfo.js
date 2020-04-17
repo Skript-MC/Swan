@@ -2,7 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../structures/Command';
 import { discordError } from '../../structures/messages';
-import { config } from '../../main';
+import { config, logger } from '../../main';
 
 class ServerInfo extends Command {
   constructor() {
@@ -19,7 +19,7 @@ class ServerInfo extends Command {
     const data = await axios(`${config.apis.server}${args[0]}`)
       .then(async (response) => {
         if (response.status !== 200) {
-          console.error(`[HTTP request failed] Error : ${response.status}`);
+          logger.error(`[HTTP request failed] Error : ${response.status}`);
           return message.channel.send(discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status}`, message));
         }
         return response.data;
