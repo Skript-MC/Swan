@@ -5,16 +5,17 @@ import { loadBot,
   loadSkripttoolsAddons,
   loadDatabases,
   loadConfig } from './setup';
-import { success } from './structures/messages';
+import SanctionManager from './structures/SanctionManager';
+import loadRssFeed from './structures/RSSFeed';
+import Command from './structures/Command';
+import Logger from './structures/Logger';
 import messageHandler from './events/message';
 import reactionAddHandler from './events/messageReactionAdd';
 import messageDeleteHandler from './events/messageDelete';
 import memberAddHandler from './events/memberAdd';
 import messageUpdateHandler from './events/messageUpdate';
-import SanctionManager from './structures/SanctionManager';
-import loadRssFeed from './structures/RSSFeed';
-import Command from './structures/Command';
 
+export const logger = new Logger();
 export const config = loadConfig();
 
 export const commands = [];
@@ -30,17 +31,21 @@ export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI() : null;
 export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : null;
 
 client.on('ready', async () => {
+  logger.debug('main.js -> Client is ready (client.on(\'ready\'))');
+
   // Verifying tokens and ids
   if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
   if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
   if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
   for (const [key, value] of Object.entries(config.channels)) {
-    if (!value) console.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+    if (!value) logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
   }
   for (const [key, value] of Object.entries(config.roles)) {
-    if (!value) console.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+    if (!value) logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
   }
+  // TODO: Also check if channels/roles exists by looking into the bot's guilds
+  logger.debug('main.js -> Checks of tokens and ids finished successfully');
 
   // Initializing the commands-stats database
   for (const command of commands) {
@@ -51,11 +56,12 @@ client.on('ready', async () => {
     await db.commandsStats.insert({ command: command.name, used: 0 })
       .catch(console.error);
   }
+  logger.debug('main.js -> commandsStats database initialized successfully');
 
   // Cache all messages that need to be cached
   const suggestionChannel = client.channels.cache.get(config.channels.suggestion);
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
-  success(`Messages cached! (${suggestionMessages.size})`);
+  logger.step(`Messages cached! (${suggestionMessages.size})`);
 
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   client.config = {};
@@ -63,7 +69,7 @@ client.on('ready', async () => {
 
   const guild = client.guilds.resolve(config.bot.guild);
 
-  success('Skript-MC bot loaded!');
+  logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
     // Tri dans les cooldowns des commandes
@@ -75,15 +81,15 @@ client.on('ready', async () => {
   }, config.bot.checkInterval);
 });
 
+// TODO: Automaticly bind events based on files in ./events/
 client.on('message', messageHandler);
 client.on('messageDelete', messageDeleteHandler);
 client.on('messageUpdate', messageUpdateHandler);
 client.on('messageReactionAdd', reactionAddHandler);
-
 client.on('guildMemberAdd', memberAddHandler);
 
-client.on('error', console.error);
-client.on('warn', console.warn);
+client.on('error', (err) => { throw new Error(err); });
+client.on('warn', logger.warn);
 
 process.on('uncaughtException', (err) => { throw new Error(err); });
 process.on('unhandledRejection', (err) => { throw new Error(err); });
