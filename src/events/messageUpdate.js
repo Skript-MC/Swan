@@ -16,7 +16,6 @@ export default async function messageUpdateHandler(oldMessage, newMessage) {
   const deletedMentions = oldMentions.filter(elt => !newMentions.includes(elt));
   if (deletedMentions.length === 0) return;
 
-  // FIXME: Make this work (it does not work due to a current discordjs bug)
   const deletedRoleMention = oldRoleMentions.filter(elt => !newRoleMentions.includes(elt)).length > 0;
 
   const baseMessage = deletedMentions.length > 1 || deletedRoleMention
