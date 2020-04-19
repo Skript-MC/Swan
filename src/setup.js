@@ -1,5 +1,6 @@
 /* eslint-disable import/no-dynamic-require, import/no-cycle */
 import fs from 'fs';
+import path from 'path';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
 import { Client } from 'discord.js';
@@ -57,28 +58,46 @@ export function loadBot() {
   return client;
 }
 
-export function loadCommands(path = 'commands') {
-  if (path !== 'commands') logger.step(`loading : ${path}`);
+export function loadCommands(cmdPath = 'commands') {
+  if (cmdPath !== 'commands') logger.step(`loading : ${cmdPath}`);
 
-  fs.readdir(`${__dirname}/${path}`, (err, files) => {
+  fs.readdir(`${__dirname}/${cmdPath}`, (err, files) => {
     if (err) throw err;
     for (const file of files) {
-      const stat = fs.statSync(`${__dirname}/${path}/${file}`);
+      const stat = fs.statSync(`${__dirname}/${cmdPath}/${file}`);
       if (stat.isDirectory()) {
-        loadCommands(`${path}/${file}`);
-      } else if (file === '.DS_Store') {
-        continue;
-      } else {
+        loadCommands(`${cmdPath}/${file}`);
+      } else if (path.parse(file).ext === '.js') {
         try {
-          const Module = require(`${__dirname}/${path}/${file}`).default; // eslint-disable-line global-require
+          const Module = require(`${__dirname}/${cmdPath}/${file}`).default; // eslint-disable-line global-require
           const command = new Module();
           if (command.enabled) {
             command.init();
-            command.category = path.replace('commands/', '');
+            command.category = cmdPath.replace('commands/', '');
             commands.push(command);
           }
         } catch (e) {
           logger.error(`Unable to load this command: ${file}`);
+          throw new Error(e);
+        }
+      }
+    }
+  });
+}
+
+export function loadEvents(client) {
+  logger.step('loading events');
+
+  fs.readdir(`${__dirname}/events/`, (err, files) => {
+    if (err) throw err;
+    for (const file of files) {
+      if (path.parse(file).ext === '.js') {
+        try {
+          const eventFunction = require(`${__dirname}/events/${file}`).default; // eslint-disable-line global-require
+          const event = file.split('.')[0];
+          client.on(event, (...args) => eventFunction(...args));
+        } catch (e) {
+          logger.error(`Unable to load this event: ${file}`);
           throw new Error(e);
         }
       }
