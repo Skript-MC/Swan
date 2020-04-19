@@ -4,16 +4,12 @@ import { loadBot,
   loadSkriptHubAPI,
   loadSkripttoolsAddons,
   loadDatabases,
-  loadConfig } from './setup';
+  loadConfig,
+  loadEvents } from './setup';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
 import Command from './structures/Command';
 import Logger from './structures/Logger';
-import messageHandler from './events/message';
-import reactionAddHandler from './events/messageReactionAdd';
-import messageDeleteHandler from './events/messageDelete';
-import memberAddHandler from './events/memberAdd';
-import messageUpdateHandler from './events/messageUpdate';
 
 export const logger = new Logger();
 export const config = loadConfig();
@@ -22,8 +18,11 @@ export const commands = [];
 export const sanctions = [];
 
 loadCommands();
+
 export const db = loadDatabases();
 export const client = loadBot();
+
+loadEvents(client);
 
 const shouldLoadSyntaxes = config.messages.commands.syntaxinfo.enabled ?? true;
 const shouldLoadAddons = config.messages.commands.addoninfo.enabled ?? true;
@@ -80,13 +79,6 @@ client.on('ready', async () => {
     loadRssFeed();
   }, config.bot.checkInterval);
 });
-
-// TODO: Automaticly bind events based on files in ./events/
-client.on('message', messageHandler);
-client.on('messageDelete', messageDeleteHandler);
-client.on('messageUpdate', messageUpdateHandler);
-client.on('messageReactionAdd', reactionAddHandler);
-client.on('guildMemberAdd', memberAddHandler);
 
 client.on('error', (err) => { throw new Error(err); });
 client.on('warn', logger.warn);
