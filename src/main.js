@@ -31,6 +31,7 @@ export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : nu
 
 client.on('ready', async () => {
   logger.debug('main.js -> Client is ready (client.on(\'ready\'))');
+  const guild = client.guilds.resolve(config.bot.guild);
 
   // Verifying tokens and ids
   if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
@@ -39,11 +40,13 @@ client.on('ready', async () => {
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
   for (const [key, value] of Object.entries(config.channels)) {
     if (!value) logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+    else if (!guild.channels.cache.has(value)) logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
   }
   for (const [key, value] of Object.entries(config.roles)) {
     if (!value) logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+    else if (!guild.roles.cache.has(value)) logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
   }
-  // TODO: Also check if channels/roles exists by looking into the bot's guilds
+
   logger.debug('main.js -> Checks of tokens and ids finished successfully');
 
   // Initializing the commands-stats database
@@ -65,8 +68,6 @@ client.on('ready', async () => {
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   client.config = {};
   client.config.activated = true;
-
-  const guild = client.guilds.resolve(config.bot.guild);
 
   logger.step('Skript-MC bot loaded!', true);
 
