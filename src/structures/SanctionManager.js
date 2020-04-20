@@ -159,6 +159,7 @@ class SanctionManager {
       .addField(':tools: Action', `${action}`, true)
       .addField(':label: Raison', `${info.reason}\nID : ${info.id}`, true);
     if (info.file) embed.addField(':scroll: Historique des messages', 'Disponible ci-dessous', true);
+    else if (info.sanction === 'ban') embed.addField(':scroll: Historique des messages', 'Indisponible', true);
 
     logChannel.send(embed);
 
@@ -255,9 +256,11 @@ class SanctionManager {
         const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(victim)}`;
         const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
 
-        const allMessages = await SanctionManager.getAllMessages(chan);
-        const originalModerator = guild.members.cache.get(result.modid);
-        file = SanctionManager.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
+        if (chan) {
+          const allMessages = await SanctionManager.getAllMessages(chan);
+          const originalModerator = guild.members.cache.get(result.modid);
+          file = SanctionManager.getMessageHistoryFile({ victim, moderator: originalModerator, reason: result.reason }, allMessages);
+        }
       }
 
       SanctionManager.removeSanction({
