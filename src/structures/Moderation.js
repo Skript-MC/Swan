@@ -35,10 +35,6 @@ class Moderation {
   static async ban(victim, reason, duration, moderator, cmdConfig, message, guild) {
     const role = guild.roles.cache.find(r => r.name === config.moderation.banRole);
 
-    // Durée invalide
-    if (duration < -1) {
-      return message.channel.send(discordError(cmdConfig.invalidDuration, message));
-    }
     // Durée max des modérateurs forum : 2j
     if (message.member.roles.cache.has(config.roles.forumMod) && (duration === -1 || duration > 172800)) {
       return message.channel.send(discordError(cmdConfig.durationTooLong));

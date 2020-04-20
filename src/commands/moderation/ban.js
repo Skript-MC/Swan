@@ -9,7 +9,7 @@ class Ban extends Command {
     super('Ban');
     this.aliases = ['ban', 'sdb'];
     this.usage = 'ban <@mention | ID> <durée> [<raison>]';
-    this.examples = ['ban @Uneo7 5j Mouahaha'];
+    this.examples = ['ban @Uneo7 5j Mouahaha', 'ban @Vengelis_ def Tu ne reviendras jamais !'];
     this.permissions = ['Staff'];
   }
 
@@ -22,7 +22,13 @@ class Ban extends Command {
     if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.send(discordError(this.config.userTooPowerful, message));
 
     const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
-    const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
+    let duration;
+    if (args[1] === 'def' || args[1] === 'definitif') {
+      duration = -1;
+    } else {
+      duration = toTimestamp(args[1]) / 1000;
+      if (duration < 0) return message.channel.send(discordError(this.config.invalidDuration, message));
+    }
 
     Moderation.ban(victim, reason, duration, message.author, this.config, message, message.guild);
   }
