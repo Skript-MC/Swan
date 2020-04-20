@@ -15,7 +15,7 @@ class Moderation {
     await db.sanctions.remove({ _id: member.id }).catch(console.error);
 
     // Suppression du channel perso
-    const guild = client.guilds.cache.get(config.bot.guild);
+    const { guild } = client;
     const chan = guild.channels.cache.find(c => c.name === `${config.moderation.banChannelPrefix}${prunePseudo(member)}` && c.type === 'text');
     if (chan) chan.delete();
 

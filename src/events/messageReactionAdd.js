@@ -7,7 +7,7 @@ export default async function reactionAddHandler(reaction, user) {
   if (user.bot
     || message.channel.id !== config.channels.suggestion) return;
 
-  const guild = client.guilds.cache.get(config.bot.guild);
+  const { guild } = client;
   const link = `https://discordapp.com/channels/${guild.id}/${config.channels.suggestion}/${message.id}`;
 
   if (reaction.emoji.name === '✅') {
