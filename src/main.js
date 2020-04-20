@@ -66,6 +66,7 @@ client.on('ready', async () => {
   logger.step(`Messages cached! (${suggestionMessages.size})`);
 
   client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
+  client.guild = guild;
   client.config = {};
   client.config.activated = true;
 
