@@ -114,12 +114,13 @@ export function prunePseudo(member) {
 }
 
 /**
- * @description Élaguer le pseudo d'un membre, pour qu'il puisse être mentionné par tout le monde.
+ * @description Tester le pseudonyme d'un membre pour vérifier s'il correspond au regex.
  * @param {GuildMember} member Le membre
  */
-export function prunePseudoJoin(member) {
+export function regexPseudo(member) {
   const name = member.nickname || member.user.username;
-  return new RegExp(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).test(name);
+  if (name.match(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).length >= name.length / 2) return true;
+  return false;
 }
 
 /**

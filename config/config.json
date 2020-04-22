@@ -78,7 +78,7 @@
                 "Bizu",
                 "Tarentule"
             ],
-            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nNous avons modifié ton pseudonyme car il contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord à être renommé."
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu qu'il était difficile de te mentionner, nous avons modifié ton pseudonyme car plus de la moîtié contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord pour être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
