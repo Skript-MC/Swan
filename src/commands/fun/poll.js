@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { config } from '../../main';
-import { discordError, discordInfo } from '../../structures/messages';
 import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {
@@ -42,7 +41,7 @@ class Poll extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const duration = args.shift(); // Extraction de la durée
     const answers = extractQuotedText(args.join(' ')); // Array de toutes les réponses
@@ -51,14 +50,14 @@ class Poll extends Command {
 
     const wait = toTimestamp(duration);
 
-    if (!wait) return message.channel.send(discordError(this.config.invalidDuration, message));
-    if (Date.now() + wait < Date.now()) return message.channel.send(discordError(this.config.invalidDuration, message));
-    if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
+    if (!wait) return message.channel.sendError(this.config.invalidDuration, message.member);
+    if (Date.now() + wait < Date.now()) return message.channel.sendError(this.config.invalidDuration, message.member);
+    if (wait > config.miscellaneous.maxPollDuration) return message.channel.sendError(this.config.tooLong, message.member);
 
-    if (!question) return message.channel.send(discordError(this.config.invalidCmd, message));
-    if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.send(discordError(this.config.quoteProblem, message));
-    if (answers.length === 1) return message.channel.send(discordError(this.config.notEnoughAnswers, message));
-    if (answers.length >= 18) return message.channel.send(discordError(this.config.tooManyAnswers, message));
+    if (!question) return message.channel.sendError(this.config.invalidCmd, message.member);
+    if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.sendError(this.config.quoteProblem, message.member);
+    if (answers.length === 1) return message.channel.sendError(this.config.notEnoughAnswers, message.member);
+    if (answers.length >= 18) return message.channel.sendError(this.config.tooManyAnswers, message.member);
 
     const end = formatDate(new Date(Date.now() + wait));
 
@@ -106,7 +105,7 @@ class Poll extends Command {
         && reaction.emoji.name === 'ℹ'
         && user.id === message.author.id)
       .on('collect', () => {
-        message.channel.send(discordInfo(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message));
+        message.channel.sendInfo(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member);
       });
 
     const collectorStop = msg

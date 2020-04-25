@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { config, logger } from '../../main';
 import { formatDate } from '../../utils';
 
@@ -14,19 +13,19 @@ class PlayerInfos extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
     const msg = await message.channel.send(this.config.searching1);
 
     // On récupère l'UUID du joueur a partir de son pseudo
     const uuid = await axios(`${config.apis.mojang_api}/users/profiles/minecraft/${args[0]}`)
       .then(async (response) => {
-        if ([204, 400, 404].includes(response.status)) { message.channel.send(discordError(this.config.playerNotFound, message)); return -1; }
+        if ([204, 400, 404].includes(response.status)) { message.channel.sendError(this.config.playerNotFound, message.member); return -1; }
         if (response.status !== 200) { this.httpError(response, message); return -1; }
         return response.data.id;
       }).catch(console.error);
 
     if (uuid === -1) return;
-    if (!uuid) return message.channel.send(discordError(this.config.error, message));
+    if (!uuid) return message.channel.sendError(this.config.error, message.member);
 
     msg.edit(this.config.searching2);
     // On récupère l'historique des pseudos du joueur
@@ -36,7 +35,7 @@ class PlayerInfos extends Command {
         return response.data;
       }).catch(console.error);
 
-    if (!nameHystory) return message.channel.send(discordError(this.config.error, message));
+    if (!nameHystory) return message.channel.sendError(this.config.error, message.member);
 
     msg.delete();
     this.sendDetails(message, nameHystory, uuid);
@@ -71,7 +70,7 @@ class PlayerInfos extends Command {
 
   httpError(response, message) {
     logger.error(`[HTTP request failed] Error : ${response.status}`);
-    message.channel.send(discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status} ${response.status === 429 ? 'Trop de requêtes ! Attendez un peu...' : ''}`, message));
+    message.channel.sendError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status} ${response.status === 429 ? 'Trop de requêtes ! Attendez un peu...' : ''}`, message.member);
   }
 }
 

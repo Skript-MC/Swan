@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { logger } from '../../main';
 
 class TagRole extends Command {
@@ -12,7 +11,7 @@ class TagRole extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     message.delete();
     const role = message.guild.roles.cache.find(r => r.name.toUpperCase() === args.join(' ').toUpperCase());

@@ -2,7 +2,6 @@ import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
 import Command from '../../structures/Command';
 import { db, config } from '../../main';
-import { discordError } from '../../structures/messages';
 
 require('dotenv').config();
 
@@ -20,7 +19,7 @@ class Ranking extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.noType, message));
+    if (args.length === 0) return message.channel.sendError(this.config.noType, message.member);
 
     let description = '';
     let type = '';
@@ -121,7 +120,7 @@ class Ranking extends Command {
         break;
       }
       default:
-        message.channel.send(discordError(this.config.invalidType, message));
+        message.channel.sendError(this.config.invalidType, message.member);
         return;
     }
 

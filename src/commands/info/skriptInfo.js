@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordInfo, discordError } from '../../structures/messages';
 import { convertFileSize } from '../../utils';
 import { config } from '../../main';
 
@@ -14,7 +13,7 @@ class SkriptInfo extends Command {
   }
 
   async execute(message, args) {
-    if (args[0] && !['dl', 'download', 'link', 'links'].includes(args[0])) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args[0] && !['dl', 'download', 'link', 'links'].includes(args[0])) return message.channel.sendError(this.config.invalidCmd, message.member);
     if (!args[0] || ['dl', 'download'].includes(args[0])) {
       const options = { Accept: 'Accept: application/vnd.github.v3+json' };
       const githubReleases = await axios(`${config.apis.github}/repos/SkriptLang/Skript/releases`, options)
@@ -41,7 +40,7 @@ class SkriptInfo extends Command {
 
       message.channel.send(embed);
     } if (!args[0] || ['links', 'link'].includes(args[0])) {
-      message.channel.send(discordInfo(this.config.embed.verInfo_desc, message));
+      message.channel.sendInfo(this.config.embed.verInfo_desc, message.member);
     }
   }
 }

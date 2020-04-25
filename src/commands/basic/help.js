@@ -2,7 +2,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { commands, config } from '../../main';
-import { discordError } from '../../structures/messages';
 import { jkDistance, selectorMessage } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
@@ -101,7 +100,7 @@ class Help extends Command {
         }
 
         if (matches.length === 0) {
-          message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+          message.channel.sendError(config.messages.commands.help.cmdDoesntExist, message.member);
         } else {
           const cmdList = matches.map(m => m.name).join('`, `');
           const msg = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));

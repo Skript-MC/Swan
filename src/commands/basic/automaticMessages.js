@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 import { uncapitalize, jkDistance } from '../../utils';
 
@@ -19,7 +18,7 @@ class AutomaticMessages extends Command {
 
     if (args.length === 0) {
       const allMessages = Object.keys(this.config.messages).join(', ');
-      message.channel.send(discordError(this.config.noArg.replace('%s', `\`${allMessages}\``), message));
+      message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages}\``), message.member);
       return;
     }
 
@@ -50,7 +49,7 @@ class AutomaticMessages extends Command {
     }
 
     if (matches.length === 0) {
-      const errorMsg = await message.channel.send(discordError(this.config.invalidMessage, message));
+      const errorMsg = await message.channel.sendError(this.config.invalidMessage, message.member);
       errorMsg.delete({ timeout: 10000 });
     } else {
       const messagesList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.automsg ');

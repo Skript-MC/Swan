@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { config, logger } from '../../main';
 
 class ServerInfo extends Command {
@@ -13,19 +12,19 @@ class ServerInfo extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const msg = await message.channel.send(this.config.searching);
     const data = await axios(`${config.apis.server}${args[0]}`)
       .then(async (response) => {
         if (response.status !== 200) {
           logger.error(`[HTTP request failed] Error : ${response.status}`);
-          return message.channel.send(discordError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status}`, message));
+          return message.channel.sendError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status}`, message.member);
         }
         return response.data;
       }).catch(console.error);
 
-    if (!data) return message.channel.send(discordError(this.config.noServerFound, message));
+    if (!data) return message.channel.sendError(this.config.noServerFound, message.member);
     return this.sendDetails(message, msg, data, args[0]);
   }
 

@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import Moderation from '../../structures/Moderation';
 
 class Unmute extends Command {
@@ -13,7 +12,7 @@ class Unmute extends Command {
 
   async execute(message, args) {
     const victim = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
-    if (!victim) return message.channel.send(discordError(this.config.missingUserArgument, message));
+    if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
 
     const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 

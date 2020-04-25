@@ -1,6 +1,5 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 import { formatDate } from '../../utils';
 
@@ -28,9 +27,9 @@ class UserInfos extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
     const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
-    if (!target) return message.channel.send(discordError(this.config.pseudoNotFound, message));
+    if (!target) return message.channel.sendError(this.config.pseudoNotFound, message.member);
 
     const roles = [];
     for (const role of target.roles.cache.array()) {

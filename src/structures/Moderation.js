@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
-import { discordSuccess, discordError } from './messages';
 import { db, config, client, logger } from '../main';
 import { prunePseudo, secondToDuration } from '../utils';
 import MusicBot from './Music';
@@ -39,7 +38,7 @@ class Moderation {
 
     // Durée max des modérateurs forum : 2j
     if (message.member.roles.cache.has(config.roles.forumMod) && (duration === -1 || duration > 172800)) {
-      return message.channel.send(discordError(cmdConfig.durationTooLong));
+      return message.channel.sendError(cmdConfig.durationTooLong.member);
     }
 
     let chan;
@@ -69,7 +68,7 @@ class Moderation {
     // Vérifier dans la bdd si le joueur est déjà banni
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
     if (result) {
-      message.channel.send(discordSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message));
+      message.channel.sendSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message.member);
       if (duration !== -1) {
         db.sanctions.update(
           { _id: result._id },
@@ -87,7 +86,7 @@ class Moderation {
         .replace('%u', victim.user.username)
         .replace('%r', reason)
         .replace('%d', secondToDuration(duration));
-      message.channel.send(discordSuccess(successMessage, message));
+      message.channel.sendSuccess(successMessage, message.member);
       return this.hardBan(victim, reason, moderator);
     }
 
@@ -100,7 +99,7 @@ class Moderation {
       .replace('%u', victim.user.username)
       .replace('%r', reason)
       .replace('%d', secondToDuration(duration));
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
     chan.send(whyHere);
 
     // Envoyer les logs
@@ -114,11 +113,11 @@ class Moderation {
 
     // Durée invalide
     if (duration < -1) {
-      return message.channel.send(discordError(cmdConfig.invalidDuration, message));
+      return message.channel.sendError(cmdConfig.invalidDuration, message.member);
     }
     // Durée maximale des sanctions des modos forum : 2j
     if (message.member.roles.cache.has(config.roles.forumMod) && (duration !== -1 || duration > 172800)) {
-      return message.channel.send(discordError(cmdConfig.durationTooLong, message));
+      return message.channel.sendError(cmdConfig.durationTooLong, message.member);
     }
 
     const infos = {
@@ -143,7 +142,7 @@ class Moderation {
         } },
       );
       infos.sanction = 'mute_prolongation';
-      message.channel.send(discordSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message));
+      message.channel.sendSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message.member);
       SanctionManager.log(infos, guild);
       return;
     }
@@ -161,7 +160,7 @@ class Moderation {
       .replace('%u', victim.user.username)
       .replace('%r', reason)
       .replace('%d', secondToDuration(duration));
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     // Envoyer les logs
     SanctionManager.addToHistory(infos);
@@ -174,7 +173,7 @@ class Moderation {
     const date = Date.now();
 
     const successMessage = cmdConfig.successfullyWarned.replace('%u', victim.user.username).replace('%r', reason).replace('%d', date);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
     victim.send(cmdConfig.warning.replace('%u', victim.user.username).replace('%r', reason));
 
     // Vérifier s'il a dépasser la limite d'avertissement avant le banissement
@@ -201,11 +200,11 @@ class Moderation {
     // Kick
     const hasBeenKicked = await victim.kick(reason).catch(error => void console.error(error)); // eslint-disable-line no-void
 
-    if (!hasBeenKicked) return message.channel.send(discordError(cmdConfig.couldntKick, message));
+    if (!hasBeenKicked) return message.channel.sendError(cmdConfig.couldntKick, message.member);
 
     // Envoyer les messages
     const successMessage = cmdConfig.successfullyKicked.replace('%u', victim.user.username).replace('%r', reason);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     // Envoyer les logs
     const infos = {
@@ -254,8 +253,8 @@ class Moderation {
   static async unban(victim, reason, moderator, cmdConfig, message, guild) {
     // Regarde dans la bdd si le joueur est banni
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
-    if (!result) return message.channel.send(discordError(cmdConfig.notBanned.replace('%u', victim), message));
-    if (!message.member.roles.cache.has(config.roles.owner) && result.modid !== message.author.id) return message.channel.send(discordError(cmdConfig.notYou, message));
+    if (!result) return message.channel.sendError(cmdConfig.notBanned.replace('%u', victim), message.member);
+    if (!message.member.roles.cache.has(config.roles.owner) && result.modid !== message.author.id) return message.channel.sendError(cmdConfig.notYou, message.member);
 
     const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(victim)}`;
     const chan = guild.channels.cache.find(c => c.name === channelName && c.type === 'text');
@@ -272,7 +271,7 @@ class Moderation {
     const successMessage = cmdConfig.successfullyUnbanned
       .replace('%u', victim.user.username)
       .replace('%r', reason);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     SanctionManager.addToHistory({
       member: victim,
@@ -295,13 +294,13 @@ class Moderation {
     // Regarde dans la database si le joueur est mute
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'mute' }).catch(console.error);
 
-    if (!result) return message.channel.send(discordError(cmdConfig.notMuted.replace('%u', victim), message));
-    if (result.modid !== message.author.id) return message.channel.send(discordError(cmdConfig.notYou, message));
+    if (!result) return message.channel.sendError(cmdConfig.notMuted.replace('%u', victim), message.member);
+    if (result.modid !== message.author.id) return message.channel.sendError(cmdConfig.notYou, message.member);
 
     const successMessage = cmdConfig.successfullyUnmuted
       .replace('%u', victim.user.username)
       .replace('%r', reason);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     SanctionManager.addToHistory({
       member: victim,
@@ -322,18 +321,18 @@ class Moderation {
   static async removeWarn(victim, id, reason, moderator, cmdConfig, message, guild) {
     // Regarde dans la database si le warn existe
     const userHistory = await db.sanctionsHistory.findOne({ memberId: victim.id }).catch(console.error);
-    if (!userHistory) return message.channel.send(discordError(cmdConfig.noSanction.replace('%u', victim), message));
+    if (!userHistory) return message.channel.sendError(cmdConfig.noSanction.replace('%u', victim), message.member);
 
     const warn = userHistory.sanctions.find(elt => elt.type === 'warn' && elt.date.toString() === id);
-    if (!warn) return message.channel.send(discordError(cmdConfig.notWarned.replace('%u', victim).replace('%d', id), message));
-    if (userHistory.revokedWarns.includes(warn.date.toString())) return message.channel.send(discordError(cmdConfig.alreadyRevoked, message));
-    if (warn.mod !== message.author.id) return message.channel.send(discordError(cmdConfig.notYou, message));
+    if (!warn) return message.channel.sendError(cmdConfig.notWarned.replace('%u', victim).replace('%d', id), message.member);
+    if (userHistory.revokedWarns.includes(warn.date.toString())) return message.channel.sendError(cmdConfig.alreadyRevoked, message.member);
+    if (warn.mod !== message.author.id) return message.channel.sendError(cmdConfig.notYou, message.member);
 
     const successMessage = cmdConfig.successfullyUnwarned
       .replace('%u', victim.user.username)
       .replace('%d', id)
       .replace('%r', reason);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     SanctionManager.addToHistory({
       member: victim,
@@ -365,12 +364,12 @@ class Moderation {
     // Regarde dans la database si le joueur est interdit des commandes de musique
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'music_restriction' }).catch(console.error);
 
-    if (!result) return message.channel.send(discordError(cmdConfig.notRestricted.replace('%u', victim), message));
+    if (!result) return message.channel.sendError(cmdConfig.notRestricted.replace('%u', victim), message.member);
 
     const successMessage = cmdConfig.successfullyRemoveRestr
       .replace('%u', `${victim.user.username}`)
       .replace('%r', reason);
-    message.channel.send(discordSuccess(successMessage, message));
+    message.channel.sendSuccess(successMessage, message.member);
 
     const index = MusicBot.restricted.indexOf(victim.id);
     MusicBot.restricted.splice(index, 1);

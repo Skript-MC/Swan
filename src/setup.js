@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
-import { Client } from 'discord.js';
+import { Client, Structures, MessageEmbed } from 'discord.js';
 import { config, commands, logger } from './main';
 
 require('dotenv').config();
@@ -48,8 +48,57 @@ export function loadConfig() {
   return conf;
 }
 
+function extendClasses() {
+  Structures.extend('TextChannel', (TextChannel) => {
+    class CustomTextChannel extends TextChannel {
+      sendError(content, member, options) {
+        const embed = new MessageEmbed()
+          .setAuthor(member.displayName, member.user.avatarURL())
+          .attachFiles(['./assets/error.png'])
+          .setThumbnail('attachment://error.png')
+          .setTitle('Erreur')
+          .setColor(config.colors.error)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
+      }
+
+      sendInfo(content, member, options) {
+        const embed = new MessageEmbed()
+          .setAuthor(member.displayName, member.user.avatarURL())
+          .attachFiles(['./assets/information.png'])
+          .setThumbnail('attachment://information.png')
+          .setTitle('Information')
+          .setColor(config.colors.default)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
+      }
+
+      sendSuccess(content, member, options) {
+        const embed = new MessageEmbed()
+          .setAuthor(member.displayName, member.user.avatarURL())
+          .attachFiles(['./assets/success.png'])
+          .setThumbnail('attachment://success.png')
+          .setTitle('Succès')
+          .setColor(config.colors.success)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
+      }
+    }
+
+    return CustomTextChannel;
+  });
+}
+
 export function loadBot() {
   logger.debug('setup.js -> Loading bot (loadBot())');
+
+  extendClasses();
 
   const client = new Client();
   client.login(apikeys.discord);
