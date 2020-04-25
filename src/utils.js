@@ -112,15 +112,6 @@ export function prunePseudo(member) {
 }
 
 /**
- * @description Élaguer le pseudo d'un membre, pour qu'il puisse être mentionné par tout le monde.
- * @param {GuildMember} member Le membre
- */
-export function prunePseudoJoin(member) {
-  const name = member.nickname || member.user.username;
-  return new RegExp(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).test(name);
-}
-
-/**
  * @description Fonction pour calculer la distance jaro-winkler entre 2 strings
  * @param {String} s1 Premier string
  * @param {String} s2 Second string
