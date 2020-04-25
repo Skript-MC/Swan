@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError, discordInfo } from '../../structures/messages';
+import { discordError } from '../../structures/messages';
 import { config } from '../../main';
 
 class Move extends Command {
@@ -37,7 +37,7 @@ class Move extends Command {
       .replace('%a', targetedMessage.member.nickname || targetedMessage.author.username)
       .replace('%s', targetedChannel)
       .replace('%t', message.member.nickname || message.author.username);
-    message.channel.send(discordInfo(successMessage, message));
+    message.channel.send(successMessage);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
