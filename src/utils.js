@@ -114,16 +114,6 @@ export function prunePseudo(member) {
 }
 
 /**
- * @description Tester le pseudonyme d'un membre pour vérifier s'il correspond au regex.
- * @param {GuildMember} member Le membre
- */
-export function regexPseudo(member) {
-  const name = member.nickname || member.user.username;
-  if (name.match(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).length >= name.length / 2) return true;
-  return false;
-}
-
-/**
  * @description Fonction pour calculer la distance jaro-winkler entre 2 strings
  * @param {String} s1 Premier string
  * @param {String} s2 Second string
@@ -224,12 +214,13 @@ export async function selectorMessage(results, query, message, cmdConfig, messag
   };
   const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
   let content = conf.searchResults.replace('%r', results.length).replace('%s', query);
-  for (let i = 0; i < 10; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
 
-  if (results.length - 10 > 0) content += `\n...et ${results.length - 10} de plus...`;
+  for (let i = 0; i < results.length; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
+
+  if (results.length - 10 > 0) content += `\n...et ${results - 10} de plus...`;
   const botMessage = await message.channel.send(content);
 
-  for (let i = 0; i < 10; i++) await botMessage.react(reactionsNumbers[i]);
+  for (let i = 0; i < results.length; i++) await botMessage.react(reactionsNumbers[i]);
   await botMessage.react('❌');
 
   const collectorNumbers = botMessage
