@@ -22,7 +22,13 @@ class Mute extends Command {
     if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.send(discordError(this.config.userTooPowerful, message));
 
     const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
-    const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
+    let duration;
+    if (args[1] === 'def' || args[1] === 'definitif') {
+      duration = -1;
+    } else {
+      duration = toTimestamp(args[1]);
+      if (!duration) return message.channel.send(discordError(this.config.invalidDuration, message));
+    }
 
     Moderation.mute(victim, reason, duration, message.author, this.config, message, message.guild);
   }
