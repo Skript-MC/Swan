@@ -31,7 +31,7 @@ export default async function loadRssFeed() {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
-    content = content.replace('Hidden Content\n\n\nGive reaction or reply to this topic to see the hidden content.', '');
+    content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
     content = content.replace(/(\n){3,}/gmu, '\n');
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
@@ -49,7 +49,7 @@ export default async function loadRssFeed() {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
-    content = content.replace('Hidden Content\n\n\nGive reaction or reply to this topic to see the hidden content.', '');
+    content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
     content = content.replace(/(\n){3,}/gmu, '\n');
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 

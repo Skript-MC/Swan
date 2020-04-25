@@ -78,7 +78,7 @@
                 "Bizu",
                 "Tarentule"
             ],
-            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nNous avons modifié ton pseudonyme car il contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord à être renommé."
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu qu'il était difficile de te mentionner, nous avons modifié ton pseudonyme car plus de la moîtié contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord pour être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
@@ -183,7 +183,7 @@
                     },
                     "spoonfeed": {
                         "templates": ["spoonfeed", "learntolearn", "searchdoc"],
-                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris le compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent afin qu'ils comprennent ce qu'ils font.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
+                        "content": ":warning: Nous déconseillons de donner un code prêt à être copié-collé, __sans que l'utilisateur n'ait compris son contenu__ (= **spoonfeed**, anglais pour `nourrir à la cuillère`).\nAfin de favoriser l'apprentissage à Skript et dans le but de devenir autonome, nous demandons aux utilisateurs d'essayer de réaliser leur code **eux-même** avec l'aide des nombreuses documentations qui existent afin qu'ils comprennent ce qu'ils font.\n\n:arrow_right_hook: Néanmoins, nous restons bien entendu toujours présents pour vous aider lorsque vous ne trouvez pas les réponses à vos questions !"
                     },
                     "encoding": {
                         "templates": ["encoding", "utf-8", "utf8"],
@@ -651,10 +651,10 @@
                 "description": "Déplace un message vers un salon défini par son identifiant.",
                 "invalidChannel": "Désolé, je n'ai pas pu trouver ce salon. Vérifie que tu l'as correctement mentionné (#salon).",
                 "sameChannel": "Ce message se trouve déjà dans ce salon, tu ne peux pas le déplacer !",
-                "invalidMessage": "Désolé, je n'ai pas pu trouver ce message. Vérifie que tu aies correctement copié son identifiant.",
+                "invalidMessage": "Désolé, je n'ai pas pu trouver ce message. Vérifie que tu aies indiqué l'identifiant du message concerné.",
                 "restrictedChannel": "Désolé, tu ne peux pas exécuter cette commande ou déplacer ce message dans ce salon.",
                 "targetedUserTooPowerful": "Désolé, tu ne peux pas déplacer le message de cet utilisateur.",
-                "successfullyMoved": ":twisted_rightwards_arrows: **%a, ton message a été déplacé vers %s.**\n\n*Ce salon est sûrement déjà occupé par une autre demande, **%t** a déplacé ton message dans un salon libre ! :smile:*"
+                "successfullyMoved": ":twisted_rightwards_arrows: %a, ton message a été déplacé vers %s par %t."
             },
             "removemusicrestriction": {
                 "help": "Supprimer les restrictions musicales d'un membre.",
