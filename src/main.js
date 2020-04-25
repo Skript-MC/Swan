@@ -79,6 +79,8 @@ client.on('ready', async () => {
     SanctionManager.checkSanctions(guild);
     // Chargement des flux RSS
     loadRssFeed();
+    // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+    client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   }, config.bot.checkInterval);
 });
 
