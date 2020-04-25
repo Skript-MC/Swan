@@ -5,7 +5,7 @@ export default async function messageUpdateHandler(oldMessage, newMessage) {
   if (newMessage.author.bot) return; // The bot has a ghost-ping command
   if (newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(config.roles.staff).position) return;
 
-  const oldUserMentions = oldMessage.mentions.users.array().filter(usr => !usr.bot).map(usr => usr.username);
+  const oldUserMentions = oldMessage.mentions.users.array().filter(usr => !usr.bot && usr.id !== newMessage.author.id).map(usr => usr.username);
   const oldRoleMentions = oldMessage.mentions.roles.array().map(role => role.name);
   const oldMentions = [...oldUserMentions, ...oldRoleMentions];
 
