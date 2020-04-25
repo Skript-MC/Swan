@@ -48,9 +48,9 @@ class Poll extends Command {
     const question = answers.shift() || args.join(' '); // Extraction de la question
     const questionType = answers.length === 0 ? 0 : 1; // 0 = oui/non | 1 = réponse spécifique
 
-    const wait = toTimestamp(duration);
+    const wait = toTimestamp(duration) * 1000;
 
-    if (!wait) return message.channel.sendError(this.config.invalidDuration, message.member);
+    if (!wait || isNaN(wait)) return message.channel.sendError(this.config.invalidDuration, message.member);
     if (Date.now() + wait < Date.now()) return message.channel.sendError(this.config.invalidDuration, message.member);
     if (wait > config.miscellaneous.maxPollDuration) return message.channel.sendError(this.config.tooLong, message.member);
 
