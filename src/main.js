@@ -85,5 +85,7 @@ client.on('ready', async () => {
 client.on('error', (err) => { throw new Error(err); });
 client.on('warn', logger.warn);
 
-process.on('uncaughtException', (err) => { throw new Error(err); });
-process.on('unhandledRejection', (err) => { throw new Error(err); });
+if (process.env.NODE_ENV !== 'development') {
+  process.on('uncaughtException', (err) => { throw new Error(err); });
+  process.on('unhandledRejection', (err) => { throw new Error(err); });
+}
