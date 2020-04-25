@@ -91,15 +91,13 @@ export function toTimestamp(str) {
   }
 
   // On regarde s'il reste des lettres
-  if (str.match(/[a-zA-Z]+/g)) return -1;
+  if (str.match(/[a-zA-Z]+/g)) return null;
 
-  let result;
   try {
-    result = math.evaluate(str.slice(0, -1));
+    return math.evaluate(str.slice(0, -1));
   } catch (e) {
-    result = -1;
+    return null;
   }
-  return result * 1000;
 }
 
 /**
@@ -224,12 +222,13 @@ export async function selectorMessage(results, query, message, cmdConfig, messag
   const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
   let content = conf.searchResults.replace('%r', results.length).replace('%s', query);
 
-  for (let i = 0; i < results.length; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
+  const elementNumber = results.length > 10 ? 10 : results.length;
+  for (let i = 0; i < elementNumber; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
 
-  if (results.length - 10 > 0) content += `\n...et ${results - 10} de plus...`;
+  if (results.length - 10 > 0) content += `\n...et ${results.length - 10} de plus...`;
   const botMessage = await message.channel.send(content);
 
-  for (let i = 0; i < results.length; i++) await botMessage.react(reactionsNumbers[i]);
+  for (let i = 0; i < elementNumber; i++) await botMessage.react(reactionsNumbers[i]);
   await botMessage.react('❌');
 
   const collectorNumbers = botMessage

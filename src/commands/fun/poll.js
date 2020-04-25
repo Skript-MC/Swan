@@ -51,8 +51,10 @@ class Poll extends Command {
 
     const wait = toTimestamp(duration);
 
+    if (!wait) return message.channel.send(discordError(this.config.invalidDuration, message));
     if (Date.now() + wait < Date.now()) return message.channel.send(discordError(this.config.invalidDuration, message));
     if (wait > config.miscellaneous.maxPollDuration) return message.channel.send(discordError(this.config.tooLong, message));
+
     if (!question) return message.channel.send(discordError(this.config.invalidCmd, message));
     if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.send(discordError(this.config.quoteProblem, message));
     if (answers.length === 1) return message.channel.send(discordError(this.config.notEnoughAnswers, message));

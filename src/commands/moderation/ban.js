@@ -26,8 +26,8 @@ class Ban extends Command {
     if (args[1] === 'def' || args[1] === 'definitif') {
       duration = -1;
     } else {
-      duration = toTimestamp(args[1]) / 1000;
-      if (duration < 0) return message.channel.send(discordError(this.config.invalidDuration, message));
+      duration = toTimestamp(args[1]);
+      if (!duration) return message.channel.send(discordError(this.config.invalidDuration, message));
     }
 
     Moderation.ban(victim, reason, duration, message.author, this.config, message, message.guild);
