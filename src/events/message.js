@@ -78,7 +78,7 @@ export default async function messageHandler(message) {
       let loop = 1;
       if (loop <= 5) {
         targetedMessage.attachments.forEach((attachment) => {
-          embed.addField(`Attachement n°${loop}`, attachment.url);
+          embed.addField(`Pièce jointe n°${loop}`, attachment.url);
           loop++;
         });
       }
