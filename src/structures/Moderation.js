@@ -8,11 +8,13 @@ import SanctionManager from './SanctionManager';
 
 class Moderation {
   static async hardBan(member, reason, moderator) {
+    // Suppression de la database
+    // On fait ca en premier pour que s'il le rôle sous-fifre, il ne soit pas re-ban par le bot
+    // pour déconnexion du discord en étant sous-fifre.
+    await db.sanctions.remove({ member: member.id }).catch(console.error);
+
     // Ban
     member.ban();
-
-    // Suppression de la database
-    await db.sanctions.remove({ _id: member.id }).catch(console.error);
 
     // Suppression du channel perso
     const { guild } = client;
@@ -67,16 +69,17 @@ class Moderation {
     // Vérifier dans la bdd si le joueur est déjà banni
     const result = await db.sanctions.findOne({ member: victim.id, sanction: 'ban' }).catch(console.error);
     if (result) {
-      // Si oui on mets à jour la durée du ban
-      db.sanctions.update(
-        { _id: result._id },
-        { $set: { duration, finish: infos.finish } },
-      );
-      infos.sanction = 'ban_prolongation';
       message.channel.send(discordSuccess(cmdConfig.durationUpdated.replace('%u', victim).replace('%d', secondToDuration(duration)), message));
-      chan.send(cmdConfig.sanctionUpdated.replace('%d', secondToDuration(duration)));
-      SanctionManager.log(infos, guild);
-      return;
+      if (duration !== -1) {
+        db.sanctions.update(
+          { _id: result._id },
+          { $set: { duration, finish: infos.finish } },
+        );
+        infos.sanction = 'ban_prolongation';
+        SanctionManager.log(infos, guild);
+        return chan.send(cmdConfig.sanctionUpdated.replace('%d', secondToDuration(duration)));
+      }
+      return this.hardBan(victim, reason, moderator);
     }
 
     if (duration === -1) {
