@@ -1,6 +1,5 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { config, db } from '../../main';
 import { formatDate, secondToDuration } from '../../utils';
 
@@ -28,7 +27,7 @@ class History extends Command {
 
   async execute(message, args) {
     const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
-    if (!target) return message.channel.send(discordError(this.config.missingUserArgument, message));
+    if (!target) return message.channel.sendError(this.config.missingUserArgument, message.member);
 
     const result = await db.sanctionsHistory.findOne({ memberId: target.id }).catch(console.error);
     if (!result) return message.channel.send(this.config.noHistory);

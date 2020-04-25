@@ -1,7 +1,6 @@
 /* eslint-disable no-else-return, nonblock-statement-body-position, curly */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { SkriptHubSyntaxes, config } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -65,7 +64,7 @@ class SyntaxInfo extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const msg = await message.channel.send('Je vais chercher ça...');
     const syntaxes = await SkriptHubSyntaxes;
@@ -97,7 +96,7 @@ class SyntaxInfo extends Command {
     }
 
     if (arg === '')
-      return message.channel.send(discordError(this.config.invalidCmd, message));
+      return message.channel.sendError(this.config.invalidCmd, message.member);
 
     let matchingSyntaxes = syntaxes.filter(elt => elt.title.toUpperCase().includes(arg)) || syntaxes.filter(elt => elt.description.toUpperCase().includes(arg));
     if (addon)
@@ -113,7 +112,7 @@ class SyntaxInfo extends Command {
 
     if (matchingSyntaxes.length === 0) {
       await msg.delete();
-      return message.channel.send(discordError(this.config.syntaxDoesntExist, message));
+      return message.channel.sendError(this.config.syntaxDoesntExist, message.member);
     } else if (matchingSyntaxes.length === 1) {
       msg.delete();
       return this.sendDetails(message, matchingSyntaxes[0]);

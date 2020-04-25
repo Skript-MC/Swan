@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 
 class ErrorDetails extends Command {
   constructor() {
@@ -10,7 +9,7 @@ class ErrorDetails extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.noError, message));
+    if (args.length === 0) return message.channel.sendError(this.config.noError, message.member);
 
     const arg = args.join(' ').toLowerCase();
 
@@ -25,7 +24,7 @@ class ErrorDetails extends Command {
     else if (arg.match(/There's no player in/gimu)) message.channel.send(this.config.error.noplayer);
     else if (arg.match(/code has to be put in triggers/gimu)) message.channel.send(this.config.error.codeintriggers);
     else if (arg.match(/because it's a single value/gimu)) message.channel.send(this.config.error.cantloopsinglevalue);
-    else message.channel.send(discordError(this.config.error.unknown, message));
+    else message.channel.sendError(this.config.error.unknown, message.member);
   }
 }
 

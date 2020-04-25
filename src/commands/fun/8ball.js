@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 
 class EightBall extends Command {
   constructor() {
@@ -10,7 +9,7 @@ class EightBall extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.noQuestion, message));
+    if (args.length === 0) return message.channel.sendError(this.config.noQuestion, message.member);
     let answer;
     if (Math.random() < 0.5) {
       answer = this.config.affirmative[Math.floor(Math.random() * this.config.affirmative.length)];

@@ -3,7 +3,6 @@ import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
-import { discordError } from '../../structures/messages';
 import Moderation from '../../structures/Moderation';
 
 const PROGRESS_BAR_SIZE = 30;
@@ -49,7 +48,7 @@ class NowPlaying extends Command {
           if (MusicBot.nowPlaying) {
             playingEmbed.edit(await this.buildEmbed(message));
           } else {
-            playingEmbed.edit(discordError(this.config.noSongPlaying, message));
+            playingEmbed.editError(this.config.noSongPlaying, message.member);
           }
         }
       });

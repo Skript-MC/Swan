@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 
 const math = require('mathjs');
 
@@ -14,7 +13,7 @@ class Math extends Command {
   }
 
   async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.addMath, message));
+    if (args.length === 0) return message.channel.sendError(this.config.addMath, message.member);
 
     let expr = args.join(' ');
     expr = expr
@@ -28,7 +27,7 @@ class Math extends Command {
       expr = parser.evaluate(expr);
       return message.reply(`\`${args.join(' ')}\` = \`${expr}\``);
     } catch (err) {
-      return discordError(this.config.error, message);
+      return message.channel.sendError(this.config.error, message.member);
     }
   }
 }

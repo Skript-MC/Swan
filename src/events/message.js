@@ -2,7 +2,6 @@
 import { MessageEmbed } from 'discord.js';
 import { client, config, commands, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
-import { discordError } from '../structures/messages';
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
@@ -11,14 +10,14 @@ function canExecute(command, message) {
   if (command.permissions.length > 0) {
     for (const perm of command.permissions) {
       if (!message.member.roles.cache.find(role => role.name === perm)) {
-        message.channel.send(discordError(config.messages.errors.permission, message));
+        message.channel.sendError(config.messages.errors.permission, message.member);
         return false;
       }
     }
   }
   // Check du cooldown
   if (command.cooldown !== 0 && command.userCooldowns.has(message.author.id) && (command.userCooldowns.get(message.author.id) + command.cooldown >= Date.now())) {
-    message.channel.send(discordError(config.messages.errors.cooldown, message));
+    message.channel.sendError(config.messages.errors.cooldown, message.member);
     return false;
   }
   // Check des channels interdits pour toutes les commandes
@@ -29,7 +28,7 @@ function canExecute(command, message) {
   if (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id)) return false;
   // Check des channels d'aide
   if ((config.channels.helpSkript.includes(message.channel.id) || config.channels.helpOther.includes(message.channel.id)) && !command.enabledInHelpChannels) {
-    message.channel.send(discordError(config.messages.errors.notInHelpChannels, message));
+    message.channel.sendError(config.messages.errors.notInHelpChannels, message.member);
     return false;
   }
   return true;
@@ -44,6 +43,8 @@ export default async function messageHandler(message) {
     || message.system
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
+
+  if (message.content === 'test') message.channel.sendError('test', message.member);
 
   // Easter egg "ssh root@skript-mc.fr"
   if (message.content.startsWith('ssh root@skript-mc.fr')) {
@@ -189,7 +190,7 @@ export default async function messageHandler(message) {
       return;
     }
 
-    const msg = await message.channel.send(discordError(config.messages.errors.unknowncommand, message));
+    const msg = await message.channel.sendError(config.messages.errors.unknowncommand, message.member);
     message.delete({ timeout: 5000 });
     msg.delete({ timeout: 5000 });
   }

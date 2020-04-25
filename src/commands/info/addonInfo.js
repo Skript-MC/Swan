@@ -1,6 +1,5 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { SkripttoolsAddons, config } from '../../main';
 import { uncapitalize, jkDistance, convertFileSize, selectorMessage } from '../../utils';
 
@@ -16,7 +15,7 @@ class AddonInfo extends Command {
 
   async execute(message, args) {
     if (args.length === 0) {
-      message.channel.send(discordError(this.config.invalidCmd, message));
+      message.channel.sendError(this.config.invalidCmd, message.member);
     } else {
       const msg = await message.channel.send(this.config.searching);
       const addons = await SkripttoolsAddons;
@@ -37,7 +36,7 @@ class AddonInfo extends Command {
         }
 
         if (matches.length === 0) {
-          message.channel.send(discordError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message));
+          message.channel.sendError(this.config.addonDoesntExist.replace('%s', `${myAddon}`), message.member);
         } else {
           const addonsList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.addoninfo ');
           const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', addonsList));

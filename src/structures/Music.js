@@ -1,7 +1,6 @@
 /* eslint-disable import/no-cycle, object-curly-newline, prefer-destructuring */
 import ytdl from 'discord-ytdl-core';
 import { config, db } from '../main';
-import { discordError } from './messages';
 
 class MusicBotApp {
   constructor() {
@@ -97,15 +96,15 @@ class MusicBotApp {
 
   join(message) {
     if (!message.member.voice.channel) {
-      message.channel.send(discordError(config.messages.errors.joinErrors.notInChannel, message));
+      message.channel.sendError(config.messages.errors.joinErrors.notInChannel, message.member);
     } else if (config.music.restrictedVocal.includes(message.member.voice.channel.id)) {
-      message.channel.send(discordError(config.messages.errors.joinErrors.restrictedChannel, message));
+      message.channel.sendError(config.messages.errors.joinErrors.restrictedChannel, message.member);
     } else if (message.member.voice.channel.full) {
-      message.channel.send(discordError(config.messages.errors.joinErrors.channelFull, message));
+      message.channel.sendError(config.messages.errors.joinErrors.channelFull, message.member);
     } else if (!message.member.voice.channel.speakable) {
-      message.channel.send(discordError(config.messages.errors.joinErrors.notSpeakable, message));
+      message.channel.sendError(config.messages.errors.joinErrors.notSpeakable, message.member);
     } else if (!message.member.voice.channel.joinable) {
-      message.channel.send(discordError(config.messages.errors.joinErrors.notJoinable, message));
+      message.channel.sendError(config.messages.errors.joinErrors.notJoinable, message.member);
     } else {
       message.channel.send(config.messages.commands.join.comming);
       message.member.voice.channel.join();
