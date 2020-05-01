@@ -43,6 +43,7 @@ export function loadConfig() {
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
   conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
+  conf.sendCommandStats = ids.COMMAND_STATS_USERS ? ids.COMMAND_STATS_USERS.split(',') : [];
 
   logger.debug('setup.js -> Configuration finished loading');
   return conf;

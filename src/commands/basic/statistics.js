@@ -16,6 +16,7 @@ class Statistics extends Command {
   async execute(message, _args) {
     const uptime = secondToDuration(client.uptime / 1000);
 
+    await message.guild.members.fetch().catch(console.error);
     const onlineUsers = message.guild.members.cache.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;
     const totalUsers = message.guild.members.cache.filter(m => !m.user.bot).size;
     const offlineUsers = totalUsers - onlineUsers;
@@ -45,7 +46,7 @@ class Statistics extends Command {
     message.channel.send(embed);
 
     // Send commands stats :
-    if (message.member.roles.highest.position < message.guild.roles.cache.get(config.roles.ma).position) return;
+    if (!config.sendCommandStats.includes(message.author.id)) return;
 
     const docs = await db.commandsStats.find({}).catch(console.error);
     const commandsStats = docs.sort((a, b) => b.used - a.used);
