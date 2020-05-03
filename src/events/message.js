@@ -44,10 +44,8 @@ export default async function messageHandler(message) {
     || message.guild.id !== config.bot.guild
     || (!client.config.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
 
-  if (message.content === 'test') message.channel.sendError('test', message.member);
-
   // Easter egg "ssh root@skript-mc.fr"
-  if (message.content.startsWith('ssh root@skript-mc.fr')) {
+  if (message.channel.id === config.channels.bot && message.content.startsWith('ssh root@skript-mc.fr')) {
     const guess = message.content.split(' ').pop();
     const password = await db.miscellaneous.findOne({ entry: 'sshpassword' }).catch(console.error);
     if (!password) {
@@ -71,8 +69,8 @@ export default async function messageHandler(message) {
     if (!targetedMessage.content) return;
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
-      .setDescription(targetedMessage.content)
+      .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username}`, targetedMessage.author.avatarURL())
+      .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${config.bot.guild}/${channel.id}/${targetedMessage.id})`)
       .setFooter(`Message cité par ${message.member.nickname || message.author.username}`)
       .setTimestamp(targetedMessage.createdAt);
     if (targetedMessage.attachments !== 0) {
