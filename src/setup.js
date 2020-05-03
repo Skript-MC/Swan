@@ -32,6 +32,8 @@ export function loadConfig() {
     main: ids.MAIN,
     logs: ids.LOGS,
     rssFeed: ids.RSS_FEED,
+    skriptNews: ids.SKRIPT_NEWS,
+    bot: ids.BOT_CHANNEL,
   };
   conf.roles = {
     owner: ids.OWNER,
@@ -54,7 +56,6 @@ function extendClasses() {
     class CustomTextChannel extends TextChannel {
       sendError(content, member, options) {
         const embed = new MessageEmbed()
-          .setAuthor(member.displayName, member.user.avatarURL())
           .attachFiles(['./assets/error.png'])
           .setThumbnail('attachment://error.png')
           .setTitle('Erreur')
@@ -67,7 +68,6 @@ function extendClasses() {
 
       sendInfo(content, member, options) {
         const embed = new MessageEmbed()
-          .setAuthor(member.displayName, member.user.avatarURL())
           .attachFiles(['./assets/information.png'])
           .setThumbnail('attachment://information.png')
           .setTitle('Information')
@@ -80,7 +80,6 @@ function extendClasses() {
 
       sendSuccess(content, member, options) {
         const embed = new MessageEmbed()
-          .setAuthor(member.displayName, member.user.avatarURL())
           .attachFiles(['./assets/success.png'])
           .setThumbnail('attachment://success.png')
           .setTitle('Succès')
