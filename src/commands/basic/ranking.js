@@ -3,8 +3,6 @@ import Youtube from 'simple-youtube-api';
 import Command from '../../structures/Command';
 import { db, config } from '../../main';
 
-require('dotenv').config();
-
 const youtubeAPI = process.env.YOUTUBE_API;
 const youtube = new Youtube(youtubeAPI);
 

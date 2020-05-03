@@ -37,7 +37,6 @@ client.on('ready', async () => {
   // Verifying tokens and ids
   if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
   if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
-  if (!process.env.SUGGESTION) throw new Error('Suggestion channel ID was not set in the environment variables (SUGGESTION)');
   if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
   for (const [key, value] of Object.entries(config.channels)) {
