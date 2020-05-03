@@ -142,7 +142,7 @@ class NowPlaying extends Command {
 
   async like(message, playingEmbed, type, users, music) {
     const foundTrack = await db.musicsStats.findOne({ ytid: music.video.id }).catch(console.error);
-    const options = { returnUpdatedDocs: true, multi: false };
+    const options = { returnUpdatedDocs: true };
     const userId = users.reportedBy.id;
     let updated = false;
     if (foundTrack !== null) {

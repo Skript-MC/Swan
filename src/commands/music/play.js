@@ -7,8 +7,6 @@ import MusicBot from '../../structures/Music';
 import { config } from '../../main';
 import { padNumber } from '../../utils';
 
-require('dotenv').config();
-
 const youtubeAPI = process.env.YOUTUBE_API;
 const youtube = new Youtube(youtubeAPI);
 

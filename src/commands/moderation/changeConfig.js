@@ -3,10 +3,10 @@ import { db } from '../../main';
 
 class changeConfig extends Command {
   constructor() {
-    super('changeConfig');
+    super('Change Config');
     this.aliases = ['changeconfig'];
     this.usage = 'changeconfig <configuration> <valeur>';
-    this.examples = ['changeconfig ssh Admin123'];
+    this.examples = ['changeconfig sshpassword Admin123'];
     this.enabledInHelpChannels = false;
     this.permissions = ['Staff'];
   }
@@ -23,7 +23,6 @@ class changeConfig extends Command {
     await db.miscellaneous.update(
       { entry: args[0] },
       { $set: { value: args.join('').slice(args[0].length) } },
-      { multi: false, upsert: true },
     ).catch(console.error);
     // Send a success message
     message.channel.sendSuccess(this.config.successfullyChanged, message.member);
