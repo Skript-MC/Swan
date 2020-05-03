@@ -78,7 +78,7 @@
                 "Bizu",
                 "Tarentule"
             ],
-            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu qu'il était difficile de te mentionner, nous avons modifié ton pseudonyme car plus de la moîtié contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord pour être renommé."
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu que ton pseudonyme contenait des caractères spéciaux, je me suis permis de te les retirer ou de te renommer complètement. J'espère que mes modifications te plairont.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord (pseudonymes vert clair) pour être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
@@ -540,11 +540,12 @@
                 "help": "Envoie diverses statistiques.",
                 "description": "Envoie diverses statistiques sur Swan et le serveur."
             },
-            "setsshpassword": {
-                "help": "Définir le mot de passe de ssh@skript-mc.fr",
-                "description": "Définit le mot de passe de ssh@skript-mc.fr",
-                "noPassword": "Ajoute un mot de passe !",
-                "successfullyChanged": "Vous avez bien changé le mot de passe !"
+            "changeconfig": {
+                "help": "Modifie la configuration.",
+                "description": "Modifier différentes valeurs de la configuration",
+                "invalidConfig": "Veuilez indiquer une configuration valide.",
+                "emptyValue": "Veuillez indiquer une valeur correcte.",
+                "successfullyChanged": "Vtore modification a été appliquée."
             },
             "addonpack": {
                 "help": "Envoie un pack d'addon correspondant à une certaine version MC.",
