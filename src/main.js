@@ -74,17 +74,15 @@ client.on('ready', async () => {
   logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
-    // Tri dans les cooldowns des commandes
-    Command.filterCooldown(commands);
-    // Vérification des sanctions temporaires
-    SanctionManager.checkSanctions(guild);
-    // Chargement des flux RSS
-    loadRssFeed();
-    // Vérification si une nouvelle version de Skript est sortie
-    loadSkriptReleases();
-    // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
-    client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
-  }, config.bot.checkInterval);
+    Command.filterCooldown(commands); // Tri dans les cooldowns des commandes
+    SanctionManager.checkSanctions(guild); // Vérification des sanctions temporaires
+    client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' }); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+  }, config.bot.checkInterval.bot);
+
+  setInterval(() => {
+    loadRssFeed(); // Chargement des flux RSS
+    loadSkriptReleases(); // Vérification si une nouvelle version de Skript est sortie
+  }, config.bot.checkInterval.web);
 });
 
 client.on('error', (err) => { throw new Error(err); });
