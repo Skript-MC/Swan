@@ -2,7 +2,10 @@
     "bot": {
         "prefix": ".",
         "avatar": "./assets/logo.png",
-        "checkInterval": 10000,
+        "checkInterval": {
+            "web": 60000,
+            "bot": 10000
+        },
         "activity_on": ".aide | Skript-MC",
         "activity_off": "Désactivé"
     },
@@ -54,7 +57,8 @@
         "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
-        "commandSimilarity": 0.7
+        "commandSimilarity": 0.7,
+        "documentation": "https://skript-mc.github.io/Swan/"
     },
 
     "messages": {
@@ -646,6 +650,10 @@
                 "description": "Envoie l'historique de toutes les sanctions d'un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
+            },
+            "idea": {
+                "help": "Envoyer une idée de script aléatoire.",
+                "description": "Envoie une idée de script aléatoire à réaliser parmis celles dans le salon des idées."
             },
             "movemessage": {
                 "help": "Déplacer un message.",
