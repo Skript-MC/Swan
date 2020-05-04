@@ -4,13 +4,8 @@ import { MessageEmbed } from 'discord.js';
 import { config, client } from '../main';
 
 export default async function loadSkriptReleases() {
-  // Options pour la requête ainsi que les autorisations
-  const options = {
-    accept: 'Accept: application/vnd.github.v3+json',
-    headers: { Authorization: `Authorization: token ${process.env.GITHUB_API}` },
-  };
   // Envoie de la requête avec les options ci-dessus
-  const githubReleases = await axios(`${config.apis.github}/repos/SkriptLang/Skript/releases`, options)
+  const githubReleases = await axios(`${config.apis.github}/repos/SkriptLang/Skript/releases`)
     .then((response) => {
       // Retourner unedefined si la réponse n'est pas positive (= 200)
       if (response.status !== 200) return undefined;
@@ -22,9 +17,9 @@ export default async function loadSkriptReleases() {
   const latestRelease = githubReleases[0]; // Récupérer la dernière release
   if ((Date.now() - new Date(latestRelease.published_at).getTime()) > config.bot.checkInterval) return; // Vérification si c'est une nouvelle version
 
-  // Get the targeted channel message
+  // Récupérer le salon des nouvelles de Skript
   const channel = client.channels.cache.get(config.channels.skriptNews);
-  // Send the new release and infos
+  // On envoie les informations de la nouvelle version
   await channel.send('Une nouvelle version de Skript vient d\'être publiée. Vous pouvez la télécharger et consulter les changements ci-dessous.');
   const embed = new MessageEmbed()
     .setColor(config.colors.default)
