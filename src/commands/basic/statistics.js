@@ -35,7 +35,7 @@ class Statistics extends Command {
       .addField('Version', pkg.version, true)
       .addField('Temps de fonctionnement', uptime, true)
       .addField('Mémoire', `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
-      .addField('Commandes', commands.length, true)
+      .addField('Commandes', `${commands.length} [(documentation)](${config.miscellaneous.documentation})`, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
       .addField('Développeurs', `${authors}`, true)
