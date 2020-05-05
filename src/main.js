@@ -6,6 +6,7 @@ import { loadBot,
   loadDatabases,
   loadConfig,
   loadEvents } from './setup';
+import { randomActivity } from './utils';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
 import loadSkriptReleases from './structures/skriptReleases';
@@ -66,7 +67,6 @@ client.on('ready', async () => {
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
   logger.step(`Messages cached! (${suggestionMessages.size})`);
 
-  client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   client.guild = guild;
   client.config = {};
   client.config.activated = true;
@@ -76,13 +76,13 @@ client.on('ready', async () => {
   setInterval(() => {
     Command.filterCooldown(commands); // Tri dans les cooldowns des commandes
     SanctionManager.checkSanctions(guild); // Vérification des sanctions temporaires
-    client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' }); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
-  }, config.bot.checkInterval.bot);
+  }, config.bot.checkInterval.short);
 
-  setInterval(() => {
+  setInterval(async () => {
     loadRssFeed(); // Chargement des flux RSS
     loadSkriptReleases(); // Vérification si une nouvelle version de Skript est sortie
-  }, config.bot.checkInterval.web);
+    client.user.setPresence(await randomActivity(client, commands, config.bot.prefix)); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+  }, config.bot.checkInterval.long);
 });
 
 client.on('error', (err) => { throw new Error(err); });
