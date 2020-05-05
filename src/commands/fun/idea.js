@@ -4,7 +4,7 @@ import { config, client } from '../../main';
 
 class Idea extends Command {
   constructor() {
-    super('Idea');
+    super('Idée');
     this.aliases = ['idée', 'idee', 'idea'];
     this.usage = 'idea';
     this.examples = ['idea'];
@@ -15,9 +15,9 @@ class Idea extends Command {
     const randomIdea = ideaMessages.array()[Math.floor(Math.random() * ideaMessages.array().length)];
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Idée de ${randomIdea.author.nickname || randomIdea.author.username} :`, randomIdea.author.avatarURL())
+      .setAuthor(`Idée de ${randomIdea.member.displayName} :`, randomIdea.author.avatarURL())
       .setDescription(randomIdea.content)
-      .setFooter(`Exécuté par ${message.member.nickname || message.author.username}`)
+      .setFooter(`Exécuté par ${message.member.displayName}`)
       .setTimestamp(randomIdea.createdAt);
 
     message.channel.send(embed);
