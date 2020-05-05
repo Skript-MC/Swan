@@ -24,8 +24,8 @@ export default async function loadRssFeed() {
   }
   topics = topics.map(elt => elt.items).flat();
 
-  const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval);
-  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval);
+  const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval.longl);
+  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval.long);
 
   for (const item of lastTopics) {
     let { content } = item;

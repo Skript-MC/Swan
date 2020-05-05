@@ -15,7 +15,7 @@ export default async function loadSkriptReleases() {
 
   if (!githubReleases) return; // Retourner si non défini, évitant les boucles crash
   const latestRelease = githubReleases[0]; // Récupérer la dernière release
-  if ((Date.now() - new Date(latestRelease.published_at).getTime()) > config.bot.checkInterval) return; // Vérification si c'est une nouvelle version
+  if ((Date.now() - new Date(latestRelease.published_at).getTime()) > config.bot.checkInterval.long) return; // Vérification si c'est une nouvelle version
 
   // Récupérer le salon des nouvelles de Skript
   const channel = client.channels.cache.get(config.channels.skriptNews);

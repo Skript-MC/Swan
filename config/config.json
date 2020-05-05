@@ -3,11 +3,9 @@
         "prefix": ".",
         "avatar": "./assets/logo.png",
         "checkInterval": {
-            "web": 60000,
-            "bot": 10000
-        },
-        "activity_on": ".aide | Skript-MC",
-        "activity_off": "Désactivé"
+            "short": 10000,
+            "long": 90000  
+        }
     },
 
     "colors": {
@@ -651,7 +649,7 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
             },
-            "idea": {
+            "idée": {
                 "help": "Envoyer une idée de script aléatoire.",
                 "description": "Envoie une idée de script aléatoire à réaliser parmis celles dans le salon des idées."
             },
