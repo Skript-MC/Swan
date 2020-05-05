@@ -2,13 +2,12 @@
 import fs from 'fs';
 
 const template = `\n
-### <a name="$name"></a>$name\n
+### <a name="$anchor"></a>$name\n
 - **Catégorie :** $category
 - **Description :** $description
 - **Alias :** \`$aliases\`
 - **Usage :** \`$usage\`
 - **Exemples :** \`$examples\`
-- **Délai de réutilisation :** $cooldown
 `;
 
 async function softLoadCommands(path) {
@@ -73,19 +72,19 @@ async function generateDocs() {
 
     content += template
       .replace('$name', cmd.name)
-      .replace('$name', cmd.name)
+      .replace('$anchor', cmd.name.replace(/ +/g, '-'))
       .replace('$category', cmd.category)
       .replace('$description', cmd.description)
       .replace('$aliases', cmd.aliases.join('`, `'))
       .replace('$usage', cmd.usage)
-      .replace('$examples', cmd.examples.join('`, `'))
-      .replace('$cooldown', cmd.cooldown === 0 ? 'aucun' : `${cmd.cooldown / 1000} secondes`);
-    if (cmd.permissions.join(', ') || cmd.requiredChannels.length || cmd.prohibitedChannels.length || !cmd.enabledInHelpChannels) {
+      .replace('$examples', cmd.examples.join('`, `'));
+    if (cmd.cooldown || cmd.permissions.join(', ') || cmd.requiredChannels.length || cmd.prohibitedChannels.length || !cmd.enabledInHelpChannels) {
       content += '- **Informations supplémentaires :**\n';
+      if (cmd.cooldown) content += `\t- ⚠️ Le temps de réutilisation de cette commande est de \`${cmd.cooldown / 1000} secondes\`.\n`;
       if (!cmd.enabledInHelpChannels) content += '\t- ⚠️ Cette commande ne peut pas être exécutée dans les salons d\'aide.\n';
-      if (cmd.permissions.join(', ')) content += `\t- ⚠️ Seul les membres ayant un rôle **${cmd.permissions.join(', ')}** peuvent exécuter cette commande.\n`;
-      if (cmd.requiredChannels.length) content += `\t- ⚠️ Les canaux requis sont **${cmd.requiredChannels.length}**.\n`;
-      if (cmd.prohibitedChannels.length) content += `\t- ⚠️ Cette commande est interdite dans les salons **${cmd.prohibitedChannels.length}**.\n`;
+      if (cmd.permissions.join(', ')) content += `\t- ⚠️ Seul les membres ayant le rôle \`${cmd.permissions.join(', ')}\` ou supérieur peuvent exécuter cette commande.\n`;
+      if (cmd.requiredChannels.length) content += `\t- ⚠️ Les canaux requis sont **${cmd.requiredChannels}**.\n`;
+      if (cmd.prohibitedChannels.length) content += `\t- ⚠️ Cette commande est interdite dans les salons **${cmd.prohibitedChannels}**.\n`;
     }
   }
 
