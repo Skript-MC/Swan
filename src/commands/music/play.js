@@ -39,9 +39,12 @@ class Play extends Command {
     // Faire rejoindre le bot, s'il n'est pas déjà dans un canal vocal
     if (!message.guild.voice || !message.guild.voice.connection || message.guild.voice.channel.id !== message.member.voice.channel.id) {
       // Rejoindre le channel s'il n'est pas en train de jouer
-      if (!MusicBot.nowPlaying) MusicBot.join(message);
-      // Sinon on arrête
-      else return message.channel.send(this.config.alreadyBusy.replace('%s', message.guild.voice.channel.name));
+      if (!MusicBot.nowPlaying) {
+        const success = MusicBot.join(message);
+        if (!success) return;
+      } else {
+        return message.channel.send(this.config.alreadyBusy.replace('%s', message.guild.voice.channel.name));
+      }
     }
 
     let query = args.length === 0 ? '' : args.join(' ');
