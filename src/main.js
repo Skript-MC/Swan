@@ -78,10 +78,10 @@ client.on('ready', async () => {
     SanctionManager.checkSanctions(guild); // Vérification des sanctions temporaires
   }, config.bot.checkInterval.short);
 
-  setInterval(async () => {
+  setInterval(() => {
     loadRssFeed(); // Chargement des flux RSS
     loadSkriptReleases(); // Vérification si une nouvelle version de Skript est sortie
-    client.user.setPresence(await randomActivity(client, commands, config.bot.prefix)); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+    client.user.setPresence(randomActivity(client, commands, config.bot.prefix)); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
   }, config.bot.checkInterval.long);
 });
 
