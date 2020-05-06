@@ -10,6 +10,7 @@ class SkriptInfo extends Command {
     this.aliases = ['skriptinfo', 'skript-info', 'skript_info', 'skriptinfos', 'skript-infos', 'skript_infos'];
     this.usage = 'skript-info';
     this.examples = ['skriptInfo'];
+    this.cooldown = 60000;
   }
 
   async execute(message, args) {

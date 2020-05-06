@@ -2,9 +2,10 @@
     "bot": {
         "prefix": ".",
         "avatar": "./assets/logo.png",
-        "checkInterval": 10000,
-        "activity_on": ".aide | Skript-MC",
-        "activity_off": "Désactivé"
+        "checkInterval": {
+            "short": 10000,
+            "long": 90000  
+        }
     },
 
     "colors": {
@@ -54,7 +55,8 @@
         "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
-        "commandSimilarity": 0.7
+        "commandSimilarity": 0.7,
+        "documentation": "https://skript-mc.github.io/Swan/"
     },
 
     "messages": {
@@ -78,7 +80,7 @@
                 "Bizu",
                 "Tarentule"
             ],
-            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu qu'il était difficile de te mentionner, nous avons modifié ton pseudonyme car plus de la moîtié contenait des caractères spéciaux, j'espère que ton nouveau pseudonyme te convient.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord pour être renommé."
+            "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu que ton pseudonyme contenait des caractères spéciaux, je me suis permis de te les retirer ou de te renommer complètement. J'espère que mes modifications te plairont.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord (pseudonymes vert clair) pour être renommé."
         },
         "errors": {
             "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
@@ -146,7 +148,7 @@
                     },
                     "everyloop": {
                         "templates": ["everyloop", "every loop"],
-                        "content": "```applescript\nevery X:\n\tloop all players:\n\t\t# Vtore code </>```Les codes de ce type sont fortements déconseillés pour des questions d'**optimisation** et de **performance**. Imaginez que tous les ticks (20 fois par seconde) ou autre délai, vous vérifiez tous les joueurs de votre serveur ? Cela reste correct si vous êtes 4, mais si vous êtes une trentaine ? Skript ferait 120 000 vérifications par minute si vous êtes une centaine, votre serveur ne supporterait pas tous ces calculs !\n\nEssayez de trouver une alternative à votre code, qui n'utilise pas ce type de code. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```applescript\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\t# Votre code </>\n\t\twait 5 seconds # Déconseillé de le réduire```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt que vérifier tous les joueurs tous les X temps, chaque joueur possède sa boucle qui se rafraîchit tous les X.\n\n:arrow_right_hook: **__Pour conclure :__** D'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos codes, essayez d'utiliser des alternatives."
+                        "content": "```applescript\nevery X:\n\tloop all players:\n\t\t# Votre code </>```Les codes de ce type sont fortements déconseillés pour des questions d'**optimisation** et de **performance**. Imaginez que tous les ticks (20 fois par seconde) ou autre délai, vous vérifiez tous les joueurs de votre serveur ? Cela reste correct si vous êtes 4, mais si vous êtes une trentaine ? Skript ferait 120 000 vérifications par minute si vous êtes une centaine, votre serveur ne supporterait pas tous ces calculs !\n\nEssayez de trouver une alternative à votre code, qui n'utilise pas ce type de code. Si jamais cela est vraiment obligatoire, alors vous pouvez envisager d'utiliser quelque chose comme cela :```applescript\non join:\n\twhile player is online: # Tant que le joueur est en ligne, fais les instructions suivantes:\n\t\t# Votre code </>\n\t\twait 5 seconds # Déconseillé de le réduire```Même si ce n'est pas une solution miracle, c'est une solution préférable à la précédente, car plutôt que vérifier tous les joueurs tous les X temps, chaque joueur possède sa boucle qui se rafraîchit tous les X.\n\n:arrow_right_hook: **__Pour conclure :__** D'une manière générale, essayez d'éviter le plus possible les `every X:` ou les `on any move:` dans vos codes, essayez d'utiliser des alternatives."
                     },
                     "longcode": {
                         "templates": ["longcode", "long code", "code"],
@@ -540,11 +542,12 @@
                 "help": "Envoie diverses statistiques.",
                 "description": "Envoie diverses statistiques sur Swan et le serveur."
             },
-            "setsshpassword": {
-                "help": "Définir le mot de passe de ssh@skript-mc.fr",
-                "description": "Définit le mot de passe de ssh@skript-mc.fr",
-                "noPassword": "Ajoute un mot de passe !",
-                "successfullyChanged": "Vous avez bien changé le mot de passe !"
+            "changeconfig": {
+                "help": "Modifie la configuration.",
+                "description": "Modifier différentes valeurs de la configuration",
+                "invalidConfig": "Veuillez indiquer une configuration valide.",
+                "emptyValue": "Veuillez indiquer une valeur correcte.",
+                "successfullyChanged": "Votre modification a été appliquée."
             },
             "addonpack": {
                 "help": "Envoie un pack d'addon correspondant à une certaine version MC.",
@@ -645,6 +648,10 @@
                 "description": "Envoie l'historique de toutes les sanctions d'un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noHistory": ":x: Ce membre n'a reçu aucune sanction !"
+            },
+            "idée": {
+                "help": "Envoyer une idée de script aléatoire.",
+                "description": "Envoie une idée de script aléatoire à réaliser parmis celles dans le salon des idées."
             },
             "movemessage": {
                 "help": "Déplacer un message.",
