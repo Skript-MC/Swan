@@ -1,7 +1,7 @@
 import { config, db } from '../main';
 import { toValidName } from '../utils';
 
-export default async function memberAddHandler(member) {
+export default async function guildMemberAddHandler(member) {
   // Get the nickname or the username of the member
   const name = member.nickname || member.user.username;
   // Get the correct name without special or forbidden characters

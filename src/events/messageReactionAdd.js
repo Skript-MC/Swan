@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { client, config } from '../main';
 
-export default async function reactionAddHandler(reaction, user) {
+export default async function messageReactionAddHandler(reaction, user) {
   const { message } = reaction;
 
   if (user.bot
