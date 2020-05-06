@@ -54,7 +54,7 @@ class Joke extends Command {
 
   async like(message, jokeEmbed, type, user, id) {
     const joke = await db.jokes.findOne({ id }).catch(console.error);
-    const options = { returnUpdatedDocs: true, multi: false };
+    const options = { returnUpdatedDocs: true };
     const userId = user.id;
     let updated = false;
     if (joke !== null) {

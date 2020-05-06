@@ -6,8 +6,10 @@ import { loadBot,
   loadDatabases,
   loadConfig,
   loadEvents } from './setup';
+import { randomActivity } from './utils';
 import SanctionManager from './structures/SanctionManager';
 import loadRssFeed from './structures/RSSFeed';
+import loadSkriptReleases from './structures/skriptReleases';
 import Command from './structures/Command';
 import Logger from './structures/Logger';
 
@@ -65,7 +67,6 @@ client.on('ready', async () => {
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
   logger.step(`Messages cached! (${suggestionMessages.size})`);
 
-  client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
   client.guild = guild;
   client.config = {};
   client.config.activated = true;
@@ -73,15 +74,15 @@ client.on('ready', async () => {
   logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
-    // Tri dans les cooldowns des commandes
-    Command.filterCooldown(commands);
-    // Vérification des sanctions temporaires
-    SanctionManager.checkSanctions(guild);
-    // Chargement des flux RSS
-    loadRssFeed();
-    // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
-    client.user.setActivity(config.bot.activity_on, { type: 'WATCHING' });
-  }, config.bot.checkInterval);
+    Command.filterCooldown(commands); // Tri dans les cooldowns des commandes
+    SanctionManager.checkSanctions(guild); // Vérification des sanctions temporaires
+  }, config.bot.checkInterval.short);
+
+  setInterval(() => {
+    loadRssFeed(); // Chargement des flux RSS
+    loadSkriptReleases(); // Vérification si une nouvelle version de Skript est sortie
+    client.user.setPresence(randomActivity(client, commands, config.bot.prefix)); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+  }, config.bot.checkInterval.long);
 });
 
 client.on('error', (err) => { throw new Error(err); });
