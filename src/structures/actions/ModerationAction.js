@@ -108,7 +108,6 @@ class ModerationAction {
     embed.addField(':label: Raison', `${this.data.reason}`, true);
     if (this.data.privateChannel) embed.addField(':speech_left: Channel privé', `${this.data.privateChannel.toString()}`, true);
 
-    console.log('DEBUG: ModerationAction -> log -> this.data.file', this.data.file);
     if (this.data.file) embed.addField(':scroll: Historique des messages', 'Disponible ci-dessous', true);
     else if (this.data.type === ACTION_TYPE.UNBAN) embed.addField(':scroll: Historique des messages', 'Indisponible', true);
 
