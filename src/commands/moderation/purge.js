@@ -5,13 +5,13 @@ class Purge extends Command {
   constructor() {
     super('Purge');
     this.aliases = ['purge'];
-    this.usage = 'purge [<@mention>] <nombre> [<-f>]';
+    this.usage = 'purge [<@mention | ID>] <nombre> [<-f>]';
     this.examples = ['purge 40', 'purge 20 -f', 'purge @utilisateur 20'];
     this.permissions = ['Staff'];
   }
 
   async execute(message, args) {
-    const user = message.mentions.users.first();
+    const user = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     const force = args.includes('-f');
     let amount = parseInt(args[0], 10) ? parseInt(args[0], 10) + 1 : parseInt(args[1], 10) + 1;
 
@@ -24,7 +24,7 @@ class Purge extends Command {
       messages = messages.filter(m => m.author.id === user.id);
     }
     if (!force) {
-      messages = messages.filter(m => !m.member.roles.cache.has(config.roles.staff));
+      messages = messages.filter(m => m.system || !m.member.roles.cache.has(config.roles.staff));
     }
 
     message.channel.bulkDelete(messages).catch((err) => {

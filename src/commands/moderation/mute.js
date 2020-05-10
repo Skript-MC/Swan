@@ -1,35 +1,52 @@
 import Command from '../../structures/Command';
 import { toTimestamp } from '../../utils';
-import Moderation from '../../structures/Moderation';
-import SanctionManager from '../../structures/SanctionManager';
+import ACTION_TYPE from '../../structures/actions/actionType';
+import MuteAction from '../../structures/actions/MuteAction';
+import { config } from '../../main';
+import ModerationData from '../../structures/ModerationData';
 
 class Mute extends Command {
   constructor() {
     super('Mute');
     this.aliases = ['mute'];
-    this.usage = 'mute <@mention | ID> <durée> [<raison>]';
-    this.examples = ['mute @AlexLew 5j Une raison plus ou moins valable'];
+    this.usage = 'mute <@mention | ID> <durée> <raison>';
+    this.examples = ['mute @Olyno 5j Une raison plus ou moins valable'];
     this.permissions = ['Staff'];
   }
 
   async execute(message, args) {
-    const victim = SanctionManager.getMember(message, args[0]);
+    const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
     if (!args[1]) return message.channel.sendError(this.config.missingTimeArgument, message.member);
     if (!args[2]) return message.channel.sendError(this.config.missingReasonArgument, message.member);
     if (victim.id === message.author.id) return message.channel.sendError(this.config.noSelfMute, message.member);
     if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.sendError(this.config.userTooPowerful, message.member);
 
-    const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
+    const reason = args.splice(2).join(' ');
     let duration;
     if (args[1] === 'def' || args[1] === 'definitif') {
       duration = -1;
     } else {
       duration = toTimestamp(args[1]);
       if (!duration) return message.channel.sendError(this.config.invalidDuration, message.member);
+      duration *= 1000;
     }
 
-    Moderation.mute(victim, reason, duration, message.author, this.config, message, message.guild);
+    // Durée max des modérateurs forum : 2j
+    if (message.member.roles.cache.has(config.roles.forumMod) && duration > config.moderation.maxForumModDuration) {
+      return message.channel.sendError(this.config.durationTooLong, message.member);
+    }
+
+    const data = new ModerationData()
+      .setType(ACTION_TYPE.MUTE)
+      .setColor(config.colors.mute)
+      .setReason(reason)
+      .setDuration(duration)
+      .setMember(victim)
+      .setModerator(message.member)
+      .setMessageChannel(message.channel)
+      .setFinishTimestamp();
+    new MuteAction(data).commit();
   }
 }
 
