@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle, object-curly-newline, prefer-destructuring */
-import ytdl from 'discord-ytdl-core';
+import ytdl from 'ytdl-core-discord';
 import { config, db } from '../main';
 
 class MusicBotApp {
@@ -16,7 +16,7 @@ class MusicBotApp {
     this.dispatcher = undefined;
     this.queue = undefined;
     this.loop = this.enums.NONE;
-    this.bassboost = 0;
+    this.bassboost = 20;
 
     this.blacklistedMusics = [];
     this.blacklistedChannels = [];
@@ -30,21 +30,14 @@ class MusicBotApp {
     const voiceChannel = queue[0].voiceChannel;
     queue[0].voiceChannel.join()
       .then(async (co) => {
-        const input = ytdl(queue[0].url, {
+        const input = await ytdl(queue[0].url, {
           filter: 'audioonly',
           quality: 'highestaudio',
           highWaterMark: 1 << 25, // eslint-disable-line no-bitwise
           passArgs: ['-af', `equalizer=f=40:width_type=h:width=50:g=${this.bassboost}`],
         });
 
-        this.dispatcher = co.play(
-          input,
-          {
-            highWaterMark: 1,
-            type: 'converted',
-            bitrate: 320000,
-          },
-        );
+        this.dispatcher = co.play(input, { type: 'opus' });
 
         this.dispatcher.on('start', () => {
           this.queue = queue;
@@ -108,7 +101,9 @@ class MusicBotApp {
     } else {
       message.channel.send(config.messages.commands.join.comming);
       message.member.voice.channel.join();
+      return true;
     }
+    return false;
   }
 
   canUseCommand(message, options = { songPlaying: false, queueNotEmpty: false, notRestricted: false }) {
