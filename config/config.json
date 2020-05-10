@@ -4,7 +4,7 @@
         "avatar": "./assets/logo.png",
         "checkInterval": {
             "short": 10000,
-            "long": 90000  
+            "long": 90000
         }
     },
 
@@ -17,20 +17,19 @@
         "success": "#1fc622",
         "error": "#db2c23",
         "blacklist": "#000000",
-        "musicrestriction": "#2c02b5",
         "mute": "#8100eb",
         "ban": "#cc3300",
         "hardban": "#000000"
     },
 
     "moderation": {
-        "banRole": "Sous Fifre",
-        "muteRole": "Bâillonné - Aide Skript",
         "banChannelPrefix": "b-",
         "warnLimitBeforeBan": 2,
-        "warnBanReason": "2 avertissements",
-        "warnBanTime": 86400,
-        "purgeLimit": 100
+        "warnBanReason": "2 avertissements (automatique)",
+        "warnBanTime": 345600,
+        "warnDuration": 2592000,
+        "purgeLimit": 100,
+        "maxForumModDuration": 172800
     },
 
     "music": {
@@ -69,6 +68,11 @@
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
             "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:",
             "ghostpingPlural": ":warning: %s, vous avez été ghost-ping par %m. :innocent:",
+            "sanctionExpired": "Sanction expirée (automatique)",
+            "sanctionNotification": "Bonjour %u, tu viens de recevoir une sanction (%s) sur le serveur Skript-MC. Raison : \"%r\". Durée : %d. Nous t'invitons donc a revoir ton comportement pour éviter que cela se reproduise.",
+            "sanctionNotificationUpdate": "Bonjour %u, ta sanction sanction (%s) sur le serveur Skript-MC à été mise à jour. Raison : \"%r\". Durée : %d.",
+            "sanctionNotificationRemoved": "Bonjour %u, ta sanction (%s) sur le serveur Skript-MC à été révoquée. Raison : \"%r\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
+            "inactivityWhileBanned": "Inactivité après un bannissement",
             "renameList": [
                 "Quiche",
                 "Licorne",
@@ -91,8 +95,9 @@
             "privatemessage": "Oups ! Je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
             "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
             "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
-            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission, pas de Swan)",
-            "channelPermissions": ":warning: Impossible de créer ou de modifier le canal privé ! (Problème de permission, pas du bot)",
+            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission ou de configuration, pas de Swan)",
+            "channelPermissions": ":warning: Impossible de créer ou de modifier le canal privé ! (Problème de permission ou de configuration, pas de Swan)",
+            "noReasonSpecified": "Aucune raison spécifiée",
             "music": [
                 "Tu n'es pas dans un salon vocal !",
                 "Je ne suis pas dans un salon vocal !",
@@ -576,7 +581,7 @@
                 "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
                 "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u : %d.",
                 "sanctionUpdated": "Ta sanction a été mise à jour. Tu es maintenant bannis : %d",
-                "whyHere": "Bonjour %u ! Tu es là pour la raison suivante : %r. Tu peux essayer de t'expliquer avec les modérateurs. Durée de ta sanction : %d",
+                "whyHere": "Bonjour %u. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.\nSi tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.\n\n**Raison :** %r.\n**Durée :** %d.\n**Expire :** %e.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unban": {
@@ -615,6 +620,7 @@
                 "help": "Avertir un membre.",
                 "description": "Donne un avertissement à un membre.",
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
+                "missingReasonArgument": "Vous n'avez pas spécifié de raison !",
                 "noSelfWarn": "Ne te warn pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "successfullyWarned": "Vous avez bien averti %u !\nRaison : %r\nID de l'avertissement : %d",
@@ -640,7 +646,7 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "noSelfKick": "Ne te kick pas toi même, boulet.",
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
-                "successfullyKicked": "Vous avez bien averti %u !\nRaison : %r",
+                "successfullyKicked": "Vous avez bien expulsé %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "history": {
@@ -758,8 +764,8 @@
             },
             "bassboost": {
                 "help": "Modifier la puissance des basses.",
-                "description": "Modifie le gain de la musique.",
-                "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 1 et 40.",
+                "description": "Modifie le gain de la musique. La puissance par défault est à 20",
+                "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 0 et 40.",
                 "currentPower": "La puissance actuelle est à %d/40.",
                 "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture.",
                 "ask": "changer la puissance des basses"

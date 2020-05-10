@@ -26,7 +26,7 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.3.2",
     "axios": "^0.19.2",
     "bufferutil": "^4.0.1",
     "chalk": "^4.0.0",
@@ -34,9 +34,10 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "erlpack": "^0.1.3",
-    "ffmpeg-static": "^2.7.0",
+    "ffmpeg-static": "^4.2.1",
     "he": "^1.2.0",
-    "mathjs": "^6.6.4",
+    "mathjs": "^7.0.0",
+    "moment": "^2.25.3",
     "nedb-promises": "^4.0.1",
     "rss-parser": "^3.7.6",
     "sanitize-html": "^1.23.0",
@@ -50,8 +51,8 @@
     "@babel/preset-env": "^7.9.5",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^7.0.0",
+    "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "nodemon": "^2.0.3"
   },
