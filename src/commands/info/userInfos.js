@@ -28,7 +28,7 @@ class UserInfos extends Command {
 
   async execute(message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
-    const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
+    const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
     if (!target) return message.channel.sendError(this.config.pseudoNotFound, message.member);
 
     const roles = [];
@@ -38,23 +38,23 @@ class UserInfos extends Command {
 
     let presence = '';
     presence += `Statut : ${explain(target.presence.status)}\n`;
-    if (target.presence.activity) {
-      if (target.presence.activity.type === 0) presence += `Joue à \`${target.presence.activity.name}\`\n`;
-      else if (target.presence.activity.type === 1) presence += 'Est en live\n';
-      else if (target.presence.activity.type === 2) presence += `Écoute : ${target.presence.activity.name}\n`;
-      else if (target.presence.activity.type === 3) presence += `Regarde : ${target.presence.activity.name}\n`;
+    if (target.presence.activities[0]) {
+      if (target.presence.activities[0].type === 'PLAYING') presence += `Joue à \`${target.presence.activities[0].name}\`\n`;
+      else if (target.presence.activities[0].type === 'STREAMING') presence += 'Est en live\n';
+      else if (target.presence.activities[0].type === 'LISTENING') presence += `Écoute (sur ${target.presence.activities[0].name}) :\n`;
+      else if (target.presence.activities[0].type === 'WATCHING') presence += `Regarde : ${target.presence.activities[0].name}\n`;
+      else if (target.presence.activities[0].type === 'CUSTOM_STATUS') presence += `${target.presence.activities[0].name}\n`;
 
-      if (target.presence.activity.details) presence += `↳ ${target.presence.activity.details}\n`;
-      if (target.presence.activity.party) presence += `↳ ${target.presence.activity.party}\n`;
-      if (target.presence.activity.state) presence += `↳ ${target.presence.activity.state}\n`;
-      if (target.presence.activity.timestamps) presence += `↳ A commencé ${moment(target.presence.activity.timestamps.start).format('[le] DD/MM/YYYY [à] HH:mm:ss')}\n`;
+      if (target.presence.activities[0].details) presence += `↳ ${target.presence.activities[0].details}\n`;
+      if (target.presence.activities[0].state) presence += `↳ ${target.presence.activities[0].state}\n`;
+      if (target.presence.activities[0].timestamps) presence += `↳ A commencé ${moment(target.presence.activities[0].timestamps.start).format('[le] DD/MM/YYYY [à] HH:mm:ss')}\n`;
     }
 
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
-      .setAuthor(`Informations sur le membre ${target.user.username}`, 'attachment://logo.png')
+      .setAuthor(`Informations sur le membre ${target.user.username}`)
       .setFooter(`Exécuté par ${message.author.username}`)
+      .setThumbnail(target.user.avatarURL())
       .setTimestamp()
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
       .addField(this.config.embed.created, moment(target.user.createdAt).format('[le] DD/MM/YYYY [à] HH:mm:ss'), true)
