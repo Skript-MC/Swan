@@ -1,8 +1,9 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
 import { config, db } from '../../main';
-import { formatDate, padNumber } from '../../utils';
+import { padNumber } from '../../utils';
 
 const PROGRESS_BAR_SIZE = 30;
 
@@ -74,7 +75,7 @@ class NowPlaying extends Command {
     const description = `
     \`${progressBar.join('')}\` ${duration}
 
-    Ajoutée sur YouTube ${formatDate(new Date(music.video.publishedAt).getTime())}
+    Ajoutée sur YouTube ${moment(new Date(music.video.publishedAt).getTime()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}
 
     En train de jouer dans le canal : \`${message.guild.voice.connection.channel.name}\`
 

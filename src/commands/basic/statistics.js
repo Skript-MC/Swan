@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { commands, client, config, db } from '../../main';
 import pkg from '../../../package.json';
-import { secondToDuration } from '../../utils';
 
 class Statistics extends Command {
   constructor() {
@@ -14,7 +14,7 @@ class Statistics extends Command {
   }
 
   async execute(message, _args) {
-    const uptime = secondToDuration(client.uptime / 1000);
+    const uptime = moment.duration(client.uptime).humanize();
 
     await message.guild.members.fetch().catch(console.error);
     const onlineUsers = message.guild.members.cache.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;

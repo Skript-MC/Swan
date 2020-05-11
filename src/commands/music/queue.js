@@ -1,8 +1,8 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import Command from '../../structures/Command';
 import { config } from '../../main';
 import MusicBot from '../../structures/Music';
-import { secondToDuration } from '../../utils';
 
 class Queue extends Command {
   constructor() {
@@ -52,7 +52,7 @@ class Queue extends Command {
       }
 
       const durations = MusicBot.queue.map(elt => elt.video.durationSeconds);
-      const totalDuration = secondToDuration(durations.reduce((acc, current) => acc + current));
+      const totalDuration = moment.duration(durations.reduce((acc, current) => acc + current)).humanize();
       let footer = `\n${MusicBot.queue.length} musique${MusicBot.queue.length === 1 ? '' : 's'}. Durée totale : ${totalDuration}`;
 
       // Si l'embed est trop long

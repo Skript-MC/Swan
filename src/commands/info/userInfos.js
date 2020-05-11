@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import Command from '../../structures/Command';
 import { config } from '../../main';
-import { formatDate } from '../../utils';
 
 function explain(status) {
   switch (status) {
@@ -47,7 +47,7 @@ class UserInfos extends Command {
       if (target.presence.activity.details) presence += `↳ ${target.presence.activity.details}\n`;
       if (target.presence.activity.party) presence += `↳ ${target.presence.activity.party}\n`;
       if (target.presence.activity.state) presence += `↳ ${target.presence.activity.state}\n`;
-      if (target.presence.activity.timestamps) presence += `↳ A commencé ${formatDate(target.presence.activity.timestamps.start)}\n`;
+      if (target.presence.activity.timestamps) presence += `↳ A commencé ${moment(target.presence.activity.timestamps.start).format('[le] DD/MM/YYYY [à] HH:mm:ss')}\n`;
     }
 
     const embed = new MessageEmbed()
@@ -57,8 +57,8 @@ class UserInfos extends Command {
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp()
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
-      .addField(this.config.embed.created, formatDate(target.user.createdAt), true)
-      .addField(this.config.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
+      .addField(this.config.embed.created, moment(target.user.createdAt).format('[le] DD/MM/YYYY [à] HH:mm:ss'), true)
+      .addField(this.config.embed.joined, `${moment(new Date(target.joinedTimestamp)).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`, true)
       .addField(this.config.embed.roles, `${target.roles.cache.array().length - 1 === 0 ? 'Aucun' : `${target.roles.cache.array().length - 1} : ${roles.join(', ')}`}`, true)
       .addField(this.config.embed.presence, presence, true);
 
