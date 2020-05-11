@@ -3,7 +3,6 @@ import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
 import { config, db } from '../../main';
 import { formatDate, padNumber } from '../../utils';
-import Moderation from '../../structures/Moderation';
 
 const PROGRESS_BAR_SIZE = 30;
 
@@ -94,15 +93,6 @@ class NowPlaying extends Command {
       .setTimestamp();
   }
 
-  async updateDbAsync(database, query, update, options = { returnUpdatedDocs: true }) {
-    return new Promise((resolve, reject) => {
-      database.update(query, update, options, (err, _numReplaced, affectedDocuments, _upsert) => {
-        if (err) reject(err);
-        else resolve(affectedDocuments);
-      });
-    });
-  }
-
   async report(message, users, music) {
     message.channel.send(this.config.successfullyReported);
     const reportedBy = await message.guild.members.fetch(users.reportedBy);
@@ -113,18 +103,17 @@ class NowPlaying extends Command {
       .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
       .addField(':persevere: Plaignant', `${reportedBy.toString()}\n(${users.reportedBy.id})`, true)
       .addField(':musical_note: Musique', `[${music.title}](${music.video.shortURL})\nID de la musique : ${music.video.id}`, true)
-      .addField('Informations', 'Réagissez avec :minidisc: pour ajouter la musique à la blacklist.\nRéagisser avec :tv: pour ajouter la chaîne YouTube à la blacklist.\nRéagissez avec :bust_in_silhouette: pour empêcher le joueur d\'ajouter une musique à la queue pendant 1 semaine');
+      .addField('Informations', 'Réagissez avec :minidisc: pour ajouter la musique à la blacklist.\nRéagisser avec :tv: pour ajouter la chaîne YouTube à la blacklist.');
 
     const logChannel = message.guild.channels.cache.get(config.channels.logs);
     const logMessage = await logChannel.send(logEmbed);
     logMessage.react('💽');
     logMessage.react('📺');
-    logMessage.react('👤');
 
     logMessage
       .createReactionCollector((reaction, user) => {
         users.moderator = user; // eslint-disable-line no-param-reassign
-        return !user.bot && ['👤', '💽', '📺'].includes(reaction.emoji.name);
+        return !user.bot && ['💽', '📺'].includes(reaction.emoji.name);
       }).on('collect', (reaction) => {
         switch (reaction.emoji.name) { // eslint-disable-line default-case
           case '💽':
@@ -132,9 +121,6 @@ class NowPlaying extends Command {
             break;
           case '📺':
             this.blacklistChannel(users, music, logChannel);
-            break;
-          case '👤':
-            Moderation.musicRestriction(users.requestedBy, users.moderator, music, logChannel, message);
             break;
         }
       });
