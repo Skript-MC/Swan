@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import moment from 'moment';
 import { loadBot,
   loadCommands,
   loadSkriptHubAPI,
@@ -12,6 +13,14 @@ import loadRssFeed from './structures/RSSFeed';
 import loadSkriptReleases from './structures/skriptReleases';
 import Command from './structures/Command';
 import Logger from './structures/Logger';
+
+moment.locale('fr');
+moment.relativeTimeThreshold('M', 12);
+moment.relativeTimeThreshold('d', 28);
+moment.relativeTimeThreshold('h', 24);
+moment.relativeTimeThreshold('m', 55);
+moment.relativeTimeThreshold('s', 55);
+moment.relativeTimeThreshold('ss', 3);
 
 export const logger = new Logger();
 export const config = loadConfig();
@@ -33,7 +42,7 @@ export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : nu
 
 client.on('ready', async () => {
   logger.debug('main.js -> Client is ready (client.on(\'ready\'))');
-  const guild = client.guilds.resolve(config.bot.guild);
+  client.guild = client.guilds.resolve(config.bot.guild);
 
   // Verifying tokens and ids
   if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
@@ -42,14 +51,17 @@ client.on('ready', async () => {
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
   for (const [key, value] of Object.entries(config.channels)) {
     if (!value) logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!guild.channels.cache.has(value)) logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
+    else if (!client.guild.channels.cache.has(value)) logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
   }
   for (const [key, value] of Object.entries(config.roles)) {
     if (!value) logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!guild.roles.cache.has(value)) logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
+    else if (!client.guild.roles.cache.has(value)) logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
   }
+  const clientMember = client.guild.members.resolve(client.user.id);
+  const permissions = ['KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'ADD_REACTIONS', 'VIEW_CHANNEL', 'SEND_MESSAGES', 'MANAGE_MESSAGES', 'ATTACH_FILES', 'CONNECT', 'SPEAK', 'MANAGE_NICKNAMES', 'MANAGE_ROLES'];
+  if (!clientMember.hasPermission(permissions)) logger.error(`Swan is missing permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
 
-  logger.debug('main.js -> Checks of tokens and ids finished successfully');
+  logger.debug('main.js -> Checks of tokens, ids and permissions finished successfully');
 
   // Initializing the commands-stats database
   for (const command of commands) {
@@ -67,7 +79,6 @@ client.on('ready', async () => {
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
   logger.step(`Messages cached! (${suggestionMessages.size})`);
 
-  client.guild = guild;
   client.config = {};
   client.config.activated = true;
 
@@ -75,7 +86,7 @@ client.on('ready', async () => {
 
   setInterval(() => {
     Command.filterCooldown(commands); // Tri dans les cooldowns des commandes
-    SanctionManager.checkSanctions(guild); // Vérification des sanctions temporaires
+    SanctionManager.checkSanctions(); // Vérification des sanctions temporaires
   }, config.bot.checkInterval.short);
 
   setInterval(() => {

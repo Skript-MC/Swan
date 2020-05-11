@@ -16,7 +16,7 @@ class MusicBotApp {
     this.dispatcher = undefined;
     this.queue = undefined;
     this.loop = this.enums.NONE;
-    this.bassboost = 0;
+    this.bassboost = 20;
 
     this.blacklistedMusics = [];
     this.blacklistedChannels = [];
@@ -24,67 +24,59 @@ class MusicBotApp {
     this.fetch();
   }
 
-  playSong(queue, message) {
+  async playSong(queue, message) {
     if (queue.length === 0) return;
 
-    const voiceChannel = queue[0].voiceChannel;
-    queue[0].voiceChannel.join()
-      .then(async (co) => {
-        const input = ytdl(queue[0].url, {
-          filter: 'audioonly',
-          quality: 'highestaudio',
-          highWaterMark: 1 << 25, // eslint-disable-line no-bitwise
-          passArgs: ['-af', `equalizer=f=40:width_type=h:width=50:g=${this.bassboost}`],
-        });
-
-        this.dispatcher = co.play(
-          input,
-          {
-            highWaterMark: 1,
-            type: 'converted',
-            bitrate: 320000,
-          },
-        );
-
-        this.dispatcher.on('start', () => {
-          this.queue = queue;
-          this.nowPlaying = queue[0];
-          this.updateStats(this.nowPlaying);
-          queue.shift();
-          message.channel.send(config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));
-        });
-
-        this.dispatcher.on('finish', () => {
-          const preset = this.presets.get(this.endReason || 'default');
-          this.endReason = undefined;
-
-          if (this.loop === this.enums.MUSIC && preset.playNext) {
-            if (this.blacklistedMusics.includes(this.nowPlaying.video.id)) {
-              message.channel.send(config.messages.commands.play.blacklistedMusic);
-            } else {
-              queue.unshift(this.nowPlaying);
-            }
-            this.playSong(queue, message);
-          } else if (preset.playNext && queue.length >= 1) {
-            this.playSong(queue, message);
-          } else {
-            this.nowPlaying = undefined;
-            if (preset.sendFinishMsg) message.channel.send(config.messages.commands.play.queueFinished);
-            if (preset.leave) voiceChannel.leave();
-          }
-        });
-
-        this.dispatcher.on('error', (err) => {
-          message.channel.send(config.messages.errors.cantplaymusic);
-          voiceChannel.leave();
-          throw new Error(err);
-        });
-      })
+    const { voiceChannel } = queue[0];
+    const connection = await queue[0].voiceChannel.join()
       .catch((err) => {
         message.channel.send(config.messages.errors.erroroccured);
         voiceChannel.leave();
         throw new Error(err);
       });
+
+    const input = ytdl(queue[0].url, {
+      filter: 'audioonly',
+      quality: 'highestaudio',
+      highWaterMark: 1 << 25, // eslint-disable-line no-bitwise
+      encoderArgs: ['-af', `equalizer=f=40:width_type=h:width=50:g=${this.bassboost}`],
+    });
+
+    this.dispatcher = connection.play(input, { type: 'opus' });
+
+    this.dispatcher.on('start', () => {
+      this.queue = queue;
+      this.nowPlaying = queue[0];
+      this.updateStats(this.nowPlaying);
+      queue.shift();
+      message.channel.send(config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));
+    });
+
+    this.dispatcher.on('finish', () => {
+      const preset = this.presets.get(this.endReason || 'default');
+      this.endReason = undefined;
+
+      if (this.loop === this.enums.MUSIC && preset.playNext) {
+        if (this.blacklistedMusics.includes(this.nowPlaying.video.id)) {
+          message.channel.send(config.messages.commands.play.blacklistedMusic);
+        } else {
+          queue.unshift(this.nowPlaying);
+        }
+        this.playSong(queue, message);
+      } else if (preset.playNext && queue.length >= 1) {
+        this.playSong(queue, message);
+      } else {
+        this.nowPlaying = undefined;
+        if (preset.sendFinishMsg) message.channel.send(config.messages.commands.play.queueFinished);
+        if (preset.leave) voiceChannel.leave();
+      }
+    });
+
+    this.dispatcher.on('error', (err) => {
+      message.channel.send(config.messages.errors.cantplaymusic);
+      voiceChannel.leave();
+      throw new Error(err);
+    });
   }
 
   shuffleQueue(queue) {
@@ -108,7 +100,9 @@ class MusicBotApp {
     } else {
       message.channel.send(config.messages.commands.join.comming);
       message.member.voice.channel.join();
+      return true;
     }
+    return false;
   }
 
   canUseCommand(message, options = { songPlaying: false, queueNotEmpty: false, notRestricted: false }) {

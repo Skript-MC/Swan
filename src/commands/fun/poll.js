@@ -13,10 +13,10 @@ function endPoll(msg, embed, collectors, votes, answers, questionType) {
   const voters = votes.reduce((acc, cur) => acc + cur);
   let results = '';
   if (questionType === 0) {
-    results = `:white_check_mark: : ${votes[0]} oui (${100 * votes[0] / voters || 0}%)\n:x: : ${votes[1]} non (${100 * votes[1] / voters || 0}%)`;
+    results = `:white_check_mark: : ${votes[0]} oui (${(100 * votes[0]) / voters || 0}%)\n:x: : ${votes[1]} non (${(100 * votes[1]) / voters || 0}%)`;
   } else if (questionType === 1) {
     for (let i = 0; i < votes.length; i++) {
-      results += `${reactions.multiple[i]} : ${votes[i]} ${answers[i]} (${100 * votes[i] / voters || 0}%)\n`;
+      results += `${reactions.multiple[i]} : ${votes[i]} ${answers[i]} (${(100 * votes[i]) / voters || 0}%)\n`;
     }
   }
   results += `\n:bust_in_silhouette: : ${voters} votant${voters > 1 ? 's' : ''}.`;

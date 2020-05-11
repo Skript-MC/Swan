@@ -2,6 +2,7 @@
 import { MessageEmbed } from 'discord.js';
 import { client, config, commands, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
+import SanctionManager from '../structures/SanctionManager';
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
@@ -38,6 +39,11 @@ export default async function messageHandler(message) {
   const args = message.content.split(/ +/);
   const { prefix } = config.bot;
   let cmd = args.shift();
+
+  if (await SanctionManager.isBan(message.author.id)) {
+    SanctionManager.hasSentMessages(message.author.id);
+    return;
+  }
 
   if (message.author.bot
     || message.system

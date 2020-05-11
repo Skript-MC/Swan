@@ -16,7 +16,7 @@ export default async function guildMemberAddHandler(member) {
 
   let newName;
   // If the percentage of correct name is >= required percentage
-  if (Math.round(validName.length / name.length * 100) >= requiredPrc.value) {
+  if (Math.round((validName.length / name.length) * 100) >= requiredPrc.value) {
     // Modify the username to the correct username (without special characters)
     newName = validName;
   } else {
