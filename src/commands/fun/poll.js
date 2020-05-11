@@ -1,7 +1,8 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import Command from '../../structures/Command';
 import { config } from '../../main';
-import { formatDate, extractQuotedText, toTimestamp } from '../../utils';
+import { extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {
   yesno: ['✅', '❌'],
@@ -59,7 +60,7 @@ class Poll extends Command {
     if (answers.length === 1) return message.channel.sendError(this.config.notEnoughAnswers, message.member);
     if (answers.length >= 18) return message.channel.sendError(this.config.tooManyAnswers, message.member);
 
-    const end = formatDate(new Date(Date.now() + wait));
+    const end = moment(new Date(Date.now() + wait)).format('[le] DD/MM/YYYY [à] HH:mm:ss');
 
     let possibleAnswers = '';
     if (questionType === 0) {

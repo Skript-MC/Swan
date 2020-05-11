@@ -1,8 +1,8 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import axios from 'axios';
 import Command from '../../structures/Command';
 import { config, logger } from '../../main';
-import { formatDate } from '../../utils';
 
 class PlayerInfos extends Command {
   constructor() {
@@ -58,7 +58,7 @@ class PlayerInfos extends Command {
     } else {
       let i = 1;
       for (const pseudo of data) {
-        history += `${i} - \`${pseudo.name}\` ${pseudo.changedToAt ? `(changé ${formatDate(pseudo.changedToAt)})` : ''}`;
+        history += `${i} - \`${pseudo.name}\` ${pseudo.changedToAt ? `(changé ${moment(pseudo.changedToAt).format('[le] DD/MM/YYYY [à] HH:mm:ss')})` : ''}`;
 
         history += '\n';
         i += 1;
