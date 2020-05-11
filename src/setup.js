@@ -229,6 +229,10 @@ export function loadDatabases() {
     databases[db].load()
       .then(() => logger.step(`Databases : "${db}.db" loaded!`))
       .catch(console.error);
+    databases[db].on('__error__', (datastore, event, error, ...args) => {
+      logger.error(`Database ${db} generated the following error (${event}). Arguments: ${args}`);
+      console.error(error);
+    });
   }
 
   return databases;
