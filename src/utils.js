@@ -200,11 +200,8 @@ export function convertFileSize(size) {
  * @param {Function} callback - The callback to call when the user has made his choice
  */
 export async function selectorMessage(results, query, message, cmdConfig, messageCallback, callback) {
-  const conf = {
-    searchResults: '%r élements trouvés pour la recherche `%s`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**',
-  };
   const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-  let content = conf.searchResults.replace('%r', results.length).replace('%s', query);
+  let content = cmdConfig.searchResults.replace('%r', results.length).replace('%s', query);
 
   const elementNumber = results.length > 10 ? 10 : results.length;
   for (let i = 0; i < elementNumber; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
