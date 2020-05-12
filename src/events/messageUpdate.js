@@ -25,6 +25,6 @@ export default async function messageUpdateHandler(oldMessage, newMessage) {
   newMessage.channel.send(
     baseMessage
       .replace('%s', deletedMentions.join(', '))
-      .replace('%m', newMessage.member.nickname || newMessage.author.username),
+      .replace('%m', newMessage.member.displayName),
   );
 }

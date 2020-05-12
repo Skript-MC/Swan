@@ -134,7 +134,7 @@ class MusicBotApp {
   async askPermission(cb, reason, message, args, cmdConfig) {
     if (this.shouldAskOthers(message.member)) {
       const messageContent = config.messages.miscellaneous.musicAskOthers
-        .replace('%u', message.member.nickname || message.author.username)
+        .replace('%u', message.member.displayName)
         .replace('%s', reason);
 
       const membersInChannel = message.member.voice.channel.members;

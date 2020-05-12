@@ -20,6 +20,6 @@ export default async function messageDeleteHandler(message) {
   message.channel.send(
     baseMessage
       .replace('%s', mentions.join(', '))
-      .replace('%m', message.member.nickname || message.author.username),
+      .replace('%m', message.member.displayName),
   );
 }

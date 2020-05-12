@@ -19,7 +19,7 @@ class Ping extends Command {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .setDescription(description)
-      .setFooter(`Exécuté par ${message.member.nickname || message.author.username}`)
+      .setFooter(`Exécuté par ${message.displayName}`)
       .setTimestamp();
     message.channel.send(embed);
   }
