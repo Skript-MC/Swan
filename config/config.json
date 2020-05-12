@@ -570,7 +570,7 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyBanned": "Vous avez bien banni %u !\nRaison : %r\nDurée : %d",
-                "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u : %d.",
+                "durationUpdated": "Vous avez bien mis à jour la durée de la restriction du discord de %u à %d, pour %r",
                 "sanctionUpdated": "Ta sanction a été mise à jour. Tu es maintenant bannis : %d",
                 "whyHere": "Bonjour %u. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.\nSi tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.\n\n**Raison :** %r.\n**Durée :** %d.\n**Expire :** %e.",
                 "noReasonSpecified": "Aucune raison spécifiée"
@@ -594,7 +594,7 @@
                 "userTooPowerful": "Désolé, je ne peux rien faire contre cet utilisateur... Toi non plus d'ailleurs !",
                 "invalidDuration": "Vous n'avez pas écrit la durée correctement ! Merci d'entrer un nombre suivi (sans espaces) de `sec` (seconde), `m` (minute), `h` (heure), `j` (jour), `mo` (mois) ou simplement `def` (à vie).",
                 "successfullyMuted": "Vous avez bien rendu muet %u !\nRaison : %r\nDurée : %d",
-                "durationUpdated": "Vous avez bien mis à jour la durée du mute de %u : %d.",
+                "durationUpdated": "Vous avez bien mis à jour la durée du mute de %u à %d, pour %r",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "unmute": {

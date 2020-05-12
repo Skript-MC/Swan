@@ -30,7 +30,7 @@ class MuteAction extends ModerationAction {
   async remute() {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
-      const successMessage = this.config.successfullyMuted
+      const successMessage = this.config.durationUpdated
         .replace('%u', this.data.user.username)
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));

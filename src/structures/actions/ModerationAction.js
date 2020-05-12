@@ -12,7 +12,8 @@ class ModerationAction {
   }
 
   async commit() {
-    const [result, isUpdate] = await this.prepare();
+    const [stop, result, isUpdate] = await this.prepare();
+    if (stop) return;
 
     // We notify first in case we kick/hardban him in the .exec (in which case we won't
     // be able to DM him because he left the guild)
@@ -49,7 +50,18 @@ class ModerationAction {
       ? await db.sanctions.findOne(query).catch(console.error)
       : null;
     const isUpdate = !!result;
-    return [result, isUpdate];
+
+    let stop = false;
+    if (!result && [ACTION_TYPE.UNBAN, ACTION_TYPE.UNMUTE, ACTION_TYPE.REMOVE_WARN].includes(this.data.type)) {
+      let message = '';
+      if (this.data.type === ACTION_TYPE.UNBAN) message = config.messages.commands.unban.notBanned;
+      else if (this.data.type === ACTION_TYPE.UNMUTE) message = config.messages.commands.unmute.notMuted;
+      else if (this.data.type === ACTION_TYPE.REMOVE_WARN) message = config.messages.commands.removewarn.alreadyRevoked;
+      this.data.messageChannel.sendError(message.replace('%u', this.data.user.username), this.data.moderator);
+      stop = true;
+    }
+
+    return [stop, result, isUpdate];
   }
 
   async notify(isUpdate) {

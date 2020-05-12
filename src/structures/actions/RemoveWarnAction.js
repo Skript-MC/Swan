@@ -13,7 +13,7 @@ class RemoveWarnAction extends ModerationAction {
     // Regarde dans la bdd si le warn existe
     const warnExists = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.WARN }).catch(console.error);
     if (!warnExists) {
-      return this.data.messageChannel.sendError(this.config.notMuted.replace('%u', this.data.username), this.data.moderator);
+      return this.data.messageChannel.sendError(this.config.alreadyRevoked, this.data.moderator);
     }
 
     if (!this.data.sendSuccessIfBot && this.data.moderator.user.bot) return;
