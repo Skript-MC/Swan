@@ -84,7 +84,7 @@ export function uid(len = 8) {
  * @param {GuildMember} member Le membre
  */
 export function prunePseudo(member) {
-  const name = member.nickname || member.user.username;
+  const name = member.displayName;
   let cleanPseudo = name.replace(/[^a-zA-Z0-9]/gimu, '');
   if (cleanPseudo.length === 0) cleanPseudo = member.id;
   return cleanPseudo.toLowerCase();

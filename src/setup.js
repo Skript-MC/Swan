@@ -43,6 +43,8 @@ export function loadConfig() {
     everyone: ids.EVERYONE,
     ban: ids.BAN,
     mute: ids.MUTE,
+    eventNotifications: ids.EVENT_NOTIFICATIONS,
+    minRoleToClearQueue: ids.MIN_ROLE_TO_CLEAR_QUEUE,
   };
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;

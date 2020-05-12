@@ -12,8 +12,7 @@ class ToggleNotifRole extends Command {
 
   async execute(message, _args) {
     message.delete();
-    const rolename = config.miscellaneous.notifRoleName;
-    const role = message.guild.roles.cache.find(r => r.name === rolename);
+    const role = message.guild.roles.resolve(config.roles.eventNotifications);
     if (!role) {
       logger.warn('Le rôle "Notification Évènement" n\'existe pas !');
       return message.channel.send("Désolé, mais ce rôle n'a pas été créé. Signalez cela à un modérateur discord");
@@ -26,7 +25,7 @@ class ToggleNotifRole extends Command {
         message.channel.send(config.messages.errors.rolePermissions);
         logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
-      message.member.send(`**(${message.guild.name})** Le rôle *"${rolename}"* vous a été ajouté !`);
+      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été ajouté !`);
     } else if (message.member.roles.cache.has(role.id)) {
       try {
         await message.member.roles.remove(role);
@@ -34,7 +33,7 @@ class ToggleNotifRole extends Command {
         message.channel.send(config.messages.errors.rolePermissions);
         logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
-      message.member.send(`**(${message.guild.name})** Le rôle *"${rolename}"* vous a été enlevé !`);
+      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été enlevé !`);
     }
   }
 }

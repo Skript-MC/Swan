@@ -58,8 +58,8 @@ class SanctionManager {
 
   static async addRole(data, overwrite = false) {
     const role = data.type === ACTION_TYPE.BAN
-      ? data.guild.roles.cache.find(r => r.id === config.roles.ban)
-      : data.guild.roles.cache.find(r => r.id === config.roles.mute);
+      ? data.guild.roles.resolve(config.roles.ban)
+      : data.guild.roles.resolve(config.roles.mute);
 
     try {
       if (overwrite) await data.member.roles.set([role]);
@@ -73,8 +73,8 @@ class SanctionManager {
   static async removeRole(data) {
     // On enlève le rôle de la victime
     const role = data.type === ACTION_TYPE.UNBAN
-      ? data.guild.roles.cache.find(r => r.id === config.roles.ban)
-      : data.guild.roles.cache.find(r => r.id === config.roles.mute);
+      ? data.guild.roles.resolv(config.roles.ban)
+      : data.guild.roles.resolv(config.roles.mute);
 
     if (data.member.roles.cache.has(role.id)) {
       try {

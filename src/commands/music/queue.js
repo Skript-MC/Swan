@@ -29,7 +29,7 @@ class Queue extends Command {
       const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
       if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
 
-      const minRole = message.guild.roles.cache.find(r => r.id === config.music.minRoleToClearQueue).rawPosition;
+      const minRole = message.guild.roles.resolve(config.roles.minRoleToClearQueue).rawPosition;
       if (message.member.roles.highest.rawPosition >= minRole) {
         MusicBot.queue = [];
         return message.channel.send(this.config.cleared);

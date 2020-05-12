@@ -75,9 +75,9 @@ export default async function messageHandler(message) {
     if (!targetedMessage.content) return;
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username}`, targetedMessage.author.avatarURL())
+      .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
       .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${config.bot.guild}/${channel.id}/${targetedMessage.id})`)
-      .setFooter(`Message cité par ${message.member.nickname || message.author.username}`)
+      .setFooter(`Message cité par ${message.member.displayName}`)
       .setTimestamp(targetedMessage.createdAt);
     if (targetedMessage.attachments !== 0) {
       let loop = 1;

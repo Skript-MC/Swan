@@ -3,7 +3,7 @@ import { toValidName } from '../utils';
 
 export default async function guildMemberAddHandler(member) {
   // Get the nickname or the username of the member
-  const name = member.nickname || member.user.username;
+  const name = member.displayName;
   // Get the correct name without special or forbidden characters
   const validName = toValidName(name);
   // Get the required perentage of valid characters in the miscellaneous database

@@ -33,15 +33,15 @@ class Move extends Command {
     message.delete();
     targetedMessage.delete();
     const successMessage = this.config.successfullyMoved
-      .replace('%a', targetedMessage.member.nickname || targetedMessage.author.username)
+      .replace('%a', targetedMessage.member.displayName)
       .replace('%s', targetedChannel)
-      .replace('%t', message.member.nickname || message.author.username);
+      .replace('%t', message.member.displayName);
     message.channel.send(successMessage);
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.nickname || targetedMessage.author.username} :`, targetedMessage.author.avatarURL())
+      .setAuthor(`Message de ${targetedMessage.member.displayName} :`, targetedMessage.author.avatarURL())
       .setDescription(targetedMessage.content)
-      .setFooter(`Déplacé par ${message.member.nickname || message.author.username}`)
+      .setFooter(`Déplacé par ${message.member.displayName}`)
       .setTimestamp(targetedMessage.createdAt);
     const moveEmbed = await targetedChannel.send(embed);
 
