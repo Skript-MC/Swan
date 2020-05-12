@@ -18,7 +18,7 @@ class Bassboost extends Command {
     if (args.length === 0) return message.channel.send(this.config.currentPower.replace('%d', MusicBot.bassboost));
 
     let power = parseInt(args.join(' '), 10);
-    if (['off', 'default', 'stop'].includes(args[0])) power = 20;
+    if (['off', 'default', 'stop'].includes(args[0])) power = 0;
 
     if (isNaN(power) || power < 0 || power > 40) return message.channel.send(this.config.invalidPower);
 

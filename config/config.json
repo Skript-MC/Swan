@@ -739,7 +739,7 @@
             },
             "bassboost": {
                 "help": "Modifier la puissance des basses.",
-                "description": "Modifie le gain de la musique. La puissance par défault est à 20",
+                "description": "Modifie le gain de la musique. La puissance par défault est à 0",
                 "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 0 et 40.",
                 "currentPower": "La puissance actuelle est à %d/40.",
                 "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture.",
