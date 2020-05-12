@@ -16,7 +16,7 @@ class MusicBotApp {
     this.dispatcher = undefined;
     this.queue = undefined;
     this.loop = this.enums.NONE;
-    this.bassboost = 20;
+    this.bassboost = 0;
 
     this.blacklistedMusics = [];
     this.blacklistedChannels = [];
