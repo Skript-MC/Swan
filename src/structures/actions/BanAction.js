@@ -4,6 +4,7 @@ import ModerationAction from './ModerationAction';
 import { config, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import { toDuration } from '../../utils';
+import ACTION_TYPE from './actionType';
 
 class BanAction extends ModerationAction {
   constructor(data) {
@@ -74,7 +75,7 @@ class BanAction extends ModerationAction {
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }
 
-    await db.sanctions.remove({ member: this.data.user.id }).catch(console.error);
+    await db.sanctions.remove({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
 
     // Delete channel
     const file = await SanctionManager.removeChannel(this.data);
