@@ -31,7 +31,6 @@ class Statistics extends Command {
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
       .setAuthor('Statistiques de Swan', 'attachment://logo.png')
-      .addField('Préfixe', config.bot.prefix, true)
       .addField('Version', pkg.version, true)
       .addField('Temps de fonctionnement', uptime, true)
       .addField('Mémoire', `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
