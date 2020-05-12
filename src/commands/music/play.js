@@ -34,7 +34,7 @@ class Play extends Command {
 
     // Si l'utilisateur est dans un channel
     const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) return message.channel.send(this.config.notInChannel);
+    if (!voiceChannel) return message.channel.send(config.messages.errors.joinErrors[0]);
 
     // Faire rejoindre le bot, s'il n'est pas déjà dans un canal vocal
     if (!message.guild.voice || !message.guild.voice.connection || message.guild.voice.channel.id !== message.member.voice.channel.id) {
@@ -88,7 +88,7 @@ class Play extends Command {
 
       message.channel.send(this.config.playlistAdded.replace('%s', playlist.title));
       if (blocked === 1) message.channel.send(this.config['1ElementCouldntBeAdd'].replace('%s', blocked));
-      else if (blocked >= 1) message.channel.send(this.config.SeveralElementCouldntBeAdd.replace('%s', blocked));
+      else if (blocked >= 1) message.channel.send(this.config.severalElementCouldntBeAdd.replace('%s', blocked));
 
       if (!MusicBot.nowPlaying) return MusicBot.playSong(queue, message);
     } else if (query.match(regexps.video)) { // URL de Musique YouTube

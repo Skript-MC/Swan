@@ -32,7 +32,7 @@ class Help extends Command {
       const embed = new MessageEmbed()
         .attachFiles([config.bot.avatar])
         .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
-        .setDescription(config.messages.commands.help.header)
+        .setDescription(this.config.header)
         .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
 
@@ -100,7 +100,7 @@ class Help extends Command {
         }
 
         if (matches.length === 0) {
-          message.channel.sendError(config.messages.commands.help.cmdDoesntExist, message.member);
+          message.channel.sendError(this.config.cmdDoesntExist, message.member);
         } else {
           const cmdList = matches.map(m => m.name).join('`, `');
           const msg = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));

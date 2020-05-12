@@ -11,7 +11,6 @@
     "colors": {
         "default": "#4286f4",
         "warn": "#ffe200",
-        "warning": "#ecef1c",
         "kick": "#ff6b61",
         "log": "#4a64d6",
         "success": "#1fc622",
@@ -40,7 +39,6 @@
 
     "apis": {
         "addons": "https://api.skripttools.net/v4/addons/",
-        "skript": "https://api.skripttools.net/v4/skript/",
         "syntax": "https://skripthub.net/api/v1",
         "server": "https://api.mcsrvstat.us/2/",
         "mojang_api": "https://api.mojang.com",
@@ -51,7 +49,6 @@
     },
 
     "miscellaneous": {
-        "notifRoleName": "Notifications Évènements",
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
         "commandSimilarity": 0.7,
@@ -87,7 +84,6 @@
             "strangeName": "Bienvenue sur le serveur Discord de Skript-MC !\nVu que ton pseudonyme contenait des caractères spéciaux, je me suis permis de te les retirer ou de te renommer complètement. J'espère que mes modifications te plairont.\nSi malheureusement ce n'est pas le cas, tu peux demander à un Modérateur Discord (pseudonymes vert clair) pour être renommé."
         },
         "errors": {
-            "command": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
             "permission": "Aïe, tu n'as pas les privilèges d'exécuter cette commande. :confused:",
             "notInHelpChannels": "Désolé, tu ne peux pas exécuter cette commande dans les salons d'aide, rends-toi dans le salon #bot. :wink:",
             "erroroccured": "Oups ! Une erreur s'est produite... Merci de réessayer plus tard !",
@@ -240,7 +236,6 @@
             "errordetails": {
                 "help": "Aide à régler les erreurs de vos scripts",
                 "description": "Aide à régler les erreurs que vous pouvez avoir lorsque vous faites /sk reload. Attention, cette commande est en BETA, donc le pourcentage de précision n'est pas garanti à 100%. Il se peut aussi que certaines erreur ne soit pas disponibles.",
-                "hub": "**Quelle erreur encontres-tu ?**\n:one: Indentation error\n:two: Can't understand this XX\n:three: Empty configuration section !\n:four: Invalid use of quotes\n:five: There's no loop that match XX\n:six: \"else\" have to be placed just after an \"if\"\n:seven: Can't compare XX with XX\n:eight: XX is not a valid item data\n:nine: XX can't be added to XX because the former is not an object\n:keycap_ten: Autre",
                 "noError": "Tu n'as pas défini d'erreur !",
                 "error": {
                     "indentation": "Ce message apparait généralement lorsqu'il y a une incohérence dans les tabulations. Il peut y avoir plusieurs cas de figure pour que cette erreur apparaisse :\n\n- Lorsque vous utilisez un mélange d'espaces et de tabulation. Dans ces cas la, enlevez tous les espaces/tabulations de la ligne, et refaite-les. Cela peut aussi arriver lorsque vous copier collez le code de quelqu'un alors qu'il ne l'a pas formatté dans des blocs de codes (Discord ou forum), et que des caractères spéciaux bizarres et invisibles se sont introduits.\n\n- Cela peut aussi arriver lorsque il manque une tabulation, comme dans ce cas : ```applescript\nif {_variable} is equal to 3:\n\tif {player::%player%} is set:\n\tmessage \"Bravo !\"```**Rappel :** lorsqu'une ligne se *finit* par un \":\", la ligne suivante est *toujours* indenté d'un cran de plus.\n\n- Dernier cas de figure, directement en relation avec le précédent : la ligne précédente ne finit pas par un \":\" alors qu'elle devrait, comme dans ce cas de figure :```applescript\nif {_variable} is equal to 3:\n\tif {player::%player%} is set\n\tmessage \"Bravo !\" # Vous n'avez pas indenté car la ligne précédente ne finit pas par \":\", alors qu'elle est censé.```Corriger un problème d'oubli de \":\" à la fin d'une ligne peut corriger plusieurs erreurs d'un coups.",
@@ -296,8 +291,6 @@
                 "description": "Envoie diverses informations sur une syntaxe, telle que l'addon nécessaire, le pattern, un exemple... Vous devez chercher une syntaxe avec des mots clés qui seront cherchés dans le nom ou la description. Vous pouvez ensuite affiner vos recherche un spécifiant un addon, un type ou une ID skripthub.",
                 "syntaxDoesntExist": "Aucune syntaxe ne correspond a votre recherche... Nous avons pourtant essayer de rechercher dans le titre et dans la description... Désolé.",
                 "invalidCmd": "Il faut que tu ajoutes le nom d'une syntaxe !",
-                "requestError": "Désolé, une erreur est survenue... Réessayez plus tard. Si cela ne fonctionne toujours pas, merci de contacter un administrateur.",
-                "httpError": "Désolé, une erreur est survenue lors de la requete HTTP... Réessayez plus tard. Si cela ne fonctionne toujours pas, merci de contacter un administrateur. Status de la requete : `%e`",
                 "embed": {
                     "patternTitle": ":pencil: Pattern",
                     "patternDesc": "```vb\n%s\n```",
@@ -329,7 +322,6 @@
             "playerinfo": {
                 "help": "Afficher des informations sur un joueur Minecraft.",
                 "description": "Envoie diverses informations sur un certain joueur, que vous avez défini par son pseudo Minecraft.",
-                "pseudoNotFound": "Ce pseudo n'existe pas ! Il faut que le compte soit Premium...",
                 "playerNotFound": "Impossible de trouver ce joueur, désolé.",
                 "invalidCmd": "Il faut que tu ajoutes un pseudo !",
                 "searching1": "Je vais chercher ça... (1/2)",
@@ -540,7 +532,6 @@
             "code": {
                 "help": "Permet de présenter votre code de façon claire.",
                 "description": "Mettre votre code dans un bloc. Ajoutez le paramètre '-l' pour afficher le numéro des lignes.",
-                "tooLong": "Désolé, mais votre code est trop long (+2 000 caractères).",
                 "noCode": "Merci d'ajouter un code ! Il faut que la première ligne soit sur la même ligne que la commande `.code`."
             },
             "statistics": {
@@ -590,7 +581,6 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnbanned": "Vous avez bien débanni %u !\nRaison : %r",
                 "notBanned": "%u n'est pas banni (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "mute": {
@@ -613,7 +603,6 @@
                 "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
                 "successfullyUnmuted": "Vous avez bien rétabli la parole à %u !\nRaison : %r",
                 "notMuted": "%u n'est pas muet (ou du moins ce n'est pas inscrit dans la base de données).",
-                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
                 "noReasonSpecified": "Aucune raison spécifiée"
             },
             "warn": {
@@ -635,9 +624,6 @@
                 "missingIdArgument": "Vous n'avez pas spécifié d'ID de warn *(visible sur l'embed quand on .warn, dans les logs, ou en faisant .history)* !",
                 "successfullyUnwarned": "Vous avez bien enlevé l'avertissement `%d` de %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée",
-                "noSanction": "Cet utilisateur n'a aucune sanction.",
-                "notWarned": "Cet utilisateur n'a aucun avertissement.",
-                "notYou": "Vous n'êtes pas à l'origine de cette sanction, vous ne pouvez pas la gérer.",
                 "alreadyRevoked": "Cet avertissement est déjà révoqué"
             },
             "kick": {
@@ -669,14 +655,6 @@
                 "targetedUserTooPowerful": "Désolé, tu ne peux pas déplacer le message de cet utilisateur.",
                 "successfullyMoved": ":twisted_rightwards_arrows: %a, ton message a été déplacé vers %s par %t."
             },
-            "removemusicrestriction": {
-                "help": "Supprimer les restrictions musicales d'un membre.",
-                "description": "Rétabli à un membre l'accès aux commandes musicales.",
-                "missingUserArgument": "Vous n'avez pas spécifié d'utilisateur *(mention ou ID)* !\nIl est possible que cet utilisateur ait quitté le serveur.",
-                "notRestricted": "%u n'a aucune restriction de commandes musicales (ou ce n'est pas inscrit dans la base de données).",
-                "successfullyRemoveRestr": "Vous avez bien supprimé les restrictions à %u !\nRaison : %r",
-                "noReasonSpecified": "Aucune raison spécifiée"
-            },
             "purge": {
                 "help": "Supprimer des messages dans un salon.",
                 "description": "Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100. Par défault, les messages des membres ayant le rôle 'Staff' ne serront pas supprimés, pour aussi les supprimer, utiliser l'argument `-f`",
@@ -694,8 +672,6 @@
                 "description": "Joue une musique ou une playlist selon son nom ou son URL YouTube. Ajoute `--first` pour choisir automatiquement le premier résultat si vous cherchez une musique par son nom.",
                 "restrictedUser": "Impossible d'exécuter cette action, tu as une restriction des commandes musicales !",
                 "notInChannel": "Tu n'es pas dans un salon vocal !",
-                "restrictedChannel": "Désolé, mais je ne peux pas rejoindre ton salon vocal !",
-                "comming": "J'arrive dans ton salon vocal !",
                 "alreadyBusy": "Désolé, mais je suis déjà occupé dans un autre salon... Rejoins-moi vite dans le salon %s !",
                 "noArgumentGiven": "Tu ne m'as donné aucune musique à jouer et la queue est vide !",
                 "queueLimited": "Impossible d'ajouter cet élément à la queue car elle est pleine (queue limitée à %d).",
@@ -703,12 +679,11 @@
                 "blacklistedMusic": "Impossible de jouer cette musique car elle a été ajoutée à la liste noire !",
                 "blacklistedChannel": "Impossible de jouer cette musique car elle provient d'une chaîne ajoutée à la liste noire !",
                 "1ElementCouldntBeAdd": "Désolé, mais 1 élément de la playlist n'a pu être ajouté car il a sûrement été ajouté à la liste noire.",
-                "SeveralElementCouldntBeAdd": "Désolé, mais %s éléments de la playlist n'ont pu être ajoutés car ils ont sûrement été ajoutés à la liste noire.",
+                "severalElementCouldntBeAdd": "Désolé, mais %s éléments de la playlist n'ont pu être ajoutés car ils ont sûrement été ajoutés à la liste noire.",
                 "noLiveStream": "Je ne supporte pas encore les diffusions en direct !",
                 "songTooLong": "Je n'accepte que les musiques durant moins d'une heure !",
                 "playlistAdded": "Playlist : :musical_note: %s :musical_note: ajoutée à la queue.",
                 "songAdded": "Musique : :musical_note: %s :musical_note: ajoutée à la queue. Elle se trouve en position %p.",
-                "queueFinished": "Je n'ai plus aucune musique à jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine. :wink:",
                 "error": "Une erreur s'est produite... Merci de réessayer plus tard !",
                 "chooseSong": "J'ai trouvé plusieurs musiques, choisis une musique en cliquant sur la réaction correspondante :",
                 "nowPlaying": "Musique en cours de lecture : :musical_note: %t :musical_note: (%d)",
@@ -720,13 +695,13 @@
                 "invalidIndex": "L'index entré n'est pas valide ! Vérifiez que vous avez saisi un nombre et que la queue contienne cette musique.",
                 "removedSong": "Musique %s retirée de la queue !",
                 "cleared": "La queue a entièrement été vidée !",
-                "startQueue": "Pour lancer la queue, faites simplement `.play`.",
-                "ask": "mélanger la queue"
+                "startQueue": "Pour lancer la queue, faites simplement `.play`."
             },
             "shuffle": {
                 "help": "Mélanger la queue de lecture.",
                 "description": "Mélange l'ordre des musiques dans la queue.",
-                "queueShuffled": "Ordre de passage des musiques mélangé ! Pour afficher la nouvelle queue, faites `.queue`."
+                "queueShuffled": "Ordre de passage des musiques mélangé ! Pour afficher la nouvelle queue, faites `.queue`.",
+                "ask": "mélanger la queue"
             },
             "pause": {
                 "help": "Pauser ou reprendre la lecture d'une musique.",

@@ -16,7 +16,7 @@ class Kick extends Command {
   async execute(message, args) {
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
-    if (victim.id === message.author.id) return message.channel.sendError(this.config.noSelfWarnKick, message.member);
+    if (victim.id === message.author.id) return message.channel.sendError(this.config.noSelfKick, message.member);
     if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.sendError(this.config.userTooPowerful, message.member);
 
     const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
