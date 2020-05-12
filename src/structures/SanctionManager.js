@@ -73,8 +73,8 @@ class SanctionManager {
   static async removeRole(data) {
     // On enlève le rôle de la victime
     const role = data.type === ACTION_TYPE.UNBAN
-      ? data.guild.roles.resolv(config.roles.ban)
-      : data.guild.roles.resolv(config.roles.mute);
+      ? data.guild.roles.resolve(config.roles.ban)
+      : data.guild.roles.resolve(config.roles.mute);
 
     if (data.member.roles.cache.has(role.id)) {
       try {
