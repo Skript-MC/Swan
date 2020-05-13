@@ -10,12 +10,17 @@ class Ban extends Command {
   constructor() {
     super('Ban');
     this.aliases = ['ban', 'sdb'];
-    this.usage = 'ban <@mention | ID> <durée> <raison>';
-    this.examples = ['ban @Uneo7 5j Mouahaha', 'ban @Vengelis_ def Tu ne reviendras jamais !'];
+    this.usage = 'ban <@mention | ID> <durée> <raison> [--autoban]';
+    this.examples = ['ban @Uneo7 5j Mouahaha --autoban', 'ban @Vengelis_ def Tu ne reviendras jamais !'];
     this.permissions = ['Staff'];
   }
 
   async execute(message, args) {
+    let hardbanIfNoMessages = false;
+    if (args.includes('--autoban')) {
+      args.splice(args.indexOf('--autoban'), 1);
+      hardbanIfNoMessages = true;
+    }
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!(victim instanceof GuildMember)) return message.channel.sendError(this.config.missingUserArgument, message.member);
     if (!args[1]) return message.channel.sendError(this.config.missingTimeArgument, message.member);
@@ -24,6 +29,7 @@ class Ban extends Command {
     if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.sendError(this.config.userTooPowerful, message.member);
 
     const reason = args.splice(2).join(' ');
+
     let duration;
     if (args[1] === 'def' || args[1] === 'definitif') {
       duration = -1;
@@ -47,8 +53,10 @@ class Ban extends Command {
       .setDuration(duration)
       .setMember(victim)
       .setModerator(message.member)
+      .shouldHardbanIfNoMessages(hardbanIfNoMessages)
       .setMessageChannel(message.channel)
       .setFinishTimestamp();
+
     new BanAction(data).commit();
   }
 }

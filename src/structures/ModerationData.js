@@ -20,6 +20,7 @@ class ModerationData {
     this.file = undefined; // The file to send along with the log embed
     this.warnId = undefined; // If it is a "remove warn", this will be set to the id of the warn to remove
     this.removeFile = false; // If this is true, it will remove the file at this.file.path
+    this.hardbanIfNoMessages = false; // If this is true, the user will be hardban if he doesn't write any message in the private channel
     this.id = uid(); // The id of the case
   }
 
@@ -47,11 +48,6 @@ class ModerationData {
 
   setModerator(member) {
     this.moderator = member;
-    return this;
-  }
-
-  sendSuccessIfBot(bool) {
-    this.sendSuccessIfBot = bool;
     return this;
   }
 
@@ -95,8 +91,18 @@ class ModerationData {
     return this;
   }
 
+  shouldSendSuccessIfBot(bool) {
+    this.shouldSendSuccessIfBot = bool;
+    return this;
+  }
+
   shouldRemoveFile(bool) {
     this.removeFile = bool;
+    return this;
+  }
+
+  shouldHardbanIfNoMessages(bool) {
+    this.hardbanIfNoMessages = bool;
     return this;
   }
 
@@ -113,10 +119,11 @@ class ModerationData {
       finish: this.finish,
       privateChannel: compact && this.privateChannel ? this.privateChannel.id : this.privateChannel,
       messageChannel: compact && this.messageChannel ? this.messageChannel.id : this.privateChannel,
-      sendSuccessIfBot: this.sendSuccessIfBot,
+      sendSuccessIfBot: this.shouldSendSuccessIfBot,
       file: this.file,
       warnId: this.warnId,
       removeFile: this.removeFile,
+      hardbanIfNoMessages: this.hardbanIfNoMessages,
       id: this.id,
     };
   }

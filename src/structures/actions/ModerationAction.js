@@ -242,6 +242,7 @@ class ModerationAction {
       duration: this.data.duration || 0,
       finish: this.data.finish,
       hasSentMessages: this.data.type === ACTION_TYPE.BAN ? false : undefined,
+      hardbanIfNoMessages: this.data.type === ACTION_TYPE.BAN ? this.data.hardbanIfNoMessages : undefined,
       id: this.data.id,
     }).catch(console.error);
   }
