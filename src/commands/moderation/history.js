@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config, db } from '../../main';
+import { config, db, client } from '../../main';
 import { toDuration } from '../../utils';
 import ACTION_TYPE from '../../structures/actions/actionType';
 
@@ -26,11 +26,14 @@ class History extends Command {
   }
 
   async execute(message, args) {
-    const target = message.mentions.members.first() || message.guild.members.resolve(args[0]) || args[0];
+    args[0] = args[0].replace(/<@!(\d*)>/gimu, '$1'); // eslint-disable-line no-param-reassign
+    const target = message.mentions.members.first()
+      || message.guild.members.resolve(args[0])
+      || await client.users.fetch(args[0]);
     if (!target) return message.channel.sendError(this.config.missingUserArgument, message.member);
     // If the target is a GuildMember then take its id, otherwise it's an ID that could not have been resolved
     // as a GuildMember because the member is not in the guild anymore, so it's just an ID.
-    const targetId = target.id || target;
+    const targetId = target.id;
 
     const result = await db.sanctionsHistory.findOne({ memberId: targetId }).catch(console.error);
     if (!result) return message.channel.send(this.config.noHistory);
@@ -52,13 +55,15 @@ class History extends Command {
       :stop_sign: Avertissements totaux : ${stats.warns}
       :warning: Avertissements en cours : ${stats.currentWarns}/${config.moderation.warnLimitBeforeBan}`;
 
+    const username = target?.user?.username || target?.username;
+
     const publicHistory = new MessageEmbed()
       .setColor(config.colors.default)
-      .setTitle(`Dernières sanctions du membre ${target?.user?.username || target} (${result.count > 3 ? 3 : result.count})`)
+      .setTitle(`Dernières sanctions du membre ${username} (${result.count > 3 ? 3 : result.count})`)
       .setDescription(description)
       .setTimestamp();
 
-    let privateHistory = `Sanctions du membre ${target?.user?.username || target} (${result.count})\n\n`;
+    let privateHistory = `Sanctions du membre ${username} (${result.count})\n\n`;
     privateHistory += `${description}\n\n`;
 
     const lastSanctions = sanctions.slice(Math.max(sanctions.length - 25, 0));

@@ -16,6 +16,7 @@ class Unban extends Command {
   async execute(message, args) {
     // The only moderation command where the victim might be a User, not a GuildMember, because if he is
     // hardban, then he can't be a GuildMember as he's not in the guild anymore
+    args[0] = args[0].replace(/<@!(\d*)>/gimu, '$1'); // eslint-disable-line no-param-reassign
     const victim = message.mentions.members.first()
       || message.guild.members.resolve(args[0])
       || await client.users.fetch(args[0]);
