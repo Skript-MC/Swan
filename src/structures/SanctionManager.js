@@ -174,7 +174,7 @@ class SanctionManager {
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(client.guild.channels.resolve(config.channels.logs));
 
-      if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages) {
+      if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
         data.setType(ACTION_TYPE.HARDBAN)
           .setColor(config.colors.hardban)
           .setReason(config.messages.miscellaneous.inactivityWhileBanned)
