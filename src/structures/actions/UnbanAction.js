@@ -14,7 +14,7 @@ class UnbanAction extends ModerationAction {
     // Regarde dans la bdd si le joueur est banni
     const isHardban = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.HARDBAN }).catch(console.error);
     if (isHardban) {
-      this.data.guild.members.unban(this.data.user, this.data.reason);
+      await this.data.guild.members.unban(this.data.user.id, this.data.reason);
     } else {
       const isBan = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
       if (isBan) {
@@ -22,8 +22,6 @@ class UnbanAction extends ModerationAction {
         const file = await SanctionManager.removeChannel(this.data);
         this.data.setFile(file);
         this.data.shouldRemoveFile(true);
-      } else {
-        return this.data.messageChannel.sendError(this.config.notBanned.replace('%u', this.data.user.username), this.data.moderator);
       }
     }
 
