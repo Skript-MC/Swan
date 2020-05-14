@@ -103,10 +103,17 @@ class Poll extends Command {
 
     const collectorInfo = msg
       .createReactionCollector((reaction, user) => !user.bot
-        && reaction.emoji.name === 'ℹ'
-        && user.id === message.author.id)
-      .on('collect', () => {
-        message.channel.sendInfo(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member);
+        && reaction.emoji.name === 'ℹ')
+      .on('collect', async (reaction, user) => {
+        const member = message.guild.members.resolve(user.id);
+        reaction.users.remove(user);
+        try {
+          member.send(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member);
+          const info = await message.channel.send(this.config.infosSent.replace('%m', member.toString()));
+          info.delete({ timeout: 5000 });
+        } catch (e) {
+          message.channel.send(`${member.toString()}, ${config.messages.errors.privatemessage}`);
+        }
       });
 
     const collectorStop = msg
