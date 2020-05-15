@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { client } from '../../main';
 
 class Status extends Command {
   constructor() {
@@ -10,15 +9,15 @@ class Status extends Command {
     this.permissions = ['Gérant', 'Modérateur Discord'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args[0] === 'on') {
-      client.config.activated = true;
+      client.activated = true; // eslint-disable-line no-param-reassign
       message.channel.send(this.config.turnOn);
     } else if (args[0] === 'off') {
-      client.config.activated = false;
+      client.activated = false; // eslint-disable-line no-param-reassign
       message.channel.send(this.config.turnOff);
     } else {
-      message.channel.send(this.config.status.replace('%s', client.config.activated ? 'Activé :white_check_mark:' : 'Désactivé :x:'));
+      message.channel.send(this.config.status.replace('%s', client.activated ? 'Activé :white_check_mark:' : 'Désactivé :x:'));
     }
   }
 }

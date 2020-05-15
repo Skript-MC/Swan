@@ -3,19 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
-import { Client, Structures, MessageEmbed } from 'discord.js';
-import { config, commands, logger } from './main';
+import { Structures, MessageEmbed } from 'discord.js';
+import { client } from './main';
 
 require('dotenv').config();
 
-const apikeys = {
-  discord: process.env.DISCORD_API,
-  skripthub: process.env.SKRIPTHUB_API,
-};
-
 export function loadConfig() {
-  logger.debug('setup.js -> Loading configuration (loadConfig())');
-
   const conf = require('../config/config.json'); // eslint-disable-line global-require
   const ids = process.env;
 
@@ -51,11 +44,10 @@ export function loadConfig() {
   conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
   conf.sendCommandStats = ids.COMMAND_STATS_USERS ? ids.COMMAND_STATS_USERS.split(',') : [];
 
-  logger.debug('setup.js -> Configuration finished loading');
   return conf;
 }
 
-function extendClasses() {
+export function extendClasses() {
   Structures.extend('TextChannel', (TextChannel) => {
     class CustomTextChannel extends TextChannel {
       sendError(content, member, options) {
@@ -63,7 +55,7 @@ function extendClasses() {
           .attachFiles(['./assets/error.png'])
           .setThumbnail('attachment://error.png')
           .setTitle('Erreur')
-          .setColor(config.colors.error)
+          .setColor(client.config.colors.error)
           .setDescription(content)
           .setTimestamp()
           .setFooter(`Exécuté par ${member.displayName}`);
@@ -75,7 +67,7 @@ function extendClasses() {
           .attachFiles(['./assets/information.png'])
           .setThumbnail('attachment://information.png')
           .setTitle('Information')
-          .setColor(config.colors.default)
+          .setColor(client.config.colors.default)
           .setDescription(content)
           .setTimestamp()
           .setFooter(`Exécuté par ${member.displayName}`);
@@ -87,7 +79,7 @@ function extendClasses() {
           .attachFiles(['./assets/success.png'])
           .setThumbnail('attachment://success.png')
           .setTitle('Succès')
-          .setColor(config.colors.success)
+          .setColor(client.config.colors.success)
           .setDescription(content)
           .setTimestamp()
           .setFooter(`Exécuté par ${member.displayName}`);
@@ -99,20 +91,8 @@ function extendClasses() {
   });
 }
 
-export function loadBot() {
-  logger.debug('setup.js -> Loading bot (loadBot())');
-
-  extendClasses();
-
-  const client = new Client();
-  client.login(apikeys.discord);
-
-  logger.debug(`setup.js -> Bot finished loading (type: ${client.constructor.name})`);
-  return client;
-}
-
 export function loadCommands(cmdPath = 'commands') {
-  if (cmdPath !== 'commands') logger.step(`loading : ${cmdPath}`);
+  if (cmdPath !== 'commands') client.logger.step(`loading : ${cmdPath}`);
 
   fs.readdir(`${__dirname}/${cmdPath}`, (err, files) => {
     if (err) throw err;
@@ -127,10 +107,10 @@ export function loadCommands(cmdPath = 'commands') {
           if (command.enabled) {
             command.init();
             command.category = cmdPath.replace('commands/', '');
-            commands.push(command);
+            client.commands.push(command);
           }
         } catch (e) {
-          logger.error(`Unable to load this command: ${file}`);
+          client.logger.error(`Unable to load this command: ${file}`);
           throw new Error(e);
         }
       }
@@ -138,8 +118,8 @@ export function loadCommands(cmdPath = 'commands') {
   });
 }
 
-export function loadEvents(client) {
-  logger.step('loading events');
+export function loadEvents() {
+  client.logger.step('loading events');
 
   fs.readdir(`${__dirname}/events/`, (err, files) => {
     if (err) throw err;
@@ -150,7 +130,7 @@ export function loadEvents(client) {
           const event = file.split('.')[0];
           client.on(event, (...args) => eventFunction(...args));
         } catch (e) {
-          logger.error(`Unable to load this event: ${file}`);
+          client.logger.error(`Unable to load this event: ${file}`);
           throw new Error(e);
         }
       }
@@ -162,17 +142,17 @@ export async function loadSkriptHubAPI() {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Token ${apikeys.skripthub}`,
+      Authorization: `Token ${process.env.SKRIPTHUB_API}`,
     },
   };
   const syntaxes = [];
 
-  await axios(`${config.apis.syntax}/syntax/`, options)
+  await axios(`${client.config.apis.syntax}/syntax/`, options)
     .then((response) => {
       for (const syntax of response.data) syntaxes[syntax.id] = syntax;
     }).catch(console.error);
 
-  await axios(`${config.apis.syntax}/syntaxexample/`, options)
+  await axios(`${client.config.apis.syntax}/syntaxexample/`, options)
     .then((response) => {
       for (const example of response.data) {
         if (syntaxes[example.syntax_element]) {
@@ -181,17 +161,17 @@ export async function loadSkriptHubAPI() {
       }
     }).catch(console.error);
 
-  logger.step('SkriptHub : api loaded!');
+  client.logger.step('SkriptHub : api loaded!');
   return syntaxes;
 }
 
 export async function loadSkripttoolsAddons() {
   let addons = [];
 
-  const allAddons = await axios(config.apis.addons)
+  const allAddons = await axios(client.config.apis.addons)
     .then(response => (response ? response.data.data : undefined))
     .catch(console.error);
-  if (typeof allAddons === 'undefined') return logger.error(`Unable to retrieve informations from ${config.apis.addons}`);
+  if (typeof allAddons === 'undefined') return client.logger.error(`Unable to retrieve informations from ${client.config.apis.addons}`);
 
   for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
@@ -199,12 +179,12 @@ export async function loadSkripttoolsAddons() {
     if (!versions) continue;
 
     const latest = versions[versions.length - 1];
-    addons.push(axios(`${config.apis.addons}${latest}`)
+    addons.push(axios(`${client.config.apis.addons}${latest}`)
       .then(response => response.data.data)
       .catch(console.error));
   }
   addons = await Promise.all(addons);
-  logger.step('Skripttools : addons loaded!');
+  client.logger.step('Skripttools : addons loaded!');
   return addons;
 }
 
@@ -229,10 +209,10 @@ export function loadDatabases() {
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
     databases[db].load()
-      .then(() => logger.step(`Databases : "${db}.db" loaded!`))
+      .then(() => client.logger.step(`Databases : "${db}.db" loaded!`))
       .catch(console.error);
     databases[db].on('__error__', (datastore, event, error, ...args) => {
-      logger.error(`Database ${db} generated the following error (${event}). Arguments: ${args}`);
+      client.logger.error(`Database ${db} generated the following error (${event}). Arguments: ${args}`);
       console.error(error);
     });
   }

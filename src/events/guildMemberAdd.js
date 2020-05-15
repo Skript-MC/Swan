@@ -1,4 +1,4 @@
-import { config, db } from '../main';
+import { client, db } from '../main';
 import { toValidName } from '../utils';
 
 export default async function guildMemberAddHandler(member) {
@@ -21,11 +21,11 @@ export default async function guildMemberAddHandler(member) {
     newName = validName;
   } else {
     // Else, choose a new name in the rename list
-    newName = config.messages.miscellaneous.renameList[Math.floor(Math.random() * config.messages.miscellaneous.renameList.length)];
+    newName = client.config.messages.miscellaneous.renameList[Math.floor(Math.random() * client.config.messages.miscellaneous.renameList.length)];
   }
 
   // Modify nickname with the new name
   member.setNickname(newName);
   // Send a detailled message to inform why
-  member.send(config.messages.miscellaneous.strangeName);
+  member.send(client.config.messages.miscellaneous.strangeName);
 }

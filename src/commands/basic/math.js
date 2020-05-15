@@ -12,7 +12,7 @@ class Math extends Command {
     this.examples = ['math sqrt(12) + 18 - abs(-13)'];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.addMath, message.member);
 
     let expr = args.join(' ');

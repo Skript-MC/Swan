@@ -1,13 +1,13 @@
 /* eslint-disable import/no-cycle */
 import ModerationAction from './ModerationAction';
-import { config, db } from '../../main';
+import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import ACTION_TYPE from './actionType';
 
 class UnmuteAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.unmute;
+    this.config = client.config.messages.commands.unmute;
   }
 
   async exec(_document) {

@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Volume extends Command {
   constructor() {
@@ -11,9 +10,9 @@ class Volume extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const validate = MusicBot.canUseCommand(message, { songPlaying: true });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     if (args.length === 0) return message.channel.send(this.config.currentVolume.replace('%s', MusicBot.dispatcher.volume * 10));
 

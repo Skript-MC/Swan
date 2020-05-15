@@ -1,12 +1,12 @@
 import ModerationAction from './ModerationAction';
-import { config, db } from '../../main';
+import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import { toDuration } from '../../utils';
 
 class MuteAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.mute;
+    this.config = client.config.messages.commands.mute;
   }
 
   async exec(document) {

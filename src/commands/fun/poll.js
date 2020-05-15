@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import Command from '../../structures/Command';
-import { config } from '../../main';
 import { extractQuotedText, toTimestamp } from '../../utils';
 
 const reactions = {
@@ -10,7 +9,7 @@ const reactions = {
   basic: ['ℹ', '🛑'],
 };
 
-function endPoll(msg, embed, collectors, votes, answers, questionType) {
+function endPoll(client, msg, embed, collectors, votes, answers, questionType) {
   const voters = votes.reduce((acc, cur) => acc + cur);
   let results = '';
   if (questionType === 0) {
@@ -22,7 +21,7 @@ function endPoll(msg, embed, collectors, votes, answers, questionType) {
   }
   results += `\n:bust_in_silhouette: : ${voters} votant${voters > 1 ? 's' : ''}.`;
 
-  embed.setColor(config.colors.success)
+  embed.setColor(client.config.colors.success)
     .setTitle('Ce vote est fini !')
     .addField('Résultats :', results);
   collectors.collector.stop();
@@ -41,7 +40,7 @@ class Poll extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const duration = args.shift(); // Extraction de la durée
@@ -53,7 +52,7 @@ class Poll extends Command {
 
     if (!wait || isNaN(wait)) return message.channel.sendError(this.config.invalidDuration, message.member);
     if (Date.now() + wait < Date.now()) return message.channel.sendError(this.config.invalidDuration, message.member);
-    if (wait > config.miscellaneous.maxPollDuration) return message.channel.sendError(this.config.tooLong, message.member);
+    if (wait > client.config.miscellaneous.maxPollDuration) return message.channel.sendError(this.config.tooLong, message.member);
 
     if (!question) return message.channel.sendError(this.config.invalidCmd, message.member);
     if (questionType === 1 && (args.join('').match(/"/gi).length % 2) === 1) return message.channel.sendError(this.config.quoteProblem, message.member);
@@ -85,7 +84,7 @@ class Poll extends Command {
 
     for (const r of reactions.basic) await msg.react(r);
 
-    embed.setColor(config.colors.default);
+    embed.setColor(client.config.colors.default);
     await msg.edit(embed);
 
     const len = questionType === 0 ? 2 : answers.length;
@@ -112,7 +111,7 @@ class Poll extends Command {
           const info = await message.channel.send(this.config.infosSent.replace('%m', member.toString()));
           info.delete({ timeout: 5000 });
         } catch (e) {
-          message.channel.send(`${member.toString()}, ${config.messages.errors.privatemessage}`);
+          message.channel.send(`${member.toString()}, ${client.config.messages.errors.privatemessage}`);
         }
       });
 
@@ -122,14 +121,14 @@ class Poll extends Command {
         && user.id === message.author.id)
       .once('collect', () => {
         const collectors = { collector, collectorInfo, collectorStop };
-        endPoll(msg, embed, collectors, votes, answers, questionType);
+        endPoll(client, msg, embed, collectors, votes, answers, questionType);
         finished = true;
       });
 
     setTimeout(() => {
       if (finished) return;
       const collectors = { collector, collectorInfo, collectorStop };
-      endPoll(msg, embed, collectors, votes, answers, questionType);
+      endPoll(client, msg, embed, collectors, votes, answers, questionType);
     }, wait);
   }
 }

@@ -1,6 +1,5 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config, client } from '../../main';
 
 class Idea extends Command {
   constructor() {
@@ -10,11 +9,11 @@ class Idea extends Command {
     this.examples = ['idea'];
   }
 
-  async execute(message, _args) {
-    const ideaMessages = await client.channels.cache.get(config.channels.idea).messages.fetch();
+  async execute(client, message, _args) {
+    const ideaMessages = await client.channels.resolve(client.config.channels.idea).messages.fetch();
     const randomIdea = ideaMessages.array()[Math.floor(Math.random() * ideaMessages.array().length)];
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setAuthor(`Idée de ${randomIdea.member.displayName} :`, randomIdea.author.avatarURL())
       .setDescription(randomIdea.content)
       .setFooter(`Exécuté par ${message.member.displayName}`)

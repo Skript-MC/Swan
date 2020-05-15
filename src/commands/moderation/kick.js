@@ -1,7 +1,6 @@
 import Command from '../../structures/Command';
 import ModerationData from '../../structures/ModerationData';
 import ACTION_TYPE from '../../structures/actions/actionType';
-import { config } from '../../main';
 import KickAction from '../../structures/actions/KickAction';
 
 class Kick extends Command {
@@ -13,7 +12,7 @@ class Kick extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
     if (victim.id === message.author.id) return message.channel.sendError(this.config.noSelfKick, message.member);
@@ -23,7 +22,7 @@ class Kick extends Command {
 
     const data = new ModerationData()
       .setType(ACTION_TYPE.KICK)
-      .setColor(config.colors.kick)
+      .setColor(client.config.colors.kick)
       .setMember(victim)
       .setReason(reason)
       .setModerator(message.member)

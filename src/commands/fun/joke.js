@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config, db } from '../../main';
+import { db } from '../../main';
 
 class Joke extends Command {
   constructor() {
@@ -11,12 +11,12 @@ class Joke extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
+  async execute(client, message, _args) {
     const { jokes } = this.config;
     const joke = jokes[Math.floor(Math.random() * jokes.length)];
     const id = jokes.indexOf(joke);
     await this.updateStats(id);
-    const embed = await this.buildEmbed(message, id);
+    const embed = await this.buildEmbed(client, message, id);
     const jokeEmbed = await message.channel.send(embed);
     await jokeEmbed.react('😄');
     await jokeEmbed.react('🙄');
@@ -28,7 +28,7 @@ class Joke extends Command {
       });
   }
 
-  async buildEmbed(message, id) {
+  async buildEmbed(client, message, id) {
     const joke = this.config.jokes[id];
     const split = joke.split(';');
     const jokeDoc = await db.jokes.findOne({ id }).catch(console.error);
@@ -38,7 +38,7 @@ class Joke extends Command {
     return new MessageEmbed()
       .setTitle(`:small_blue_diamond: ${split[0]}`)
       .setDescription(split[1])
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setFooter(`Exécuté par ${message.author.username}. Statistiques : ${likes} 😄 - ${dislikes} 🙄 - ${views} 👀`)
       .setTimestamp();
   }

@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config } from '../../main';
 
 const reactionsNumbers = ['🇽', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣'];
 const reactionsPage = ['⏮', '◀', '🇽', '▶', '⏭'];
@@ -15,13 +14,13 @@ class Links extends Command {
     this.examples = ['link 3'];
   }
 
-  async execute(message, args, page) {
+  async execute(client, message, args, page) {
     // eslint-disable-next-line no-nested-ternary
     page = page ? parseInt(page, 10) : args[0] ? parseInt(args[0], 10) : 0;
     page = isNaN(page) ? 0 : page;
 
     const embed = new MessageEmbed()
-      .attachFiles([config.bot.avatar])
+      .attachFiles([client.config.bot.avatar])
       .setAuthor(`Liens utiles (${page}/${maxPage})`, 'attachment://logo.png')
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
@@ -55,7 +54,7 @@ class Links extends Command {
     const msgLinks = await message.channel.send(embed);
     if (page === 0) {
       for (const r of reactionsNumbers) await msgLinks.react(r);
-      embed.setColor(config.colors.default);
+      embed.setColor(client.config.colors.default);
       msgLinks.edit(embed);
 
       const collector = msgLinks
@@ -64,19 +63,19 @@ class Links extends Command {
         .once('collect', (reaction) => {
           msgLinks.delete();
           if (reaction.emoji.name === '🇽') message.delete();
-          else this.execute(message, args, reactionsNumbers.indexOf(reaction.emoji.name));
+          else this.execute(client, message, args, reactionsNumbers.indexOf(reaction.emoji.name));
           collector.stop();
         });
     } else {
       for (const r of reactionsPage) await msgLinks.react(r);
-      embed.setColor(config.colors.default);
+      embed.setColor(client.config.colors.default);
       msgLinks.edit(embed);
-      this.reactCollector(message, args, msgLinks, page);
+      this.reactCollector(client, message, args, msgLinks, page);
     }
   }
 
   // Fonction appelée lorsque l'on réagis avec une réaction de type reactionsPage
-  async reactCollector(message, args, msgLinks, page) {
+  async reactCollector(client, message, args, msgLinks, page) {
     const collector = msgLinks
       .createReactionCollector((reaction, user) => !user.bot
           && user.id === message.author.id
@@ -84,17 +83,17 @@ class Links extends Command {
       .once('collect', (reaction) => {
         msgLinks.delete();
         if (reaction.emoji.name === '⏮') {
-          this.execute(message, args, 0);
+          this.execute(client, message, args, 0);
         } else if (reaction.emoji.name === '◀') {
           const prevPage = page <= 0 ? maxPage : page - 1;
-          this.execute(message, args, prevPage);
+          this.execute(client, message, args, prevPage);
         } else if (reaction.emoji.name === '🇽') {
           message.delete();
         } else if (reaction.emoji.name === '▶') {
           const nextPage = page + 1 > maxPage ? 0 : page + 1;
-          this.execute(message, args, nextPage);
+          this.execute(client, message, args, nextPage);
         } else if (reaction.emoji.name === '⏭') {
-          this.execute(message, args, maxPage);
+          this.execute(client, message, args, maxPage);
         }
         collector.stop();
       });

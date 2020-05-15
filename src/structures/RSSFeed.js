@@ -3,18 +3,18 @@ import { MessageEmbed } from 'discord.js';
 import he from 'he';
 import sanitize from 'sanitize-html';
 import Parser from 'rss-parser';
-import { config, client } from '../main';
+import { client } from '../main';
 
 const parser = new Parser();
 
 export default async function loadRssFeed() {
-  const channel = client.channels.cache.get(config.channels.rssFeed);
+  const channel = client.channels.cache.get(client.config.channels.rssFeed);
 
   let topics = [];
-  for (const feedURL of config.apis.rssContentFeeds) {
+  for (const feedURL of client.config.apis.rssContentFeeds) {
     topics.push(parser.parseURL(feedURL));
   }
-  const files = await parser.parseURL(config.apis.rssFilesFeed);
+  const files = await parser.parseURL(client.config.apis.rssFilesFeed);
 
   topics = await Promise.all(topics);
   for (const forum of topics) {
@@ -24,8 +24,8 @@ export default async function loadRssFeed() {
   }
   topics = topics.map(elt => elt.items).flat();
 
-  const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval.long);
-  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < config.bot.checkInterval.long);
+  const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
+  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
 
   for (const item of lastTopics) {
     let { content } = item;
@@ -36,8 +36,8 @@ export default async function loadRssFeed() {
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
+      .setColor(client.config.colors.default)
+      .attachFiles([client.config.bot.avatar])
       .setAuthor(`Nouveau post forum (${item.forum})`, 'attachment://logo.png')
       .setTitle(item.title)
       .setURL(item.link)
@@ -54,8 +54,8 @@ export default async function loadRssFeed() {
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
+      .setColor(client.config.colors.default)
+      .attachFiles([client.config.bot.avatar])
       .setAuthor('Nouvelle ressource forum', 'attachment://logo.png')
       .setTitle(item.title)
       .setURL(item.link)

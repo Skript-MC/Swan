@@ -2,7 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config, db } from '../../main';
+import { db } from '../../main';
 import { padNumber } from '../../utils';
 
 const PROGRESS_BAR_SIZE = 30;
@@ -16,13 +16,13 @@ class NowPlaying extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
-    if (!MusicBot.dispatcher || !MusicBot.nowPlaying) return message.channel.send(config.messages.errors.music[3]);
+  async execute(client, message, _args) {
+    if (!MusicBot.dispatcher || !MusicBot.nowPlaying) return message.channel.send(client.config.messages.errors.music[3]);
 
     const music = MusicBot.nowPlaying;
 
     const users = { requestedBy: music.requestedBy, reportedBy: undefined, moderator: undefined };
-    const embed = await this.buildEmbed(message);
+    const embed = await this.buildEmbed(client, message);
     const playingEmbed = await message.channel.send(embed);
 
     await playingEmbed.react('👍');
@@ -35,7 +35,7 @@ class NowPlaying extends Command {
         return message.guild.voice.connection && !user.bot && message.guild.voice.connection.channel.members.has(user.id);
       }).on('collect', async (reaction) => {
         if (reaction.emoji.name === '⚠️') {
-          this.report(message, users, music);
+          this.report(client, message, users, music);
         } else if (reaction.emoji.name === '👍' || reaction.emoji.name === '👎') {
           this.like(message, playingEmbed, reaction.emoji.name === '👍' ? 'like' : 'dislike', users, music);
         } else if (reaction.emoji.name === '🔄') {
@@ -46,7 +46,7 @@ class NowPlaying extends Command {
           }
 
           if (MusicBot.nowPlaying) {
-            playingEmbed.edit(await this.buildEmbed(message));
+            playingEmbed.edit(await this.buildEmbed(client, message));
           } else {
             playingEmbed.editError(this.config.noSongPlaying, message.member);
           }
@@ -54,7 +54,7 @@ class NowPlaying extends Command {
       });
   }
 
-  async buildEmbed(message) {
+  async buildEmbed(client, message) {
     const music = MusicBot.nowPlaying;
 
     const startAt = new Date(MusicBot.dispatcher.startTime).getTime();
@@ -84,21 +84,21 @@ class NowPlaying extends Command {
     ${likes} 👍 / ${dislikes} 👎`;
 
     return new MessageEmbed()
-      .setAuthor('Actuellement en train de jouer :', config.avatar)
+      .setAuthor('Actuellement en train de jouer :', client.config.avatar)
       .setTitle(music.title)
       .setURL(music.video.shortURL)
       .setDescription(description)
       .setThumbnail(music.video.thumbnails.medium.url)
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setFooter(`Exécuté par ${message.author.username}. Réagissez avec ⚠️ pour signaler cette musique`)
       .setTimestamp();
   }
 
-  async report(message, users, music) {
+  async report(client, message, users, music) {
     message.channel.send(this.config.successfullyReported);
     const reportedBy = await message.guild.members.fetch(users.reportedBy);
     const logEmbed = new MessageEmbed()
-      .setColor(config.colors.log)
+      .setColor(client.config.colors.log)
       .setTitle('Rapport de musique :')
       .setTimestamp()
       .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
@@ -106,7 +106,7 @@ class NowPlaying extends Command {
       .addField(':musical_note: Musique', `[${music.title}](${music.video.shortURL})\nID de la musique : ${music.video.id}`, true)
       .addField('Informations', 'Réagissez avec :minidisc: pour ajouter la musique à la blacklist.\nRéagisser avec :tv: pour ajouter la chaîne YouTube à la blacklist.');
 
-    const logChannel = message.guild.channels.cache.get(config.channels.logs);
+    const logChannel = message.guild.channels.cache.get(client.config.channels.logs);
     const logMessage = await logChannel.send(logEmbed);
     logMessage.react('💽');
     logMessage.react('📺');
@@ -118,10 +118,10 @@ class NowPlaying extends Command {
       }).on('collect', (reaction) => {
         switch (reaction.emoji.name) { // eslint-disable-line default-case
           case '💽':
-            this.blacklistMusic(users, music, logChannel);
+            this.blacklistMusic(client, users, music, logChannel);
             break;
           case '📺':
-            this.blacklistChannel(users, music, logChannel);
+            this.blacklistChannel(client, users, music, logChannel);
             break;
         }
       });
@@ -179,7 +179,7 @@ class NowPlaying extends Command {
     }
   }
 
-  async blacklistMusic(users, music, logChannel) {
+  async blacklistMusic(client, users, music, logChannel) {
     const result = await db.musics.findOne({ blacklist: true, type: 'music', ytid: music.video.id }).catch(console.error);
     if (result) return logChannel.send(this.config.alreadyBlacklist);
 
@@ -194,7 +194,7 @@ class NowPlaying extends Command {
     }).catch(console.error);
 
     const logBlacklistEmbed = new MessageEmbed()
-      .setColor(config.colors.blacklist)
+      .setColor(client.config.colors.blacklist)
       .setTitle('Blacklist de musique :')
       .setTimestamp()
       .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)
@@ -204,7 +204,7 @@ class NowPlaying extends Command {
     return logChannel.send(logBlacklistEmbed);
   }
 
-  async blacklistChannel(users, music, logChannel) {
+  async blacklistChannel(client, users, music, logChannel) {
     const result = await db.musics.findOne({ blacklist: true, type: 'channel', ytid: music.video.channel.id }).catch(console.error);
     if (result) return logChannel.send(this.config.alreadyBlacklist);
 
@@ -219,7 +219,7 @@ class NowPlaying extends Command {
     }).catch(console.error);
 
     const logBlacklistEmbed = new MessageEmbed()
-      .setColor(config.colors.blacklist)
+      .setColor(client.config.colors.blacklist)
       .setTitle('Blacklist de chaîne YT :')
       .setTimestamp()
       .addField(':bust_in_silhouette: Utilisateur', `${users.requestedBy.toString()}\n(${users.requestedBy.id})`, true)

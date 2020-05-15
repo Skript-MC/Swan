@@ -2,7 +2,6 @@ import Command from '../../structures/Command';
 import { toTimestamp } from '../../utils';
 import ACTION_TYPE from '../../structures/actions/actionType';
 import MuteAction from '../../structures/actions/MuteAction';
-import { config } from '../../main';
 import ModerationData from '../../structures/ModerationData';
 
 class Mute extends Command {
@@ -14,7 +13,7 @@ class Mute extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
     if (!args[1]) return message.channel.sendError(this.config.missingTimeArgument, message.member);
@@ -33,13 +32,13 @@ class Mute extends Command {
     }
 
     // Durée max des modérateurs forum : 2j
-    if (message.member.roles.cache.has(config.roles.forumMod) && duration > config.moderation.maxForumModDuration) {
+    if (message.member.roles.cache.has(client.config.roles.forumMod) && duration > client.config.moderation.maxForumModDuration) {
       return message.channel.sendError(this.config.durationTooLong, message.member);
     }
 
     const data = new ModerationData()
       .setType(ACTION_TYPE.MUTE)
-      .setColor(config.colors.mute)
+      .setColor(client.config.colors.mute)
       .setReason(reason)
       .setDuration(duration)
       .setMember(victim)

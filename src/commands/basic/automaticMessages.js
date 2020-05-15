@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { config } from '../../main';
 import { uncapitalize, jkDistance } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -12,7 +11,7 @@ class AutomaticMessages extends Command {
     this.examples = ['automsg asktoask'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const arg = args.join(' ');
     const { messages } = this.config;
 
@@ -30,7 +29,7 @@ class AutomaticMessages extends Command {
             message.react('✅').catch(console.error);
           } catch (e) {
             message.react('❌').catch(console.error);
-            message.reply(config.messages.errors.privatemessage);
+            message.reply(client.config.messages.errors.privatemessage);
           }
         } else {
           message.channel.send(autoMessage.content);
@@ -66,7 +65,7 @@ class AutomaticMessages extends Command {
           collector.stop();
           suggestion.delete();
           const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
-          return this.execute(message, [matches[index]]);
+          return this.execute(client, message, [matches[index]]);
         });
     }
   }

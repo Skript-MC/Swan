@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class ShuffleQueue extends Command {
   constructor() {
@@ -11,9 +10,9 @@ class ShuffleQueue extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
+  async execute(client, message, _args) {
     const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     MusicBot.askPermission(this.shuffle, this.config.ask, message, _args, this.config);
   }

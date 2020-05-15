@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config, db, client } from '../../main';
+import { db } from '../../main';
 import { toDuration } from '../../utils';
 import ACTION_TYPE from '../../structures/actions/actionType';
 
@@ -25,7 +25,7 @@ class History extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     args[0] = args[0].replace(/<@!(\d*)>/gimu, '$1'); // eslint-disable-line no-param-reassign
     const target = message.mentions.members.first()
       || message.guild.members.resolve(args[0])
@@ -53,12 +53,12 @@ class History extends Command {
       :mute: Mutes : ${stats.mutes}
       :door: Kicks : ${stats.kicks}
       :stop_sign: Avertissements totaux : ${stats.warns}
-      :warning: Avertissements en cours : ${stats.currentWarns}/${config.moderation.warnLimitBeforeBan}`;
+      :warning: Avertissements en cours : ${stats.currentWarns}/${client.config.moderation.warnLimitBeforeBan}`;
 
     const username = target?.user?.username || target?.username;
 
     const publicHistory = new MessageEmbed()
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setTitle(`Dernières sanctions du membre ${username} (${result.count > 3 ? 3 : result.count})`)
       .setDescription(description)
       .setTimestamp();

@@ -1,13 +1,13 @@
 /* eslint-disable import/no-cycle */
 import ModerationAction from './ModerationAction';
-import { config, db } from '../../main';
+import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import ACTION_TYPE from './actionType';
 
 class UnbanAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.unban;
+    this.config = client.config.messages.commands.unban;
   }
 
   async exec(_document) {

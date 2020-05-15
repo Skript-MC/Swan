@@ -2,7 +2,7 @@
 import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import ACTION_TYPE from './actionType';
-import { db, config } from '../../main';
+import { db, client } from '../../main';
 import { toDuration } from '../../utils';
 import SanctionManager from '../SanctionManager';
 
@@ -54,9 +54,9 @@ class ModerationAction {
     let stop = false;
     if (!result && [ACTION_TYPE.UNBAN, ACTION_TYPE.UNMUTE, ACTION_TYPE.REMOVE_WARN].includes(this.data.type)) {
       let message = '';
-      if (this.data.type === ACTION_TYPE.UNBAN) message = config.messages.commands.unban.notBanned;
-      else if (this.data.type === ACTION_TYPE.UNMUTE) message = config.messages.commands.unmute.notMuted;
-      else if (this.data.type === ACTION_TYPE.REMOVE_WARN) message = config.messages.commands.removewarn.alreadyRevoked;
+      if (this.data.type === ACTION_TYPE.UNBAN) message = client.config.messages.commands.unban.notBanned;
+      else if (this.data.type === ACTION_TYPE.UNMUTE) message = client.config.messages.commands.unmute.notMuted;
+      else if (this.data.type === ACTION_TYPE.REMOVE_WARN) message = client.config.messages.commands.removewarn.alreadyRevoked;
       this.data.messageChannel.sendError(message.replace('%u', this.data.user.username), this.data.moderator);
       stop = true;
     }
@@ -67,13 +67,13 @@ class ModerationAction {
   async notify(isUpdate) {
     if ([ACTION_TYPE.WARN, ACTION_TYPE.REMOVE_WARN].includes(this.data.type)) return;
 
-    let baseMessage = config.messages.miscellaneous.sanctionNotification;
+    let baseMessage = client.config.messages.miscellaneous.sanctionNotification;
     let { type } = this.data;
 
     if ([ACTION_TYPE.BAN, ACTION_TYPE.MUTE].includes(this.data.type) && isUpdate) {
-      baseMessage = config.messages.miscellaneous.sanctionNotificationUpdate;
+      baseMessage = client.config.messages.miscellaneous.sanctionNotificationUpdate;
     } else if ([ACTION_TYPE.UNBAN, ACTION_TYPE.UNMUTE].includes(this.data.type)) {
-      baseMessage = config.messages.miscellaneous.sanctionNotificationRemoved;
+      baseMessage = client.config.messages.miscellaneous.sanctionNotificationRemoved;
       type = ACTION_TYPE.opposite(this.data.type);
     }
 
@@ -125,7 +125,7 @@ class ModerationAction {
 
     if (this.data.warnId) embed.addField(":hash: ID de l'avertissement", this.data.warnId, true);
 
-    const logChannel = this.data.guild.channels.cache.get(config.channels.logs);
+    const logChannel = this.data.guild.channels.cache.get(client.config.channels.logs);
     logChannel.send(embed);
 
     if (this.data.file) {
@@ -159,7 +159,7 @@ class ModerationAction {
       modId: this.data.moderator.id,
       date: Date.now(),
       duration: this.data.duration,
-      reason: this.data.reason || config.messages.errors.noReasonSpecified,
+      reason: this.data.reason || client.config.messages.errors.noReasonSpecified,
       id: this.data.id,
       updates: [],
     };

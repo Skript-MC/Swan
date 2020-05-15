@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import moment from 'moment';
 import ModerationAction from './ModerationAction';
-import { config, db } from '../../main';
+import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import { toDuration } from '../../utils';
 import ACTION_TYPE from './actionType';
@@ -9,7 +9,7 @@ import ACTION_TYPE from './actionType';
 class BanAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.ban;
+    this.config = client.config.messages.commands.ban;
   }
 
   async exec(document) {

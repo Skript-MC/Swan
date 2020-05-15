@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Skip extends Command {
   constructor() {
@@ -12,9 +11,9 @@ class Skip extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const validate = MusicBot.canUseCommand(message, { songPlaying: true, queueNotEmpty: true, notRestricted: true });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     let index;
     if (args.length > 0) {

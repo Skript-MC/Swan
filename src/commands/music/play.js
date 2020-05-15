@@ -4,7 +4,6 @@ import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 import { padNumber } from '../../utils';
 
 const youtubeAPI = process.env.YOUTUBE_API;
@@ -28,13 +27,13 @@ class Play extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     // Si l'utilisateur est restreint des commandes de musiques
     if (MusicBot.restricted.includes(message.author.id)) return message.channel.send(this.config.restrictedUser);
 
     // Si l'utilisateur est dans un channel
     const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) return message.channel.send(config.messages.errors.joinErrors[0]);
+    if (!voiceChannel) return message.channel.send(client.config.messages.errors.joinErrors[0]);
 
     // Faire rejoindre le bot, s'il n'est pas déjà dans un canal vocal
     if (!message.guild.voice || !message.guild.voice.connection || message.guild.voice.channel.id !== message.member.voice.channel.id) {
@@ -57,7 +56,7 @@ class Play extends Command {
       try {
         matches = Array.from(query.matchAll(regexps.playlist));
         playlist = await youtube.getPlaylistByID(matches[0][1]);
-        videos = await playlist.getVideos(config.music.queueLimit);
+        videos = await playlist.getVideos(client.config.music.queueLimit);
       } catch (err) {
         return message.channel.send(this.config.playlistNotFound);
       }
@@ -82,8 +81,8 @@ class Play extends Command {
           requestedBy: message.member,
         };
 
-        if ((config.music.queueLimit !== 0 && queue.length < config.music.queueLimit) || config.music.queueLimit === 0) queue.push(song);
-        else return message.channel.send(this.config.queueLimited.replace('%s', config.music.queueLimit));
+        if ((client.config.music.queueLimit !== 0 && queue.length < client.config.music.queueLimit) || client.config.music.queueLimit === 0) queue.push(song);
+        else return message.channel.send(this.config.queueLimited.replace('%s', client.config.music.queueLimit));
       }
 
       message.channel.send(this.config.playlistAdded.replace('%s', playlist.title));
@@ -100,7 +99,7 @@ class Play extends Command {
         const video = await youtube.getVideoByID(id);
         if (MusicBot.blacklistedChannels.includes(video.channel.id)) return message.channel.send(this.config.blacklistedChannel);
 
-        this.prepareForPlaying(video, message, voiceChannel);
+        this.prepareForPlaying(client, video, message, voiceChannel);
       } catch (err) {
         return message.channel.send(this.config.error);
       }
@@ -113,7 +112,7 @@ class Play extends Command {
           if (MusicBot.blacklistedChannels.includes(videos[0].channel.id)) return message.channel.send(this.config.blacklistedChannel);
 
           const video = await youtube.getVideoByID(videos[0].id);
-          return this.prepareForPlaying(video, message, voiceChannel);
+          return this.prepareForPlaying(client, video, message, voiceChannel);
         }
 
         // TODO Add search-limit to config.music
@@ -134,7 +133,7 @@ class Play extends Command {
         const songEmbed = await message.channel.send(embed);
         for (let i = 0; i < videosNames.length; i++) await songEmbed.react(reactionsNumbers[i]);
         await songEmbed.react('❌');
-        embed.setColor(config.colors.default);
+        embed.setColor(client.config.colors.default);
         songEmbed.edit(embed);
 
 
@@ -151,7 +150,7 @@ class Play extends Command {
             if (MusicBot.blacklistedChannels.includes(videos[videoIndex].channel.id)) return message.channel.send(this.config.blacklistedChannel);
 
             const video = await youtube.getVideoByID(videos[videoIndex].id);
-            return this.prepareForPlaying(video, message, voiceChannel);
+            return this.prepareForPlaying(client, video, message, voiceChannel);
           });
 
         const collectorStop = songEmbed
@@ -170,16 +169,18 @@ class Play extends Command {
     }
   }
 
-  queuePush(song, message) {
-    if (message.member.roles.cache.has(config.roles.owner) && config.music.queueLimit !== 0 && queue.length > config.music.queueLimit) {
-      message.channel.send(this.config.queueLimited.replace('%d', config.music.queueLimit));
+  queuePush(client, song, message) {
+    if (message.member.roles.cache.has(client.config.roles.owner)
+      && client.config.music.queueLimit !== 0
+      && queue.length > client.config.music.queueLimit) {
+      message.channel.send(this.config.queueLimited.replace('%d', client.config.music.queueLimit));
       return false; // Echec
     }
     MusicBot.queue.push(song);
     return true; // Succès
   }
 
-  async prepareForPlaying(video, message, voiceChannel) {
+  async prepareForPlaying(client, video, message, voiceChannel) {
     if (video.raw.snippet.liveBroadcastContent === 'live') return message.channel.send(this.config.noLiveStream);
     if (video.duration.hours !== 0) return message.channel.send(this.config.songTooLong);
 
@@ -195,7 +196,7 @@ class Play extends Command {
       requestedBy: message.member,
     };
 
-    if ((config.music.queueLimit !== 0 && queue.length > config.music.queueLimit)) {
+    if ((client.config.music.queueLimit !== 0 && queue.length > client.config.music.queueLimit)) {
       return message.channel.send(this.config.queueLimited);
     }
     queue.push(song);

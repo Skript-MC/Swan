@@ -1,6 +1,5 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { config } from '../../main';
 
 class Move extends Command {
   constructor() {
@@ -12,14 +11,14 @@ class Move extends Command {
     this.enabledInHelpChannels = true;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     // On récupère le salon, vérifie qu'il existe, qu'il est autorisé et qu'il n'est pas le même avant de faire une requête à l'API Discord.
     const targetedChannel = message.mentions.channels.first();
     if (!args[0] || !targetedChannel) return message.channel.sendError(this.config.invalidChannel, message.member);
     if (targetedChannel.id === message.channel.id) return message.channel.sendError(this.config.sameChannel, message.member);
     const helpChannels = [
-      ...config.channels.helpSkript,
-      ...config.channels.helpOther,
+      ...client.config.channels.helpSkript,
+      ...client.config.channels.helpOther,
     ];
     if (!helpChannels.includes(message.channel.id) || !helpChannels.includes(targetedChannel.id)) return message.channel.sendError(this.config.restrictedChannel, message.member);
 
@@ -38,7 +37,7 @@ class Move extends Command {
       .replace('%t', message.member.displayName);
     message.channel.send(successMessage);
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setAuthor(`Message de ${targetedMessage.member.displayName} :`, targetedMessage.author.avatarURL())
       .setDescription(targetedMessage.content)
       .setFooter(`Déplacé par ${message.member.displayName}`)

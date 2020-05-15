@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Leave extends Command {
   constructor() {
@@ -11,9 +10,9 @@ class Leave extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
+  async execute(client, message, _args) {
     const validate = MusicBot.canUseCommand(message, { notRestricted: true });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     MusicBot.askPermission(this.leave, this.config.ask, message, _args, this.config);
   }

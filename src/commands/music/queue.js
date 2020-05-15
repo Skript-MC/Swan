@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import Command from '../../structures/Command';
-import { config } from '../../main';
 import MusicBot from '../../structures/Music';
 
 class Queue extends Command {
@@ -13,10 +12,10 @@ class Queue extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (['remove', 'rem', 'delete', 'del'].includes(args[0])) {
       const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
-      if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+      if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
       const songIndex = parseInt(args[1], 10);
       if (isNaN(songIndex) || !MusicBot.queue[songIndex - 1]) return message.channel.send(this.config.invalidIndex);
@@ -27,19 +26,19 @@ class Queue extends Command {
     //   return 'SOON (nécessite de retravailler le système de .play, pour éviter de devoir tout remettre ici. Le diviser en méthode qu'on ajoute à MusicBotApp)';
     } else if (args[0] === 'clear') {
       const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
-      if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+      if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
-      const minRole = message.guild.roles.resolve(config.roles.minRoleToClearQueue).rawPosition;
+      const minRole = message.guild.roles.resolve(client.config.roles.minRoleToClearQueue).rawPosition;
       if (message.member.roles.highest.rawPosition >= minRole) {
         MusicBot.queue = [];
         return message.channel.send(this.config.cleared);
       }
-      return message.channel.send(config.messages.errors.permission);
+      return message.channel.send(client.config.messages.errors.permission);
     } else {
-      if (!MusicBot.queue || MusicBot.queue.length === 0) return message.channel.send(config.messages.errors.music[4]);
+      if (!MusicBot.queue || MusicBot.queue.length === 0) return message.channel.send(client.config.messages.errors.music[4]);
 
       const embed = new MessageEmbed()
-        .setColor(config.colors.default)
+        .setColor(client.config.colors.default)
         .setTitle("File d'attente des musiques")
         .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();

@@ -1,12 +1,12 @@
 /* eslint-disable import/no-cycle */
 import ModerationAction from './ModerationAction';
-import { config, db } from '../../main';
+import { client, db } from '../../main';
 import ACTION_TYPE from './actionType';
 
 class RemoveWarnAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.removewarn;
+    this.config = client.config.messages.commands.removewarn;
   }
 
   async exec(_document) {

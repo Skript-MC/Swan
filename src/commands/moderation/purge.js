@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { config } from '../../main';
 
 class Purge extends Command {
   constructor() {
@@ -10,21 +9,21 @@ class Purge extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const user = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     const force = args.includes('-f');
     let amount = parseInt(args[0], 10) ? parseInt(args[0], 10) + 1 : parseInt(args[1], 10) + 1;
 
     if (!amount) return message.channel.sendError(this.config.missingNumberArgument, message.member);
     if (!amount && !user) return message.channel.sendError(this.config.wrongUsage, message.member);
-    if (amount > config.moderation.purgeLimit) amount = config.moderation.purgeLimit;
+    if (amount > client.config.moderation.purgeLimit) amount = client.config.moderation.purgeLimit;
 
     let messages = await message.channel.messages.fetch({ limit: amount }).catch(console.error);
     if (user) {
       messages = messages.filter(m => m.author.id === user.id);
     }
     if (!force) {
-      messages = messages.filter(m => m.system || !m.member.roles.cache.has(config.roles.staff));
+      messages = messages.filter(m => m.system || !m.member.roles.cache.has(client.config.roles.staff));
     }
 
     message.channel.bulkDelete(messages).catch((err) => {

@@ -2,7 +2,6 @@ import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { convertFileSize } from '../../utils';
-import { config } from '../../main';
 
 class SkriptInfo extends Command {
   constructor() {
@@ -13,11 +12,11 @@ class SkriptInfo extends Command {
     this.cooldown = 60000;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args[0] && !['dl', 'download', 'link', 'links'].includes(args[0])) return message.channel.sendError(this.config.invalidCmd, message.member);
     if (!args[0] || ['dl', 'download'].includes(args[0])) {
       const options = { Accept: 'Accept: application/vnd.github.v3+json' };
-      const githubReleases = await axios(`${config.apis.github}/repos/SkriptLang/Skript/releases`, options)
+      const githubReleases = await axios(`${client.config.apis.github}/repos/SkriptLang/Skript/releases`, options)
         .catch(console.error);
 
       const lastRelease = githubReleases.data[0];
@@ -32,8 +31,8 @@ class SkriptInfo extends Command {
       }
 
       const embed = new MessageEmbed()
-        .setColor(config.colors.default)
-        .attachFiles([config.bot.avatar])
+        .setColor(client.config.colors.default)
+        .attachFiles([client.config.bot.avatar])
         .setAuthor('Informations sur Skript', 'attachment://logo.png')
         .addField(this.config.embed.download, downloadDesc, true)
         .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://github.com`)

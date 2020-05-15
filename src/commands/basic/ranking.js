@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import Youtube from 'simple-youtube-api';
 import Command from '../../structures/Command';
-import { db, config } from '../../main';
+import { db } from '../../main';
 
 const youtubeAPI = process.env.YOUTUBE_API;
 const youtube = new Youtube(youtubeAPI);
@@ -16,7 +16,7 @@ class Ranking extends Command {
     this.examples = ['classement music-views', 'ranks music-dislikes', 'ranking joke-likes'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.noType, message.member);
 
     let description = '';
@@ -32,7 +32,7 @@ class Ranking extends Command {
 
         if (topJokes) {
           for (const [i, joke] of topJokes.entries()) {
-            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const currentJoke = client.config.messages.commands.joke.jokes[joke.id];
             const split = currentJoke.split(';');
             description += `    ${emojis[i]} \`${split[0]}\` : ${joke.likes.length} 😄\n`;
           }
@@ -48,7 +48,7 @@ class Ranking extends Command {
 
         if (topJokes) {
           for (const [i, joke] of topJokes.entries()) {
-            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const currentJoke = client.config.messages.commands.joke.jokes[joke.id];
             const split = currentJoke.split(';');
             description += `    ${emojis[i]} \`${split[0]}\` : ${joke.dislikes.length} 🙄\n`;
           }
@@ -64,7 +64,7 @@ class Ranking extends Command {
 
         if (topJokes) {
           for (const [i, joke] of topJokes.entries()) {
-            const currentJoke = config.messages.commands.joke.jokes[joke.id];
+            const currentJoke = client.config.messages.commands.joke.jokes[joke.id];
             const split = currentJoke.split(';');
             description += `    ${emojis[i]} \`${split[0]}\` : ${joke.views} 👀\n`;
           }
@@ -123,8 +123,8 @@ class Ranking extends Command {
     }
 
     const embed = new MessageEmbed()
-      .attachFiles([config.bot.avatar])
-      .setColor(config.colors.default)
+      .attachFiles([client.config.bot.avatar])
+      .setColor(client.config.colors.default)
       .setAuthor(`Classement des ${type} :`, 'attachment://logo.png')
       .setDescription(description || 'Aucune donnée')
       .setFooter(`Exécuté par ${message.author.username}`)

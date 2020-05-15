@@ -1,7 +1,7 @@
 /* eslint-disable no-else-return, nonblock-statement-body-position, curly */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { SkriptHubSyntaxes, config } from '../../main';
+import { SkriptHubSyntaxes } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 const regexAddon = new RegExp(/-a(?:dd?on)?:/, 'gimu');
@@ -63,7 +63,7 @@ class SyntaxInfo extends Command {
     this.examples.push('syntax-info join', 'doc tablist', 'doc tablist -type:effect -addon:skrayfall', 'doc -id:2000', 'doc join -t:event');
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const msg = await message.channel.send('Je vais chercher ça...');
@@ -115,7 +115,7 @@ class SyntaxInfo extends Command {
       return message.channel.sendError(this.config.syntaxDoesntExist, message.member);
     } else if (matchingSyntaxes.length === 1) {
       msg.delete();
-      return this.sendDetails(message, matchingSyntaxes[0]);
+      return this.sendDetails(client, message, matchingSyntaxes[0]);
     } else {
       await msg.edit(`${results} élements trouvés pour la recherche \`${arg.toLowerCase()}\`${search.length > 0 ? ` avec comme paramètres \`${search.join(', ')}\`` : ''}. Quelle syntaxe vous interesse ?\n:warning: **Attendez que la réaction :x: soit posée avant de commencer.**`);
 
@@ -135,7 +135,7 @@ class SyntaxInfo extends Command {
           && reactionsNumbers.includes(reaction.emoji.name))
         .once('collect', (reaction) => {
           msg.delete();
-          this.sendDetails(message, args, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
+          this.sendDetails(client, message, args, matchingSyntaxes[reactionsNumbers.indexOf(reaction.emoji.name)]);
           collectorNumbers.stop();
         });
 
@@ -152,10 +152,10 @@ class SyntaxInfo extends Command {
     }
   }
 
-  async sendDetails(message, args, data) {
+  async sendDetails(client, message, args, data) {
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
+      .setColor(client.config.colors.default)
+      .attachFiles([client.config.bot.avatar])
       .setAuthor(`Informations sur "${data.title}"`, 'attachment://logo.png')
       .setFooter(`Executé par ${message.author.username} | Données fournies par https://skripthub.net`)
       .setTimestamp()
@@ -183,7 +183,7 @@ class SyntaxInfo extends Command {
         && reaction.emoji.name === '⏮️')
       .once('collect', () => {
         msg.delete();
-        this.execute(message, args);
+        this.execute(client, message, args);
         collectorStop.stop();
       });
   }
