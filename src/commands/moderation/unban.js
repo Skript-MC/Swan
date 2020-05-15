@@ -2,7 +2,6 @@ import Command from '../../structures/Command';
 import ModerationData from '../../structures/ModerationData';
 import UnbanAction from '../../structures/actions/UnbanAction';
 import ACTION_TYPE from '../../structures/actions/actionType';
-import { config, client } from '../../main';
 
 class Unban extends Command {
   constructor() {
@@ -13,7 +12,7 @@ class Unban extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     // The only moderation command where the victim might be a User, not a GuildMember, because if he is
     // hardban, then he can't be a GuildMember as he's not in the guild anymore
     args[0] = args[0].replace(/<@!(\d*)>/gimu, '$1'); // eslint-disable-line no-param-reassign
@@ -27,7 +26,7 @@ class Unban extends Command {
 
     const data = new ModerationData()
       .setType(ACTION_TYPE.UNBAN)
-      .setColor(config.colors.success)
+      .setColor(client.config.colors.success)
       .setVictim(victim)
       .setReason(reason)
       .setModerator(message.member)

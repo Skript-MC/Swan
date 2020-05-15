@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Join extends Command {
   constructor() {
@@ -11,8 +10,8 @@ class Join extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
-    if (message.member.roles.cache.has(config.roles.owner)) {
+  async execute(client, message, _args) {
+    if (message.member.roles.cache.has(client.config.roles.owner)) {
       message.member.voice.channel.join();
       message.channel.send(this.config.comming);
     } else if (!message.guild.voice || !message.guild.voice.connection || (message.guild.voice.connection.channel.id !== message.member.voice.channel.id && !MusicBot.nowPlaying)) {

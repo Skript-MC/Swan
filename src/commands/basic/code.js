@@ -8,7 +8,7 @@ class Code extends Command {
     this.examples = ['code broadcast "Yeah!"', 'code -l on join: message "salut !"'];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     const printLines = args[0] === '-l';
     if (printLines) args.shift();
 

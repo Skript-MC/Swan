@@ -1,10 +1,10 @@
 import ModerationAction from './ModerationAction';
-import { config } from '../../main';
+import { client } from '../../main';
 
 class KickAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.kick;
+    this.config = client.config.messages.commands.kick;
   }
 
   async exec(_document) {

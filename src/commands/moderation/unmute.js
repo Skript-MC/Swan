@@ -1,7 +1,6 @@
 import Command from '../../structures/Command';
 import ModerationData from '../../structures/ModerationData';
 import ACTION_TYPE from '../../structures/actions/actionType';
-import { config } from '../../main';
 import UnmuteAction from '../../structures/actions/UnmuteAction';
 
 class Unmute extends Command {
@@ -13,7 +12,7 @@ class Unmute extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
 
@@ -21,7 +20,7 @@ class Unmute extends Command {
 
     const data = new ModerationData()
       .setType(ACTION_TYPE.UNMUTE)
-      .setColor(config.colors.success)
+      .setColor(client.config.colors.success)
       .setMember(victim)
       .setReason(reason)
       .setModerator(message.member)

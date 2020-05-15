@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { SkripttoolsAddons, config } from '../../main';
+import { SkripttoolsAddons } from '../../main';
 import { uncapitalize, jkDistance, convertFileSize, selectorMessage } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -13,7 +13,7 @@ class AddonInfo extends Command {
     this.examples = ['addon-info skquery-lime', 'addoninfo mirror'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) {
       message.channel.sendError(this.config.invalidCmd, message.member);
     } else {
@@ -52,13 +52,14 @@ class AddonInfo extends Command {
               collector.stop();
               suggestion.delete();
               const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
-              return this.sendDetails(message, addons.filter(elt => elt.plugin === matches[index])[0]);
+              return this.sendDetails(client.config, message, addons.filter(elt => elt.plugin === matches[index])[0]);
             });
         }
       } else if (matchingAddons.length === 1) {
-        this.sendDetails(message, matchingAddons[0]);
+        this.sendDetails(client.config, message, matchingAddons[0]);
       } else {
         selectorMessage(
+          client,
           matchingAddons,
           myAddon,
           message,
@@ -70,7 +71,7 @@ class AddonInfo extends Command {
     }
   }
 
-  async sendDetails(message, addon, thisConfig = this.config) {
+  async sendDetails(config, message, addon, thisConfig = this.config) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])

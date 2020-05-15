@@ -1,7 +1,6 @@
 import Command from '../../structures/Command';
 import ModerationData from '../../structures/ModerationData';
 import ACTION_TYPE from '../../structures/actions/actionType';
-import { config } from '../../main';
 import RemoveWarnAction from '../../structures/actions/RemoveWarnAction';
 
 class RemoveWarn extends Command {
@@ -13,7 +12,7 @@ class RemoveWarn extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
     if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
 
@@ -24,7 +23,7 @@ class RemoveWarn extends Command {
 
     const data = new ModerationData()
       .setType(ACTION_TYPE.REMOVE_WARN)
-      .setColor(config.colors.success)
+      .setColor(client.config.colors.success)
       .setMember(victim)
       .setReason(reason)
       .setWarnId(id)

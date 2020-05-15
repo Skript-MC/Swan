@@ -1,5 +1,5 @@
 import ModerationAction from './ModerationAction';
-import { config, db, client } from '../../main';
+import { db, client } from '../../main';
 import ACTION_TYPE from './actionType';
 import ModerationData from '../ModerationData';
 import BanAction from './BanAction';
@@ -7,7 +7,7 @@ import BanAction from './BanAction';
 class WarnAction extends ModerationAction {
   constructor(data) {
     super(data);
-    this.config = config.messages.commands.warn;
+    this.config = client.config.messages.commands.warn;
   }
 
   async exec(_document) {
@@ -35,17 +35,17 @@ class WarnAction extends ModerationAction {
     const result = await db.sanctionsHistory.findOne({ memberId: this.data.user.id }).catch(console.error);
 
     let currentWarnCount = result.currentWarnCount + 1;
-    if (currentWarnCount >= config.moderation.warnLimitBeforeBan) currentWarnCount = 0;
+    if (currentWarnCount >= client.config.moderation.warnLimitBeforeBan) currentWarnCount = 0;
     await db.sanctionsHistory.update({ _id: result._id }, { $set: { currentWarnCount } }).catch(console.error);
 
-    if (result.currentWarnCount + 1 === config.moderation.warnLimitBeforeBan) {
+    if (result.currentWarnCount + 1 === client.config.moderation.warnLimitBeforeBan) {
       await db.sanctions.remove({ member: this.data.user.id, type: ACTION_TYPE.WARN }, { multi: true }).catch(console.error);
       this.data.messageChannel.send(this.config.warnLimitReached);
       const data = new ModerationData()
         .setType(ACTION_TYPE.BAN)
-        .setColor(config.colors.ban)
-        .setReason(config.moderation.warnBanReason)
-        .setDuration(config.moderation.warnBanTime * 1000)
+        .setColor(client.config.colors.ban)
+        .setReason(client.config.moderation.warnBanReason)
+        .setDuration(client.config.moderation.warnBanTime * 1000)
         .setMember(this.data.member)
         .setModerator(this.data.guild.members.resolve(client.user.id))
         .setMessageChannel(this.data.messageChannel)

@@ -1,7 +1,6 @@
 import { GuildMember } from 'discord.js';
 import Command from '../../structures/Command';
 import { toTimestamp } from '../../utils';
-import { config } from '../../main';
 import ModerationData from '../../structures/ModerationData';
 import BanAction from '../../structures/actions/BanAction';
 import ACTION_TYPE from '../../structures/actions/actionType';
@@ -15,7 +14,7 @@ class Ban extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     let hardbanIfNoMessages = false;
     if (args.includes('--autoban')) {
       args.splice(args.indexOf('--autoban'), 1);
@@ -42,13 +41,13 @@ class Ban extends Command {
     const type = duration === -1 ? ACTION_TYPE.HARDBAN : ACTION_TYPE.BAN;
 
     // Durée max des modérateurs forum : 2j
-    if (message.member.roles.cache.has(config.roles.forumMod) && (type === ACTION_TYPE.HARDBAN || duration > config.moderation.maxForumModDuration)) {
+    if (message.member.roles.cache.has(client.config.roles.forumMod) && (type === ACTION_TYPE.HARDBAN || duration > client.config.moderation.maxForumModDuration)) {
       return message.channel.sendError(this.config.durationTooLong, message.member);
     }
 
     const data = new ModerationData()
       .setType(type)
-      .setColor(type === ACTION_TYPE.BAN ? config.colors.ban : config.colors.hardban)
+      .setColor(type === ACTION_TYPE.BAN ? client.config.colors.ban : client.config.colors.hardban)
       .setReason(reason)
       .setDuration(duration)
       .setMember(victim)

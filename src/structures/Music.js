@@ -1,6 +1,6 @@
-/* eslint-disable import/no-cycle, object-curly-newline, prefer-destructuring */
+/* eslint-disable object-curly-newline, prefer-destructuring */
 import ytdl from 'discord-ytdl-core';
-import { config, db } from '../main';
+import { client, db } from '../main';
 
 class MusicBotApp {
   constructor() {
@@ -30,7 +30,7 @@ class MusicBotApp {
     const { voiceChannel } = queue[0];
     const connection = await queue[0].voiceChannel.join()
       .catch((err) => {
-        message.channel.send(config.messages.errors.erroroccured);
+        message.channel.send(client.config.messages.errors.erroroccured);
         voiceChannel.leave();
         throw new Error(err);
       });
@@ -49,7 +49,7 @@ class MusicBotApp {
       this.nowPlaying = queue[0];
       this.updateStats(this.nowPlaying);
       queue.shift();
-      message.channel.send(config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));
+      message.channel.send(client.config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));
     });
 
     this.dispatcher.on('finish', () => {
@@ -58,7 +58,7 @@ class MusicBotApp {
 
       if (this.loop === this.enums.MUSIC && preset.playNext) {
         if (this.blacklistedMusics.includes(this.nowPlaying.video.id)) {
-          message.channel.send(config.messages.commands.play.blacklistedMusic);
+          message.channel.send(client.config.messages.commands.play.blacklistedMusic);
         } else {
           queue.unshift(this.nowPlaying);
         }
@@ -67,13 +67,13 @@ class MusicBotApp {
         this.playSong(queue, message);
       } else {
         this.nowPlaying = undefined;
-        if (preset.sendFinishMsg) message.channel.send(config.messages.commands.play.queueFinished);
+        if (preset.sendFinishMsg) message.channel.send(client.config.messages.commands.play.queueFinished);
         if (preset.leave) voiceChannel.leave();
       }
     });
 
     this.dispatcher.on('error', (err) => {
-      message.channel.send(config.messages.errors.cantplaymusic);
+      message.channel.send(client.config.messages.errors.cantplaymusic);
       voiceChannel.leave();
       throw new Error(err);
     });
@@ -88,17 +88,17 @@ class MusicBotApp {
 
   join(message) {
     if (!message.member.voice.channel) {
-      message.channel.sendError(config.messages.errors.joinErrors.notInChannel, message.member);
-    } else if (config.music.restrictedVocal.includes(message.member.voice.channel.id)) {
-      message.channel.sendError(config.messages.errors.joinErrors.restrictedChannel, message.member);
+      message.channel.sendError(client.config.messages.errors.joinErrors.notInChannel, message.member);
+    } else if (client.config.music.restrictedVocal.includes(message.member.voice.channel.id)) {
+      message.channel.sendError(client.config.messages.errors.joinErrors.restrictedChannel, message.member);
     } else if (message.member.voice.channel.full) {
-      message.channel.sendError(config.messages.errors.joinErrors.channelFull, message.member);
+      message.channel.sendError(client.config.messages.errors.joinErrors.channelFull, message.member);
     } else if (!message.member.voice.channel.speakable) {
-      message.channel.sendError(config.messages.errors.joinErrors.notSpeakable, message.member);
+      message.channel.sendError(client.config.messages.errors.joinErrors.notSpeakable, message.member);
     } else if (!message.member.voice.channel.joinable) {
-      message.channel.sendError(config.messages.errors.joinErrors.notJoinable, message.member);
+      message.channel.sendError(client.config.messages.errors.joinErrors.notJoinable, message.member);
     } else {
-      message.channel.send(config.messages.commands.join.comming);
+      message.channel.send(client.config.messages.commands.join.comming);
       message.member.voice.channel.join();
       return true;
     }
@@ -106,7 +106,7 @@ class MusicBotApp {
   }
 
   canUseCommand(message, options = { songPlaying: false, queueNotEmpty: false, notRestricted: false }) {
-    if (!config.music.canUseMusicCommandsIfNotInChannel) { // Si l'option "pouvoir utiliser les commandes de musiques si on est pas dans le channel" est désactivé
+    if (!client.config.music.canUseMusicCommandsIfNotInChannel) { // Si l'option "pouvoir utiliser les commandes de musiques si on est pas dans le channel" est désactivé
       if (!message.member.voice.channel) return 0; // Si on est pas dans un channel
       if (!message.guild.voice || !message.guild.voice.connection || !message.guild.voice.channel) return 1; // Si le bot n'est pas dans un channel
       if (message.member.voice.channel !== message.guild.voice.channel) return 2; // Si on est pas dans le channel du bot
@@ -124,16 +124,16 @@ class MusicBotApp {
       if (membersInChannel.has(restrictedMemberId)) restrictedMembers.push(restrictedMemberId);
     }
 
-    if (!member.roles.cache.has(config.roles.staff)
+    if (!member.roles.cache.has(client.config.roles.staff)
       && membersInChannel.size > 2
       && membersInChannel.size - restrictedMembers.length > 2
-      && config.music.shouldAskPermissionForSomeCommands) return true;
+      && client.config.music.shouldAskPermissionForSomeCommands) return true;
     return false;
   }
 
   async askPermission(cb, reason, message, args, cmdConfig) {
     if (this.shouldAskOthers(message.member)) {
-      const messageContent = config.messages.miscellaneous.musicAskOthers
+      const messageContent = client.config.messages.miscellaneous.musicAskOthers
         .replace('%u', message.member.displayName)
         .replace('%s', reason);
 
@@ -156,7 +156,7 @@ class MusicBotApp {
         .createReactionCollector((reaction, user) => {
           if (this.restricted.includes(user.id)) {
             askMsg.reactions.cache.find(r => r.emoji.name === reaction.emoji.name).users.remove(user);
-            user.send(config.messages.errors.music[5]);
+            user.send(client.config.messages.errors.music[5]);
             return false;
           }
           return !user.bot

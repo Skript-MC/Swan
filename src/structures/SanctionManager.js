@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import fs from 'fs';
 import moment from 'moment';
-import { db, config, client, logger } from '../main';
+import { db, client } from '../main';
 import { prunePseudo } from '../utils';
 import ACTION_TYPE from './actions/actionType';
 import UnbanAction from './actions/UnbanAction';
@@ -13,7 +13,7 @@ import RemoveWarnAction from './actions/RemoveWarnAction';
 class SanctionManager {
   static async getOrCreateChannel(data) {
     const pseudo = prunePseudo(data.member);
-    const channelName = `${config.moderation.banChannelPrefix}${pseudo}`;
+    const channelName = `${client.config.moderation.banChannelPrefix}${pseudo}`;
 
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
     if (data.guild.channels.cache.some(filter)) {
@@ -22,13 +22,13 @@ class SanctionManager {
 
     const channel = await data.guild.channels.create(channelName, 'text');
 
-    const parent = channel.setParent(config.moderation.logCategory);
+    const parent = channel.setParent(client.config.moderation.logCategory);
     const topic = channel.setTopic(`${data.user.id} (NE PAS CHANGER)`);
     const permissions = channel.overwritePermissions([{
-      id: config.roles.everyone,
+      id: client.config.roles.everyone,
       deny: ['VIEW_CHANNEL'],
     }, {
-      id: config.roles.staff,
+      id: client.config.roles.staff,
       allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
     }, {
       id: data.user.id,
@@ -36,14 +36,14 @@ class SanctionManager {
     }]);
 
     await Promise.all([parent, topic, permissions]).catch((_err) => {
-      data.messageChannel.send(config.messages.errors.channelPermissions);
-      logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      data.messageChannel.send(client.config.messages.errors.channelPermissions);
+      client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
     });
     return channel;
   }
 
   static async removeChannel(data) {
-    const channelName = `${config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
+    const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
     const chan = data.guild.channels.cache.find(filter);
     let file;
@@ -58,30 +58,30 @@ class SanctionManager {
 
   static async addRole(data, overwrite = false) {
     const role = data.type === ACTION_TYPE.BAN
-      ? data.guild.roles.resolve(config.roles.ban)
-      : data.guild.roles.resolve(config.roles.mute);
+      ? data.guild.roles.resolve(client.config.roles.ban)
+      : data.guild.roles.resolve(client.config.roles.mute);
 
     try {
       if (overwrite) await data.member.roles.set([role]);
       else await data.member.roles.add(role);
     } catch (_err) {
-      data.messageChannel.send(config.messages.errors.rolePermissions);
-      logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      data.messageChannel.send(client.config.messages.errors.rolePermissions);
+      client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
     }
   }
 
   static async removeRole(data) {
     // On enlève le rôle de la victime
     const role = data.type === ACTION_TYPE.UNBAN
-      ? data.guild.roles.resolve(config.roles.ban)
-      : data.guild.roles.resolve(config.roles.mute);
+      ? data.guild.roles.resolve(client.config.roles.ban)
+      : data.guild.roles.resolve(client.config.roles.mute);
 
     if (data.member.roles.cache.has(role.id)) {
       try {
         data.member.roles.remove(role);
       } catch (e) {
-        data.messageChannel.send(config.messages.errors.rolePermissions).catch();
-        logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+        data.messageChannel.send(client.config.messages.errors.rolePermissions).catch();
+        client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
     }
   }
@@ -168,16 +168,16 @@ class SanctionManager {
       const victim = client.guild.members.cache.get(result.member) || await client.users.fetch(result.member);
       const data = new ModerationData()
         .setType(ACTION_TYPE.opposite(result.type))
-        .setColor(config.colors.success)
+        .setColor(client.config.colors.success)
         .setVictim(victim)
-        .setReason(config.messages.miscellaneous.sanctionExpired)
+        .setReason(client.config.messages.miscellaneous.sanctionExpired)
         .setModerator(client.guild.members.resolve(client.user.id))
-        .setMessageChannel(client.guild.channels.resolve(config.channels.logs));
+        .setMessageChannel(client.guild.channels.resolve(client.config.channels.logs));
 
       if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
         data.setType(ACTION_TYPE.HARDBAN)
-          .setColor(config.colors.hardban)
-          .setReason(config.messages.miscellaneous.inactivityWhileBanned)
+          .setColor(client.config.colors.hardban)
+          .setReason(client.config.messages.miscellaneous.inactivityWhileBanned)
           .setDuration(-1)
           .setFinishTimestamp();
         new BanAction(data).commit();

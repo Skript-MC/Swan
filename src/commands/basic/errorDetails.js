@@ -8,7 +8,7 @@ class ErrorDetails extends Command {
     this.examples = ["errordetail Can't compare 'if arg 1' with a text"];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.noError, message.member);
 
     const arg = args.join(' ').toLowerCase();

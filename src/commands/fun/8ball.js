@@ -8,7 +8,7 @@ class EightBall extends Command {
     this.examples = ['8ball suis-je le plus beau ?'];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.noQuestion, message.member);
     let answer;
     if (Math.random() < 0.5) {

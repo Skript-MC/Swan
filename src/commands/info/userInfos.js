@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import Command from '../../structures/Command';
-import { config } from '../../main';
 
 function explain(status) {
   switch (status) {
@@ -26,7 +25,7 @@ class UserInfos extends Command {
     this.examples = ['userinfo @noftaly', 'user-infos 188341077902753794'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
     const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
     if (!target) return message.channel.sendError(this.config.pseudoNotFound, message.member);
@@ -51,7 +50,7 @@ class UserInfos extends Command {
     }
 
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
+      .setColor(client.config.colors.default)
       .setAuthor(`Informations sur le membre ${target.user.username}`)
       .setFooter(`Exécuté par ${message.author.username}`)
       .setThumbnail(target.user.avatarURL())

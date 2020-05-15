@@ -1,7 +1,7 @@
 import Command from '../../structures/Command';
 import { db } from '../../main';
 
-class changeConfig extends Command {
+class ChangeConfig extends Command {
   constructor() {
     super('Change Config');
     this.aliases = ['changeconfig'];
@@ -11,7 +11,7 @@ class changeConfig extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     // Delete the message.
     message.delete();
     // Check if the targeted config is correct.
@@ -29,4 +29,4 @@ class changeConfig extends Command {
   }
 }
 
-export default changeConfig;
+export default ChangeConfig;

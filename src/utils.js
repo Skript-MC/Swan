@@ -192,6 +192,7 @@ export function convertFileSize(size) {
 
 /**
  * Create a "selector message", which will send a message from which the user can choose multiple options
+ * @param {Client} client - The client
  * @param {Array} results - The array we should itterate
  * @param {string} query - The query the user passed (basically a args.join(' '))
  * @param {Message} message - The user's message
@@ -199,7 +200,7 @@ export function convertFileSize(size) {
  * @param {Function} messageCallback - The callback to print a line
  * @param {Function} callback - The callback to call when the user has made his choice
  */
-export async function selectorMessage(results, query, message, cmdConfig, messageCallback, callback) {
+export async function selectorMessage(client, results, query, message, cmdConfig, messageCallback, callback) {
   const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
   let content = cmdConfig.searchResults.replace('%r', results.length).replace('%s', query);
 
@@ -218,7 +219,7 @@ export async function selectorMessage(results, query, message, cmdConfig, messag
       && reactionsNumbers.includes(reaction.emoji.name))
     .once('collect', (reaction) => {
       botMessage.delete();
-      callback(message, results[reactionsNumbers.indexOf(reaction.emoji.name)], cmdConfig);
+      callback(client.config, message, results[reactionsNumbers.indexOf(reaction.emoji.name)], cmdConfig);
       collectorNumbers.stop();
     });
 
@@ -242,7 +243,7 @@ export function randomCommand(commands, withoutPerms = true) {
 }
 
 export function randomActivity(client, commands, prefix) {
-  if (!client.config.activated) return { activity: { name: 'Désactivé.', type: 'WATCHING' }, status: 'idle' };
+  if (!client.activated) return { activity: { name: 'Désactivé.', type: 'WATCHING' }, status: 'idle' };
   const random = Math.floor(Math.random() * 3);
   let status;
   if (random === 0) status = { activity: { name: `${client.guild.members.cache.filter(m => !m.user.bot).size} membres 🎉`, type: 'WATCHING' }, status: 'online' };

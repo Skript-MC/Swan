@@ -1,7 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import Command from '../../structures/Command';
-import { config, logger } from '../../main';
 
 class ServerInfo extends Command {
   constructor() {
@@ -11,27 +10,27 @@ class ServerInfo extends Command {
     this.examples = ['serveur-info hypixel.net'];
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     const msg = await message.channel.send(this.config.searching);
-    const data = await axios(`${config.apis.server}${args[0]}`)
+    const data = await axios(`${client.config.apis.server}${args[0]}`)
       .then(async (response) => {
         if (response.status !== 200) {
-          logger.error(`[HTTP request failed] Error : ${response.status}`);
+          client.logger.error(`[HTTP request failed] Error : ${response.status}`);
           return message.channel.sendError(`Une erreur est survenue lors de la reqûete... Veuillez réessayer plus tard.\nStatus de la requête : ${response.status}`, message.member);
         }
         return response.data;
       }).catch(console.error);
 
     if (!data) return message.channel.sendError(this.config.noServerFound, message.member);
-    return this.sendDetails(message, msg, data, args[0]);
+    return this.sendDetails(client, message, msg, data, args[0]);
   }
 
-  sendDetails(message, msg, data, ip) {
+  sendDetails(client, message, msg, data, ip) {
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
+      .setColor(client.config.colors.default)
+      .attachFiles([client.config.bot.avatar])
       .setAuthor(`Informations sur ${ip}`, 'attachment://logo.png')
       .setFooter(`Exécuté par ${message.author.username} | Données fournies par https://api.mcsrvstat.us/`)
       .setTimestamp();
