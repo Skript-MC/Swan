@@ -22,8 +22,6 @@ class Queue extends Command {
 
       MusicBot.queue.splice(songIndex - 1, 1);
       message.channel.send(this.config.removedSong.replace('%s', songIndex));
-    // } else if (args[0] === 'add') {
-    //   return 'SOON (nécessite de retravailler le système de .play, pour éviter de devoir tout remettre ici. Le diviser en méthode qu'on ajoute à MusicBotApp)';
     } else if (args[0] === 'clear') {
       const validate = MusicBot.canUseCommand(message, { queueNotEmpty: true, notRestricted: true });
       if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
@@ -51,7 +49,7 @@ class Queue extends Command {
       }
 
       const durations = MusicBot.queue.map(elt => elt.video.durationSeconds);
-      const totalDuration = moment.duration(durations.reduce((acc, current) => acc + current)).humanize();
+      const totalDuration = moment.duration(durations.reduce((acc, current) => acc + current) * 1000).humanize();
       let footer = `\n${MusicBot.queue.length} musique${MusicBot.queue.length === 1 ? '' : 's'}. Durée totale : ${totalDuration}`;
 
       // Si l'embed est trop long
