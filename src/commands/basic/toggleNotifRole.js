@@ -24,7 +24,7 @@ class ToggleNotifRole extends Command {
         message.channel.send(client.config.messages.errors.rolePermissions);
         client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
-      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été ajouté !`);
+      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été ajouté !`).catch(() => {});
     } else if (message.member.roles.cache.has(role.id)) {
       try {
         await message.member.roles.remove(role);
@@ -32,7 +32,7 @@ class ToggleNotifRole extends Command {
         message.channel.send(client.config.messages.errors.rolePermissions);
         client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
       }
-      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été enlevé !`);
+      message.member.send(`**(${message.guild.name})** Le rôle *"${role.name}"* vous a été enlevé !`).catch(() => {});
     }
   }
 }
