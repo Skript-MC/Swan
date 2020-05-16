@@ -107,12 +107,6 @@ class Command {
   }
 
   /**
-   * Fonction qui s'execute lors du chargement du bot
-   * @async
-   */
-  async init() {} // eslint-disable-line no-empty-function
-
-  /**
    * Fonction qui s'execute lorsque l'on fait la commande
    * @param {Client} _client - Client, instancié sur le serveur
    * @param {Message} _message - Message qui a déclenché la commande

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-dynamic-require, import/no-cycle */
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
@@ -91,51 +91,36 @@ export function extendClasses() {
   });
 }
 
-export function loadCommands(cmdPath = 'commands') {
-  if (cmdPath !== 'commands') client.logger.step(`loading : ${cmdPath}`);
+export async function loadCommands(dir = 'commands') {
+  if (dir !== 'commands') client.logger.step(`loading: ${dir}`);
 
-  fs.readdir(`${__dirname}/${cmdPath}`, (err, files) => {
-    if (err) throw err;
-    for (const file of files) {
-      const stat = fs.statSync(`${__dirname}/${cmdPath}/${file}`);
-      if (stat.isDirectory()) {
-        loadCommands(`${cmdPath}/${file}`);
-      } else if (path.parse(file).ext === '.js') {
-        try {
-          const Module = require(`${__dirname}/${cmdPath}/${file}`).default; // eslint-disable-line global-require
-          const command = new Module();
-          if (command.enabled) {
-            command.init();
-            command.category = cmdPath.replace('commands/', '');
-            client.commands.push(command);
-          }
-        } catch (e) {
-          client.logger.error(`Unable to load this command: ${file}`);
-          throw new Error(e);
-        }
+  const filePath = path.join(__dirname, dir);
+  const files = await fs.readdir(filePath);
+  for (const file of files) {
+    const stat = await fs.lstat(path.join(filePath, file));
+    if (stat.isDirectory()) loadCommands(path.join(dir, file));
+    if (file.endsWith('.js')) {
+      const Command = require(path.join(filePath, file)).default; // eslint-disable-line global-require
+      const cmd = new Command();
+      if (cmd.enabled) {
+        cmd.category = dir.replace('commands/', '');
+        client.commands.push(cmd);
       }
     }
-  });
+  }
 }
 
-export function loadEvents() {
+export async function loadEvents() {
   client.logger.step('loading events');
-
-  fs.readdir(`${__dirname}/events/`, (err, files) => {
-    if (err) throw err;
-    for (const file of files) {
-      if (path.parse(file).ext === '.js') {
-        try {
-          const eventFunction = require(`${__dirname}/events/${file}`).default; // eslint-disable-line global-require
-          const event = file.split('.')[0];
-          client.on(event, (...args) => eventFunction(...args));
-        } catch (e) {
-          client.logger.error(`Unable to load this event: ${file}`);
-          throw new Error(e);
-        }
-      }
+  const filePath = path.join(__dirname, 'events');
+  const files = await fs.readdir(filePath);
+  for (const file of files) {
+    if (file.endsWith('.js')) {
+      const eventFunction = require(path.join(filePath, file)).default; // eslint-disable-line global-require
+      const event = file.split('.')[0];
+      client.on(event, eventFunction);
     }
-  });
+  }
 }
 
 export async function loadSkriptHubAPI() {
