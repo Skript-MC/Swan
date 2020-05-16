@@ -107,7 +107,8 @@ class Poll extends Command {
         const member = message.guild.members.resolve(user.id);
         reaction.users.remove(user);
         try {
-          member.send(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member).catch(console.error);
+          const type = questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom;
+          await member.send(type).catch((_e) => { throw new Error(); });
           const info = await message.channel.send(this.config.infosSent.replace('%m', member.toString()));
           info.delete({ timeout: 5000 });
         } catch (e) {
