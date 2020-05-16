@@ -13,12 +13,13 @@ class Discover extends Command {
     let result;
     while (!result) {
       const command = client.commands[Math.floor(Math.random() * client.commands.length)];
-      // Les gérants ont toutes les permissions
-      if (message.member.roles.cache.has(client.config.roles.owner)) result = command;
       // Check des permissions
-      if (command.permissions.length === 0) result = command;
-      for (const perm of command.permissions) {
-        if (message.member.roles.cache.find(role => role.name === perm)) result = command;
+      if (message.member.roles.cache.has(client.config.roles.owner)) result = command;
+      else if (command.permissions.length === 0) result = command;
+      else {
+        for (const perm of command.permissions) {
+          if (message.member.roles.cache.find(role => role.name === perm)) result = command;
+        }
       }
     }
     new Help().sendDetails(client.config, message, result);
