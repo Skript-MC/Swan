@@ -13,7 +13,7 @@ function endPoll(client, msg, embed, collectors, votes, answers, questionType) {
   const voters = votes.reduce((acc, cur) => acc + cur);
   let results = '';
   if (questionType === 0) {
-    results = `:white_check_mark: : ${votes[0]} oui (${(100 * votes[0]) / voters || 0}%)\n:x: : ${votes[1]} non (${(100 * votes[1]) / voters || 0}%)`;
+    results = `:white_check_mark: : ${votes[0]} oui (${Math.round((100 * votes[0]) / voters || 0)}%)\n:x: : ${votes[1]} non (${Math.round((100 * votes[1]) / voters || 0)}%)`;
   } else if (questionType === 1) {
     for (let i = 0; i < votes.length; i++) {
       results += `${reactions.multiple[i]} : ${votes[i]} ${answers[i]} (${(100 * votes[i]) / voters || 0}%)\n`;
@@ -107,7 +107,7 @@ class Poll extends Command {
         const member = message.guild.members.resolve(user.id);
         reaction.users.remove(user);
         try {
-          member.send(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member);
+          member.send(questionType === 0 ? this.config.pollInfosYesNo : this.config.pollInfosCustom, message.member).catch(console.error);
           const info = await message.channel.send(this.config.infosSent.replace('%m', member.toString()));
           info.delete({ timeout: 5000 });
         } catch (e) {
