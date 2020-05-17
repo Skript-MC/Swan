@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
 import he from 'he';
 import sanitize from 'sanitize-html';
