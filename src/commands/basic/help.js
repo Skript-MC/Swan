@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { jkDistance, selectorMessage } from '../../utils';
+import { jkDistance, selectorMessage, parsePage } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -15,18 +14,12 @@ class Help extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(client, message, args, page) {
+  async execute(client, message, args) {
     const cmdPerPage = client.config.miscellaneous.cmdPerPagesInHelp;
-    // eslint-disable-next-line no-nested-ternary
-    page = page ? parseInt(page, 10) : (args[0] ? parseInt(args[0] - 1, 10) : 0);
-    page = isNaN(page) ? 0 : page;
-
     const totalPages = Math.ceil(client.commands.length / cmdPerPage);
+    const page = parsePage(args[0], totalPages);
 
-    if (page < 0) page = 0;
-    if (page >= totalPages) page = totalPages - 1;
-
-    // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
+    // S'il n'y a pas d'arguments ou une page, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
         .attachFiles([client.config.bot.avatar])
@@ -52,17 +45,15 @@ class Help extends Command {
         .once('collect', (reaction) => {
           helpEmbed.delete();
           if (reaction.emoji.name === '⏮') {
-            this.execute(client, message, args, 0);
+            this.execute(client, message, [1]);
           } else if (reaction.emoji.name === '◀') {
-            const prevPage = page <= 0 ? totalPages - 1 : page - 1;
-            this.execute(client, message, args, prevPage);
+            this.execute(client, message, [page]);
           } else if (reaction.emoji.name === '🇽') {
             message.delete();
           } else if (reaction.emoji.name === '▶') {
-            const nextPage = page + 1 >= totalPages ? 0 : page + 1;
-            this.execute(client, message, args, nextPage);
+            this.execute(client, message, [page + 2]);
           } else if (reaction.emoji.name === '⏭') {
-            this.execute(client, message, args, totalPages - 1);
+            this.execute(client, message, [totalPages]);
           }
           collector.stop();
         });
