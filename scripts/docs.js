@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import fs from 'fs';
 
 const template = `\n

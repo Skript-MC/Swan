@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import { client } from '../main';
