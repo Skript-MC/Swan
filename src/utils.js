@@ -63,6 +63,14 @@ export function toTimestamp(str) {
   }
 }
 
+export function parsePage(page, max = Infinity) {
+  page = parseInt(page, 10) - 1;
+  if (isNaN(page)) page = 0;
+  else if (page < 0) page = 0;
+  else if (page >= max) page = max - 1;
+  return page;
+}
+
 /**
  * Renvoie un string alphanumérique aléatoire de la longueur `len`.
  * Il y a une très petite chance (moins de 1/1 000 000) que la taille soit plus petite que len
