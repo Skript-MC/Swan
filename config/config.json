@@ -194,7 +194,7 @@
                     },
                     "pattern": {
                         "templates": ["pattern", "skriptpattern"],
-                        "content": "Comment utiliser une syntaxe Skript ? Elles sont en réalité extrêmement simples. Voici comment elles sont composées :\n- `[...]` : optionnel\n- `(1|2|3)` : une des propositions (`1`, `2` ou `3`) est obligatoire\n\nSi vous avez toujours besoin d'aide concernant ces syntaxes, prenons comme exemple celle-ci : `[the] (clicked (block|%itemtype/entitydata%)|clicked slot|clicked inventory|click (type|action)|inventory action)`. Pour obtenir la liste des possibilités, vous pouvez accéder à <https://bi0qaw.github.io/skript-pattern-calculator>."
+                        "content": "Comment utiliser une syntaxe Skript ? Elles sont en réalité extrêmement simples. Voici comment elles sont composées :\n- `[...]` : optionnel\n- `(1|2|3)` : une des propositions (`1`, `2` ou `3`) est obligatoire\n- `%players%` (ou autres types) : à remplacer par une donnée du type indiqué.`\n\nSi vous avez toujours besoin d'aide concernant ces syntaxes, prenons comme exemple celle-ci : `[the] (clicked (block|%itemtype/entitydata%)|clicked slot|clicked inventory|click (type|action)|inventory action)`. Pour obtenir la liste des possibilités, vous pouvez accéder à <https://bi0qaw.github.io/skript-pattern-calculator>."
                     },
                     "debug": {
                         "templates": ["debug"],
