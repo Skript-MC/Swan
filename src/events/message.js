@@ -65,7 +65,7 @@ export default async function messageHandler(message) {
   }
 
   // Système de citation
-  const linkRegex = new RegExp(`discordapp.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
+  const linkRegex = new RegExp(`discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
   if (message.content.match(linkRegex)) {
     const [, channelId, messageId] = linkRegex.exec(message.content);
 
