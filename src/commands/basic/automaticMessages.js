@@ -32,7 +32,15 @@ class AutomaticMessages extends Command {
             message.reply(client.config.messages.errors.privatemessage);
           }
         } else {
-          message.channel.send(autoMessage.content);
+          const msg = await message.channel.send(autoMessage.content);
+          msg.react('🗑️');
+          const removeCollector = msg
+            .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)
+            .once('collect', () => {
+              removeCollector.stop();
+              msg.delete();
+              message.delete();
+            });
         }
         return;
       }
