@@ -198,7 +198,7 @@
                     },
                     "debug": {
                         "templates": ["debug"],
-                        "content": "Un \"debug\" est un ou plusieurs messages que l'on positionne a des endroits stratégiques dans le code pour voir ou est ce qu'il ne fonctionne pas (pour voir si un évènement se déclenche, ou si une condition est passée par exemple).\nIl peut aussi être utilisé pour afficher une variable, et voir ce qu'elle contient. En skript, on utilisé généralement `broadcast` pour éviter les problèmes dans les contextes ou il n'y a pas de joueur."
+                        "content": "Un \"debug\" est un (ou plusieurs) message que l'on positionne à des endroits stratégiques dans le code pour voir où est ce qu'il ne fonctionne pas (pour voir si un évènement se déclenche, ou si une condition est passée par exemple).\nIl peut aussi être utilisé pour afficher une variable, et voir ce qu'elle contient. En Skript, on utilise généralement `broadcast` pour éviter les problèmes dans les contextes où il n'y a pas de joueur."
                     },
                     "lores": {
                         "templates": ["lore", "lores"],
@@ -206,11 +206,11 @@
                     },
                     "begin": {
                         "templates": ["begin", "start"],
-                        "content": "Pour commencer à apprendre Skript, vous avez beaucoup de possibilités. D'abord, des tutoriels vidéos en francais sont disponibles sur la chaîne YouTube de Skript-MC : <https://www.youtube.com/channel/UCnpbnCqfmJmbYaYCLEYsOJw/videos>. D'autres chaînes youtube vous apprenant le Skript existent aussi, comme celles de Phe0x, de 6moon etc. Des tutoriels écris existent aussi sur le forum, ici : <https://skript-mc.fr/forum/forum/8-tutoriels/>. Vous pouvez aussi vous aider des documentations, comme celle de Skript-MC, ici : <https://skript-mc.fr/documentation/skript/>. Enfin, vous pouvez télécharger des ressources pas trop compliquées ici : <https://skript-mc.fr/forum/files/>, et regarder comment elles fonctionnent/sont structurées. Bienvenue dans l'univers de Skript, et amusez-vous bien !"
+                        "content": "Pour commencer à apprendre Skript, vous avez beaucoup de possibilités. D'abord, des tutoriels vidéos en francais sont disponibles sur la chaîne YouTube de Skript-MC : <https://www.youtube.com/channel/UCnpbnCqfmJmbYaYCLEYsOJw/videos>. D'autres chaînes youtube vous apprenant le Skript existent aussi, vous avez juste à chercher sur YouTube ! Des tutoriels écrits existent aussi sur le forum, ici : <https://skript-mc.fr/forum/forum/8-tutoriels/>. Vous pouvez aussi vous aider des documentations, comme celle de Skript-MC, ici : <https://skript-mc.fr/documentation/skript/>. Enfin, vous pouvez télécharger des ressources pas trop compliquées ici : <https://skript-mc.fr/forum/files/>, et regarder comment elles fonctionnent/sont structurées. Bienvenue dans l'univers de Skript, et amusez-vous bien !"
                     },
                     "demande": {
                         "templates": ["demande", "demandes"],
-                        "content": ":warning: Merci de ne pas faire vos demandes de skript sur le Discord.\nPour cela, vous pouvez aller dans cette catégorie du forum : <https://skript-mc.fr/forum/forum/6-demandes-de-skripts/>. Vos questions et demande d'aide sont par contre bienvenues ici !."
+                        "content": ":warning: Merci de ne pas faire vos demandes de skript sur le Discord.\nPour cela, vous pouvez aller dans cette catégorie du forum : <https://skript-mc.fr/forum/forum/6-demandes-de-skripts/>. Vos questions et demandes d'aide sont par contre bienvenues ici !."
                     },
                     "marchepas": {
                         "templates": ["marchepas", "fonctionnepas"],
@@ -274,7 +274,7 @@
                     "notinperiodic": "Ce message indique que vous utilisez des mots clés tels que `player` ou `world` dans un évènement périodique (`every X`). Or, un évènement périodique n'a pas de joueur ou d'évènement en jeu, il s'éxecute seulement tous les X. Vous ne pouvez donc pas utiliser les données `joueur` ou `world`. Pour utiliser le monde, vous pouvez préciser \"Tous les X dans le monde Y\" : `every hour in \"hub\"`. Pour le joueur, il faudra tous les boucler. Cela est cependant déconseillé, veuillez regarder ici : `.auto everyloop`.",
                     "cantparse": "Ce message apparait quand vous essayer de `parse` une donnée dans un certain type, alors que ce n'est pas possible. Par exemple `set {_} to \"ABC\" parsed as chunk` n'est pas possible.",
                     "cantsave": "Cet avertissement indique que ce que vous essayer de stocker dans une variable n'est pas possible, donc au redémarrage du serveur, ce qu'il y a dedans sera perdu. Par exemple : un inventaire ne peut pas être sauvegardé dans une variable.",
-                    "unknown": "Désolé, mais je ne connais pas cette erreur... Beaucoup d'autre erreur existe dans Skript. Pour vous aider a corriger votre erreur, essayez déjà de la traduire, cela vous aidera à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
+                    "unknown": "Désolé, mais je ne connais pas cette erreur : beaucoup d'erreurs existent dans Skript. Pour vous aider à corriger votre erreur, essayez déjà de la traduire, cela vous aidera à mieux comprendre votre problème. Si vous ne voyez toujours pas, et que vous n'avez pas pu trouver de sujets similaires résolus sur internet, alors vous pouvez demander de l'aide dans les canaux d'aide."
                 }
             },
             "addoninfo": {
