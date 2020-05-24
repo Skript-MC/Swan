@@ -420,16 +420,17 @@
             },
             "poll": {
                 "help": "Lancer un sondage.",
-                "description": "Lance un sondage temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée.",
+                "description": "Lance un sondage temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajouter l'argument `-a` indique que le sondage sera anonyme.",
                 "invalidDuration": "La durée marquée est invalide !",
                 "invalidCmd": "Il y a un problème dans ta commande... Vérifie qu'elle soit construite de cette façon :\n```.sond <durée> \"<sondage>\" [\"réponse 1\"] [\"réponse 2\"] [\"réponse 3\"] ...```\n**DURÉE** est composée d'un nombre suivi sans espace de `sec` pour `seconde` ou de `m` pour `minute` ou de `h` pour `heure` ou de `j` pour `jour`.\n**SONDAGE** est un texte, entre guillemets, qui explique votre sondage.\n**[\"réponse X\"]** est une option de réponse, entre guillemets. Ce champ est facultatif, car si vous ne mettez aucune réponse on devra répondre à votre sondage par Oui/Non.\nExemple de commande : ```.sond 1h30m \"Vous aimez les pâtes ?\"```",
                 "quoteProblem": "Il y a un problème dans les guillemets (\") !",
                 "notEnoughAnswers": "Il n'y a pas assez de réponses possible ! Il faut préciser soit aucune réponse, auquel cas on pourra répondre a ton sondage par oui et non, soit au moins 2 réponses.",
                 "tooManyAnswers": "Il y a trop de réponse ! Le maximum est de 18.",
-                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
-                "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la 1ère mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "pollInfosYesNo": "**Informations sur les sondages :**\nRéagissez par :white_check_mark: pour voter Oui à la question posée, ou réagissez par :x: pour voter Non. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la dernière mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
+                "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la dernière mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
                 "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours.",
-                "infosSent": "%m, je t'ai envoyé plus d'informations en privé !"
+                "infosSent": "%m, je t'ai envoyé plus d'informations en privé !",
+                "alreadyVotedThis": "Vous avez déjà voté pour cette option !"
             },
             "joke": {
                 "help": "Envoyer une blague aléatoire.",

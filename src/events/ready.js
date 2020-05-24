@@ -4,6 +4,7 @@ import SanctionManager from '../structures/SanctionManager';
 import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
+import { checkPolls } from '../commands/fun/poll';
 
 export default async function readyHandler() {
   client.guild = client.guilds.resolve(client.config.bot.guild);
@@ -29,12 +30,10 @@ export default async function readyHandler() {
 
   // Initializing the commands-stats database
   for (const command of client.commands) {
-    const docs = await db.commandsStats.find({ command: command.name })
-      .catch(console.error);
+    const docs = await db.commandsStats.find({ command: command.name }).catch(console.error);
     if (docs.length > 0) continue;
 
-    await db.commandsStats.insert({ command: command.name, used: 0 })
-      .catch(console.error);
+    await db.commandsStats.insert({ command: command.name, used: 0 }).catch(console.error);
   }
   client.logger.debug('main.js -> commandsStats database initialized successfully');
 
@@ -42,17 +41,18 @@ export default async function readyHandler() {
   const suggestionChannel = client.channels.cache.get(client.config.channels.suggestion);
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
   client.logger.step(`Messages cached! (${suggestionMessages.size})`);
-
   client.logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
     SanctionManager.checkSanctions(); // Vérification des sanctions temporaires
+    checkPolls(client); // Vérification des sondages
   }, client.config.bot.checkInterval.short);
 
   setInterval(() => {
     loadRssFeed(); // Chargement des flux RSS
     loadSkriptReleases(); // Vérification si une nouvelle version de Skript est sortie
-    client.user.setPresence(randomActivity(client, client.commands, client.config.bot.prefix)); // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment)
+    // On remet l'activité du bot (sinon elle s'enlève toute seule au bout d'un moment) :
+    client.user.setPresence(randomActivity(client, client.commands, client.config.bot.prefix));
   }, client.config.bot.checkInterval.long);
 }

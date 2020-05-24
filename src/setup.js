@@ -186,10 +186,12 @@ export function loadDatabases() {
     'musicsStats',
     // Store all commands stats
     'commandsStats',
+    // Jokes stats
+    'jokes',
+    // Polls objects
+    'polls',
     // Miscellaneous
     'miscellaneous',
-    // Jokes
-    'jokes',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
