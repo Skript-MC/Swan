@@ -724,7 +724,8 @@
                 "error": "Une erreur s'est produite... Merci de réessayer plus tard !",
                 "chooseSong": "J'ai trouvé plusieurs musiques, choisis une musique en cliquant sur la réaction correspondante :",
                 "nowPlaying": "Musique en cours de lecture : :musical_note: %t :musical_note: (%d)",
-                "noMusicFound": "Désolé, mais je n'ai trouvé aucune musique correspondante à ta recherche `%s`."
+                "noMusicFound": "Désolé, mais je n'ai trouvé aucune musique correspondante à ta recherche `%s`.",
+                "queueFinished": "Je n'ai plus aucune musique à jouer, je me déconnecte ! Si tu as de nouveau besoin de moi, utilise la commande `.play` ou `.join` ! À la prochaine. :wink:"
             },
             "queue": {
                 "help": "Afficher la queue.",
