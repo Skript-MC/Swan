@@ -215,6 +215,10 @@
                     "marchepas": {
                         "templates": ["marchepas", "fonctionnepas"],
                         "content": "Contre toute attente, \"ne fonctionne pas\" n'est pas une information suffisante à fournir pour recevoir de l'aide.\nQuel est le comportement attendu (voulu), quel est le comportement réel (non voulu) ? Y a-t-il des erreurs ? Quel est le code pertinent qui pourrait être à l'origine du problème ? Et évidemment, respectez le modèle d'aide qui permet aux personnes de vous aider beaucoup plus simplement (`.auto helptemplate`)"
+                    },
+                    "discussion": {
+                        "templates": ["question", "discussion"],
+                        "content": "Comme vous pouvez le lire, ce channel est réservé à de la **__*DISCUSSION*__**. Ainsi toute demande d'aide sera suivie d'une sanction irrévoquable. Vous avez déjà 3 salons réservés à cet effet. Veuillez lire le nom du canal, le \"sujet\" du salon et les messages épinglés la prochaine fois, avant de poster dans un salon."
                     }
                 }
             },
