@@ -63,6 +63,7 @@
             "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
             "cmdSuggestion": "La commande `%c` n'existe pas. Voulais-tu dire `.%m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
             "musicAskOthers": "%u voudrait effectuer l'action suivante : `%s`. Êtes-vous d'accord ? (ajoutez une réaction au message). Expire au bout d'1 minute.\n**(%d)**",
+            "leaveBecauseAlone": "J'ai quitté le canal vocal car j'y suis seul !",
             "ghostping": ":warning: %s, tu as été ghost-ping par %m. :innocent:",
             "ghostpingPlural": ":warning: %s, vous avez été ghost-ping par %m. :innocent:",
             "sanctionExpired": "Sanction expirée (automatique)",

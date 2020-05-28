@@ -33,7 +33,7 @@ class Play extends Command {
 
     // Si l'utilisateur est dans un channel
     const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) return message.channel.send(client.config.messages.errors.joinErrors[0]);
+    if (!voiceChannel) return message.channel.send(client.config.messages.errors.joinErrors.notInChannel);
 
     // Faire rejoindre le bot, s'il n'est pas déjà dans un canal vocal
     if (!message.guild.voice || !message.guild.voice.connection || message.guild.voice.channel.id !== message.member.voice.channel.id) {
