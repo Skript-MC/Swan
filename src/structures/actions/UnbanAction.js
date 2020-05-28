@@ -14,7 +14,8 @@ class UnbanAction extends ModerationAction {
     // Regarde dans la bdd si le joueur est banni
     const isHardban = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.HARDBAN }).catch(console.error);
     if (isHardban) {
-      await this.data.guild.members.unban(this.data.user.id, this.data.reason);
+      const isBanned = await this.data.guild.fetchBan(this.data.user.id);
+      if (isBanned) await this.data.guild.members.unban(this.data.user.id, this.data.reason).catch(console.error);
     } else {
       const isBan = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
       if (isBan) {
