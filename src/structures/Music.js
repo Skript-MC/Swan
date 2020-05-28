@@ -12,6 +12,7 @@ class MusicBotApp {
     this.presets.set('leave', { playNext: false, leave: true, sendFinishMsg: false });
     this.presets.set('default', { playNext: true, leave: true, sendFinishMsg: true });
 
+    this.channel = undefined;
     this.nowPlaying = undefined;
     this.dispatcher = undefined;
     this.queue = undefined;
@@ -26,6 +27,7 @@ class MusicBotApp {
 
   async playSong(queue, message) {
     if (queue.length === 0) return;
+    this.channel = message.channel;
 
     const { voiceChannel } = queue[0];
     const connection = await queue[0].voiceChannel.join()
