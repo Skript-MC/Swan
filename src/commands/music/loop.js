@@ -1,6 +1,5 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Loop extends Command {
   constructor() {
@@ -11,9 +10,9 @@ class Loop extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const validate = MusicBot.canUseCommand(message, { notRestricted: true });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     const reason = args.join(' ') === 'off' ? 'arrêter de ' : '';
     const arg = args.join(' ');

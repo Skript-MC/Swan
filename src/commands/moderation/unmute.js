@@ -1,6 +1,7 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
-import Moderation from '../../structures/Moderation';
+import ModerationData from '../../structures/ModerationData';
+import ACTION_TYPE from '../../structures/actions/actionType';
+import UnmuteAction from '../../structures/actions/UnmuteAction';
 
 class Unmute extends Command {
   constructor() {
@@ -11,13 +12,20 @@ class Unmute extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
-    const victim = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
-    if (!victim) return message.channel.send(discordError(this.config.missingUserArgument, message));
+  async execute(client, message, args) {
+    const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
+    if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
 
     const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 
-    Moderation.unmute(victim, reason, message.author, this.config, message, message.guild);
+    const data = new ModerationData()
+      .setType(ACTION_TYPE.UNMUTE)
+      .setColor(client.config.colors.success)
+      .setMember(victim)
+      .setReason(reason)
+      .setModerator(message.member)
+      .setMessageChannel(message.channel);
+    new UnmuteAction(data).commit();
   }
 }
 

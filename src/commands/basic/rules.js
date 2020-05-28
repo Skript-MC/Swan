@@ -1,6 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
-import { config } from '../../main';
 
 class Rules extends Command {
   constructor() {
@@ -10,11 +8,11 @@ class Rules extends Command {
     this.examples = ['rule 2'];
   }
 
-  async execute(message, args) {
-    if (!config.channels.helpSkript.includes(message.channel.id)) return message.channel.send(discordError(this.config.onlyInHelp, message));
+  async execute(client, message, args) {
+    if (!client.config.channels.helpSkript.includes(message.channel.id)) return message.channel.sendError(this.config.onlyInHelp, message.member);
 
     const rule = parseInt(args[0], 10);
-    if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) return message.channel.send(discordError(this.config.invalidRule, message));
+    if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) return message.channel.sendError(this.config.invalidRule, message.member);
     return message.channel.send(this.config.messages[rule - 1]);
   }
 }

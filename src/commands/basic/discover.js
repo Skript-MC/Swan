@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { commands } from '../../main';
 import Help from './help';
 
 class Discover extends Command {
@@ -10,8 +9,20 @@ class Discover extends Command {
     this.examples = ['discover'];
   }
 
-  async execute(message, _args) {
-    new Help().sendDetails(message, commands[Math.floor(Math.random() * commands.length)]);
+  async execute(client, message, _args) {
+    let result;
+    while (!result) {
+      const command = client.commands[Math.floor(Math.random() * client.commands.length)];
+      // Check des permissions
+      if (message.member.roles.cache.has(client.config.roles.owner)) result = command;
+      else if (command.permissions.length === 0) result = command;
+      else {
+        for (const perm of command.permissions) {
+          if (message.member.roles.cache.find(role => role.name === perm)) result = command;
+        }
+      }
+    }
+    new Help().sendDetails(client.config, message, result);
   }
 }
 

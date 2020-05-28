@@ -1,6 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
-import { logger } from '../../main';
 
 class TagRole extends Command {
   constructor() {
@@ -11,8 +9,8 @@ class TagRole extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
+  async execute(client, message, args) {
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
 
     message.delete();
     const role = message.guild.roles.cache.find(r => r.name.toUpperCase() === args.join(' ').toUpperCase());
@@ -21,7 +19,7 @@ class TagRole extends Command {
         try {
           role.setMentionable(true);
         } catch (err) {
-          logger.error(`An error occured while attempting to set the mentionable state of role ${role} to true.\nError : ${err.msg}`);
+          client.logger.error(`An error occured while attempting to set the mentionable state of role ${role} to true.\nError : ${err.msg}`);
         }
       }
       await message.channel.send(`${role.toString()} :arrow_up: `);
@@ -29,11 +27,11 @@ class TagRole extends Command {
         try {
           role.setMentionable(false);
         } catch (err) {
-          logger.error(`An error occured while attempting to set the mentionable state of role ${role} to false.\nError : ${err.msg}`);
+          client.logger.error(`An error occured while attempting to set the mentionable state of role ${role} to false.\nError : ${err.msg}`);
         }
       }
     } else {
-      return logger.error(this.config.invalidRole.replace('%s', args.join(' ')));
+      return client.logger.error(this.config.invalidRole.replace('%s', args.join(' ')));
     }
   }
 }

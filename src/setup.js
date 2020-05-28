@@ -1,20 +1,14 @@
 /* eslint-disable import/no-dynamic-require, import/no-cycle */
-import fs from 'fs';
+import { promises as fs } from 'fs';
+import path from 'path';
 import axios from 'axios';
 import Datastore from 'nedb-promises';
-import { Client } from 'discord.js';
-import { config, commands, logger } from './main';
+import { Structures, MessageEmbed } from 'discord.js';
+import { client } from './main';
 
 require('dotenv').config();
 
-const apikeys = {
-  discord: process.env.DISCORD_API,
-  skripthub: process.env.SKRIPTHUB_API,
-};
-
 export function loadConfig() {
-  logger.debug('setup.js -> Loading configuration (loadConfig())');
-
   const conf = require('../config/config.json'); // eslint-disable-line global-require
   const ids = process.env;
 
@@ -31,6 +25,8 @@ export function loadConfig() {
     main: ids.MAIN,
     logs: ids.LOGS,
     rssFeed: ids.RSS_FEED,
+    skriptNews: ids.SKRIPT_NEWS,
+    bot: ids.BOT_CHANNEL,
   };
   conf.roles = {
     owner: ids.OWNER,
@@ -38,69 +34,110 @@ export function loadConfig() {
     staff: ids.STAFF,
     ma: ids.MA,
     everyone: ids.EVERYONE,
+    ban: ids.BAN,
+    mute: ids.MUTE,
+    eventNotifications: ids.EVENT_NOTIFICATIONS,
+    minRoleToClearQueue: ids.MIN_ROLE_TO_CLEAR_QUEUE,
   };
   conf.moderation.logCategory = ids.LOG_CATEGORY;
   conf.music.minRoleToClearQueue = ids.MIN_ROLE_TO_CLEAR_QUEUE;
   conf.music.restrictedVocal = ids.RESTRICTED_VOCAL ? ids.RESTRICTED_VOCAL.split(',') : [];
+  conf.sendCommandStats = ids.COMMAND_STATS_USERS ? ids.COMMAND_STATS_USERS.split(',') : [];
 
-  logger.debug('setup.js -> Configuration finished loading');
   return conf;
 }
 
-export function loadBot() {
-  logger.debug('setup.js -> Loading bot (loadBot())');
+export function extendClasses() {
+  Structures.extend('TextChannel', (TextChannel) => {
+    class CustomTextChannel extends TextChannel {
+      sendError(content, member, options) {
+        const embed = new MessageEmbed()
+          .attachFiles(['./assets/error.png'])
+          .setThumbnail('attachment://error.png')
+          .setTitle('Erreur')
+          .setColor(client.config.colors.error)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
+      }
 
-  const client = new Client();
-  client.login(apikeys.discord);
+      sendInfo(content, member, options) {
+        const embed = new MessageEmbed()
+          .attachFiles(['./assets/information.png'])
+          .setThumbnail('attachment://information.png')
+          .setTitle('Information')
+          .setColor(client.config.colors.default)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
+      }
 
-  logger.debug(`setup.js -> Bot finished loading (type: ${client.constructor.name})`);
-  return client;
-}
-
-export function loadCommands(path = 'commands') {
-  if (path !== 'commands') logger.step(`loading : ${path}`);
-
-  fs.readdir(`${__dirname}/${path}`, (err, files) => {
-    if (err) throw err;
-    for (const file of files) {
-      const stat = fs.statSync(`${__dirname}/${path}/${file}`);
-      if (stat.isDirectory()) {
-        loadCommands(`${path}/${file}`);
-      } else if (file === '.DS_Store') {
-        continue;
-      } else {
-        try {
-          const Module = require(`${__dirname}/${path}/${file}`).default; // eslint-disable-line global-require
-          const command = new Module();
-          if (command.enabled) {
-            command.init();
-            command.category = path.replace('commands/', '');
-            commands.push(command);
-          }
-        } catch (e) {
-          logger.error(`Unable to load this command: ${file}`);
-          throw new Error(e);
-        }
+      sendSuccess(content, member, options) {
+        const embed = new MessageEmbed()
+          .attachFiles(['./assets/success.png'])
+          .setThumbnail('attachment://success.png')
+          .setTitle('Succès')
+          .setColor(client.config.colors.success)
+          .setDescription(content)
+          .setTimestamp()
+          .setFooter(`Exécuté par ${member.displayName}`);
+        this.send(embed, options);
       }
     }
+
+    return CustomTextChannel;
   });
+}
+
+export async function loadCommands(dir = 'commands') {
+  if (dir !== 'commands') client.logger.step(`loading: ${dir}`);
+
+  const filePath = path.join(__dirname, dir);
+  const files = await fs.readdir(filePath);
+  for (const file of files) {
+    const stat = await fs.lstat(path.join(filePath, file));
+    if (stat.isDirectory()) loadCommands(path.join(dir, file));
+    if (file.endsWith('.js')) {
+      const Command = require(path.join(filePath, file)).default; // eslint-disable-line global-require
+      const cmd = new Command();
+      if (cmd.enabled) {
+        cmd.category = dir.replace('commands/', '');
+        client.commands.push(cmd);
+      }
+    }
+  }
+}
+
+export async function loadEvents() {
+  client.logger.step('loading events');
+  const filePath = path.join(__dirname, 'events');
+  const files = await fs.readdir(filePath);
+  for (const file of files) {
+    if (file.endsWith('.js')) {
+      const eventFunction = require(path.join(filePath, file)).default; // eslint-disable-line global-require
+      const event = file.split('.')[0];
+      client.on(event, eventFunction);
+    }
+  }
 }
 
 export async function loadSkriptHubAPI() {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Token ${apikeys.skripthub}`,
+      Authorization: `Token ${process.env.SKRIPTHUB_API}`,
     },
   };
   const syntaxes = [];
 
-  await axios(`${config.apis.syntax}/syntax/`, options)
+  await axios(`${client.config.apis.syntax}/syntax/`, options)
     .then((response) => {
       for (const syntax of response.data) syntaxes[syntax.id] = syntax;
     }).catch(console.error);
 
-  await axios(`${config.apis.syntax}/syntaxexample/`, options)
+  await axios(`${client.config.apis.syntax}/syntaxexample/`, options)
     .then((response) => {
       for (const example of response.data) {
         if (syntaxes[example.syntax_element]) {
@@ -109,17 +146,17 @@ export async function loadSkriptHubAPI() {
       }
     }).catch(console.error);
 
-  logger.step('SkriptHub : api loaded!');
+  client.logger.step('SkriptHub : api loaded!');
   return syntaxes;
 }
 
 export async function loadSkripttoolsAddons() {
   let addons = [];
 
-  const allAddons = await axios(config.apis.addons)
+  const allAddons = await axios(client.config.apis.addons)
     .then(response => (response ? response.data.data : undefined))
     .catch(console.error);
-  if (typeof allAddons === 'undefined') return logger.error(`Unable to retrieve informations from ${config.apis.addons}`);
+  if (typeof allAddons === 'undefined') return client.logger.error(`Unable to retrieve informations from ${client.config.apis.addons}`);
 
   for (const addon of Object.keys(allAddons)) {
     const versions = allAddons[addon];
@@ -127,12 +164,12 @@ export async function loadSkripttoolsAddons() {
     if (!versions) continue;
 
     const latest = versions[versions.length - 1];
-    addons.push(axios(`${config.apis.addons}${latest}`)
+    addons.push(axios(`${client.config.apis.addons}${latest}`)
       .then(response => response.data.data)
       .catch(console.error));
   }
   addons = await Promise.all(addons);
-  logger.step('Skripttools : addons loaded!');
+  client.logger.step('Skripttools : addons loaded!');
   return addons;
 }
 
@@ -149,16 +186,22 @@ export function loadDatabases() {
     'musicsStats',
     // Store all commands stats
     'commandsStats',
+    // Jokes stats
+    'jokes',
+    // Polls objects
+    'polls',
     // Miscellaneous
     'miscellaneous',
-    // Jokes
-    'jokes',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
     databases[db].load()
-      .then(() => logger.step(`Databases : "${db}.db" loaded!`))
+      .then(() => client.logger.step(`Databases : "${db}.db" loaded!`))
       .catch(console.error);
+    databases[db].on('__error__', (datastore, event, error, ...args) => {
+      client.logger.error(`Database ${db} generated the following error (${event}). Arguments: ${args}`);
+      console.error(error);
+    });
   }
 
   return databases;

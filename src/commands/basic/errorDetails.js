@@ -1,5 +1,4 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 
 class ErrorDetails extends Command {
   constructor() {
@@ -9,8 +8,8 @@ class ErrorDetails extends Command {
     this.examples = ["errordetail Can't compare 'if arg 1' with a text"];
   }
 
-  async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.noError, message));
+  async execute(_client, message, args) {
+    if (args.length === 0) return message.channel.sendError(this.config.noError, message.member);
 
     const arg = args.join(' ').toLowerCase();
 
@@ -25,7 +24,12 @@ class ErrorDetails extends Command {
     else if (arg.match(/There's no player in/gimu)) message.channel.send(this.config.error.noplayer);
     else if (arg.match(/code has to be put in triggers/gimu)) message.channel.send(this.config.error.codeintriggers);
     else if (arg.match(/because it's a single value/gimu)) message.channel.send(this.config.error.cantloopsinglevalue);
-    else message.channel.send(discordError(this.config.error.unknown, message));
+    else if (arg.match(/This command doesn't have any arguments/gimu)) message.channel.send(this.config.error.doesnthaveargs);
+    else if (arg.match(/can only be used within a command/gimu)) message.channel.send(this.config.error.onlyincommand);
+    else if (arg.match(/in a periodic event/gimu)) message.channel.send(this.config.error.notinperiodic);
+    else if (arg.match(/cannot be parsed as/gimu)) message.channel.send(this.config.error.cantparse);
+    else if (arg.match(/cannot be saved/gimu)) message.channel.send(this.config.error.cantsave);
+    else message.channel.sendError(this.config.error.unknown, message.member);
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "1.4.1",
+  "version": "1.7.0",
   "description": "Bot discord de Skript-Mc.",
   "main": "./src/main.js",
   "scripts": {
@@ -26,34 +26,37 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.3.2",
     "axios": "^0.19.2",
-    "bufferutil": "^4.0.1",
     "chalk": "^4.0.0",
-    "discord-ytdl-core": "0.0.0",
+    "discord-ytdl-core": "^2.0.1",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
-    "erlpack": "^0.1.3",
-    "ffmpeg-static": "^2.7.0",
+    "ffmpeg-static": "^4.2.2",
     "he": "^1.2.0",
-    "mathjs": "^6.6.4",
+    "mathjs": "^7.0.0",
+    "moment": "^2.26.0",
     "nedb-promises": "^4.0.1",
     "rss-parser": "^3.7.6",
-    "sanitize-html": "^1.23.0",
-    "simple-youtube-api": "^5.2.1",
-    "utf-8-validate": "^5.0.2",
-    "zlib-sync": "^0.1.6"
+    "sanitize-html": "^1.24.0",
+    "simple-youtube-api": "^5.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "^7.10.0",
     "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.10.0",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint": "^7.1.0",
+    "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.4"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.1",
+    "erlpack": "^0.1.3",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.6"
   },
   "repository": {
     "type": "git",

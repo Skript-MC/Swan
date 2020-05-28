@@ -8,10 +8,10 @@ class AddonPack extends Command {
     this.examples = ['addon-pack 1.14'];
   }
 
-  async execute(message, args) {
+  async execute(_client, message, args) {
     if (args.length > 0) {
-      // De la 1.9 à la 1.15 inclus
-      const match = /1\.(9|1[0-5])(\.\d*)?/gimu.exec(args[0]);
+      // De la 1.9 à la 1.16 inclus
+      const match = /1\.(9|1[0-6])(\.\d*)?/gimu.exec(args[0]);
       try {
         message.channel.send(this.config.messages[match[1] - 9]);
       } catch (e) {
