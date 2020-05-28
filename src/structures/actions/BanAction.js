@@ -75,6 +75,9 @@ class BanAction extends ModerationAction {
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }
 
+    // We send him this awesome gif
+    await this.data.user.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695').catch(() => {});
+
     await db.sanctions.remove({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
 
     // Delete channel
