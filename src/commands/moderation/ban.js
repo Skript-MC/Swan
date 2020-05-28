@@ -1,30 +1,62 @@
+import { GuildMember } from 'discord.js';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
 import { toTimestamp } from '../../utils';
-import Moderation from '../../structures/Moderation';
-import SanctionManager from '../../structures/SanctionManager';
+import ModerationData from '../../structures/ModerationData';
+import BanAction from '../../structures/actions/BanAction';
+import ACTION_TYPE from '../../structures/actions/actionType';
 
 class Ban extends Command {
   constructor() {
     super('Ban');
     this.aliases = ['ban', 'sdb'];
-    this.usage = 'ban <@mention | ID> <durée> [<raison>]';
-    this.examples = ['ban @Uneo7 5j Mouahaha'];
+    this.usage = 'ban <@mention | ID> <durée> <raison> [--autoban]';
+    this.examples = ['ban @Uneo7 5j Mouahaha --autoban', 'ban @Vengelis_ def Tu ne reviendras jamais !'];
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
-    const victim = SanctionManager.getMember(message, args[0]);
-    if (!victim) return message.channel.send(discordError(this.config.missingUserArgument, message));
-    if (!args[1]) return message.channel.send(discordError(this.config.missingTimeArgument, message));
-    if (!args[2]) return message.channel.send(discordError(this.config.missingReasonArgument, message));
-    if (victim.id === message.author.id) return message.channel.send(discordError(this.config.unableToSelfBan, message));
-    if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.send(discordError(this.config.userTooPowerful, message));
+  async execute(client, message, args) {
+    let hardbanIfNoMessages = false;
+    if (args.includes('--autoban')) {
+      args.splice(args.indexOf('--autoban'), 1);
+      hardbanIfNoMessages = true;
+    }
+    const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
+    if (!(victim instanceof GuildMember)) return message.channel.sendError(this.config.missingUserArgument, message.member);
+    if (!args[1]) return message.channel.sendError(this.config.missingTimeArgument, message.member);
+    if (!args[2]) return message.channel.sendError(this.config.missingReasonArgument, message.member);
+    if (victim.id === message.author.id) return message.channel.sendError(this.config.unableToSelfBan, message.member);
+    if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.sendError(this.config.userTooPowerful, message.member);
 
-    const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
-    const duration = toTimestamp(args[1]) === -1 ? -1 : toTimestamp(args[1]) / 1000;
+    const reason = args.splice(2).join(' ');
 
-    Moderation.ban(victim, reason, duration, message.author, this.config, message, message.guild);
+    let duration;
+    if (args[1] === 'def' || args[1] === 'definitif') {
+      duration = -1;
+    } else {
+      duration = toTimestamp(args[1]);
+      if (!duration) return message.channel.sendError(this.config.invalidDuration, message.member);
+      duration *= 1000;
+    }
+
+    const type = duration === -1 ? ACTION_TYPE.HARDBAN : ACTION_TYPE.BAN;
+
+    // Durée max des modérateurs forum : 2j
+    if (message.member.roles.cache.has(client.config.roles.forumMod) && (type === ACTION_TYPE.HARDBAN || duration > client.config.moderation.maxForumModDuration)) {
+      return message.channel.sendError(this.config.durationTooLong, message.member);
+    }
+
+    const data = new ModerationData()
+      .setType(type)
+      .setColor(type === ACTION_TYPE.BAN ? client.config.colors.ban : client.config.colors.hardban)
+      .setReason(reason)
+      .setDuration(duration)
+      .setMember(victim)
+      .setModerator(message.member)
+      .shouldHardbanIfNoMessages(hardbanIfNoMessages)
+      .setMessageChannel(message.channel)
+      .setFinishTimestamp();
+
+    new BanAction(data).commit();
   }
 }
 

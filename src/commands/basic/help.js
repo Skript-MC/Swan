@@ -1,13 +1,9 @@
-/* eslint-disable no-param-reassign */
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { commands, config } from '../../main';
-import { discordError } from '../../structures/messages';
-import { jkDistance, selectorMessage } from '../../utils';
+import { jkDistance, selectorMessage, parsePage } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-const cmdPerPage = config.miscellaneous.cmdPerPagesInHelp;
 
 class Help extends Command {
   constructor() {
@@ -18,34 +14,29 @@ class Help extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args, page) {
-    // eslint-disable-next-line no-nested-ternary
-    page = page ? parseInt(page, 10) : (args[0] ? parseInt(args[0] - 1, 10) : 0);
-    page = isNaN(page) ? 0 : page;
+  async execute(client, message, args) {
+    const cmdPerPage = client.config.miscellaneous.cmdPerPagesInHelp;
+    const totalPages = Math.ceil(client.commands.length / cmdPerPage);
+    const page = parsePage(args[0], totalPages);
 
-    const totalPages = Math.ceil(commands.length / cmdPerPage);
-
-    if (page < 0) page = 0;
-    if (page >= totalPages) page = totalPages - 1;
-
-    // S'il n'y a pas d'arguments, on montre la liste de toutes les commandes
+    // S'il n'y a pas d'arguments ou une page, on montre la liste de toutes les commandes
     if (args.length === 0 || Number.isInteger(parseInt(args[0], 10))) {
       const embed = new MessageEmbed()
-        .attachFiles([config.bot.avatar])
-        .setAuthor(`${commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
-        .setDescription(config.messages.commands.help.header)
+        .attachFiles([client.config.bot.avatar])
+        .setAuthor(`${client.commands.length} commandes disponibles (page ${page + 1}/${totalPages})`, 'attachment://logo.png')
+        .setDescription(this.config.header)
         .setFooter(`Exécuté par ${message.author.username}`)
         .setTimestamp();
 
-      for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= commands.length - 1; i++) {
-        const cmd = commands[page * cmdPerPage + i];
-        embed.addField(`${cmd.name} ⁕ ${config.bot.prefix}${cmd.usage}`, `${cmd.permissions.some(role => role === 'Staff' || role === 'Modérateur Discord' || role === 'Gérant') > 0 ? ':octagonal_sign:' : ''} ${cmd.help}`, false);
+      for (let i = 0; i < cmdPerPage && i < page * cmdPerPage + cmdPerPage && page * cmdPerPage + i <= client.commands.length - 1; i++) {
+        const cmd = client.commands[page * cmdPerPage + i];
+        embed.addField(`${cmd.name} ⁕ ${client.config.bot.prefix}${cmd.usage}`, `${cmd.permissions.some(role => role === 'Staff' || role === 'Modérateur Discord' || role === 'Gérant') > 0 ? ':octagonal_sign:' : ''} ${cmd.help}`, false);
       }
 
       // Envoyer l'embed, ajouter les réactions, puis modifier sa couleur en bleu
       const helpEmbed = await message.channel.send(embed);
       for (const r of reactions) await helpEmbed.react(r);
-      embed.setColor(config.colors.default);
+      embed.setColor(client.config.colors.default);
       helpEmbed.edit(embed);
 
       const collector = helpEmbed
@@ -54,30 +45,28 @@ class Help extends Command {
         .once('collect', (reaction) => {
           helpEmbed.delete();
           if (reaction.emoji.name === '⏮') {
-            this.execute(message, args, 0);
+            this.execute(client, message, [1]);
           } else if (reaction.emoji.name === '◀') {
-            const prevPage = page <= 0 ? totalPages - 1 : page - 1;
-            this.execute(message, args, prevPage);
+            this.execute(client, message, [page]);
           } else if (reaction.emoji.name === '🇽') {
             message.delete();
           } else if (reaction.emoji.name === '▶') {
-            const nextPage = page + 1 >= totalPages ? 0 : page + 1;
-            this.execute(message, args, nextPage);
+            this.execute(client, message, [page + 2]);
           } else if (reaction.emoji.name === '⏭') {
-            this.execute(message, args, totalPages - 1);
+            this.execute(client, message, [totalPages]);
           }
           collector.stop();
         });
     } else {
       // On cherche parmis les noms des commandes
-      let cmds = commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
+      let cmds = client.commands.filter(elt => elt.name.toUpperCase().includes(args.join(' ').toUpperCase()));
       if (cmds.length === 0) {
         // Et parmis les noms des commandes, sans espaces
-        cmds = commands.filter(elt => elt.name.toUpperCase().replace(/ /g, '').includes(args.join(' ').toUpperCase()));
+        cmds = client.commands.filter(elt => elt.name.toUpperCase().replace(/ /g, '').includes(args.join(' ').toUpperCase()));
       }
       if (cmds.length === 0) {
         // Et parmis les alias
-        cmds = commands.filter((elt) => {
+        cmds = client.commands.filter((elt) => {
           let found = false;
           elt.aliases.forEach((alias) => {
             found = alias.toUpperCase().replace(/ /g, '').includes(args.join('').toUpperCase());
@@ -91,9 +80,9 @@ class Help extends Command {
       if (results === 0) {
         // Si la commande est inconnue
         const matches = [];
-        for (const elt of commands) {
+        for (const elt of client.commands) {
           for (const alias of elt.aliases) {
-            if (jkDistance(args.join(''), alias) >= config.miscellaneous.commandSimilarity) {
+            if (jkDistance(args.join(''), alias) >= client.config.miscellaneous.commandSimilarity) {
               matches.push(elt);
               break;
             }
@@ -101,7 +90,7 @@ class Help extends Command {
         }
 
         if (matches.length === 0) {
-          message.channel.send(discordError(config.messages.commands.help.cmdDoesntExist, message));
+          message.channel.sendError(this.config.cmdDoesntExist, message.member);
         } else {
           const cmdList = matches.map(m => m.name).join('`, `');
           const msg = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', cmdList));
@@ -117,13 +106,14 @@ class Help extends Command {
               collector.stop();
               msg.delete();
               const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
-              return this.sendDetails(message, matches[index]);
+              return this.sendDetails(client.config, message, matches[index]);
             });
         }
       } else if (results === 1) {
-        this.sendDetails(message, cmds[0]);
+        this.sendDetails(client.config, message, cmds[0]);
       } else {
         selectorMessage(
+          client,
           cmds,
           args.join(' '),
           message,
@@ -135,7 +125,7 @@ class Help extends Command {
     }
   }
 
-  async sendDetails(message, command, thisConfig = this.config) {
+  async sendDetails(config, message, command, thisConfig = this.config) {
     const embed = new MessageEmbed()
       .setColor(config.colors.default)
       .attachFiles([config.bot.avatar])
@@ -143,7 +133,7 @@ class Help extends Command {
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
-    let perms = this.config.details.everyone;
+    let perms = thisConfig.details.everyone;
     if (command.permissions.length > 0) perms = command.permissions.join(', ');
 
     let ex = '';
@@ -169,7 +159,7 @@ class Help extends Command {
       channels.push("sauf les salons d'aide");
     }
 
-    embed.addField(`:star: **${command.name}**`, `${thisConfig.details.description} ${desc}\n${thisConfig.details.category} ${command.category}\n${thisConfig.details.utilisation} ${config.bot.prefix}${command.usage}\n${thisConfig.details.aliases} \`${command.aliases.join('`, `')}\`\n${thisConfig.details.examples} ${ex}\n${thisConfig.details.usable} ${perms}\n${thisConfig.details.channels} ${channels.join(', ')}\n‌‌ `, true);
+    embed.addField(`:star: **${command.name}**`, `${thisConfig.details.description} ${desc}\n${thisConfig.details.category} ${command.category}\n${thisConfig.details.utilisation} \`${config.bot.prefix}${command.usage}\`\n${thisConfig.details.aliases} \`${command.aliases.join('`, `')}\`\n${thisConfig.details.examples} ${ex}\n${thisConfig.details.usable} ${perms}\n${thisConfig.details.channels} ${channels.join(', ')}\n\n[(documentation en ligne)](${config.miscellaneous.documentation}#${command.name.replace(/ +/g, '-')})`, true);
 
     message.channel.send(embed);
   }

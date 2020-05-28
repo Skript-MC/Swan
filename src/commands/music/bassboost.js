@@ -1,19 +1,18 @@
 import Command from '../../structures/Command';
 import MusicBot from '../../structures/Music';
-import { config } from '../../main';
 
 class Bassboost extends Command {
   constructor() {
     super('Bassboost');
     this.aliases = ['bassboost'];
     this.usage = 'bassboost [<nombre entre 0 et 40>]';
-    this.examples = ['bassboost', 'bassboost 3'];
+    this.examples = ['bassboost', 'bassboost 3', 'bassboost default'];
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, args) {
+  async execute(client, message, args) {
     const validate = MusicBot.canUseCommand(message, { songPlaying: false });
-    if (validate !== true) return message.channel.send(config.messages.errors.music[validate]);
+    if (validate !== true) return message.channel.send(client.config.messages.errors.music[validate]);
 
     if (args.length === 0) return message.channel.send(this.config.currentPower.replace('%d', MusicBot.bassboost));
 

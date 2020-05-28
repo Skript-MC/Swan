@@ -9,7 +9,7 @@ class GhostPing extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, _args) {
+  async execute(_client, message, _args) {
     if (typeof message.mentions === 'undefined') message.author.send(this.config.missingUserArgument);
     else message.delete();
   }

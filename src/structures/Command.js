@@ -1,5 +1,4 @@
-/* eslint-disable import/no-cycle */
-import { config } from '../main';
+import { client } from '../main';
 
 /**
  * Représente une commande du bot
@@ -11,10 +10,10 @@ class Command {
    */
   constructor(name) {
     /**
-     * Configuration de la commande (config.messages.commands.la_commande)
+     * Configuration de la commande (client.config.messages.commands.la_commande)
      * @type {Object}
      */
-    this.config = config.messages.commands[name.toLowerCase().replace(/\s/gimu, '')];
+    this.config = client.config.messages.commands[name.toLowerCase().replace(/\s/gimu, '')];
 
     /**
      * Nom de la commande
@@ -75,8 +74,8 @@ class Command {
      * @type {string[]}
      */
     this.requiredChannels = (this.config && this.config.requiredChannels) ? this.config.requiredChannels : [];
-    if (config.bot.defaultChannels.length > 0) {
-      for (const channel of config.bot.defaultChannels) {
+    if (client.config.bot.defaultChannels.length > 0) {
+      for (const channel of client.config.bot.defaultChannels) {
         this.requiredChannels.push(channel);
       }
     }
@@ -91,7 +90,7 @@ class Command {
      * Catégorie de la commande (= le dossier dans lequel elle se trouve)
      * @type {string}
      */
-    this.category = (this.config && this.config.category) ? this.config.category : config.messages.miscellaneous.noCategory;
+    this.category = (this.config && this.config.category) ? this.config.category : client.config.messages.miscellaneous.noCategory;
 
     /**
      * Cooldown de la commande
@@ -107,18 +106,13 @@ class Command {
   }
 
   /**
-   * Fonction qui s'execute lors du chargement du bot
-   * @async
-   */
-  async init() {} // eslint-disable-line no-empty-function
-
-  /**
    * Fonction qui s'execute lorsque l'on fait la commande
+   * @param {Client} _client - Client, instancié sur le serveur
    * @param {Message} _message - Message qui a déclenché la commande
    * @param {string[]} _args - Arguments de la commande.
    * @async
    */
-  async execute(_message, _args) {} // eslint-disable-line no-empty-function
+  async execute(_client, _message, _args) {} // eslint-disable-line no-empty-function
 
   static filterCooldown(commands) {
     for (const cmd of commands) {

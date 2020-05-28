@@ -1,8 +1,8 @@
+import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { commands, client, config, db } from '../../main';
+import { db } from '../../main';
 import pkg from '../../../package.json';
-import { secondToDuration } from '../../utils';
 
 class Statistics extends Command {
   constructor() {
@@ -13,9 +13,10 @@ class Statistics extends Command {
     this.enabledInHelpChannels = false;
   }
 
-  async execute(message, _args) {
-    const uptime = secondToDuration(client.uptime / 1000);
+  async execute(client, message, _args) {
+    const uptime = moment.duration(client.uptime).humanize();
 
+    await message.guild.members.fetch().catch(console.error);
     const onlineUsers = message.guild.members.cache.filter(m => (m.presence.status === 'online' || m.presence.status === 'idle' || m.presence.status === 'dnd') && !m.user.bot).size;
     const totalUsers = message.guild.members.cache.filter(m => !m.user.bot).size;
     const offlineUsers = totalUsers - onlineUsers;
@@ -27,14 +28,13 @@ class Statistics extends Command {
       .replace(/_/gm, '\\_');
 
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
+      .setColor(client.config.colors.default)
+      .attachFiles([client.config.bot.avatar])
       .setAuthor('Statistiques de Swan', 'attachment://logo.png')
-      .addField('Préfixe', config.bot.prefix, true)
       .addField('Version', pkg.version, true)
       .addField('Temps de fonctionnement', uptime, true)
       .addField('Mémoire', `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
-      .addField('Commandes', commands.length, true)
+      .addField('Commandes', `${client.commands.length} [(documentation)](${client.config.miscellaneous.documentation})`, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
       .addField('Développeurs', `${authors}`, true)
@@ -45,7 +45,7 @@ class Statistics extends Command {
     message.channel.send(embed);
 
     // Send commands stats :
-    if (message.member.roles.highest.position < message.guild.roles.cache.get(config.roles.ma).position) return;
+    if (!client.config.sendCommandStats.includes(message.author.id)) return;
 
     const docs = await db.commandsStats.find({}).catch(console.error);
     const commandsStats = docs.sort((a, b) => b.used - a.used);

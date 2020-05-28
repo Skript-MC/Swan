@@ -1,7 +1,7 @@
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
-import Moderation from '../../structures/Moderation';
-import SanctionManager from '../../structures/SanctionManager';
+import ModerationData from '../../structures/ModerationData';
+import ACTION_TYPE from '../../structures/actions/actionType';
+import KickAction from '../../structures/actions/KickAction';
 
 class Kick extends Command {
   constructor() {
@@ -12,15 +12,22 @@ class Kick extends Command {
     this.permissions = ['Staff'];
   }
 
-  async execute(message, args) {
-    const victim = SanctionManager.getMember(message, args[0]);
-    if (!victim) return message.channel.send(discordError(this.config.missingUserArgument, message));
-    if (victim.id === message.author.id) return message.channel.send(discordError(this.config.noSelfWarnKick, message));
-    if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.send(discordError(this.config.userTooPowerful, message));
+  async execute(client, message, args) {
+    const victim = message.mentions.members.first() || message.guild.members.resolve(args[0]);
+    if (!victim) return message.channel.sendError(this.config.missingUserArgument, message.member);
+    if (victim.id === message.author.id) return message.channel.sendError(this.config.noSelfKick, message.member);
+    if (victim.roles.highest.position >= message.member.roles.highest.position) return message.channel.sendError(this.config.userTooPowerful, message.member);
 
     const reason = args.splice(1).join(' ') || this.config.noReasonSpecified;
 
-    Moderation.kick(victim, reason, message.author, this.config, message, message.guild);
+    const data = new ModerationData()
+      .setType(ACTION_TYPE.KICK)
+      .setColor(client.config.colors.kick)
+      .setMember(victim)
+      .setReason(reason)
+      .setModerator(message.member)
+      .setMessageChannel(message.channel);
+    new KickAction(data).commit();
   }
 }
 

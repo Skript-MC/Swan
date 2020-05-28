@@ -1,4 +1,7 @@
-/* eslint-disable import/no-cycle, no-param-reassign */
+/* eslint-disable no-param-reassign */
+import crypto from 'crypto';
+import moment from 'moment';
+
 const math = require('mathjs');
 
 export function padNumber(x) {
@@ -9,48 +12,8 @@ export function uncapitalize(string) {
   return string[0].toLowerCase() + string.slice(1);
 }
 
-export function formatDate(d) {
-  const date = new Date(d);
-  const now = new Date(Date.now());
-  // Même jour, mois, année
-  if (date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-    return `aujourd'hui à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-  }
-  // Jours suivants, même mois, même année (pour éviter que 04/05/2015 soit "demain" quand on est le 03/08/2019)
-  if (date.getDate() - 1 === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-    return `demain à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-  }
-  if (date.getDate() - 2 === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-    return `après-demain à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-  }
-  // Jours précédents, même mois, même année (pour éviter que 04/05/2015 soit "hier" quand on est le 05/08/2019)
-  if (date.getDate() + 1 === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-    return `hier à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-  }
-  if (date.getDate() + 2 === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) {
-    return `avant-hier à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-  }
-  // Date par défaut.
-  return `le ${padNumber(date.getDate())}/${padNumber(date.getMonth() + 1)}/${padNumber(date.getFullYear())} à ${padNumber(date.getHours())}h${padNumber(date.getMinutes())}'${padNumber(date.getSeconds())}`;
-}
-
-export function secondToDuration(ms) {
-  if (ms === -1) return 'Définitif';
-
-  const day = Math.floor(ms / (24 * 3600));
-  ms %= 86400; // 24 * 3600
-  const hour = Math.floor(ms / 3600);
-  ms %= 3600;
-  const minutes = Math.floor(ms / 60);
-  ms %= 60;
-  const seconds = Math.floor(ms);
-
-  const results = [];
-  if (day !== 0) results.push(`${day} jour${day > 1 ? 's' : ''}`);
-  if (hour !== 0) results.push(`${hour} heure${hour > 1 ? 's' : ''}`);
-  if (minutes !== 0) results.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
-  if (seconds !== 0) results.push(`${seconds} seconde${seconds > 1 ? 's' : ''}`);
-  return results.join(', ');
+export function toDuration(ms) {
+  return ms === -1 ? 'Définitif' : moment.duration(ms).humanize();
 }
 
 export function extractQuotedText(text) {
@@ -91,15 +54,37 @@ export function toTimestamp(str) {
   }
 
   // On regarde s'il reste des lettres
-  if (str.match(/[a-zA-Z]+/g)) return -1;
+  if (str.match(/[a-zA-Z]+/g)) return null;
 
-  let result;
   try {
-    result = math.evaluate(str.slice(0, -1));
+    return math.evaluate(str.slice(0, -1));
   } catch (e) {
-    result = -1;
+    return null;
   }
-  return result * 1000;
+}
+
+export function parsePage(page, max = Infinity) {
+  page = parseInt(page, 10) - 1;
+  if (isNaN(page)) page = 0;
+  else if (page < 0) page = 0;
+  else if (page >= max) page = max - 1;
+  return page;
+}
+
+/**
+ * Renvoie un string alphanumérique aléatoire de la longueur `len`.
+ * Il y a une très petite chance (moins de 1/1 000 000) que la taille soit plus petite que len
+ * à cause de la conversion en base64, mais ce n'est pas un problème ici.
+ * La probabilité de collision est très très petite (avec len = 16, il faudrait
+ * 3*10^12  utilisations pour avoir 1 chance sur 1 million d'avoir 2 doublons)
+ * Voir http://en.wikipedia.org/wiki/Birthday_problem
+ * C'est l'algorithme d'id utilisé par NeDB.
+ */
+export function uid(len = 8) {
+  return crypto.randomBytes(Math.ceil(Math.max(8, len * 2)))
+    .toString('base64')
+    .replace(/[+/]/g, '')
+    .slice(0, len);
 }
 
 /**
@@ -107,19 +92,10 @@ export function toTimestamp(str) {
  * @param {GuildMember} member Le membre
  */
 export function prunePseudo(member) {
-  const name = member.nickname || member.user.username;
+  const name = member.displayName;
   let cleanPseudo = name.replace(/[^a-zA-Z0-9]/gimu, '');
   if (cleanPseudo.length === 0) cleanPseudo = member.id;
   return cleanPseudo.toLowerCase();
-}
-
-/**
- * @description Élaguer le pseudo d'un membre, pour qu'il puisse être mentionné par tout le monde.
- * @param {GuildMember} member Le membre
- */
-export function prunePseudoJoin(member) {
-  const name = member.nickname || member.user.username;
-  return new RegExp(/[^a-zA-Z0-9-ÖØ-öø-ÿ]/gimu).test(name);
 }
 
 /**
@@ -184,6 +160,20 @@ export function jkDistance(s1, s2) {
   return weight;
 }
 
+export function toValidName(str) {
+  const valid = [];
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (['é', 'è', 'à', 'ù', 'ô', 'â', 'ê', 'ë', 'î', 'ï'].includes(char.toLowerCase())) {
+      valid.push(char);
+      continue;
+    }
+    const charcode = str.charCodeAt(i);
+    if (charcode < 0x80) valid.push(char);
+  }
+  return valid.join('');
+}
+
 export function slugify(string) {
   const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;';
   const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnooooooooprrsssssttuuuuuuuuuwxyyzzz------';
@@ -210,6 +200,7 @@ export function convertFileSize(size) {
 
 /**
  * Create a "selector message", which will send a message from which the user can choose multiple options
+ * @param {Client} client - The client
  * @param {Array} results - The array we should itterate
  * @param {string} query - The query the user passed (basically a args.join(' '))
  * @param {Message} message - The user's message
@@ -217,19 +208,17 @@ export function convertFileSize(size) {
  * @param {Function} messageCallback - The callback to print a line
  * @param {Function} callback - The callback to call when the user has made his choice
  */
-export async function selectorMessage(results, query, message, cmdConfig, messageCallback, callback) {
-  const conf = {
-    searchResults: '%r élements trouvés pour la recherche `%s`. Quel addon vous intéresse ?\n:warning: **Attendez que la réaction :x: soit ajoutée avant de commencer.**',
-  };
+export async function selectorMessage(client, results, query, message, cmdConfig, messageCallback, callback) {
   const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-  let content = conf.searchResults.replace('%r', results.length).replace('%s', query);
+  let content = cmdConfig.searchResults.replace('%r', results.length).replace('%s', query);
 
-  for (let i = 0; i < results.length; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
+  const elementNumber = results.length > 10 ? 10 : results.length;
+  for (let i = 0; i < elementNumber; i++) content += `\n${reactionsNumbers[i]} ${messageCallback(results[i])}`;
 
-  if (results.length - 10 > 0) content += `\n...et ${results - 10} de plus...`;
+  if (results.length - 10 > 0) content += `\n...et ${results.length - 10} de plus...`;
   const botMessage = await message.channel.send(content);
 
-  for (let i = 0; i < results.length; i++) await botMessage.react(reactionsNumbers[i]);
+  for (let i = 0; i < elementNumber; i++) await botMessage.react(reactionsNumbers[i]);
   await botMessage.react('❌');
 
   const collectorNumbers = botMessage
@@ -238,7 +227,7 @@ export async function selectorMessage(results, query, message, cmdConfig, messag
       && reactionsNumbers.includes(reaction.emoji.name))
     .once('collect', (reaction) => {
       botMessage.delete();
-      callback(message, results[reactionsNumbers.indexOf(reaction.emoji.name)], cmdConfig);
+      callback(client.config, message, results[reactionsNumbers.indexOf(reaction.emoji.name)], cmdConfig);
       collectorNumbers.stop();
     });
 
@@ -252,4 +241,21 @@ export async function selectorMessage(results, query, message, cmdConfig, messag
       collectorNumbers.stop();
       collectorStop.stop();
     });
+}
+
+export function randomCommand(commands, withoutPerms = true) {
+  for (;;) {
+    const command = commands[Math.floor(Math.random() * commands.length)];
+    if (withoutPerms && command.permissions.length === 0) return command.aliases[0].toLowerCase();
+  }
+}
+
+export function randomActivity(client, commands, prefix) {
+  if (!client.activated) return { activity: { name: 'Désactivé.', type: 'WATCHING' }, status: 'idle' };
+  const random = Math.floor(Math.random() * 3);
+  let status;
+  if (random === 0) status = { activity: { name: `${client.guild.members.cache.filter(m => !m.user.bot).size} membres 🎉`, type: 'WATCHING' }, status: 'online' };
+  if (random === 1) status = { activity: { name: `${prefix}aide | Skript-MC`, type: 'WATCHING' }, status: 'online' };
+  if (random === 2) status = { activity: { name: `${prefix}help ${randomCommand(commands)}`, type: 'PLAYING' }, status: 'dnd' };
+  return status;
 }

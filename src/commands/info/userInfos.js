@@ -1,8 +1,6 @@
 import { MessageEmbed } from 'discord.js';
+import moment from 'moment';
 import Command from '../../structures/Command';
-import { discordError } from '../../structures/messages';
-import { config } from '../../main';
-import { formatDate } from '../../utils';
 
 function explain(status) {
   switch (status) {
@@ -27,10 +25,10 @@ class UserInfos extends Command {
     this.examples = ['userinfo @noftaly', 'user-infos 188341077902753794'];
   }
 
-  async execute(message, args) {
-    if (args.length === 0) return message.channel.send(discordError(this.config.invalidCmd, message));
-    const target = message.guild.member(message.mentions.users.first()) || message.guild.members.cache.get(args[0]);
-    if (!target) return message.channel.send(discordError(this.config.pseudoNotFound, message));
+  async execute(client, message, args) {
+    if (args.length === 0) return message.channel.sendError(this.config.invalidCmd, message.member);
+    const target = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
+    if (!target) return message.channel.sendError(this.config.pseudoNotFound, message.member);
 
     const roles = [];
     for (const role of target.roles.cache.array()) {
@@ -39,27 +37,27 @@ class UserInfos extends Command {
 
     let presence = '';
     presence += `Statut : ${explain(target.presence.status)}\n`;
-    if (target.presence.activity) {
-      if (target.presence.activity.type === 0) presence += `Joue à \`${target.presence.activity.name}\`\n`;
-      else if (target.presence.activity.type === 1) presence += 'Est en live\n';
-      else if (target.presence.activity.type === 2) presence += `Écoute : ${target.presence.activity.name}\n`;
-      else if (target.presence.activity.type === 3) presence += `Regarde : ${target.presence.activity.name}\n`;
+    if (target.presence.activities[0]) {
+      if (target.presence.activities[0].type === 'PLAYING') presence += `Joue à \`${target.presence.activities[0].name}\`\n`;
+      else if (target.presence.activities[0].type === 'STREAMING') presence += 'Est en live\n';
+      else if (target.presence.activities[0].type === 'LISTENING') presence += `Écoute (sur ${target.presence.activities[0].name}) :\n`;
+      else if (target.presence.activities[0].type === 'WATCHING') presence += `Regarde : ${target.presence.activities[0].name}\n`;
+      else if (target.presence.activities[0].type === 'CUSTOM_STATUS') presence += `${target.presence.activities[0].name}\n`;
 
-      if (target.presence.activity.details) presence += `↳ ${target.presence.activity.details}\n`;
-      if (target.presence.activity.party) presence += `↳ ${target.presence.activity.party}\n`;
-      if (target.presence.activity.state) presence += `↳ ${target.presence.activity.state}\n`;
-      if (target.presence.activity.timestamps) presence += `↳ A commencé ${formatDate(target.presence.activity.timestamps.start)}\n`;
+      if (target.presence.activities[0].details) presence += `↳ ${target.presence.activities[0].details}\n`;
+      if (target.presence.activities[0].state) presence += `↳ ${target.presence.activities[0].state}\n`;
+      if (target.presence.activities[0].timestamps) presence += `↳ A commencé ${moment(target.presence.activities[0].timestamps.start).format('[le] DD/MM/YYYY [à] HH:mm:ss')}\n`;
     }
 
     const embed = new MessageEmbed()
-      .setColor(config.colors.default)
-      .attachFiles([config.bot.avatar])
-      .setAuthor(`Informations sur le membre ${target.user.username}`, 'attachment://logo.png')
+      .setColor(client.config.colors.default)
+      .setAuthor(`Informations sur le membre ${target.user.username}`)
       .setFooter(`Exécuté par ${message.author.username}`)
+      .setThumbnail(target.user.avatarURL())
       .setTimestamp()
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
-      .addField(this.config.embed.created, formatDate(target.user.createdAt), true)
-      .addField(this.config.embed.joined, `${formatDate(new Date(target.joinedTimestamp))}`, true)
+      .addField(this.config.embed.created, moment(target.user.createdAt).format('[le] DD/MM/YYYY [à] HH:mm:ss'), true)
+      .addField(this.config.embed.joined, `${moment(new Date(target.joinedTimestamp)).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`, true)
       .addField(this.config.embed.roles, `${target.roles.cache.array().length - 1 === 0 ? 'Aucun' : `${target.roles.cache.array().length - 1} : ${roles.join(', ')}`}`, true)
       .addField(this.config.embed.presence, presence, true);
 
