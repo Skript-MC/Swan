@@ -15,7 +15,7 @@ class MusicBotApp {
     this.channel = undefined;
     this.nowPlaying = undefined;
     this.dispatcher = undefined;
-    this.queue = undefined;
+    this.queue = [];
     this.loop = this.enums.NONE;
     this.bassboost = 0;
 
