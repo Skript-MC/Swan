@@ -558,7 +558,7 @@
                 "help": "Afficher la latence de Swan",
                 "description": "Envoie la latence entre vous et Swan ainsi que Swan et l'API Discord.",
                 "firstMessage": ":incoming_envelope: Calcul en cours ...",
-                "secondMessage": ":hourglass: Swan: %sms\n\n:globe_with_meridians: API Discord: %xms"
+                "secondMessage": ":hourglass: Swan: %sms %i\n\n:globe_with_meridians: API Discord: %xms %j"
             },
             "mathematiques": {
                 "help": "Permet de tester la mathématique de Skript.",
