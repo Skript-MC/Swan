@@ -5,26 +5,22 @@ import Parser from 'rss-parser';
 import { client } from '../main';
 
 const parser = new Parser();
+const channel = client.channels.resolve(client.config.channels.rssFeed);
 
-export default async function loadRssFeed() {
-  const channel = client.channels.cache.get(client.config.channels.rssFeed);
+function warn(msg) {
+  client.logger.warn('Could not fetch a Skript-MC\'s RSS Endpoint. Is the website down/offline?');
+  client.logger.debug(`    ↳ ${msg}`);
+}
 
-  let topics = [];
-  for (const feedURL of client.config.apis.rssContentFeeds) {
-    topics.push(parser.parseURL(feedURL));
-  }
-  const files = await parser.parseURL(client.config.apis.rssFilesFeed);
-
-  topics = await Promise.all(topics);
+function sendTopics(topics) {
   for (const forum of topics) {
     for (const topic of forum.items) {
       topic.forum = forum.title.replace(' derniers sujets', '');
     }
   }
-  topics = topics.map(elt => elt.items).flat();
+  topics = topics.map(elt => elt.items).flat(); // eslint-disable-line no-param-reassign
 
   const lastTopics = topics.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
-  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
 
   for (const item of lastTopics) {
     let { content } = item;
@@ -44,6 +40,11 @@ export default async function loadRssFeed() {
       .setTimestamp();
     channel.send(embed);
   }
+}
+
+function sendFiles(files) {
+  const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
+
   for (const item of lastFiles) {
     let { content } = item;
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
@@ -62,4 +63,19 @@ export default async function loadRssFeed() {
       .setTimestamp();
     channel.send(embed);
   }
+}
+
+export default async function loadRssFeed() {
+  let topics = [];
+  for (const feedURL of client.config.apis.rssContentFeeds) {
+    // eslint-disable-next-line no-void
+    topics.push(parser.parseURL(feedURL).catch(err => void warn(err)));
+  }
+  const files = await parser.parseURL(client.config.apis.rssFilesFeed).catch(warn);
+
+  topics = await Promise.all(topics);
+  topics = topics.filter(elt => typeof elt !== 'undefined');
+
+  if (topics) sendTopics(topics);
+  if (files) sendFiles(files);
 }
