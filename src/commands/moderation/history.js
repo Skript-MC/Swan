@@ -72,7 +72,7 @@ class History extends Command {
       if (sanction.duration && sanction.type !== ACTION_TYPE.WARN) infos += `\nDurée : ${toDuration(sanction.duration)}`;
       if (sanction.reason) infos += `\nRaison : ${sanction.reason}`;
 
-      if (sanction.updates && sanction.updates.length > 0) {
+      if (sanction.updates?.length > 0) {
         infos += `\nModification${sanction.updates.length > 1 ? 's' : ''} :`;
         for (const update of sanction.updates) {
           let action;
