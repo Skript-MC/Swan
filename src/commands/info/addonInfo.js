@@ -85,8 +85,8 @@ class AddonInfo extends Command {
     if (addon.version) embed.addField(thisConfig.embed.version, addon.version, true);
     if (addon.download) embed.addField(thisConfig.embed.download, `[Téléchargez ici](${addon.download}) (${convertFileSize(addon.bytes)})`, true);
     if (addon.sourcecode) embed.addField(thisConfig.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
-    if (addon.depend && addon.depend.depend) embed.addField(thisConfig.embed.depend, addon.depend.depend.join(', '), true);
-    if (addon.depend && addon.depend.softdepend) embed.addField(thisConfig.embed.softdepend, addon.depend.softdepend.join(', '), true);
+    if (addon.depend?.depend) embed.addField(thisConfig.embed.depend, addon.depend.depend.join(', '), true);
+    if (addon.depend?.softdepend) embed.addField(thisConfig.embed.softdepend, addon.depend.softdepend.join(', '), true);
 
     message.channel.send(embed);
   }

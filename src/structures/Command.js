@@ -25,7 +25,7 @@ class Command {
      * Si la commande est activée
      * @type {boolean}
      */
-    this.enabled = (this.config && typeof this.config.enabled !== 'undefined') ? this.config.enabled : true;
+    this.enabled = this.config?.enabled ?? true;
 
     /**
      * Si la commande est activée dans les channels d'aide
@@ -37,43 +37,43 @@ class Command {
      * Longue description de la commande
      * @type {string}
      */
-    this.description = (this.config && this.config.description) ? this.config.description : `Commande ${name}`;
+    this.description = this.config?.description ? this.config.description : `Commande ${name}`;
 
     /**
      * Courte description de la commande
      * @type {string}
      */
-    this.help = (this.config && this.config.help) ? this.config.help : `Commande ${name}`;
+    this.help = this.config?.help ? this.config.help : `Commande ${name}`;
 
     /**
      * Pattern d'utilisation de la commande
      * @type {string}
      */
-    this.usage = (this.config && this.config.usage) ? this.config.usage : name.toLowerCase().replace(/\s/gmui, '_');
+    this.usage = this.config?.usage ? this.config.usage : name.toLowerCase().replace(/\s/gmui, '_');
 
     /**
      * Examples d'utilisation de la commande
      * @type {string[]}
      */
-    this.examples = (this.config && this.config.examples) ? this.config.examples : [];
+    this.examples = this.config?.examples ? this.config.examples : [];
 
     /**
      * Aliases des commandes.
      * @type {string[]}
      */
-    this.aliases = (this.config && this.config.aliases) ? this.config.aliases : [];
+    this.aliases = this.config?.aliases ? this.config.aliases : [];
 
     /**
      * ID des rôles pouvant éxecuter la commande
      * @type {string[]}
      */
-    this.permissions = (this.config && this.config.permissions) ? this.config.permissions : [];
+    this.permissions = this.config?.permissions ? this.config.permissions : [];
 
     /**
      * ID des channels dans lesquels on doit executer la commande
      * @type {string[]}
      */
-    this.requiredChannels = (this.config && this.config.requiredChannels) ? this.config.requiredChannels : [];
+    this.requiredChannels = this.config?.requiredChannels ? this.config.requiredChannels : [];
     if (client.config.bot.defaultChannels.length > 0) {
       for (const channel of client.config.bot.defaultChannels) {
         this.requiredChannels.push(channel);
@@ -84,19 +84,19 @@ class Command {
      * ID des channels dans lesquels on ne peut pas executer la commande
      * @type {string[]}
      */
-    this.prohibitedChannels = (this.config && this.config.prohibitedChannels) ? this.config.prohibitedChannels : [];
+    this.prohibitedChannels = this.config?.prohibitedChannels ? this.config.prohibitedChannels : [];
 
     /**
      * Catégorie de la commande (= le dossier dans lequel elle se trouve)
      * @type {string}
      */
-    this.category = (this.config && this.config.category) ? this.config.category : client.config.messages.miscellaneous.noCategory;
+    this.category = this.config?.category ? this.config.category : client.config.messages.miscellaneous.noCategory;
 
     /**
      * Cooldown de la commande
      * @type {Timestamp}
      */
-    this.cooldown = (this.config && this.config.cooldown) ? this.config.cooldown : 0;
+    this.cooldown = this.config?.cooldown ? this.config.cooldown : 0;
 
     /**
      * Map des utilisateurs ayant un cooldown sur la commande (utilisateur mappés par leur ID discord)
