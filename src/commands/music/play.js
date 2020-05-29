@@ -49,7 +49,7 @@ class Play extends Command {
     let query = args.length === 0 ? '' : args.join(' ');
 
     if (query === '') { // Aucun argument
-      if (MusicBot.queue && MusicBot.queue.length > 0) MusicBot.playSong(MusicBot.queue, message);
+      if (MusicBot.queue.length > 0) MusicBot.playSong(MusicBot.queue, message);
       else message.channel.send(this.config.noArgumentGiven);
     } else if (query.match(regexps.playlist)) { // URL de Playlist YouTube
       let matches, playlist, videos;
