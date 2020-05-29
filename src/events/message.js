@@ -3,6 +3,8 @@ import { client, db } from '../main';
 import { jkDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
 
+const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
+
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
   if (message.member.roles.cache.has(client.config.roles.owner)) return true;
@@ -64,39 +66,51 @@ export default async function messageHandler(message) {
     return;
   }
 
-  // Système de citation
-  const linkRegex = new RegExp(`discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
-  if (message.content.match(linkRegex)) {
-    const [, channelId, messageId] = linkRegex.exec(message.content);
 
-    const channel = await client.channels.fetch(channelId).catch(console.error);
-    const targetedMessage = await channel.messages.fetch(messageId).catch(console.error);
-    if (!targetedMessage.content) return;
-    const embed = new MessageEmbed()
-      .setColor(client.config.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
-      .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${client.config.bot.guild}/${channel.id}/${targetedMessage.id})`)
-      .setFooter(`Message cité par ${message.member.displayName}`)
-      .setTimestamp(targetedMessage.createdAt);
-    if (targetedMessage.attachments !== 0) {
-      let loop = 1;
-      if (loop <= 5) {
-        targetedMessage.attachments.forEach((attachment) => {
-          embed.addField(`Pièce jointe n°${loop}`, attachment.url);
-          loop++;
-        });
-      }
+  const isCommand = cmd.startsWith(client.config.bot.prefix)
+    && cmd !== client.config.bot.prefix
+    && cmd.startsWith(`${client.config.bot.prefix}${client.config.bot.prefix}`);
+
+  // Système de citation
+  let text = message.content;
+  if (!isCommand && message.content.match(linkRegex)) {
+    const quotes = [];
+    while (text.match(linkRegex)) {
+      const [full, channelId, messageId] = linkRegex.exec(text);
+      quotes.push({ channelId, messageId });
+      text = text.replace(full, '');
     }
-    const msg = await message.channel.send(embed);
-    await msg.react('🗑️');
-    const collector = msg
-      .createReactionCollector((reaction, user) => user.id === message.author.id
-        && reaction.emoji.name === '🗑️'
-        && !user.bot)
-      .on('collect', () => {
-        msg.delete();
-        collector.stop();
-      });
+
+    for (const quote of quotes) {
+      const channel = await client.channels.fetch(quote.channelId).catch(console.error);
+      const targetedMessage = await channel.messages.fetch(quote.messageId).catch(console.error);
+      if (!targetedMessage.content) return;
+      const embed = new MessageEmbed()
+        .setColor(client.config.colors.default)
+        .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
+        .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${client.config.bot.guild}/${channel.id}/${targetedMessage.id})`)
+        .setFooter(`Message cité par ${message.member.displayName}`)
+        .setTimestamp(targetedMessage.createdAt);
+      if (targetedMessage.attachments !== 0) {
+        let loop = 1;
+        if (loop <= 5) {
+          targetedMessage.attachments.forEach((attachment) => {
+            embed.addField(`Pièce jointe n°${loop}`, attachment.url);
+            loop++;
+          });
+        }
+      }
+      const msg = await message.channel.send(embed);
+      await msg.react('🗑️');
+      const collector = msg
+        .createReactionCollector((reaction, user) => user.id === message.author.id
+          && reaction.emoji.name === '🗑️'
+          && !user.bot)
+        .on('collect', () => {
+          msg.delete();
+          collector.stop();
+        });
+    }
   }
 
   // Antispam channel Snippet
