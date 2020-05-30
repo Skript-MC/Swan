@@ -1,6 +1,6 @@
 # Documentation de Swan
 
-Cette page regroupe les **49 commandes** disponibles sur Swan.
+Cette page regroupe les **48 commandes** disponibles sur Swan.
 
 ## Accès rapides
 
@@ -36,7 +36,6 @@ Cette page regroupe les **49 commandes** disponibles sur Swan.
 - [Purge](#Purge)
 - [Queue](#Queue)
 - [Ranking](#Ranking)
-- [Remove Music Restriction](#Remove-Music-Restriction)
 - [Remove Warn](#Remove-Warn)
 - [Rules](#Rules)
 - [Server Info](#Server-Info)
@@ -99,8 +98,8 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Catégorie :** moderation
 - **Description :** Applique une restriction du Discord à un membre.
 - **Alias :** `ban`, `sdb`
-- **Usage :** `ban <@mention | ID> <durée> [<raison>]`
-- **Exemples :** `ban @Uneo7 5j Mouahaha`, `ban @Vengelis_ def Tu ne reviendras jamais !`
+- **Usage :** `ban <@mention | ID> <durée> <raison> [--autoban]`
+- **Exemples :** `ban @Uneo7 5j Mouahaha --autoban`, `ban @Vengelis_ def Tu ne reviendras jamais !`
 - **Informations supplémentaires :**
 	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
 
@@ -108,10 +107,10 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 ### <a name="Bassboost"></a>Bassboost
 
 - **Catégorie :** music
-- **Description :** Modifie le gain de la musique.
+- **Description :** Modifie le gain de la musique. La puissance par défault est à 0
 - **Alias :** `bassboost`
 - **Usage :** `bassboost [<nombre entre 0 et 40>]`
-- **Exemples :** `bassboost`, `bassboost 3`
+- **Exemples :** `bassboost`, `bassboost 3`, `bassboost default`
 - **Informations supplémentaires :**
 	- ⚠️ Cette commande ne peut pas être exécutée dans les salons d'aide.
 
@@ -286,8 +285,8 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Catégorie :** moderation
 - **Description :** Rendre muet un membre dans les salons d'aide.
 - **Alias :** `mute`
-- **Usage :** `mute <@mention | ID> <durée> [<raison>]`
-- **Exemples :** `mute @AlexLew 5j Une raison plus ou moins valable`
+- **Usage :** `mute <@mention | ID> <durée> <raison>`
+- **Exemples :** `mute @Olyno 5j Une raison plus ou moins valable`
 - **Informations supplémentaires :**
 	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
 
@@ -347,10 +346,10 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 ### <a name="Poll"></a>Poll
 
 - **Catégorie :** fun
-- **Description :** Lance un sondage temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée.
+- **Description :** Lance un sondage temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajouter l'argument `-a` indique que le sondage sera anonyme.
 - **Alias :** `poll`, `vote`, `sondage`
-- **Usage :** `poll <durée> "<sondage>" ["réponse 1"] ["réponse 2"] [...]`
-- **Exemples :** `poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"`, `poll 10m "votre sondage"`
+- **Usage :** `poll <durée> [-a] "<sondage>" ["réponse 1"] ["réponse 2"] [...]`
+- **Exemples :** `poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"`, `vote 10m votre sondage`, `sondage 10m "votre sondage" -a "réponse 1" "réponse 2" `
 - **Informations supplémentaires :**
 	- ⚠️ Cette commande ne peut pas être exécutée dans les salons d'aide.
 
@@ -360,7 +359,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Catégorie :** moderation
 - **Description :** Supprime un nombre de messages determiné dans un salon. La suppresion peut être basée sur un utilisateur en particulier. La limite de suppression est fixée à 100. Par défault, les messages des membres ayant le rôle 'Staff' ne serront pas supprimés, pour aussi les supprimer, utiliser l'argument `-f`
 - **Alias :** `purge`
-- **Usage :** `purge [<@mention>] <nombre> [<-f>]`
+- **Usage :** `purge [<@mention | ID>] <nombre> [<-f>]`
 - **Exemples :** `purge 40`, `purge 20 -f`, `purge @utilisateur 20`
 - **Informations supplémentaires :**
 	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
@@ -386,24 +385,13 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Exemples :** `classement music-views`, `ranks music-dislikes`, `ranking joke-likes`
 
 
-### <a name="Remove-Music-Restriction"></a>Remove Music Restriction
-
-- **Catégorie :** moderation
-- **Description :** Rétabli à un membre l'accès aux commandes musicales.
-- **Alias :** `removemusicrestriction`, `remove-music-restriction`, `remove_music_restriction`, `remmusicrestr`, `rem-music-restr`, `rem_music_restr`
-- **Usage :** `removemusicrestriction <@mention | ID> [<raison>]`
-- **Exemples :** `removemusicrestr @4rno En fait c'est une bonne musique`
-- **Informations supplémentaires :**
-	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
-
-
 ### <a name="Remove-Warn"></a>Remove Warn
 
 - **Catégorie :** moderation
 - **Description :** Enlève un avertissement à un membre, selon l'ID de l'avertissement.
 - **Alias :** `removewarn`, `remwarn`, `deletewarn`, `delwarn`, `unwarn`
 - **Usage :** `removewarn <@mention | ID utilisateur> <ID warn> [<raison>]`
-- **Exemples :** `removewarn @polymeth 1585832207807 En fait trkl il m'a payé`
+- **Exemples :** `removewarn @polymeth nZPiWKem En fait trkl il m'a payé`
 - **Informations supplémentaires :**
 	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
 
@@ -562,7 +550,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Catégorie :** moderation
 - **Description :** Donne un avertissement à un membre.
 - **Alias :** `warn`
-- **Usage :** `warn <@mention | ID> [<raison>]`
-- **Exemples :** `warn @polymeth Langage incorrect`
+- **Usage :** `warn <@mention | ID> <raison>`
+- **Exemples :** `warn @polymeth Irrespect du format d'aide`
 - **Informations supplémentaires :**
 	- ⚠️ Seul les membres ayant le rôle `Staff` ou supérieur peuvent exécuter cette commande.
