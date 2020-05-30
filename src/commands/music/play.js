@@ -115,8 +115,7 @@ class Play extends Command {
           return this.prepareForPlaying(client, video, message, voiceChannel);
         }
 
-        // TODO Add search-limit to config.music
-        const videos = await youtube.searchVideos(query, 5);
+        const videos = await youtube.searchVideos(query, client.config.music.searchLimit);
         if (videos.length === 0) return message.channel.send(this.config.noMusicFound.replace('%s', query));
 
         const videosNames = [];

@@ -34,7 +34,8 @@
     "music": {
         "queueLimit": 10,
         "canUseMusicCommandsIfNotInChannel": false,
-        "shouldAskPermissionForSomeCommands": true
+        "shouldAskPermissionForSomeCommands": true,
+        "searchLimit": 5
     },
 
     "apis": {
