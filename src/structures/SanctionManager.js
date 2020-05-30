@@ -144,8 +144,13 @@ class SanctionManager {
     }, 2000);
   }
 
-  static async isBan(id) {
+  static async isBanned(id) {
     const doc = await db.sanctions.findOne({ member: id, type: ACTION_TYPE.BAN }).catch(console.error);
+    return !!doc;
+  }
+
+  static async isMuted(id) {
+    const doc = await db.sanctions.findOne({ member: id, type: ACTION_TYPE.MUTE }).catch(console.error);
     return !!doc;
   }
 

@@ -41,7 +41,7 @@ export default async function messageHandler(message) {
   const { prefix } = client.config.bot;
   let cmd = args.shift();
 
-  if (await SanctionManager.isBan(message.author.id)) {
+  if (await SanctionManager.isBanned(message.author.id)) {
     SanctionManager.hasSentMessages(message.author.id);
     return;
   }

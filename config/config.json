@@ -58,7 +58,7 @@
 
     "messages": {
         "miscellaneous": {
-            "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement",
+            "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement (automatique)",
             "noCategory": "Aucune catégorie",
             "noDocLink": "Calme-toi, petit garnement. Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (Vengelis ou Rémi) afin d'améliorer la documentation.",
             "noSpam": "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discordapp.com/hc/fr/articles/210298617>.",
@@ -72,6 +72,7 @@
             "sanctionNotificationUpdate": "Bonjour %u, ta sanction sanction (%s) sur le serveur Skript-MC à été mise à jour. Raison : \"%r\". Durée : %d.",
             "sanctionNotificationRemoved": "Bonjour %u, ta sanction (%s) sur le serveur Skript-MC à été révoquée. Raison : \"%r\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
             "inactivityWhileBanned": "Inactivité après un bannissement",
+            "autoUnmuteBeforeBan": "Unmute avant bannissement définitif (automatique)",
             "renameList": [
                 "Quiche",
                 "Licorne",
