@@ -8,7 +8,7 @@ const parser = new Parser();
 const channel = client.channels.resolve(client.config.channels.rssFeed);
 
 function warn(msg) {
-  client.logger.warn('Could not fetch a Skript-MC\'s RSS Endpoint. Is the website down/offline?');
+  client.logger.warn('Could not fetch a Skript-MC\'s RSS Endpoint. Is either the website or the bot down/offline?');
   client.logger.debug(`    ↳ ${msg}`);
 }
 
