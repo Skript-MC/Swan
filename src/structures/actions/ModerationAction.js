@@ -13,10 +13,10 @@ class ModerationAction {
 
   async commit() {
     const [stop, result, isUpdate] = await this.prepare();
-    if (stop) return;
+    if (stop) return false;
 
-    // We notify first in case we kick/hardban him in the .exec (in which case we won't
-    // be able to DM him because he left the guild)
+    await this.before();
+
     await this.notify(isUpdate);
     await this.exec(result);
     await this.log(isUpdate);
@@ -32,6 +32,7 @@ class ModerationAction {
     }
 
     await this.after();
+    return true;
   }
 
   async prepare() {
@@ -64,7 +65,10 @@ class ModerationAction {
     return [stop, result, isUpdate];
   }
 
+  async before() {} // eslint-disable-line
+
   async notify(isUpdate) {
+    if (this.data.silent) return;
     if ([ACTION_TYPE.WARN, ACTION_TYPE.REMOVE_WARN].includes(this.data.type)) return;
 
     let baseMessage = client.config.messages.miscellaneous.sanctionNotification;

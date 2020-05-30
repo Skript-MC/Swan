@@ -20,6 +20,7 @@ class ModerationData {
     this.warnId = undefined; // If it is a "remove warn", this will be set to the id of the warn to remove
     this.removeFile = false; // If this is true, it will remove the file at this.file.path
     this.hardbanIfNoMessages = false; // If this is true, the user will be hardban if he doesn't write any message in the private channel
+    this.silent = false; // Don't send private message to the victim
     this.id = uid(); // The id of the case
   }
 
@@ -105,6 +106,11 @@ class ModerationData {
     return this;
   }
 
+  shouldBeSilent(bool) {
+    this.silent = bool;
+    return this;
+  }
+
   getData(compact = true) {
     return {
       guild: compact && this.guild ? this.guild.id : this.guild,
@@ -123,6 +129,7 @@ class ModerationData {
       warnId: this.warnId,
       removeFile: this.removeFile,
       hardbanIfNoMessages: this.hardbanIfNoMessages,
+      silent: this.silent,
       id: this.id,
     };
   }

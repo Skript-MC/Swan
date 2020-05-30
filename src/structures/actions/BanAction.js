@@ -5,11 +5,28 @@ import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
 import { toDuration } from '../../utils';
 import ACTION_TYPE from './actionType';
+import ModerationData from '../ModerationData';
+import UnmuteAction from './UnmuteAction';
 
 class BanAction extends ModerationAction {
   constructor(data) {
     super(data);
     this.config = client.config.messages.commands.ban;
+  }
+
+  async before() {
+    // Unmute him if he's mute
+    if (await SanctionManager.isMuted(this.data.user.id)) {
+      const data = new ModerationData()
+        .setType(ACTION_TYPE.UNMUTE)
+        .setColor(client.config.colors.success)
+        .setMember(this.data.member)
+        .setReason(client.config.messages.miscellaneous.autoUnmuteBeforeBan)
+        .setModerator(client.guild.members.resolve(client.user.id))
+        .setMessageChannel(this.data.messageChannel)
+        .shouldBeSilent(true);
+      await new UnmuteAction(data).commit();
+    }
   }
 
   async exec(document) {

@@ -11,7 +11,7 @@ class UnmuteAction extends ModerationAction {
   }
 
   async exec(_document) {
-    // Regarde dans la bdd si le joueur est banni
+    // Regarde dans la bdd si le joueur est mute
     const isMute = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.MUTE }).catch(console.error);
     if (isMute) {
       await SanctionManager.removeRole(this.data);
@@ -19,7 +19,7 @@ class UnmuteAction extends ModerationAction {
       return this.data.messageChannel.sendError(this.config.notMuted.replace('%u', this.data.username), this.data.moderator);
     }
 
-    if (!this.data.sendSuccessIfBot && this.data.moderator.user.bot) return;
+    if ((!this.data.sendSuccessIfBot && this.data.moderator.user.bot) || this.data.silent) return;
     const successMessage = this.config.successfullyUnmuted
       .replace('%u', this.data.user.username)
       .replace('%r', this.data.reason);
