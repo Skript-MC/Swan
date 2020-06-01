@@ -1,4 +1,5 @@
 import Command from '../../structures/Command';
+import { splitText } from '../../utils';
 
 class Code extends Command {
   constructor() {
@@ -27,7 +28,7 @@ class Code extends Command {
     }
 
     const msgTitle = await message.channel.send(`**Code de ${message.author.username} :**`);
-    const splittedCode = this.splitCode(code);
+    const splittedCode = splitText(code);
     const codeBlocks = [];
 
     codeBlocks[0] = await message.channel.send(splittedCode[0], { code: 'applescript' });
@@ -45,26 +46,6 @@ class Code extends Command {
         for (const block of codeBlocks) block.delete();
         collector.stop();
       });
-  }
-
-  /**
-   * Split a long string into an array strings of 2000 chars max. each,
-   * and between each line
-   * @param {String} code - The string to split
-   */
-  splitCode(code) {
-    const blocks = [];
-    const lines = code.split(/\n/g);
-    let index = 0;
-
-    for (const line of lines) {
-      if ((blocks[index] || '').length + line.length >= 2000) index++;
-      if (!blocks[index]) blocks[index] = '';
-
-      blocks[index] += `${line}\n`;
-    }
-
-    return blocks;
   }
 }
 

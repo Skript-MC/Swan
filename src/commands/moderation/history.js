@@ -2,7 +2,7 @@ import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { db } from '../../main';
-import { toDuration } from '../../utils';
+import { toDuration, splitText } from '../../utils';
 import ACTION_TYPE from '../../structures/actions/actionType';
 
 const sanctionsName = {
@@ -90,28 +90,8 @@ class History extends Command {
 
     message.channel.send(publicHistory);
 
-    const splittedText = this.splitText(privateHistory);
+    const splittedText = splitText(privateHistory);
     for (let i = 0; i < splittedText.length; i++) await message.member.send(splittedText[i]);
-  }
-
-  /**
-   * Split a long string into an array strings of 2000 chars max. each,
-   * and between each line
-   * @param {String} text - The string to split
-   */
-  splitText(text) {
-    const blocks = [];
-    const lines = text.split(/\n/g);
-    let index = 0;
-
-    for (const line of lines) {
-      if ((blocks[index] || '').length + line.length >= 2000) index++;
-      if (!blocks[index]) blocks[index] = '';
-
-      blocks[index] += `${line}\n`;
-    }
-
-    return blocks;
   }
 }
 
