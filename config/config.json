@@ -562,12 +562,6 @@
                 "firstMessage": ":incoming_envelope: Calcul en cours ...",
                 "secondMessage": ":hourglass: Swan: %sms %i\n\n:globe_with_meridians: API Discord: %xms %j"
             },
-            "mathematiques": {
-                "help": "Permet de tester la mathématique de Skript.",
-                "description": "Teste une expression mathématique en Skript.",
-                "addMath": "Il faut que tu ajoutes une expression mathématique !",
-                "error": "Impossible de tester cette expression ! Il semblerait qu'il y ait un problème dedans..."
-            },
             "code": {
                 "help": "Permet de présenter votre code de façon claire.",
                 "description": "Mettre votre code dans un bloc. Ajoutez le paramètre '-l' pour afficher le numéro des lignes.",
