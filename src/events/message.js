@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import { client, db } from '../main';
-import { jkDistance, uncapitalize } from '../utils';
+import { jwDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
 
 const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
@@ -175,7 +175,7 @@ export default async function messageHandler(message) {
     const matches = [];
     for (const elt of client.commands) {
       for (const alias of elt.aliases) {
-        if (jkDistance(cmd, alias) >= client.config.miscellaneous.commandSimilarity) {
+        if (jwDistance(cmd, alias) >= client.config.miscellaneous.commandSimilarity) {
           matches.push(elt);
           break;
         }

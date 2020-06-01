@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { SkripttoolsAddons } from '../../main';
-import { uncapitalize, jkDistance, convertFileSize, selectorMessage } from '../../utils';
+import { uncapitalize, jwDistance, convertFileSize, selectorMessage } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -32,7 +32,7 @@ class AddonInfo extends Command {
         // Si l'addon est inconnu
         const matches = [];
         for (const elt of addons.map(addon => addon.plugin)) {
-          if (jkDistance(args.join(''), elt) >= this.config.similarity) matches.push(elt);
+          if (jwDistance(args.join(''), elt) >= this.config.similarity) matches.push(elt);
         }
 
         if (matches.length === 0) {

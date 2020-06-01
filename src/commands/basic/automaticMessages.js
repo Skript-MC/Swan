@@ -1,5 +1,5 @@
 import Command from '../../structures/Command';
-import { uncapitalize, jkDistance } from '../../utils';
+import { uncapitalize, jwDistance } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -50,7 +50,7 @@ class AutomaticMessages extends Command {
 
     for (const msg of Object.values(messages)) {
       for (const elt of msg.templates) {
-        if (jkDistance(arg, elt) >= this.config.similarity) matches.push(elt);
+        if (jwDistance(arg, elt) >= this.config.similarity) matches.push(elt);
         break;
       }
     }
