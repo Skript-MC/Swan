@@ -34,7 +34,6 @@
     "dotenv": "^8.2.0",
     "ffmpeg-static": "^4.2.2",
     "he": "^1.2.0",
-    "mathjs": "^7.0.0",
     "moment": "^2.26.0",
     "nedb-promises": "^4.0.1",
     "rss-parser": "^3.7.6",
