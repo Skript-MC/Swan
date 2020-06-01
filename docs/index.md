@@ -1,6 +1,6 @@
 # Documentation de Swan
 
-Cette page regroupe les **48 commandes** disponibles sur Swan.
+Cette page regroupe les **47 commandes** disponibles sur Swan.
 
 ## Accès rapides
 
@@ -24,7 +24,6 @@ Cette page regroupe les **48 commandes** disponibles sur Swan.
 - [Leave](#Leave)
 - [Links](#Links)
 - [Loop](#Loop)
-- [Mathematiques](#Mathematiques)
 - [Move Message](#Move-Message)
 - [Mute](#Mute)
 - [Now Playing](#Now-Playing)
@@ -258,15 +257,6 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Exemples :** `loop`, `loop music`, `loop off`
 - **Informations supplémentaires :**
 	- ⚠️ Cette commande ne peut pas être exécutée dans les salons d'aide.
-
-
-### <a name="Mathematiques"></a>Mathematiques
-
-- **Catégorie :** basic
-- **Description :** Teste une expression mathématique en Skript.
-- **Alias :** `math`, `mathematique`, `mathematiques`, `mathématique`, `mathématiques`
-- **Usage :** `math <expression mathématique de skript>`
-- **Exemples :** `math sqrt(12) + 18 - abs(-13)`
 
 
 ### <a name="Move-Message"></a>Move Message
