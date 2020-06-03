@@ -28,7 +28,7 @@
         "warnBanTime": 345600,
         "warnDuration": 2592000,
         "purgeLimit": 100,
-        "maxForumModDuration": 172800
+        "maxForumModDuration": 172800000
     },
 
     "music": {
