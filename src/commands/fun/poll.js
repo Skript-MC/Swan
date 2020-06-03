@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import Command from '../../structures/Command';

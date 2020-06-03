@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { GuildMember } from 'discord.js';
 import { client } from '../main';
 import { uid } from '../utils';
