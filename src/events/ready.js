@@ -12,9 +12,13 @@ export default async function readyHandler() {
   if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
   if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
   if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
+  const channels = client.guild.channels.cache;
   for (const [key, value] of Object.entries(client.config.channels)) {
-    if (!value) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!client.guild.channels.cache.has(value)) client.logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
+    if (value instanceof Array) {
+      if (value.length === 0) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+      else if (!value.every(elt => channels.has(elt))) client.logger.warn(`One of the id entered for config.channels.${key} is not a valid channel.`);
+    } else if (!value) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+    else if (!channels.has(value)) client.logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
   }
   for (const [key, value] of Object.entries(client.config.roles)) {
     if (!value) client.logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
