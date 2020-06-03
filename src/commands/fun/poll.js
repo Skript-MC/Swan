@@ -40,11 +40,6 @@ export async function endPoll(client, poll, stopped = false) {
   message.edit(embed);
 }
 
-export async function checkPolls(client) {
-  const polls = await db.polls.find({ finish: { $lt: Date.now() } }).catch(console.error);
-  for (const poll of polls) endPoll(client, poll);
-}
-
 class Poll extends Command {
   constructor() {
     super('Poll');
