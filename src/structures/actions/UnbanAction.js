@@ -22,7 +22,6 @@ class UnbanAction extends ModerationAction {
         await SanctionManager.removeRole(this.data);
         const file = await SanctionManager.removeChannel(this.data);
         this.data.setFile(file);
-        this.data.shouldRemoveFile(true);
       }
     }
 

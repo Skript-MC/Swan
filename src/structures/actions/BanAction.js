@@ -100,7 +100,6 @@ class BanAction extends ModerationAction {
     // Delete channel
     const file = await SanctionManager.removeChannel(this.data);
     this.data.setFile(file);
-    this.data.shouldRemoveFile(true);
 
     // Ban
     const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
