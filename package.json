@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "make-docs": "babel-node ./scripts/docs.js",
-    "update-dbs": "babel-node ./scripts/docs.js"
+    "update-dbs": "babel-node ./scripts/update-dbs.js"
   },
   "authors": [
     "noftaly (noftaly#0359)",
