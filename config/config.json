@@ -209,7 +209,7 @@
                     },
                     "begin": {
                         "templates": ["begin", "start"],
-                        "content": "Pour commencer à apprendre Skript, vous avez beaucoup de possibilités. D'abord, des tutoriels vidéos en francais sont disponibles sur la chaîne YouTube de Skript-MC : <https://www.youtube.com/channel/UCnpbnCqfmJmbYaYCLEYsOJw/videos>. D'autres chaînes youtube vous apprenant le Skript existent aussi, vous avez juste à chercher sur YouTube ! Des tutoriels écrits existent aussi sur le forum, ici : <https://skript-mc.fr/forum/forum/8-tutoriels/>. Vous pouvez aussi vous aider des documentations, comme celle de Skript-MC, ici : <https://skript-mc.fr/documentation/skript/>. Enfin, vous pouvez télécharger des ressources pas trop compliquées ici : <https://skript-mc.fr/forum/files/>, et regarder comment elles fonctionnent/sont structurées. Bienvenue dans l'univers de Skript, et amusez-vous bien !"
+                        "content": "Pour commencer à apprendre Skript, vous avez beaucoup de possibilités.\n:small_blue_diamond: D'abord, des tutoriels vidéos en francais sont disponibles sur la chaîne YouTube de Skript-MC : <https://www.youtube.com/channel/UCnpbnCqfmJmbYaYCLEYsOJw/videos>. D'autres chaînes youtube vous apprenant le Skript existent aussi, vous avez juste à chercher sur YouTube !\n:small_blue_diamond: Des tutoriels écrits existent aussi sur le forum, ici : <https://skript-mc.fr/forum/forum/8-tutoriels/>.\n:small_blue_diamond: Vous pouvez aussi vous aider des documentations, comme celle de Skript-MC, ici : <https://skript-mc.fr/documentation/skript/>.\n:small_blue_diamond: Enfin, vous pouvez télécharger des ressources pas trop compliquées ici : <https://skript-mc.fr/forum/files/>, et regarder comment elles fonctionnent/sont structurées.\n\nBienvenue dans l'univers de Skript, et amusez-vous bien !"
                     },
                     "demande": {
                         "templates": ["demande", "demandes"],
@@ -774,7 +774,7 @@
             },
             "bassboost": {
                 "help": "Modifier la puissance des basses.",
-                "description": "Modifie le gain de la musique. La puissance par défault est à 0",
+                "description": "Modifie le gain de la musique. La puissance par défaut est à 0",
                 "invalidPower": "La puissance entrée n'est pas valide ! Vérifiez que vous avez saisi un nombre compris entre 0 et 40.",
                 "currentPower": "La puissance actuelle est à %d/40.",
                 "changed": "La puissance a bien été modifiée à %d, la modification sera effective dès la prochaine lecture.",
