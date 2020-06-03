@@ -4,7 +4,6 @@ import { MessageEmbed } from 'discord.js';
 import ACTION_TYPE from './actionType';
 import { db, client } from '../../main';
 import { toDuration } from '../../utils';
-import SanctionManager from '../SanctionManager';
 
 class ModerationAction {
   constructor(data) {
@@ -255,11 +254,7 @@ class ModerationAction {
     await db.sanctions.remove({ _id: id }).catch(console.error);
   }
 
-  async after(_document) {
-    if (this.data.removeFile && this.data.file) {
-      SanctionManager.deleteMessageHistoryFile(this.data);
-    }
-  }
+  async after(_document) {} // eslint-disable-line
 }
 
 export default ModerationAction;
