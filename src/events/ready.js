@@ -1,10 +1,8 @@
 import { client, db } from '../main';
 import Command from '../structures/Command';
-import SanctionManager from '../structures/SanctionManager';
 import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
-import { checkPolls } from '../commands/fun/poll';
 
 export default async function readyHandler() {
   client.guild = client.guilds.resolve(client.config.bot.guild);
@@ -45,8 +43,8 @@ export default async function readyHandler() {
 
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
-    SanctionManager.checkSanctions(); // Vérification des sanctions temporaires
-    checkPolls(client); // Vérification des sondages
+    client.checkSanctions(); // Vérification des sanctions temporaires
+    client.checkPolls(); // Vérification des sondages
   }, client.config.bot.checkInterval.short);
 
   setInterval(() => {

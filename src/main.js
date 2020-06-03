@@ -1,14 +1,11 @@
 /* eslint-disable import/no-cycle */
-import { Client } from 'discord.js';
 import moment from 'moment';
-import { extendClasses,
-  loadCommands,
-  loadSkriptHubAPI,
+import { loadSkriptHubAPI,
   loadSkripttoolsAddons,
-  loadDatabases,
-  loadConfig,
-  loadEvents } from './setup';
-import Logger from './structures/Logger';
+  loadDatabases } from './setup';
+import SwanClient from './SwanClient';
+
+require('dotenv').config();
 
 moment.locale('fr');
 moment.relativeTimeThreshold('M', 12);
@@ -18,18 +15,7 @@ moment.relativeTimeThreshold('m', 55);
 moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
-extendClasses();
-
-export const client = new Client();
-client.config = loadConfig();
-client.logger = new Logger();
-client.activated = true;
-client.commands = [];
-client.login(process.env.DISCORD_API);
-
-loadCommands();
-loadEvents();
-
+export const client = new SwanClient();
 export const db = loadDatabases();
 
 const shouldLoadSyntaxes = client.config.messages.commands.syntaxinfo.enabled ?? true;
