@@ -100,7 +100,7 @@ class SanctionManager {
   }
 
   static getMessageHistoryFile(data, messages) {
-    let fileContent = `Historique des messages du salon du banni : ${data.member.user.username}.\n\n\nMessages :\n\n`;
+    let fileContent = `Historique des messages du salon du banni : ${data.user.username}.\n\n\nMessages :\n\n`;
 
     for (const message of messages) {
       const sentAt = moment(new Date(message.sentAt)).format('[à] HH:mm:ss [le] DD/MM/YY');
@@ -110,7 +110,7 @@ class SanctionManager {
       fileContent += `${line}\n`;
     }
 
-    let fileName = prunePseudo(data.member);
+    let fileName = `logs-${data.user.id}`;
     const path = `${__dirname}/../../databases/ban-logs/`;
     let i = 1;
     if (fs.existsSync(`${path}${fileName}.txt`)) {
@@ -128,15 +128,6 @@ class SanctionManager {
       path: `${path}${fileName}.txt`,
       name: fileName,
     };
-  }
-
-  static deleteMessageHistoryFile(data) {
-    // On doit attendre un peu car des fois, (rarement), il le supprime trop tôt (même avec les awaits etc)...
-    setTimeout(() => {
-      fs.unlink(data.file.path, (err) => {
-        if (err) throw new Error(err);
-      });
-    }, 2000);
   }
 
   static async isBanned(id) {
