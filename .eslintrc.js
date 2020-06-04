@@ -1,6 +1,7 @@
 module.exports = {
   parser: 'babel-eslint',
   extends: 'airbnb-base',
+  ignorePatterns: ['scripts/update-dbs.js'],
   rules: {
     'arrow-parens': [
       'error',
