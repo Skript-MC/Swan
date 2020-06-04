@@ -80,7 +80,7 @@ class BanAction extends ModerationAction {
       { member: this.data.user.id },
       { $set: { duration: this.data.duration, finish: this.data.finish } },
     );
-    return this.data.privateChannel.send(this.config.sanctionUpdated.replace('%d', toDuration(this.data.duration)));
+    this.data.privateChannel.send(this.config.sanctionUpdated.replace('%d', toDuration(this.data.duration)));
   }
 
   async hardBan() {
@@ -103,7 +103,7 @@ class BanAction extends ModerationAction {
 
     // Ban
     const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
-    this.data.member.ban({ reason });
+    await this.data.member.ban({ reason });
   }
 }
 

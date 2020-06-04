@@ -254,7 +254,7 @@ class ModerationAction {
     await db.sanctions.remove({ _id: id }).catch(console.error);
   }
 
-  async after(_document) {} // eslint-disable-line
+  async after() {} // eslint-disable-line
 }
 
 export default ModerationAction;
