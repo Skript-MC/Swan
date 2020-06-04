@@ -1,35 +1,75 @@
 import Command from '../../structures/Command';
+import { uncapitalize, jwDistance } from '../../utils';
+import { db } from '../../main';
+
+const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
 class ErrorDetails extends Command {
   constructor() {
     super('Error Details');
-    this.aliases = ['errordetail', 'errordetails', 'error_detail', 'error_details', 'error-detail', 'error-details'];
+    this.aliases = ['errordetail', 'errordetails', 'error_detail', 'error_details', 'error-detail', 'error-details', 'error'];
     this.usage = 'errordetail <votre erreur>';
     this.examples = ["errordetail Can't compare 'if arg 1' with a text"];
   }
 
-  async execute(_client, message, args) {
-    if (args.length === 0) return message.channel.sendError(this.config.noError, message.member);
+  async execute(client, message, args) {
+    const arg = args.join(' ');
+    const messages = await db.messages.find({ type: 'error' }).catch(console.error);
 
-    const arg = args.join(' ').toLowerCase();
+    if (args.length === 0) {
+      const allMessages = [];
+      messages.filter(msg => allMessages.push(msg.title));
+      message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages.join(', ')}\``), message.member);
+      return;
+    }
 
-    if (arg.match(/indentation/gimu)) message.channel.send(this.config.error.indentation);
-    else if (arg.match(/can't understand this/gimu)) message.channel.send(this.config.error.cantunderstand);
-    else if (arg.match(/empty configuration section/gimu)) message.channel.send(this.config.error.emptysection);
-    else if (arg.match(/invalid use of quotes/gimu)) message.channel.send(this.config.error.invalidquotes);
-    else if (arg.match(/there's no loop that match/gimu)) message.channel.send(this.config.error.noloopmatch);
-    else if (arg.match(/"else" has to be place just after an "if"/gimu)) message.channel.send(this.config.error.elseafterif);
-    else if (arg.match(/can't compare/gimu)) message.channel.send(this.config.error.cantcompare);
-    else if (arg.match(/can't be added to/gimu)) message.channel.send(this.config.error.cantbeadded);
-    else if (arg.match(/There's no player in/gimu)) message.channel.send(this.config.error.noplayer);
-    else if (arg.match(/code has to be put in triggers/gimu)) message.channel.send(this.config.error.codeintriggers);
-    else if (arg.match(/because it's a single value/gimu)) message.channel.send(this.config.error.cantloopsinglevalue);
-    else if (arg.match(/This command doesn't have any arguments/gimu)) message.channel.send(this.config.error.doesnthaveargs);
-    else if (arg.match(/can only be used within a command/gimu)) message.channel.send(this.config.error.onlyincommand);
-    else if (arg.match(/in a periodic event/gimu)) message.channel.send(this.config.error.notinperiodic);
-    else if (arg.match(/cannot be parsed as/gimu)) message.channel.send(this.config.error.cantparse);
-    else if (arg.match(/cannot be saved/gimu)) message.channel.send(this.config.error.cantsave);
-    else message.channel.sendError(this.config.error.unknown, message.member);
+    for (const autoMessage of messages) {
+      if (autoMessage.aliases.some(elt => elt === arg) || autoMessage.title === arg) {
+        if (arg.includes('-pv')) {
+          try {
+            await message.member.send(autoMessage.content);
+            message.react('✅').catch(console.error);
+          } catch (e) {
+            message.react('❌').catch(console.error);
+            message.reply(client.config.messages.errors.privatemessage);
+          }
+        } else {
+          message.channel.send(autoMessage.content);
+        }
+        return;
+      }
+    }
+
+    const matches = [];
+
+    for (const msg of messages) {
+      for (const elt of msg.aliases) {
+        console.log(arg, elt);
+        if (jwDistance(arg, elt) >= this.config.similarity) matches.push(elt);
+        break;
+      }
+    }
+
+    if (matches.length === 0) {
+      message.channel.sendError(this.config.invalidMessage, message.member);
+    } else {
+      const messagesList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.error ');
+      const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', messagesList));
+
+      if (matches.length === 1) suggestion.react('✅');
+      else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await suggestion.react(reactionsNumbers[i]);
+
+      const collector = suggestion
+        .createReactionCollector((reaction, user) => !user.bot
+            && user.id === message.author.id
+            && (reaction.emoji.name === '✅' || reactionsNumbers.includes(reaction.emoji.name)))
+        .once('collect', (reaction) => {
+          collector.stop();
+          suggestion.delete();
+          const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
+          return this.execute(client, message, [matches[index]]);
+        });
+    }
   }
 }
 
