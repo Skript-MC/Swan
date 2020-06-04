@@ -23,20 +23,9 @@ class ErrorDetails extends Command {
       return;
     }
 
-    for (const autoMessage of messages) {
-      if (autoMessage.aliases.some(elt => elt === arg) || autoMessage.title === arg) {
-        if (arg.includes('-pv')) {
-          try {
-            await message.member.send(autoMessage.content);
-            message.react('✅').catch(console.error);
-          } catch (e) {
-            message.react('❌').catch(console.error);
-            message.reply(client.config.messages.errors.privatemessage);
-          }
-        } else {
-          message.channel.send(autoMessage.content);
-        }
-        return;
+    for (const errorMessage of messages) {
+      if (errorMessage.aliases.some(elt => elt === arg)) {
+        return message.channel.send(errorMessage.content);
       }
     }
 
