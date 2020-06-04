@@ -24,7 +24,7 @@ class AutomaticMessages extends Command {
     }
 
     for (const autoMessage of messages) {
-      if (autoMessage.aliases.some(elt => elt === arg) || autoMessage.title === arg) {
+      if (autoMessage.aliases.some(elt => elt === arg)) {
         if (arg.endsWith('-pv')) {
           try {
             await message.member.send(autoMessage.content);
@@ -34,7 +34,7 @@ class AutomaticMessages extends Command {
             message.reply(client.config.messages.errors.privatemessage);
           }
         } else {
-          const msg = message.channel.send(autoMessage.content);
+          const msg = await message.channel.send(autoMessage.content);
           msg.react('🗑️');
           const removeCollector = msg
             .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)

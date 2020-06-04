@@ -2,7 +2,7 @@ import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { db } from '../../main';
 
-class editMessages extends Command {
+class EditMessages extends Command {
   constructor() {
     super('Edit Messages');
     this.aliases = ['editm', 'editmsg', 'editMessages', 'msg'];
@@ -23,10 +23,10 @@ class editMessages extends Command {
     // On affiche la liste des messages si on ne veut pas en créer un nouveau
     if (args[1] === 'new') {
       const embedCollector = new MessageEmbed()
-        .setTitle('Comment ajouter un message ?')
-        .setDescription('Envoyez dans l\'odre défini ci-dessous les messages demandés.\n\n:one: le **titre** du message ;\n:two: les **alias** du message (séparés par un espace, exemple: `test test1`, ajouter `-pv` à la fin enverra en message privé) ;\n:three: le **contenu** du message qui sera envoyé.\n\nSi ❌ est ajouté à votre message, cela signifie que la valeur que vous essayez d\'ajouter existe déjà quelque part d\'autre. Réessayez donc avec d\'autres termes.')
+        .setTitle(this.config.howToAdd.title)
+        .setDescription(this.config.howToAdd.content)
         .setColor(client.config.colors.default)
-        .setFooter(`Exécuté par ${message.author.username}`)
+        .setFooter(`Exécuté par ${message.author.displayName}`)
         .setTimestamp();
 
       // On envoie l'embed d'information et on démarre le collector
@@ -44,7 +44,7 @@ class editMessages extends Command {
           // On réagit pour indiquer qu'on a bien pris en compte sa réponse
           answer.react('✅');
         } else if (answers.length === 1) {
-          const aliases = answer.content.split('|');
+          const aliases = answer.content.split(' ');
           for (const aliase of aliases) {
             if (msgDocs.some(msg => msg.type === type && msg.aliases.includes(aliase))) {
               return answer.react('❌');
@@ -107,4 +107,4 @@ class editMessages extends Command {
   }
 }
 
-export default editMessages;
+export default EditMessages;
