@@ -1,11 +1,8 @@
-/* eslint-disable import/no-cycle */
 import { GuildMember } from 'discord.js';
-import { client } from '../main';
 import { uid } from '../utils';
 
 class ModerationData {
   constructor() {
-    this.guild = client.guild;
     this.type = undefined; // The sanction type (enum of ACTION_TYPE)
     this.member = undefined; // The victim GuildMember object
     this.user = undefined; // The victim User object
@@ -108,7 +105,6 @@ class ModerationData {
 
   getData(compact = true) {
     return {
-      guild: compact && this.guild ? this.guild.id : this.guild,
       type: this.type,
       member: compact && this.member ? this.member.id : this.member,
       user: compact && this.user ? this.user.id : this.user,

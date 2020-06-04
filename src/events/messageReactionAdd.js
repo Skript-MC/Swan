@@ -1,5 +1,5 @@
 import { client, db } from '../main';
-import { endPoll } from '../commands/fun/poll';
+import endPoll from '../structures/endPoll';
 
 const pollsReactions = {
   yesno: ['✅', '❌'],
@@ -11,6 +11,7 @@ export default async function messageReactionAddHandler(reaction, user) {
   const { message } = reaction;
   const polls = await db.polls.find({}).catch(console.error);
   const poll = polls.find(p => p.id === reaction.message.id);
+  const member = message.guild.members.resolve(user.id);
 
   if (poll) {
     if ((poll.type === 0 && pollsReactions.yesno.includes(reaction.emoji.name))
@@ -20,7 +21,8 @@ export default async function messageReactionAddHandler(reaction, user) {
 
       if (userVote === reaction.emoji.name) {
         // Déjà voté pour cette option
-        message.channel.send(client.config.messages.commands.poll.alreadyVotedThis).then(msg => msg.delete({ timeout: 5000 }));
+        message.channel.send(client.config.messages.commands.poll.alreadyVotedThis.replace('%m', member.toString()))
+          .then(msg => msg.delete({ timeout: 5000 }));
       } else if (userVote) {
         // On a voté, mais on veut changer
         await db.polls.update(
@@ -40,9 +42,8 @@ export default async function messageReactionAddHandler(reaction, user) {
         if (poll.isAnonymous) reaction.users.remove(user);
       }
     } else if (pollsReactions.specials[1] === reaction.emoji.name && user.id === poll.creator) {
-      endPoll(client, poll, true);
+      endPoll(client, db, poll, true);
     } else if (pollsReactions.specials[0] === reaction.emoji.name) {
-      const member = message.guild.members.resolve(user.id);
       reaction.users.remove(user);
       try {
         const conf = client.config.messages.commands.poll;

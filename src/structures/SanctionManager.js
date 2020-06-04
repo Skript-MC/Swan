@@ -11,11 +11,11 @@ class SanctionManager {
     const channelName = `${client.config.moderation.banChannelPrefix}${pseudo}`;
 
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
-    if (data.guild.channels.cache.some(filter)) {
-      return data.guild.channels.cache.find(filter);
+    if (client.guild.channels.cache.some(filter)) {
+      return client.guild.channels.cache.find(filter);
     }
 
-    const channel = await data.guild.channels.create(channelName, 'text');
+    const channel = await client.guild.channels.create(channelName, 'text');
 
     const parent = channel.setParent(client.config.moderation.logCategory);
     const topic = channel.setTopic(`${data.user.id} (NE PAS CHANGER)`);
@@ -40,7 +40,7 @@ class SanctionManager {
   static async removeChannel(data) {
     const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
-    const chan = data.guild.channels.cache.find(filter);
+    const chan = client.guild.channels.cache.find(filter);
     let file;
 
     if (chan) {
@@ -53,8 +53,8 @@ class SanctionManager {
 
   static async addRole(data, overwrite = false) {
     const role = data.type === ACTION_TYPE.BAN
-      ? data.guild.roles.resolve(client.config.roles.ban)
-      : data.guild.roles.resolve(client.config.roles.mute);
+      ? client.guild.roles.resolve(client.config.roles.ban)
+      : client.guild.roles.resolve(client.config.roles.mute);
 
     try {
       if (overwrite) await data.member.roles.set([role]);
@@ -68,8 +68,8 @@ class SanctionManager {
   static async removeRole(data) {
     // On enlève le rôle de la victime
     const role = data.type === ACTION_TYPE.UNBAN
-      ? data.guild.roles.resolve(client.config.roles.ban)
-      : data.guild.roles.resolve(client.config.roles.mute);
+      ? client.guild.roles.resolve(client.config.roles.ban)
+      : client.guild.roles.resolve(client.config.roles.mute);
 
     if (data.member.roles.cache.has(role.id)) {
       try {

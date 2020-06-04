@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, prefer-destructuring */
+/* eslint-disable object-curly-newline */
 import ytdl from 'discord-ytdl-core';
 import { client, db } from '../main';
 
@@ -48,7 +48,7 @@ class MusicBotApp {
 
     this.dispatcher.on('start', () => {
       this.queue = queue;
-      this.nowPlaying = queue[0];
+      this.nowPlaying = queue[0]; // eslint-disable-line prefer-destructuring
       this.updateStats(this.nowPlaying);
       queue.shift();
       message.channel.send(client.config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));

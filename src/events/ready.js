@@ -3,6 +3,7 @@ import Command from '../structures/Command';
 import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
+import DatabaseChecker from '../structures/DatabaseChecker';
 
 export default async function readyHandler() {
   client.guild = client.guilds.resolve(client.config.bot.guild);
@@ -40,15 +41,25 @@ export default async function readyHandler() {
   client.logger.debug('main.js -> commandsStats database initialized successfully');
 
   // Cache all messages that need to be cached
-  const suggestionChannel = client.channels.cache.get(client.config.channels.suggestion);
+  const suggestionChannel = client.channels.resolve(client.config.channels.suggestion);
   const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
-  client.logger.step(`Messages cached! (${suggestionMessages.size})`);
+
+  const polls = await db.polls.find({}).catch(console.error);
+  const pollInfos = polls.map(poll => [poll.channel, poll.id]);
+  const pollsMessagesCache = [];
+  for (const [channelId, messageId] of pollInfos) {
+    const channel = client.channels.resolve(channelId);
+    pollsMessagesCache.push(channel.messages.fetch(messageId, true));
+  }
+  await Promise.all(pollsMessagesCache);
+
+  client.logger.step(`Messages cached! (${suggestionMessages.size + pollsMessagesCache.length})`);
   client.logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
-    client.checkSanctions(); // Vérification des sanctions temporaires
-    client.checkPolls(); // Vérification des sondages
+    DatabaseChecker.checkSanctions(client, db); // Vérification des sanctions temporaires
+    DatabaseChecker.checkPolls(client, db); // Vérification des sondages
   }, client.config.bot.checkInterval.short);
 
   setInterval(() => {

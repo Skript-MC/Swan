@@ -16,12 +16,12 @@ moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
 export const client = new SwanClient();
-export const db = loadDatabases();
+export const db = loadDatabases(client);
 
 const shouldLoadSyntaxes = client.config.messages.commands.syntaxinfo.enabled ?? true;
 const shouldLoadAddons = client.config.messages.commands.addoninfo.enabled ?? true;
-export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI() : null;
-export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons() : null;
+export const SkriptHubSyntaxes = shouldLoadSyntaxes ? loadSkriptHubAPI(client) : null;
+export const SkripttoolsAddons = shouldLoadAddons ? loadSkripttoolsAddons(client) : null;
 
 client.on('error', (err) => { throw new Error(err); });
 client.on('warn', client.logger.warn);
