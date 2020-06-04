@@ -71,6 +71,8 @@ export function loadDatabases(client) {
     'polls',
     // Miscellaneous
     'miscellaneous',
+    // Messages modifiables
+    'messages',
   ];
   for (const db of databasesNames) {
     databases[db] = Datastore.create(`./databases/${db}.db`);
