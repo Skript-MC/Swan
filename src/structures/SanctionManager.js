@@ -130,8 +130,17 @@ class SanctionManager {
     };
   }
 
-  static async isBanned(id) {
-    const doc = await db.sanctions.findOne({ member: id, type: ACTION_TYPE.BAN }).catch(console.error);
+  static async isBanned(id, orHardban = false) {
+    const query = orHardban
+      ? {
+        member: id,
+        $or: [{ type: ACTION_TYPE.BAN }, { type: ACTION_TYPE.HARDBAN }],
+      }
+      : {
+        member: id,
+        type: ACTION_TYPE.BAN,
+      };
+    const doc = await db.sanctions.findOne(query).catch(console.error);
     return !!doc;
   }
 
