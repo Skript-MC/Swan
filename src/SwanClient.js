@@ -3,14 +3,6 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { Client, Structures, MessageEmbed } from 'discord.js';
 import Logger from './structures/Logger';
-import { db } from './main';
-import ModerationData from './structures/ModerationData';
-import ACTION_TYPE from './structures/actions/actionType';
-import BanAction from './structures/actions/BanAction';
-import UnbanAction from './structures/actions/UnbanAction';
-import UnmuteAction from './structures/actions/UnmuteAction';
-import RemoveWarnAction from './structures/actions/RemoveWarnAction';
-import { endPoll } from './commands/fun/poll';
 
 class SwanClient extends Client {
   constructor(options) {
@@ -144,50 +136,6 @@ class SwanClient extends Client {
         this.on(event, eventFunction);
       }
     }
-  }
-
-  async checkSanctions() {
-    // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) la durée
-    // ("duration") n'est pas égale ($not) à -1 (= ban def)
-    const query = {
-      $and: [
-        { finish: { $lt: Date.now() } },
-        { $not: { duration: -1 } }],
-    };
-    const results = await db.sanctions.find(query).catch(console.error);
-
-    for (const result of results) {
-      const victim = this.guild.members.cache.get(result.member) || await this.users.fetch(result.member);
-      const data = new ModerationData()
-        .setType(ACTION_TYPE.opposite(result.type))
-        .setColor(this.config.colors.success)
-        .setVictim(victim)
-        .setReason(this.config.messages.miscellaneous.sanctionExpired)
-        .setModerator(this.guild.members.resolve(this.user.id))
-        .setMessageChannel(this.guild.channels.resolve(this.config.channels.logs));
-
-      if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
-        data.setType(ACTION_TYPE.HARDBAN)
-          .setColor(this.config.colors.hardban)
-          .setReason(this.config.messages.miscellaneous.inactivityWhileBanned)
-          .setDuration(-1)
-          .setFinishTimestamp();
-        new BanAction(data).commit();
-        continue;
-      }
-
-      if (data.type === ACTION_TYPE.UNBAN) new UnbanAction(data).commit();
-      else if (data.type === ACTION_TYPE.UNMUTE) new UnmuteAction(data).commit();
-      else if (data.type === ACTION_TYPE.REMOVE_WARN) {
-        data.setWarnId(result.id);
-        new RemoveWarnAction(data).commit();
-      }
-    }
-  }
-
-  async checkPolls() {
-    const polls = await db.polls.find({ finish: { $lt: Date.now() } }).catch(console.error);
-    for (const poll of polls) endPoll(this, poll);
   }
 }
 

@@ -1,9 +1,8 @@
-/* eslint-disable import/no-dynamic-require, import/no-cycle */
+/* eslint-disable import/no-dynamic-require */
 import axios from 'axios';
 import Datastore from 'nedb-promises';
-import { client } from './main';
 
-export async function loadSkriptHubAPI() {
+export async function loadSkriptHubAPI(client) {
   const options = {
     method: 'GET',
     headers: {
@@ -30,7 +29,7 @@ export async function loadSkriptHubAPI() {
   return syntaxes;
 }
 
-export async function loadSkripttoolsAddons() {
+export async function loadSkripttoolsAddons(client) {
   let addons = [];
 
   const allAddons = await axios(client.config.apis.addons)
@@ -53,7 +52,7 @@ export async function loadSkripttoolsAddons() {
   return addons;
 }
 
-export function loadDatabases() {
+export function loadDatabases(client) {
   const databases = {};
   const databasesNames = [
     // Store all current sanctions

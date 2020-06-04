@@ -437,7 +437,7 @@
                 "pollInfosCustom": "**Informations sur les sondages :**\nRéagissez par :one:, :two:, :three: etc pour voter pour la réponse qui vous convient. Au bout du temps défini, le décompte des votes est fait. Si vous enlevez votre réaction, elle sera tout de même comptée. Si vous mettez plusieurs réactions, c'est la dernière mise qui sera comptée. Le vote commence lorsque l'embed devient bleu. Pour arrêter un vote, cliquez sur :octagonal_sign:.",
                 "tooLong": "Désolé, mais la durée indiquée pour ce sondage est trop longue. Le maximum autorisé est de 7 jours.",
                 "infosSent": "%m, je t'ai envoyé plus d'informations en privé !",
-                "alreadyVotedThis": "Vous avez déjà voté pour cette option !"
+                "alreadyVotedThis": "%m, vous avez déjà voté pour cette option !"
             },
             "joke": {
                 "help": "Envoyer une blague aléatoire.",

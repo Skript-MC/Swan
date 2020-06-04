@@ -128,7 +128,7 @@ class ModerationAction {
 
     if (this.data.warnId) embed.addField(":hash: ID de l'avertissement", this.data.warnId, true);
 
-    const logChannel = this.data.guild.channels.cache.get(client.config.channels.logs);
+    const logChannel = client.guild.channels.cache.get(client.config.channels.logs);
     logChannel.send(embed);
 
     if (this.data.file) {
