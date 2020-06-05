@@ -37,9 +37,14 @@ function canExecute(command, message) {
 }
 
 export default async function messageHandler(message) {
-  const args = message.content.split(/ +/);
   const { prefix } = client.config.bot;
-  let cmd = args.shift();
+  let cmd = message.content.split(' ').shift();
+  // TODO: Améliorer ceci pour ne pas avoir a hardcoder les commandes...
+  const splitOneSpace = ['code', 'balise'];
+  const args = splitOneSpace.map(c => `${prefix}${c}`).includes(cmd)
+    ? message.content.split(' ')
+    : message.content.split(/ +/g);
+  args.shift();
 
   if (await SanctionManager.isBanned(message.author.id)) {
     SanctionManager.hasSentMessages(message.author.id);
