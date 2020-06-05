@@ -1,4 +1,4 @@
-/* eslint-disable import/no-cycle, max-classes-per-file */
+/* eslint-disable max-classes-per-file */
 import { promises as fs } from 'fs';
 import path from 'path';
 import { Client, Structures, MessageEmbed } from 'discord.js';
