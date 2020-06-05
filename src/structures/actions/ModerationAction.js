@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import moment from 'moment';
 import { MessageEmbed } from 'discord.js';
 import ACTION_TYPE from './actionType';

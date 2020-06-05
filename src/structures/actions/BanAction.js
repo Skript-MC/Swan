@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import moment from 'moment';
 import ModerationAction from './ModerationAction';
 import { client, db } from '../../main';

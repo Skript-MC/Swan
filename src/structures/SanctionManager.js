@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import fs from 'fs';
 import moment from 'moment';
 import { db, client } from '../main';

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import ModerationAction from './ModerationAction';
 import { client, db } from '../../main';
 import SanctionManager from '../SanctionManager';
