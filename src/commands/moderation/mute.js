@@ -23,7 +23,7 @@ class Mute extends Command {
 
     const reason = args.splice(2).join(' ');
     let duration;
-    if (args[1] === 'def' || args[1] === 'definitif') {
+    if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(args[1])) {
       duration = -1;
     } else {
       duration = toTimestamp(args[1]);
