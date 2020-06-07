@@ -92,6 +92,7 @@
             "erroroccured": "Oups ! Une erreur s'est produite... Merci de réessayer plus tard !",
             "unknowncommand": "Aïe, cette commande n'existe pas...\nEssaye `.help` pour afficher la liste des commandes disponibles. :wink:",
             "privatemessage": "Oups ! Je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
+            "userHasClosedDm": "Oups ! Je ne peux pas envoyer de message privé à cette utilisateur... Il n'a donc pas été informé de la sanction directement, je vous invite à le faire !",
             "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
             "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
             "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission ou de configuration, pas de Swan)",

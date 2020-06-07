@@ -84,7 +84,9 @@ class ModerationAction {
       .replace('%s', type)
       .replace('%r', this.data.reason)
       .replace('%d', toDuration(this.data.duration));
-    await this.data.user.send(notification).catch(() => {});
+    await this.data.user.send(notification).catch((_err) => {
+      this.data.messageChannel.sendInfo(client.config.messages.errors.userHasClosedDm, this.data.moderator);
+    });
   }
 
   async exec(document) {} // eslint-disable-line
