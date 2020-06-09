@@ -679,7 +679,9 @@
             },
             "idée": {
                 "help": "Envoyer une idée de script aléatoire.",
-                "description": "Envoie une idée de script aléatoire à réaliser parmis celles dans le salon des idées."
+                "description": "Envoie une idée de script aléatoire à réaliser parmis celles dans le salon des idées.",
+                "noChannelFound": "Le salon d'ou je dois tirer les idées n'a pas été définit dans la config ! Je ne peux donc pas les récupérer...",
+                "noMessagesFound": "Je n'ai trouvé aucune idée !"
             },
             "movemessage": {
                 "help": "Déplacer un message.",

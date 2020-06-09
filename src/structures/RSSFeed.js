@@ -38,7 +38,7 @@ function sendTopics(topics) {
       .setURL(item.link)
       .setDescription(content)
       .setTimestamp();
-    channel.send(embed);
+    if (channel) channel.send(embed);
   }
 }
 
@@ -61,7 +61,7 @@ function sendFiles(files) {
       .setURL(item.link)
       .setDescription(content)
       .setTimestamp();
-    channel.send(embed);
+    if (channel) channel.send(embed);
   }
 }
 

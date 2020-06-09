@@ -19,6 +19,7 @@ class DatabaseChecker {
 
     for (const result of results) {
       const victim = client.guild.members.cache.get(result.member) || await client.users.fetch(result.member);
+      if (!victim) continue;
       const data = new ModerationData()
         .setType(ACTION_TYPE.opposite(result.type))
         .setColor(client.config.colors.success)
