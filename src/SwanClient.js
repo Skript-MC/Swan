@@ -104,6 +104,47 @@ class SwanClient extends Client {
     });
   }
 
+  checkValidity() {
+    // Check tokens
+    if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
+    if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
+
+    // Check bot and guild IDs
+    if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
+    if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
+
+    // Check channels IDs
+    const channels = this.guild.channels.cache;
+    for (const [key, value] of Object.entries(this.config.channels)) {
+      if (value instanceof Array) {
+        if (value.length === 0) this.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+        else if (!value.every(elt => channels.has(elt))) this.logger.warn(`One of the id entered for config.channels.${key} is not a valid channel.`);
+      } else if (!value) this.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+      else if (!channels.has(value)) this.logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
+    }
+
+    // Check roles IDs
+    for (const [key, value] of Object.entries(this.config.roles)) {
+      if (!value) this.logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+      else if (!this.guild.roles.cache.has(value)) this.logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
+    }
+
+    // Check client permissions
+    const clientMember = this.guild.members.resolve(this.user.id);
+    const permissions = ['KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'ADD_REACTIONS', 'VIEW_CHANNEL', 'SEND_MESSAGES', 'MANAGE_MESSAGES', 'ATTACH_FILES', 'READ_MESSAGE_HISTORY', 'CONNECT', 'SPEAK', 'MANAGE_NICKNAMES', 'MANAGE_ROLES'];
+    if (!clientMember.hasPermission(permissions)) this.logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
+
+    // Check channels permissions
+    for (const channel of this.channels.cache.array()) {
+      if (!['text', 'voice'].includes(channel.type)) continue;
+      if (channel.name !== 'blabla') continue;
+      const channelPermissions = channel.permissionsFor(clientMember).toArray();
+      if (!permissions.every(p => channelPermissions.includes(p))) {
+        this.logger.warn(`Swan is missing permission(s) ${permissions.filter(p => !channelPermissions.includes(p)).join(', ')} in channel "${channel.name}".`);
+      }
+    }
+  }
+
   async loadCommands(dir = 'commands') {
     if (dir !== 'commands') this.logger.step(`loading: ${dir}`);
 

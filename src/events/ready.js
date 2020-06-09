@@ -8,27 +8,7 @@ import DatabaseChecker from '../structures/DatabaseChecker';
 export default async function readyHandler() {
   client.guild = client.guilds.resolve(client.config.bot.guild);
 
-  // Verifying tokens and ids
-  if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
-  if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
-  if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
-  if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
-  const channels = client.guild.channels.cache;
-  for (const [key, value] of Object.entries(client.config.channels)) {
-    if (value instanceof Array) {
-      if (value.length === 0) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-      else if (!value.every(elt => channels.has(elt))) client.logger.warn(`One of the id entered for config.channels.${key} is not a valid channel.`);
-    } else if (!value) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!channels.has(value)) client.logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
-  }
-  for (const [key, value] of Object.entries(client.config.roles)) {
-    if (!value) client.logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!client.guild.roles.cache.has(value)) client.logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
-  }
-  const clientMember = client.guild.members.resolve(client.user.id);
-  const permissions = ['KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'ADD_REACTIONS', 'VIEW_CHANNEL', 'SEND_MESSAGES', 'MANAGE_MESSAGES', 'ATTACH_FILES', 'CONNECT', 'SPEAK', 'MANAGE_NICKNAMES', 'MANAGE_ROLES'];
-  if (!clientMember.hasPermission(permissions)) client.logger.error(`Swan is missing permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
-
+  client.checkValidity();
   client.logger.debug('main.js -> Checks of tokens, ids and permissions finished successfully');
 
   // Initializing the commands-stats database
