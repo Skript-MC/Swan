@@ -88,8 +88,9 @@ export default async function messageHandler(message) {
 
     for (const quote of quotes) {
       const channel = await client.channels.fetch(quote.channelId).catch(console.error);
+      if (!channel) return;
       const targetedMessage = await channel.messages.fetch(quote.messageId).catch(console.error);
-      if (!targetedMessage.content) return;
+      if (!targetedMessage?.content) return;
       const embed = new MessageEmbed()
         .setColor(client.config.colors.default)
         .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())

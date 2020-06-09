@@ -10,8 +10,14 @@ class Idea extends Command {
   }
 
   async execute(client, message, _args) {
-    const ideaMessages = await client.channels.resolve(client.config.channels.idea).messages.fetch();
-    const randomIdea = ideaMessages.array()[Math.floor(Math.random() * ideaMessages.array().length)];
+    const channel = client.channels.resolve(client.config.channels.idea);
+    if (!channel) return message.channel.send(this.config.noChannelFound);
+
+    const ideaMessages = await channel.messages.fetch();
+    if (!ideaMessages) return message.channel.send(this.config.noMesagesFound);
+
+    const randomIdea = ideaMessages.array()[Math.floor(Math.random() * ideaMessages.size)];
+
     const embed = new MessageEmbed()
       .setColor(client.config.colors.default)
       .setAuthor(`Idée de ${randomIdea.member.displayName} :`, randomIdea.author.avatarURL())
