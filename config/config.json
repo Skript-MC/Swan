@@ -550,8 +550,8 @@
                 "invalidRule": "Le numéro de la règle n'est pas valide !",
                 "messages": [
                     "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, vos erreurs si vous en avez (pensez à regarder la console), etc.). Regardez `.auto helptemplate` pour plus d'informations.",
-                    "Rester clément même avec les débutants. Tout le monde n'est pas un expert en Skript.",
-                    "Personne n'est présent pour faire votre code à votre place, aussi soyez patient et essayez de décrire au mieux votre problème (le langage utilisé, le contexte...). Eviter de simplement dire \"j'ai un problème qui peut m'aider ?\"",
+                    "Restez clément même avec les débutants. Tout le monde n'est pas un expert en Skript.",
+                    "Personne n'est présent pour faire votre code à votre place, aussi soyez patient et essayez de décrire au mieux votre problème. Eviter de simplement dire \"j'ai un problème qui peut m'aider ?\"",
                     "Le langage SMS est à éviter mais ne vous sentez pas obligé de corriger la moindre faute d'orthographe faite par d'autres utilisateurs (la langue française n'est pas forcément la langue maternelle de certains utilisateurs donc soyez respectueux). Essayez cependant tous de faire un effort et de rendre votre message compréhensible.",
                     "Si vous donnez un avis, soyez clair, les remarques du genre \"c'est nul\", \"X est à chier\" ne servent à rien. Si vous exposez votre avis, spécifiez le et développez.",
                     "Ne mentionnez pas les autres utilisateurs pour rien, surtout pas pour venir résoudre un problème de code.",
