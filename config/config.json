@@ -547,7 +547,7 @@
                 "help": "Afficher les règles des salons d'aide Skript.",
                 "description": "Envoie les règles des salons d'aide Skript.",
                 "onlyInHelp": "Cette commande est disponible uniquement dans les salons d'aide Skript.",
-                "invalidRule": "Le numéro de la règle n'est pas valide !",
+                "invalidRule": "Le numéro de la règle n'est pas valide ! Voici la liste des règles :\n%s",
                 "messages": [
                     "Lorsque vous demandez de l'aide, il faut donner le plus d'informations possibles (votre code, version Skript/addons/minercaft, vos addons, vos erreurs si vous en avez (pensez à regarder la console), etc.). Regardez `.auto helptemplate` pour plus d'informations.",
                     "Restez clément même avec les débutants. Tout le monde n'est pas un expert en Skript.",
