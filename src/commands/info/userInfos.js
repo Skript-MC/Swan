@@ -58,7 +58,7 @@ class UserInfos extends Command {
       .addField(this.config.embed.names, `Pseudo : \`${target.user.username}\`\nSurnom : \`${target.displayName}\`\nDiscriminant : ${target.user.discriminator}\nIdentifiant : ${target.id}\n`, true)
       .addField(this.config.embed.created, moment(target.user.createdAt).format('[le] DD/MM/YYYY [à] HH:mm:ss'), true)
       .addField(this.config.embed.joined, `${moment(new Date(target.joinedTimestamp)).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`, true)
-      .addField(this.config.embed.roles, `${target.roles.cache.array().length - 1 === 0 ? 'Aucun' : `${target.roles.cache.array().length - 1} : ${roles.join(', ')}`}`, true)
+      .addField(this.config.embed.roles, `${target.roles.cache.size - 1 === 0 ? 'Aucun' : `${target.roles.cache.size - 1} : ${roles.join(', ')}`}`, true)
       .addField(this.config.embed.presence, presence, true);
 
     message.channel.send(embed);
