@@ -26,8 +26,8 @@ function canExecute(command, message) {
   if (client.config.bot.forbiddenChannels.includes(message.channel.id)) return false;
   // Check des channels interdits par la commande
   if (command.prohibitedChannels.length > 0 && command.prohibitedChannels.includes(message.channel.id)) return false;
-  // Check des channels requis par la commande
-  if (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id)) return false;
+  // Check des channels requis par la commande (on autorise le channel #bot dans tous les cas)
+  if (message.channel.id === client.config.channels.bot || (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id))) return false;
   // Check des channels d'aide
   if ((client.config.channels.helpSkript.includes(message.channel.id) || client.config.channels.helpOther.includes(message.channel.id)) && !command.enabledInHelpChannels) {
     message.channel.sendError(client.config.messages.errors.notInHelpChannels, message.member);
