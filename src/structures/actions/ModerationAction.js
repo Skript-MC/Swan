@@ -132,7 +132,7 @@ class ModerationAction {
     const logChannel = client.guild.channels.cache.get(client.config.channels.logs);
     logChannel.send(embed);
 
-    if (this.data.file) {
+    if (this.data.file?.path && this.data.file?.name) {
       logChannel.send({
         files: [{
           attachment: this.data.file.path,
