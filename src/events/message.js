@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, DMChannel } from 'discord.js';
 import { client, db } from '../main';
 import { jwDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
@@ -46,16 +46,16 @@ export default async function messageHandler(message) {
     : message.content.split(/ +/g);
   args.shift();
 
+  if (message.author.bot
+    || message.system
+    || message.channel instanceof DMChannel
+    || message.guild.id !== client.config.bot.guild
+    || (!client.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
+
   if (await SanctionManager.isBanned(message.author.id)) {
     SanctionManager.hasSentMessages(message.author.id);
     return;
   }
-
-  if (message.author.bot
-    || message.system
-    || message.guild.id !== client.config.bot.guild
-    || (!client.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
-
   // Easter egg "ssh root@skript-mc.fr"
   if (message.channel.id === client.config.channels.bot && message.content.startsWith('ssh root@skript-mc.fr')) {
     const guess = message.content.split(' ').pop();
