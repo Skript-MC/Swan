@@ -30,7 +30,7 @@ class Purge extends Command {
       if (err.message.includes('14 days old')) message.channel.sendError(this.config.tooOld, message.member);
     });
     // On re-delete le message si jamais il n'a pas été supprimé à cause des filtres
-    message.delete();
+    message.delete().catch(() => {});
   }
 }
 
