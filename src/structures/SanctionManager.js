@@ -20,7 +20,7 @@ class SanctionManager {
     const topic = channel.setTopic(`${data.user.id} (NE PAS CHANGER)`);
     const permissions = channel.overwritePermissions([{
       id: client.config.roles.everyone,
-      deny: ['VIEW_CHANNEL'],
+      deny: ['VIEW_CHANNEL', 'CREATE_INSTANT_INVITE'],
     }, {
       id: client.config.roles.staff,
       allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
