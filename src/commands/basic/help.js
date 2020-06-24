@@ -141,7 +141,6 @@ class Help extends Command {
     ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace à la fin.
     ex = ex === '' ? thisConfig.details.noExample : `${ex}`;
 
-
     let desc = command.description;
     if (command.name === 'Automatic Messages') {
       desc = desc.replace('%s', `${Object.keys(config.messages.commands.automaticmessages.messages).join(', ')}`);
