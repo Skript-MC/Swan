@@ -110,13 +110,17 @@ class SanctionManager {
     }
 
     let fileName = `logs-${data.user.id}`;
-    const path = `${__dirname}/../../databases/ban-logs/`;
+    const path = `${__dirname}\\..\\..\\databases\\ban-logs\\`;
     let i = 1;
     if (fs.existsSync(`${path}${fileName}.txt`)) {
       while (fs.existsSync(`${path}${fileName}-${i}.txt`)) {
         i++;
       }
       fileName += `-${i}`;
+    }
+
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path);
     }
 
     fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {
