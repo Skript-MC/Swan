@@ -34,7 +34,7 @@ export default async function readyHandler() {
   await Promise.all(pollsMessagesCache);
   pollsMessagesCache.filter(elt => typeof elt !== 'undefined');
 
-  client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + (pollsMessagesCache?.length || 0)})`);
+  client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + (pollsMessagesCache?.length || 0)})`);
   client.logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {

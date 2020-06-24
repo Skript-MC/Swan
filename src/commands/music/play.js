@@ -135,7 +135,6 @@ class Play extends Command {
         embed.setColor(client.config.colors.default);
         songEmbed.edit(embed);
 
-
         const collectorNumbers = songEmbed
           .createReactionCollector((reaction, user) => !user.bot
             && user.id === message.author.id
