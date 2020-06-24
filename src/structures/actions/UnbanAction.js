@@ -17,7 +17,7 @@ class UnbanAction extends ModerationAction {
       if (isBanned) await client.guild.members.unban(this.data.user.id, this.data.reason).catch(console.error);
     } else {
       const isBan = await db.sanctions.findOne({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
-      if (isBan) {
+      if (isBan && this.data.member) {
         await SanctionManager.removeRole(this.data);
         const file = await SanctionManager.removeChannel(this.data);
         this.data.setFile(file);
