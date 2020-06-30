@@ -15,7 +15,7 @@ class EditMessages extends Command {
     if (!args[0]) return message.channel.sendError(this.config.invalidCommand, message.member);
     const type = args[0].toLowerCase();
     // Vérification des arguments ('error' ou 'auto')
-    if (!['error', 'auto'].includes(type)) return;
+    if (!['error', 'auto'].includes(type)) return message.channel.sendError(this.config.invalidCommand, message.member);
 
     // On récupère la db une seule fois pour le reste du code
     const msgDocs = await db.messages.find({ type }).catch(console.error);
@@ -38,13 +38,14 @@ class EditMessages extends Command {
       // Collecteur de réponse
       msgCollector.on('collect', (answer) => {
         if (answers.length === 0) {
-          if (msgDocs.some(msg => msg.type === type && msg.title === answer.content)) return answer.react('❌');
+          const title = answer.content.split(' ')[0].toLowerCase();
+          if (msgDocs.some(msg => msg.type === type && msg.title === title)) return answer.react('❌');
           // Uniquement si la condition est validée, on ajoute la réponse à l'array des réponses
-          answers.push(answer.content);
+          answers.push(title);
           // On réagit pour indiquer qu'on a bien pris en compte sa réponse
           answer.react('✅');
         } else if (answers.length === 1) {
-          const aliases = answer.content.split(' ');
+          const aliases = answer.content.split('|');
           for (const aliase of aliases) {
             if (msgDocs.some(msg => msg.type === type && msg.aliases.includes(aliase))) {
               return answer.react('❌');
@@ -65,8 +66,8 @@ class EditMessages extends Command {
         // Si on a pas nos 3 réponses (quoi qu'il en est de la raison), on indique que la collection est stoppée et rien n'est sauvegardé
         if (answers.length !== 3) return message.channel.sendError(this.config.endCollect, message.member);
         // On traite nos réponses
-        const title = answers[0].toLowerCase();
-        const aliases = answers[1].split(' ');
+        const title = answers[0];
+        const aliases = answers[1].toLowerCase().split('|');
         // On indique le type (soit 'error' ou 'auto') et son contenu etc...
         db.messages.insert({ type, title, aliases, content: answers[2] }).catch(console.error);
         message.channel.sendSuccess(`Votre message a bien été ajouté à la base de données \`${type}\`. Vous pouvez passer en revue les détails de votre ajout :\n\n> **Sujet du message :** ${title}\n\n> **Alias :** ${aliases.join(', ')}\n\n> **Contenu :** ${answers[2]}\n\nExécutez \`.msg ${type} del ${title}\` si vous vous souhaitez le supprimer.`, message.member);
