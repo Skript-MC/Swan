@@ -165,10 +165,8 @@
             "errordetails": {
                 "help": "Envoyer des informations sur une erreur.",
                 "description": "Envoie des informations sur ces erreurs : `%s`.",
-                "invalidMessage": "Désolé, mais cette erreur n'existe pas. :confused: Pour vous aider à corriger votre erreur, cherchez des solutions sur internet ou traduisez l'erreur. Si vous avez toujours besoin d'aide, rendez-vous dans les salons d'aide. :wink:",
-                "noArg": "Envoie des informations concernent ces erreurs :\n `%s`.",
-                "cmdSuggestion": "L'erreur `%c` n'a pas été trouvée. Voulais-tu dire `.error %m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
-                "similarity": 0.8
+                "invalidMessage": "Désolé, mais cette erreur n'existe pas. :confused:\nPour vous aider à corriger votre erreur, cherchez des solutions sur internet ou traduisez l'erreur. Si vous avez toujours besoin d'aide, rendez-vous dans les salons d'aide. :wink:",
+                "noArg": "Envoie des informations concernent ces erreurs :\n `%s`."
             },
             "editmessages": {
                 "help": "Gérer les messages éditables de Swan.",
@@ -179,7 +177,7 @@
                 "endCollect": "La collection des réponses a été arrêtée et vos messages n'ont pas été enregistrés (expiration ou annulation volontaire).",
                 "howToAdd": {
                     "title": "Comment ajouter un message ?",
-                    "content": "Envoyez dans l'odre défini ci-dessous les messages demandés.\n\n:one: le titre du message (affiché uniquement dans la liste);\n:two: les alias du message (séparés par un `|`, exemple: `test|test1` - ajoutez `-pv` à la fin pour envoyer en message privé) ;\n:three: le contenu du message qui sera envoyé.\n\nSi :x: est ajouté à votre message, cela signifie que la valeur que vous essayez d'ajouter existe déjà quelque part d'autre. Réessayez donc avec d'autres termes."
+                    "content": "Envoyez dans l'odre défini ci-dessous les messages demandés.\n\n:one: le titre du message (en un mot, affiché uniquement dans la liste);\n:two: les alias du message (séparés par un `|`, exemple: `test|test1` - ajoutez `-pv` à la fin pour envoyer en message privé) ;\n:three: le contenu du message qui sera envoyé.\n\nSi :x: est ajouté à votre message, cela signifie que la valeur que vous essayez d'ajouter existe déjà quelque part d'autre. Réessayez donc avec d'autres termes."
                 }
             },
             "addoninfo": {
