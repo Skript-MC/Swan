@@ -10,8 +10,6 @@ class ModerationAction {
   }
 
   async commit() {
-    console.log('DEBUG: ModerationAction -> commit -> commit');
-    console.log(new Error().stack);
     const [stop, result, isUpdate] = await this.prepare();
     if (stop) return false;
 
