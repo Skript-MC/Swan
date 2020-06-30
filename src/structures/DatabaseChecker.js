@@ -8,6 +8,7 @@ import endPoll from './endPoll';
 
 class DatabaseChecker {
   static async checkSanctions(client, db) {
+    const messageChannel = client.guild.channels.resolve(client.config.channels.logs);
     // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) la durée
     // ("duration") n'est pas égale ($not) à -1 (= ban def)
     const query = {
@@ -19,7 +20,7 @@ class DatabaseChecker {
 
     for (const result of results) {
       const victim = client.guild.members.cache.get(result.member) || await client.users.fetch(result.member);
-      if (!victim) continue;
+
       const data = new ModerationData()
         .setType(ACTION_TYPE.opposite(result.type))
         .setColor(client.config.colors.success)
@@ -27,6 +28,21 @@ class DatabaseChecker {
         .setReason(client.config.messages.miscellaneous.sanctionExpired)
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(messageChannel);
+
+      if (!victim) {
+        if (result.type === ACTION_TYPE.BAN) {
+          // Si on ne retrouve pas la victime alors qu'elle était bannie (sdb), alors elle doit être bannie
+          // (= elle a quitté/on l'a banni pendant que le bot était offline)
+          messageChannel.sendError(client.config.messages.errors.assumeBanned);
+          data.setVictimId(result.member);
+          data.setType(ACTION_TYPE.HARDBAN);
+          data.setColor(client.config.colors.hardban);
+          data.setReason(client.config.messages.miscellaneous.hardBanAutomatic);
+          data.setDuration(-1);
+          new BanAction(data).commit();
+        }
+        continue;
+      }
 
       if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
         data.setType(ACTION_TYPE.HARDBAN)
