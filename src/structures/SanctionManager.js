@@ -9,7 +9,7 @@ class SanctionManager {
     const pseudo = prunePseudo(data.member);
     const channelName = `${client.config.moderation.banChannelPrefix}${pseudo}`;
 
-    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
+    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
     if (client.guild.channels.cache.some(filter)) {
       return client.guild.channels.cache.find(filter);
     }
@@ -17,7 +17,7 @@ class SanctionManager {
     const channel = await client.guild.channels.create(channelName, 'text');
 
     const parent = channel.setParent(client.config.moderation.logCategory);
-    const topic = channel.setTopic(`${data.user.id} (NE PAS CHANGER)`);
+    const topic = channel.setTopic(`${data.victimId} (NE PAS CHANGER)`);
     const permissions = channel.overwritePermissions([{
       id: client.config.roles.everyone,
       deny: ['VIEW_CHANNEL'],
@@ -25,20 +25,21 @@ class SanctionManager {
       id: client.config.roles.staff,
       allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
     }, {
-      id: data.user.id,
+      id: data.victimId,
       allow: ['VIEW_CHANNEL'],
     }]);
 
-    await Promise.all([parent, topic, permissions]).catch((_err) => {
+    await Promise.all([parent, topic, permissions]).catch((err) => {
       data.messageChannel.send(client.config.messages.errors.channelPermissions);
       client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      client.logger.debug(`    ↳ ${err.message}`);
     });
     return channel;
   }
 
   static async removeChannel(data) {
     const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
-    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
+    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
     const chan = client.guild.channels.cache.find(filter);
     let file;
 
@@ -58,9 +59,10 @@ class SanctionManager {
     try {
       if (overwrite) await data.member.roles.set([role]);
       else await data.member.roles.add(role);
-    } catch (_err) {
+    } catch (err) {
       data.messageChannel.send(client.config.messages.errors.rolePermissions);
       client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      client.logger.debug(`    ↳ ${err.message}`);
     }
   }
 
@@ -73,9 +75,10 @@ class SanctionManager {
     if (data.member.roles.cache.has(role.id)) {
       try {
         data.member.roles.remove(role);
-      } catch (e) {
-        data.messageChannel.send(client.config.messages.errors.rolePermissions).catch();
+      } catch (err) {
+        data.messageChannel.send(client.config.messages.errors.rolePermissions);
         client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+        client.logger.debug(`    ↳ ${err.message}`);
       }
     }
   }
@@ -99,7 +102,7 @@ class SanctionManager {
   }
 
   static getMessageHistoryFile(data, messages) {
-    let fileContent = `Historique des messages du salon du banni : ${data.user.username}.\n\n\nMessages :\n\n`;
+    let fileContent = `Historique des messages du salon du banni : ${data.getUserName()}.\n\n\nMessages :\n\n`;
 
     for (const message of messages) {
       const sentAt = moment(new Date(message.sentAt)).format('[à] HH:mm:ss [le] DD/MM/YY');
@@ -109,7 +112,7 @@ class SanctionManager {
       fileContent += `${line}\n`;
     }
 
-    let fileName = `logs-${data.user.id}`;
+    let fileName = `logs-${data.victimId}`;
     const path = `${__dirname}/../../databases/ban-logs/`;
     let i = 1;
     if (fs.existsSync(`${path}${fileName}.txt`)) {

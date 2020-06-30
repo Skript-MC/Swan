@@ -50,7 +50,7 @@ class Ban extends Command {
       .setColor(type === ACTION_TYPE.BAN ? client.config.colors.ban : client.config.colors.hardban)
       .setReason(reason)
       .setDuration(duration)
-      .setMember(victim)
+      .setVictimId(victim.id)
       .setModerator(message.member)
       .shouldHardbanIfNoMessages(hardbanIfNoMessages)
       .setMessageChannel(message.channel)

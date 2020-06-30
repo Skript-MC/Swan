@@ -17,7 +17,7 @@ export default async function guildBanAddHandler(guild, user) {
     .setColor(client.config.colors.hardban)
     .setReason(reason)
     .setDuration(-1)
-    .setMember(member)
+    .setVictimId(member.id)
     .setModerator(client.guild.members.resolve(client.user.id))
     .setMessageChannel(client.guild.channels.resolve(client.config.channels.logs))
     .setFinishTimestamp();

@@ -15,11 +15,11 @@ class BanAction extends ModerationAction {
 
   async before() {
     // Unmute him if he's mute
-    if (await SanctionManager.isMuted(this.data.user.id)) {
+    if (await SanctionManager.isMuted(this.data.victimId)) {
       const data = new ModerationData()
         .setType(ACTION_TYPE.UNMUTE)
         .setColor(client.config.colors.success)
-        .setMember(this.data.member)
+        .setVictimId(this.data.victimId)
         .setReason(client.config.messages.miscellaneous.autoUnmuteBeforeBan)
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(this.data.messageChannel)
@@ -48,14 +48,14 @@ class BanAction extends ModerationAction {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.successfullyBanned
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }
 
     const whyHere = this.config.whyHere
-      .replace('%u', this.data.user.username)
+      .replace('%u', this.data.getUserName())
       .replace('%r', this.data.reason)
       .replace('%d', toDuration(this.data.duration))
       .replace('%e', moment(this.data.finish).format('[à] HH:mm:ss [le] DD/MM/YYYY'));
@@ -69,14 +69,14 @@ class BanAction extends ModerationAction {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.durationUpdated
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }
 
     db.sanctions.update(
-      { member: this.data.user.id },
+      { member: this.data.victimId },
       { $set: { duration: this.data.duration, finish: this.data.finish } },
     );
     this.data.privateChannel.send(this.config.sanctionUpdated.replace('%d', toDuration(this.data.duration)));
@@ -85,7 +85,7 @@ class BanAction extends ModerationAction {
   async hardBan() {
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.successfullyBanned
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
@@ -94,7 +94,7 @@ class BanAction extends ModerationAction {
     // We send him this awesome gif
     await this.data.user.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695').catch(() => {});
 
-    await db.sanctions.remove({ member: this.data.user.id, type: ACTION_TYPE.BAN }).catch(console.error);
+    await db.sanctions.remove({ member: this.data.victimId, type: ACTION_TYPE.BAN }).catch(console.error);
 
     // Delete channel
     const file = await SanctionManager.removeChannel(this.data);
