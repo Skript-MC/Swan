@@ -1,8 +1,5 @@
 import Command from '../../structures/Command';
-import { uncapitalize, jwDistance } from '../../utils';
 import { db } from '../../main';
-
-const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
 class ErrorDetails extends Command {
   constructor() {
@@ -12,53 +9,34 @@ class ErrorDetails extends Command {
     this.examples = ["errordetail Can't compare 'if arg 1' with a text"];
   }
 
-  async execute(client, message, args) {
-    const arg = args.join(' ');
+  async execute(_client, message, args) {
+    const arg = args.join(' ').toLowerCase();
     const messages = await db.messages.find({ type: 'error' }).catch(console.error);
 
     if (args.length === 0) {
       const allMessages = [];
-      messages.filter(msg => allMessages.push(msg.title));
+      messages.filter(msg => allMessages.push(msg.aliases[0]));
       message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages.join(', ')}\``), message.member);
       return;
     }
 
-    for (const errorMessage of messages) {
-      if (errorMessage.aliases.some(elt => elt === arg)) {
-        return message.channel.send(errorMessage.content);
-      }
-    }
-
-    const matches = [];
-
     for (const msg of messages) {
-      for (const elt of msg.aliases) {
-        console.log(arg, elt);
-        if (jwDistance(arg, elt) >= this.config.similarity) matches.push(elt);
-        break;
+      for (const aliase of msg.aliases) {
+        if (arg.includes(aliase) || arg.includes(msg.title)) {
+          const msgContent = await message.channel.send(msg.content);
+          msgContent.react('🗑️');
+          const removeCollector = msgContent
+            .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)
+            .once('collect', () => {
+              removeCollector.stop();
+              msgContent.delete();
+              message.delete();
+            });
+          return;
+        }
       }
     }
-
-    if (matches.length === 0) {
-      message.channel.sendError(this.config.invalidMessage, message.member);
-    } else {
-      const messagesList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.error ');
-      const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', messagesList));
-
-      if (matches.length === 1) suggestion.react('✅');
-      else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await suggestion.react(reactionsNumbers[i]);
-
-      const collector = suggestion
-        .createReactionCollector((reaction, user) => !user.bot
-            && user.id === message.author.id
-            && (reaction.emoji.name === '✅' || reactionsNumbers.includes(reaction.emoji.name)))
-        .once('collect', (reaction) => {
-          collector.stop();
-          suggestion.delete();
-          const index = reaction.emoji.name === '✅' ? 0 : reactionsNumbers.indexOf(reaction.emoji.name);
-          return this.execute(client, message, [matches[index]]);
-        });
-    }
+    message.channel.send(this.config.invalidMessage);
   }
 }
 

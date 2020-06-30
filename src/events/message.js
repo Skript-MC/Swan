@@ -71,7 +71,6 @@ export default async function messageHandler(message) {
     return;
   }
 
-
   const isCommand = cmd.startsWith(client.config.bot.prefix)
     && cmd !== client.config.bot.prefix
     && cmd.startsWith(`${client.config.bot.prefix}${client.config.bot.prefix}`);
