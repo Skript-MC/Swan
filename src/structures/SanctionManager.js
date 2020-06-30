@@ -20,7 +20,7 @@ class SanctionManager {
     const topic = channel.setTopic(`${data.victimId} (NE PAS CHANGER)`);
     const permissions = channel.overwritePermissions([{
       id: client.config.roles.everyone,
-      deny: ['VIEW_CHANNEL'],
+      deny: ['VIEW_CHANNEL', 'CREATE_INSTANT_INVITE'],
     }, {
       id: client.config.roles.staff,
       allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
@@ -112,14 +112,18 @@ class SanctionManager {
       fileContent += `${line}\n`;
     }
 
-    let fileName = `logs-${data.victimId}`;
-    const path = `${__dirname}/../../databases/ban-logs/`;
+    let fileName = `logs-${data.user.id}`;
+    const path = `${__dirname}\\..\\..\\databases\\ban-logs\\`;
     let i = 1;
     if (fs.existsSync(`${path}${fileName}.txt`)) {
       while (fs.existsSync(`${path}${fileName}-${i}.txt`)) {
         i++;
       }
       fileName += `-${i}`;
+    }
+
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path);
     }
 
     fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {

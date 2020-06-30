@@ -18,13 +18,13 @@ class AutomaticMessages extends Command {
 
     if (args.length === 0) {
       const allMessages = [];
-      messages.filter(msg => allMessages.push(msg.title));
+      messages.filter(msg => allMessages.push(msg.aliases[0]));
       message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages.join(', ')}\``), message.member);
       return;
     }
 
     for (const autoMessage of messages) {
-      if (autoMessage.aliases.some(elt => elt === arg)) {
+      if (autoMessage.aliases.some(elt => elt === arg) || autoMessage.title === arg) {
         if (arg.endsWith('-pv')) {
           try {
             await message.member.send(autoMessage.content);
