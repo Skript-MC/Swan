@@ -20,7 +20,7 @@ class MuteAction extends ModerationAction {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.successfullyMuted
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
@@ -31,14 +31,14 @@ class MuteAction extends ModerationAction {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.durationUpdated
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason)
         .replace('%d', toDuration(this.data.duration));
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }
 
     db.sanctions.update(
-      { member: this.data.user.id },
+      { member: this.data.victimId },
       { $set: { duration: this.data.duration, finish: this.data.finish } },
     );
   }

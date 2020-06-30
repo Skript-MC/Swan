@@ -1,4 +1,3 @@
-import { GuildMember } from 'discord.js';
 import { uid } from '../utils';
 
 class ModerationData {
@@ -21,25 +20,22 @@ class ModerationData {
     this.id = uid(); // The id of the case
   }
 
+  // ESLint bug, thinking the method is not defined (wtf?)
+  // eslint-disable-next-line no-undef
+  async #updateMemberAndUser() {
+    if (!this.victimId) return
+    this.member = client.guild.members.cache.get(this.victimId) || await client.guild.members.fetch(this.victimId);
+    this.user = this.member?.user || client.guild.users.cache.get(this.victimId) || await client.users.fetch(this.victimId);
+  }
+
   setType(type) {
     this.type = type;
     return this;
   }
 
-  setMember(member) {
-    this.member = member;
-    this.user = member.user;
-    return this;
-  }
-
-  setUser(user) {
-    this.user = user;
-    return this;
-  }
-
-  setVictim(victim) {
-    if (victim instanceof GuildMember) this.setMember(victim);
-    else this.setUser(victim);
+  setVictimId(id) {
+    this.victimId = id;
+    this.#updateMemberAndUser();
     return this;
   }
 
@@ -103,9 +99,18 @@ class ModerationData {
     return this;
   }
 
+  getUserName() {
+    let name = '';
+    if (this.user?.username) name += this.user.username;
+    if (this.member?.nickname) name += ` (${this.member.nickname})`;
+    if (name === '' && this.victimId) name += this.victimId;
+    return name;
+  }
+
   getData(compact = true) {
     return {
       type: this.type,
+      victimId: this.victimId,
       member: compact && this.member ? this.member.id : this.member,
       user: compact && this.user ? this.user.id : this.user,
       moderator: compact && this.moderator ? this.moderator.id : this.moderator,

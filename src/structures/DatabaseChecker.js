@@ -23,10 +23,10 @@ class DatabaseChecker {
       const data = new ModerationData()
         .setType(ACTION_TYPE.opposite(result.type))
         .setColor(client.config.colors.success)
-        .setVictim(victim)
+        .setVictimId(victim.id)
         .setReason(client.config.messages.miscellaneous.sanctionExpired)
         .setModerator(client.guild.members.resolve(client.user.id))
-        .setMessageChannel(client.guild.channels.resolve(client.config.channels.logs));
+        .setMessageChannel(messageChannel);
 
       if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
         data.setType(ACTION_TYPE.HARDBAN)

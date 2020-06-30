@@ -10,6 +10,8 @@ class ModerationAction {
   }
 
   async commit() {
+    console.log('DEBUG: ModerationAction -> commit -> commit');
+    console.log(new Error().stack);
     const [stop, result, isUpdate] = await this.prepare();
     if (stop) return false;
 
@@ -34,14 +36,14 @@ class ModerationAction {
   }
 
   async prepare() {
-    let query = { member: this.data.user.id, type: this.data.type };
+    let query = { member: this.data.victimId, type: this.data.type };
     if (this.data.type === ACTION_TYPE.UNBAN) {
       query = {
-        member: this.data.user.id,
+        member: this.data.victimId,
         $or: [{ type: ACTION_TYPE.BAN }, { type: ACTION_TYPE.HARDBAN }],
       };
     } else if ([ACTION_TYPE.UNMUTE, ACTION_TYPE.REMOVE_WARN].includes(this.data.type)) {
-      query = { member: this.data.user.id, type: ACTION_TYPE.opposite(this.data.type) };
+      query = { member: this.data.victimId, type: ACTION_TYPE.opposite(this.data.type) };
     }
     // If it is a warn we don't want to search in the database, because you
     // can have multiple warns at the same time.
@@ -56,7 +58,7 @@ class ModerationAction {
       if (this.data.type === ACTION_TYPE.UNBAN) message = client.config.messages.commands.unban.notBanned;
       else if (this.data.type === ACTION_TYPE.UNMUTE) message = client.config.messages.commands.unmute.notMuted;
       else if (this.data.type === ACTION_TYPE.REMOVE_WARN) message = client.config.messages.commands.removewarn.alreadyRevoked;
-      this.data.messageChannel.sendError(message.replace('%u', this.data.user.username), this.data.moderator);
+      this.data.messageChannel.sendError(message.replace('%u', this.data.getUserName()), this.data.moderator);
       stop = true;
     }
 
@@ -80,11 +82,11 @@ class ModerationAction {
     }
 
     const notification = baseMessage
-      .replace('%u', this.data.user.username)
+      .replace('%u', this.data.user?.username || this.data.victimId)
       .replace('%s', type)
       .replace('%r', this.data.reason)
       .replace('%d', toDuration(this.data.duration));
-    await this.data.user.send(notification).catch((_err) => {
+    await this.data.user?.send(notification).catch((_err) => {
       this.data.messageChannel.sendInfo(client.config.messages.errors.userHasClosedDm, this.data.moderator);
     });
   }
@@ -109,7 +111,7 @@ class ModerationAction {
       .setColor(this.data.color)
       .setTitle(`Nouveau cas (${this.data.id})`)
       .setTimestamp()
-      .addField(':bust_in_silhouette: Utilisateur', `${this.data.user.toString()}\n${this.data.user.id}`, true)
+      .addField(':bust_in_silhouette: Utilisateur', `${this.data.user?.toString() || 'Pseudo Inconnu'}\n${this.data.victimId}`, true)
       .addField(':cop: Modérateur', `${this.data.moderator.toString()}\n${this.data.moderator.id}`, true)
       .addField(':tools: Action', `${action}`, true);
 
@@ -143,12 +145,12 @@ class ModerationAction {
   }
 
   async addToHistory() {
-    let result = await db.sanctionsHistory.findOne({ memberId: this.data.user.id }).catch(console.error);
+    let result = await db.sanctionsHistory.findOne({ memberId: this.data.victimId }).catch(console.error);
 
     // Si le membre n'a pas d'historique, on créé un document
     if (!result) {
       result = await db.sanctionsHistory.insert({
-        memberId: this.data.user.id,
+        memberId: this.data.victimId,
         sanctions: [],
         lastBanId: null,
         lastMuteId: null,
@@ -183,7 +185,7 @@ class ModerationAction {
   }
 
   async addUpdateToHistory() {
-    const result = await db.sanctionsHistory.findOne({ memberId: this.data.user.id }).catch(console.error);
+    const result = await db.sanctionsHistory.findOne({ memberId: this.data.victimId }).catch(console.error);
     const { sanctions } = result;
 
     let sanctionId;
@@ -240,7 +242,7 @@ class ModerationAction {
     await db.sanctions.insert({
       type: this.data.type,
       reason: this.data.reason,
-      member: this.data.user.id,
+      member: this.data.victimId,
       modId: this.data.moderator.id,
       start: Date.now(),
       duration: this.data.duration || 0,
