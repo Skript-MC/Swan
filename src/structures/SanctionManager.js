@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import moment from 'moment';
 import { db, client } from '../main';
 import { prunePseudo } from '../utils';
@@ -113,25 +114,25 @@ class SanctionManager {
     }
 
     let fileName = `logs-${data.user.id}`;
-    const path = `${__dirname}\\..\\..\\databases\\ban-logs\\`;
+    const filePath = path.join(process.cwd(), 'databases', 'ban-logs');
     let i = 1;
-    if (fs.existsSync(`${path}${fileName}.txt`)) {
-      while (fs.existsSync(`${path}${fileName}-${i}.txt`)) {
+    if (fs.existsSync(`${filePath}${fileName}.txt`)) {
+      while (fs.existsSync(`${filePath}${fileName}-${i}.txt`)) {
         i++;
       }
       fileName += `-${i}`;
     }
 
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path);
+    if (!fs.existsSync(filePath)) {
+      fs.mkdirSync(filePath);
     }
 
-    fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {
+    fs.writeFile(`${filePath}${fileName}.txt`, fileContent, (err) => {
       if (err) throw new Error(err);
     });
 
     return {
-      path: `${path}${fileName}.txt`,
+      path: `${filePath}${fileName}.txt`,
       name: fileName,
     };
   }
