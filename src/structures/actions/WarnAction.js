@@ -18,7 +18,7 @@ class WarnAction extends ModerationAction {
     const warningMessage = this.config.warning
       .replace('%u', this.data.getUserName())
       .replace('%r', this.data.reason);
-    this.data.member.send(warningMessage);
+    this.data.member.send(warningMessage).catch(() => {});
 
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {

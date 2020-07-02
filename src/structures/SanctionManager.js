@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fsSync, { promises as fs } from 'fs';
 import path from 'path';
 import moment from 'moment';
 import { db, client } from '../main';
@@ -32,7 +32,7 @@ class SanctionManager {
 
     await Promise.all([parent, topic, permissions]).catch((err) => {
       data.messageChannel.send(client.config.messages.errors.channelPermissions);
-      client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      client.logger.warn('Swan does not have sufficient permissions to edit a TextChannel permissions');
       client.logger.debug(`    ↳ ${err.message}`);
     });
     return channel;
@@ -46,7 +46,7 @@ class SanctionManager {
 
     if (chan) {
       const allMessages = await SanctionManager.getAllMessages(chan);
-      file = SanctionManager.getMessageHistoryFile(data, allMessages);
+      file = await SanctionManager.getMessageHistoryFile(data, allMessages);
       chan.delete();
     }
     return file;
@@ -73,7 +73,7 @@ class SanctionManager {
       ? client.guild.roles.resolve(client.config.roles.ban)
       : client.guild.roles.resolve(client.config.roles.mute);
 
-    if (data.member.roles.cache.has(role.id)) {
+    if (data.member?.roles.cache.has(role.id)) {
       try {
         data.member.roles.remove(role);
       } catch (err) {
@@ -102,7 +102,7 @@ class SanctionManager {
     return allMessages;
   }
 
-  static getMessageHistoryFile(data, messages) {
+  static async getMessageHistoryFile(data, messages) {
     let fileContent = `Historique des messages du salon du banni : ${data.getUserName()}.\n\n\nMessages :\n\n`;
 
     for (const message of messages) {
@@ -114,22 +114,26 @@ class SanctionManager {
     }
 
     let fileName = `logs-${data.user.id}`;
-    const filePath = path.join(process.cwd(), 'databases', 'ban-logs');
+    const filePath = path.join(process.cwd(), 'databases', 'ban-logs/');
     let i = 1;
-    if (fs.existsSync(`${filePath}${fileName}.txt`)) {
-      while (fs.existsSync(`${filePath}${fileName}-${i}.txt`)) {
+    if (fsSync.existsSync(`${filePath}${fileName}.txt`)) {
+      while (fsSync.existsSync(`${filePath}${fileName}-${i}.txt`)) {
         i++;
       }
       fileName += `-${i}`;
     }
 
-    if (!fs.existsSync(filePath)) {
-      fs.mkdirSync(filePath);
-    }
-
-    fs.writeFile(`${filePath}${fileName}.txt`, fileContent, (err) => {
-      if (err) throw new Error(err);
-    });
+    const createFile = async () => {
+      try {
+        await fs.writeFile(`${filePath}${fileName}.txt`, fileContent);
+      } catch (e) {
+        if (e.code === 'ENOENT') {
+          await fs.mkdir(filePath);
+          await createFile();
+        }
+      }
+    };
+    await createFile();
 
     return {
       path: `${filePath}${fileName}.txt`,
