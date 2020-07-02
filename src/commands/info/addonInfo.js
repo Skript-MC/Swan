@@ -1,7 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { SkripttoolsAddons } from '../../main';
-import { uncapitalize, jkDistance, convertFileSize, selectorMessage } from '../../utils';
+import { uncapitalize, jwDistance, convertFileSize, selectorMessage } from '../../utils';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -32,7 +32,7 @@ class AddonInfo extends Command {
         // Si l'addon est inconnu
         const matches = [];
         for (const elt of addons.map(addon => addon.plugin)) {
-          if (jkDistance(args.join(''), elt) >= this.config.similarity) matches.push(elt);
+          if (jwDistance(args.join(''), elt) >= this.config.similarity) matches.push(elt);
         }
 
         if (matches.length === 0) {
@@ -85,8 +85,8 @@ class AddonInfo extends Command {
     if (addon.version) embed.addField(thisConfig.embed.version, addon.version, true);
     if (addon.download) embed.addField(thisConfig.embed.download, `[Téléchargez ici](${addon.download}) (${convertFileSize(addon.bytes)})`, true);
     if (addon.sourcecode) embed.addField(thisConfig.embed.sourcecode, `[Voir ici](${addon.sourcecode})`, true);
-    if (addon.depend && addon.depend.depend) embed.addField(thisConfig.embed.depend, addon.depend.depend.join(', '), true);
-    if (addon.depend && addon.depend.softdepend) embed.addField(thisConfig.embed.softdepend, addon.depend.softdepend.join(', '), true);
+    if (addon.depend?.depend) embed.addField(thisConfig.embed.depend, addon.depend.depend.join(', '), true);
+    if (addon.depend?.softdepend) embed.addField(thisConfig.embed.softdepend, addon.depend.softdepend.join(', '), true);
 
     message.channel.send(embed);
   }

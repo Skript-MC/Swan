@@ -1,31 +1,14 @@
 import { client, db } from '../main';
 import Command from '../structures/Command';
-import SanctionManager from '../structures/SanctionManager';
 import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
-import { checkPolls } from '../commands/fun/poll';
+import DatabaseChecker from '../structures/DatabaseChecker';
 
 export default async function readyHandler() {
   client.guild = client.guilds.resolve(client.config.bot.guild);
 
-  // Verifying tokens and ids
-  if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
-  if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
-  if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
-  if (!process.env.GUILD) throw new Error('Guild id was not set in the environment variables (GUILD)');
-  for (const [key, value] of Object.entries(client.config.channels)) {
-    if (!value) client.logger.warn(`config.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!client.guild.channels.cache.has(value)) client.logger.warn(`The id entered for config.channels.${key} is not a valid channel.`);
-  }
-  for (const [key, value] of Object.entries(client.config.roles)) {
-    if (!value) client.logger.warn(`config.roles.${key} is not set. You may want to fill this field to avoid any error.`);
-    else if (!client.guild.roles.cache.has(value)) client.logger.warn(`The id entered for config.roles.${key} is not a valid role.`);
-  }
-  const clientMember = client.guild.members.resolve(client.user.id);
-  const permissions = ['KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'ADD_REACTIONS', 'VIEW_CHANNEL', 'SEND_MESSAGES', 'MANAGE_MESSAGES', 'ATTACH_FILES', 'CONNECT', 'SPEAK', 'MANAGE_NICKNAMES', 'MANAGE_ROLES'];
-  if (!clientMember.hasPermission(permissions)) client.logger.error(`Swan is missing permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
-
+  client.checkValidity();
   client.logger.debug('main.js -> Checks of tokens, ids and permissions finished successfully');
 
   // Initializing the commands-stats database
@@ -38,15 +21,26 @@ export default async function readyHandler() {
   client.logger.debug('main.js -> commandsStats database initialized successfully');
 
   // Cache all messages that need to be cached
-  const suggestionChannel = client.channels.cache.get(client.config.channels.suggestion);
-  const suggestionMessages = await suggestionChannel.messages.fetch({ limit: 100 }, true);
-  client.logger.step(`Messages cached! (${suggestionMessages.size})`);
+  const suggestionChannel = client.channels.resolve(client.config.channels.suggestion);
+  const suggestionMessages = await suggestionChannel?.messages.fetch({ limit: 100 }, true);
+
+  const polls = await db.polls.find({}).catch(console.error);
+  const pollInfos = polls.map(poll => [poll.channel, poll.id]);
+  const pollsMessagesCache = [];
+  for (const [channelId, messageId] of pollInfos) {
+    const channel = client.channels.resolve(channelId);
+    pollsMessagesCache.push(channel?.messages.fetch(messageId, true));
+  }
+  await Promise.all(pollsMessagesCache);
+  pollsMessagesCache.filter(elt => typeof elt !== 'undefined');
+
+  client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + (pollsMessagesCache?.length || 0)})`);
   client.logger.step('Skript-MC bot loaded!', true);
 
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
-    SanctionManager.checkSanctions(); // Vérification des sanctions temporaires
-    checkPolls(client); // Vérification des sondages
+    DatabaseChecker.checkSanctions(client, db); // Vérification des sanctions temporaires
+    DatabaseChecker.checkPolls(client, db); // Vérification des sondages
   }, client.config.bot.checkInterval.short);
 
   setInterval(() => {

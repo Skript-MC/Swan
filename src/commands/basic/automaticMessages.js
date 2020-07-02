@@ -1,5 +1,6 @@
 import Command from '../../structures/Command';
-import { uncapitalize, jkDistance } from '../../utils';
+import { uncapitalize, jwDistance } from '../../utils';
+import { db } from '../../main';
 
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 
@@ -13,19 +14,20 @@ class AutomaticMessages extends Command {
 
   async execute(client, message, args) {
     const arg = args.join(' ');
-    const { messages } = this.config;
+    const messages = await db.messages.find({ type: 'auto' }).catch(console.error);
 
     if (args.length === 0) {
-      const allMessages = Object.keys(this.config.messages).join(', ');
-      message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages}\``), message.member);
+      const allMessages = [];
+      messages.filter(msg => allMessages.push(msg.aliases[0]));
+      message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages.join(', ')}\``), message.member);
       return;
     }
 
-    for (const autoMessage of Object.values(messages)) {
-      if (autoMessage.templates.some(elt => elt === arg || `${elt}-pv` === arg)) {
-        if (arg.includes('-pv') && autoMessage.pvContent) {
+    for (const autoMessage of messages) {
+      if (autoMessage.aliases.some(elt => elt === arg) || autoMessage.title === arg) {
+        if (arg.endsWith('-pv')) {
           try {
-            for (const chunk of autoMessage.pvContent) await message.member.send(chunk);
+            await message.member.send(autoMessage.content);
             message.react('✅').catch(console.error);
           } catch (e) {
             message.react('❌').catch(console.error);
@@ -48,9 +50,9 @@ class AutomaticMessages extends Command {
 
     const matches = [];
 
-    for (const msg of Object.values(messages)) {
-      for (const elt of msg.templates) {
-        if (jkDistance(arg, elt) >= this.config.similarity) matches.push(elt);
+    for (const msg of messages) {
+      for (const elt of msg.aliases) {
+        if (jwDistance(arg, elt) >= this.config.similarity) matches.push(elt);
         break;
       }
     }

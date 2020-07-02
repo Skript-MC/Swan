@@ -24,7 +24,7 @@ class RemoveWarn extends Command {
     const data = new ModerationData()
       .setType(ACTION_TYPE.REMOVE_WARN)
       .setColor(client.config.colors.success)
-      .setMember(victim)
+      .setVictimId(victim.id)
       .setReason(reason)
       .setWarnId(id)
       .setModerator(message.member)

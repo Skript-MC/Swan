@@ -1,4 +1,4 @@
-/* eslint-disable object-curly-newline, prefer-destructuring */
+/* eslint-disable object-curly-newline */
 import ytdl from 'discord-ytdl-core';
 import { client, db } from '../main';
 
@@ -12,9 +12,10 @@ class MusicBotApp {
     this.presets.set('leave', { playNext: false, leave: true, sendFinishMsg: false });
     this.presets.set('default', { playNext: true, leave: true, sendFinishMsg: true });
 
+    this.channel = undefined;
     this.nowPlaying = undefined;
     this.dispatcher = undefined;
-    this.queue = undefined;
+    this.queue = [];
     this.loop = this.enums.NONE;
     this.bassboost = 0;
 
@@ -26,6 +27,7 @@ class MusicBotApp {
 
   async playSong(queue, message) {
     if (queue.length === 0) return;
+    this.channel = message.channel;
 
     const { voiceChannel } = queue[0];
     const connection = await queue[0].voiceChannel.join()
@@ -46,7 +48,7 @@ class MusicBotApp {
 
     this.dispatcher.on('start', () => {
       this.queue = queue;
-      this.nowPlaying = queue[0];
+      this.nowPlaying = queue[0]; // eslint-disable-line prefer-destructuring
       this.updateStats(this.nowPlaying);
       queue.shift();
       message.channel.send(client.config.messages.commands.play.nowPlaying.replace('%t', this.nowPlaying.title).replace('%d', this.nowPlaying.duration));

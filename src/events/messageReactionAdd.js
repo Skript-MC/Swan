@@ -1,5 +1,5 @@
 import { client, db } from '../main';
-import { endPoll } from '../commands/fun/poll';
+import endPoll from '../structures/endPoll';
 
 const pollsReactions = {
   yesno: ['✅', '❌'],
@@ -11,6 +11,7 @@ export default async function messageReactionAddHandler(reaction, user) {
   const { message } = reaction;
   const polls = await db.polls.find({}).catch(console.error);
   const poll = polls.find(p => p.id === reaction.message.id);
+  const member = message.guild.members.resolve(user.id);
 
   if (poll) {
     if ((poll.type === 0 && pollsReactions.yesno.includes(reaction.emoji.name))
@@ -20,7 +21,8 @@ export default async function messageReactionAddHandler(reaction, user) {
 
       if (userVote === reaction.emoji.name) {
         // Déjà voté pour cette option
-        message.channel.send(client.config.messages.commands.poll.alreadyVotedThis).then(msg => msg.delete({ timeout: 5000 }));
+        message.channel.send(client.config.messages.commands.poll.alreadyVotedThis.replace('%m', member.toString()))
+          .then(msg => msg.delete({ timeout: 5000 }));
       } else if (userVote) {
         // On a voté, mais on veut changer
         await db.polls.update(
@@ -40,9 +42,8 @@ export default async function messageReactionAddHandler(reaction, user) {
         if (poll.isAnonymous) reaction.users.remove(user);
       }
     } else if (pollsReactions.specials[1] === reaction.emoji.name && user.id === poll.creator) {
-      endPoll(client, poll, true);
+      endPoll(client, db, poll, true);
     } else if (pollsReactions.specials[0] === reaction.emoji.name) {
-      const member = message.guild.members.resolve(user.id);
       reaction.users.remove(user);
       try {
         const conf = client.config.messages.commands.poll;
@@ -62,7 +63,7 @@ export default async function messageReactionAddHandler(reaction, user) {
       const reactionners = message.reactions.cache.find(r => r.emoji.name === '❌').users;
       if (typeof reactionners.cache.get(user.id) !== 'undefined') reactionners.remove(user);
 
-      const positive = reaction.count;
+      const positive = reaction.count - 1;
       if (positive === 20) {
         guild.channels.cache.get(client.config.channels.main).send(`:fire: La suggestion de ${message.embeds[0].title.replace(/Suggestion de (\w+) \(\d+\)/, '$1')} devient populaire ! Elle a déjà 20 avis positifs !\nAvez-vous pensé à y jeter un oeil ? Qu'en pensez-vous ?\nLien : ${link}`);
       }
@@ -70,7 +71,7 @@ export default async function messageReactionAddHandler(reaction, user) {
       const reactionners = message.reactions.cache.find(r => r.emoji.name === '✅').users;
       if (typeof reactionners.cache.get(user.id) !== 'undefined') reactionners.remove(user);
 
-      const negative = reaction.count;
+      const negative = reaction.count - 1;
       if (negative === 10) {
         guild.channels.cache.get(client.config.channels.logs).send(`:warning: La suggestion de ${message.embeds[0].title.replace(/Suggestion de (\w+) \(\d+\)/, '$1')} a reçu beaucoup de réactions négatives ! Elle a 10 avis contre.\nLien : ${link}`);
       }

@@ -26,7 +26,7 @@ class Warn extends Command {
       .setColor(client.config.colors.warn)
       .setReason(reason)
       .setDuration(client.config.moderation.warnDuration * 1000)
-      .setMember(victim)
+      .setVictimId(victim.id)
       .setModerator(message.member)
       .setMessageChannel(message.channel)
       .setFinishTimestamp();

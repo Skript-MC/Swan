@@ -23,6 +23,7 @@ class ChangeConfig extends Command {
     await db.miscellaneous.update(
       { entry: args[0] },
       { $set: { value: args.join('').slice(args[0].length) } },
+      { upsert: true },
     ).catch(console.error);
     // Send a success message
     message.channel.sendSuccess(this.config.successfullyChanged, message.member);

@@ -17,7 +17,7 @@ class KickAction extends ModerationAction {
     // Envoyer les messages
     if (!this.data.moderator.user.bot || (this.data.sendSuccessIfBot && this.data.moderator.user.bot)) {
       const successMessage = this.config.successfullyKicked
-        .replace('%u', this.data.user.username)
+        .replace('%u', this.data.getUserName())
         .replace('%r', this.data.reason);
       this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
     }

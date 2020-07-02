@@ -1,56 +1,52 @@
-/* eslint-disable import/no-cycle */
-import fs from 'fs';
+import fsSync, { promises as fs } from 'fs';
+import path from 'path';
 import moment from 'moment';
 import { db, client } from '../main';
 import { prunePseudo } from '../utils';
 import ACTION_TYPE from './actions/actionType';
-import UnbanAction from './actions/UnbanAction';
-import BanAction from './actions/BanAction';
-import UnmuteAction from './actions/UnmuteAction';
-import ModerationData from './ModerationData';
-import RemoveWarnAction from './actions/RemoveWarnAction';
 
 class SanctionManager {
   static async getOrCreateChannel(data) {
     const pseudo = prunePseudo(data.member);
     const channelName = `${client.config.moderation.banChannelPrefix}${pseudo}`;
 
-    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
-    if (data.guild.channels.cache.some(filter)) {
-      return data.guild.channels.cache.find(filter);
+    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
+    if (client.guild.channels.cache.some(filter)) {
+      return client.guild.channels.cache.find(filter);
     }
 
-    const channel = await data.guild.channels.create(channelName, 'text');
+    const channel = await client.guild.channels.create(channelName, 'text');
 
     const parent = channel.setParent(client.config.moderation.logCategory);
-    const topic = channel.setTopic(`${data.user.id} (NE PAS CHANGER)`);
+    const topic = channel.setTopic(`${data.victimId} (NE PAS CHANGER)`);
     const permissions = channel.overwritePermissions([{
       id: client.config.roles.everyone,
-      deny: ['VIEW_CHANNEL'],
+      deny: ['VIEW_CHANNEL', 'CREATE_INSTANT_INVITE'],
     }, {
       id: client.config.roles.staff,
       allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
     }, {
-      id: data.user.id,
+      id: data.victimId,
       allow: ['VIEW_CHANNEL'],
     }]);
 
-    await Promise.all([parent, topic, permissions]).catch((_err) => {
+    await Promise.all([parent, topic, permissions]).catch((err) => {
       data.messageChannel.send(client.config.messages.errors.channelPermissions);
-      client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      client.logger.warn('Swan does not have sufficient permissions to edit a TextChannel permissions');
+      client.logger.debug(`    ↳ ${err.message}`);
     });
     return channel;
   }
 
   static async removeChannel(data) {
     const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
-    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.user.id);
-    const chan = data.guild.channels.cache.find(filter);
+    const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
+    const chan = client.guild.channels.cache.find(filter);
     let file;
 
     if (chan) {
       const allMessages = await SanctionManager.getAllMessages(chan);
-      file = SanctionManager.getMessageHistoryFile(data, allMessages);
+      file = await SanctionManager.getMessageHistoryFile(data, allMessages);
       chan.delete();
     }
     return file;
@@ -58,30 +54,32 @@ class SanctionManager {
 
   static async addRole(data, overwrite = false) {
     const role = data.type === ACTION_TYPE.BAN
-      ? data.guild.roles.resolve(client.config.roles.ban)
-      : data.guild.roles.resolve(client.config.roles.mute);
+      ? client.guild.roles.resolve(client.config.roles.ban)
+      : client.guild.roles.resolve(client.config.roles.mute);
 
     try {
       if (overwrite) await data.member.roles.set([role]);
       else await data.member.roles.add(role);
-    } catch (_err) {
+    } catch (err) {
       data.messageChannel.send(client.config.messages.errors.rolePermissions);
       client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+      client.logger.debug(`    ↳ ${err.message}`);
     }
   }
 
   static async removeRole(data) {
     // On enlève le rôle de la victime
     const role = data.type === ACTION_TYPE.UNBAN
-      ? data.guild.roles.resolve(client.config.roles.ban)
-      : data.guild.roles.resolve(client.config.roles.mute);
+      ? client.guild.roles.resolve(client.config.roles.ban)
+      : client.guild.roles.resolve(client.config.roles.mute);
 
-    if (data.member.roles.cache.has(role.id)) {
+    if (data.member?.roles.cache.has(role.id)) {
       try {
         data.member.roles.remove(role);
-      } catch (e) {
-        data.messageChannel.send(client.config.messages.errors.rolePermissions).catch();
+      } catch (err) {
+        data.messageChannel.send(client.config.messages.errors.rolePermissions);
         client.logger.warn('Swan does not have sufficient permissions to edit GuildMember roles');
+        client.logger.debug(`    ↳ ${err.message}`);
       }
     }
   }
@@ -104,8 +102,8 @@ class SanctionManager {
     return allMessages;
   }
 
-  static getMessageHistoryFile(data, messages) {
-    let fileContent = `Historique des messages du salon du banni : ${data.member.user.username}.\n\n\nMessages :\n\n`;
+  static async getMessageHistoryFile(data, messages) {
+    let fileContent = `Historique des messages du salon du banni : ${data.getUserName()}.\n\n\nMessages :\n\n`;
 
     for (const message of messages) {
       const sentAt = moment(new Date(message.sentAt)).format('[à] HH:mm:ss [le] DD/MM/YY');
@@ -115,82 +113,56 @@ class SanctionManager {
       fileContent += `${line}\n`;
     }
 
-    let fileName = prunePseudo(data.member);
-    const path = `${__dirname}/../../databases/ban-logs/`;
+    let fileName = `logs-${data.user.id}`;
+    const filePath = path.join(process.cwd(), 'databases', 'ban-logs/');
     let i = 1;
-    if (fs.existsSync(`${path}${fileName}.txt`)) {
-      while (fs.existsSync(`${path}${fileName}-${i}.txt`)) {
+    if (fsSync.existsSync(`${filePath}${fileName}.txt`)) {
+      while (fsSync.existsSync(`${filePath}${fileName}-${i}.txt`)) {
         i++;
       }
       fileName += `-${i}`;
     }
 
-    fs.writeFile(`${path}${fileName}.txt`, fileContent, (err) => {
-      if (err) throw new Error(err);
-    });
+    const createFile = async () => {
+      try {
+        await fs.writeFile(`${filePath}${fileName}.txt`, fileContent);
+      } catch (e) {
+        if (e.code === 'ENOENT') {
+          await fs.mkdir(filePath);
+          await createFile();
+        }
+      }
+    };
+    await createFile();
 
     return {
-      path: `${path}${fileName}.txt`,
+      path: `${filePath}${fileName}.txt`,
       name: fileName,
     };
   }
 
-  static deleteMessageHistoryFile(data) {
-    // On doit attendre un peu car des fois, (rarement), il le supprime trop tôt (même avec les awaits etc)...
-    setTimeout(() => {
-      fs.unlink(data.file.path, (err) => {
-        if (err) throw new Error(err);
-      });
-    }, 2000);
+  static async isBanned(id, orHardban = false) {
+    const query = orHardban
+      ? {
+        member: id,
+        $or: [{ type: ACTION_TYPE.BAN }, { type: ACTION_TYPE.HARDBAN }],
+      }
+      : {
+        member: id,
+        type: ACTION_TYPE.BAN,
+      };
+    const doc = await db.sanctions.findOne(query).catch(console.error);
+    return !!doc;
   }
 
-  static async isBan(id) {
-    const doc = await db.sanctions.findOne({ member: id, type: ACTION_TYPE.BAN }).catch(console.error);
+  static async isMuted(id) {
+    const doc = await db.sanctions.findOne({ member: id, type: ACTION_TYPE.MUTE }).catch(console.error);
     return !!doc;
   }
 
   static async hasSentMessages(id) {
     const history = await db.sanctionsHistory.findOne({ memberId: id }).catch(console.error);
     db.sanctions.update({ member: id, type: ACTION_TYPE.BAN, id: history.lastBanId }, { $set: { hasSentMessages: true } }).catch(console.error);
-  }
-
-  static async checkSanctions() {
-    // Trouver tous les élements dont la propriété "finish" est inférieure ($lt) à maintenant et ($and) la durée
-    // ("duration") n'est pas égale ($not) à -1 (= ban def)
-    const query = {
-      $and: [
-        { finish: { $lt: Date.now() } },
-        { $not: { duration: -1 } }],
-    };
-    const results = await db.sanctions.find(query).catch(console.error);
-
-    for (const result of results) {
-      const victim = client.guild.members.cache.get(result.member) || await client.users.fetch(result.member);
-      const data = new ModerationData()
-        .setType(ACTION_TYPE.opposite(result.type))
-        .setColor(client.config.colors.success)
-        .setVictim(victim)
-        .setReason(client.config.messages.miscellaneous.sanctionExpired)
-        .setModerator(client.guild.members.resolve(client.user.id))
-        .setMessageChannel(client.guild.channels.resolve(client.config.channels.logs));
-
-      if (result.type === ACTION_TYPE.BAN && !result.hasSentMessages && result.hardbanIfNoMessages) {
-        data.setType(ACTION_TYPE.HARDBAN)
-          .setColor(client.config.colors.hardban)
-          .setReason(client.config.messages.miscellaneous.inactivityWhileBanned)
-          .setDuration(-1)
-          .setFinishTimestamp();
-        new BanAction(data).commit();
-        continue;
-      }
-
-      if (data.type === ACTION_TYPE.UNBAN) new UnbanAction(data).commit();
-      else if (data.type === ACTION_TYPE.UNMUTE) new UnmuteAction(data).commit();
-      else if (data.type === ACTION_TYPE.REMOVE_WARN) {
-        data.setWarnId(result.id);
-        new RemoveWarnAction(data).commit();
-      }
-    }
   }
 }
 
