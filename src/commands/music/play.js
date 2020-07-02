@@ -33,7 +33,7 @@ class Play extends Command {
 
     // Si l'utilisateur est dans un channel
     const voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) return message.channel.send(client.config.messages.errors.joinErrors[0]);
+    if (!voiceChannel) return message.channel.send(client.config.messages.errors.joinErrors.notInChannel);
 
     // Faire rejoindre le bot, s'il n'est pas déjà dans un canal vocal
     if (!message.guild.voice || !message.guild.voice.connection || message.guild.voice.channel.id !== message.member.voice.channel.id) {
@@ -49,7 +49,7 @@ class Play extends Command {
     let query = args.length === 0 ? '' : args.join(' ');
 
     if (query === '') { // Aucun argument
-      if (MusicBot.queue && MusicBot.queue.length > 0) MusicBot.playSong(MusicBot.queue, message);
+      if (MusicBot.queue.length > 0) MusicBot.playSong(MusicBot.queue, message);
       else message.channel.send(this.config.noArgumentGiven);
     } else if (query.match(regexps.playlist)) { // URL de Playlist YouTube
       let matches, playlist, videos;
@@ -115,8 +115,7 @@ class Play extends Command {
           return this.prepareForPlaying(client, video, message, voiceChannel);
         }
 
-        // TODO Add search-limit to config.music
-        const videos = await youtube.searchVideos(query, 5);
+        const videos = await youtube.searchVideos(query, client.config.music.searchLimit);
         if (videos.length === 0) return message.channel.send(this.config.noMusicFound.replace('%s', query));
 
         const videosNames = [];
@@ -135,7 +134,6 @@ class Play extends Command {
         await songEmbed.react('❌');
         embed.setColor(client.config.colors.default);
         songEmbed.edit(embed);
-
 
         const collectorNumbers = songEmbed
           .createReactionCollector((reaction, user) => !user.bot

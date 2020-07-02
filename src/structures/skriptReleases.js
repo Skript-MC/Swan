@@ -6,11 +6,14 @@ export default async function loadSkriptReleases() {
   // Envoie de la requête avec les options ci-dessus
   const githubReleases = await axios(`${client.config.apis.github}/repos/SkriptLang/Skript/releases`)
     .then((response) => {
-      // Retourner unedefined si la réponse n'est pas positive (= 200)
-      if (response.status !== 200) return undefined;
+      // Retourner si la réponse n'est pas positive (>= 300)
+      if (response.status >= 300) return;
       return response.data;
     })
-    .catch(console.error);
+    .catch((err) => {
+      client.logger.warn("Could not fetch github's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
+      client.logger.debug(`    ↳ ${err.message}`);
+    });
 
   if (!githubReleases) return; // Retourner si non défini, évitant les boucles crash
   const latestRelease = githubReleases[0]; // Récupérer la dernière release

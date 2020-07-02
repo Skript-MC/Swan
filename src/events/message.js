@@ -1,7 +1,10 @@
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, DMChannel } from 'discord.js';
+import axios from 'axios';
 import { client, db } from '../main';
-import { jkDistance, uncapitalize } from '../utils';
+import { jwDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
+
+const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
 
 function canExecute(command, message) {
   // Les gérants ont toutes les permissions
@@ -24,8 +27,8 @@ function canExecute(command, message) {
   if (client.config.bot.forbiddenChannels.includes(message.channel.id)) return false;
   // Check des channels interdits par la commande
   if (command.prohibitedChannels.length > 0 && command.prohibitedChannels.includes(message.channel.id)) return false;
-  // Check des channels requis par la commande
-  if (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id)) return false;
+  // Check des channels requis par la commande (on autorise le channel #bot dans tous les cas)
+  if (message.channel.id === client.config.channels.bot || (command.requiredChannels.length > 0 && !command.requiredChannels.includes(message.channel.id))) return false;
   // Check des channels d'aide
   if ((client.config.channels.helpSkript.includes(message.channel.id) || client.config.channels.helpOther.includes(message.channel.id)) && !command.enabledInHelpChannels) {
     message.channel.sendError(client.config.messages.errors.notInHelpChannels, message.member);
@@ -34,21 +37,39 @@ function canExecute(command, message) {
   return true;
 }
 
-export default async function messageHandler(message) {
-  const args = message.content.split(/ +/);
-  const { prefix } = client.config.bot;
-  let cmd = args.shift();
+async function hastebinPaste(message) {
+  const attachment = message.attachments.first();
+  if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk'))) return;
+  const attachmentContent = await axios.get(attachment.url);
 
-  if (await SanctionManager.isBan(message.author.id)) {
-    SanctionManager.hasSentMessages(message.author.id);
-    return;
-  }
+  const response = await axios.post(client.config.apis.hastebin, attachmentContent.data);
+  if (!response.data.key) return;
+  const embed = new MessageEmbed()
+    .setColor(client.config.colors.default)
+    .setDescription(`[Ouvrir le fichier ${attachment.name} sans le télécharger](https://hastebin.com/${response.data.key})`);
+  message.channel.send(embed);
+}
+
+export default async function messageHandler(message) {
+  const { prefix } = client.config.bot;
+  let cmd = message.content.split(' ').shift();
+  // TODO: Améliorer ceci pour ne pas avoir a hardcoder les commandes...
+  const splitOneSpace = ['code', 'balise'];
+  const args = splitOneSpace.map(c => `${prefix}${c}`).includes(cmd)
+    ? message.content.split(' ')
+    : message.content.split(/ +/g);
+  args.shift();
 
   if (message.author.bot
     || message.system
+    || message.channel instanceof DMChannel
     || message.guild.id !== client.config.bot.guild
     || (!client.activated && ![`${prefix}status`, `${prefix}statut`].includes(cmd))) return;
 
+  if (await SanctionManager.isBanned(message.author.id)) {
+    SanctionManager.hasSentMessages(message.author.id);
+    return;
+  }
   // Easter egg "ssh root@skript-mc.fr"
   if (message.channel.id === client.config.channels.bot && message.content.startsWith('ssh root@skript-mc.fr')) {
     const guess = message.content.split(' ').pop();
@@ -64,39 +85,51 @@ export default async function messageHandler(message) {
     return;
   }
 
-  // Système de citation
-  const linkRegex = new RegExp(`discord(?:app)?.com/channels/${client.config.bot.guild}/(\\d{18})/(\\d{18})`, 'gimu');
-  if (message.content.match(linkRegex)) {
-    const [, channelId, messageId] = linkRegex.exec(message.content);
+  const isCommand = cmd.startsWith(client.config.bot.prefix)
+    && cmd !== client.config.bot.prefix
+    && cmd.startsWith(`${client.config.bot.prefix}${client.config.bot.prefix}`);
 
-    const channel = await client.channels.fetch(channelId).catch(console.error);
-    const targetedMessage = await channel.messages.fetch(messageId).catch(console.error);
-    if (!targetedMessage.content) return;
-    const embed = new MessageEmbed()
-      .setColor(client.config.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
-      .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${client.config.bot.guild}/${channel.id}/${targetedMessage.id})`)
-      .setFooter(`Message cité par ${message.member.displayName}`)
-      .setTimestamp(targetedMessage.createdAt);
-    if (targetedMessage.attachments !== 0) {
-      let loop = 1;
-      if (loop <= 5) {
-        targetedMessage.attachments.forEach((attachment) => {
-          embed.addField(`Pièce jointe n°${loop}`, attachment.url);
-          loop++;
-        });
-      }
+  // Système de citation
+  let text = message.content;
+  if (!isCommand && message.content.match(linkRegex)) {
+    const quotes = [];
+    while (text.match(linkRegex)) {
+      const [full, channelId, messageId] = linkRegex.exec(text);
+      quotes.push({ channelId, messageId });
+      text = text.replace(full, '');
     }
-    const msg = await message.channel.send(embed);
-    await msg.react('🗑️');
-    const collector = msg
-      .createReactionCollector((reaction, user) => user.id === message.author.id
-        && reaction.emoji.name === '🗑️'
-        && !user.bot)
-      .on('collect', () => {
-        msg.delete();
-        collector.stop();
-      });
+
+    for (const quote of quotes) {
+      const channel = await client.channels.fetch(quote.channelId).catch(console.error);
+      if (!channel) return;
+      const targetedMessage = await channel.messages.fetch(quote.messageId).catch(console.error);
+      if (!targetedMessage?.content) return;
+      const embed = new MessageEmbed()
+        .setColor(client.config.colors.default)
+        .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
+        .setDescription(`${targetedMessage.content} [(lien)](https://discordapp.com/channels/${client.config.bot.guild}/${channel.id}/${targetedMessage.id})`)
+        .setFooter(`Message cité par ${message.member.displayName}`)
+        .setTimestamp(targetedMessage.createdAt);
+      if (targetedMessage.attachments !== 0) {
+        let loop = 1;
+        if (loop <= 5) {
+          targetedMessage.attachments.forEach((attachment) => {
+            embed.addField(`Pièce jointe n°${loop}`, attachment.url);
+            loop++;
+          });
+        }
+      }
+      const msg = await message.channel.send(embed);
+      await msg.react('🗑️');
+      const collector = msg
+        .createReactionCollector((reaction, user) => user.id === message.author.id
+          && reaction.emoji.name === '🗑️'
+          && !user.bot)
+        .on('collect', () => {
+          msg.delete();
+          collector.stop();
+        });
+    }
   }
 
   // Antispam channel Snippet
@@ -138,6 +171,9 @@ export default async function messageHandler(message) {
     msg.react('✅').then(() => msg.react('❌'));
   }
 
+  // Upload text files to hastebin
+  if (message.attachments.size !== 0) return hastebinPaste(message);
+
   if (cmd === client.config.bot.prefix
     || cmd.startsWith(`${client.config.bot.prefix}${client.config.bot.prefix}`)) return;
 
@@ -161,7 +197,7 @@ export default async function messageHandler(message) {
     const matches = [];
     for (const elt of client.commands) {
       for (const alias of elt.aliases) {
-        if (jkDistance(cmd, alias) >= client.config.miscellaneous.commandSimilarity) {
+        if (jwDistance(cmd, alias) >= client.config.miscellaneous.commandSimilarity) {
           matches.push(elt);
           break;
         }

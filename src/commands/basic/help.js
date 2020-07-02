@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
-import { jkDistance, selectorMessage, parsePage } from '../../utils';
+import { jwDistance, selectorMessage, parsePage } from '../../utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -82,7 +82,7 @@ class Help extends Command {
         const matches = [];
         for (const elt of client.commands) {
           for (const alias of elt.aliases) {
-            if (jkDistance(args.join(''), alias) >= client.config.miscellaneous.commandSimilarity) {
+            if (jwDistance(args.join(''), alias) >= client.config.miscellaneous.commandSimilarity) {
               matches.push(elt);
               break;
             }
@@ -140,7 +140,6 @@ class Help extends Command {
     for (const e of command.examples) ex = `${ex} | \`${config.bot.prefix}${e}\``;
     ex = ex.slice(3, ex.length); // Enlève les espaces et la barre au début, et l'espace à la fin.
     ex = ex === '' ? thisConfig.details.noExample : `${ex}`;
-
 
     let desc = command.description;
     if (command.name === 'Automatic Messages') {

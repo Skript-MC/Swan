@@ -30,7 +30,7 @@ class Ban extends Command {
     const reason = args.splice(2).join(' ');
 
     let duration;
-    if (args[1] === 'def' || args[1] === 'definitif') {
+    if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(args[1])) {
       duration = -1;
     } else {
       duration = toTimestamp(args[1]);
@@ -50,7 +50,7 @@ class Ban extends Command {
       .setColor(type === ACTION_TYPE.BAN ? client.config.colors.ban : client.config.colors.hardban)
       .setReason(reason)
       .setDuration(duration)
-      .setMember(victim)
+      .setVictimId(victim.id)
       .setModerator(message.member)
       .shouldHardbanIfNoMessages(hardbanIfNoMessages)
       .setMessageChannel(message.channel)

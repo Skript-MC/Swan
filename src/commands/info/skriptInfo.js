@@ -22,13 +22,13 @@ class SkriptInfo extends Command {
       const lastRelease = githubReleases.data[0];
       const lastStableRelease = githubReleases.data.filter(elt => !elt.prerelease).shift();
 
-      let downloadDesc = `
-        [Dernière version : ${lastRelease.tag_name}](${lastRelease.html_url}) (${convertFileSize(lastRelease.assets[0].size)})`;
+      let downloadDesc = lastRelease !== lastStableRelease
+        ? `[Dernière version stable : ${lastStableRelease.tag_name}](${lastStableRelease.html_url}) (${convertFileSize(lastStableRelease.assets[0].size)})`
+        : '';
 
-      if (lastRelease !== lastStableRelease) {
-        downloadDesc += `\n
-          [Dernière version stable : ${lastStableRelease.tag_name}](${lastStableRelease.html_url}) (${convertFileSize(lastStableRelease.assets[0].size)})`;
-      }
+      downloadDesc += `${lastRelease !== lastStableRelease ? '\n' : ''}
+        [Dernière version : ${lastRelease.tag_name}](${lastRelease.html_url}) (${convertFileSize(lastRelease.assets[0].size)})
+      `;
 
       const embed = new MessageEmbed()
         .setColor(client.config.colors.default)

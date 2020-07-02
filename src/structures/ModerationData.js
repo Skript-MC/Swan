@@ -1,13 +1,12 @@
-import { GuildMember } from 'discord.js';
-import { client } from '../main';
 import { uid } from '../utils';
+import { client } from '../main'; // eslint-disable-line no-unused-vars
 
 class ModerationData {
   constructor() {
-    this.guild = client.guild;
     this.type = undefined; // The sanction type (enum of ACTION_TYPE)
     this.member = undefined; // The victim GuildMember object
     this.user = undefined; // The victim User object
+    this.victimId = undefined;
     this.moderator = undefined; // The moderator (GuildMember | User) object
     this.reason = undefined; // The reason
     this.color = undefined; // The embed color
@@ -18,9 +17,17 @@ class ModerationData {
     this.sendSuccessIfBot = false; // Wether or not send success messages if the moderator is a bot
     this.file = undefined; // The file to send along with the log embed
     this.warnId = undefined; // If it is a "remove warn", this will be set to the id of the warn to remove
-    this.removeFile = false; // If this is true, it will remove the file at this.file.path
     this.hardbanIfNoMessages = false; // If this is true, the user will be hardban if he doesn't write any message in the private channel
+    this.silent = false; // Don't send private message to the victim
     this.id = uid(); // The id of the case
+  }
+
+  // ESLint bug, thinking the method is not defined (wtf?)
+  // eslint-disable-next-line no-undef
+  async #updateMemberAndUser() {
+    if (!this.victimId) return
+    this.member = client.guild.members.cache.get(this.victimId) || await client.guild.members.fetch(this.victimId).catch(() => {});
+    this.user = this.member?.user || client.users.cache.get(this.victimId) || await client.users.fetch(this.victimId).catch(() => {});
   }
 
   setType(type) {
@@ -28,20 +35,9 @@ class ModerationData {
     return this;
   }
 
-  setMember(member) {
-    this.member = member;
-    this.user = member.user;
-    return this;
-  }
-
-  setUser(user) {
-    this.user = user;
-    return this;
-  }
-
-  setVictim(victim) {
-    if (victim instanceof GuildMember) this.setMember(victim);
-    else this.setUser(victim);
+  setVictimId(id) {
+    this.victimId = id;
+    this.#updateMemberAndUser();
     return this;
   }
 
@@ -95,20 +91,28 @@ class ModerationData {
     return this;
   }
 
-  shouldRemoveFile(bool) {
-    this.removeFile = bool;
-    return this;
-  }
-
   shouldHardbanIfNoMessages(bool) {
     this.hardbanIfNoMessages = bool;
     return this;
   }
 
+  shouldBeSilent(bool) {
+    this.silent = bool;
+    return this;
+  }
+
+  getUserName() {
+    let name = '';
+    if (this.user?.username) name += this.user.username;
+    if (this.member?.nickname) name += ` (${this.member.nickname})`;
+    if (name === '' && this.victimId) name += this.victimId;
+    return name;
+  }
+
   getData(compact = true) {
     return {
-      guild: compact && this.guild ? this.guild.id : this.guild,
       type: this.type,
+      victimId: this.victimId,
       member: compact && this.member ? this.member.id : this.member,
       user: compact && this.user ? this.user.id : this.user,
       moderator: compact && this.moderator ? this.moderator.id : this.moderator,
@@ -121,8 +125,8 @@ class ModerationData {
       sendSuccessIfBot: this.shouldSendSuccessIfBot,
       file: this.file,
       warnId: this.warnId,
-      removeFile: this.removeFile,
       hardbanIfNoMessages: this.hardbanIfNoMessages,
+      silent: this.silent,
       id: this.id,
     };
   }
