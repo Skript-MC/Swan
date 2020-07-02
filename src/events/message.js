@@ -1,4 +1,5 @@
 import { MessageEmbed, DMChannel } from 'discord.js';
+import Axios from 'axios';
 import { client, db } from '../main';
 import { jwDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
@@ -34,6 +35,19 @@ function canExecute(command, message) {
     return false;
   }
   return true;
+}
+
+async function hastebinPaste(message) {
+  const attachment = message.attachments.map(attach => attach)[0];
+  if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk'))) return;
+  const attachmentContent = await Axios.get(attachment.url);
+
+  const response = await Axios.post(client.config.apis.hastebin, attachmentContent.data);
+  if (!response.data.key) return;
+  const embed = new MessageEmbed()
+    .setColor(client.config.colors.default)
+    .setDescription(`[Ouvrir le fichier ${attachment.name} sans le télécharger](https://hastebin.com/${response.data.key})`);
+  message.channel.send(embed);
 }
 
 export default async function messageHandler(message) {
@@ -156,6 +170,9 @@ export default async function messageHandler(message) {
     const msg = await message.channel.send(embed);
     msg.react('✅').then(() => msg.react('❌'));
   }
+
+  // Upload text files to hastebin
+  if (message.attachments.size !== 0) return hastebinPaste(message);
 
   if (cmd === client.config.bot.prefix
     || cmd.startsWith(`${client.config.bot.prefix}${client.config.bot.prefix}`)) return;
