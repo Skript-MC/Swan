@@ -95,7 +95,7 @@
             "userHasClosedDm": "Oups ! Je ne peux pas envoyer de message privé à cet utilisateur... Il n'a donc pas été informé de la sanction directement, je vous invite à le faire !",
             "cantplaymusic": "Impossible de jouer cette musique, désolé. :confused:",
             "cooldown": "Oulà, pas si vite ! Réessaie d'exécuter cette commande dans quelques instants. :exploding_head:",
-            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission ou de configuration, pas de Swan)",
+            "rolePermissions": "Impossible d'ajouter/enlever le rôle ! (Problème de permission ou de configuration, pas de Swan). Le membre à cependant bien été marqué comme banni. Il se peut que d'autres étapes du processus de bannissement aient été altérées.",
             "channelPermissions": ":warning: Impossible de créer ou de modifier le canal privé ! (Problème de permission ou de configuration, pas de Swan)",
             "noReasonSpecified": "Aucune raison spécifiée",
             "assumeBanned": "Une erreur est survenue avec l'utilisateur %s : il n'est plus en ligne alors qu'il était banni (SdB), je le ban donc définitivement.",

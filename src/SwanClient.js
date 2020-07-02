@@ -11,6 +11,9 @@ class SwanClient extends Client {
     this.config = this.loadConfig();
     this.logger = new Logger();
     this.activated = true;
+    // TODO: Improve this, this is definitely not the best way to do it. (prevent guildBanRemove
+    // to fire when unbanning a member, leading to the member being unbanned twice)
+    this.usersBeingUnbanned = [];
     this.commands = [];
     this.login(process.env.DISCORD_API);
 
