@@ -6,6 +6,7 @@ class ModerationData {
     this.type = undefined; // The sanction type (enum of ACTION_TYPE)
     this.member = undefined; // The victim GuildMember object
     this.user = undefined; // The victim User object
+    this.victimId = undefined;
     this.moderator = undefined; // The moderator (GuildMember | User) object
     this.reason = undefined; // The reason
     this.color = undefined; // The embed color
@@ -25,8 +26,8 @@ class ModerationData {
   // eslint-disable-next-line no-undef
   async #updateMemberAndUser() {
     if (!this.victimId) return
-    this.member = client.guild.members.cache.get(this.victimId) || await client.guild.members.fetch(this.victimId);
-    this.user = this.member?.user || client.guild.users.cache.get(this.victimId) || await client.users.fetch(this.victimId);
+    this.member = client.guild.members.cache.get(this.victimId) || await client.guild.members.fetch(this.victimId).catch(() => {});
+    this.user = this.member?.user || client.users.cache.get(this.victimId) || await client.users.fetch(this.victimId).catch(() => {});
   }
 
   setType(type) {
