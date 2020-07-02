@@ -45,6 +45,7 @@
         "mojang_api": "https://api.mojang.com",
         "skin": "http://cravatar.eu/helmavatar/",
         "github": "https://api.github.com",
+        "hastebin": "https://hastebin.com/documents",
         "rssContentFeeds": ["https://skript-mc.fr/forum/forum/4-annonces.xml/", "https://skript-mc.fr/forum/forum/8-tutoriels.xml/", "https://skript-mc.fr/forum/forum/20-algorithmes.xml/", "https://skript-mc.fr/forum/forum/21-fonctions.xml/", "https://skript-mc.fr/forum/forum/22-fragments-de-code.xml/", "https://skript-mc.fr/forum/forum/6-demandes-de-skripts.xml/", "https://skript-mc.fr/forum/forum/7-aide.xml/"],
         "rssFilesFeed": "https://skript-mc.fr/forum/files/files.xml/"
     },
