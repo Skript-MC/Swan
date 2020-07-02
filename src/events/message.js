@@ -1,5 +1,5 @@
 import { MessageEmbed, DMChannel } from 'discord.js';
-import Axios from 'axios';
+import axios from 'axios';
 import { client, db } from '../main';
 import { jwDistance, uncapitalize } from '../utils';
 import SanctionManager from '../structures/SanctionManager';
@@ -38,11 +38,11 @@ function canExecute(command, message) {
 }
 
 async function hastebinPaste(message) {
-  const attachment = message.attachments.map(attach => attach)[0];
+  const attachment = message.attachments.first();
   if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk'))) return;
-  const attachmentContent = await Axios.get(attachment.url);
+  const attachmentContent = await axios.get(attachment.url);
 
-  const response = await Axios.post(client.config.apis.hastebin, attachmentContent.data);
+  const response = await axios.post(client.config.apis.hastebin, attachmentContent.data);
   if (!response.data.key) return;
   const embed = new MessageEmbed()
     .setColor(client.config.colors.default)
