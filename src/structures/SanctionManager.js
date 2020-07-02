@@ -73,7 +73,7 @@ class SanctionManager {
       ? client.guild.roles.resolve(client.config.roles.ban)
       : client.guild.roles.resolve(client.config.roles.mute);
 
-    if (data.member.roles.cache.has(role.id)) {
+    if (data.member?.roles.cache.has(role.id)) {
       try {
         data.member.roles.remove(role);
       } catch (err) {
