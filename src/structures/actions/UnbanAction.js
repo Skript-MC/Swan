@@ -9,6 +9,10 @@ class UnbanAction extends ModerationAction {
     this.config = client.config.messages.commands.unban;
   }
 
+  async before() {
+    client.usersBeingUnbanned.push(this.data.victimId);
+  }
+
   async exec(_document) {
     // Regarde dans la bdd si le joueur est banni
     const ban = await db.sanctions.findOne(
@@ -19,8 +23,12 @@ class UnbanAction extends ModerationAction {
         ] },
     ).catch(console.error);
     if (ban.type === ACTION_TYPE.HARDBAN || !this.data.member) {
-      const isBanned = await client.guild.fetchBan(this.data.victimId).catch(console.error);
-      if (isBanned) await client.guild.members.unban(this.data.victimId, this.data.reason).catch(console.error);
+      try {
+        const isBanned = await client.guild.fetchBan(this.data.victimId);
+        if (isBanned) await client.guild.members.unban(this.data.victimId, this.data.reason);
+      } catch (e) {
+        client.logger.error(`Error while fetching/unbanning member ${this.data.getUserName()}: ${e.message}`);
+      }
     } else if (ban.type === ACTION_TYPE.BAN) {
       await SanctionManager.removeRole(this.data);
       const file = await SanctionManager.removeChannel(this.data);
@@ -32,6 +40,10 @@ class UnbanAction extends ModerationAction {
       .replace('%u', this.data.getUserName())
       .replace('%r', this.data.reason);
     this.data.messageChannel.sendSuccess(successMessage, this.data.moderator);
+  }
+
+  async after() {
+    client.usersBeingUnbanned.splice(client.usersBeingUnbanned.indexOf(this.data.victimId), 1);
   }
 }
 

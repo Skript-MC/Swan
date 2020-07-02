@@ -1,4 +1,5 @@
 import { uid } from '../utils';
+import { client } from '../main';
 
 class ModerationData {
   constructor() {
