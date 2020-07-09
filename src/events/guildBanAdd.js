@@ -5,6 +5,7 @@ import ACTION_TYPE from '../structures/actions/actionType';
 import SanctionManager from '../structures/SanctionManager';
 
 export default async function guildBanAddHandler(guild, user) {
+  if (!client.activated) return;
   if (await SanctionManager.isBanned(user.id, true)) return;
   if (guild.id !== client.guild.id) return;
 

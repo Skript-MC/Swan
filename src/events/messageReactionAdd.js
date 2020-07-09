@@ -7,6 +7,7 @@ const pollsReactions = {
   specials: ['ℹ', '🛑'],
 };
 export default async function messageReactionAddHandler(reaction, user) {
+  if (!client.activated) return;
   if (user.bot) return;
   const { message } = reaction;
   const polls = await db.polls.find({}).catch(console.error);
