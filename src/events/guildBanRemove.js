@@ -5,6 +5,7 @@ import ACTION_TYPE from '../structures/actions/actionType';
 import UnbanAction from '../structures/actions/UnbanAction';
 
 export default async function guildBanRemoveHandler(guild, user) {
+  if (!client.activated) return;
   if (!(await SanctionManager.isBanned(user.id, true))) return;
   if (client.usersBeingUnbanned.includes(user.id)) return;
   if (guild.id !== client.guild.id) return;

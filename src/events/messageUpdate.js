@@ -1,6 +1,7 @@
 import { client } from '../main';
 
 export default async function messageUpdateHandler(oldMessage, newMessage) {
+  if (!client.activated) return;
   if (newMessage.author.bot) return; // The bot has a ghost-ping command
   if (newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(client.config.roles.staff).position) return;
 
