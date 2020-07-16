@@ -58,7 +58,15 @@ class AutomaticMessages extends Command {
     }
 
     if (matches.length === 0) {
-      message.channel.sendError(this.config.invalidMessage, message.member);
+      const msg = await message.channel.sendError(this.config.invalidMessage, message.member);
+      msg.react('🗑️');
+      const removeCollector = msg
+        .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)
+        .once('collect', () => {
+          removeCollector.stop();
+          msg.delete();
+          message.delete();
+        });
     } else {
       const messagesList = matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join('`, `.automsg ');
       const suggestion = await message.channel.send(this.config.cmdSuggestion.replace('%c', args.join('')).replace('%m', messagesList));
