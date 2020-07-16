@@ -13,14 +13,14 @@ class Idea extends Command {
     const channel = client.channels.resolve(client.config.channels.idea);
     if (!channel) return message.channel.send(this.config.noChannelFound);
 
-    const ideas = await channel.messages.fetch();
+    const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) return message.channel.send(this.config.noMesagesFound);
 
-    const randomIdea = ideas.random(1);
+    const randomIdea = ideas.random(1)[0];
 
     const embed = new MessageEmbed()
       .setColor(client.config.colors.default)
-      .setAuthor(`Idée de ${randomIdea.member.displayName} :`, randomIdea.author.avatarURL())
+      .setAuthor(`Idée de ${randomIdea.member?.displayName || 'Inconnu'} :`, randomIdea.author.avatarURL())
       .setDescription(randomIdea.content)
       .setFooter(`Exécuté par ${message.member.displayName}`)
       .setTimestamp(randomIdea.createdAt);
