@@ -1,5 +1,5 @@
 import { uid } from '../utils';
-import { client } from '../main';
+import { client } from '../main'; // eslint-disable-line no-unused-vars
 
 class ModerationData {
   constructor() {

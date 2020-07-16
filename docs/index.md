@@ -1,6 +1,6 @@
 # Documentation de Swan
 
-Cette page regroupe les **47 commandes** disponibles sur Swan.
+Cette page regroupe les **48 commandes** disponibles sur Swan.
 
 ## Accès rapides
 
@@ -13,6 +13,7 @@ Cette page regroupe les **47 commandes** disponibles sur Swan.
 - [Change Config](#Change-Config)
 - [Code](#Code)
 - [Discover](#Discover)
+- [Edit Messages](#Edit-Messages)
 - [Error Details](#Error-Details)
 - [Ghostping](#Ghostping)
 - [Help](#Help)
@@ -106,7 +107,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 ### <a name="Bassboost"></a>Bassboost
 
 - **Catégorie :** music
-- **Description :** Modifie le gain de la musique. La puissance par défault est à 0
+- **Description :** Modifie le gain de la musique. La puissance par défaut est à 0
 - **Alias :** `bassboost`
 - **Usage :** `bassboost [<nombre entre 0 et 40>]`
 - **Exemples :** `bassboost`, `bassboost 3`, `bassboost default`
@@ -116,7 +117,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 
 ### <a name="Change-Config"></a>Change Config
 
-- **Catégorie :** moderation
+- **Catégorie :** admin
 - **Description :** Modifier différentes valeurs de la configuration
 - **Alias :** `changeconfig`
 - **Usage :** `changeconfig <configuration> <valeur>`
@@ -144,11 +145,22 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 - **Exemples :** `discover`
 
 
+### <a name="Edit-Messages"></a>Edit Messages
+
+- **Catégorie :** admin
+- **Description :** Gère l'ajout, la suppression de messages automatiques modifiables de Swan.
+- **Alias :** `editm`, `editmsg`, `editMessages`, `msg`
+- **Usage :** `msg <error|auto> [<new|delete <titre>>]`
+- **Exemples :** `msg error new`
+- **Informations supplémentaires :**
+	- ⚠️ Seul les membres ayant le rôle `Membre actif` ou supérieur peuvent exécuter cette commande.
+
+
 ### <a name="Error-Details"></a>Error Details
 
 - **Catégorie :** basic
-- **Description :** Aide à régler les erreurs que vous pouvez avoir lorsque vous faites /sk reload. Attention, cette commande est en BETA, donc le pourcentage de précision n'est pas garanti à 100%. Il se peut aussi que certaines erreur ne soit pas disponibles.
-- **Alias :** `errordetail`, `errordetails`, `error_detail`, `error_details`, `error-detail`, `error-details`
+- **Description :** Envoie des informations sur ces erreurs : `%s`.
+- **Alias :** `errordetail`, `errordetails`, `error_detail`, `error_details`, `error-detail`, `error-details`, `error`
 - **Usage :** `errordetail <votre erreur>`
 - **Exemples :** `errordetail Can't compare 'if arg 1' with a text`
 
@@ -451,7 +463,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 
 ### <a name="Status"></a>Status
 
-- **Catégorie :** moderation
+- **Catégorie :** admin
 - **Description :** Consulter le status de Swan, ou de l'activer/désactiver.
 - **Alias :** `status`, `statut`
 - **Usage :** `status [<on/off>]`
@@ -473,7 +485,7 @@ Si vous connaissez une version plus récente d'un addon fonctionnant dans une ce
 
 ### <a name="Tag-Role"></a>Tag Role
 
-- **Catégorie :** moderation
+- **Catégorie :** admin
 - **Description :** Notifie un rôle qui n'est pas mentionnable.
 - **Alias :** `tagrole`, `tag-role`, `tag_role`
 - **Usage :** `tag-role <rôle>`

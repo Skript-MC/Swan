@@ -2,6 +2,7 @@ import { client } from '../main';
 import MusicBot from '../structures/Music';
 
 export default function voiceStateUpdateHandler(oldState, newState) {
+  if (!client.activated) return;
   const oldChannel = oldState.guild.channels.resolve(oldState.channelID);
   const newChannel = newState.guild.channels.resolve(newState.channelID);
 

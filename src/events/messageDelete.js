@@ -1,6 +1,7 @@
 import { client } from '../main';
 
 export default async function messageDeleteHandler(message) {
+  if (!client.activated) return;
   if (message.author.bot) return; // The bot has a ghost-ping command
   if (message.member.roles.highest.position >= message.guild.roles.cache.get(client.config.roles.staff).position) return;
 
