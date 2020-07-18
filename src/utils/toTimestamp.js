@@ -1,4 +1,4 @@
-const REGEX = /^((?:\d+)?\.?\d+) *([\w+]+)?$/gi;
+const REGEX = /^((?:\d+)?\.?\d+) *([\w+]+)?$/i;
 const DURATION = {
   /* eslint-disable key-spacing */
   SECOND: 1,
