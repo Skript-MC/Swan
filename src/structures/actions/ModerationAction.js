@@ -253,6 +253,11 @@ class ModerationAction {
 
   async removeFromSanctions(id) {
     await db.sanctions.remove({ _id: id }).catch(console.error);
+    if (this.data.type === ACTION_TYPE.REMOVE_WARN) {
+      const sanctionsHistory = await db.sanctionsHistory.findOne({ memberId: this.data.victimId }).catch(console.error);
+      const currentWarnCount = sanctionsHistory.currentWarnCount - 1 < 0 ? 0 : sanctionsHistory.currentWarnCount - 1;
+      await db.sanctionsHistory.update({ memberId: this.data.victimId }, { $set: { currentWarnCount } }).catch(console.error);
+    }
   }
 
   async after() {} // eslint-disable-line
