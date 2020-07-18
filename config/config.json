@@ -557,6 +557,7 @@
                 "missingIdArgument": "Vous n'avez pas spécifié d'ID de warn *(visible sur l'embed quand on .warn, dans les logs, ou en faisant .history)* !",
                 "successfullyUnwarned": "Vous avez bien enlevé l'avertissement `%d` de %u !\nRaison : %r",
                 "noReasonSpecified": "Aucune raison spécifiée",
+                "unknownWarnId": "Impossible de trouver l'avertissement avec l'id `%s`. Pour trouver les IDs des avertissements d'un membre, faites `.history <@mention | ID>`.",
                 "alreadyRevoked": "Cet avertissement est déjà révoqué"
             },
             "kick": {
