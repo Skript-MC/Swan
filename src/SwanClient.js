@@ -75,7 +75,7 @@ class SwanClient extends Client {
             .setDescription(content)
             .setTimestamp()
             .setFooter(`Exécuté par ${member.displayName}`);
-          this.send(embed, options);
+          return this.send(embed, options);
         }
 
         sendInfo(content, member, options) {
@@ -87,7 +87,7 @@ class SwanClient extends Client {
             .setDescription(content)
             .setTimestamp()
             .setFooter(`Exécuté par ${member.displayName}`);
-          this.send(embed, options);
+          return this.send(embed, options);
         }
 
         sendSuccess(content, member, options) {
@@ -99,7 +99,7 @@ class SwanClient extends Client {
             .setDescription(content)
             .setTimestamp()
             .setFooter(`Exécuté par ${member.displayName}`);
-          this.send(embed, options);
+          return this.send(embed, options);
         }
       }
 
