@@ -86,7 +86,7 @@ function convert(num, type) {
     case 's':
       return num * DURATION.SECOND;
     default:
-      return num;
+      throw new Error(`Invalid duration unit : ${type}`);
   }
 }
 
@@ -100,7 +100,11 @@ export default function toTimestamp(val) {
         const fmt = REGEX.exec(unit);
         if (fmt) {
           abs = parseFloat(fmt[1]);
-          total += convert(abs, fmt[2]);
+          try {
+            total += convert(abs, fmt[2]);
+          } catch {
+            return;
+          }
         }
       }
       return total;
