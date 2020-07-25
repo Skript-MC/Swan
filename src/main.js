@@ -1,4 +1,6 @@
 import moment from 'moment';
+import * as Sentry from '@sentry/node';
+import * as Integrations from '@sentry/integrations';
 import { loadSkriptHubAPI,
   loadSkripttoolsAddons,
   loadDatabases } from './setup';
@@ -26,6 +28,10 @@ client.on('error', (err) => { throw new Error(err); });
 client.on('warn', client.logger.warn);
 
 if (process.env.NODE_ENV !== 'development') {
-  process.on('uncaughtException', (err) => { throw new Error(err); });
-  process.on('unhandledRejection', (err) => { throw new Error(err); });
+  Sentry.init({ dsn: process.env.SENTRY_API,
+    integrations: [
+      new Integrations.CaptureConsole({ levels: ['warn', 'error'] }),
+      new Sentry.Integrations.OnUncaughtException({ onFatalError: (err) => { throw new Error(err); } }),
+      new Sentry.Integrations.OnUnhandledRejection({ mode: 'strict' }), // Fait passer l'UnhandledRejection comme UncaughtException
+    ] });
 }
