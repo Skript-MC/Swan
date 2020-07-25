@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
+    "@sentry/integrations": "^5.20.1",
+    "@sentry/node": "^5.20.1",
     "axios": "^0.19.2",
     "chalk": "^4.1.0",
     "discord-ytdl-core": "^3.0.1",
