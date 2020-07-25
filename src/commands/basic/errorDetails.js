@@ -36,7 +36,15 @@ class ErrorDetails extends Command {
         }
       }
     }
-    message.channel.send(this.config.invalidMessage);
+    const msg = await message.channel.send(this.config.invalidMessage);
+    msg.react('🗑️');
+    const removeCollector = msg
+      .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)
+      .once('collect', () => {
+        removeCollector.stop();
+        msg.delete();
+        message.delete();
+      });
   }
 }
 

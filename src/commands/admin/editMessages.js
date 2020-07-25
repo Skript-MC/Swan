@@ -26,7 +26,7 @@ class EditMessages extends Command {
         .setTitle(this.config.howToAdd.title)
         .setDescription(this.config.howToAdd.content)
         .setColor(client.config.colors.default)
-        .setFooter(`Exécuté par ${message.author.displayName}`)
+        .setFooter(`Exécuté par ${message.member.displayName}`)
         .setTimestamp();
 
       // On envoie l'embed d'information et on démarre le collector
