@@ -5,14 +5,13 @@ import Parser from 'rss-parser';
 import { client } from '../main';
 
 const parser = new Parser();
-const channel = client.channels.resolve(client.config.channels.rssFeed);
 
 function warn(msg) {
   client.logger.warn('Could not fetch a Skript-MC\'s RSS Endpoint. Is either the website or the bot down/offline?');
   client.logger.debug(`    ↳ ${msg}`);
 }
 
-function sendTopics(topics) {
+function sendTopics(topics, channel) {
   for (const forum of topics) {
     for (const topic of forum.items) {
       topic.forum = forum.title.replace(' derniers sujets', '');
@@ -42,7 +41,7 @@ function sendTopics(topics) {
   }
 }
 
-function sendFiles(files) {
+function sendFiles(files, channel) {
   const lastFiles = files.items.filter(item => (Date.now() - new Date(item.pubDate).getTime()) < client.config.bot.checkInterval.long);
 
   for (const item of lastFiles) {
@@ -66,6 +65,8 @@ function sendFiles(files) {
 }
 
 export default async function loadRssFeed() {
+  const channel = client.channels.resolve(client.config.channels.rssFeed);
+
   let topics = [];
   for (const feedURL of client.config.apis.rssContentFeeds) {
     // eslint-disable-next-line no-void
@@ -76,6 +77,6 @@ export default async function loadRssFeed() {
   topics = await Promise.all(topics);
   topics = topics.filter(elt => typeof elt !== 'undefined');
 
-  if (topics) sendTopics(topics);
-  if (files) sendFiles(files);
+  if (topics) sendTopics(topics, channel);
+  if (files) sendFiles(files, channel);
 }

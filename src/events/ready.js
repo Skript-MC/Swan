@@ -37,6 +37,13 @@ export default async function readyHandler() {
   client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + (pollsMessagesCache?.length || 0)})`);
   client.logger.step('Skript-MC bot loaded!', true);
 
+  Command.filterCooldown(client.commands);
+  DatabaseChecker.checkSanctions(client, db);
+  DatabaseChecker.checkPolls(client, db);
+  loadRssFeed();
+  loadSkriptReleases();
+  client.user.setPresence(randomActivity(client, client.commands, client.config.bot.prefix));
+
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
     DatabaseChecker.checkSanctions(client, db); // Vérification des sanctions temporaires
