@@ -111,6 +111,7 @@ class SwanClient extends Client {
     // Check tokens
     if (!process.env.DISCORD_API) throw new Error('Discord token was not set in the environment variables (DISCORD_API)');
     if (!process.env.YOUTUBE_API) throw new Error('Youtube token was not set in the environment variables (YOUTUBE_API)');
+    if (!process.env.SENTRY_API) throw new Error('Sentry DSN was not set in the environment variables (SENTRY_API)');
 
     // Check bot and guild IDs
     if (!process.env.BOT) throw new Error('Bot id was not set in the environment variables (BOT)');
