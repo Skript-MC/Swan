@@ -33,8 +33,8 @@ class Statistics extends Command {
       .addField('Commandes', `${client.commands.length} [(documentation)](${client.config.miscellaneous.documentation})`, true)
       .addField('Répartition des membres', `${onlineUsers} en ligne / ${offlineUsers} hors ligne / ${totalBots} bot${totalBots > 1 ? 's' : ''}`, true)
       .addField('Total', `${total} membres`, true)
-      .addField('Développeurs', '<@188341077902753794>\n<@191495299884122112>\n<@218505052015296512>', true)
-      .addField('Contributeurs', '<@173542833364533249>\n<@294134773901688833>', true)
+      .addField('Développeurs', '<@188341077902753794>\n<@191495299884122112>', true)
+      .addField('Remerciements', '<@218505052015296512> : ancien développeur\n<@173542833364533249> : contributions\n<@294134773901688833> : contributions', true)
       .addField('Signalement des bugs/problèmes, et suggestions', `Vous pouvez les signaler sur le [GitHub](<${pkg.bugs.url}>) ou sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.`, true)
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
