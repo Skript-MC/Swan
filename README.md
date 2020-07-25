@@ -1,37 +1,38 @@
-# Skript-MC Bot
+<p align="center"><img width=400px src="https://skript-mc.fr/assets/images/logo.png"></p>
+<h2 align="center">Swan</h2>
+<p align="center">
+    Swan est un bot développé spécialement pour le serveur <a href="https://discord.com/invite/J3NSGaE">Discord de Skript-MC</a>.
+</p>
 
-Bot discord de Skript-MC.
+## 🚀 Installation
+- Installer [NodeJS](https://nodejs.org/fr/) sur votre machine
+- Télécharger la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest) ou cloner ce dépôt pour tester les dernières modifications
+- Copier le fichier `.env.example` vers `.env` et remplir celui-ci
+- Exécuter la commande `npm i` pour installer les modules nécessaires
+- C'est parti ! Exécuter la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan
 
-## Installation
+## 🔍 Rapport de bug et suggestions
+- 🐛 Vous avez aperçu un bug lorsque vous utilisez Swan ?
+- 💡 Vous avez une idée ou une suggestion ?
+- 💬 Vous souhaitez nous faire part de quelque chose ?
 
-0. Installer [nodejs](https://nodejs.org/fr/)
-1. Télécharger l'archive du projet (le .zip)
-2. Aller dans le répertoir du projet à partir de la console (command prompt pour Windows, shell pour linux, terminal pour macOS)
-3. Faire `npm i` dans la console
-4. Renommer `.env.example` en `.env`
-5. vos tokens d'API et les ids des channels dans le `.env`
-6. Executer le bot à l'aide de la commande `npm start`
+Vous pouvez vous rendre dans le [menu des issues](https://github.com/Skript-MC/Swan/issues) et en créer une ; nous y jetterons un œil dès que possible !
 
-## Report des bugs / Suggestions
+## 🔨 Développement et contributions
+Nos Pull Request sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Skript-MC/Swan/fork) (= une copie) de ce dépôt et y faire vos modifications. Voici quelques informations utiles avant de créer une Pull Request :
 
-Si vous avez repéré un bug avec le bot, ou que vous avez une suggestion, alors n'hésitez pas et créez une nouvelle [issue](https://github.com/Skript-MC/Swan/issues) ! Décrivez votre bug ou votre suggestion avec un maximum de précision, ajoutez des screens etc.
+- 🏷️ Créez votre PR vers la branche `dev` uniquement
+- 📦 Ajoutez le moins de dépendance possible
+- 🚨 Respectez les règles ESLint ; vous pouvez vérifier avec la commande `npm run lint`
+- ⚡️ Vérifiez qu'aucune vulnérabilité n'est présente ; via la commande `npm audit`
 
-## Contribution
+N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.com/njSgX3w) !
 
-Si jamais vous avez des bases en nodejs et que vous avez une idée pour le bot, vous pouvez essayer de la développer ! N'hésiter pas ensuite à faire une PR, qui sera ensuite acceptée ou refusée. Certaines règles s'imposent cependant : éviter d'ajouter trop de dépendences, et utilisez au maximum celles déjà disponibles, mettez vos clés d'apis dans le fichier `.env` et non dans le code et respectez les règles eslint.
-Enfin, avant de faire votre PR :
-- Vérifiez que toutes les commandes du bot, ou au moins tout ce qui touche de près ou de loin à ce que vous avez modifié, fonctionne.
-- Exécutez la commande `npm run lint`, et vérifiez qu'il n'y a aucune erreur.
-- Exécutez la commande `npm audit`, et vérifiez qu'aucune vulnérabilité n'a été trouvée.
-- Vérifiez que vous êtes bien sur la branche `dev`, et que vous ne faites pas vos PR sur la branche `master`.
-
-## Todo et roadmap
-
-Toutes les informations concernant le développement du bot se trouvent maintenant sur ce [trello](https://trello.com/b/aFLW76Fv/swan).
-
-:warning: *Le développement du bot n'est plus aussi actif qu'avant, et c'est pourquoi tous ces choses à faire ne se feront surement pas, ou du moins pas dans cet ordre. Pour avoir des nouveautés plus récentes rendez-vous sur le discord de développement.*
-
-## Discords
-
-Le discord de Skript-MC est disponible [ici](https://discordapp.com/invite/J3NSGaE).
-Le discord de développement du bot est disponible [ici](https://discord.gg/njSgX3w).
+## 🙏 Merci
+#### 👥 Développeurs
+- [noftaly](https://github.com/noftaly) (noftaly#0359)
+- [Romitou](https://github.com/Romitou) (Romitou#9685)
+#### 👷 Contributeurs
+- [Olyno](https://github.com/Olyno), ancien développeur (Olyno#1234)
+- [WeeskyBDW](https://github.com/WeeskyBDW) (WeeskyBDW#6172)
+- [iTrooz](https://github.com/iTrooz) (iTrooz_#2050)
