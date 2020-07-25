@@ -2,6 +2,7 @@ import Command from '../../structures/Command';
 import ModerationData from '../../structures/ModerationData';
 import ACTION_TYPE from '../../structures/actions/actionType';
 import RemoveWarnAction from '../../structures/actions/RemoveWarnAction';
+import { db } from '../../main';
 
 class RemoveWarn extends Command {
   constructor() {
@@ -18,6 +19,9 @@ class RemoveWarn extends Command {
 
     const id = args[1];
     if (!id) return message.channel.sendError(this.config.missingIdArgument, message.member);
+
+    const targetedWarn = await db.sanctions.findOne({ member: victim.id, type: ACTION_TYPE.WARN, id }).catch(console.error);
+    if (!targetedWarn) return message.channel.sendError(this.config.unknownWarnId.replace('%s', id), message.member);
 
     const reason = args.splice(2).join(' ') || this.config.noReasonSpecified;
 

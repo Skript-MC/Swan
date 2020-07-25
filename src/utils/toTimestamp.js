@@ -1,4 +1,4 @@
-const REGEX = /^((?:\d+)?\.?\d+) *([\w+]+)?$/gi;
+const REGEX = /^((?:\d+)?\.?\d+) *([\w+]+)?$/i;
 const DURATION = {
   /* eslint-disable key-spacing */
   SECOND: 1,
@@ -35,23 +35,36 @@ function tokenize(str) {
 
 function convert(num, type) {
   switch (type) {
+    case 'years':
+    case 'year':
+    case 'y':
     case 'annees':
     case 'annee':
     case 'ans':
     case 'an':
     case 'a':
       return num * DURATION.YEAR;
+    case 'months':
+    case 'month':
     case 'mois':
     case 'mo':
       return num * DURATION.MONTH;
+    case 'weeks':
+    case 'week':
+    case 'w':
     case 'semaines':
     case 'semaine':
     case 'sem':
       return num * DURATION.WEEK;
+    case 'days':
+    case 'day':
+    case 'd':
     case 'jours':
     case 'jour':
     case 'j':
       return num * DURATION.DAY;
+    case 'hours':
+    case 'hour':
     case 'heures':
     case 'heure':
     case 'hrs':
@@ -64,6 +77,8 @@ function convert(num, type) {
     case 'min':
     case 'm':
       return num * DURATION.MINUTE;
+    case 'seconds':
+    case 'second':
     case 'secondes':
     case 'seconde':
     case 'secs':

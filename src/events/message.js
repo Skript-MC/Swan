@@ -12,7 +12,8 @@ function canExecute(command, message) {
   // Check des permissions
   if (command.permissions.length > 0) {
     for (const perm of command.permissions) {
-      if (!message.member.roles.cache.find(role => role.name === perm)) {
+      const role = client.guild.roles.cache.find(r => r.name === perm);
+      if (message.member.roles.highest.position < role.position) {
         message.channel.sendError(client.config.messages.errors.permission, message.member);
         return false;
       }
