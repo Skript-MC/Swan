@@ -14,7 +14,19 @@ moment.relativeTimeThreshold('m', 55);
 moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
-export const client = new SwanClient();
+export const client = new SwanClient({
+  ws: {
+    intents: [
+      'GUILDS', // Access to channels, create some, pin messages etc etc
+      'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal)
+      'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events
+      'GUILD_VOICE_STATES', // Access to VoiceStateUpdate event
+      'GUILD_PRESENCES', // Access to users' presence (for .userinfo)
+      'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events
+      'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events
+    ],
+  },
+});
 export const db = loadDatabases(client);
 
 const shouldLoadSyntaxes = client.config.messages.commands.syntaxinfo.enabled ?? true;
