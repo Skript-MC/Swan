@@ -16,7 +16,7 @@ export default async function endPoll(client, db, poll, stopped = false) {
   } else if (poll.type === 1) {
     for (let i = 0; i < Object.keys(poll.votes).length; i++) {
       const r = reactions.multiple[i];
-      results += `${r} : ${poll.votes[r].length} ${poll.customAnswers[i]} (${(100 * poll.votes[r].length) / voters || 0}%)\n`;
+      results += `${r} : ${poll.votes[r].length} ${poll.customAnswers[i]} (${Math.round((100 * poll.votes[r].length) / voters || 0)}%)\n`;
     }
   }
   results += `\n:bust_in_silhouette: : ${voters} votant${voters > 1 ? 's' : ''}.`;
