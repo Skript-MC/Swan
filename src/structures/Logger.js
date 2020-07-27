@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { padNumber } from '../utils';
 
-const verbose = process.env.NODE_ENV === 'development';
+const isDevMode = process.env.NODE_ENV === 'development';
 
 class Logger {
   constructor() {
@@ -13,7 +13,9 @@ class Logger {
    * @param {string} msg - The message to log
    */
   log(msg) {
-    console.log(chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.white(msg));
+    console.log(isDevMode
+      ? (chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.white(msg))
+      : (`[Swan] LOG:    (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ${msg}`));
   }
 
   /**
@@ -21,9 +23,7 @@ class Logger {
    * @param {string} msg - The message to log
    */
   debug(msg) {
-    if (verbose) {
-      console.log(chalk.blue('[Swan] DEBUG:  ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.cyan(msg));
-    }
+    if (isDevMode) console.log(chalk.blue('[Swan] DEBUG:  ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.cyan(msg));
   }
 
   /**
@@ -31,7 +31,9 @@ class Logger {
    * @param {string} msg - The message to log
    */
   warn(msg) {
-    console.warn(chalk.blue('[Swan] WARN:   ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.yellow(`⚠ ${msg}`));
+    console.warn(isDevMode
+      ? (chalk.blue('[Swan] WARN:   ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `)) + chalk.yellow(`⚠ ${msg}`)
+      : (`[Swan] WARN:   (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ${msg}`));
   }
 
   /**
@@ -39,7 +41,9 @@ class Logger {
    * @param {string} msg - The message to log
    */
   error(msg) {
-    console.log(chalk.blue('[Swan] ERROR:  ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.red('✖ Error:'));
+    console.log(isDevMode
+      ? chalk.blue('[Swan] ERROR:  ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.red('✖ Error:')
+      : `[Swan] ERROR:  (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ${msg}`);
     console.error(msg);
   }
 
@@ -48,7 +52,7 @@ class Logger {
    * @param {string} msg - The message to log
    */
   success(msg) {
-    console.log(chalk.blue('[Swan] SUCESS: ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.green(`✔️ ${msg}`));
+    console.log(chalk.blue('[Swan] SUCCESS: ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.green(`✔️ ${msg}`));
   }
 
   /**
@@ -58,10 +62,12 @@ class Logger {
    */
   step(msg, important = false) {
     this.currentStep++;
-    if (important) {
-      console.log(chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.bold.green(`(${this.currentStep}) ${msg}`));
+    if (isDevMode) {
+      console.log(important
+        ? chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.bold.green(`(${this.currentStep}) ${msg}`)
+        : chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.green(`(${this.currentStep}) ${msg}`));
     } else {
-      console.log(chalk.blue('[Swan] LOG:    ') + chalk.italic.gray(`(${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) `) + chalk.green(`(${this.currentStep}) ${msg}`));
+      console.log(`[Swan] LOG:    (${padNumber(new Date(Date.now()).getHours())}:${padNumber(new Date(Date.now()).getMinutes())}) ${msg}`);
     }
   }
 }
