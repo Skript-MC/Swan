@@ -102,8 +102,10 @@ class BanAction extends ModerationAction {
     this.data.setFile(file);
 
     // Ban
-    const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
-    await this.data.member.ban({ reason }).catch(console.error);
+    if (this.data.member) {
+      const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
+      await this.data.member.ban({ reason }).catch(console.error);
+    }
   }
 }
 
