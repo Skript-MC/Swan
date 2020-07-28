@@ -1,6 +1,7 @@
 import { MessageEmbed } from 'discord.js';
 import Command from '../../structures/Command';
 import { jwDistance, selectorMessage, parsePage } from '../../utils';
+import { db } from '../../main';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -143,7 +144,11 @@ class Help extends Command {
 
     let desc = command.description;
     if (command.name === 'Automatic Messages') {
-      desc = desc.replace('%s', `${Object.keys(config.messages.commands.automaticmessages.messages).join(', ')}`);
+      const messages = await db.messages.find({ type: 'auto' }).catch(console.error);
+      desc = desc.replace('%s', messages.length ? messages.map(msg => msg.title) : 'Aucun');
+    } else if (command.name === 'Error Details') {
+      const messages = await db.messages.find({ type: 'error' }).catch(console.error);
+      desc = desc.replace('%s', messages.length ? messages.map(msg => msg.title) : 'Aucune');
     }
 
     const channels = [];
