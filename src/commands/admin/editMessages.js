@@ -83,7 +83,7 @@ class EditMessages extends Command {
           reactionCollector.stop();
           msgCollector.stop();
         });
-    } else if (args[1] === 'del') {
+    } else if (['del', 'delete', 'rem', 'remove'].includes(args[1])) {
       if (!args[2]) return message.channel.sendError(this.config.invalidDeleteCommand, message.member);
       if (msgDocs.some(msg => msg.type === type && msg.title === args[2])) {
         await db.messages.remove({ type, title: args[2] }).catch(console.error);
