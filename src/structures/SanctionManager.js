@@ -7,7 +7,7 @@ import ACTION_TYPE from './actions/actionType';
 
 class SanctionManager {
   static async getOrCreateChannel(data) {
-    const pseudo = prunePseudo(data.member);
+    const pseudo = prunePseudo(data.member, data.user, data.victimId);
     const channelName = `${client.config.moderation.banChannelPrefix}${pseudo}`;
 
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
@@ -39,7 +39,7 @@ class SanctionManager {
   }
 
   static async removeChannel(data) {
-    const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member)}`;
+    const channelName = `${client.config.moderation.banChannelPrefix}${prunePseudo(data.member, data.user, data.victimId)}`;
     const filter = c => c.type === 'text' && (c.name === channelName || c.topic?.split(' ')[0] === data.victimId);
     const chan = client.guild.channels.cache.find(filter);
     let file;
