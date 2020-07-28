@@ -14,9 +14,9 @@ export default async function guildBanRemoveHandler(guild, user) {
     .setType(ACTION_TYPE.UNBAN)
     .setColor(client.config.colors.success)
     .setReason(client.config.messages.errors.noReasonSpecified)
-    .setVictimId(user.id)
     .setModerator(client.guild.members.resolve(client.user.id))
     .setMessageChannel(client.guild.channels.resolve(client.config.channels.logs));
+  await data.setVictimId(user.id);
 
   new UnbanAction(data).commit();
 }
