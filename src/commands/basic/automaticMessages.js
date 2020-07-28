@@ -17,9 +17,7 @@ class AutomaticMessages extends Command {
     const messages = await db.messages.find({ type: 'auto' }).catch(console.error);
 
     if (args.length === 0) {
-      const allMessages = [];
-      messages.filter(msg => allMessages.push(msg.aliases[0]));
-      message.channel.sendError(this.config.noArg.replace('%s', `\`${allMessages.join(', ')}\``), message.member);
+      message.channel.sendError(this.config.noArg.replace('%s', `\`${messages.map(msg => msg.title).join('`, `')}\``), message.member);
       return;
     }
 
