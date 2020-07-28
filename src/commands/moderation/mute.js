@@ -41,10 +41,11 @@ class Mute extends Command {
       .setColor(client.config.colors.mute)
       .setReason(reason)
       .setDuration(duration)
-      .setVictimId(victim.id)
       .setModerator(message.member)
       .setMessageChannel(message.channel)
       .setFinishTimestamp();
+    await data.setVictimId(victim.id);
+
     new MuteAction(data).commit();
   }
 }

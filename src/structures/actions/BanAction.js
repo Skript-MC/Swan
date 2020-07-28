@@ -19,11 +19,12 @@ class BanAction extends ModerationAction {
       const data = new ModerationData()
         .setType(ACTION_TYPE.UNMUTE)
         .setColor(client.config.colors.success)
-        .setVictimId(this.data.victimId)
         .setReason(client.config.messages.miscellaneous.autoUnmuteBeforeBan)
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(this.data.messageChannel)
         .shouldBeSilent(true);
+      await data.setVictimId(this.data.victimId);
+
       await new UnmuteAction(data).commit();
     }
   }
@@ -101,8 +102,10 @@ class BanAction extends ModerationAction {
     this.data.setFile(file);
 
     // Ban
-    const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
-    await this.data.member.ban({ reason });
+    if (this.data.member) {
+      const reason = `Raison: ${this.data.reason}. Modérateur ${this.data.moderator.user.username}. Date: ${moment(Date.now()).format('[le] DD/MM/YYYY [à] HH:mm:ss')}`;
+      await this.data.member.ban({ reason }).catch(console.error);
+    }
   }
 }
 
