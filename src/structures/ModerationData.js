@@ -35,9 +35,9 @@ class ModerationData {
     return this;
   }
 
-  setVictimId(id) {
+  async setVictimId(id) {
     this.victimId = id;
-    this.#updateMemberAndUser();
+    await this.#updateMemberAndUser();
     return this;
   }
 

@@ -23,10 +23,11 @@ class Kick extends Command {
     const data = new ModerationData()
       .setType(ACTION_TYPE.KICK)
       .setColor(client.config.colors.kick)
-      .setVictimId(victim.id)
       .setReason(reason)
       .setModerator(message.member)
       .setMessageChannel(message.channel);
+    await data.setVictimId(victim.id);
+
     new KickAction(data).commit();
   }
 }

@@ -24,21 +24,22 @@ class DatabaseChecker {
       const data = new ModerationData()
         .setType(ACTION_TYPE.opposite(result.type))
         .setColor(client.config.colors.success)
-        .setVictimId(victim.id)
         .setReason(client.config.messages.miscellaneous.sanctionExpired)
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(messageChannel);
+      await data.setVictimId(victim.id);
 
       if (!victim) {
         if (result.type === ACTION_TYPE.BAN) {
           // Si on ne retrouve pas la victime alors qu'elle était bannie (sdb), alors elle doit être bannie
           // (= elle a quitté/on l'a banni pendant que le bot était offline)
           messageChannel.sendError(client.config.messages.errors.assumeBanned);
-          data.setVictimId(result.member);
+          await data.setVictimId(result.member);
           data.setType(ACTION_TYPE.HARDBAN);
           data.setColor(client.config.colors.hardban);
           data.setReason(client.config.messages.miscellaneous.hardBanAutomatic);
           data.setDuration(-1);
+
           new BanAction(data).commit();
         }
         continue;

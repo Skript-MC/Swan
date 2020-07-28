@@ -46,10 +46,11 @@ class WarnAction extends ModerationAction {
         .setColor(client.config.colors.ban)
         .setReason(client.config.moderation.warnBanReason)
         .setDuration(client.config.moderation.warnBanTime * 1000)
-        .setVictimId(this.data.victimId)
         .setModerator(client.guild.members.resolve(client.user.id))
         .setMessageChannel(this.data.messageChannel)
         .setFinishTimestamp();
+      await data.setVictimId(this.data.victimId);
+
       new BanAction(data).commit();
     }
   }

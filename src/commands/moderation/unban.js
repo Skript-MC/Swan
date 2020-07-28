@@ -27,10 +27,11 @@ class Unban extends Command {
     const data = new ModerationData()
       .setType(ACTION_TYPE.UNBAN)
       .setColor(client.config.colors.success)
-      .setVictimId(victim.id)
       .setReason(reason)
       .setModerator(message.member)
       .setMessageChannel(message.channel);
+    await data.setVictimId(victim.id);
+
     new UnbanAction(data).commit();
   }
 }
