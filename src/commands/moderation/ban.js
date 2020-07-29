@@ -41,7 +41,8 @@ class Ban extends Command {
     const type = duration === -1 ? ACTION_TYPE.HARDBAN : ACTION_TYPE.BAN;
 
     // Durée max des modérateurs forum : 2j
-    if (message.member.roles.cache.has(client.config.roles.forumMod) && (type === ACTION_TYPE.HARDBAN || duration > client.config.moderation.maxForumModDuration)) {
+    const roleToLow = message.member.roles.highest.id === client.config.roles.forumMod;
+    if (roleToLow && (type === ACTION_TYPE.HARDBAN || duration > client.config.moderation.maxForumModDuration)) {
       return message.channel.sendError(this.config.durationTooLong, message.member);
     }
 
