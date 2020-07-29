@@ -4,12 +4,9 @@ import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
 import DatabaseChecker from '../structures/DatabaseChecker';
-import HelpChannelManager from '../structures/HelpChannelManager';
 
 export default async function readyHandler() {
-  this.guild = this.guilds.resolve(this.config.bot.guild);
-  this.helpChannelManager = new HelpChannelManager(this);
-
+  client.finishSetup();
   client.checkValidity();
   client.logger.debug('main.js -> Checks of tokens, ids and permissions finished successfully');
 

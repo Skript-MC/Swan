@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { Client, Structures, MessageEmbed } from 'discord.js';
 import Logger from './structures/Logger';
+import HelpChannelManager from './structures/HelpChannelManager';
 
 class SwanClient extends Client {
   constructor(options) {
@@ -182,6 +183,11 @@ class SwanClient extends Client {
         this.on(event, eventFunction);
       }
     }
+  }
+
+  finishSetup() {
+    this.guild = this.guilds.resolve(this.config.bot.guild);
+    this.helpChannelManager = new HelpChannelManager(this);
   }
 }
 
