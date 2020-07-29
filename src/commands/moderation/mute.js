@@ -32,7 +32,8 @@ class Mute extends Command {
     }
 
     // Durée max des modérateurs forum : 2j
-    if (message.member.roles.cache.has(client.config.roles.forumMod) && duration > client.config.moderation.maxForumModDuration) {
+    const roleToLow = message.member.roles.highest.id === client.config.roles.forumMod;
+    if (roleToLow && duration > client.config.moderation.maxForumModDuration) {
       return message.channel.sendError(this.config.durationTooLong, message.member);
     }
 
