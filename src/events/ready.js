@@ -4,9 +4,11 @@ import loadRssFeed from '../structures/RSSFeed';
 import loadSkriptReleases from '../structures/skriptReleases';
 import { randomActivity } from '../utils';
 import DatabaseChecker from '../structures/DatabaseChecker';
+import HelpChannelManager from '../structures/HelpChannelManager';
 
 export default async function readyHandler() {
-  client.guild = client.guilds.resolve(client.config.bot.guild);
+  this.guild = this.guilds.resolve(this.config.bot.guild);
+  this.helpChannelManager = new HelpChannelManager(this);
 
   client.checkValidity();
   client.logger.debug('main.js -> Checks of tokens, ids and permissions finished successfully');
@@ -43,11 +45,14 @@ export default async function readyHandler() {
   loadRssFeed();
   loadSkriptReleases();
   client.user.setPresence(randomActivity(client, client.commands, client.config.bot.prefix));
+  client.helpChannelManager.checkChannelActivity();
 
   setInterval(() => {
     Command.filterCooldown(client.commands); // Tri dans les cooldowns des commandes
     DatabaseChecker.checkSanctions(client, db); // Vérification des sanctions temporaires
     DatabaseChecker.checkPolls(client, db); // Vérification des sondages
+    // Check de l'activité des salons d'aide (pour le balanceur des salons)
+    client.helpChannelManager.checkChannelActivity();
   }, client.config.bot.checkInterval.short);
 
   setInterval(() => {
