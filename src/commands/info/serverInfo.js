@@ -41,7 +41,7 @@ class ServerInfo extends Command {
     if (data.version) embed.addField(this.config.embed.version, data.version, true);
     if (data.hostname) embed.addField(this.config.embed.hostname, data.hostname, true);
     if (data.software) embed.addField(this.config.embed.software, data.software, true);
-    if (data.plugins) embed.addField(this.config.embed.plugins, data.plugin.raw.length, true);
+    if (data.plugins) embed.addField(this.config.embed.plugins, data.plugins.raw.length, true);
     if (data.mods) embed.addField(this.config.embed.mods, data.mods.raw.length, true);
 
     msg.delete();
