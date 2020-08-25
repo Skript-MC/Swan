@@ -4,7 +4,8 @@
   "description": "Bot discord de Skript-Mc.",
   "main": "./src/main.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production babel-node ./src/main.js",
+    "build": "babel src -d build",
+    "start": "npm run build && cross-env NODE_ENV=production node ./build/main.js",
     "dev": "cross-env NODE_ENV=development babel-node ./src/main.js",
     "watch:dev": "nodemon --exec cross-env NODE_ENV=development babel-node ./src/main.js",
     "lint": "eslint .",
@@ -43,6 +44,7 @@
     "simple-youtube-api": "^5.2.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.1",
     "@babel/node": "^7.10.5",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
