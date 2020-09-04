@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { Client, Structures, MessageEmbed } from 'discord.js';
 import Logger from './structures/Logger';
+import HelpChannelManager from './structures/HelpChannelManager';
 
 class SwanClient extends Client {
   constructor(options) {
@@ -33,6 +34,7 @@ class SwanClient extends Client {
     conf.bot.forbiddenChannels = ids.FORBIDDEN_CHANNELS ? ids.FORBIDDEN_CHANNELS.split(',') : [];
     conf.channels = {
       helpSkript: ids.HELP_SKRIPT ? ids.HELP_SKRIPT.split(',') : [],
+      extraHelpSkript: ids.EXTRA_HELP_SKRIPT ? ids.EXTRA_HELP_SKRIPT.split(',') : [],
       helpOther: ids.HELP_OTHER ? ids.HELP_OTHER.split(',') : [],
       snippet: ids.SNIPPET,
       idea: ids.IDEA,
@@ -181,6 +183,11 @@ class SwanClient extends Client {
         this.on(event, eventFunction);
       }
     }
+  }
+
+  finishSetup() {
+    this.guild = this.guilds.resolve(this.config.bot.guild);
+    this.helpChannelManager = new HelpChannelManager(this);
   }
 }
 

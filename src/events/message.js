@@ -41,9 +41,8 @@ function canExecute(command, message) {
 async function hastebinPaste(message) {
   const attachment = message.attachments.first();
   if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk'))) return;
-  const attachmentContent = await axios.get(attachment.url);
-
-  const response = await axios.post(client.config.apis.hastebin, attachmentContent.data);
+  const attachmentContent = await axios.get(attachment.url).catch(() => {});
+  const response = await axios.post(client.config.apis.hastebin, attachmentContent.data).catch(() => {});
   if (!response.data.key) return;
   const embed = new MessageEmbed()
     .setColor(client.config.colors.default)

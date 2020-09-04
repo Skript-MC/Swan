@@ -54,7 +54,9 @@
         "maxPollDuration": 604800000,
         "cmdPerPagesInHelp": 5,
         "commandSimilarity": 0.7,
-        "documentation": "https://skript-mc.github.io/Swan/"
+        "documentation": "https://skript-mc.github.io/Swan/",
+        "helpChannelInactivityTime": 1200000,
+        "helpChannelInactivityMessages": 15
     },
 
     "messages": {
