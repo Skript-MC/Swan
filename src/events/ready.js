@@ -25,15 +25,24 @@ export default async function readyHandler() {
 
   const polls = await db.polls.find({}).catch(console.error);
   const pollInfos = polls.map(poll => [poll.channel, poll.id]);
-  const pollsMessagesCache = [];
+  let pollsMessagesCache = 0;
+
   for (const [channelId, messageId] of pollInfos) {
     const channel = client.channels.resolve(channelId);
-    pollsMessagesCache.push(channel?.messages.fetch(messageId, true));
-  }
-  await Promise.all(pollsMessagesCache);
-  pollsMessagesCache.filter(elt => typeof elt !== 'undefined');
+    if (!channel) {
+      await db.polls.remove({ id: messageId }).catch(console.error);
+      continue;
+    }
 
-  client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + (pollsMessagesCache?.length || 0)})`);
+    const message = await channel?.messages.fetch(messageId, true).catch(() => {});
+    if (!message) {
+      await db.polls.remove({ id: messageId }).catch(console.error);
+      continue;
+    }
+    pollsMessagesCache++;
+  }
+
+  client.logger.step(`Messages cached! (${(suggestionMessages?.size || 0) + pollsMessagesCache})`);
   client.logger.step('Skript-MC bot loaded!', true);
 
   Command.filterCooldown(client.commands);
