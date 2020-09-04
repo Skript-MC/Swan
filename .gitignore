@@ -1,6 +1,7 @@
 TODO/*
 node_modules/*
 databases/*
+build/
 .idea/
 .vscode/*
 .env

@@ -22,7 +22,7 @@ export default async function endPoll(client, db, poll, stopped = false) {
   results += `\n:bust_in_silhouette: : ${voters} votant${voters > 1 ? 's' : ''}.`;
 
   const channelMessages = client.guild.channels.resolve(poll.channel)?.messages;
-  const message = channelMessages?.resolve(poll.id) || await channelMessages?.fetch(poll.id);
+  const message = channelMessages?.resolve(poll.id) || await channelMessages?.fetch(poll.id).catch(console.error);
   if (!message) return;
 
   const embed = message.embeds[0];

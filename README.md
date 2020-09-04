@@ -8,6 +8,7 @@
 - Installer [NodeJS](https://nodejs.org/fr/) sur votre machine
 - Télécharger la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest) ou cloner ce dépôt pour tester les dernières modifications
 - Copier le fichier `.env.example` vers `.env` et remplir celui-ci
+- Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activer les options `Server Members Intent` et `Presence Intent` de l'application
 - Exécuter la commande `npm i` pour installer les modules nécessaires
 - C'est parti ! Exécuter la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan
 
