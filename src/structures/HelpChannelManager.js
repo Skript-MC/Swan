@@ -7,10 +7,12 @@ class HelpChannelManager {
     this.inactivityMessages = this.client.config.miscellaneous.helpChannelInactivityMessages;
 
     for (const channelId of client.config.channels.helpSkript) {
-      this.basicHelpChannels.push(client.guild.channels.cache.get(channelId));
+      const chan = client.guild.channels.cache.get(channelId);
+      if (chan) this.basicHelpChannels.push(chan);
     }
     for (const channelId of client.config.channels.extraHelpSkript) {
-      this.extraHelpChannels.push(client.guild.channels.cache.get(channelId));
+      const chan = client.guild.channels.cache.get(channelId);
+      if (chan) this.extraHelpChannels.push();
     }
   }
 
