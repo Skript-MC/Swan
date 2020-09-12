@@ -1,4 +1,10 @@
-import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
+import path from 'path';
+import {
+  AkairoClient,
+  CommandHandler,
+  InhibitorHandler,
+  ListenerHandler,
+} from 'discord-akairo';
 import messages from '../config/messages';
 import settings from '../config/settings';
 
@@ -19,7 +25,7 @@ class SwanClient extends AkairoClient {
     });
 
     this.commandHandler = new CommandHandler(this, {
-      directory: `${__dirname}/commands/`,
+      directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
       aliasReplacement: /-/g,
       commandUtil: true,
@@ -27,11 +33,11 @@ class SwanClient extends AkairoClient {
     });
 
     this.inhibitorHandler = new InhibitorHandler(this, {
-      directory: `${__dirname}/inhibitors/`,
+      directory: path.join(__dirname, 'inhibitors/'),
     });
 
     this.listenerHandler = new ListenerHandler(this, {
-      directory: `${__dirname}/listeners/`,
+      directory: path.join(__dirname, 'listeners/'),
     });
 
     this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
@@ -40,7 +46,7 @@ class SwanClient extends AkairoClient {
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
-      listenerHandler: this.listenerHandler
+      listenerHandler: this.listenerHandler,
     });
 
     this.commandHandler.loadAll();
