@@ -9,7 +9,7 @@ class ReadyListener extends Listener {
   }
 
   exec() {
-    console.log("I'm ready");
+    this.client.logger.success('Swan is ready to listen for messages.');
   }
 }
 

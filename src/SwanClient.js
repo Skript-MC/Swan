@@ -7,6 +7,7 @@ import {
 } from 'discord-akairo';
 import messages from '../config/messages';
 import settings from '../config/settings';
+import Logger from './structures/Logger';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -24,6 +25,9 @@ class SwanClient extends AkairoClient {
       },
     });
 
+    this.logger = new Logger();
+
+    this.logger.info('Creating Command handler');
     this.commandHandler = new CommandHandler(this, {
       directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
@@ -32,10 +36,12 @@ class SwanClient extends AkairoClient {
       handleEdits: true,
     });
 
+    this.logger.info('Creating Inhibitor handler');
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: path.join(__dirname, 'inhibitors/'),
     });
 
+    this.logger.info('Creating Listener handler');
     this.listenerHandler = new ListenerHandler(this, {
       directory: path.join(__dirname, 'listeners/'),
     });
@@ -54,6 +60,7 @@ class SwanClient extends AkairoClient {
     this.listenerHandler.loadAll();
 
     this.messages = messages;
+    this.logger.info('Client initialization finished');
   }
 }
 
