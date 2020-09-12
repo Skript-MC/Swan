@@ -1,21 +1,22 @@
 import { AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler } from 'discord-akairo';
+import messages from '../config/messages';
 import settings from '../config/settings';
 
 class SwanClient extends AkairoClient {
-    constructor() {
-        super({}, {
-          ws: {
-            intents: [
-              'GUILDS', // Access to channels, create some, pin messages etc etc
-              'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal)
-              'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events
-              'GUILD_VOICE_STATES', // Access to VoiceStateUpdate event
-              'GUILD_PRESENCES', // Access to users' presence (for .userinfo)
-              'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events
-              'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events
-            ],
-          },
-        });
+  constructor() {
+    super({}, {
+      ws: {
+        intents: [
+          'GUILDS', // Access to channels, create some, pin messages etc etc
+          'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal)
+          'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events
+          'GUILD_VOICE_STATES', // Access to VoiceStateUpdate event
+          'GUILD_PRESENCES', // Access to users' presence (for .userinfo)
+          'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events
+          'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events
+        ],
+      },
+    });
 
     this.commandHandler = new CommandHandler(this, {
       directory: `${__dirname}/commands/`,
@@ -45,6 +46,8 @@ class SwanClient extends AkairoClient {
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
+
+    this.messages = messages;
   }
 }
 
