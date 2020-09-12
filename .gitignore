@@ -1,12 +1,6 @@
-TODO/*
-node_modules/*
-databases/*
+node_modules/
 build/
 .idea/
-.vscode/*
+.vscode/
 .env
 .DS_Store
-*.db
-assets/*.psd
-ecosystem.config.js
-update.sh
