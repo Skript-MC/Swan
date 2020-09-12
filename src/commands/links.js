@@ -1,7 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
-
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
 
@@ -62,7 +61,7 @@ class LinksCommand extends Command {
     } else {
       embed.addField(...content[0]);
       embed.addField(...content[1]);
-    };
+    }
     return embed;
   }
 
