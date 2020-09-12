@@ -1,6 +1,7 @@
+import dotenv from 'dotenv';
 import SwanClient from './SwanClient';
 
-require('dotenv').config();
+dotenv.config();
 
 const client = new SwanClient();
 client.login(process.env.DISCORD_TOKEN);
