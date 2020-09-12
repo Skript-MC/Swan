@@ -12,10 +12,10 @@ class LinksCommand extends Command {
       args: [{
         id: 'page',
         type: (_message, phrase) => {
-            if (!phrase || isNaN(phrase)) return null;
-            const num = parseInt(phrase);
-            if (num < 0 || num > maxPage) return null;
-            return num;
+          if (!phrase || isNaN(phrase)) return null;
+          const num = parseInt(phrase, 10);
+          if (num < 0 || num > maxPage) return null;
+          return num;
         },
         default: 0,
       }],
@@ -24,14 +24,13 @@ class LinksCommand extends Command {
   }
 
   async exec(message, args) {
-    let page = args.page;
+    let { page } = args;
     const msg = await message.util.send(this.getEmbedForPage(page));
     for (const reaction of reactions)
       msg.react(reaction);
 
     const collector = msg
-      .createReactionCollector((reaction, user) =>
-        user.id === message.author.id
+      .createReactionCollector((reaction, user) => user.id === message.author.id
         && reactions.includes(reaction.emoji.name))
       .on('collect', (reaction) => {
         reaction.users.remove(message.author);
