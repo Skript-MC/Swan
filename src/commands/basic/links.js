@@ -9,6 +9,7 @@ class LinksCommand extends Command {
   constructor() {
     super('links', {
       aliases: config.settings.aliases,
+      description: { ...config.description },
       args: [{
         id: 'page',
         type: Argument.range('integer', 0, maxPage),
