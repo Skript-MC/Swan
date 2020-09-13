@@ -28,4 +28,12 @@ export default {
       gitSk_desc: "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour.",
     },
   },
+  ping: {
+    firstMessage: ':incoming_envelope: Calcul en cours...',
+    secondMessage: `
+      :hourglass: Swan : {SWAN_PING} ms {SWAN_INDICATOR}
+
+      :globe_with_meridians: API Discord : {DISCORD_PING} ms {DISCORD_INDICATOR}
+    `,
+  },
 };
