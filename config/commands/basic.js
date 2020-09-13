@@ -1,7 +1,9 @@
+import { Permissions } from 'discord.js';
+
 export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissons: ['ADD_REACTIONS', 'SEND_MESSAGES'],
+    clientPermissons: [Permissions.FLAGS.ADD_REACTIONS, Permissions.FLAGS.SEND_MESSAGES],
     userPermissions: [],
   },
   messages: {
@@ -57,7 +59,7 @@ export const links = {
 export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
-    clientPermissons: ['SEND_MESSAGES'],
+    clientPermissons: [Permissions.FLAGS.SEND_MESSAGES],
     userPermissions: [],
   },
   messages: {
