@@ -60,6 +60,7 @@ class SwanClient extends AkairoClient {
     this.listenerHandler.loadAll();
 
     this.messages = messages;
+    this.settings = settings;
     this.logger.info('Client initialization finished');
   }
 }
