@@ -18,6 +18,7 @@ class LinksCommand extends Command {
         },
         default: 0,
       }],
+      clientPermissions: ['ADD_REACTIONS', 'SEND_MESSAGES'],
       channel: 'guild',
     });
   }

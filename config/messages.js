@@ -1,4 +1,7 @@
 export default {
+  global: {
+    notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
+  },
   links: {
     embed: {
       summary: 'Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers quelques Discord importants\n:five: Divers liens importants',
