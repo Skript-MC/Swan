@@ -32,6 +32,10 @@ class SwanClient extends AkairoClient {
       directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
       aliasReplacement: /-/g,
+      allowMention: true,
+      automateCategories: true,
+      blockBots: true,
+      fetchMembers: true,
       commandUtil: true,
       handleEdits: true,
     });
