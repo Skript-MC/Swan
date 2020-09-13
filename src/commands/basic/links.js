@@ -1,4 +1,4 @@
-import { Command } from 'discord-akairo';
+import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
@@ -10,12 +10,7 @@ class LinksCommand extends Command {
       aliases: ['links'],
       args: [{
         id: 'page',
-        type: (_message, phrase) => {
-          if (!phrase || isNaN(phrase)) return null;
-          const num = parseInt(phrase, 10);
-          if (num < 0 || num > maxPage) return null;
-          return num;
-        },
+        type: Argument.range('integer', 0, maxPage),
         default: 0,
       }],
       clientPermissions: ['ADD_REACTIONS', 'SEND_MESSAGES'],
