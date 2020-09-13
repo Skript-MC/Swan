@@ -1,10 +1,44 @@
 import { Permissions } from 'discord.js';
 
+const permissions = Permissions.FLAGS;
+
+export const help = {
+  settings: {
+    aliases: ['help', 'aide'],
+    clientPermissons: [permissions.SEND_MESSAGES],
+    userPermissions: [],
+  },
+  description: {
+    content: 'Affiche la liste des commandes disponible ou des informations précises sur une commande spécifique.',
+    usage: 'help [commande]',
+    examples: ['help', 'aide ping'],
+  },
+  messages: {
+    commandInfo: {
+      description: '❯ Description',
+      usage: '❯ Utilisation',
+      aliases: '❯ Aliases',
+      examples: '❯ Exemples',
+      unavailabe: 'Indisponible.',
+    },
+    commandsList: {
+      title: 'Commandes de Swan ({NUMBER})',
+      description: "Faites `{COMMAND}` pour avoir plus d'informations sur une commande",
+      category: '❯ {CATEGORY}',
+    },
+  },
+};
+
 export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissons: [Permissions.FLAGS.ADD_REACTIONS, Permissions.FLAGS.SEND_MESSAGES],
+    clientPermissons: [permissions.ADD_REACTIONS, permissions.SEND_MESSAGES],
     userPermissions: [],
+  },
+  description: {
+    content: "Affiche la liste des liens utiles concernant Skript, comme les discords, les documentations, les plateformes de téléchargement d'addon...",
+    usage: 'links [page]',
+    examples: ['links', 'liens 4'],
   },
   messages: {
     embed: {
@@ -59,8 +93,12 @@ export const links = {
 export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
-    clientPermissons: [Permissions.FLAGS.SEND_MESSAGES],
+    clientPermissons: [permissions.SEND_MESSAGES],
     userPermissions: [],
+  },
+  description: {
+    content: "Permet de savoir la latence du bot et de l'API Discord.",
+    usage: 'ping',
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',

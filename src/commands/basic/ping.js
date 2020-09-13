@@ -7,6 +7,7 @@ class PingCommand extends Command {
   constructor() {
     super('ping', {
       aliases: config.settings.aliases,
+      description: { ...config.description },
       clientPermissions: config.settings.clientPermissons,
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
