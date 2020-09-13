@@ -1,11 +1,14 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import { ping as config } from '../../../config/commands/basic';
+import settings from '../../../config/settings';
 
 class PingCommand extends Command {
   constructor() {
     super('ping', {
-      aliases: ['ping', 'p'],
-      clientPermissions: ['SEND_MESSAGES'],
+      aliases: config.settings.aliases,
+      clientPermissions: config.settings.clientPermissons,
+      userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
   }
@@ -18,17 +21,17 @@ class PingCommand extends Command {
   }
 
   async exec(message) {
-    const sent = await message.util.send(this.client.messages.ping.firstMessage);
+    const sent = await message.util.send(config.messages.firstMessage);
     const timeDiff = (sent.editedAt || sent.createdAt) - (message.editedAt || message.createdAt);
 
-    const description = this.client.messages.ping.secondMessage
+    const description = config.messages.secondMessage
       .replace('{SWAN_PING}', timeDiff)
       .replace('{SWAN_INDICATOR}', this.getColorFromPing(timeDiff))
       .replace('{DISCORD_PING}', Math.round(this.client.ws.ping))
       .replace('{DISCORD_INDICATOR}', this.getColorFromPing(Math.round(this.client.ws.ping)));
 
     const embed = new MessageEmbed()
-      .setColor(this.client.settings.colors.default)
+      .setColor(settings.colors.default)
       .setDescription(description)
       .setFooter(`Exécuté par ${message.member.displayName}`)
       .setTimestamp();

@@ -1,5 +1,6 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import { links as config } from '../../../config/commands/basic';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
@@ -7,13 +8,14 @@ const maxPage = 5;
 class LinksCommand extends Command {
   constructor() {
     super('links', {
-      aliases: ['links'],
+      aliases: config.settings.aliases,
       args: [{
         id: 'page',
         type: Argument.range('integer', 0, maxPage),
         default: 0,
       }],
-      clientPermissions: ['ADD_REACTIONS', 'SEND_MESSAGES'],
+      clientPermissions: config.settings.clientPermissions,
+      userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
   }
@@ -21,8 +23,6 @@ class LinksCommand extends Command {
   async exec(message, args) {
     let { page } = args;
     const msg = await message.util.send(this.getEmbedForPage(page));
-    for (const reaction of reactions)
-      msg.react(reaction);
 
     const collector = msg
       .createReactionCollector((reaction, user) => user.id === message.author.id
@@ -31,26 +31,34 @@ class LinksCommand extends Command {
         reaction.users.remove(message.author);
         if (reaction.emoji.name === '🇽') {
           message.delete();
-          msg.deletet();
+          msg.delete();
           collector.stop();
           return;
         }
 
+        const oldPage = page;
         if (reaction.emoji.name === '⏮')
           page = 0;
         else if (reaction.emoji.name === '◀')
-          page--;
+          page = page === 0 ? 0 : page - 1;
         else if (reaction.emoji.name === '▶')
-          page++;
+          page = page === maxPage ? maxPage : page + 1;
         else if (reaction.emoji.name === '⏭')
           page = maxPage;
-        msg.edit(this.getEmbedForPage(page));
+
+        if (oldPage !== page)
+          msg.edit(this.getEmbedForPage(page));
       });
+
+    for (const reaction of reactions)
+      msg.react(reaction);
   }
 
   getEmbedForPage(page) {
     const embed = new MessageEmbed();
-    const content = this.getMessageForPage(page);
+    const content = page === 0
+      ? config.messages.embed.summary
+      : config.messages.embed.fields[page - 1];
 
     if (page === 0) {
       embed.setDescription(content);
@@ -59,40 +67,6 @@ class LinksCommand extends Command {
       embed.addField(...content[1]);
     }
     return embed;
-  }
-
-  getMessageForPage(page) {
-    const content = this.client.messages.links.embed;
-
-    switch (page) {
-      case 0:
-        return content.summary;
-      case 1:
-        return [
-          [content.docSkSkMc_title, content.docSkSkMc_desc],
-          [content.docSkOffi_title, content.docSkOffi_desc],
-        ];
-      case 2:
-        return [
-          [content.docAddSkMc_title, content.docAddSkMc_desc],
-          [content.docAdd_title, content.docAdd_desc],
-        ];
-      case 3:
-        return [
-          [content.dlSk_title, content.dlSk_desc],
-          [content.dlAdd_title, content.dlAdd_desc],
-        ];
-      case 4:
-        return [
-          [content.discSkMc_title, content.discSkMc_desc],
-          [content.discSkCh_title, content.discSkCh_desc],
-        ];
-      case 5:
-        return [
-          [content.forumSkMc_title, content.forumSkMc_desc],
-          [content.gitSk_title, content.gitSk_desc],
-        ];
-    }
   }
 }
 

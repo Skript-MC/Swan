@@ -5,7 +5,6 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
-import messages from '../config/messages';
 import settings from '../config/settings';
 import Logger from './structures/Logger';
 
@@ -63,8 +62,6 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
-    this.messages = messages;
-    this.settings = settings;
     this.logger.info('Client initialization finished');
   }
 }
