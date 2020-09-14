@@ -15,7 +15,7 @@ class ErrorListener extends Listener {
     if (process.env.NODE_ENV === 'production')
       throw new Error(error);
     else
-      this.client.logger.error(error);
+      this.client.logger.error(error.stack);
   }
 }
 
