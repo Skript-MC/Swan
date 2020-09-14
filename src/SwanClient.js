@@ -36,6 +36,7 @@ class SwanClient extends AkairoClient {
       fetchMembers: true,
       commandUtil: true,
       handleEdits: true,
+      storeMessages: true,
       argumentDefaults: {
         prompt: {
           retries: 3,
