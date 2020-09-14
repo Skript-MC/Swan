@@ -44,6 +44,14 @@ class Logger {
       chalk.red(`✖ ${message}`),
     );
   }
+
+  detail(message) {
+    const totalSpace = 'Swan: '.length
+      + 'SUCCESS '.length
+      + this._getTime().toString().length + 1
+      + 4;
+    console.log(chalk.cyan(`${' '.repeat(totalSpace)} ↳ ${message}`));
+  }
 }
 
 export default Logger;
