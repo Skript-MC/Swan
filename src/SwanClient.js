@@ -5,6 +5,7 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
+import messages from '../config/messages';
 import settings from '../config/settings';
 import Logger from './structures/Logger';
 
@@ -31,12 +32,23 @@ class SwanClient extends AkairoClient {
       directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
       aliasReplacement: /-/g,
-      allowMention: true,
       automateCategories: true,
-      blockBots: true,
       fetchMembers: true,
       commandUtil: true,
       handleEdits: true,
+      argumentDefaults: {
+        prompt: {
+          retries: 3,
+          time: 60_000,
+          cancelWord: messages.prompt.cancelWord,
+          stopWord: messages.prompt.stopWord,
+          modifyStart: (_, text) => text + messages.prompt.footer,
+          modifyRetry: (_, text) => text + messages.prompt.footer,
+          timeout: messages.prompt.timeout,
+          ended: messages.prompt.ended,
+          cancel: messages.prompt.canceled,
+        },
+      },
     });
 
     this.logger.info('Creating Inhibitor handler');
