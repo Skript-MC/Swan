@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
   bot: {
-    prefix: '=',
+    prefix: '.',
   },
   colors: {
     default: '#4286f4',
