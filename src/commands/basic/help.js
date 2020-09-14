@@ -29,8 +29,8 @@ class HelpCommand extends Command {
     if (command) {
       const messages = config.messages.commandInfo;
       embed.setTitle(command.aliases[0])
-        .addField(messages.usage, command.description.content || messages.unavailabe)
-        .addField(messages.description, `\`${prefix}${command.description.usage}\`` || messages.unavailabe);
+        .addField(messages.usage, `\`${prefix}${command.description.usage}\`` || messages.unavailabe)
+        .addField(messages.description, command.description.content || messages.unavailabe);
 
       if (command.aliases.length > 1)
         embed.addField(messages.aliases, `\`${command.aliases.join('` • `')}\``);
