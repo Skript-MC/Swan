@@ -71,6 +71,7 @@ class SwanClient extends AkairoClient {
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
       listenerHandler: this.listenerHandler,
+      process,
     });
 
     this.commandHandler.loadAll();
