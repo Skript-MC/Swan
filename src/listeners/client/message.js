@@ -38,15 +38,15 @@ class MessageListener extends Listener {
     if (message.author.bot || message.system || message.channel instanceof DMChannel)
       return;
 
-    // Run all needed tasks, and stop either when there is no more tasks or
+    // Run all needed tasks, and stop when there is either no more tasks or
     // when one returned true (= want to stop)
-    let next = { done: false };
+    let task = { done: false };
     const tasks = this.getTasks(message);
 
-    while (!next.done) {
-      if (next.value)
+    while (!task.done) {
+      if (task.value)
         break;
-      next = await tasks.next(); // eslint-disable-line no-await-in-loop
+      task = await tasks.next(); // eslint-disable-line no-await-in-loop
     }
   }
 }
