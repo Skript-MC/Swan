@@ -13,7 +13,7 @@ class ErrorListener extends Listener {
     this.client.logger.detail(`Command: ${command}`);
     this.client.logger.detail(`Message: ${message.url}`);
     if (process.env.NODE_ENV === 'production')
-      throw new Error(error);
+      throw new Error(error.stack);
     else
       this.client.logger.error(error.stack);
   }
