@@ -29,12 +29,13 @@ class HelpCommand extends Command {
     if (command) {
       const messages = config.messages.commandInfo;
       embed.setTitle(command.aliases[0])
-        .addField(messages.usage, `\`${prefix}${command.description.usage}\`` || messages.unavailabe)
-        .addField(messages.description, command.description.content || messages.unavailabe);
+        .addField(messages.usage, `\`${prefix}${command.description?.usage}\`` || messages.unavailabe)
+        .addField(messages.description, command.description?.content || messages.unavailabe)
+        .addField(messages.usableBy, command.description?.permissions || 'Tout le monde');
 
       if (command.aliases.length > 1)
         embed.addField(messages.aliases, `\`${command.aliases.join('` • `')}\``);
-      if (command.description.examples?.length)
+      if (command.description?.examples?.length)
         embed.addField(messages.examples, `\`${prefix}${command.description.examples.join(`\` • \`${prefix}`)}\``);
     } else {
       const messages = config.messages.commandsList;
