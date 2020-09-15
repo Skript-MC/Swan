@@ -7,6 +7,7 @@ import {
 } from 'discord-akairo';
 import messages from '../config/messages';
 import settings from '../config/settings';
+import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 
 class SwanClient extends AkairoClient {
@@ -75,7 +76,26 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
+    this.loadDatabases();
+
     this.logger.info('Client initialization finished');
+  }
+
+  async loadDatabases() {
+    const commandIds = this.commandHandler.categories
+      .array()
+      .flatMap(category => category.array())
+      .map(cmd => cmd.id);
+    const documents = [];
+    for (const commandId of commandIds)
+      documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
+
+    try {
+      await Promise.all(documents);
+    } catch (err) {
+      this.logger.error('Could not load some documents:');
+      this.logger.error(err.stack);
+    }
   }
 }
 
