@@ -17,6 +17,7 @@ export const help = {
     commandInfo: {
       description: '❯ Description',
       usage: '❯ Utilisation',
+      usableBy: '❯ Utilisable par',
       aliases: '❯ Aliases',
       examples: '❯ Exemples',
       unavailabe: 'Indisponible.',
@@ -99,6 +100,7 @@ export const ping = {
   description: {
     content: "Permet de savoir la latence du bot et de l'API Discord.",
     usage: 'ping',
+    examples: ['ping'],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -119,6 +121,7 @@ export const statistics = {
   description: {
     content: 'Affiche des statistiques et diverses informations sur le bot, comme son temps de fonctionnement, sa version etc...',
     usage: 'stats',
+    examples: ['stats'],
   },
   messages: {
     embed: {
