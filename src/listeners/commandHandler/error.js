@@ -1,8 +1,8 @@
 import { Listener } from 'discord-akairo';
 
-class ErrorListener extends Listener {
+class CommandHandlerErrorListener extends Listener {
   constructor() {
-    super('error', {
+    super('commandHandlerError', {
       event: 'error',
       emitter: 'commandHandler',
     });
@@ -19,4 +19,4 @@ class ErrorListener extends Listener {
   }
 }
 
-export default ErrorListener;
+export default CommandHandlerErrorListener;
