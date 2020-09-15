@@ -10,8 +10,9 @@ class ErrorListener extends Listener {
   }
 
   exec(error, message, command) {
-    this.client.logger.error(`Oops, something went wrong with the command ${command}!`);
-    this.client.logger.detail(`Message that triggered the command: ${message.url}`);
+    this.client.logger.error('Oops, something went wrong with a command!');
+    this.client.logger.detail(`Command: ${command}`);
+    this.client.logger.detail(`Message: ${message.url}`);
     if (process.env.NODE_ENV === 'production')
       throw new Error(error);
     else
