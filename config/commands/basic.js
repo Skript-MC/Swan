@@ -9,12 +9,14 @@ export const help = {
     userPermissions: [],
   },
   description: {
+    name: 'Aide',
     content: 'Affiche la liste des commandes disponible ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
   },
   messages: {
     commandInfo: {
+      title: ':star: Commande "{NAME}"',
       description: '❯ Description',
       usage: '❯ Utilisation',
       usableBy: '❯ Utilisable par',
@@ -37,6 +39,7 @@ export const links = {
     userPermissions: [],
   },
   description: {
+    name: 'Liens',
     content: "Affiche la liste des liens utiles concernant Skript, comme les discords, les documentations, les plateformes de téléchargement d'addon...",
     usage: 'links [page]',
     examples: ['links', 'liens 4'],
@@ -98,6 +101,7 @@ export const ping = {
     userPermissions: [],
   },
   description: {
+    name: 'Ping',
     content: "Permet de savoir la latence du bot et de l'API Discord.",
     usage: 'ping',
     examples: ['ping'],
@@ -119,6 +123,7 @@ export const statistics = {
     userPermissions: [],
   },
   description: {
+    name: 'Statistique',
     content: 'Affiche des statistiques et diverses informations sur le bot, comme son temps de fonctionnement, sa version etc...',
     usage: 'stats',
     examples: ['stats'],

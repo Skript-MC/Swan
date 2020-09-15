@@ -28,7 +28,7 @@ class HelpCommand extends Command {
 
     if (command) {
       const messages = config.messages.commandInfo;
-      embed.setTitle(command.aliases[0])
+      embed.setTitle(messages.title.replace('{NAME}', command.description?.name || command.aliases[0]))
         .addField(messages.usage, `\`${prefix}${command.description?.usage}\`` || messages.unavailabe)
         .addField(messages.description, command.description?.content || messages.unavailabe)
         .addField(messages.usableBy, command.description?.permissions || 'Tout le monde');
