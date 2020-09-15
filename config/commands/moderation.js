@@ -2,7 +2,7 @@ import { Permissions } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
 
-const hasStaffRole = message => (message.member.roles.cache.has(process.env.ROLE_STAFF) ? null : 'Pas de rôle Staff');
+const hasStaffRole = message => (message.member.roles.cache.has(process.env.STAFF_ROLE) ? null : 'No staff role');
 
 // eslint-disable-next-line import/prefer-default-export
 export const purge = {
