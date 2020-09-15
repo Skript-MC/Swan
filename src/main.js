@@ -1,8 +1,17 @@
 import dotenv from 'dotenv';
+import moment from 'moment';
 import mongoose from 'mongoose';
 import SwanClient from './SwanClient';
 
 dotenv.config();
+
+moment.locale('fr');
+moment.relativeTimeThreshold('M', 12);
+moment.relativeTimeThreshold('d', 28);
+moment.relativeTimeThreshold('h', 24);
+moment.relativeTimeThreshold('m', 55);
+moment.relativeTimeThreshold('s', 55);
+moment.relativeTimeThreshold('ss', 3);
 
 const client = new SwanClient();
 client.login(process.env.DISCORD_TOKEN);
