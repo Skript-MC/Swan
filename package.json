@@ -37,6 +37,7 @@
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
     "dotenv": "^8.2.0",
+    "moment": "^2.28.0",
     "mongoose": "^5.10.5"
   },
   "devDependencies": {
