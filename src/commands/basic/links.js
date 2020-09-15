@@ -31,9 +31,9 @@ class LinksCommand extends Command {
       .on('collect', (reaction) => {
         reaction.users.remove(message.author);
         if (reaction.emoji.name === '🇽') {
+          collector.stop();
           message.delete();
           msg.delete();
-          collector.stop();
           return;
         }
 
