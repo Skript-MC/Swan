@@ -61,6 +61,7 @@ class SwanClient extends AkairoClient {
     this.logger.info('Creating Listener handler');
     this.listenerHandler = new ListenerHandler(this, {
       directory: path.join(__dirname, 'listeners/'),
+      automateCategories: true,
     });
 
     this.commandHandler.useInhibitorHandler(this.inhibitorHandler);

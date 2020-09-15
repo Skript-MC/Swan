@@ -4,9 +4,8 @@ import CommandStat from '../../models/commandStat';
 class CommandStartedListener extends Listener {
   constructor() {
     super('commandStarted', {
-      emitter: 'commandHandler',
       event: 'commandStarted',
-      category: 'commandHandler',
+      emitter: 'commandHandler',
     });
   }
 

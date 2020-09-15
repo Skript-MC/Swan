@@ -3,9 +3,8 @@ import { Listener } from 'discord-akairo';
 class ReadyListener extends Listener {
   constructor() {
     super('ready', {
-      emitter: 'client',
       event: 'ready',
-      category: 'client',
+      emitter: 'client',
     });
   }
 
