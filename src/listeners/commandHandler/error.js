@@ -3,9 +3,8 @@ import { Listener } from 'discord-akairo';
 class ErrorListener extends Listener {
   constructor() {
     super('error', {
-      emitter: 'commandHandler',
       event: 'error',
-      category: 'commandHandler',
+      emitter: 'commandHandler',
     });
   }
 

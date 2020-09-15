@@ -4,9 +4,8 @@ import messages from '../../../config/messages';
 class MissingPermissionsListener extends Listener {
   constructor() {
     super('missingPermissions', {
-      emitter: 'commandHandler',
       event: 'missingPermissions',
-      category: 'commandHandler',
+      emitter: 'commandHandler',
     });
   }
 
