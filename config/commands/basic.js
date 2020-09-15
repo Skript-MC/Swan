@@ -109,3 +109,31 @@ export const ping = {
     `,
   },
 };
+
+export const statistics = {
+  settings: {
+    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
+    clientPermissons: [permissions.SEND_MESSAGES],
+    userPermissions: [],
+  },
+  description: {
+    content: 'Affiche des statistiques et diverses informations sur le bot, comme son temps de fonctionnement, sa version etc...',
+    usage: 'stats',
+  },
+  messages: {
+    embed: {
+      title: 'Statistiques de Swan',
+      description: 'Le préfix est `{PREFIX}`. Faites `{HELP}` pour avoir la liste des commandes.',
+      version: '❯ Version',
+      uptime: '❯ Temps de fonctionnement',
+      memory: '❯ Mémoire',
+      commands: '❯ Commandes',
+      developers: '❯ Développeurs',
+      developersContent: '<@188341077902753794>\n<@191495299884122112>',
+      thanks: '❯ Remerciements',
+      thanksContent: '<@218505052015296512> : ancien développeur\n<@173542833364533249> : contributions\n<@294134773901688833> : contributions',
+      bugs: 'Signalement des bugs/problèmes et suggestions',
+      bugsContent: 'Vous pouvez les signaler sur le [GitHub](<{URL}>). Vous pouvez aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
+    },
+  },
+};
