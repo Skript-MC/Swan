@@ -11,8 +11,8 @@ export default {
   colors: {
     default: '#4286f4',
   },
-  moderation: {
-    purgeLimit: 50,
+  roles: {
+    staff: process.env.STAFF_ROLE,
   },
   roles: {
     staff: process.env.ROLE_STAFF,
