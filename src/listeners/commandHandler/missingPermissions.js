@@ -11,13 +11,15 @@ class MissingPermissionsListener extends Listener {
 
   exec(message, command, type, missing) {
     if (type === 'client') {
-      if (missing === 'SEND_MESSAGES') {
-        this.client.logger.error(`Swan n'as pas la permission ${missing}, et il en a besoin pour la commande ${command}`);
+      if (missing.includes('SEND_MESSAGES')) {
+        this.client.logger.error(`Swan n'as pas la/les permission(s) ${missing.join(', ')}, et il en a besoin pour la commande ${command}`);
       } else {
         message.util.send(
           messages.global.insufficientClientPermissions
             .replace('{COMMAND}', command)
-            .replace('{PERMISSIONS}', missing),
+            // String#replaceAll is neither in NodeJS nor in babel yet...
+            // eslint-disable-next-line unicorn/prefer-replace-all
+            .replace('{PERMISSIONS}', missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', ')),
         );
       }
     } else {
