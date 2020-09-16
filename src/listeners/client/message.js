@@ -67,9 +67,8 @@ class MessageListener extends Listener {
 
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setTitle(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
-        .setURL(targetedMessage.url)
-        .setDescription(targetedMessage.content)
+        .setAuthor(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
+        .setDescription(`${targetedMessage.content}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
       if (targetedMessage.attachments > 0) {
         for (const [i, attachment] of targetedMessage.attachments.slice(0, 5).entries())
