@@ -16,6 +16,7 @@ export default {
   },
   roles: {
     staff: process.env.STAFF_ROLE,
+    activeMember: process.env.ACTIVE_MEMBER_ROLE,
   },
   channels: {
     idea: process.env.IDEA_CHANNEL,

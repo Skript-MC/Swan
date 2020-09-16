@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
+import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 
 class MessageListener extends Listener {
@@ -8,6 +9,20 @@ class MessageListener extends Listener {
       event: 'message',
       emitter: 'client',
     });
+  }
+
+  async preventActiveMembersToPostDocLinks(message) {
+    if (message.member.roles.cache.has(settings.roles.activeMember)) {
+      if (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/')) {
+        message.delete();
+        const content = message.content.length + messages.miscellaneous.noDocLink.length >= 2000
+          ? message.content.slice(0, 2000 - messages.miscellaneous.noDocLink.length - 3) + '...'
+          : message.content;
+        message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
+        return true;
+      }
+    }
+    return false;
   }
 
   async addReactionsInIdeaChannel(message) {
@@ -57,7 +72,7 @@ class MessageListener extends Listener {
         .setDescription(targetedMessage.content)
         .setFooter(`Message cité par ${message.member.displayName}.`);
       if (targetedMessage.attachments > 0) {
-        for (const [i, attachment] of targetedMessage.attachments.slice(5).entries())
+        for (const [i, attachment] of targetedMessage.attachments.slice(0, 5).entries())
           embed.addField(`Pièce joine n°${i}`, attachment.url);
       }
 
@@ -77,6 +92,7 @@ class MessageListener extends Listener {
   }
 
   async* getTasks(message) {
+    yield await this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInIdeaChannel(message);
     yield await this.quoteLinkedMessage(message);
   }
