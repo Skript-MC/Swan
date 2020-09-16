@@ -34,26 +34,22 @@ class PurgeCommand extends Command {
   async exec(message, args) {
     const { amount, member, force } = args;
 
-    try {
-      const deletions = [];
+    const deletions = [];
 
-      deletions.push(message.delete().catch(noop));
-      for (const msg of message.util.messages.array())
-        deletions.push(msg.delete().catch(noop));
+    deletions.push(message.delete().catch(noop));
+    for (const msg of message.util.messages.array())
+      deletions.push(msg.delete().catch(noop));
 
-      await Promise.all(deletions).catch(noop);
+    await Promise.all(deletions).catch(noop);
 
-      const messages = (await message.channel.messages
-        .fetch({ limit: amount }))
-        .filter(msg => (member ? msg.author.id === member.id : true))
-        .filter(msg => (force ? true : !msg.member.roles.cache.has(settings.roles.staff)));
-      await message.channel.bulkDelete(messages, true);
+    const messages = (await message.channel.messages
+      .fetch({ limit: amount }))
+      .filter(msg => (member ? msg.author.id === member.id : true))
+      .filter(msg => (force ? true : !msg.member.roles.cache.has(settings.roles.staff)));
+    await message.channel.bulkDelete(messages, true);
 
-      const msg = await message.channel.send(config.messages.success.replace('{AMOUNT}', amount));
-      await msg.delete({ timeout: 5_000 }).catch(noop);
-    } catch (err) {
-      throw new Error(err);
-    }
+    const msg = await message.channel.send(config.messages.success.replace('{AMOUNT}', amount));
+    await msg.delete({ timeout: 5_000 }).catch(noop);
   }
 }
 
