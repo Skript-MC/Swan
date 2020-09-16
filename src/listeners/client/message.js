@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import { DMChannel, Permissions } from 'discord.js';
+import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import settings from '../../../config/settings';
 
 class MessageListener extends Listener {
@@ -27,8 +27,58 @@ class MessageListener extends Listener {
     return false;
   }
 
+  async quoteLinkedMessage(message) {
+    const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'gimu');
+    if (!message.content.match(linkRegex))
+      return false;
+
+    const quotes = [];
+    let text = message.content;
+    while (text.match(linkRegex)) {
+      const [full, channelId, messageId] = linkRegex.exec(text);
+      quotes.push({ channelId, messageId });
+      text = text.replace(full, '');
+    }
+
+    for (const quote of quotes) {
+      /* eslint-disable no-await-in-loop */
+      const channel = await this.client.channels.fetch(quote.channelId);
+      if (!channel)
+        return;
+
+      const targetedMessage = await channel.messages.fetch(quote.messageId);
+      if (!targetedMessage?.content)
+        return;
+
+      const embed = new MessageEmbed()
+        .setColor(settings.colors.default)
+        .setTitle(`Message de ${targetedMessage.member.displayName}`, targetedMessage.author.avatarURL())
+        .setURL(targetedMessage.url)
+        .setDescription(targetedMessage.content)
+        .setFooter(`Message cité par ${message.member.displayName}.`);
+      if (targetedMessage.attachments > 0) {
+        for (const [i, attachment] of targetedMessage.attachments.slice(5).entries())
+          embed.addField(`Pièce joine n°${i}`, attachment.url);
+      }
+
+      const msg = await message.channel.send(embed);
+      const collector = msg
+        .createReactionCollector((reaction, user) => user.id === message.author.id
+          && (reaction.emoji.id || reaction.emoji.name) === settings.emojis.remove
+          && !user.bot)
+        .on('collect', () => {
+          msg.delete();
+          collector.stop();
+        });
+
+      await msg.react(settings.emojis.remove);
+    }
+    return false;
+  }
+
   async* getTasks(message) {
     yield await this.addReactionsInIdeaChannel(message);
+    yield await this.quoteLinkedMessage(message);
   }
 
   async exec(message) {
@@ -46,7 +96,7 @@ class MessageListener extends Listener {
     while (!task.done) {
       if (task.value)
         break;
-      task = await tasks.next(); // eslint-disable-line no-await-in-loop
+      task = await tasks.next();
     }
   }
 }
