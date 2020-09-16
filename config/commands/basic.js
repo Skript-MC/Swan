@@ -5,8 +5,8 @@ const permissions = Permissions.FLAGS;
 export const help = {
   settings: {
     aliases: ['help', 'aide'],
-    clientPermissons: [permissions.SEND_MESSAGES],
-    userPermissions: [],
+    clientPermissons: permissions.SEND_MESSAGES,
+    userPermissions: null,
   },
   description: {
     name: 'Aide',
@@ -35,8 +35,8 @@ export const help = {
 export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissons: [permissions.ADD_REACTIONS, permissions.SEND_MESSAGES],
-    userPermissions: [],
+    clientPermissons: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
+    userPermissions: null,
   },
   description: {
     name: 'Liens',
@@ -97,8 +97,8 @@ export const links = {
 export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
-    clientPermissons: [permissions.SEND_MESSAGES],
-    userPermissions: [],
+    clientPermissons: permissions.SEND_MESSAGES,
+    userPermissions: null,
   },
   description: {
     name: 'Ping',
@@ -119,8 +119,8 @@ export const ping = {
 export const statistics = {
   settings: {
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
-    clientPermissons: [permissions.SEND_MESSAGES],
-    userPermissions: [],
+    clientPermissons: permissions.SEND_MESSAGES,
+    userPermissions: null,
   },
   description: {
     name: 'Statistique',
