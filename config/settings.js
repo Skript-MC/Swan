@@ -14,6 +14,9 @@ export default {
   colors: {
     default: '#4286f4',
   },
+  apis: {
+    hastebin: 'https://hastebin.com/documents',
+  },
   roles: {
     staff: process.env.STAFF_ROLE,
     activeMember: process.env.ACTIVE_MEMBER_ROLE,
