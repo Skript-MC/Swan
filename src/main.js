@@ -1,3 +1,5 @@
+import * as Integrations from '@sentry/integrations';
+import * as Sentry from '@sentry/node';
 import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
@@ -29,3 +31,15 @@ mongoose.connection.on('error', (err) => {
   client.logger.error('MongoDB connection error. Please make sure MongoDB is running.');
   throw err;
 });
+
+if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_TOKEN,
+    integrations: [
+      // Debug is used to send details about handled errors
+      new Integrations.CaptureConsole({ levels: ['debug', 'warn', 'error'] }),
+      new Sentry.Integrations.OnUncaughtException({ onFatalError: (err) => { throw new Error(err); } }),
+      new Sentry.Integrations.OnUnhandledRejection({ mode: 'strict' }),
+    ],
+  });
+}

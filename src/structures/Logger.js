@@ -28,7 +28,7 @@ class Logger {
   }
 
   warn(message) {
-    console.log(
+    console.warn(
       chalk.cyan('Swan:'),
       chalk.bold.blue('WARN   '),
       chalk.italic.gray(`(${this._getTime()})`),
@@ -37,7 +37,7 @@ class Logger {
   }
 
   error(message) {
-    console.log(
+    console.error(
       chalk.cyan('Swan:'),
       chalk.bold.blue('ERROR  '),
       chalk.italic.gray(`(${this._getTime()})`),
@@ -46,11 +46,11 @@ class Logger {
   }
 
   detail(message) {
-    const totalSpace = 'Swan: '.length
-      + 'SUCCESS '.length
-      + this._getTime().toString().length + 1
-      + 4;
-    console.log(chalk.cyan(`${' '.repeat(totalSpace)} ↳ ${message}`));
+    const messages = message.split('\n');
+    console.group();
+    for (const msg of messages)
+      console.debug(chalk.cyan(`↳ ${msg}`));
+    console.groupEnd();
   }
 }
 
