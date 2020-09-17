@@ -13,6 +13,7 @@ import Logger from './structures/Logger';
 class SwanClient extends AkairoClient {
   constructor() {
     super({}, {
+      disableMentions: 'everyone',
       ws: {
         intents: [
           'GUILDS', // Access to channels, create some, pin messages etc etc
@@ -97,6 +98,61 @@ class SwanClient extends AkairoClient {
     } catch (err) {
       this.logger.error('Could not load some documents:');
       this.logger.error(err.stack);
+    }
+  }
+
+  async checkValidity() {
+    // Check tokens
+    if (!process.env.DISCORD_TOKEN)
+      this.logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
+    if (!process.env.SENTRY_TOKEN)
+      this.logger.error('Sentry DSN was not set in the environment variables (SENTRY_TOKEN)');
+
+    // Check channels IDs
+    const channels = this.guild.channels.cache;
+    for (const [key, value] of Object.entries(settings.channels)) {
+      if (Array.isArray(value)) {
+        if (value.length === 0)
+          this.logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+        else if (!value.every(elt => channels.has(elt)))
+          this.logger.warn(`One of the id entered for settings.channels.${key} is not a valid channel.`);
+      } else if (!value) {
+        this.logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+      } else if (!channels.has(value)) {
+        this.logger.warn(`The id entered for settings.channels.${key} is not a valid channel.`);
+      }
+    }
+
+    // Check roles IDs
+    for (const [key, value] of Object.entries(settings.roles)) {
+      if (!value)
+        this.logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+      else if (!this.guild.roles.cache.has(value))
+        this.logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
+    }
+
+    // TODO: Also check for emojis IDs
+
+    // Check client's server-level permissions
+    const permissions = [
+      'ADD_REACTIONS',
+      'VIEW_CHANNEL',
+      'SEND_MESSAGES',
+      'MANAGE_MESSAGES',
+      'ATTACH_FILES',
+      'READ_MESSAGE_HISTORY',
+    ];
+    if (!this.guild.me.hasPermission(permissions))
+      this.logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
+
+    // Check client's channels permissions
+    for (const channel of channels.array()) {
+      if (channel.type !== 'text')
+        continue;
+
+      const channelPermissions = channel.permissionsFor(this.guild.me).toArray();
+      if (!permissions.every(perm => channelPermissions.includes(perm)))
+        this.logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
     }
   }
 }
