@@ -20,6 +20,7 @@ export default {
   },
   channels: {
     idea: process.env.IDEA_CHANNEL,
+    suggestions: process.env.SUGGESTIONS_CHANNEL,
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',

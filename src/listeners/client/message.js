@@ -25,8 +25,8 @@ class MessageListener extends Listener {
     return false;
   }
 
-  async addReactionsInIdeaChannel(message) {
-    if (message.channel.id === settings.channels.idea) {
+  async addReactionsInNeededChannels(message) {
+    if ([settings.channels.idea, settings.channels.suggestions].includes(message.channel.id)) {
       try {
         await message.react(settings.emojis.yes);
         await message.react(settings.emojis.no);
@@ -92,7 +92,7 @@ class MessageListener extends Listener {
 
   async* getTasks(message) {
     yield await this.preventActiveMembersToPostDocLinks(message);
-    yield await this.addReactionsInIdeaChannel(message);
+    yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
   }
 
