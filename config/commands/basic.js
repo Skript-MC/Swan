@@ -10,7 +10,7 @@ export const help = {
   },
   description: {
     name: 'Aide',
-    content: 'Affiche la liste des commandes disponible ou des informations précises sur une commande spécifique.',
+    content: 'Affiche la __liste des commandes__ disponible ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
   },
@@ -40,7 +40,7 @@ export const links = {
   },
   description: {
     name: 'Liens',
-    content: "Affiche la liste des liens utiles concernant Skript, comme les discords, les documentations, les plateformes de téléchargement d'addon...",
+    content: "Affiche la liste des __liens utiles concernant Skript__, comme les discords, les documentations, les plateformes de téléchargement d'addon...",
     usage: 'links [page]',
     examples: ['links', 'liens 4'],
   },
@@ -102,7 +102,7 @@ export const ping = {
   },
   description: {
     name: 'Ping',
-    content: "Permet de savoir la latence du bot et de l'API Discord.",
+    content: "Permet de savoir la __latence du bot__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
   },
@@ -124,7 +124,7 @@ export const statistics = {
   },
   description: {
     name: 'Statistique',
-    content: 'Affiche des statistiques et diverses informations sur le bot, comme son temps de fonctionnement, sa version etc...',
+    content: 'Affiche des __statistiques et diverses informations__ sur le bot, comme son temps de fonctionnement, sa version etc...',
     usage: 'stats',
     examples: ['stats'],
   },
