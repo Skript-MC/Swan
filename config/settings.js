@@ -7,6 +7,7 @@ export default {
   bot: {
     prefix: '.',
     avatar: path.join(__dirname, '..', 'assets', 'logo.png'),
+    guild: process.env.GUILD_ID,
   },
   moderation: {
     purgeLimit: 50,
