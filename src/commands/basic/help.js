@@ -20,6 +20,9 @@ class HelpCommand extends Command {
   }
 
   async exec(message, args) {
+    if (settings.channels.help.includes(message.channel.id))
+      return;
+
     const { command } = args;
     const { prefix } = this.handler;
 

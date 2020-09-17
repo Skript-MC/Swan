@@ -22,6 +22,9 @@ class PingCommand extends Command {
   }
 
   async exec(message) {
+    if (settings.channels.help.includes(message.channel.id))
+      return;
+
     const sent = await message.util.send(config.messages.firstMessage);
     const timeDiff = (sent.editedAt || sent.createdAt) - (message.editedAt || message.createdAt);
 
