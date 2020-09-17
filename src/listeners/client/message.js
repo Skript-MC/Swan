@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { Listener } from 'discord-akairo';
 import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import { noop } from '../../utils';
 
 class MessageListener extends Listener {
   constructor() {
@@ -90,10 +92,33 @@ class MessageListener extends Listener {
     return false;
   }
 
+  async uploadFileOnHastebin(message) {
+    if (message.attachments.size === 0)
+      return false;
+
+    const attachment = message.attachments.first();
+    if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk')))
+      return;
+
+    const attachmentContent = await axios.get(attachment.url).catch(noop);
+    if (!attachmentContent)
+      return;
+
+    const response = await axios.post(settings.apis.hastebin, attachmentContent.data).catch(noop);
+    if (!response?.data?.key)
+      return;
+
+    const embed = new MessageEmbed()
+      .setColor(settings.colors.default)
+      .setDescription(`[Ouvrir le fichier ${attachment.name} sans le télécharger](https://hastebin.com/${response.data.key})`);
+    message.channel.send(embed);
+  }
+
   async* getTasks(message) {
     yield await this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
+    yield await this.uploadFileOnHastebin(message);
   }
 
   async exec(message) {

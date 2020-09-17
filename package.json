@@ -33,6 +33,7 @@
     "url": "git+https://github.com/Skript-MC/Swan.git"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "chalk": "^4.1.0",
     "delete": "^1.1.0",
     "discord-akairo": "^8.1.0",
