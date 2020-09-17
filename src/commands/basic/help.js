@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { help as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
-import { capitalize } from '../../utils';
+import { capitalize, constants } from '../../utils';
 
 class HelpCommand extends Command {
   constructor() {
@@ -17,12 +17,10 @@ class HelpCommand extends Command {
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
+    this.rules = [constants.RULES.ONLY_BOT_CHANNEL];
   }
 
   async exec(message, args) {
-    if (settings.channels.help.includes(message.channel.id))
-      return;
-
     const { command } = args;
     const { prefix } = this.handler;
 

@@ -5,6 +5,7 @@ import { statistics as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 // eslint-disable-next-line node/file-extension-in-import
 import pkg from '../../../package.json';
+import { constants } from '../../utils';
 
 class StatisticsCommand extends Command {
   constructor() {
@@ -15,12 +16,10 @@ class StatisticsCommand extends Command {
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
+    this.rules = [constants.RULES.ONLY_BOT_CHANNEL];
   }
 
   exec(message) {
-    if (settings.channels.help.includes(message.channel.id))
-      return;
-
     const totalCommands = this.handler.categories.array().flatMap(cat => cat.array()).length;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)

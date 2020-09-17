@@ -2,6 +2,7 @@ import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { ping as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
+import { constants } from '../../utils';
 
 class PingCommand extends Command {
   constructor() {
@@ -12,6 +13,7 @@ class PingCommand extends Command {
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
+    this.rules = [constants.RULES.ONLY_BOT_CHANNEL];
   }
 
   getColorFromPing(ping) {
@@ -22,9 +24,6 @@ class PingCommand extends Command {
   }
 
   async exec(message) {
-    if (settings.channels.help.includes(message.channel.id))
-      return;
-
     const sent = await message.util.send(config.messages.firstMessage);
     const timeDiff = (sent.editedAt || sent.createdAt) - (message.editedAt || message.createdAt);
 
