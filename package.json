@@ -55,7 +55,7 @@
     "@babel/register": "^7.11.5",
     "babel-eslint": "^11.0.0-beta.2",
     "cross-env": "^7.0.2",
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "eslint-config-noftalint": "^1.8.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
