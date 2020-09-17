@@ -18,6 +18,9 @@ class StatisticsCommand extends Command {
   }
 
   exec(message) {
+    if (settings.channels.help.includes(message.channel.id))
+      return;
+
     const totalCommands = this.handler.categories.array().flatMap(cat => cat.array()).length;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)

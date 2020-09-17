@@ -24,6 +24,9 @@ export default {
   channels: {
     idea: process.env.IDEA_CHANNEL,
     suggestions: process.env.SUGGESTIONS_CHANNEL,
+    skriptHelp: [...process.env.SKRIPT_HELP_CHANNELS.split(',')],
+    otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
+    help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',
