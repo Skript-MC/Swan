@@ -30,7 +30,7 @@ jobs:
 
       - name: Install ESLint Configs and Plugins
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install eslint-config-airbnb-base eslint-plugin-import babel-eslint@11.0.0-beta.2
+        run: npm install eslint-config-noftalint eslint-plugin-import eslint-plugin-unicorn eslint-plugin-node babel-eslint@11.0.0-beta.2
 
       - name: Run ESLint
         run: npm run lint
