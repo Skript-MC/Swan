@@ -9,6 +9,7 @@ import messages from '../config/messages';
 import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
+import TaskHandler from './structures/TaskHandler';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -56,6 +57,13 @@ class SwanClient extends AkairoClient {
     this.logger.info('Creating Inhibitor handler');
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: path.join(__dirname, 'inhibitors/'),
+      automateCategories: true,
+    });
+
+    this.logger.info('Creating Task handler');
+    this.taskHandler = new TaskHandler(this, {
+      directory: path.join(__dirname, 'tasks/'),
+      automateCategories: true,
     });
 
     this.logger.info('Creating Listener handler');
@@ -70,12 +78,14 @@ class SwanClient extends AkairoClient {
     this.listenerHandler.setEmitters({
       commandHandler: this.commandHandler,
       inhibitorHandler: this.inhibitorHandler,
+      taskHandler: this.taskHandler,
       listenerHandler: this.listenerHandler,
       process,
     });
 
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
+    this.taskHandler.loadAll();
     this.listenerHandler.loadAll();
 
     this.loadCommandStats();
