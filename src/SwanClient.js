@@ -37,7 +37,6 @@ class SwanClient extends AkairoClient {
       automateCategories: true,
       fetchMembers: true,
       commandUtil: true,
-      handleEdits: true,
       storeMessages: true,
       argumentDefaults: {
         prompt: {
@@ -79,12 +78,12 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
-    this.loadDatabases();
+    this.loadCommandStats();
 
     this.logger.info('Client initialization finished');
   }
 
-  async loadDatabases() {
+  async loadCommandStats() {
     const commandIds = this.commandHandler.categories
       .array()
       .flatMap(category => category.array())
