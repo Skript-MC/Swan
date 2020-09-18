@@ -61,11 +61,11 @@ class MessageListener extends Listener {
       /* eslint-disable no-await-in-loop */
       const channel = await this.client.channels.fetch(quote.channelId);
       if (!channel)
-        return;
+        continue;
 
       const targetedMessage = await channel.messages.fetch(quote.messageId);
       if (!targetedMessage?.content)
-        return;
+        continue;
 
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
@@ -98,20 +98,40 @@ class MessageListener extends Listener {
 
     const attachment = message.attachments.first();
     if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk')))
-      return;
+      return false;
 
     const attachmentContent = await axios.get(attachment.url).catch(noop);
     if (!attachmentContent)
-      return;
+      return false;
 
     const response = await axios.post(settings.apis.hastebin, attachmentContent.data).catch(noop);
     if (!response?.data?.key)
-      return;
+      return false;
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setDescription(`[Ouvrir le fichier ${attachment.name} sans le télécharger](https://hastebin.com/${response.data.key})`);
     message.channel.send(embed);
+    return false;
+  }
+
+  async antispamSnippetsChannel(message) {
+    if (message.channel.id === settings.channels.snippet
+      && !message.member.roles.cache.has(role => role.id === settings.roles.staff)) {
+      // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2 000
+      // caractères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
+      try {
+        const previousAuthorId = await message.channel.messages
+          .fetch({ before: message.channel.lastMessageID, limit: 1 })
+          .then(elt => elt.first().author.id);
+        if (previousAuthorId !== message.author.id && !message.content.match(/```(.|\n)*```/gmu)) {
+          await message.delete();
+          await message.member.send(messages.miscellaneous.noSpam);
+          await message.member.send(message.content);
+        }
+      } catch { /* Ignored */ }
+    }
+    return false;
   }
 
   async* getTasks(message) {
@@ -119,6 +139,7 @@ class MessageListener extends Listener {
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
     yield await this.uploadFileOnHastebin(message);
+    yield await this.antispamSnippetsChannel(message);
   }
 
   async exec(message) {

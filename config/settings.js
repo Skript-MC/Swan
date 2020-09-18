@@ -26,6 +26,7 @@ export default {
     idea: process.env.IDEA_CHANNEL,
     suggestions: process.env.SUGGESTIONS_CHANNEL,
     bot: process.env.BOT_CHANNEL,
+    snippets: process.env.SNIPPETS_CHANNEL,
     skriptHelp: [...process.env.SKRIPT_HELP_CHANNELS.split(',')],
     otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
     help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
