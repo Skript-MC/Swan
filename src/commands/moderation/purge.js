@@ -34,13 +34,8 @@ class PurgeCommand extends Command {
   async exec(message, args) {
     const { amount, member, force } = args;
 
-    const deletions = [];
-
-    deletions.push(message.delete().catch(noop));
-    for (const msg of message.util.messages.array())
-      deletions.push(msg.delete().catch(noop));
-
-    await Promise.all(deletions).catch(noop);
+    message.util.messages.set(message.id, message);
+    await message.channel.bulkDelete(message.util.messages, true).catch(noop);
 
     const messages = (await message.channel.messages
       .fetch({ limit: amount }))
