@@ -9,6 +9,9 @@ export default {
     avatar: path.join(__dirname, '..', 'assets', 'logo.png'),
     guild: process.env.GUILD_ID,
   },
+  miscellaneous: {
+    validNamePercentage: 0.5,
+  },
   moderation: {
     purgeLimit: 50,
   },
