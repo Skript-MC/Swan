@@ -37,6 +37,6 @@ export default {
   emojis: {
     yes: process.env.YES_EMOJI || '✅',
     no: process.env.NO_EMOJI || '❌',
-    remove: process.env.REMOVE_EMOJI || '🗑',
+    remove: process.env.REMOVE_EMOJI || '🗑️',
   },
 };
