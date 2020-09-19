@@ -2,6 +2,8 @@ import { Permissions } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
 
+const hasActiveMemberRole = message => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
+
 export const help = {
   settings: {
     aliases: ['help', 'aide'],
@@ -91,6 +93,30 @@ export const links = {
         ],
       ],
     },
+  },
+};
+
+export const move = {
+  settings: {
+    aliases: ['move', 'movemessage'],
+    clientPermissons: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS | permissions.MANAGE_MESSAGES,
+    userPermissions: hasActiveMemberRole,
+  },
+  description: {
+    name: 'Déplacer un message',
+    content: "Permet de déplacer un message d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la commande par exemple.",
+    usage: 'move <#salon> <ID message>',
+    examples: ['move #skript-2 756858183229636640'],
+    permissions: 'Membre Actif',
+  },
+  messages: {
+    startChannelPrompt: "Vous n'avez pas spécifié de salon ! Entrez son ID ou mentionnez-le.",
+    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée ne sont pas des salons d'aide, ou ce sont les mêmes salons.",
+    startMessagePrompt: "Vous n'avez pas spécifié de message à déplacer. Entrez son ID.",
+    retryMessagePrompt: 'Identifiant du message invalide. Vérifiez que le message spécifié est bien dans ce salon',
+    successfullyMoved: ':twisted_rightwards_arrows: {TARGET_MEMBER}, ton message a été déplacé vers {TARGET_CHANNEL} par {EXECUTOR}.',
+    moveInfos: "{EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}. Raison du déplacement : {REASON}\nEn cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.",
+    emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message est était totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
 };
 

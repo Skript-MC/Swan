@@ -1,7 +1,9 @@
 export default {
   global: {
+    oops: "Oups... Quelque chose s'est mal passé en faisant cette action... Il se peut qu'elle n'est pas été complètement terminée, voire pas commencée. Si possible, veuillez contacter un des développeurs de Swan en les mentionnant, ou en allant sur le discord dédié (lien disponible dans les messages épinglés de #bot).",
     notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
     insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {COMMAND}. (Permissions manquantes : {PERMISSIONS})",
+    memberTooPowerful: 'Je ne peux pas appliquer cette action à ce membre ! Il doit avoir des permissions supérieures ou égales aux tiennent.',
   },
   miscellaneous: {
     noDocLink: "Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (à Vengelis) afin d'améliorer la documentation. Voici ton message, si tu souhaites le récupérer : ```\n{MESSAGE}\n```",
