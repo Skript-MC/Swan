@@ -20,6 +20,7 @@ export default {
   },
   apis: {
     hastebin: 'https://hastebin.com/documents',
+    github: 'https://api.github.com',
   },
   roles: {
     staff: process.env.STAFF_ROLE,
