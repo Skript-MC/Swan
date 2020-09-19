@@ -25,7 +25,7 @@ class PurgeCommand extends Command {
         match: 'flag',
         flag: ['--force', '-f'],
       }],
-      clientPermissions: config.settings.clientPermissons,
+      clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });

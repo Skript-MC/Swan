@@ -13,7 +13,7 @@ class HelpCommand extends Command {
         id: 'command',
         type: 'commandAlias',
       }],
-      clientPermissions: config.settings.clientPermissons,
+      clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
@@ -30,8 +30,8 @@ class HelpCommand extends Command {
     if (command) {
       const messages = config.messages.commandInfo;
       embed.setTitle(messages.title.replace('{NAME}', command.description?.name || command.aliases[0]))
-        .addField(messages.usage, `\`${prefix}${command.description?.usage}\`` || messages.unavailabe)
-        .addField(messages.description, command.description?.content || messages.unavailabe)
+        .addField(messages.usage, `\`${prefix}${command.description?.usage}\`` || messages.unavailable)
+        .addField(messages.description, command.description?.content || messages.unavailable)
         .addField(messages.usableBy, command.description?.permissions || 'Tout le monde');
 
       if (command.aliases.length > 1)

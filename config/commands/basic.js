@@ -5,7 +5,7 @@ const permissions = Permissions.FLAGS;
 export const help = {
   settings: {
     aliases: ['help', 'aide'],
-    clientPermissons: permissions.SEND_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES,
     userPermissions: null,
   },
   description: {
@@ -22,7 +22,7 @@ export const help = {
       usableBy: '❯ Utilisable par',
       aliases: '❯ Aliases',
       examples: '❯ Exemples',
-      unavailabe: 'Indisponible.',
+      unavailable: 'Indisponible.',
     },
     commandsList: {
       title: 'Commandes de Swan ({NUMBER})',
@@ -35,7 +35,7 @@ export const help = {
 export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissons: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
+    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
     userPermissions: null,
   },
   description: {
@@ -97,12 +97,12 @@ export const links = {
 export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
-    clientPermissons: permissions.SEND_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES,
     userPermissions: null,
   },
   description: {
     name: 'Ping',
-    content: "Permet de savoir la __latence du bot__ et de __l'API Discord__.",
+    content: "Permet de savoir la __latence de Swan__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
   },
@@ -119,19 +119,19 @@ export const ping = {
 export const statistics = {
   settings: {
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
-    clientPermissons: permissions.SEND_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES,
     userPermissions: null,
   },
   description: {
     name: 'Statistique',
-    content: 'Affiche des __statistiques et diverses informations__ sur le bot, comme son temps de fonctionnement, sa version etc...',
+    content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc...',
     usage: 'stats',
     examples: ['stats'],
   },
   messages: {
     embed: {
       title: 'Statistiques de Swan',
-      description: 'Le préfix est `{PREFIX}`. Faites `{HELP}` pour avoir la liste des commandes.',
+      description: 'Le préfixe est `{PREFIX}`. Faites `{HELP}` pour avoir la liste des commandes.',
       version: '❯ Version',
       uptime: '❯ Temps de fonctionnement',
       memory: '❯ Mémoire',
