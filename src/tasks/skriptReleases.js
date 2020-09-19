@@ -23,7 +23,7 @@ class SkriptReleasesTask extends Task {
     if (!githubReleases)
       return;
     const latestRelease = githubReleases[0];
-    if ((Date.now() - new Date(latestRelease.published_at).getTime()) < config.timeDifference)
+    if ((Date.now() - new Date(latestRelease.published_at).getTime()) > config.timeDifference)
       return;
 
     const channel = this.client.channels.cache.get(settings.channels.skriptTalk);
