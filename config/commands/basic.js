@@ -4,6 +4,23 @@ const permissions = Permissions.FLAGS;
 
 const hasActiveMemberRole = message => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
 
+export const code = {
+  settings: {
+    aliases: ['code', 'balise', 'balises'],
+    clientPermissons: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
+    userPermissions: [],
+  },
+  description: {
+    name: 'Code',
+    content: "Permet d'afficher du code bien présenté, avec des balises de code et une coloration syntaxique.",
+    usage: 'code <code>',
+    examples: ['code broadcast "Yeah!"'],
+  },
+  messages: {
+    emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
+  },
+};
+
 export const help = {
   settings: {
     aliases: ['help', 'aide'],
@@ -115,8 +132,8 @@ export const move = {
     startMessagePrompt: "Vous n'avez pas spécifié de message à déplacer. Entrez son ID.",
     retryMessagePrompt: 'Identifiant du message invalide. Vérifiez que le message spécifié est bien dans ce salon',
     successfullyMoved: ':twisted_rightwards_arrows: {TARGET_MEMBER}, ton message a été déplacé vers {TARGET_CHANNEL} par {EXECUTOR}.',
-    moveInfos: "{EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}. Raison du déplacement : {REASON}\nEn cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.",
-    emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message est était totalement supprimé, alors le voici, si tu veux le reposter :)",
+    moveInfos: "{EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}.\nEn cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.",
+    emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
 };
 
