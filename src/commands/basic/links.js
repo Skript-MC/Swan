@@ -1,6 +1,7 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import { links as config } from '../../../config/commands/basic';
+import settings from '../../../config/settings';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
@@ -56,7 +57,7 @@ class LinksCommand extends Command {
   }
 
   getEmbedForPage(page) {
-    const embed = new MessageEmbed();
+    const embed = new MessageEmbed().setColor(settings.colors.default);
     const content = page === 0
       ? config.messages.embed.summary
       : config.messages.embed.fields[page - 1];
