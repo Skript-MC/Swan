@@ -17,8 +17,6 @@ class MissingPermissionsListener extends Listener {
         message.util.send(
           messages.global.insufficientClientPermissions
             .replace('{COMMAND}', command)
-            // String#replaceAll is neither in NodeJS nor in babel yet...
-            // eslint-disable-next-line unicorn/prefer-replace-all
             .replace('{PERMISSIONS}', missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', ')),
         );
       }
