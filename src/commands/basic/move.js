@@ -42,7 +42,7 @@ class MoveCommand extends Command {
     const { channel: targetedChannel, message: targetedMessage } = args;
 
     if (targetedMessage.member.roles.highest.position >= message.member.roles.highest.position)
-      return message.channel.send(messages.global.memberTooPowerful);
+      return message.util.send(messages.global.memberTooPowerful);
 
 
     const successMessage = config.messages.successfullyMoved
@@ -66,7 +66,7 @@ class MoveCommand extends Command {
       message.util.messages.set(targetedMessage.id, targetedMessage);
       await message.channel.bulkDelete(message.util.messages, true);
 
-      await message.channel.send(successMessage);
+      await message.util.send(successMessage);
       const informationEmbed = await targetedChannel.send(embed);
       const repostMessage = await targetedChannel.send(targetedMessage.content);
 
@@ -80,11 +80,11 @@ class MoveCommand extends Command {
             await informationEmbed.delete();
             await repostMessage.delete();
           } catch {
-            await message.channel.send(messages.global.oops).catch(noop);
+            await message.util.send(messages.global.oops).catch(noop);
           }
         });
     } catch (err) {
-      await message.channel.send(messages.global.oops).catch(noop);
+      await message.util.send(messages.global.oops).catch(noop);
       await targetedMessage.member.send(config.messages.emergency).catch(noop);
       await targetedMessage.member.send(message.content).catch(noop);
       throw err;
