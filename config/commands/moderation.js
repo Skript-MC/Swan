@@ -8,7 +8,7 @@ const hasStaffRole = message => (message.member.roles.cache.has(process.env.STAF
 export const purge = {
   settings: {
     aliases: ['purge'],
-    clientPermissons: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
     userPermissions: hasStaffRole,
   },
   description: {
