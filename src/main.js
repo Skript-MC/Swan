@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
     integrations: [
       // Debug is used to send details about handled errors
       new Integrations.CaptureConsole({ levels: ['debug', 'warn', 'error'] }),
-      new Sentry.Integrations.OnUncaughtException({ onFatalError: (err) => { throw new Error(err); } }),
+      new Sentry.Integrations.OnUncaughtException({ onFatalError: (err) => { throw err; } }),
       new Sentry.Integrations.OnUnhandledRejection({ mode: 'strict' }),
     ],
   });
