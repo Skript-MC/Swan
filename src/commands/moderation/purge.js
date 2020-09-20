@@ -44,7 +44,7 @@ class PurgeCommand extends Command {
     await message.channel.bulkDelete(messages, true);
 
     const msg = await message.util.send(config.messages.success.replace('{AMOUNT}', amount));
-    await msg.delete({ timeout: 5_000 }).catch(noop);
+    await msg.delete({ timeout: 5000 }).catch(noop);
   }
 }
 
