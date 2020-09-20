@@ -40,7 +40,6 @@ class CodeCommand extends Command {
           }
         });
     } catch (err) {
-      await message.util.send(messages.global.oops).catch(noop);
       await message.member.send(config.messages.emergency).catch(noop);
       await message.member.send(message.content).catch(noop);
       throw err;

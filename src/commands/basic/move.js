@@ -84,7 +84,6 @@ class MoveCommand extends Command {
           }
         });
     } catch (err) {
-      await message.util.send(messages.global.oops).catch(noop);
       await targetedMessage.member.send(config.messages.emergency).catch(noop);
       await targetedMessage.member.send(message.content).catch(noop);
       throw err;
