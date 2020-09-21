@@ -35,6 +35,7 @@ mongoose.connection.on('error', (err) => {
 if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
   Sentry.init({
     dsn: process.env.SENTRY_TOKEN,
+    release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
     integrations: [
       // Debug is used to send details about handled errors
       new Integrations.CaptureConsole({ levels: ['debug', 'warn', 'error'] }),
