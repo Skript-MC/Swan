@@ -7,7 +7,7 @@ const hasActiveMemberRole = message => (message.member.roles.cache.has(process.e
 export const code = {
   settings: {
     aliases: ['code', 'balise', 'balises'],
-    clientPermissons: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
     userPermissions: [],
   },
   description: {
@@ -29,7 +29,7 @@ export const help = {
   },
   description: {
     name: 'Aide',
-    content: 'Affiche la __liste des commandes__ disponible ou des informations précises sur une commande spécifique.',
+    content: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
   },
@@ -59,7 +59,7 @@ export const links = {
   },
   description: {
     name: 'Liens',
-    content: "Affiche la liste des __liens utiles concernant Skript__, comme les discords, les documentations, les plateformes de téléchargement d'addon...",
+    content: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addon...",
     usage: 'links [page]',
     examples: ['links', 'liens 4'],
   },
@@ -70,42 +70,42 @@ export const links = {
         [
           [
             ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
-            "Documentation sur Skript, faite par la communauté de Skript-MC. Elle est en français et elle est en constante amélioration. Si vous avez une suggestion, ou si vous voyez une erreur, n'hésitez pas à nous en faire part !",
+            "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si vous avez une suggestion ou si vous voyez une erreur, n'hésitez pas à nous en faire part !",
           ], [
             ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
-            'Documentation de Skript officielle. Elle est en anglais mais est complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
+            'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
           ],
         ], [
           [
             ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
-            'Documentation des addons, faite par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais est en français et elle est complête.',
+            'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et complète.',
           ], [
             ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
-            'Documentation officielle de tous les addons. Elle est en anglais, mais contient la quasi-totalité des addons disponibles.',
+            'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
           ],
         ], [
           [
             ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
-            "Lien pour télécharger la dernière version de Skript officielle. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
+            "Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
           ], [
             ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-            'Lien de téléchargement des dernières versions de tous les addons existant pour Skript.',
+            'Lien de téléchargement des dernières versions de tous les addons existants de Skript.',
           ],
         ], [
           [
-            ':speech_left: Discord Skript-MC : https://discordapp.com/invite/J3NSGaE',
+            ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
             'Lien officiel de ce Discord.',
           ], [
             ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
-            "Lien du Discord \"Skript Chat\", qui est le Discord officiel de Skript. Vous pourrez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+            "Lien du Discord \"Skript Chat\", étant le serveur Discord officiel de Skript. Vous pouvez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
           ],
         ], [
           [
-            ':speech_balloon: Forum SkriptMC : https://skript-mc.fr',
-            "Forum français de Skript-MC. Vous pourrez y demander des Skript, de l'aide Skript, Java ou avec vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos skript !",
+            ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
+            "Forum français de Skript-MC. Vous pouvez y demander des scripts, de l'aide Skript, Java ou sur vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos scripts !",
           ], [
             ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
-            "GitHub officiel de la fork Skript de Bensku. C'est actuellement la seule fork de Skript toujours mise à jour.",
+            'GitHub officiel du projet Skript. Vous pouvez y consulter son développement, y signaler des problèmes ou y contribuer.',
           ],
         ],
       ],
@@ -116,12 +116,12 @@ export const links = {
 export const move = {
   settings: {
     aliases: ['move', 'movemessage'],
-    clientPermissons: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS | permissions.MANAGE_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS | permissions.MANAGE_MESSAGES,
     userPermissions: hasActiveMemberRole,
   },
   description: {
     name: 'Déplacer un message',
-    content: "Permet de déplacer un message d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la commande par exemple.",
+    content: "Permet de déplacer un message d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
     permissions: 'Membre Actif',
