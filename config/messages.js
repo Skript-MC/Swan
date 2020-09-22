@@ -12,7 +12,7 @@ export default {
     renameList: ['Quiche', 'Licorne', 'Tarte', 'Arachnoïde', 'Boulet', 'Banjo', 'Saperlipopette', 'Bizu', 'Tarentule'],
   },
   prompt: {
-    footer: '\n*Tapez "retour" pour annuler cette commande, et "stop" pour arrêter.*',
+    footer: '\n*Tapez "retour" pour annuler cette commande.*',
     timeout: 'Temps écoulé !',
     ended: "Tu as fait trop d'erreurs....",
     canceled: 'Commande annulée !',
