@@ -14,7 +14,7 @@ class UncaughtExceptionListener extends Listener {
       throw new Error(error.stack);
     } else {
       this.client.logger.error(error.stack);
-      this.client.logger.warn('An uncaughtException just occured. Swan is now in an undefined state. Continuing using it might lead to unforeseen and unpredictable issues.');
+      this.client.logger.warn('An uncaughtException just occurred. Swan is now in an undefined state. Continuing using it might lead to unforeseen and unpredictable issues.');
     }
   }
 }
