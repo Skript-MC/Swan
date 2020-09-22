@@ -12,6 +12,7 @@ class CodeCommand extends Command {
       args: [{
         id: 'code',
         type: 'string',
+        match: 'content',
         prompt: {
           start: config.messages.startPrompt,
           retry: config.messages.retryPrompt,
