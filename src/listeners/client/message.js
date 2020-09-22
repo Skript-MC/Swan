@@ -74,7 +74,7 @@ class MessageListener extends Listener {
         .setFooter(`Message cité par ${message.member.displayName}.`);
       if (targetedMessage.attachments > 0) {
         for (const [i, attachment] of targetedMessage.attachments.slice(0, 5).entries())
-          embed.addField(`Pièce joine n°${i}`, attachment.url);
+          embed.addField(`Pièce jointe n°${i}`, attachment.url);
       }
 
       const msg = await message.channel.send(embed);

@@ -32,7 +32,7 @@ class MoveCommand extends Command {
           retry: config.messages.retryMessagePrompt,
         },
       }],
-      clientPermissions: config.settings.clientPermissons,
+      clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
