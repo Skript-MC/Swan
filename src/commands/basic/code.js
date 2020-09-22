@@ -12,6 +12,10 @@ class CodeCommand extends Command {
       args: [{
         id: 'code',
         type: 'string',
+        prompt: {
+          start: config.messages.startPrompt,
+          retry: config.messages.retryPrompt,
+        },
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
@@ -21,7 +25,9 @@ class CodeCommand extends Command {
 
   async exec(message, args) {
     try {
-      message.delete();
+      message.util.messages.set(message.id, message);
+      await message.channel.bulkDelete(message.util.messages, true).catch(noop);
+
       const titleMessage = await message.util.send(`**Code de ${message.member.displayName} :**`);
       const codeMessage = await message.util.sendNew(args.code, { code: 'applescript' });
       await codeMessage.react(settings.emojis.remove);
