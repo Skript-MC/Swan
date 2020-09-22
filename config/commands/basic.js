@@ -18,6 +18,8 @@ export const code = {
   },
   messages: {
     emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
+    startPrompt: 'Ajoute un code à formatter :',
+    retryPrompt: 'Code invalid. Ré-entre ton code :',
   },
 };
 
