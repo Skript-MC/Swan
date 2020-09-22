@@ -1,11 +1,11 @@
 {
   "name": "swan",
   "version": "2.0.0-dev",
-  "description": "Bot discord de Skript-Mc.",
+  "description": "Bot discord de Skript-MC.",
   "main": "./src/main.js",
   "scripts": {
     "build": "npx gulp",
-    "start": "npm run build && cross-env NODE_ENV=production node ./build/src/main.js",
+    "start": "npm run build && cross-env NODE_ENV=production node ./build/src/main.js --no-color",
     "dev": "cross-env NODE_ENV=development babel-node ./src/main.js",
     "watch:dev": "nodemon --exec cross-env NODE_ENV=development babel-node ./src/main.js",
     "lint": "eslint .",

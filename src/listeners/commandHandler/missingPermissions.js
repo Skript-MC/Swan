@@ -12,7 +12,7 @@ class MissingPermissionsListener extends Listener {
   exec(message, command, type, missing) {
     if (type === 'client') {
       if (missing.includes('SEND_MESSAGES')) {
-        this.client.logger.error(`Swan n'as pas la/les permission(s) ${missing.join(', ')}, et il en a besoin pour la commande ${command}`);
+        this.client.logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command} command.`);
       } else {
         message.util.send(
           messages.global.insufficientClientPermissions
