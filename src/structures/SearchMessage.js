@@ -8,7 +8,7 @@ export default async function searchMessage(client, message, args, type) {
   const messages = await db.messages.find({ type }).catch(console.error);
 
   if (args.length === 0) {
-    message.channel.sendError(client.config.messages.utils.searchmessage.noArg.replace('%s', `\`${messages.map(msg => msg.title).join(', ')}\``), message.member);
+    message.channel.sendError(client.config.messages.utils.searchMessage.noArg.replace('%s', `\`${messages.map(msg => msg.title).join(', ')}\``), message.member);
     return;
   }
 
@@ -20,7 +20,7 @@ export default async function searchMessage(client, message, args, type) {
           message.react('✅').catch(console.error);
         } catch (e) {
           message.react('❌').catch(console.error);
-          message.reply(client.config.messages.errors.privatemessage);
+          message.reply(client.config.messages.utils.searchMessage.privateMessage);
         }
       } else {
         const msg = await message.channel.send(match.content);
@@ -41,13 +41,13 @@ export default async function searchMessage(client, message, args, type) {
 
   for (const msg of messages) {
     for (const elt of msg.aliases) {
-      if (jwDistance(search, elt) >= client.config.messages.utils.searchmessage.similarity) matches.push(elt);
+      if (jwDistance(search, elt) >= client.config.messages.utils.searchMessage.similarity) matches.push(elt);
       break;
     }
   }
 
   if (matches.length === 0) {
-    const msg = await message.channel.sendError(client.config.messages.utils.searchmessage.invalidMessage, message.member);
+    const msg = await message.channel.sendError(client.config.messages.utils.searchMessage.invalidMessage, message.member);
     await msg.react('🗑️');
     const removeCollector = msg
       .createReactionCollector((reaction, user) => reaction.emoji.name === '🗑️' && user.id === message.author.id)
@@ -57,7 +57,7 @@ export default async function searchMessage(client, message, args, type) {
         message.delete();
       });
   } else {
-    const suggestion = await message.channel.send(client.config.messages.utils.searchmessage.cmdSuggestion.replace('%c', args.join('')).replace('%m', matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join(`\`, \`.${type} `)).replace('%t', type));
+    const suggestion = await message.channel.send(client.config.messages.utils.searchMessage.cmdSuggestion.replace('%c', args.join('')).replace('%m', matches.map(elt => uncapitalize(elt.replace(/ /g, ''))).join(`\`, \`.${type} `)).replace('%t', type));
 
     if (matches.length === 1) await suggestion.react('✅');
     else for (let i = 0; i < reactionsNumbers.length && i < matches.length; i++) await suggestion.react(reactionsNumbers[i]);

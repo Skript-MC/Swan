@@ -60,6 +60,15 @@
     },
 
     "messages": {
+        "utils": {
+          "searchMessage": {
+            "noArg": "Envoie des informations concernant ces messages : `%s`.",
+            "privateMessage": "Oups, je ne peux pas t'envoyer mes messages privés ! Vérifie qu'ils sont activés sur ce serveur et que tu ne m'aies pas bloqué.",
+            "invalidMessage": "Désolé, mais ce message n'existe pas. :confused:",
+            "cmdSuggestion": "Le message `%c` n'a pas été trouvé. Voulais-tu dire `.%t %m` ?\n*Pour exécuter cette commande, clique sur la réaction ci-dessous.*",
+            "similarity": 0.8
+          }
+        },
         "miscellaneous": {
             "hardBanAutomatic": "Déconnexion du Discord lors d'un banissement (automatique)",
             "noCategory": "Aucune catégorie",
