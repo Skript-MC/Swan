@@ -27,12 +27,15 @@ class SkriptReleasesTask extends Task {
       return;
 
     const channel = this.client.channels.cache.get(settings.channels.skriptTalk);
+    const body = latestRelease.body.length >= 1900
+      ? latestRelease.body.slice(0, 1900) + '...'
+      : latestRelease.body;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(latestRelease.author.login, latestRelease.author.avatar_url)
       .setTitle(`${latestRelease.name} (${latestRelease.tag_name})`)
       .setURL(latestRelease.html_url)
-      .setDescription(latestRelease.body)
+      .setDescription(body)
       .setFooter(`${config.dataProvider} (#${latestRelease.id})`)
       .setTimestamp(latestRelease.published_at);
     channel.send(config.releaseAnnouncement, embed);
