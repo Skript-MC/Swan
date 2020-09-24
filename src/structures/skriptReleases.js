@@ -23,7 +23,7 @@ export default async function loadSkriptReleases() {
   const channel = client.channels.cache.get(client.config.channels.skriptNews);
   // On envoie les informations de la nouvelle version
   const body = latestRelease.body.length >= 1900
-    ? latestRelease.body.slice(0, 1900) + '...'
+    ? `${latestRelease.body.slice(0, 1900)}...`
     : latestRelease.body;
   await channel.send('Une nouvelle version de Skript vient d\'être publiée. Vous pouvez la télécharger et consulter les changements ci-dessous.');
   const embed = new MessageEmbed()
