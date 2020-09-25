@@ -22,13 +22,16 @@ export default async function loadSkriptReleases() {
   // Récupérer le salon des nouvelles de Skript
   const channel = client.channels.cache.get(client.config.channels.skriptNews);
   // On envoie les informations de la nouvelle version
+  const body = latestRelease.body.length >= 1900
+    ? `${latestRelease.body.slice(0, 1900)}...`
+    : latestRelease.body;
   await channel.send('Une nouvelle version de Skript vient d\'être publiée. Vous pouvez la télécharger et consulter les changements ci-dessous.');
   const embed = new MessageEmbed()
     .setColor(client.config.colors.default)
     .setAuthor(latestRelease.author.login, latestRelease.author.avatar_url)
     .setTitle(`${latestRelease.name} (${latestRelease.tag_name})`)
     .setURL(latestRelease.html_url)
-    .setDescription(latestRelease.body)
+    .setDescription(body)
     .setFooter(`Données fournies par https://github.com (#${latestRelease.id})`)
     .setTimestamp(latestRelease.published_at);
   channel.send(embed);
