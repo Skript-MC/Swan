@@ -42,17 +42,28 @@ class TaskHandler extends AkairoHandler {
     if (!task)
       throw new AkairoError('MODULE_NOT_FOUND', this.classToHandle.name, id);
 
-    if (!cron.validate(task.cron))
-      throw new AkairoError('INVALID_TYPE', 'cron', 'cron schedule');
+    if (typeof task.interval === 'number') {
+      const interval = setInterval(() => {
+        try {
+          task.exec();
+        } catch (err) {
+          this.emit('error', err, task);
+        }
+      }, task.interval);
+      this.tasks.set(task.id, { type: 'interval', interval });
+    } else if (cron.validate(task.cron)) {
+      const schedule = cron.schedule(task.cron, () => {
+        try {
+          task.exec();
+        } catch (err) {
+          this.emit('error', err, task);
+        }
+      });
+      this.tasks.set(task.id, { type: 'schedule', schedule });
+    } else {
+      throw new AkairoError('INVALID_TYPE', 'cron or interval', `cron schedule or a number (${id})`);
+    }
 
-    const schedule = cron.schedule(task.cron, () => {
-      try {
-        task.exec();
-      } catch (err) {
-        this.emit('error', err, task);
-      }
-    });
-    this.tasks.set(task.id, schedule);
     return task;
   }
 
@@ -61,9 +72,12 @@ class TaskHandler extends AkairoHandler {
     if (!task)
       throw new AkairoError('MODULE_NOT_FOUND', this.classToHandle.name, id);
 
-    const schedule = this.tasks.get(task.id);
-    schedule.stop();
-    schedule.destroy();
+    const taskInfos = this.tasks.get(task.id);
+    if (taskInfos.type === 'interval')
+      clearInterval(taskInfos.interval);
+    else if (taskInfos.type === 'schedule')
+      taskInfos.schedule.stop().destroy();
+
     this.tasks.delete(task.id);
     return task;
   }
