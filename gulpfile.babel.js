@@ -6,19 +6,14 @@ import {
   src,
 } from 'gulp';
 import babel from 'gulp-babel';
-import gulpIf from 'gulp-if';
-
-function isJavaScript(file) {
-  return file.extname === '.js';
-}
 
 export function clean(cb) {
   del(['build/'], cb);
 }
 
 export function transpileJs() {
-  return src(['src/**/*.js', 'src/**/.keep', 'config/**/*.js'], { base: './' })
-    .pipe(gulpIf(isJavaScript, babel()))
+  return src(['src/**/*.js', 'config/**/*.js'], { base: './' })
+    .pipe(babel())
     .pipe(dest('build/'));
 }
 
