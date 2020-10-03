@@ -1,4 +1,5 @@
 import path from 'path';
+import axios from 'axios';
 import {
   AkairoClient,
   CommandHandler,
@@ -29,6 +30,7 @@ class SwanClient extends AkairoClient {
     });
 
     this.logger = new Logger();
+    this.addonsVersions = [];
 
     this.logger.info('Creating Command handler');
     this.commandHandler = new CommandHandler(this, {
@@ -89,6 +91,8 @@ class SwanClient extends AkairoClient {
     this.listenerHandler.loadAll();
 
     this.loadCommandStats();
+    this.loadAddons();
+    this.logger.info('Skripttools : addons loaded!');
 
     this.logger.info('Client initialization finished');
   }
@@ -107,6 +111,21 @@ class SwanClient extends AkairoClient {
     } catch (err) {
       this.logger.error('Could not load some documents:');
       this.logger.error(err.stack);
+    }
+  }
+
+  async loadAddons() {
+    const allAddons = await axios(settings.apis.addons)
+      .then(res => (res ? res.data.data : undefined))
+      .catch(err => this.logger.error(err.message));
+    if (!allAddons)
+      return;
+
+    for (const addon of Object.keys(allAddons)) {
+      const versions = allAddons[addon];
+      if (!versions) continue;
+
+      this.addonsVersions.push(versions[versions.length - 1]);
     }
   }
 
