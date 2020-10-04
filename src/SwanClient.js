@@ -116,16 +116,15 @@ class SwanClient extends AkairoClient {
 
   async loadAddons() {
     const allAddons = await axios(settings.apis.addons)
-      .then(res => (res ? res.data.data : undefined))
+      .then(res => res?.data?.data)
       .catch(err => this.logger.error(err.message));
     if (!allAddons)
       return;
 
     for (const addon of Object.keys(allAddons)) {
       const versions = allAddons[addon];
-      if (!versions) continue;
-
-      this.addonsVersions.push(versions[versions.length - 1]);
+      if (versions)
+        this.addonsVersions.push(versions[versions.length - 1]);
     }
   }
 
