@@ -134,12 +134,27 @@ class MessageListener extends Listener {
     return false;
   }
 
+  async checkCreationsChannelRules(message) {
+    if (message.channel.id === settings.channels.creations
+      && !message.member.roles.cache.has(role => role.id === settings.roles.staff)) {
+      if (message?.content
+        .match(/(https?:\/\/\S+)/g)
+        .some(link => !link.match(/(https?:\/\/skript-mc\.fr\S+)/g))
+      ) {
+        await message.delete();
+        await message.member.send(messages.miscellaneous.invalidMessage.replace('{CHANNEL}', message.channel));
+        await message.member.send(message.content);
+      }
+    }
+  }
+
   async* getTasks(message) {
     yield await this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
     yield await this.uploadFileOnHastebin(message);
     yield await this.antispamSnippetsChannel(message);
+    yield await this.checkCreationsChannelRules(message);
   }
 
   async exec(message) {

@@ -36,6 +36,7 @@ export default {
     otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
     help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
     skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
+    creations: process.env.SKRIPT_CREATIONS_CHANNEL,
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',
