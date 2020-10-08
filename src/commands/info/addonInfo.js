@@ -29,18 +29,22 @@ class AddonInfoCommand extends Command {
     const { addon } = args;
     const matchingAddons = this.client.addonsVersions
       .filter(elt => jaroWinklerDistance(elt.split(' ').shift().toUpperCase(), addon) >= 0.7)
+      .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
       .slice(0, 10);
 
+    const isExactMatch = match => addon.toLowerCase() === match.name.toLowerCase();
     if (matchingAddons.length === 0) {
       message.util.send(config.messages.unknownAddon.replace('{ADDON}', addon));
     } else if (matchingAddons.length === 1) {
-      this.sendDetail(message, matchingAddons[0]);
+      this.sendDetail(message, matchingAddons[0].file);
+    } else if (matchingAddons.some(isExactMatch)) {
+      this.sendDetail(message, matchingAddons.find(isExactMatch).file);
     } else {
       const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
       let content = config.messages.searchResults.replace('{AMOUNT}', matchingAddons.length).replace('{QUERY}', addon);
 
-      for (const [i, addonFile] of matchingAddons.entries())
-        content += `\n${reactionsNumbers[i]} ${addonFile.split(' ').shift()}`;
+      for (const [i, match] of matchingAddons.entries())
+        content += `\n${reactionsNumbers[i]} ${match.name}`;
 
       if (matchingAddons.length - 10 > 0)
         content += config.messages.more.replace('{AMOUNT}', matchingAddons.length - 10);
@@ -52,7 +56,7 @@ class AddonInfoCommand extends Command {
           && reactionsNumbers.includes(reaction.emoji.name))
         .once('collect', (reaction) => {
           selectorMessage.reactions.removeAll();
-          this.sendDetail(message, matchingAddons[reactionsNumbers.indexOf(reaction.emoji.name)]);
+          this.sendDetail(message, matchingAddons[reactionsNumbers.indexOf(reaction.emoji.name)].file);
           collector.stop();
         });
 
