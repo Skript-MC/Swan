@@ -41,9 +41,9 @@ class PurgeCommand extends Command {
       .fetch({ limit: amount }))
       .filter(msg => (member ? msg.author.id === member.id : true))
       .filter(msg => (force ? true : !msg.member.roles.cache.has(settings.roles.staff)));
-    await message.channel.bulkDelete(messages, true);
+    const deletedMessages = await message.channel.bulkDelete(messages, true);
 
-    const msg = await message.util.send(config.messages.success.replace('{AMOUNT}', amount));
+    const msg = await message.util.send(config.messages.success.replace('{AMOUNT}', deletedMessages.size));
     await msg.delete({ timeout: 5000 }).catch(noop);
   }
 }
