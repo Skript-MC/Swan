@@ -11,6 +11,7 @@ export default {
   },
   miscellaneous: {
     validNamePercentage: 0.5,
+    pastebinExtensions: ['.sk', '.yml', '.txt', '.json', '.js'],
   },
   moderation: {
     purgeLimit: 50,
