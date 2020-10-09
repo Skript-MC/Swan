@@ -97,7 +97,7 @@ class MessageListener extends Listener {
       return false;
 
     const attachment = message.attachments.first();
-    if (!(attachment.name.endsWith('.txt') || attachment.name.endsWith('.yml') || attachment.name.endsWith('.sk')))
+    if (!settings.miscellaneous.pastebinExtensions.some(ext => attachment.name.endsWith(ext)))
       return false;
 
     const attachmentContent = await axios.get(attachment.url).catch(noop);
