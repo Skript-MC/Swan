@@ -33,6 +33,9 @@ class SwanClient extends AkairoClient {
     this.logger = new Logger();
     this.addonsVersions = [];
 
+    this.currentlyBanning = [];
+    this.currentlyUnbanning = [];
+
     this.logger.info('Creating Command handler');
     this.commandHandler = new CommandHandler(this, {
       directory: path.join(__dirname, 'commands/'),
