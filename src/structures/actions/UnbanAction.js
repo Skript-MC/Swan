@@ -8,7 +8,7 @@ import ModerationAction from './ModerationAction';
 
 class UnbanAction extends ModerationAction {
   before() {
-    this.client.currentlyBanning.push(this.data.victim.id);
+    this.client.currentlyUnbanning.push(this.data.victim.id);
   }
 
   async exec() {
@@ -63,7 +63,7 @@ class UnbanAction extends ModerationAction {
   }
 
   after() {
-    this.client.currentlyBanning.splice(this.client.currentlyBanning.indexOf(this.data.victim.id), 1);
+    this.client.currentlyUnbanning.splice(this.client.currentlyUnbanning.indexOf(this.data.victim.id), 1);
   }
 }
 
