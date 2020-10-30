@@ -3,7 +3,9 @@ import { Listener } from 'discord-akairo';
 import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import { noop } from '../../utils';
+import Sanction from '../../models/sanction';
+import ModerationHelper from '../../structures/ModerationHelper';
+import { constants, noop } from '../../utils';
 
 class MessageListener extends Listener {
   constructor() {
@@ -11,6 +13,32 @@ class MessageListener extends Listener {
       event: 'message',
       emitter: 'client',
     });
+  }
+
+  async confirmBannedMemberSentMessages(message) {
+    const isBanned = await ModerationHelper.isBanned(message.member.id, false);
+    if (isBanned) {
+      try {
+        await Sanction.updateOne(
+          {
+            memberId: message.member.id,
+            revoked: false,
+            type: constants.SANCTIONS.TYPES.BAN,
+          },
+          {
+            $set: { informations: { hasSentMessage: true } },
+          },
+        );
+      } catch (error) {
+        this.client.logger.error('Unable to confirm that the author (which is banned) has sent messages.');
+        this.client.logger.detail(`isBanned: ${isBanned}`);
+        this.client.logger.detail(`Member ID: ${message.member.id}`);
+        this.client.logger.detail(`Message: ${message.url}`);
+        this.client.logger.error(error.stack);
+        return true;
+      }
+    }
+    return false;
   }
 
   async preventActiveMembersToPostDocLinks(message) {
@@ -149,6 +177,7 @@ class MessageListener extends Listener {
   }
 
   async* getTasks(message) {
+    yield await this.confirmBannedMemberSentMessages(message);
     yield await this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
