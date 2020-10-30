@@ -41,7 +41,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  async preventActiveMembersToPostDocLinks(message) {
+  preventActiveMembersToPostDocLinks(message) {
     if (message.member.roles.cache.has(settings.roles.activeMember)) {
       if (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/')) {
         message.delete();
@@ -178,7 +178,7 @@ class MessageListener extends Listener {
 
   async* getTasks(message) {
     yield await this.confirmBannedMemberSentMessages(message);
-    yield await this.preventActiveMembersToPostDocLinks(message);
+    yield this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
     yield await this.uploadFileOnHastebin(message);

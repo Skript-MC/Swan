@@ -10,7 +10,7 @@ class MessageUpdateListener extends Listener {
     });
   }
 
-  async exec(oldMessage, newMessage) {
+  exec(oldMessage, newMessage) {
     if (newMessage.author.bot || newMessage.system)
       return;
     if (newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff).position)

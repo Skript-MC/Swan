@@ -42,7 +42,7 @@ class ModerationHelper {
     }
   }
 
-  static async removeChannel(data) {
+  static removeChannel(data) {
     const filter = c => c.type === 'text' && c.topic?.split(' ')[0] === data.victim.id.toString();
     const chan = data.guild.channels.cache.find(filter);
     let file;

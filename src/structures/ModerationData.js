@@ -45,31 +45,29 @@ class ModerationData {
     } else {
       throw new TypeError('ModerationData: Incorrect parameter types');
     }
-    this.type = undefined;           // The sanction type (one of constants.SANCTIONS.TYPE)
-    this.config = undefined;         // The configuration of the action (all the messages)
+    this.type = null;           // The sanction type (one of constants.SANCTIONS.TYPE)
+    this.config = null;         // The configuration of the action (all the messages)
     this.victim = {                  // The victim of the case. It contains an ID, a User? and a GuildMember?
-      id: undefined,
-      user: undefined,
-      member: undefined,
+      id: null,
+      user: null,
+      member: null,
     };
     this.reason = messages.miscellaneous.noReason; // The reason
-    this.duration = undefined;       // The duration
-    this.finish = undefined;         // The finish timestamp
+    this.duration = null;       // The duration
+    this.finish = null;         // The finish timestamp
     this.start = Date.now();         // The start timestamp
-    this.privateChannel = undefined; // The private channel (in case of a ban)
+    this.privateChannel = null; // The private channel (in case of a ban)
     this.id = nanoid(8);             // The id of the case
     this.informations = {};          // The additional information to be given to the sanction model
   }
 
   setVictim(personResolvable, resolveMemberAndUser = true) {
     /* eslint-disable prefer-destructuring */
-    let member;
-    let user;
-    if (personResolvable instanceof GuildMember)
-      member = personResolvable;
-    else
-      member = this.guild.members.resolve(personResolvable);
+    const member = personResolvable instanceof GuildMember
+      ? personResolvable
+      : this.guild.members.resolve(personResolvable);
 
+    let user;
     if (member instanceof GuildMember)
       user = member.user;
     else if (personResolvable instanceof User)

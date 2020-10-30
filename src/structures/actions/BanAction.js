@@ -12,7 +12,7 @@ class BanAction extends ModerationAction {
     if (this.data.duration === -1)
       await this.hardban();
     else if (this.isUpdate)
-      await this.reban();
+      this.reban();
     else
       await this.ban();
     return true;
@@ -52,7 +52,7 @@ class BanAction extends ModerationAction {
     this.client.logger.success('Bannishment finished successfully');
   }
 
-  async reban() {
+  reban() {
     // TODO: implement ban update
     this.client.logger.info('NOT IMPLEMENTED: Reban (ban update)');
   }

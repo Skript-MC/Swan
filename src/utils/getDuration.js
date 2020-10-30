@@ -30,11 +30,12 @@ function tokenize(str) {
       buf += char;
     }
   }
-  if (buf.length !== 0)
+  if (buf.length > 0)
     units.push(buf.trim());
   return units;
 }
 
+// eslint-disable-next-line complexity
 function convert(num, type) {
   switch (type) {
     case 'years':
@@ -95,7 +96,7 @@ function convert(num, type) {
 function getDuration(val) {
   let abs;
   let total = 0;
-  if (typeof val === 'string' && val.length !== 0) {
+  if (typeof val === 'string' && val.length > 0) {
     if (val.length < 101) {
       const units = tokenize(val.toLowerCase());
       for (const unit of units) {

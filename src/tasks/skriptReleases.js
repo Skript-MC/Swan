@@ -14,7 +14,7 @@ class SkriptReleasesTask extends Task {
 
   async exec() {
     const githubReleases = await axios.get(settings.apis.github + config.githubEndpoint)
-      .then(response => (response.status >= 300 ? undefined : response.data))
+      .then(response => (response.status >= 300 ? null : response.data))
       .catch((err) => {
         this.client.logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
         this.client.logger.detail(err.message);

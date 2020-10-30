@@ -45,7 +45,7 @@ class UnbanAction extends ModerationAction {
       } else if (ban.type === constants.SANCTIONS.TYPES.BAN) {
         this.data.victim.member.roles.set([]);
         // TODO: Find channel by id (which will be stored in the database, in the "ban" object)
-        await ModerationHelper.removeChannel(this.data);
+        ModerationHelper.removeChannel(this.data);
       }
     } catch (error) {
       this.data.channel.send(messages.global.oops);

@@ -140,7 +140,7 @@ class SwanClient extends AkairoClient {
     }
   }
 
-  async checkValidity() {
+  checkValidity() {
     // Check tokens
     if (!process.env.DISCORD_TOKEN)
       this.logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');

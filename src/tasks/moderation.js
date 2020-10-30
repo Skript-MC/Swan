@@ -1,3 +1,4 @@
+import messages from '../../config/messages';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import ModerationData from '../structures/ModerationData';
@@ -5,7 +6,6 @@ import Task from '../structures/Task';
 import BanAction from '../structures/actions/BanAction';
 import UnbanAction from '../structures/actions/UnbanAction';
 import { constants } from '../utils';
-import messages from '../../config/messages';
 
 class ModerationTask extends Task {
   constructor() {
