@@ -25,7 +25,7 @@ export default {
     stopWord: 'stop',
   },
   moderation: {
-    permanent: 'définitif',
+    permanent: 'Définitif',
     never: 'jamais',
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à l'en lui informer !",
     newCase: 'Nouveau cas ({ID})',
