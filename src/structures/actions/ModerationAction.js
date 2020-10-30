@@ -32,7 +32,7 @@ class ModerationAction {
       await this.notify();
       await this.exec();
       await this.after();
-      await this.log();
+      this.log();
     } catch (error) {
       this.client.logger.error('An error occured while executing a moderation action.');
       this.client.logger.detail(`Data: ${JSON.stringify(this.data.toSchema())}`);
@@ -95,7 +95,7 @@ class ModerationAction {
       : moment(this.data.finish).format(settings.miscellaneous.durationFormat);
   }
 
-  async before() {}
+  async before() { /* Implemented in the parent classes */ }
 
   async notify() {
     const message = this.data.config.notification
@@ -110,11 +110,11 @@ class ModerationAction {
     }
   }
 
-  async exec() {}
+  async exec() { /* Implemented in the parent classes */ }
 
-  async after() {}
+  async after() { /* Implemented in the parent classes */ }
 
-  async log() {
+  log() {
     if (!this.logChannel)
       return;
 
