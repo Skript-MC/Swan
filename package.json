@@ -44,7 +44,9 @@
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "moment": "^2.28.0",
-    "mongoose": "^5.10.6",
+    "mongoose": "^5.10.11",
+    "mongoose-autopopulate": "^0.12.2",
+    "nanoid": "^3.1.16",
     "node-cron": "^2.0.3"
   },
   "devDependencies": {

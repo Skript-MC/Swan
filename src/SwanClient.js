@@ -11,6 +11,7 @@ import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
+import { getDuration } from './utils';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -89,6 +90,15 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.taskHandler.loadAll();
     this.listenerHandler.loadAll();
+
+    this.commandHandler.resolver.addType('duration', (_message, phrase) => {
+      if (!phrase)
+        return null;
+
+      if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(phrase))
+        return -1;
+      return getDuration(phrase) || null;
+    });
 
     this.loadCommandStats();
     this.loadAddons();
