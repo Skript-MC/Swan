@@ -8,6 +8,10 @@ import ModerationHelper from '../ModerationHelper';
 import ModerationAction from './ModerationAction';
 
 class BanAction extends ModerationAction {
+  before() {
+    this.client.currentlyBanning.push(this.data.victim.id);
+  }
+
   async exec() {
     if (this.data.duration === -1)
       await this.hardban();
@@ -106,6 +110,10 @@ class BanAction extends ModerationAction {
     }
 
     this.client.logger.success('Bannishment finished successfully');
+  }
+
+  after() {
+    this.client.currentlyBanning.splice(this.client.currentlyBanning.indexOf(this.data.victim.id), 1);
   }
 }
 
