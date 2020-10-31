@@ -20,8 +20,8 @@ class BanCommand extends Command {
             && value.roles.highest.position < message.member.roles.highest.position,
         ),
         prompt: {
-          start: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
-          retry: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+          start: config.messages.promptStartMember,
+          retry: config.messages.promptRetryMember,
         },
       }, {
         id: 'duration',
@@ -32,16 +32,16 @@ class BanCommand extends Command {
             : true),
         ),
         prompt: {
-          start: 'Il faut ajouter une durée (en anglais ou en francais). Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :',
-          retry: "Cette durée n'est pas valide.. Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :",
+          start: config.messages.promptStartDuration,
+          retry: config.messages.promptRetryDuration,
         },
       }, {
         id: 'reason',
         type: 'string',
         match: 'rest',
         prompt: {
-          start: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
-          retry: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
+          start: config.messages.promptStartReason,
+          retry: config.messages.promptRetryReason,
         },
       }, {
         id: 'autoban',

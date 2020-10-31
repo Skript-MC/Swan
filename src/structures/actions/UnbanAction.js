@@ -36,8 +36,10 @@ class UnbanAction extends ModerationAction {
       );
     } catch (error) {
       this.data.channel.send(messages.global.oops);
-      // TODO: Add more details here?
       this.client.logger.error('An error occured while revoking a ban in the Database');
+      this.client.logger.detail(`Ban ID: ${this.data.id}`);
+      this.client.logger.detail(`Victim ID: ${this.data.victim.id}`);
+      this.client.logger.detail(`Unban Reason: ${this.data.reason}`);
       this.client.logger.error(error.stack);
     }
 
