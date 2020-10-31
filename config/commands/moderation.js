@@ -25,6 +25,13 @@ export const ban = {
   messages: {
     notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
     success: 'Membre banni avec succès !',
+    promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
+    promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+    promptStartDuration: 'Il faut ajouter une durée (en anglais ou en francais). Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :',
+    promptRetryDuration: "Cette durée n'est pas valide.. Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :",
+    promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
+    promptRetryReason: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
+
   },
 };
 
@@ -40,14 +47,15 @@ export const history = {
   },
   description: {
     name: 'Historique',
-    // TODO: Improve message and config
     content: "Permet de voir l'historique des sanctions d'un utilisateur.",
-    usage: 'purge <nombre> [<@mention | pseudo | ID>] [--force | -f]',
-    examples: ['purge 10 -f', 'purge @membre 40'],
+    usage: 'history <@mention | pseudo | ID>',
+    examples: ['history carlodrift'],
     permissions: 'Staff',
   },
   messages: {
     sentInDm: "L'historique des sanctions de l'utilisateur vous a bien été envoyé en privé !",
+    promptStartUser: "Il faut ajouter un utilisateur. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
+    promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
       ban: ':hammer: Bannissement',

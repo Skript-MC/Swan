@@ -17,7 +17,7 @@ class UnbanCommand extends Command {
         id: 'member',
         // TODO: Make the validation of member here.
         // TODO: Also fetch the user, don't only take it from the cache (make a new custom type?)
-        // TODO: Add a prompt
+        // TODO: Add a prompt (when the validation is done correctly)
         type: Argument.union('member', 'user'),
       }, {
         id: 'reason',

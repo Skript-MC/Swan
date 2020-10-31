@@ -12,13 +12,12 @@ class HistoryCommand extends Command {
     super('history', {
       aliases: config.settings.aliases,
       description: { ...config.description },
-      // TODO: Move prompts to the config file
       args: [{
         id: 'member',
         type: Argument.union('member', 'user', 'string'),
         prompt: {
-          start: "Il faut ajouter un utilisateur. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
-          retry: "Cet utilisateur n'est pas valide, il se peut que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
+          start: config.messages.promptStartUser,
+          retry: config.messages.promptStartUser,
         },
       }],
       clientPermissions: config.settings.clientPermissions,
