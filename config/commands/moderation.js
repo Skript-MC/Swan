@@ -1,3 +1,4 @@
+import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
@@ -30,6 +31,59 @@ export const ban = {
 // TODO: Either leave it as it is now, or remove this extra const and improve the
 // configuration-detection in ModerationData#setType
 export const hardban = ban;
+
+export const history = {
+  settings: {
+    aliases: ['history', 'historique'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: 'Historique',
+    // TODO: Improve message and config
+    content: "Permet de voir l'historique des sanctions d'un utilisateur.",
+    usage: 'purge <nombre> [<@mention | pseudo | ID>] [--force | -f]',
+    examples: ['purge 10 -f', 'purge @membre 40'],
+    permissions: 'Staff',
+  },
+  messages: {
+    sentInDm: "L'historique des sanctions de l'utilisateur vous a bien été envoyé en privé !",
+    sanctionsName: {
+      hardban: ':bomb: Bannissement définitif',
+      ban: ':hammer: Bannissement',
+      unban: ':white_check_mark: Débannissement',
+      mute: ':mute: Mute',
+      unmute: ':loud_sound: Unmute',
+      kick: ':door: Expulsion',
+      warn: ':warning: Avertissement',
+      unwarn: ":repeat: Suppression d'Avertissement",
+    },
+    overview: `
+      :bomb: Bannissements définitifs : {HARDBANS}
+      :hammer: Bannissements : {BANS}
+      :mute: Mutes : {MUTES}
+      :door: Kicks : {KICKS}
+      :stop_sign: Avertissements totaux : {WARNS}
+      :warning: Avertissements en cours : {CURRENT_WARNS}/{WARN_LIMIT}`,
+    updateReasons: {
+      duration: 'a changé la durée',
+      reason: 'a changé la raison',
+      revoked: 'a révoqué la sanction',
+    },
+    sanctionDescription: {
+      main: stripIndent`
+        ━━━━━━━━━━━━━━━
+
+        **{NAME}** (\`{ID}\`)
+            __Modérateur :__ <@{MODERATOR}>
+            __Date :__ {DATE}
+            __Raison :__ {REASON}
+      `,
+      duration: '\n    __Durée :__ {DURATION}',
+      modifications: '    __Modification{PLURAL} :__\n',
+    },
+  },
+};
 
 export const purge = {
   settings: {
