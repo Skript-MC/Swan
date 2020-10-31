@@ -45,7 +45,8 @@ class UnbanAction extends ModerationAction {
     try {
       if (ban.type === constants.SANCTIONS.TYPES.HARDBAN || !this.data.victim.member) {
         const isHardbanned = await this.data.guild.fetchBan(this.data.victim.id).catch(noop);
-        if (isHardbanned) await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
+        if (isHardbanned)
+          await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
       } else if (ban.type === constants.SANCTIONS.TYPES.BAN) {
         this.data.victim.member.roles.set([]);
         // TODO: Find channel by id (which will be stored in the database, in the "ban" object)

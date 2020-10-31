@@ -73,10 +73,8 @@ class AddonInfoCommand extends Command {
     const addon = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
       .catch(err => this.logger.error(err.message));
-    if (!addon) {
-      message.util.send(messages.global.oops);
-      return;
-    }
+    if (!addon)
+      return message.util.send(messages.global.oops);
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
