@@ -82,9 +82,6 @@ const SanctionSchema = new Schema({
       type: String,
       required: true,
     },
-    duration: {
-      type: Number,
-    },
   }],
 });
 
