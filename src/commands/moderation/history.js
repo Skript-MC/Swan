@@ -28,38 +28,39 @@ class HistoryCommand extends Command {
 
   async exec(message, args) {
     const memberId = args.member?.id || args.member;
-    const memberName = args.member?.displayName || args.member?.username || args.member;
 
     const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0)
-      return message.util.send("pas trouvé / pas d'historique");
+      return message.util.send(config.messages.notFound);
 
     const stats = {
       hardbans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.HARDBAN).length,
       bans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.BAN).length,
     };
 
-    const overview = config.messages.overview
+    let privateHistory = config.messages.title
+      .replace('{NAME}', args.member?.displayName || args.member?.username || args.member)
+      .replace('{COUNT}', sanctions.length);
+
+    privateHistory += config.messages.overview
       .replace('{HARDBANS}', stats.hardbans)
       .replace('{BANS}', stats.bans);
-
-    let privateHistory = `Sanctions du membre ${memberName} (${sanctions.length})\n`;
-    privateHistory += `${overview}\n\n`;
+    privateHistory += '\n\n';
 
     for (const sanction of sanctions) {
-      let infos = config.messages.sanctionDescription
+      let infos = config.messages.sanctionDescription.main
         .replace('{NAME}', config.messages.sanctionsName[sanction.type])
         .replace('{ID}', sanction.id)
         .replace('{MODERATOR}', sanction.moderator)
         .replace('{DATE}', moment(sanction.date).format(settings.miscellaneous.durationFormat))
         .replace('{REASON}', sanction.reason);
 
-      if (sanction.duration && sanction.duration !== -1 && sanction.type !== constants.SANCTIONS.TYPES.WARN)
+      if (sanction.duration && sanction.type !== constants.SANCTIONS.TYPES.WARN)
         infos += config.messages.sanctionDescription.duration.replace('{DURATION}', toHumanDuration(sanction.duration));
 
       infos += '\n';
       if (sanction.updates?.length > 0) {
-        infos += config.messages.sanctionDescription.duration.replace('{PLURAL}', sanction.updates.length > 1 ? 's' : '');
+        infos += config.messages.sanctionDescription.modifications.replace('{PLURAL}', sanction.updates.length > 1 ? 's' : '');
         for (const update of sanction.updates) {
           let diff;
 

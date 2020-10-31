@@ -56,6 +56,8 @@ export const history = {
     sentInDm: "L'historique des sanctions de l'utilisateur vous a bien été envoyé en privé !",
     promptStartUser: "Il faut ajouter un utilisateur. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
     promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
+    notFound: "Je n'est pas pu trouver d'historique correspondant à cet utilisateur !",
+    title: "**__SANCTION DE L'UTILISATEUR {NAME}__** (*{COUNT}*)\n\n",
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
       ban: ':hammer: Bannissement',
@@ -66,7 +68,7 @@ export const history = {
       warn: ':warning: Avertissement',
       unwarn: ":repeat: Suppression d'Avertissement",
     },
-    overview: `
+    overview: stripIndent`
       :bomb: Bannissements définitifs : {HARDBANS}
       :hammer: Bannissements : {BANS}
       :mute: Mutes : {MUTES}
