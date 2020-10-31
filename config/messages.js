@@ -4,6 +4,7 @@ export default {
     notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
     insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {COMMAND}. (Permissions manquantes : {PERMISSIONS})",
     memberTooPowerful: 'Je ne peux pas effectuer cette action pour ce membre ! Il doit avoir des permissions supérieures ou égales aux tiennes.',
+    dmAreClosed: "Je ne peux pas t'envoyer les informations car tes messages privés sont restreint ! Pense bien a les activer :)",
     unknownName: 'Pseudo Inconnu',
     noReason: 'Aucune raison spécifiée.',
   },

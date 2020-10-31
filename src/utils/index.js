@@ -6,4 +6,6 @@ export { default as jaroWinklerDistance } from './jaroWinklerDistance';
 export { default as noop } from './noop';
 export { default as padNumber } from './padNumber';
 export { default as prunePseudo } from './prunePseudo';
+export { default as splitText } from './splitText';
+export { default as toHumanDuration } from './toHumanDuration';
 export { default as toValidName } from './toValidName';
