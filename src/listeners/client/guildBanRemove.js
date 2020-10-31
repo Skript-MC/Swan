@@ -26,7 +26,7 @@ class GuildBanRemoveListener extends Listener {
 
     const data = new ModerationData(guild.me, guild, this.client, channel)
       .setVictim(user, false)
-      .setReason(messages.miscellaneous.noReason)
+      .setReason(messages.global.noReason)
       .setType(constants.SANCTIONS.TYPES.UNBAN);
 
     await new UnbanAction(data).commit();

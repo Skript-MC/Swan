@@ -52,7 +52,7 @@ class ModerationData {
       user: null,
       member: null,
     };
-    this.reason = messages.miscellaneous.noReason; // The reason
+    this.reason = messages.global.noReason; // The reason
     this.duration = null;       // The duration
     this.finish = null;         // The finish timestamp
     this.start = Date.now();         // The start timestamp
