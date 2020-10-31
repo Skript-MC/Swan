@@ -28,7 +28,7 @@ class UnbanAction extends ModerationAction {
             updates: {
               date: this.data.start,
               moderator: this.data.moderator?.id,
-              type: constants.SANCTIONS.TYPES.UNBAN,
+              type: constants.SANCTIONS.UPDATES.REVOKED,
               reason: this.data.reason,
             },
           },
