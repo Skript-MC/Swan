@@ -15,7 +15,8 @@ class GuildMemberAddListener extends Listener {
   async exec(member) {
     const name = member.displayName;
     const strippedName = toValidName(name);
-    if (strippedName === name) return;
+    if (strippedName === name)
+      return;
 
     const requiredPercentage = settings.miscellaneous.validNamePercentage;
 

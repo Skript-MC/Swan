@@ -17,7 +17,8 @@ class GuildBanAddListener extends Listener {
       return;
 
     const member = guild.members.resolve(user.id) || await guild.members.fetch(user.id);
-    if (!member) return;
+    if (!member)
+      return;
 
     const { reason } = await guild.fetchBan(user.id);
     const channel = guild.channels.resolve(settings.channels.log);
