@@ -23,7 +23,7 @@ class UnbanCommand extends Command {
         id: 'reason',
         type: 'string',
         match: 'rest',
-        default: messages.miscellaneous.noReason,
+        default: messages.global.noReason,
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
