@@ -59,17 +59,15 @@ class BanCommand extends Command {
       .setVictim(args.member)
       .setReason(args.reason);
 
-    let type = constants.SANCTIONS.TYPES.HARDBAN;
     if (args.duration === -1) {
-      data.setDuration(args.duration, false);
+      data.setDuration(args.duration, false)
+        .setType(constants.SANCTIONS.TYPES.HARDBAN);
     } else {
       args.duration *= 1000;
       data.setDuration(args.duration, true)
-        .setInformations({ hasSentMessage: !args.autoban });
-      type = constants.SANCTIONS.TYPES.BAN;
+        .setInformations({ hasSentMessage: !args.autoban })
+        .setType(constants.SANCTIONS.TYPES.BAN);
     }
-
-    data.setType(type);
 
     try {
       await new BanAction(data).commit();
