@@ -103,6 +103,13 @@ class SwanClient extends AkairoClient {
       return getDuration(phrase) || null;
     });
 
+    this.commandHandler.resolver.addType('finiteDuration', (_message, phrase) => {
+      if (!phrase)
+        return null;
+
+      return getDuration(phrase) || null;
+    });
+
     this.loadCommandStats();
     this.loadAddons();
     this.logger.info('Skripttools : addons loaded!');

@@ -44,6 +44,7 @@ export default {
     everyone: process.env.EVERYONE_ROLE,
     activeMember: process.env.ACTIVE_MEMBER_ROLE,
     ban: process.env.BAN_ROLE,
+    mute: process.env.MUTE_ROLE,
   },
   channels: {
     idea: process.env.IDEA_CHANNEL,
