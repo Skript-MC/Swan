@@ -30,12 +30,9 @@ const SanctionSchema = new Schema({
   },
   duration: {
     type: Number,
-    required: true,
   },
   finish: {
     type: Number,
-    required: true,
-    default() { return this.start + this.duration; },
   },
   reason: {
     type: String,
@@ -54,7 +51,6 @@ const SanctionSchema = new Schema({
   informations: {
     hasSentMessage: {
       type: Boolean,
-      default: true,
     },
   },
   updates: [{

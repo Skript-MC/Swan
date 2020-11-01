@@ -132,6 +132,7 @@ class ModerationData {
       type: this.type,
       moderator: this.moderator.id,
       start: this.start,
+      finish: this.finish,
       duration: this.duration,
       reason: this.reason,
       revoked: false,

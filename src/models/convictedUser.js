@@ -26,4 +26,10 @@ const ConvictedUserSchema = new Schema({
   },
 });
 
+
+ConvictedUserSchema.static('findOneOrCreate', async function (condition, doc) {
+  const result = await this.findOne(condition);
+  return result || this.create(doc);
+});
+
 export default model('ConvictedUser', ConvictedUserSchema);

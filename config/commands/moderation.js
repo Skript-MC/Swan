@@ -31,7 +31,6 @@ export const ban = {
     promptRetryDuration: "Cette durée n'est pas valide.. Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :",
     promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
     promptRetryReason: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
-
   },
 };
 
@@ -92,6 +91,29 @@ export const history = {
       duration: '\n    __Durée :__ {DURATION}',
       modifications: '    __Modification{PLURAL} :__\n',
     },
+  },
+};
+
+export const kick = {
+  settings: {
+    aliases: ['kick'],
+    clientPermissions: permissions.SEND_MESSAGES | permissions.KICK_MEMBERS,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: 'Expulsion',
+    content: "Permet d'expulser un membre du serveur..",
+    usage: 'kick <@mention | pseudo | ID> <raison>',
+    examples: ['kick Gonpvp'],
+    permissions: 'Staff',
+  },
+  messages: {
+    notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
+    success: 'Membre expulsé avec succès !',
+    promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
+    promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+    promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
+    promptRetryReason: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
   },
 };
 
