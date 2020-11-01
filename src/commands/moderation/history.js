@@ -36,6 +36,7 @@ class HistoryCommand extends Command {
     const stats = {
       hardbans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.HARDBAN).length,
       bans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.BAN).length,
+      kicks: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.KICK).length,
     };
 
     let privateHistory = config.messages.title
@@ -44,7 +45,8 @@ class HistoryCommand extends Command {
 
     privateHistory += config.messages.overview
       .replace('{HARDBANS}', stats.hardbans)
-      .replace('{BANS}', stats.bans);
+      .replace('{BANS}', stats.bans)
+      .replace('{KICKS}', stats.kicks);
     privateHistory += '\n\n';
 
     for (const sanction of sanctions) {
@@ -52,7 +54,7 @@ class HistoryCommand extends Command {
         .replace('{NAME}', config.messages.sanctionsName[sanction.type])
         .replace('{ID}', sanction.id)
         .replace('{MODERATOR}', sanction.moderator)
-        .replace('{DATE}', moment(sanction.date).format(settings.miscellaneous.durationFormat))
+        .replace('{DATE}', moment(sanction.start).format(settings.miscellaneous.durationFormat))
         .replace('{REASON}', sanction.reason);
 
       if (sanction.duration && sanction.type !== constants.SANCTIONS.TYPES.WARN)
