@@ -36,6 +36,7 @@ class HistoryCommand extends Command {
     const stats = {
       hardbans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.HARDBAN).length,
       bans: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.BAN).length,
+      mutes: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.MUTE).length,
       kicks: sanctions.filter(s => s.type === constants.SANCTIONS.TYPES.KICK).length,
     };
 
@@ -46,6 +47,7 @@ class HistoryCommand extends Command {
     privateHistory += config.messages.overview
       .replace('{HARDBANS}', stats.hardbans)
       .replace('{BANS}', stats.bans)
+      .replace('{MUTES}', stats.mutes)
       .replace('{KICKS}', stats.kicks);
     privateHistory += '\n\n';
 

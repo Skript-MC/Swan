@@ -30,7 +30,7 @@ export const ban = {
     promptStartDuration: 'Il faut ajouter une durée (en anglais ou en francais). Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :',
     promptRetryDuration: "Cette durée n'est pas valide.. Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :",
     promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
-    promptRetryReason: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
+    promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
   },
 };
 
@@ -113,7 +113,32 @@ export const kick = {
     promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
     promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
     promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
-    promptRetryReason: "Cette raison n'est pas valide.  Entre-la en postant un message contenant seulement la raison :",
+    promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
+  },
+};
+
+export const mute = {
+  settings: {
+    aliases: ['mute'],
+    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_ROLES,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: 'Mute',
+    content: "Appliquer une restriction de la parole à un membre (= interdiction de parler dans les salons d'aide).",
+    usage: 'mute <@mention | pseudo | ID> <durée> <raison>',
+    examples: ['mute @Xamez chuuuut'],
+    permissions: 'Staff',
+  },
+  messages: {
+    notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
+    success: 'Membre mute avec succès !',
+    promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
+    promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+    promptStartDuration: 'Il faut ajouter une durée (en anglais ou en francais). Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :',
+    promptRetryDuration: "Cette durée n'est pas valide.. Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :",
+    promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
+    promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
   },
 };
 
@@ -141,8 +166,6 @@ export const unban = {
   settings: {
     aliases: ['unban', 'deban'],
     clientPermissions: permissions.SEND_MESSAGES
-      | permissions.MANAGE_MESSAGES
-      | permissions.BAN_MEMBERS
       | permissions.MANAGE_CHANNELS
       | permissions.MANAGE_ROLES,
     userPermissions: hasStaffRole,
@@ -155,8 +178,28 @@ export const unban = {
     permissions: 'Staff',
   },
   messages: {
-    notification: "Bonjour {MEMBER}, ta sanction (bannissement) sur le serveur Skript-MC à été révoquée. Raison : \"%r\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
+    notification: "Bonjour {MEMBER}, ta sanction (Bannissement) sur le serveur Skript-MC à été révoquée. Raison : \"%r\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
     notBanned: "Cet utilisateur n'est pas banni.",
     success: 'Utilisateur débanni avec succès !',
+  },
+};
+
+export const unmute = {
+  settings: {
+    aliases: ['unmute', 'demute'],
+    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_ROLES,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: 'Unmute',
+    content: 'Retirer un mute à un membre du Discord.',
+    usage: 'unmute <@mention | pseudo | ID> [raison]',
+    examples: ['unmute @Vengelis désolé !'],
+    permissions: 'Staff',
+  },
+  messages: {
+    notification: "Bonjour {MEMBER}, ta sanction (Mute) sur le serveur Skript-MC à été révoquée. Raison : \"%r\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
+    notBanned: "Cet utilisateur n'est pas mute.",
+    success: 'Utilisateur mute avec succès !',
   },
 };

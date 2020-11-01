@@ -34,7 +34,7 @@ export default {
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un banissement (automatique)",
       autoBan: 'Inactivité après un bannissement (automatique)',
-      autoUnban: 'Sanction expirée (automatique)',
+      autoRevoke: 'Sanction expirée (automatique)',
     },
     log: {
       userTitle: ':bust_in_silhouette: Utilisateur',
