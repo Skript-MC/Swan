@@ -36,7 +36,7 @@ class ModerationAction {
     } catch (error) {
       this.client.logger.error('An error occured while executing a moderation action.');
       this.client.logger.detail(`Data: ${JSON.stringify(this.data.toSchema())}`);
-      this.client.logger.detail(error.stack);
+      this.client.logger.error(error.stack);
       this.data.channel.send(messages.global.oops);
     }
   }
