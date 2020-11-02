@@ -19,30 +19,32 @@ class GuildMemberRemoveListener extends Listener {
   async exec(member) {
     const isBanned = await ModerationHelper.isBanned(member.id, false);
 
+    const kicks = await member.guild.fetchAuditLogs({ type: GuildAuditLogs.Actions.MEMBER_KICK });
+    const lastKick = kicks.entries.first();
+    const isKicked = lastKick
+      && lastKick.target.id === member.id
+      && !lastKick.executor.bot
+      && lastKick.createdTimestamp >= Date.now() - 1000;
+
+    const channel = member.guild.channels.resolve(settings.channels.log);
+
+    // Check if they've been kicked
+    if (isKicked) {
+      const data = new ModerationData(member.guild.me, member.guild, this.client, channel)
+        .setVictim(member)
+        .setReason(lastKick.reason)
+        .setType(constants.SANCTIONS.TYPES.KICK);
+      await new KickAction(data).commit();
+    }
+
     if (isBanned) {
       // Check if they're leaving while being banned
-      const channel = member.guild.channels.resolve(settings.channels.log);
       const data = new ModerationData(member.guild.me, member.guild, this.client, channel)
         .setVictim(member)
         .setDuration(-1, false)
         .setReason(messages.moderation.reasons.leaveBan)
         .setType(constants.SANCTIONS.TYPES.HARDBAN);
       await new BanAction(data).commit();
-    } else {
-      // Check if they've been kicked
-      const kicks = await member.guild.fetchAuditLogs({ type: GuildAuditLogs.Actions.MEMBER_KICK });
-      const lastKick = kicks.entries.first();
-      if (lastKick
-        && lastKick.target.id === member.id
-        && !lastKick.executor.bot
-        && lastKick.createdTimestamp >= Date.now() - 1000) {
-        const channel = member.guild.channels.resolve(settings.channels.log);
-        const data = new ModerationData(member.guild.me, member.guild, this.client, channel)
-          .setVictim(member)
-          .setReason(lastKick.reason)
-          .setType(constants.SANCTIONS.TYPES.KICK);
-        await new KickAction(data).commit();
-      }
     }
   }
 }
