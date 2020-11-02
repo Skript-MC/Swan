@@ -66,6 +66,15 @@ class ModerationHelper {
     }).catch(noop);
     return banObject;
   }
+
+  static async isMuted(memberId) {
+    const banObject = await Sanction.findOne({
+      memberId,
+      revoked: false,
+      type: constants.SANCTIONS.TYPES.MUTE,
+    }).catch(noop);
+    return banObject;
+  }
 }
 
 export default ModerationHelper;
