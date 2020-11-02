@@ -2,6 +2,7 @@ import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import ModerationHelper from '../../structures/ModerationHelper';
 import { toValidName, noop } from '../../utils';
 
 class GuildMemberAddListener extends Listener {
@@ -12,7 +13,22 @@ class GuildMemberAddListener extends Listener {
     });
   }
 
-  async exec(member) {
+  async remute(member) {
+    const isMuted = await ModerationHelper.isMuted(member.id);
+    if (isMuted) {
+      try {
+        const muteRole = member.guild.roles.resolve(settings.roles.mute);
+        await member.roles.add(muteRole);
+      } catch (error) {
+        this.client.logger.error('Could not add the mute role to a member.');
+        this.client.logger.detail(`MuteObject: "${JSON.stringify(isMuted)}"`);
+        this.client.logger.detail(`Manager roles permission: ${member.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
+        this.client.logger.error(error.stack);
+      }
+    }
+  }
+
+  async rename(member) {
     const name = member.displayName;
     const strippedName = toValidName(name);
     if (strippedName === name)
@@ -37,6 +53,11 @@ class GuildMemberAddListener extends Listener {
     }
 
     await member.send(messages.miscellaneous.strangeName).catch(noop);
+  }
+
+  async exec(member) {
+    await this.remute(member);
+    await this.rename(member);
   }
 }
 
