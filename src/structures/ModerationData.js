@@ -81,7 +81,7 @@ class ModerationData {
     if (missingData)
       throw new Error('Victim Not Found');
 
-    this.victim.id = member instanceof GuildMember ? member.id : user.id;
+    this.victim.id = (member || user).id;
     this.victim.user = user;
     this.victim.member = member;
 
