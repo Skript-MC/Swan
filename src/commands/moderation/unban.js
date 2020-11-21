@@ -55,13 +55,14 @@ class UnbanCommand extends Command {
         .setReason(args.reason)
         .setType(constants.SANCTIONS.TYPES.UNBAN);
 
-      await new UnbanAction(data).commit();
-      await message.util.send(config.messages.success);
+      const success = await new UnbanAction(data).commit();
+      if (success)
+        await message.util.send(config.messages.success);
     } catch (error) {
-      this.client.logger.error('An error occured while unbanning a member!');
+      this.client.logger.error('An unexpected error occured while unbanning a member!');
       this.client.logger.detail(`Parsed member: ${args.member}`);
       this.client.logger.detail(`Message: ${message.url}`);
-      this.client.logger.error(error.stack);
+      this.client.logger.detail(error.stack, true);
       message.util.send(messages.global.oops);
     }
   }

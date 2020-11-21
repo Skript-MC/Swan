@@ -1,8 +1,8 @@
 import { GuildMember, User, Permissions } from 'discord.js';
-import messages from '../../../config/messages';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import { constants, noop } from '../../utils';
+import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';
 import ModerationAction from './ModerationAction';
 
@@ -35,12 +35,14 @@ class UnbanAction extends ModerationAction {
         },
       );
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      this.client.logger.error('An error occured while revoking a ban in the Database');
-      this.client.logger.detail(`Ban ID: ${this.data.id}`);
-      this.client.logger.detail(`Victim ID: ${this.data.victim.id}`);
-      this.client.logger.detail(`Unban Reason: ${this.data.reason}`);
-      this.client.logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while revoking a ban in the Database')
+          .addDetail('Ban: ID', this.data.id)
+          .addDetail('Victim: ID', this.data.victim.id)
+          .addDetail('Unban Reason', this.data.reason),
+      );
     }
 
     // 2. Unban (hard-unban or remove roles)
@@ -55,11 +57,15 @@ class UnbanAction extends ModerationAction {
         ModerationHelper.removeChannel(this.data);
       }
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      this.client.logger.error('An error occured while fetching ban/unbanning/removing channel');
-      this.client.logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      this.client.logger.detail(`Manage Channel Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
-      this.client.logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while fetching ban/unbanning/fetching messages/removing channel')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id)
+          .addDetail('Manage Channel Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+      );
     }
 
     this.client.logger.success('Unban finished successfully');
