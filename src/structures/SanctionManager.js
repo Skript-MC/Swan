@@ -90,7 +90,7 @@ class SanctionManager {
   }
 
   static async getAllMessages(chan) {
-    const allMessagesMapped = await chan.messages.fetch().catch(console.error);
+    const allMessagesMapped = await chan.messages.fetch().catch(console.error) || [];
     const allMessages = [];
     for (const elt of allMessagesMapped) {
       const infos = elt[1];
