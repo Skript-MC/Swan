@@ -1,6 +1,8 @@
 export default {
   global: {
-    oops: "Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée. Veuillez contacter un des développeurs de Swan en le mentionnant (noftaly ou Romain).",
+    oops: process.env.NODE_ENV === 'production'
+      ? ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.\n> (Cc: <@188341077902753794>, <@191495299884122112>)"
+      : ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée. Veuillez contacter un des développeurs de Swan en le mentionnant (noftaly ou Romain).",
     notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
     insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {COMMAND}. (Permissions manquantes : {PERMISSIONS})",
     memberTooPowerful: 'Je ne peux pas effectuer cette action pour ce membre ! Il doit avoir des permissions supérieures ou égales aux tiennes.',
