@@ -2,9 +2,9 @@ import { Argument, Command } from 'discord-akairo';
 import { GuildMember } from 'discord.js';
 import { unban as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
-import ModerationData from '../../structures/ModerationData';
-import ModerationHelper from '../../structures/ModerationHelper';
-import UnbanAction from '../../structures/actions/UnbanAction';
+import ModerationData from '../../moderation/ModerationData';
+import ModerationHelper from '../../moderation/ModerationHelper';
+import UnbanAction from '../../moderation/actions/UnbanAction';
 import { constants } from '../../utils';
 
 class UnbanCommand extends Command {

@@ -4,7 +4,7 @@ import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
-import ModerationHelper from '../../structures/ModerationHelper';
+import ModerationHelper from '../../moderation/ModerationHelper';
 import { constants, noop } from '../../utils';
 
 class MessageListener extends Listener {

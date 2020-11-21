@@ -1,9 +1,9 @@
 import { Listener } from 'discord-akairo';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ModerationData from '../../structures/ModerationData';
-import ModerationHelper from '../../structures/ModerationHelper';
-import UnbanAction from '../../structures/actions/UnbanAction';
+import ModerationData from '../../moderation/ModerationData';
+import ModerationHelper from '../../moderation/ModerationHelper';
+import UnbanAction from '../../moderation/actions/UnbanAction';
 import { constants } from '../../utils';
 
 class GuildBanRemoveListener extends Listener {

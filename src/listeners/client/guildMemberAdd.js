@@ -2,7 +2,7 @@ import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ModerationHelper from '../../structures/ModerationHelper';
+import ModerationHelper from '../../moderation/ModerationHelper';
 import { toValidName, noop } from '../../utils';
 
 class GuildMemberAddListener extends Listener {
