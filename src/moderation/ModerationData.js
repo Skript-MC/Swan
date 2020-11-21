@@ -62,7 +62,6 @@ class ModerationData {
   }
 
   setVictim(personResolvable, resolveMemberAndUser = true) {
-    /* eslint-disable prefer-destructuring */
     const member = personResolvable instanceof GuildMember
       ? personResolvable
       : this.guild.members.resolve(personResolvable);
