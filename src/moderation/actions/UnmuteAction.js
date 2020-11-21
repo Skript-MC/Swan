@@ -1,9 +1,9 @@
 import { GuildMember, User, Permissions } from 'discord.js';
-import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import { constants } from '../../utils';
+import ModerationError from '../ModerationError';
 import ModerationAction from './ModerationAction';
 
 class UnmuteAction extends ModerationAction {
@@ -30,12 +30,15 @@ class UnmuteAction extends ModerationAction {
         },
       );
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      this.client.logger.error('An error occured while revoking a mute in the Database');
-      this.client.logger.detail(`Ban ID: ${this.data.id}`);
-      this.client.logger.detail(`Victim ID: ${this.data.victim.id}`);
-      this.client.logger.detail(`Unmute Reason: ${this.data.reason}`);
-      this.client.logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while revoking a mute in the Database')
+          .addDetail('Unmute ID', this.data.id)
+          .addDetail('Is User', this.data.victim.user instanceof User)
+          .addDetail('User ID', this.data.victim.id)
+          .addDetail('Unmute Reason', this.data.reason),
+      );
     }
 
     // 2. Unmute (remove roles)
@@ -43,11 +46,15 @@ class UnmuteAction extends ModerationAction {
     try {
       this.data.victim.member?.roles.remove(role, this.data.reason);
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      this.client.logger.error('An error occured while fetching unmute a member (removing roles)');
-      this.client.logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      this.client.logger.detail(`Manage Roles Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
-      this.client.logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while fetching unmute a member (removing roles)')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id)
+          .addDetail('Manage Roles Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+      );
     }
 
     this.client.logger.success('Unmute finished successfully');

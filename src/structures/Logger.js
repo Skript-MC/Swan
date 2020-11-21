@@ -45,11 +45,11 @@ class Logger {
     );
   }
 
-  detail(message) {
+  detail(message, neutral = false) {
     const messages = message.split('\n');
     console.group();
     for (const msg of messages)
-      console.debug(chalk.cyan(`↳ ${msg}`));
+      console.debug(chalk.cyan(neutral ? msg : `↳ ${msg}`));
     console.groupEnd();
   }
 }

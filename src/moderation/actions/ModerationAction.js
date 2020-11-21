@@ -6,6 +6,8 @@ import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import { noop } from '../../utils';
 import constants from '../../utils/constants';
+import ErrorState from '../ErrorState';
+import ModerationError from '../ModerationError';
 
 
 const lastSanctionField = {
@@ -18,6 +20,7 @@ class ModerationAction {
     this.data = data;
     this.client = this.data.client;
     this.logChannel = this.client.channels.resolve(settings.channels.log);
+    this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
   }
 
   async commit() {
@@ -34,11 +37,19 @@ class ModerationAction {
       await this.after();
       this.log();
     } catch (error) {
-      this.client.logger.error('An error occured while executing a moderation action.');
-      this.client.logger.detail(`Data: ${JSON.stringify(this.data.toSchema())}`);
-      this.client.logger.error(error.stack);
-      this.data.channel.send(messages.global.oops);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while executing a moderation action.')
+          .addDetail('Data', JSON.stringify(this.data.toSchema())),
+      );
     }
+
+    if (this.errorState.hasError()) {
+      this.errorState.log();
+      return false;
+    }
+    return true;
   }
 
   get nameString() {
@@ -95,7 +106,7 @@ class ModerationAction {
       : moment(this.data.finish).format(settings.miscellaneous.durationFormat);
   }
 
-  async before() { /* Implemented in the parent classes */ }
+  async before() { /* Implemented in the parent class */ }
 
   async notify() {
     const message = this.data.config.notification
@@ -110,9 +121,9 @@ class ModerationAction {
     }
   }
 
-  async exec() { /* Implemented in the parent classes */ }
+  async exec() { /* Implemented in the parent class */ }
 
-  async after() { /* Implemented in the parent classes */ }
+  async after() { /* Implemented in the parent class */ }
 
   log() {
     if (!this.logChannel)
