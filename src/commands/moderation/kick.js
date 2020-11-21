@@ -1,8 +1,8 @@
 import { Argument, Command } from 'discord-akairo';
 import { kick as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
-import ModerationData from '../../structures/ModerationData';
-import KickAction from '../../structures/actions/KickAction';
+import ModerationData from '../../moderation/ModerationData';
+import KickAction from '../../moderation/actions/KickAction';
 import { constants } from '../../utils';
 
 class KickCommand extends Command {

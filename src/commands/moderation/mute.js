@@ -2,8 +2,8 @@ import { Argument, Command } from 'discord-akairo';
 import { mute as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ModerationData from '../../structures/ModerationData';
-import MuteAction from '../../structures/actions/MuteAction';
+import ModerationData from '../../moderation/ModerationData';
+import MuteAction from '../../moderation/actions/MuteAction';
 import { constants } from '../../utils';
 
 class MuteCommand extends Command {

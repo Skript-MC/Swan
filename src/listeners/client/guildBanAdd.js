@@ -1,7 +1,7 @@
 import { Listener } from 'discord-akairo';
 import settings from '../../../config/settings';
-import ModerationData from '../../structures/ModerationData';
-import BanAction from '../../structures/actions/BanAction';
+import ModerationData from '../../moderation/ModerationData';
+import BanAction from '../../moderation/actions/BanAction';
 import { constants } from '../../utils';
 
 class GuildBanAddListener extends Listener {

@@ -2,10 +2,10 @@ import { Listener } from 'discord-akairo';
 import { GuildAuditLogs } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ModerationData from '../../structures/ModerationData';
-import ModerationHelper from '../../structures/ModerationHelper';
-import BanAction from '../../structures/actions/BanAction';
-import KickAction from '../../structures/actions/KickAction';
+import ModerationData from '../../moderation/ModerationData';
+import ModerationHelper from '../../moderation/ModerationHelper';
+import BanAction from '../../moderation/actions/BanAction';
+import KickAction from '../../moderation/actions/KickAction';
 import { constants } from '../../utils';
 
 class GuildMemberRemoveListener extends Listener {

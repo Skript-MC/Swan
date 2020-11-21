@@ -2,8 +2,8 @@ import { Argument, Command } from 'discord-akairo';
 import { ban as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ModerationData from '../../structures/ModerationData';
-import BanAction from '../../structures/actions/BanAction';
+import ModerationData from '../../moderation/ModerationData';
+import BanAction from '../../moderation/actions/BanAction';
 import { constants } from '../../utils';
 
 class BanCommand extends Command {
