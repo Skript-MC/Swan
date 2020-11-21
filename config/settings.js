@@ -5,7 +5,7 @@ dotenv.config();
 
 export default {
   bot: {
-    prefix: '.',
+    prefix: process.env.BOT_PREFIX || '.',
     avatar: path.join(__dirname, '..', 'assets', 'logo.png'),
     guild: process.env.GUILD_ID,
   },
