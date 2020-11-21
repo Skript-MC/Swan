@@ -2,10 +2,10 @@ import messages from '../../config/messages';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import ModerationData from '../moderation/ModerationData';
-import Task from '../structures/Task';
 import BanAction from '../moderation/actions/BanAction';
 import UnbanAction from '../moderation/actions/UnbanAction';
 import UnmuteAction from '../moderation/actions/UnmuteAction';
+import Task from '../structures/Task';
 import { constants, noop } from '../utils';
 
 class ModerationTask extends Task {
