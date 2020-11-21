@@ -40,7 +40,7 @@ class ModerationTask extends Task {
 
       if (sanction.type === constants.SANCTIONS.TYPES.BAN) {
         const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
-          .setVictim(member || user);
+          .setVictim(member || user, false);
 
         if (sanction.informations?.hasSentMessage) {
           data.setReason(messages.moderation.reasons.autoRevoke)
