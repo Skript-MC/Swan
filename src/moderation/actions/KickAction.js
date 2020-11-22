@@ -43,8 +43,6 @@ class KickAction extends ModerationAction {
           .addDetail('Kick Member Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
       );
     }
-
-    this.client.logger.success('Kick finished successfully');
   }
 }
 

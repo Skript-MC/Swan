@@ -1,6 +1,7 @@
 import { Permissions } from 'discord.js';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
+import Logger from '../structures/Logger';
 import { constants, noop, prunePseudo } from '../utils';
 
 class ModerationHelper {
@@ -33,11 +34,11 @@ class ModerationHelper {
       );
       return channel;
     } catch (error) {
-      this.client.logger.error(`Could not create the private channel for the ban of ${data.victim.member.displayName}.`);
-      this.client.logger.detail(`Member's name: "${data.victim.member.displayName}"`);
-      this.client.logger.detail(`Stripped name: "${pseudo}"`);
-      this.client.logger.detail(`Create channel permissions: ${data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
-      this.client.logger.error(error.stack);
+      Logger.error(`Could not create the private channel for the ban of ${data.victim.member.displayName}.`);
+      Logger.detail(`Member's name: "${data.victim.member.displayName}"`);
+      Logger.detail(`Stripped name: "${pseudo}"`);
+      Logger.detail(`Create channel permissions: ${data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
+      Logger.error(error.stack);
       throw new Error('Private Channel Creation Failed');
     }
   }

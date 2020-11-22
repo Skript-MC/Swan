@@ -1,4 +1,5 @@
 import { Listener } from 'discord-akairo';
+import Logger from '../../structures/Logger';
 
 class UnhandledRejectionListener extends Listener {
   constructor() {
@@ -9,11 +10,11 @@ class UnhandledRejectionListener extends Listener {
   }
 
   exec(error) {
-    this.client.logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
+    Logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
     if (process.env.NODE_ENV === 'production')
       throw new Error(error.stack);
     else
-      this.client.logger.error(error.stack);
+      Logger.error(error.stack);
   }
 }
 

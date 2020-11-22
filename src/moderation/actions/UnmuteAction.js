@@ -56,8 +56,6 @@ class UnmuteAction extends ModerationAction {
           .addDetail('Manage Roles Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
-
-    this.client.logger.success('Unmute finished successfully');
   }
 }
 

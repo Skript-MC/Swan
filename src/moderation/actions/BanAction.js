@@ -3,6 +3,7 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
+import Logger from '../../structures/Logger';
 import { noop } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';
@@ -61,13 +62,11 @@ class BanAction extends ModerationAction {
           .addDetail('Ban Member Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.BAN_MEMBERS)),
       );
     }
-
-    this.client.logger.success('Bannishment finished successfully');
   }
 
   reban() {
     // TODO: implement ban update
-    this.client.logger.info('NOT IMPLEMENTED: Reban (ban update)');
+    Logger.info('NOT IMPLEMENTED: Reban (ban update)');
   }
 
   async ban() {
@@ -81,9 +80,9 @@ class BanAction extends ModerationAction {
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (error) {
       this.data.channel.send(messages.global.oops);
-      this.client.logger.error('An error occured while inserting ban to DB');
-      this.client.logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      this.client.logger.error(error.stack);
+      Logger.error('An error occured while inserting ban to DB');
+      Logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
+      Logger.error(error.stack);
     }
 
     // 2. Add needed roles
@@ -92,10 +91,10 @@ class BanAction extends ModerationAction {
       await this.data.victim.member?.roles.set([role]);
     } catch (error) {
       this.data.channel.send(messages.global.oops);
-      this.client.logger.error('Swan does not have sufficient permissions to edit GuildMember roles');
-      this.client.logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      this.client.logger.detail(`Manage Role Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
-      this.client.logger.error(error.stack);
+      Logger.error('Swan does not have sufficient permissions to edit GuildMember roles');
+      Logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
+      Logger.detail(`Manage Role Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
+      Logger.error(error.stack);
     }
 
     // 3. Create the private channel
@@ -113,12 +112,10 @@ class BanAction extends ModerationAction {
       await message.pin().catch(noop);
     } catch (error) {
       this.data.channel.send(messages.global.oops);
-      this.client.logger.error('Swan does not have sufficient permissions to create/get a TextChannel');
-      this.client.logger.detail(`Manage Channel Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
-      this.client.logger.error(error.stack);
+      Logger.error('Swan does not have sufficient permissions to create/get a TextChannel');
+      Logger.detail(`Manage Channel Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
+      Logger.error(error.stack);
     }
-
-    this.client.logger.success('Bannishment finished successfully');
   }
 
   after() {

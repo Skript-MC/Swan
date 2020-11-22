@@ -30,13 +30,12 @@ class SwanClient extends AkairoClient {
       },
     });
 
-    this.logger = new Logger();
     this.addonsVersions = [];
 
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
 
-    this.logger.info('Creating Command handler');
+    Logger.info('Creating Command handler');
     this.commandHandler = new CommandHandler(this, {
       directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
@@ -60,19 +59,19 @@ class SwanClient extends AkairoClient {
       },
     });
 
-    this.logger.info('Creating Inhibitor handler');
+    Logger.info('Creating Inhibitor handler');
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: path.join(__dirname, 'inhibitors/'),
       automateCategories: true,
     });
 
-    this.logger.info('Creating Task handler');
+    Logger.info('Creating Task handler');
     this.taskHandler = new TaskHandler(this, {
       directory: path.join(__dirname, 'tasks/'),
       automateCategories: true,
     });
 
-    this.logger.info('Creating Listener handler');
+    Logger.info('Creating Listener handler');
     this.listenerHandler = new ListenerHandler(this, {
       directory: path.join(__dirname, 'listeners/'),
       automateCategories: true,
@@ -112,9 +111,9 @@ class SwanClient extends AkairoClient {
 
     this.loadCommandStats();
     this.loadAddons();
-    this.logger.info('Skripttools : addons loaded!');
+    Logger.info('Skripttools : addons loaded!');
 
-    this.logger.info('Client initialization finished');
+    Logger.info('Client initialization finished');
   }
 
   async loadCommandStats() {
@@ -129,8 +128,8 @@ class SwanClient extends AkairoClient {
     try {
       await Promise.all(documents);
     } catch (err) {
-      this.logger.error('Could not load some documents:');
-      this.logger.error(err.stack);
+      Logger.error('Could not load some documents:');
+      Logger.error(err.stack);
     }
   }
 
@@ -146,38 +145,38 @@ class SwanClient extends AkairoClient {
           this.addonsVersions.push(versions[versions.length - 1]);
       }
     } catch (err) {
-      this.logger.error(err);
+      Logger.error(err);
     }
   }
 
   checkValidity() {
     // Check tokens
     if (!process.env.DISCORD_TOKEN)
-      this.logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
+      Logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
     if (!process.env.SENTRY_TOKEN)
-      this.logger.error('Sentry DSN was not set in the environment variables (SENTRY_TOKEN)');
+      Logger.error('Sentry DSN was not set in the environment variables (SENTRY_TOKEN)');
 
     // Check channels IDs
     const channels = this.guild.channels.cache;
     for (const [key, value] of Object.entries(settings.channels)) {
       if (Array.isArray(value)) {
         if (value.length === 0)
-          this.logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+          Logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
         else if (!value.every(elt => channels.has(elt)))
-          this.logger.warn(`One of the id entered for settings.channels.${key} is not a valid channel.`);
+          Logger.warn(`One of the id entered for settings.channels.${key} is not a valid channel.`);
       } else if (!value) {
-        this.logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+        Logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
       } else if (!channels.has(value)) {
-        this.logger.warn(`The id entered for settings.channels.${key} is not a valid channel.`);
+        Logger.warn(`The id entered for settings.channels.${key} is not a valid channel.`);
       }
     }
 
     // Check roles IDs
     for (const [key, value] of Object.entries(settings.roles)) {
       if (!value)
-        this.logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+        Logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
       else if (!this.guild.roles.cache.has(value))
-        this.logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
+        Logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
     }
 
     // TODO: Also check for emojis IDs
@@ -192,7 +191,7 @@ class SwanClient extends AkairoClient {
       'READ_MESSAGE_HISTORY',
     ];
     if (!this.guild.me.hasPermission(permissions))
-      this.logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
+      Logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
 
     // Check client's channels permissions
     for (const channel of channels.array()) {
@@ -201,7 +200,7 @@ class SwanClient extends AkairoClient {
 
       const channelPermissions = channel.permissionsFor(this.guild.me).toArray();
       if (!permissions.every(perm => channelPermissions.includes(perm)))
-        this.logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
+        Logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
     }
   }
 }
