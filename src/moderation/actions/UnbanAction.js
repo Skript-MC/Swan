@@ -67,8 +67,6 @@ class UnbanAction extends ModerationAction {
           .addDetail('Manage Channel Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
-
-    this.client.logger.success('Unban finished successfully');
   }
 
   after() {

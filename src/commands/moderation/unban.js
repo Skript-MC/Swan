@@ -5,6 +5,7 @@ import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import UnbanAction from '../../moderation/actions/UnbanAction';
+import Logger from '../../structures/Logger';
 import { constants } from '../../utils';
 
 class UnbanCommand extends Command {
@@ -59,10 +60,10 @@ class UnbanCommand extends Command {
       if (success)
         await message.util.send(config.messages.success);
     } catch (error) {
-      this.client.logger.error('An unexpected error occured while unbanning a member!');
-      this.client.logger.detail(`Parsed member: ${args.member}`);
-      this.client.logger.detail(`Message: ${message.url}`);
-      this.client.logger.detail(error.stack, true);
+      Logger.error('An unexpected error occured while unbanning a member!');
+      Logger.detail(`Parsed member: ${args.member}`);
+      Logger.detail(`Message: ${message.url}`);
+      Logger.detail(error.stack, true);
       message.util.send(messages.global.oops);
     }
   }

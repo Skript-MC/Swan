@@ -4,6 +4,7 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ModerationData from '../../moderation/ModerationData';
 import MuteAction from '../../moderation/actions/MuteAction';
+import Logger from '../../structures/Logger';
 import { constants } from '../../utils';
 
 class MuteCommand extends Command {
@@ -64,11 +65,11 @@ class MuteCommand extends Command {
       if (success)
         await message.util.send(config.messages.success);
     } catch (error) {
-      this.client.logger.error('An unexpected error occured while muting a member!');
-      this.client.logger.detail(`Duration: ${args.duration}`);
-      this.client.logger.detail(`Parsed member: ${args.member}`);
-      this.client.logger.detail(`Message: ${message.url}`);
-      this.client.logger.detail(error.stack, true);
+      Logger.error('An unexpected error occured while muting a member!');
+      Logger.detail(`Duration: ${args.duration}`);
+      Logger.detail(`Parsed member: ${args.member}`);
+      Logger.detail(`Message: ${message.url}`);
+      Logger.detail(error.stack, true);
       message.util.send(messages.global.oops);
     }
   }

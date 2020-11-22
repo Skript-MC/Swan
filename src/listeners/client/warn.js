@@ -1,4 +1,5 @@
 import { Listener } from 'discord-akairo';
+import Logger from '../../structures/Logger';
 
 class WarnListener extends Listener {
   constructor() {
@@ -9,7 +10,7 @@ class WarnListener extends Listener {
   }
 
   exec(info) {
-    this.client.logger.warn(`DiscordJS emitted a warning: ${info}`);
+    Logger.warn(`DiscordJS emitted a warning: ${info}`);
   }
 }
 

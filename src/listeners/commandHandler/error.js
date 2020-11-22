@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import messages from '../../../config/messages';
+import Logger from '../../structures/Logger';
 import { noop } from '../../utils';
 
 class CommandHandlerErrorListener extends Listener {
@@ -12,13 +13,13 @@ class CommandHandlerErrorListener extends Listener {
 
   exec(error, message, command) {
     message.util.send(messages.global.oops).catch(noop);
-    this.client.logger.error('Oops, something went wrong with a command!');
-    this.client.logger.detail(`Command: ${command}`);
-    this.client.logger.detail(`Message: ${message.url}`);
+    Logger.error('Oops, something went wrong with a command!');
+    Logger.detail(`Command: ${command}`);
+    Logger.detail(`Message: ${message.url}`);
     if (process.env.NODE_ENV === 'production')
       throw new Error(error.stack);
     else
-      this.client.logger.error(error.stack);
+      Logger.error(error.stack);
   }
 }
 

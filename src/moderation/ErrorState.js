@@ -1,4 +1,5 @@
 import messages from '../../config/messages';
+import Logger from '../structures/Logger';
 import ModerationError from './ModerationError';
 
 class ErrorState {
@@ -23,12 +24,12 @@ class ErrorState {
 
     this.channel.send(messages.global.oops);
     for (const error of this.errors) {
-      this.client.logger.error(error.message);
+      Logger.error(error.message);
       if (error instanceof ModerationError) {
         for (const [detail, value] of error.details.entries())
-          this.client.logger.detail(`${detail}: ${value}`);
+          Logger.detail(`${detail}: ${value}`);
       }
-      this.client.logger.detail(error.stack, true);
+      Logger.detail(error.stack, true);
     }
   }
 }

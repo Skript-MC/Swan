@@ -3,6 +3,7 @@ import { kick as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
 import KickAction from '../../moderation/actions/KickAction';
+import Logger from '../../structures/Logger';
 import { constants } from '../../utils';
 
 class KickCommand extends Command {
@@ -48,10 +49,10 @@ class KickCommand extends Command {
       if (success)
         await message.util.send(config.messages.success);
     } catch (error) {
-      this.client.logger.error('An unexpected error occured while kicking a member!');
-      this.client.logger.detail(`Parsed member: ${args.member}`);
-      this.client.logger.detail(`Message: ${message.url}`);
-      this.client.logger.detail(error.stack, true);
+      Logger.error('An unexpected error occured while kicking a member!');
+      Logger.detail(`Parsed member: ${args.member}`);
+      Logger.detail(`Message: ${message.url}`);
+      Logger.detail(error.stack, true);
       message.util.send(messages.global.oops);
     }
   }

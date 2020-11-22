@@ -53,8 +53,6 @@ class MuteAction extends ModerationAction {
           .addDetail('Add Role Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
-
-    this.client.logger.success('Mute finished successfully');
   }
 }
 

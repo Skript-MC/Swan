@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
 import SwanClient from './SwanClient';
+import Logger from './structures/Logger';
 
 dotenv.config();
 
@@ -25,10 +26,10 @@ mongoose.connect(process.env.MONGO_URI, {
   useFindAndModify: false,
 });
 mongoose.connection.on('connected', () => {
-  client.logger.success('MongoDB is connected!');
+  Logger.success('MongoDB is connected!');
 });
 mongoose.connection.on('error', (err) => {
-  client.logger.error('MongoDB connection error. Please make sure MongoDB is running.');
+  Logger.error('MongoDB connection error. Please make sure MongoDB is running.');
   throw err;
 });
 

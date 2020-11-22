@@ -1,4 +1,5 @@
 import { Listener } from 'discord-akairo';
+import Logger from '../../structures/Logger';
 
 class TaskHandlerErrorListener extends Listener {
   constructor() {
@@ -9,13 +10,13 @@ class TaskHandlerErrorListener extends Listener {
   }
 
   exec(error, task) {
-    this.client.logger.error('Oops, something went wrong with a task!');
-    this.client.logger.detail(`Task: ${task}`);
-    this.client.logger.detail(`Cron: ${task.cron}`);
+    Logger.error('Oops, something went wrong with a task!');
+    Logger.detail(`Task: ${task}`);
+    Logger.detail(`Cron: ${task.cron}`);
     if (process.env.NODE_ENV === 'production')
       throw new Error(error.stack);
     else
-      this.client.logger.error(error.stack);
+      Logger.error(error.stack);
   }
 }
 

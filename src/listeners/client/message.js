@@ -5,6 +5,7 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
 import ModerationHelper from '../../moderation/ModerationHelper';
+import Logger from '../../structures/Logger';
 import { constants, noop } from '../../utils';
 
 class MessageListener extends Listener {
@@ -30,11 +31,11 @@ class MessageListener extends Listener {
           },
         );
       } catch (error) {
-        this.client.logger.error('Unable to confirm that the author (which is banned) has sent messages.');
-        this.client.logger.detail(`isBanned: ${isBanned}`);
-        this.client.logger.detail(`Member ID: ${message.member.id}`);
-        this.client.logger.detail(`Message: ${message.url}`);
-        this.client.logger.error(error.stack);
+        Logger.error('Unable to confirm that the author (which is banned) has sent messages.');
+        Logger.detail(`isBanned: ${isBanned}`);
+        Logger.detail(`Member ID: ${message.member.id}`);
+        Logger.detail(`Message: ${message.url}`);
+        Logger.error(error.stack);
         return true;
       }
     }
@@ -61,12 +62,12 @@ class MessageListener extends Listener {
         await message.react(settings.emojis.yes);
         await message.react(settings.emojis.no);
       } catch (error) {
-        this.client.logger.error('Unable to add emojis to the idea channel.');
-        this.client.logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
-        this.client.logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
-        this.client.logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
-        this.client.logger.detail(`Message: ${message.url}`);
-        this.client.logger.error(error.stack);
+        Logger.error('Unable to add emojis to the idea channel.');
+        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        Logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
+        Logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
+        Logger.detail(`Message: ${message.url}`);
+        Logger.error(error.stack);
       }
     }
     return false;

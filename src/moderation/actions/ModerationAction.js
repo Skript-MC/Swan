@@ -4,11 +4,11 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
+import Logger from '../../structures/Logger';
 import { noop } from '../../utils';
 import constants from '../../utils/constants';
 import ErrorState from '../ErrorState';
 import ModerationError from '../ModerationError';
-
 
 const lastSanctionField = {
   [constants.SANCTIONS.TYPES.BAN]: 'lastBanId',
@@ -83,9 +83,9 @@ class ModerationAction {
       case constants.SANCTIONS.TYPES.REMOVE_WARN:
         return messages.moderation.sanctionNames.removeWarn;
       default:
-        this.client.logger.error('Assert Not Reached Error');
-        this.client.logger.detail(`Unknown moderation action: ${this.data.type}`);
-        this.client.logger.detail(`Allowed: ${Object.values(constants.SANCTIONS.TYPES)}`);
+        Logger.error('Assert Not Reached Error');
+        Logger.detail(`Unknown moderation action: ${this.data.type}`);
+        Logger.detail(`Allowed: ${Object.values(constants.SANCTIONS.TYPES)}`);
         throw new Error('Assert Not Reached');
     }
   }
