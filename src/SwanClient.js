@@ -154,7 +154,7 @@ class SwanClient extends AkairoClient {
     if (!process.env.DISCORD_TOKEN)
       Logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
     if (!process.env.SENTRY_TOKEN)
-      Logger.error('Sentry DSN was not set in the environment variables (SENTRY_TOKEN)');
+      Logger.info("Sentry DSN was not set in the environment variables (SENTRY_TOKEN), so Sentry won't be used.");
 
     // Check channels IDs
     const channels = this.guild.channels.cache;
