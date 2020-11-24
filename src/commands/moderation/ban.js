@@ -47,7 +47,7 @@ class BanCommand extends Command {
       }, {
         id: 'autoban',
         match: 'flag',
-        flag: ['--autoban', '-a'],
+        flag: ['--autoban', '--auto-ban', '-a'],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
