@@ -1,5 +1,6 @@
 import fsSync, { promises as fs } from 'fs';
 import path from 'path';
+import { Permissions } from 'discord.js';
 import moment from 'moment';
 import { db, client } from '../main';
 import { prunePseudo } from '../utils';
@@ -15,27 +16,31 @@ class SanctionManager {
       return client.guild.channels.cache.find(filter);
     }
 
-    const channel = await client.guild.channels.create(channelName, 'text');
-
-    const parent = channel.setParent(client.config.moderation.logCategory);
-    const topic = channel.setTopic(`${data.victimId} (NE PAS CHANGER)`);
-    const permissions = channel.overwritePermissions([{
-      id: client.config.roles.everyone,
-      deny: ['VIEW_CHANNEL', 'CREATE_INSTANT_INVITE'],
-    }, {
-      id: client.config.roles.staff,
-      allow: ['VIEW_CHANNEL', 'MANAGE_CHANNELS'],
-    }, {
-      id: data.victimId,
-      allow: ['VIEW_CHANNEL'],
-    }]);
-
-    await Promise.all([parent, topic, permissions]).catch((err) => {
+    try {
+      const channel = await client.guild.channels.create(
+        channelName,
+        {
+          type: 'text',
+          topic: `${data.victimId} (NE PAS CHANGER)`,
+          parent: client.config.moderation.logCategory,
+          permissionOverwrites: [{
+            id: client.config.roles.everyone,
+            deny: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.CREATE_INSTANT_INVITE],
+          }, {
+            id: client.config.roles.staff,
+            allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.MANAGE_CHANNELS],
+          }, {
+            id: data.victimId,
+            allow: [Permissions.FLAGS.VIEW_CHANNEL],
+          }],
+        },
+      );
+      return channel;
+    } catch (err) {
       data.messageChannel.send(client.config.messages.errors.channelPermissions);
       client.logger.warn('Swan does not have sufficient permissions to edit a TextChannel permissions');
       client.logger.debug(`    ↳ ${err.message}`);
-    });
-    return channel;
+    }
   }
 
   static async removeChannel(data) {
@@ -85,7 +90,7 @@ class SanctionManager {
   }
 
   static async getAllMessages(chan) {
-    const allMessagesMapped = await chan.messages.fetch().catch(console.error);
+    const allMessagesMapped = await chan.messages.fetch().catch(console.error) || [];
     const allMessages = [];
     for (const elt of allMessagesMapped) {
       const infos = elt[1];
