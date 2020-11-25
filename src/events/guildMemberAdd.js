@@ -3,6 +3,13 @@ import { toValidName } from '../utils';
 
 export default async function guildMemberAddHandler(member) {
   if (!client.activated) return;
+
+  // Send greeting
+  const messages = client.config.messages.miscellaneous.greetings;
+  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  const mainChannel = client.guild.channels.resolve(client.config.channels.main);
+  await mainChannel.send(randomMessage.replace('%m', member)).catch(() => {});
+
   // Get the nickname or the username of the member
   const name = member.displayName;
   // Get the correct name without special or forbidden characters
