@@ -3,6 +3,7 @@ import he from 'he';
 import sanitize from 'sanitize-html';
 import Parser from 'rss-parser';
 import { client } from '../main';
+import trimText from '../utils/trimText';
 
 const parser = new Parser();
 
@@ -27,7 +28,7 @@ function sendTopics(topics, channel) {
     content = he.decode(content);
     content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
     content = content.replace(/\n+/gmu, '\n');
-    if (content.length > 503) content = `${content.slice(0, 500)}...`;
+    content = trimText(content, 500);
 
     const embed = new MessageEmbed()
       .setColor(client.config.colors.default)
@@ -50,7 +51,7 @@ function sendFiles(files, channel) {
     content = he.decode(content);
     content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
     content = content.replace(/\n+/gmu, '\n');
-    if (content.length > 503) content = `${content.slice(0, 500)}...`;
+    content = trimText(content, 500);
 
     const embed = new MessageEmbed()
       .setColor(client.config.colors.default)
