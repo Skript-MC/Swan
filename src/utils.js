@@ -10,5 +10,6 @@ export { default as splitText } from './utils/splitText';
 export { default as toDuration } from './utils/toDuration';
 export { default as toTimestamp } from './utils/toTimestamp';
 export { default as toValidName } from './utils/toValidName';
+export { default as trimText } from './utils/trimText';
 export { default as uid } from './utils/uid';
 export { default as uncapitalize } from './utils/uncapitalize';

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import { client } from '../main';
+import trimText from '../utils/trimText';
 
 export default async function loadSkriptReleases() {
   // Envoie de la requête avec les options ci-dessus
@@ -22,9 +23,7 @@ export default async function loadSkriptReleases() {
   // Récupérer le salon des nouvelles de Skript
   const channel = client.channels.cache.get(client.config.channels.skriptNews);
   // On envoie les informations de la nouvelle version
-  const body = latestRelease.body.length >= 1900
-    ? `${latestRelease.body.slice(0, 1900)}...`
-    : latestRelease.body;
+  const body = trimText(latestRelease.body, 1900);
   await channel.send('Une nouvelle version de Skript vient d\'être publiée. Vous pouvez la télécharger et consulter les changements ci-dessous.');
   const embed = new MessageEmbed()
     .setColor(client.config.colors.default)
