@@ -3,6 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import ACTION_TYPE from './actionType';
 import { db, client } from '../../main';
 import { toDuration } from '../../utils';
+import trimText from '../../utils/trimText';
 
 class ModerationAction {
   constructor(data) {
@@ -121,7 +122,7 @@ class ModerationAction {
       embed.addField(':stopwatch: Durée', content, true);
     }
 
-    embed.addField(':label: Raison', `${this.data.reason}`, true);
+    embed.addField(':label: Raison', trimText(this.data.reason, 500), true);
     if (this.data.privateChannel) embed.addField(':speech_left: Channel privé', `${this.data.privateChannel.toString()}`, true);
 
     if (this.data.file) embed.addField(':scroll: Historique des messages', 'Disponible ci-dessous', true);

@@ -1,4 +1,5 @@
 import Command from '../../structures/Command';
+import trimText from '../../utils';
 
 class Rules extends Command {
   constructor() {
@@ -9,11 +10,13 @@ class Rules extends Command {
   }
 
   async execute(client, message, args) {
-    if (!client.config.channels.helpSkript.includes(message.channel.id) && message.channel.id !== client.config.channels.bot) return message.channel.sendError(this.config.onlyInHelp, message.member);
+    if (!client.config.channels.helpSkript.includes(message.channel.id) || message.channel.id !== client.config.channels.bot) {
+      return message.channel.sendError(this.config.onlyInHelp, message.member);
+    }
 
     const rule = parseInt(args[0], 10);
     if (isNaN(rule) || rule < 1 || rule > this.config.messages.length) {
-      const help = this.config.messages.map(msg => `\`${this.config.messages.indexOf(msg) + 1}\` : ${msg.slice(0, 50)}...`).join('\n');
+      const help = this.config.messages.map(msg => `\`${this.config.messages.indexOf(msg) + 1}\` : ${trimText(msg, 50)}`).join('\n');
       return message.channel.sendError(
         this.config.invalidRule.replace('%s', help),
         message.member,
