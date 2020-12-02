@@ -8,7 +8,7 @@ export default async function guildMemberAddHandler(member) {
   const messages = client.config.messages.miscellaneous.greetings;
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
   const mainChannel = client.guild.channels.resolve(client.config.channels.main);
-  await mainChannel.send(randomMessage.replace('%m', member)).catch(() => {});
+  await mainChannel.send(randomMessage.replace(/%m/g, member)).catch(() => {});
 
   // Get the nickname or the username of the member
   const name = member.displayName;
