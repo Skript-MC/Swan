@@ -26,7 +26,7 @@ function sendTopics(topics, channel) {
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
     content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
-    content = content.replace(/(\n){3,}/gmu, '\n');
+    content = content.replace(/\n+/gmu, '\n');
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
@@ -49,7 +49,7 @@ function sendFiles(files, channel) {
     content = sanitize(content, { allowedTags: [], allowedAttributes: {} });
     content = he.decode(content);
     content = content.replace('Contenu masqué\n\n\nRéagissez ou répondez à ce message afin de consulter le contenu masqué.', '');
-    content = content.replace(/(\n){3,}/gmu, '\n');
+    content = content.replace(/\n+/gmu, '\n');
     if (content.length > 503) content = `${content.slice(0, 500)}...`;
 
     const embed = new MessageEmbed()
