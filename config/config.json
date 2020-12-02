@@ -106,7 +106,13 @@
                 "Bienvenue sur Skript-MC, %m !",
                 "%m rejoint la fête ;)",
                 "%m est arrivé ! La fête peut commencer ! :partying_face:",
-                "Salut %m ! Le voyage s'est bien passé ?"
+                "Salut %m ! Le voyage s'est bien passé ?",
+                "Félicitations %m ! Tu as réussi à venir jusqu'ici sans te casser de jambes ;)",
+                "Faites place, %m est parmi nous !",
+                "Ne soyez pas timides ! Dites bonjour à %m, qui vient d'arriver :)",
+                "%m vient de se glisser dans le serveur...",
+                "Content de te voir, %m :)",
+                "%m vient juste d'attérir..."
             ]
         },
         "errors": {
