@@ -16,6 +16,11 @@ moment.relativeTimeThreshold('m', 55);
 moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
+if (!process.env.DISCORD_TOKEN) {
+  Logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
+  throw new Error('Unable to load Swan, stopping.');
+}
+
 const client = new SwanClient();
 client.login(process.env.DISCORD_TOKEN);
 
