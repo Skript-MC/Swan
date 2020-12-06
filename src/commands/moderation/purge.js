@@ -18,7 +18,7 @@ class PurgeCommand extends Command {
         },
       }, {
         id: 'member',
-        type: 'member',
+        type: Argument.union('member', 'user'),
         unordered: true,
       }, {
         id: 'force',
@@ -37,10 +37,9 @@ class PurgeCommand extends Command {
     message.util.messages.set(message.id, message);
     await message.channel.bulkDelete(message.util.messages, true).catch(noop);
 
-    const messages = (await message.channel.messages
-      .fetch({ limit: amount }))
+    const messages = (await message.channel.messages.fetch({ limit: amount }))
       .filter(msg => (member ? msg.author.id === member.id : true))
-      .filter(msg => (force ? true : !msg.member.roles.cache.has(settings.roles.staff)));
+      .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
     const deletedMessages = await message.channel.bulkDelete(messages, true);
 
     const msg = await message.util.send(config.messages.success.replace('{AMOUNT}', deletedMessages.size));
