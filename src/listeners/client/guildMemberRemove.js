@@ -18,6 +18,8 @@ class GuildMemberRemoveListener extends Listener {
 
   async exec(member) {
     const isBanned = await ModerationHelper.isBanned(member.id, false);
+    if (isBanned && this.client.currentlyBanning.includes(member.id))
+      return;
 
     const kicks = await member.guild.fetchAuditLogs({ type: GuildAuditLogs.Actions.MEMBER_KICK });
     const lastKick = kicks.entries.first();

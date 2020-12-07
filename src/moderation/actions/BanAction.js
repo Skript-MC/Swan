@@ -4,7 +4,7 @@ import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import Logger from '../../structures/Logger';
-import { noop } from '../../utils';
+import { constants, noop } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';
 import ModerationAction from './ModerationAction';
@@ -17,7 +17,7 @@ class BanAction extends ModerationAction {
   async exec() {
     if (this.data.duration === -1)
       await this.hardban();
-    else if (this.isUpdate)
+    else if (this.updateInfos.isUpdate())
       this.reban();
     else
       await this.ban();
@@ -31,12 +31,34 @@ class BanAction extends ModerationAction {
 
     // 1. Add to the database
     try {
-      const user = await ConvictedUser.findOneAndUpdate(
-        { memberId: this.data.victim.id },
-        { lastBanId: this.data.id },
-        { upsert: true, new: true },
-      );
-      await Sanction.create({ ...this.data.toSchema(), user: user._id });
+      if (this.updateInfos.isUpdate()) {
+        await Sanction.findOneAndUpdate(
+          { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastBanId },
+          {
+            $set: {
+              duration: this.data.duration,
+              finish: null,
+            },
+            $push: {
+              updates: {
+                date: this.data.start,
+                moderator: this.data.moderator?.id,
+                type: constants.SANCTIONS.UPDATES.DURATION,
+                valueBefore: this.updateInfos.sanctionDocument.duration,
+                valueAfter: this.data.duration,
+                reason: this.data.reason,
+              },
+            },
+          },
+        );
+      } else {
+        const user = await ConvictedUser.findOneAndUpdate(
+          { memberId: this.data.victim.id },
+          { lastBanId: this.data.id },
+          { upsert: true, new: true },
+        );
+        await Sanction.create({ ...this.data.toSchema(), user: user._id });
+      }
     } catch (error) {
       this.errorState.addError(
         new ModerationError()
