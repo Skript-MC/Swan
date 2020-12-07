@@ -24,6 +24,7 @@ export const ban = {
   },
   messages: {
     notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
+    notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {UPDATE}.',
     success: 'Membre banni avec succès !',
     promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
     promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
@@ -132,7 +133,7 @@ export const mute = {
   },
   messages: {
     notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
-    success: 'Membre mute avec succès !',
+    success: 'Membre rendu muet avec succès !',
     promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
     promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
     promptStartDuration: 'Il faut ajouter une durée (en anglais ou en francais). Vous pouvez par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Vous pouvez également combiner ces durées ensemble : `10j15min300s` est par exemple une durée valide. Entre-la en postant un message contenant seulement la durée :',

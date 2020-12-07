@@ -59,5 +59,9 @@ export default {
       unmute: 'Démute',
       removeWarn: "Suppression d'avertissement",
     },
+    updateNames: {
+      revoked: 'Révoquation',
+      duration: 'Durée',
+    },
   },
 };

@@ -2,33 +2,24 @@ import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
 import Logger from '../../structures/Logger';
-import { noop } from '../../utils';
-import constants from '../../utils/constants';
+import { constants, noop } from '../../utils';
+import ActionUpdateInformations from '../ActionUpdateInformations';
 import ErrorState from '../ErrorState';
 import ModerationError from '../ModerationError';
-
-const lastSanctionField = {
-  [constants.SANCTIONS.TYPES.BAN]: 'lastBanId',
-};
-
 
 class ModerationAction {
   constructor(data) {
     this.data = data;
     this.client = this.data.client;
     this.logChannel = this.client.channels.resolve(settings.channels.log);
+
     this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
+    this.updateInfos = new ActionUpdateInformations(this.data);
   }
 
   async commit() {
-    const field = lastSanctionField[this.data.type];
-    const user = await ConvictedUser.findOne({ memberId: this.data.victim.id }).catch(noop);
-    const sanction = await Sanction.findOne({ memberId: this.data.victim.id, revoked: false, id: user?.[field] })
-      .catch(noop);
-    this.isUpdate = !!sanction;
+    await this.updateInfos.load();
 
     try {
       await this.before();
@@ -109,11 +100,20 @@ class ModerationAction {
   async before() { /* Implemented in the parent class */ }
 
   async notify() {
-    const message = this.data.config.notification
-      .replace('{MEMBER}', this.nameString)
-      .replace('{SANCTION}', this.action)
-      .replace('{REASON}', this.data.reason)
-      .replace('{DURATION}', this.duration);
+    let message = '';
+
+    message = this.isUpdate
+      ? this.data.config.notificationUpdate
+        .replace('{MEMBER}', this.nameString)
+        .replace('{SANCTION}', this.action)
+        .replace('{REASON}', this.data.reason)
+        .replace('{CHANGE}', this.duration)
+      : this.data.config.notification
+        .replace('{MEMBER}', this.nameString)
+        .replace('{SANCTION}', this.action)
+        .replace('{REASON}', this.data.reason)
+        .replace('{DURATION}', this.duration);
+
     try {
       await (this.data.victim.member || this.data.victim.user)?.send(message);
     } catch {
