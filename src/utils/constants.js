@@ -17,7 +17,6 @@ export default {
     },
     UPDATES: {
       REVOKED: 'revoked',
-      REASON: 'reason',
       DURATION: 'duration',
     },
   },

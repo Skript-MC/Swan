@@ -66,25 +66,14 @@ class HistoryCommand extends Command {
       if (sanction.updates?.length > 0) {
         infos += config.messages.sanctionDescription.modifications.replace('{PLURAL}', sanction.updates.length > 1 ? 's' : '');
         for (const update of sanction.updates) {
-          let diff;
-
-          if (update.type === constants.SANCTIONS.UPDATES.DURATION) {
-            diff = stripIndent`
-              \`\`\`diff
-              - ${toHumanDuration(update.valueBefore)}
-              + ${toHumanDuration(update.valueAfter)}
-              \`\`\`
-            `;
-          } else if (update.type === constants.SANCTIONS.UPDATES.REASON) {
-            diff = stripIndent`
-              \`\`\`diff
-              - ${update.valueBefore}
-              + ${update.valueAfter}
-              \`\`\`
-            `;
-          } else {
-            diff = '\n';
-          }
+          const diff = update.type === constants.SANCTIONS.UPDATES.DURATION
+            ? stripIndent`
+                \`\`\`diff
+                - ${toHumanDuration(update.valueBefore)}
+                + ${toHumanDuration(update.valueAfter)}
+                \`\`\`
+              `
+            : '\n';
 
           infos += '        ';
           infos += oneLine`
