@@ -7,13 +7,52 @@ import {
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
+import { constants } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationAction from './ModerationAction';
 
 class MuteAction extends ModerationAction {
   async exec() {
-    await this.mute();
+    // eslint-disable-next-line unicorn/prefer-ternary
+    if (this.updateInfos.isUpdate())
+      await this.remute();
+    else
+      await this.mute();
     return true;
+  }
+
+  async remute() {
+    // Update the database
+    try {
+      await Sanction.findOneAndUpdate(
+        { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastMuteId },
+        {
+          $set: {
+            duration: this.data.duration,
+            finish: this.updateInfos.sanctionDocument.start + this.data.duration,
+          },
+          $push: {
+            updates: {
+              date: this.data.start,
+              moderator: this.data.moderator?.id,
+              type: constants.SANCTIONS.UPDATES.DURATION,
+              valueBefore: this.updateInfos.sanctionDocument.duration,
+              valueAfter: this.data.duration,
+              reason: this.data.reason,
+            },
+          },
+        },
+      );
+    } catch (error) {
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while inserting mute to database')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id),
+      );
+    }
   }
 
   async mute() {
