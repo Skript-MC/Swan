@@ -4,6 +4,8 @@ import { constants, noop } from '../utils';
 
 const lastSanctionField = {
   [constants.SANCTIONS.TYPES.BAN]: 'lastBanId',
+  [constants.SANCTIONS.TYPES.HARDBAN]: 'lastBanId',
+
   [constants.SANCTIONS.TYPES.MUTE]: 'lastMuteId',
 };
 
