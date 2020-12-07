@@ -18,7 +18,7 @@ class BanAction extends ModerationAction {
     if (this.data.duration === -1)
       await this.hardban();
     else if (this.updateInfos.isUpdate())
-      this.reban();
+      await this.reban();
     else
       await this.ban();
     return true;
@@ -29,7 +29,7 @@ class BanAction extends ModerationAction {
       ?.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695')
       .catch(noop);
 
-    // 1. Add to the database
+    // 1. Add/Update to the database
     try {
       if (this.updateInfos.isUpdate()) {
         await Sanction.findOneAndUpdate(
@@ -86,9 +86,38 @@ class BanAction extends ModerationAction {
     }
   }
 
-  reban() {
-    // TODO: implement ban update
-    Logger.info('NOT IMPLEMENTED: Reban (ban update)');
+  async reban() {
+    // Update the database
+    try {
+      await Sanction.findOneAndUpdate(
+        { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastBanId },
+        {
+          $set: {
+            duration: this.data.duration,
+            finish: this.updateInfos.sanctionDocument.start + this.data.duration,
+          },
+          $push: {
+            updates: {
+              date: this.data.start,
+              moderator: this.data.moderator?.id,
+              type: constants.SANCTIONS.UPDATES.DURATION,
+              valueBefore: this.updateInfos.sanctionDocument.duration,
+              valueAfter: this.data.duration,
+              reason: this.data.reason,
+            },
+          },
+        },
+      );
+    } catch (error) {
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while inserting ban to database')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id),
+      );
+    }
   }
 
   async ban() {

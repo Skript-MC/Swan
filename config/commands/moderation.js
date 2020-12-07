@@ -24,7 +24,7 @@ export const ban = {
   },
   messages: {
     notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
-    notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {UPDATE}.',
+    notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {CHANGE}.',
     success: 'Membre banni avec succès !',
     promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
     promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
@@ -133,6 +133,7 @@ export const mute = {
   },
   messages: {
     notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
+    notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {CHANGE}.',
     success: 'Membre rendu muet avec succès !',
     promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
     promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
