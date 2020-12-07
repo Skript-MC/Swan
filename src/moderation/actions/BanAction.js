@@ -41,7 +41,7 @@ class BanAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(error)
-          .setMessage('An error occured while inserting ban to DB')
+          .setMessage('An error occured while inserting ban to database')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id),
@@ -80,7 +80,7 @@ class BanAction extends ModerationAction {
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (error) {
       this.data.channel.send(messages.global.oops);
-      Logger.error('An error occured while inserting ban to DB');
+      Logger.error('An error occured while inserting ban to database');
       Logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
       Logger.error(error.stack);
     }
