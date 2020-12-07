@@ -22,7 +22,7 @@ class KickAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(error)
-          .setMessage('An error occured while inserting kick to DB')
+          .setMessage('An error occured while inserting kick to database')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id),

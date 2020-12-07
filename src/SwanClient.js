@@ -110,8 +110,8 @@ class SwanClient extends AkairoClient {
     });
 
     this.loadCommandStats();
+    Logger.info('Loading addons from SkriptTools');
     this.loadAddons();
-    Logger.info('Skripttools : addons loaded!');
 
     Logger.info('Client initialization finished');
   }

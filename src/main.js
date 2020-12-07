@@ -39,6 +39,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
+  Logger.info('Initializing Sentry');
   Sentry.init({
     dsn: process.env.SENTRY_TOKEN,
     release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
