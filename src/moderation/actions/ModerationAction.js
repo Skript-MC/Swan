@@ -54,13 +54,13 @@ class ModerationAction {
   get action() {
     switch (this.data.type) {
       case constants.SANCTIONS.TYPES.BAN:
-        if (this.isUpdate)
+        if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.banUpdate;
         return messages.moderation.sanctionNames.ban;
       case constants.SANCTIONS.TYPES.HARDBAN:
         return messages.moderation.sanctionNames.hardban;
       case constants.SANCTIONS.TYPES.MUTE:
-        if (this.isUpdate)
+        if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.muteUpdate;
         return messages.moderation.sanctionNames.mute;
       case constants.SANCTIONS.TYPES.KICK:
@@ -102,11 +102,12 @@ class ModerationAction {
   async notify() {
     let message = '';
 
-    message = this.isUpdate
+    message = this.updateInfos.isUpdate()
       ? this.data.config.notificationUpdate
         .replace('{MEMBER}', this.nameString)
         .replace('{SANCTION}', this.action)
         .replace('{REASON}', this.data.reason)
+        // TODO: Format the {CHANGE} better.
         .replace('{CHANGE}', this.duration)
       : this.data.config.notification
         .replace('{MEMBER}', this.nameString)
