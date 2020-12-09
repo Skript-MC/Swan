@@ -147,8 +147,8 @@ class MessageListener extends Listener {
   async antispamSnippetsChannel(message) {
     if (message.channel.id === settings.channels.snippet
       && !message.member.roles.cache.has(role => role.id === settings.roles.staff)) {
-      // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2 000
-      // caractères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
+      // We check that they are not the author of the last message... In case they exceed the 2.000 chars limit
+      // and they want to add details or informations, or even just post another snipper.
       try {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
