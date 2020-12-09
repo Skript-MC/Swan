@@ -105,7 +105,7 @@ export const kick = {
     name: 'Expulsion',
     content: "Permet d'expulser un membre du serveur..",
     usage: 'kick <@mention | pseudo | ID> <raison>',
-    examples: ['kick Gonpvp'],
+    examples: ['kick tutur Vade retro !'],
     permissions: 'Staff',
   },
   messages: {
