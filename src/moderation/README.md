@@ -5,10 +5,11 @@ Le module de modération de Swan consiste en une grosse partie du bot. Voici com
 ## Contenu
 
 - [Liste des sanctions](#liste-des-sanctions)
-  - [Préambule](#préambule)
+  - [Informations diverses](#informations-diverses)
     - [Drapeau](#drapeau)
     - [Utilisateur](#utilisateur)
     - [Durée](#durée)
+    - [Rôles](#rôles)
   - [Bannissement](#bannissement)
     - [Description](#description)
     - [Mise à jour](#mise-à-jour)
@@ -39,16 +40,16 @@ Le module de modération de Swan consiste en une grosse partie du bot. Voici com
 
 ## Liste des sanctions
 
-### Préambule
+### Informations diverses
 
 #### Drapeau
 
 Un drapeau (flag en anglais) est une option qui peut être spécifiée **n'importe où** dans une commande. Il est précédé de deux tirets
-`--` si il contient plusieurs lettres, sinon un seul `-`.
+`--` si il contient plusieurs lettres, sinon un seul tiret : `-`.
 
 #### Utilisateur
 
-Quand, dans une commande, il est écrit d'entrer un utilisateur, vous pouvez soit le mentionner, soit entrer son pseudo, soit entrer son identifiant discord.
+Quand, dans une commande, il est écrit d'entrer un utilisateur, vous pouvez soit le mentionner, soit entrer son pseudo, soit entrer son identifiant discord. (Clique droit > copier l'identifiant. Cela requiert d'avoir activé le mode développeur)
 
 #### Durée
 
@@ -64,7 +65,11 @@ Voici les indicatifs possibles :
 - Minutes : `minutes`, `minute`, `mins`, `min`, `m`
 - Secondes : `seconds`, `second`, `secondes`, `seconde`, `secs`, `sec`, `s`
 
-Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 19 minutes
+Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 10 minutes
+
+#### Rôles
+
+Toutes les commandes de modération sont exécutables par les personnes ayant le rôle "Staff". Cependant, les modérateurs forum ont une restriction de durée : il ne peuvent pas sanctionner pour une durée de plus de 2 jours.
 
 
 ### Bannissement
@@ -139,7 +144,7 @@ Modèle : `.unmute <@mention | pseudo | ID> [raison]`
 La commande est le `.mute`. S'en suit l'utilisateur à rendre muet. Il faut ensuite spécifier la durée pour le mute, et enfin, la raison du mute.
 
 Voici donc le modèle d'une commande :\
-`.mute <@mention | pseudo | ID> <durée> <raison>`\
+`.mute <@mention | pseudo | ID> <durée> <raison>`
 
 Et voici des exemples d'utilisation :\
 `.mute @Xamez chuuuut`
@@ -156,7 +161,7 @@ Un kick permet d'expulser un membre de la guilde. Il peut ensuite rejoindre la g
 La commande est le `.kick`. S'en suit l'utilisateur à expulser. Il faut ensuite préciser la raison de l'expulsion.
 
 Voici donc le modèle d'une commande :\
-`.kick <@mention | pseudo | ID> <raison>`\
+`.kick <@mention | pseudo | ID> <raison>`
 
 Et voici des exemples d'utilisation :\
 `.mute @GonPVP Tu es un espion.....`
@@ -186,7 +191,7 @@ Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
 La commande est le `.warn`. S'en suit l'utilisateur à avertir, et la raison de l'avertissement.
 
 Voici donc le modèle d'une commande :\
-`.warn <@mention | pseudo | ID> <raison>`\
+`.warn <@mention | pseudo | ID> <raison>`
 
 Et voici des exemples d'utilisation :\
 `.warn @Rémi Il faut penser à respecter le modèle d'aide !`
@@ -337,11 +342,11 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 - `informations` est un object comprenant diverses informations concernant la sanction :
   - `hasSentMessage` est un boolean, et indique si l'utilisateur à envoyé des messages en étant banni (pour le drapeau `--autoban`).
 - `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes à ceci :
-  - `date` est le timestamp de création de la modification
-  - `moderator` est l'ID du modérateur qui a fait la modification
+  - `date` est le timestamp de création de la modification.
+  - `moderator` est l'ID du modérateur qui a fait la modification.
   - `type` est le type de modification, qui peut être un des suivants :
-    - `revoked` si la modification est une annulation ;
-    - `duration` si la modification concerne la durée ;
+    - `revoked` si la modification est une annulation.
+    - `duration` si la modification concerne la durée.
   - `valueBefore` est la valeure avant la modification, par exemple la durée avant la modification.
   - `valueBefore` est la valeure après la modification, par exemple la durée après la modification.
   - `reason` est la raison pour laquelle la modification a été faite.
