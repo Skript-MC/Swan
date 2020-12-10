@@ -5,7 +5,7 @@ import settings from '../../../config/settings';
 import ModerationData from '../../moderation/ModerationData';
 import MuteAction from '../../moderation/actions/MuteAction';
 import Logger from '../../structures/Logger';
-import { constants } from '../../utils';
+import { constants, noop } from '../../utils';
 
 class MuteCommand extends Command {
   constructor() {
@@ -63,7 +63,7 @@ class MuteCommand extends Command {
 
       const success = await new MuteAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success);
+        await message.util.send(config.messages.success).catch(noop);
     } catch (error) {
       Logger.error('An unexpected error occured while muting a member!');
       Logger.detail(`Duration: ${args.duration}`);
