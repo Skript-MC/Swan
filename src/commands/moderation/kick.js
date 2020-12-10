@@ -4,7 +4,7 @@ import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
 import KickAction from '../../moderation/actions/KickAction';
 import Logger from '../../structures/Logger';
-import { constants } from '../../utils';
+import { constants, noop } from '../../utils';
 
 class KickCommand extends Command {
   constructor() {
@@ -47,7 +47,7 @@ class KickCommand extends Command {
 
       const success = await new KickAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success);
+        await message.util.send(config.messages.success).catch(noop);
     } catch (error) {
       Logger.error('An unexpected error occured while kicking a member!');
       Logger.detail(`Parsed member: ${args.member}`);

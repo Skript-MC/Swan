@@ -5,7 +5,7 @@ import settings from '../../../config/settings';
 import ModerationData from '../../moderation/ModerationData';
 import BanAction from '../../moderation/actions/BanAction';
 import Logger from '../../structures/Logger';
-import { constants } from '../../utils';
+import { constants, noop } from '../../utils';
 
 class BanCommand extends Command {
   constructor() {
@@ -73,7 +73,7 @@ class BanCommand extends Command {
     try {
       const success = await new BanAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success);
+        await message.util.send(config.messages.success).catch(noop);
     } catch (error) {
       Logger.error('An unexpected error occured while banning a member!');
       Logger.detail(`Duration: ${args.duration}`);
