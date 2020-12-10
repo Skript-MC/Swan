@@ -72,7 +72,7 @@ Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 19 mi
 #### Description
 
 Il y a deux types distincts de bannissements, les bannissements temporaires, qui isolent le membre dans un salon pour banni,
-et les bannissements permanents, nommé `hard ban` dans le code, qui consistent en des bannissements natifs de discord.
+et les bannissements permanents, nommés `hard ban` dans le code, qui consistent en des bannissements natifs de discord.
 
 #### Mise à jour
 
@@ -208,8 +208,142 @@ Les sanctions sont réparties en 2 bases de données :
 
 ### ConvictedUsers
 
-TODO
+Voici à quoi ressemble un schema de la base de données ConvictedUsers :
+```json
+{
+  "memberId": {
+    "type": "String",
+    "required": true,
+    "unique": true,
+  },
+  "lastBanId": {
+    "type": "String",
+    "default": null,
+  },
+  "lastMuteId": {
+    "type": "String",
+    "default": null,
+  },
+  "count": {
+    "type": "Number",
+    "required": true,
+    "default": 0,
+  },
+  "currentWarnCount": {
+    "type": "Number",
+    "required": true,
+    "default": 0,
+  },
+}
+```
+
+- `lastBanId` est l'ID du bannissement actuellement en cours, ou `null` si aucun n'est en cours.
+- `lastMuteId` est l'ID du mute actuellement en cours, ou `null` si aucun n'est en cours.
+- `count` est le nombre de sanctions totales que le membre à reçue. Les modifications/annulations de sanctions ne comptent pas.
+- `currentWarnCount` est le nombre d'avertissement en cours. Il se remettra à 0 dès que l'utilisateur à dépassé la limite d'avertissements avant bannissement.
 
 ### Sanctions
 
-TODO
+Voici à quoi ressemble un schema de la base de données Sanctions :
+```json
+{
+  "memberId": {
+    "type": "String",
+    "required": true
+  },
+  "user": {
+    "type": "ObjectId",
+    "required": true,
+    "ref": "ConvictedUser",
+    "autopopulate": true
+  },
+  "type": {
+    "type": "String",
+    "required": true,
+    "enum": "SANCTIONS.TYPES"
+  },
+  "moderator": {
+    "type": "String",
+    "required": true
+  },
+  "start": {
+    "type": "Number",
+    "required": true,
+    "default": "Date.now()"
+  },
+  "duration": {
+    "type": "Number"
+  },
+  "finish": {
+    "type": "Number"
+  },
+  "reason": {
+    "type": "String",
+    "required": true
+  },
+  "revoked": {
+    "type": "Boolean",
+    "required": true,
+    "default": false
+  },
+  "id": {
+    "type": "String",
+    "required": true,
+    "default": "nanoid(8)"
+  },
+  "informations": {
+    "hasSentMessage": {
+      "type": "Boolean"
+    }
+  },
+  "updates": [{
+    "date": {
+      "type": "Number",
+      "required": true,
+      "default": "Date.now()"
+    },
+    "moderator": {
+      "type": "String",
+      "required": true
+    },
+    "type": {
+      "type": "String",
+      "required": true,
+      "enum": "SANCTIONS.UPDATES"
+    },
+    "valueBefore": {
+      "type": "Mixed"
+    },
+    "valueAfter": {
+      "type": "Mixed"
+    },
+    "reason": {
+      "type": "String",
+      "required": true
+    }
+  }]
+}
+```
+
+- `user` est une référence à l'objet de l'utilisateur correspondant dans la base de données `ConvictedUsers`.
+- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`, `unban`, `unmute`, `removeWarn`. En théorie, ca ne peut pas être un des 3 derniers car ce sera considéré comme une mise à jour.
+- `moderator` est l'ID du modérateur qui a donné la sanction.
+- `start` est le timestamp de création de la sanction.
+- `duration` est la durée, en millisecondes, de la sanction.
+- `finish` est le timestamp auquel la sanction se terminera.
+- `reason` est la raison de la sanction.
+- `revoked` indique si la sanction est terminée (révoquée) ou non.
+- `id`, à ne pas confondre avec l'id MongoDB `_id`, est l'identifiant unique de la sanction (8 caractères).
+- `informations` est un object comprenant diverses informations concernant la sanction :
+  - `hasSentMessage` est un boolean, et indique si l'utilisateur à envoyé des messages en étant banni (pour le drapeau `--autoban`).
+- `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes à ceci :
+  - `date` est le timestamp de création de la modification
+  - `moderator` est l'ID du modérateur qui a fait la modification
+  - `type` est le type de modification, qui peut être un des suivants :
+    - `revoked` si la modification est une annulation ;
+    - `duration` si la modification concerne la durée ;
+  - `valueBefore` est la valeure avant la modification, par exemple la durée avant la modification.
+  - `valueBefore` est la valeure après la modification, par exemple la durée après la modification.
+  - `reason` est la raison pour laquelle la modification a été faite.
+
+
