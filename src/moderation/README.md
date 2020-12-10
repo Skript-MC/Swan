@@ -57,7 +57,7 @@ Les durées des sanctions peuvent être écrites en français ou en anglais. Ell
 Plusieurs associations de nombres et d'indicatifs peuvent être mis à la suite, mais il ne faut jamais d'espace. Exemple : `<nombre><indicatif><nombre><indicatif>`.
 L'indicatif est le type de durée (année, mois, semaine, jours, heures, minutes, secondes).
 Voici les indicatifs possibles :
-- Année : `years`, `year`, `y`, `annees`, `annee`, `ans`, `an`, `a`
+- Année : `years`, `year`, `y`, `annees`, `années`, `annee`, `année`, `ans`, `an`, `a`
 - Mois : `months`, `month`, `mois`, `mo`
 - Semaines : `weeks`, `week`, `w`, `semaines`, `semaine`, `sem`
 - Jours : `days`, `day`, `d`, `jours`, `jour`, `j`

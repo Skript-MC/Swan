@@ -42,7 +42,9 @@ function convert(num, type) {
     case 'year':
     case 'y':
     case 'annees':
+    case 'années':
     case 'annee':
+    case 'année':
     case 'ans':
     case 'an':
     case 'a':
