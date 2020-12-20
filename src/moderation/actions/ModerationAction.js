@@ -25,8 +25,8 @@ class ModerationAction {
       await this.before();
       await this.notify();
       await this.exec();
+      await this.log();
       await this.after();
-      this.log();
     } catch (error) {
       this.errorState.addError(
         new ModerationError()
@@ -126,7 +126,7 @@ class ModerationAction {
 
   async after() { /* Implemented in the parent class */ }
 
-  log() {
+  async log() {
     if (!this.logChannel)
       return;
 
@@ -148,7 +148,7 @@ class ModerationAction {
     if (this.data.privateChannel)
       embed.addField(messages.moderation.log.privateChannelTitle, this.data.privateChannel.toString(), true);
 
-    this.logChannel.send(embed);
+    await this.logChannel.send(embed);
   }
 }
 
