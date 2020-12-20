@@ -177,7 +177,7 @@ Un warn permet de donner un avertissement à un membre.
 
 Vous pouvez annuler l'avertissement d'un membre en utilisant la commande `.removewarn` (ou `.remove-warn`, `.remove_warn`, `.unwarn` et `.dewarn`).
 Il faut ensuite ajouter l'utilisateur auquel il faut retirer un avertissement, ce sera toujours le dernier avertissement du membre qui sera annulé.
-Enfin, vous pouvez, optionnellemeent, ajouter une raison pour annuler cet avertissement.
+Enfin, vous pouvez, optionnellement, ajouter une raison pour annuler cet avertissement.
 
 Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
 
@@ -341,7 +341,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 - `id`, à ne pas confondre avec l'id MongoDB `_id`, est l'identifiant unique de la sanction (8 caractères).
 - `informations` est un object comprenant diverses informations concernant la sanction :
   - `hasSentMessage` est un boolean, et indique si l'utilisateur à envoyé des messages en étant banni (pour le drapeau `--autoban`).
-- `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes à ceci :
+- `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
   - `date` est le timestamp de création de la modification.
   - `moderator` est l'ID du modérateur qui a fait la modification.
   - `type` est le type de modification, qui peut être un des suivants :
