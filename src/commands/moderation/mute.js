@@ -3,6 +3,7 @@ import { mute as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ModerationData from '../../moderation/ModerationData';
+import ModerationHelper from '../../moderation/ModerationHelper';
 import MuteAction from '../../moderation/actions/MuteAction';
 import Logger from '../../structures/Logger';
 import { constants, noop } from '../../utils';
@@ -52,6 +53,11 @@ class MuteCommand extends Command {
   }
 
   async exec(message, args) {
+    if (await ModerationHelper.isBanned(args.member.id)) {
+      await message.util.send(messages.global.impossibleBecauseBanned).catch(noop);
+      return;
+    }
+
     args.duration *= 1000;
 
     try {

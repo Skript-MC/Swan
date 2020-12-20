@@ -9,6 +9,7 @@ export default {
     dmAreClosed: "Je ne peux pas t'envoyer les informations car tes messages privés sont restreint ! Pense bien a les activer :)",
     unknownName: 'Pseudo Inconnu',
     noReason: 'Aucune raison spécifiée.',
+    impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
   },
   miscellaneous: {
     noDocLink: "Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture (à Vengelis) afin d'améliorer la documentation. Voici ton message, si tu souhaites le récupérer : ```\n{MESSAGE}\n```",
