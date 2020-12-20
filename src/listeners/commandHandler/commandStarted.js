@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import CommandStat from '../../models/commandStat';
+import Logger from '../../structures/Logger';
 
 class CommandStartedListener extends Listener {
   constructor() {
@@ -13,10 +14,10 @@ class CommandStartedListener extends Listener {
     try {
       await CommandStat.findOneAndUpdate({ commandId: command.id }, { $inc: { uses: 1 } });
     } catch (err) {
-      this.client.logger.error("An error occured while updating commands's stats!");
-      this.client.logger.detail(`Command: ${command}`);
-      this.client.logger.detail(`Message: ${message.url}`);
-      this.client.logger.error(err.stack);
+      Logger.error("An error occured while updating commands's stats!");
+      Logger.detail(`Command: ${command}`);
+      Logger.detail(`Message: ${message.url}`);
+      Logger.error(err.stack);
     }
   }
 }

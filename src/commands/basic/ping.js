@@ -17,9 +17,12 @@ class PingCommand extends Command {
   }
 
   getColorFromPing(ping) {
-    if (ping > 600) return ':red_circle:';
-    if (ping > 400) return ':orange_circle:';
-    if (ping > 200) return ':yellow_circle:';
+    if (ping > 600)
+      return ':red_circle:';
+    if (ping > 400)
+      return ':orange_circle:';
+    if (ping > 200)
+      return ':yellow_circle:';
     return ':green_circle:';
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "2.0.0-alpha-1",
+  "version": "2.0.0-alpha-2",
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.js",
   "scripts": {
@@ -33,33 +33,36 @@
     "url": "git+https://github.com/Skript-MC/Swan.git"
   },
   "dependencies": {
-    "@sentry/integrations": "^5.24.2",
-    "@sentry/node": "^5.24.2",
-    "axios": "^0.20.0",
+    "@sentry/integrations": "^5.29.2",
+    "@sentry/node": "^5.29.2",
+    "axios": "^0.21.0",
     "chalk": "^4.1.0",
+    "common-tags": "^1.8.0",
     "delete": "^1.1.0",
     "discord-akairo": "^8.1.0",
-    "discord.js": "^12.3.1",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
-    "moment": "^2.28.0",
-    "mongoose": "^5.10.6",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.8",
+    "mongoose-autopopulate": "^0.12.3",
+    "nanoid": "^3.1.20",
     "node-cron": "^2.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/register": "^7.11.5",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
     "babel-eslint": "^11.0.0-beta.2",
-    "cross-env": "^7.0.2",
-    "eslint": "^7.9.0",
-    "eslint-config-noftalint": "^1.9.0",
-    "eslint-plugin-import": "^2.22.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.16.0",
+    "eslint-config-noftalint": "^1.14.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-unicorn": "^21.0.0",
-    "nodemon": "^2.0.4"
+    "eslint-plugin-unicorn": "^24.0.0",
+    "nodemon": "^2.0.6"
   }
 }

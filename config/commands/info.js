@@ -11,8 +11,7 @@ export const addonInfo = {
   },
   description: {
     name: 'AddonInfo',
-    // TODO: Improve message
-    content: "Permet d'afficher des infos sur un addon.",
+    content: "Permet d'afficher diverses informations sur un addon choisit, à partir du moment ou il est sur skripttools.net.",
     usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
   },

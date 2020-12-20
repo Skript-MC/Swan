@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
 import SwanClient from './SwanClient';
+import Logger from './structures/Logger';
 
 dotenv.config();
 
@@ -15,6 +16,11 @@ moment.relativeTimeThreshold('m', 55);
 moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
+if (!process.env.DISCORD_TOKEN) {
+  Logger.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
+  throw new Error('Unable to load Swan, stopping.');
+}
+
 const client = new SwanClient();
 client.login(process.env.DISCORD_TOKEN);
 
@@ -25,14 +31,15 @@ mongoose.connect(process.env.MONGO_URI, {
   useFindAndModify: false,
 });
 mongoose.connection.on('connected', () => {
-  client.logger.success('MongoDB is connected!');
+  Logger.success('MongoDB is connected!');
 });
 mongoose.connection.on('error', (err) => {
-  client.logger.error('MongoDB connection error. Please make sure MongoDB is running.');
+  Logger.error('MongoDB connection error. Please make sure MongoDB is running.');
   throw err;
 });
 
 if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
+  Logger.info('Initializing Sentry');
   Sentry.init({
     dsn: process.env.SENTRY_TOKEN,
     release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,

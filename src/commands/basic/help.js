@@ -20,7 +20,7 @@ class HelpCommand extends Command {
     this.rules = [constants.RULES.ONLY_BOT_CHANNEL];
   }
 
-  async exec(message, args) {
+  exec(message, args) {
     const { command } = args;
     const { prefix } = this.handler;
 
