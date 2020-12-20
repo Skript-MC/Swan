@@ -205,3 +205,50 @@ export const unmute = {
     success: 'Utilisateur mute avec succès !',
   },
 };
+
+export const warn = {
+  settings: {
+    aliases: ['warn'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: 'Avertissement',
+    content: "Avertir un membre pour une raison donnée. Au bout de 2 avertissements, le membre sera banni pendant 4 jours. Les avertissements expirent au bout d'un mois.",
+    usage: 'warn <@mention | pseudo | ID> <raison>',
+    examples: ["warn @Rémi Il faut penser à respecter le modèle d'aide !"],
+    permissions: 'Staff',
+  },
+  messages: {
+    notification: 'Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\nNous t\'invitons à revoir ton comportement pour éviter que cela se reproduise.',
+    notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {CHANGE}.',
+    success: 'Membre avertit avec succès !',
+    banSuccess: "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
+    promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
+    promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+    promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
+    promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
+  },
+};
+
+export const removeWarn = {
+  settings: {
+    aliases: ['remove-warn', 'remove_warn', 'unwarn', 'dewarn'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: hasStaffRole,
+  },
+  description: {
+    name: "Suppression d'avertissement",
+    content: "Permet de révoquer le dernier avertissement d'un membre.",
+    usage: 'removewarn <@mention | pseudo | ID> [raison]',
+    examples: ['removewarn @Rémi'],
+    permissions: 'Staff',
+  },
+  messages: {
+    notification: "Bonjour {MEMBER}, ta sanction (Avertissement) sur le serveur Skript-MC a été révoquée. Raison : \"{REASON}\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
+    success: 'Avertissement révoqué avec succès !',
+    notWarned: "Ce membre n'a aucun avertissement en cours.",
+    promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
+    promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que vous ayez fait une faute de frappe. Vous pouvez le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+  },
+};

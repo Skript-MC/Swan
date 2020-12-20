@@ -36,8 +36,10 @@ export default {
     banExplanation: "Bonjour {MEMBER}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.\nSi tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.\n\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\n**Expire :** {EXPIRATION}.",
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un banissement (automatique)",
-      autoBan: 'Inactivité après un bannissement (automatique)',
+      autoBanInactivity: 'Inactivité après un bannissement (automatique)',
       autoRevoke: 'Sanction expirée (automatique)',
+      revokeWarnsLimitExceeded: 'Avertissement révoqué car la limite a été atteinte : le membre a été sanctionné (automatique)',
+      autoBanWarnLimitExceeded: "Limite d'avertissement atteinte (automatique)",
     },
     log: {
       userTitle: ':bust_in_silhouette: Utilisateur',

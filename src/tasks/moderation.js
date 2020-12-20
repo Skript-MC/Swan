@@ -3,6 +3,7 @@ import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import ModerationData from '../moderation/ModerationData';
 import BanAction from '../moderation/actions/BanAction';
+import RemoveWarnAction from '../moderation/actions/RemoveWarnAction';
 import UnbanAction from '../moderation/actions/UnbanAction';
 import UnmuteAction from '../moderation/actions/UnmuteAction';
 import Task from '../structures/Task';
@@ -38,26 +39,42 @@ class ModerationTask extends Task {
       if (!member && !user)
         continue;
 
-      if (sanction.type === constants.SANCTIONS.TYPES.BAN) {
-        const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
-          .setVictim(member || user, false);
+      switch (sanction.type) {
+        case constants.SANCTIONS.TYPES.BAN: {
+          const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
+            .setVictim(member || user, false);
 
-        if (sanction.informations?.hasSentMessage) {
-          data.setReason(messages.moderation.reasons.autoRevoke)
-            .setType(constants.SANCTIONS.TYPES.UNBAN);
-          await new UnbanAction(data).commit();
-        } else {
-          data.setReason(messages.moderation.reasons.autoBan)
-            .setType(constants.SANCTIONS.TYPES.HARDBAN);
-          await new BanAction(data).commit();
+          if (sanction.informations?.hasSentMessage) {
+            data.setReason(messages.moderation.reasons.autoRevoke)
+              .setType(constants.SANCTIONS.TYPES.UNBAN);
+            await new UnbanAction(data).commit();
+          } else {
+            data.setReason(messages.moderation.reasons.autoBanInactivity)
+              .setType(constants.SANCTIONS.TYPES.HARDBAN);
+            await new BanAction(data).commit();
+          }
+          break;
         }
-      } else if (sanction.type === constants.SANCTIONS.TYPES.MUTE) {
-        const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
-          .setVictim(member || user, false)
-          .setReason(messages.moderation.reasons.autoRevoke)
-          .setType(constants.SANCTIONS.TYPES.UNMUTE);
 
-        await new UnmuteAction(data).commit();
+        case constants.SANCTIONS.TYPES.MUTE: {
+          const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
+            .setVictim(member || user, false)
+            .setReason(messages.moderation.reasons.autoRevoke)
+            .setType(constants.SANCTIONS.TYPES.UNMUTE);
+
+          await new UnmuteAction(data).commit();
+          break;
+        }
+
+        case constants.SANCTIONS.TYPES.WARN: {
+          const data = new ModerationData(this.client.guild.me, this.client.guild, this.client, channel)
+            .setVictim(member || user, false)
+            .setReason(messages.moderation.reasons.autoRevoke)
+            .setType(constants.SANCTIONS.TYPES.REMOVE_WARN);
+
+          await new RemoveWarnAction(data).commit();
+          break;
+        }
       }
     }
   }

@@ -16,7 +16,10 @@ export default {
   },
   moderation: {
     purgeLimit: 50,
-    maximumDurationForumModerator: 172_800,
+    warnDuration: 60 * 60 * 24 * 30, // 1 month
+    warnLimitBeforeBan: 2,
+    warnLimitBanDuration: 60 * 60 * 24 * 4, // 4 days
+    maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days
     banChannelPrefix: 'b-',
     banChannelTopic: "Salon du bannissement de {MEMBER}. Regarder les messages épinglés pour plus d'informations.",
     colors: {
