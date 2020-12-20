@@ -201,8 +201,8 @@ export const unmute = {
   },
   messages: {
     notification: "Bonjour {MEMBER}, ta sanction (Mute) sur le serveur Skript-MC a été révoquée. Raison : \"{REASON}\". Nous t'invitons a revoir ton comportement pour éviter que cela se reproduise.",
-    notBanned: "Cet utilisateur n'est pas mute.",
-    success: 'Utilisateur mute avec succès !',
+    notMuted: "Cet utilisateur n'est pas mute.",
+    success: 'Utilisateur dé-mute avec succès !',
   },
 };
 
