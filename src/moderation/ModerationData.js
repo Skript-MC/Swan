@@ -35,9 +35,9 @@ class ModerationData {
       this.client = args[0].client;
       this.channel = args[0].channel;
     } else if (args[0] instanceof GuildMember
-        && args[1] instanceof Guild
-        && args[2] instanceof Client
-        && args[3] instanceof TextChannel) {
+            && args[1] instanceof Guild
+            && args[2] instanceof Client
+            && args[3] instanceof TextChannel) {
       this.moderator = args[0];
       this.guild = args[1];
       this.client = args[2];
@@ -47,7 +47,7 @@ class ModerationData {
     }
     this.type = null;           // The sanction type (one of constants.SANCTIONS.TYPE)
     this.config = null;         // The configuration of the action (all the messages)
-    this.victim = {                  // The victim of the case. It contains an ID, a User? and a GuildMember?
+    this.victim = {             // The victim of the case. It contains an ID, a User? and a GuildMember?
       id: null,
       user: null,
       member: null,
@@ -55,10 +55,10 @@ class ModerationData {
     this.reason = messages.global.noReason; // The reason
     this.duration = null;       // The duration
     this.finish = null;         // The finish timestamp
-    this.start = Date.now();         // The start timestamp
+    this.start = Date.now();    // The start timestamp
     this.privateChannel = null; // The private channel (in case of a ban)
-    this.id = nanoid(8);             // The id of the case
-    this.informations = {};          // The additional information to be given to the sanction model
+    this.id = nanoid(8);        // The id of the case
+    this.informations = {};     // The additional information to be given to the sanction model
   }
 
   setVictim(personResolvable, resolveMemberAndUser = true) {
