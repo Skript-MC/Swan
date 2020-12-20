@@ -344,5 +344,3 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
   - `valueBefore` est la valeure avant la modification, par exemple la durée avant la modification.
   - `valueBefore` est la valeure après la modification, par exemple la durée après la modification.
   - `reason` est la raison pour laquelle la modification a été faite.
-
-
