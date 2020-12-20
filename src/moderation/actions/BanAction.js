@@ -3,7 +3,6 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
-import Logger from '../../structures/Logger';
 import { constants, noop } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';
@@ -130,10 +129,14 @@ class BanAction extends ModerationAction {
       );
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      Logger.error('An error occured while inserting ban to database');
-      Logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      Logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('An error occured while inserting ban to database')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id),
+      );
     }
 
     // 2. Add needed roles
@@ -141,11 +144,15 @@ class BanAction extends ModerationAction {
       const role = this.data.guild.roles.resolve(settings.roles.ban);
       await this.data.victim.member?.roles.set([role]);
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      Logger.error('Swan does not have sufficient permissions to edit GuildMember roles');
-      Logger.detail(`Victim: GuildMember=${this.data.victim.member instanceof GuildMember} / User=${this.data.victim.user instanceof User} / ID=${this.data.victim.id}`);
-      Logger.detail(`Manage Role Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
-      Logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('Swan does not have sufficient permissions to edit GuildMember roles')
+          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
+          .addDetail('Victim: User', this.data.victim.user instanceof User)
+          .addDetail('Victim: ID', this.data.victim.id)
+          .addDetail('Manage Role Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+      );
     }
 
     // 3. Create the private channel
@@ -162,10 +169,12 @@ class BanAction extends ModerationAction {
       const message = await channel.send(explanation).catch(noop);
       await message.pin().catch(noop);
     } catch (error) {
-      this.data.channel.send(messages.global.oops);
-      Logger.error('Swan does not have sufficient permissions to create/get a TextChannel');
-      Logger.detail(`Manage Channel Permission: ${this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
-      Logger.error(error.stack);
+      this.errorState.addError(
+        new ModerationError()
+          .from(error)
+          .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
+          .addDetail('Manage Channel Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+      );
     }
   }
 
