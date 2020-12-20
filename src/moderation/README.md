@@ -229,11 +229,6 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
     "type": "String",
     "default": null,
   },
-  "count": {
-    "type": "Number",
-    "required": true,
-    "default": 0,
-  },
   "currentWarnCount": {
     "type": "Number",
     "required": true,
@@ -244,8 +239,7 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
 
 - `lastBanId` est l'ID du bannissement actuellement en cours, ou `null` si aucun n'est en cours.
 - `lastMuteId` est l'ID du mute actuellement en cours, ou `null` si aucun n'est en cours.
-- `count` est le nombre de sanctions totales que le membre à reçue. Les modifications/annulations de sanctions ne comptent pas.
-- `currentWarnCount` est le nombre d'avertissement en cours. Il se remettra à 0 dès que l'utilisateur à dépassé la limite d'avertissements avant bannissement.
+- `currentWarnCount` est le nombre d'avertissement en cours. Il se remettra à 0 dès que l'utilisateur a dépassé la limite d'avertissements avant bannissement.
 
 ### Sanctions
 

@@ -14,11 +14,6 @@ const ConvictedUserSchema = new Schema({
     type: String,
     default: null,
   },
-  count: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
   currentWarnCount: {
     type: Number,
     required: true,
