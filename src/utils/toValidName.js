@@ -7,7 +7,8 @@ function toValidName(str) {
       continue;
     }
     const charcode = str.charCodeAt(i);
-    if (charcode < 0x80) valid.push(char);
+    if (charcode < 0x80)
+      valid.push(char);
   }
   return valid.join('');
 }

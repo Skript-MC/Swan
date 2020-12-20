@@ -4,6 +4,7 @@ import { MessageEmbed } from 'discord.js';
 import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import Logger from '../../structures/Logger';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 
 class AddonInfoCommand extends Command {
@@ -72,11 +73,9 @@ class AddonInfoCommand extends Command {
   async sendDetail(message, addonFile) {
     const addon = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
-      .catch(err => this.logger.error(err.message));
-    if (!addon) {
-      message.util.send(messages.global.oops);
-      return;
-    }
+      .catch(err => Logger.error(err.message));
+    if (!addon)
+      return message.util.send(messages.global.oops);
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)

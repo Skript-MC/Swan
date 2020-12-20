@@ -10,10 +10,10 @@ class MessageDeleteListener extends Listener {
     });
   }
 
-  async exec(message) {
+  exec(message) {
     if (message.author.bot || message.system)
       return;
-    if (message.member.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff).position)
+    if (message.member?.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff).position)
       return;
 
     const userMentions = message.mentions.users

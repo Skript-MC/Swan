@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import messages from '../../../config/messages';
+import Logger from '../../structures/Logger';
 
 class MissingPermissionsListener extends Listener {
   constructor() {
@@ -12,7 +13,7 @@ class MissingPermissionsListener extends Listener {
   exec(message, command, type, missing) {
     if (type === 'client') {
       if (missing.includes('SEND_MESSAGES')) {
-        this.client.logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command} command.`);
+        Logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command} command.`);
       } else {
         message.util.send(
           messages.global.insufficientClientPermissions

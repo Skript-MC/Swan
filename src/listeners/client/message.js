@@ -3,7 +3,10 @@ import { Listener } from 'discord-akairo';
 import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import { noop } from '../../utils';
+import Sanction from '../../models/sanction';
+import ModerationHelper from '../../moderation/ModerationHelper';
+import Logger from '../../structures/Logger';
+import { constants, noop } from '../../utils';
 
 class MessageListener extends Listener {
   constructor() {
@@ -13,7 +16,33 @@ class MessageListener extends Listener {
     });
   }
 
-  async preventActiveMembersToPostDocLinks(message) {
+  async confirmBannedMemberSentMessages(message) {
+    const isBanned = await ModerationHelper.isBanned(message.member.id, false);
+    if (isBanned) {
+      try {
+        await Sanction.updateOne(
+          {
+            memberId: message.member.id,
+            revoked: false,
+            type: constants.SANCTIONS.TYPES.BAN,
+          },
+          {
+            $set: { informations: { hasSentMessage: true } },
+          },
+        );
+      } catch (error) {
+        Logger.error('Unable to confirm that the author (which is banned) has sent messages.');
+        Logger.detail(`isBanned: ${isBanned}`);
+        Logger.detail(`Member ID: ${message.member.id}`);
+        Logger.detail(`Message: ${message.url}`);
+        Logger.error(error.stack);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  preventActiveMembersToPostDocLinks(message) {
     if (message.member.roles.cache.has(settings.roles.activeMember)) {
       if (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/')) {
         message.delete();
@@ -33,12 +62,12 @@ class MessageListener extends Listener {
         await message.react(settings.emojis.yes);
         await message.react(settings.emojis.no);
       } catch (error) {
-        this.client.logger.error('Unable to add emojis to the idea channel.');
-        this.client.logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
-        this.client.logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
-        this.client.logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
-        this.client.logger.detail(`Message: ${message.url}`);
-        this.client.logger.error(error.stack);
+        Logger.error('Unable to add emojis to the idea channel.');
+        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        Logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
+        Logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
+        Logger.detail(`Message: ${message.url}`);
+        Logger.error(error.stack);
       }
     }
     return false;
@@ -118,8 +147,8 @@ class MessageListener extends Listener {
   async antispamSnippetsChannel(message) {
     if (message.channel.id === settings.channels.snippet
       && !message.member.roles.cache.has(role => role.id === settings.roles.staff)) {
-      // On vérifie que ce ne soit pas lui qui ai posté le dernier message... Si jamais il dépasse les 2 000
-      // caractères, qu'il veut apporter des précisions ou qu'il poste un autre snippet par exemple.
+      // We check that they are not the author of the last message... In case they exceed the 2.000 chars limit
+      // and they want to add details or informations, or even just post another snipper.
       try {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
@@ -149,7 +178,8 @@ class MessageListener extends Listener {
   }
 
   async* getTasks(message) {
-    yield await this.preventActiveMembersToPostDocLinks(message);
+    yield await this.confirmBannedMemberSentMessages(message);
+    yield this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
     yield await this.uploadFileOnHastebin(message);

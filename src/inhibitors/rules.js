@@ -1,6 +1,6 @@
 import { Inhibitor } from 'discord-akairo';
 import settings from '../../config/settings';
-import constants from '../utils/constants';
+import { constants } from '../utils';
 
 class RulesInhibitor extends Inhibitor {
   constructor() {
