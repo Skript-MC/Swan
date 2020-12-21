@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/node';
 import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import settings from '../config/settings';
 import SwanClient from './SwanClient';
 import Logger from './structures/Logger';
 
@@ -23,6 +24,13 @@ if (!process.env.DISCORD_TOKEN) {
 
 const client = new SwanClient();
 client.login(process.env.DISCORD_TOKEN);
+
+setTimeout(() => {
+  if (client.readyAt === null) {
+    Logger.error('Swan connection failed: the bot was not ready after 15s. Crashing.');
+    process.exit(1); // eslint-disable-line node/no-process-exit
+  }
+}, settings.miscellaneous.connectionCheckDuration);
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
