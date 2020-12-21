@@ -13,13 +13,14 @@ export default {
     validNamePercentage: 0.5,
     durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
     hastebinExtensions: ['.sk', '.yml', '.txt', '.json', '.js'],
+    connectionCheckDuration: 15_000, // 15 seconds in miliseconds
   },
   moderation: {
     purgeLimit: 50,
-    warnDuration: 60 * 60 * 24 * 30, // 1 month
+    warnDuration: 60 * 60 * 24 * 30, // 1 month in seconds
     warnLimitBeforeBan: 2,
-    warnLimitBanDuration: 60 * 60 * 24 * 4, // 4 days
-    maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days
+    warnLimitBanDuration: 60 * 60 * 24 * 4, // 4 days in seconds
+    maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days in seconds
     banChannelPrefix: 'b-',
     banChannelTopic: "Salon du bannissement de {MEMBER}. Regarder les messages épinglés pour plus d'informations.",
     colors: {
