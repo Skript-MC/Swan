@@ -14,6 +14,15 @@ class GuildMemberAddListener extends Listener {
     });
   }
 
+  async greet(member) {
+    const { greetings } = messages.miscellaneous;
+    const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
+    await member.guild.channels
+      .resolve(settings.channels.main)
+      .send(randomMessage.replace(/{MEMBER}/g, member))
+      .catch(noop);
+  }
+
   async remute(member) {
     const isMuted = await ModerationHelper.isMuted(member.id);
     if (isMuted) {
@@ -57,6 +66,7 @@ class GuildMemberAddListener extends Listener {
   }
 
   async exec(member) {
+    await this.greet(member);
     await this.remute(member);
     await this.rename(member);
   }
