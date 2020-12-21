@@ -59,7 +59,7 @@
     "babel-eslint": "^11.0.0-beta.2",
     "cross-env": "^7.0.3",
     "eslint": "^7.16.0",
-    "eslint-config-noftalint": "^1.14.0",
+    "eslint-config-noftalint": "^1.15.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-unicorn": "^24.0.0",
