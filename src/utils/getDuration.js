@@ -1,5 +1,5 @@
 // eslint-disable-next-line unicorn/no-unsafe-regex
-const REGEX = /^((?:\d+)?\.?\d+) *([\w+]+)?$/i;
+const REGEX = /^(?:\d+)?\.?\d+ *(?:[\w+]+)?$/i;
 const DURATION = {
   /* eslint-disable key-spacing */
   SECOND: 1,
@@ -18,7 +18,7 @@ function tokenize(str) {
   for (const char of str) {
     if (['.', ','].includes(char)) {
       buf += char;
-    } else if (isNaN(parseInt(char, 10))) {
+    } else if (Number.isNaN(Number.parseInt(char, 10))) {
       buf += char;
       letter = true;
     } else {
@@ -98,22 +98,20 @@ function convert(num, type) {
 function getDuration(val) {
   let abs;
   let total = 0;
-  if (typeof val === 'string' && val.length > 0) {
-    if (val.length < 101) {
-      const units = tokenize(val.toLowerCase());
-      for (const unit of units) {
-        const fmt = REGEX.exec(unit);
-        if (fmt) {
-          abs = parseFloat(fmt[1]);
-          try {
-            total += convert(abs, fmt[2]);
-          } catch {
-            return;
-          }
+  if (typeof val === 'string' && val.length > 0 && val.length < 101) {
+    const units = tokenize(val.toLowerCase());
+    for (const unit of units) {
+      const fmt = REGEX.exec(unit);
+      if (fmt) {
+        abs = Number.parseFloat(fmt[1]);
+        try {
+          total += convert(abs, fmt[2]);
+        } catch {
+          return;
         }
       }
-      return total;
     }
+    return total;
   }
   throw new Error(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
 }

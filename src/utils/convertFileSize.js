@@ -1,5 +1,5 @@
 function convertFileSize(size) {
-  size = Math.abs(parseInt(size, 10));
+  size = Math.abs(Number.parseInt(size, 10));
   const def = [[1, 'octets'], [1024, 'ko'], [1024 ** 2, 'Mo'], [1024 ** 3, 'Go'], [1024 ** 4, 'To']];
 
   for (let i = 1; i < def.length; i++) {

@@ -33,11 +33,10 @@ class UnbanCommand extends Command {
   }
 
   async exec(message, args) {
-    if (args.member instanceof GuildMember) {
-      if (args.member.roles.highest.position >= message.member.roles.highest.position)
-        // TODO: Change this message when the 3 TODO above are fixed
-        return message.util.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
-    }
+    if (args.member instanceof GuildMember
+      && args.member.roles.highest.position >= message.member.roles.highest.position)
+      // TODO: Change this message when the 3 TODO above are fixed
+      return message.util.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
 
     // FIXME: This is really badly done, and will be fixed when all the TODO above are fixed.
     if (!args.member)
