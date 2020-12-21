@@ -6,7 +6,7 @@ import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { constants, noop } from '../../utils';
+import { constants, noop, trimText } from '../../utils';
 
 class MessageListener extends Listener {
   constructor() {
@@ -47,7 +47,7 @@ class MessageListener extends Listener {
       && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
       await message.delete();
       const content = message.content.length + messages.miscellaneous.noDocLink.length >= 2000
-        ? message.content.slice(0, 2000 - messages.miscellaneous.noDocLink.length - 3) + '...'
+        ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
         : message.content;
       await message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
 
