@@ -42,16 +42,16 @@ class MessageListener extends Listener {
     return false;
   }
 
-  preventActiveMembersToPostDocLinks(message) {
-    if (message.member.roles.cache.has(settings.roles.activeMember)) {
-      if (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/')) {
-        message.delete();
-        const content = message.content.length + messages.miscellaneous.noDocLink.length >= 2000
-          ? message.content.slice(0, 2000 - messages.miscellaneous.noDocLink.length - 3) + '...'
-          : message.content;
-        message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
-        return true;
-      }
+  async preventActiveMembersToPostDocLinks(message) {
+    if (message.member.roles.cache.has(settings.roles.activeMember)
+      && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
+      await message.delete();
+      const content = message.content.length + messages.miscellaneous.noDocLink.length >= 2000
+        ? message.content.slice(0, 2000 - messages.miscellaneous.noDocLink.length - 3) + '...'
+        : message.content;
+      await message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
+
+      return true;
     }
     return false;
   }
@@ -153,7 +153,7 @@ class MessageListener extends Listener {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
           .then(elt => elt.first().author.id);
-        if (previousAuthorId !== message.author.id && !message.content.match(/```(.|\n)*```/gmu)) {
+        if (previousAuthorId !== message.author.id && !message.content.match(/```(?:.|\n)*```/gmu)) {
           await message.delete();
           await message.member.send(messages.miscellaneous.noSpam);
           await message.member.send(message.content);
@@ -165,21 +165,20 @@ class MessageListener extends Listener {
 
   async checkCreationsChannelRules(message) {
     if (message.channel.id === settings.channels.creations
-      && !message.member.roles.cache.has(role => role.id === settings.roles.staff)) {
-      if (message?.content
-        .match(/(https?:\/\/\S+)/g)
-        .some(link => !link.match(/(https?:\/\/skript-mc\.fr\S+)/g))
-      ) {
-        await message.delete();
-        await message.member.send(messages.miscellaneous.invalidMessage.replace('{CHANNEL}', message.channel));
-        await message.member.send(message.content);
-      }
+        && !message.member.roles.cache.has(role => role.id === settings.roles.staff)
+        && message?.content
+          .match(/(?:https?:\/\/\S+)/g)
+          .some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
+    ) {
+      await message.delete();
+      await message.member.send(messages.miscellaneous.invalidMessage.replace('{CHANNEL}', message.channel));
+      await message.member.send(message.content);
     }
   }
 
-  async* getTasks(message) {
+  async * getTasks(message) {
     yield await this.confirmBannedMemberSentMessages(message);
-    yield this.preventActiveMembersToPostDocLinks(message);
+    yield await this.preventActiveMembersToPostDocLinks(message);
     yield await this.addReactionsInNeededChannels(message);
     yield await this.quoteLinkedMessage(message);
     yield await this.uploadFileOnHastebin(message);
@@ -188,22 +187,17 @@ class MessageListener extends Listener {
   }
 
   async exec(message) {
-    const isCommand = this.client.commandHandler.parseWithPrefix(message, '=').command;
-    if (isCommand)
-      return;
-    if (message.author.bot || message.system || message.channel instanceof DMChannel)
+    const isCommand = Boolean(this.client.commandHandler.parseWithPrefix(message, '=').command);
+    if (isCommand || message.author.bot || message.system || message.channel instanceof DMChannel)
       return;
 
     // Run all needed tasks, and stop when there is either no more tasks or
     // when one returned true (= want to stop)
-    let task = { done: false };
+    let task = { done: false, value: false };
     const tasks = this.getTasks(message);
 
-    while (!task.done) {
-      if (task.value)
-        break;
+    while (!task.done && !task.value)
       task = await tasks.next();
-    }
   }
 }
 
