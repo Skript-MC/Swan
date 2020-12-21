@@ -90,7 +90,6 @@ class SwanClient extends AkairoClient {
 
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
-    this.taskHandler.loadAll();
     this.listenerHandler.loadAll();
 
     this.commandHandler.resolver.addType('duration', (_message, phrase) => {
