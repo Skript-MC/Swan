@@ -13,6 +13,9 @@ class ReadyListener extends Listener {
   exec() {
     this.client.guild = this.client.guilds.resolve(settings.bot.guild);
     this.client.checkValidity();
+
+    this.client.taskHandler.loadAll();
+
     Logger.success('Swan is ready to listen for messages.');
   }
 }
