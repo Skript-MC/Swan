@@ -4,6 +4,7 @@ import settings from '../../config/settings';
 import { skriptReleases as config } from '../../config/tasks';
 import Logger from '../structures/Logger';
 import Task from '../structures/Task';
+import { trimText } from '../utils';
 
 class SkriptReleasesTask extends Task {
   constructor() {
@@ -29,7 +30,7 @@ class SkriptReleasesTask extends Task {
 
     const channel = this.client.channels.cache.get(settings.channels.skriptTalk);
     const body = latestRelease.body.length >= 1900
-      ? latestRelease.body.slice(0, 1900) + '...'
+      ? trimText(latestRelease.body, 1900)
       : latestRelease.body;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
