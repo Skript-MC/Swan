@@ -2,14 +2,16 @@
   "name": "swan",
   "version": "2.0.0-alpha-3",
   "description": "Bot discord de Skript-MC.",
-  "main": "./src/main.js",
+  "main": "./src/main.ts",
   "scripts": {
     "build": "npx gulp",
     "start": "npm run build && cross-env NODE_ENV=production node ./build/src/main.js --no-color",
-    "dev": "cross-env NODE_ENV=development babel-node ./src/main.js",
+    "dev": "npm run build && cross-env NODE_ENV=development node ./build/src/main.js",
     "watch:dev": "nodemon --exec cross-env NODE_ENV=development babel-node ./src/main.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "patch": "npx patch-package",
+    "postinstall": "npm run patch"
   },
   "authors": [
     "noftaly (noftaly#0359)",
@@ -35,7 +37,7 @@
   "dependencies": {
     "@sentry/integrations": "^5.29.2",
     "@sentry/node": "^5.29.2",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
     "delete": "^1.1.0",
@@ -44,25 +46,27 @@
     "dotenv": "^8.2.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "moment": "^2.29.1",
     "mongoose": "^5.11.8",
     "mongoose-autopopulate": "^0.12.3",
     "nanoid": "^3.1.20",
-    "node-cron": "^2.0.3"
+    "node-cron": "^2.0.3",
+    "patch-package": "^6.2.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/node": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/register": "^7.12.10",
+    "@types/node": "^14.14.16",
+    "@types/node-cron": "^2.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.11.0",
+    "@typescript-eslint/parser": "^4.11.0",
     "babel-eslint": "^11.0.0-beta.2",
     "cross-env": "^7.0.3",
     "eslint": "^7.16.0",
-    "eslint-config-noftalint": "^1.15.0",
+    "eslint-config-noftalint": "^1.16.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-unicorn": "^24.0.0",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "typescript": "^4.1.3"
   }
 }
