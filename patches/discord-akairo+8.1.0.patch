@@ -1,0 +1,39 @@
+diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
+index cb4d20a..76cd485 100644
+--- a/node_modules/discord-akairo/src/index.d.ts
++++ b/node_modules/discord-akairo/src/index.d.ts
+@@ -18,6 +18,15 @@ declare module 'discord-akairo' {
+     }
+ 
+     export class AkairoError extends Error {
++        public constructor(key: 'FILE_NOT_FOUND', filename: string);
++        public constructor(key: 'MODULE_NOT_FOUND' | 'ALREADY_LOADED' | 'NOT_RELOADABLE', constructor: string, id: string);
++        public constructor(key: 'INVALID_CLASS_TO_HANDLE', given: string, expected: string);
++        public constructor(key: 'ALIAS_CONFLICT', alias: string, id: string, conflict: string);
++        public constructor(key: 'COMMAND_UTIL_EXPLICIT');
++        public constructor(key: 'UNKNOWN_MATCH_TYPE', match: string);
++        public constructor(key: 'NOT_INSTANTIABLE', constructor: string);
++        public constructor(key: 'NOT_IMPLEMENTED', constructor: string, method: string);
++        public constructor(key: 'INVALID_TYPE', name: string, expected: string, vowel?: boolean);
+         public code: string;
+     }
+ 
+diff --git a/node_modules/discord-akairo/src/struct/commands/Command.js b/node_modules/discord-akairo/src/struct/commands/Command.js
+index 1003663..a88b9b2 100644
+--- a/node_modules/discord-akairo/src/struct/commands/Command.js
++++ b/node_modules/discord-akairo/src/struct/commands/Command.js
+@@ -37,9 +37,13 @@ class Command extends AkairoModule {
+             ignoreCooldown,
+             ignorePermissions,
+             flags = [],
+-            optionFlags = []
++            optionFlags = [],
++            ...other
+         } = options;
+ 
++        for (const [propKey, propValue] of Object.entries(other))
++          this[propKey] = propValue;
++
+         /**
+          * Command names.
+          * @type {string[]}

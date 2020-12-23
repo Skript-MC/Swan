@@ -1,0 +1,121 @@
+// eslint-disable-next-line unicorn/no-unsafe-regex
+const REGEX = /^(?:\d+)?\.?\d+ *(?:[\w+]+)?$/i;
+const DURATION = {
+  /* eslint-disable key-spacing */
+  SECOND: 1,
+  MINUTE: 1 * 60,
+  HOUR:   1 * 60 * 60,
+  DAY:    1 * 60 * 60 * 24,
+  WEEK:   1 * 60 * 60 * 24 * 7,
+  MONTH:  1 * 60 * 60 * 24 * 30,
+  YEAR:   1 * 60 * 60 * 24 * 365.25,
+};
+
+function tokenize(str: string): string[] {
+  const units: string[] = [];
+  let buf = '';
+  let letter = false;
+
+  for (const char of str) {
+    if (['.', ','].includes(char)) {
+      buf += char;
+    } else if (Number.isNaN(Number.parseInt(char, 10))) {
+      buf += char;
+      letter = true;
+    } else {
+      if (letter) {
+        units.push(buf.trim());
+        buf = '';
+      }
+      letter = false;
+      buf += char;
+    }
+  }
+
+  if (buf.length > 0)
+    units.push(buf.trim());
+  return units;
+}
+
+// eslint-disable-next-line complexity
+function convert(num: number, type: string): number {
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'y':
+    case 'annees':
+    case 'années':
+    case 'annee':
+    case 'année':
+    case 'ans':
+    case 'an':
+    case 'a':
+      return num * DURATION.YEAR;
+    case 'months':
+    case 'month':
+    case 'mois':
+    case 'mo':
+      return num * DURATION.MONTH;
+    case 'weeks':
+    case 'week':
+    case 'w':
+    case 'semaines':
+    case 'semaine':
+    case 'sem':
+      return num * DURATION.WEEK;
+    case 'days':
+    case 'day':
+    case 'd':
+    case 'jours':
+    case 'jour':
+    case 'j':
+      return num * DURATION.DAY;
+    case 'hours':
+    case 'hour':
+    case 'heures':
+    case 'heure':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return num * DURATION.HOUR;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return num * DURATION.MINUTE;
+    case 'seconds':
+    case 'second':
+    case 'secondes':
+    case 'seconde':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return num * DURATION.SECOND;
+    default:
+      throw new Error(`Invalid duration unit: ${type}`);
+  }
+}
+
+function getDuration(val: string): number {
+  let abs: number;
+  let total = 0;
+  if (val.length > 0 && val.length < 101) {
+    const units: string[] = tokenize(val.toLowerCase());
+    for (const unit of units) {
+      const fmt = REGEX.exec(unit);
+      if (fmt) {
+        abs = Number.parseFloat(fmt[1]);
+        try {
+          total += convert(abs, fmt[2]);
+        } catch {
+          return;
+        }
+      }
+    }
+    return total;
+  }
+  throw new Error(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
+}
+
+export default getDuration;

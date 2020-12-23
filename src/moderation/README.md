@@ -301,10 +301,10 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
       "enum": "SANCTIONS.UPDATES"
     },
     "valueBefore": {
-      "type": "Mixed"
+      "type": "Number"
     },
     "valueAfter": {
-      "type": "Mixed"
+      "type": "Number"
     },
     "reason": {
       "type": "String",
@@ -315,8 +315,8 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 ```
 
 - `user` est une référence à l'objet de l'utilisateur correspondant dans la base de données `ConvictedUsers`.
-- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`, `unban`, `unmute`, `removeWarn`. En théorie, ca ne peut pas être un des 3 derniers car ce sera considéré comme une mise à jour.
-- `moderator` est l'ID du modérateur qui a donné la sanction.
+- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`.
+- `moderator` est l'ID Discord du modérateur qui a donné la sanction.
 - `start` est le timestamp de création de la sanction.
 - `duration` est la durée, en millisecondes, de la sanction.
 - `finish` est le timestamp auquel la sanction se terminera.
@@ -327,10 +327,10 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
   - `hasSentMessage` est un boolean qui ne sera définit que si la sanction est un ban. Il indique si l'utilisateur a envoyé des messages en étant banni (pour le drapeau `--autoban`).
 - `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
   - `date` est le timestamp de création de la modification.
-  - `moderator` est l'ID du modérateur qui a fait la modification.
+  - `moderator` est l'ID Discord du modérateur qui a fait la modification.
   - `type` est le type de modification, qui peut être un des suivants :
     - `revoked` si la modification est une annulation.
     - `duration` si la modification concerne la durée.
-  - `valueBefore` est la valeur avant la modification, par exemple la durée avant la modification.
-  - `valueBefore` est la valeur après la modification, par exemple la durée après la modification.
+  - `valueBefore` est la valeur avant la modification. Pour le moment, ça ne peut être que la durée, donc ce sera un nombre.
+  - `valueBefore` est la valeur après la modification. Pour le moment, ça ne peut être que la durée, donc ce sera un nombre.
   - `reason` est la raison pour laquelle la modification a été faite.
