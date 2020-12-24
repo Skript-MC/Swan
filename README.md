@@ -56,6 +56,7 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 - **`assets` :** 🏞 Dossier où se trouvent les images utilisées.
 - **`build`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouve le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
 - **`config` :** 📑 Dossier où se trouve tous les fichiers de configuration.
+- **`patches` :** 🩹 Dossier où se trouve les patchs des librairies (le script `post-install` modifie leur code directement dans `node_modules`)
 - **`src` :** 💻
     - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
     - **`inhibitors` :** ⚙️ Fichiers éxecutés avant qu'un message soit envoyé au `commandHandler`.
@@ -64,6 +65,7 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
     - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
     - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
     - **`tasks` :** ⏱ Fichiers éxecutés périodiquement (tâches).
+    - **`types` :** 🏷 Fichiers contenant les typings TypeScript
     - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
 
 
