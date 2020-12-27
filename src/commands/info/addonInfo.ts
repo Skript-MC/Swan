@@ -6,7 +6,7 @@ import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
-import type { GuildMessage } from '../../types';
+import type { GuildMessage, MatchingAddon, AddonResponse } from '../../types';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 
@@ -30,11 +30,6 @@ class AddonInfoCommand extends Command {
   }
 
   public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
-    interface MatchingAddon {
-      file: string;
-      name: string;
-    }
-
     const matchingAddons: MatchingAddon[] = this.client.addonsVersions
       .filter(elt => jaroWinklerDistance(elt.split(' ').shift().toUpperCase(), addon) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
@@ -86,22 +81,6 @@ class AddonInfoCommand extends Command {
   }
 
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
-    interface AddonResponse {
-      author: string[];
-      plugin: string;
-      version: string;
-      description?: string;
-      unmaintained: boolean;
-      bytes: string;
-      download: string;
-      sourcecode?: string;
-      depend?: {
-        depend?: string[];
-        softdepend?: string[];
-        loadbefore?: string[];
-      };
-    }
-
     const addon: AddonResponse | null = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
       .catch((err) => { Logger.error(err.message); }) || null;

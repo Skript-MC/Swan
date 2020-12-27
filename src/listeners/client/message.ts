@@ -11,11 +11,6 @@ import { SanctionCreations } from '../../types';
 import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
-interface TaskResult {
-  done?: boolean;
-  value: boolean | null;
-}
-
 class MessageListener extends Listener {
   constructor() {
     super('message', {
@@ -31,7 +26,7 @@ class MessageListener extends Listener {
 
     // Run all needed tasks, and stop when there is either no more tasks or
     // when one returned true (= want to stop)
-    let task: TaskResult = { done: false, value: false };
+    let task: { done?: boolean; value: boolean } = { done: false, value: false };
     const tasks = this._getTasks(message as GuildMessage);
 
     while (!task.done && !task.value)
@@ -79,7 +74,7 @@ class MessageListener extends Listener {
     if (message.member.roles.cache.has(settings.roles.activeMember)
       && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
       await message.delete();
-      const content = message.content.length + messages.miscellaneous.noDocLink.length >= 2000
+      const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
         : message.content;
       await message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
