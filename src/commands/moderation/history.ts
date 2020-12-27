@@ -1,6 +1,5 @@
 import { oneLine, stripIndent } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
-import { GuildMember } from 'discord.js';
 import moment from 'moment';
 import { history as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
@@ -9,7 +8,12 @@ import Sanction from '../../models/sanction';
 import { SanctionsUpdates, SanctionCreations } from '../../types';
 import type { GuildMessage } from '../../types';
 import type { HistoryCommandArgument } from '../../types/CommandArguments';
-import { noop, splitText, toHumanDuration } from '../../utils';
+import {
+  getUsername,
+  noop,
+  splitText,
+  toHumanDuration,
+ } from '../../utils';
 
 class HistoryCommand extends Command {
   constructor() {
@@ -32,12 +36,6 @@ class HistoryCommand extends Command {
 
   public async exec(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
     const memberId = typeof args.member === 'string' ? args.member : args.member.id;
-    const memberName = typeof args.member === 'string'
-      ? args.member
-      : (args.member instanceof GuildMember
-        ? args.member.displayName
-        : args.member.username
-      );
 
     const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
@@ -53,7 +51,7 @@ class HistoryCommand extends Command {
     };
 
     let privateHistory = config.messages.title
-      .replace('{NAME}', memberName)
+      .replace('{NAME}', getUsername(args.member))
       .replace('{COUNT}', sanctions.length.toString());
 
     privateHistory += config.messages.overview
