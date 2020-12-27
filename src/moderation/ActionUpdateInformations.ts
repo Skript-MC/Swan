@@ -1,7 +1,7 @@
 import ConvictedUser from '../models/convictedUser';
 import Sanction from '../models/sanction';
-import type { ConvictedUserDocument, SanctionDocument } from '../types/documents';
-import { SanctionTypes } from '../types/sanctionsTypes';
+import type { ConvictedUserDocument, SanctionDocument } from '../types';
+import { SanctionTypes } from '../types';
 import { noop } from '../utils';
 import type ModerationData from './ModerationData';
 

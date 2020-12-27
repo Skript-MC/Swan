@@ -4,7 +4,7 @@ import type { TextChannel } from 'discord.js';
 import moment from 'moment';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import { SanctionTypes } from '../../types/sanctionsTypes';
+import { SanctionTypes } from '../../types';
 import { noop } from '../../utils';
 import ActionUpdateInformations from '../ActionUpdateInformations';
 import ErrorState from '../ErrorState';

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import type { Query } from 'mongoose';
-import type { ConvictedUserDocument } from '../types/documents';
+import type { ConvictedUserDocument } from '../types';
 
 const ConvictedUserSchema: Schema = new Schema({
   memberId: {

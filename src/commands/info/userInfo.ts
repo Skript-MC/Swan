@@ -4,8 +4,8 @@ import type { Message, GuildMember } from 'discord.js';
 import moment from 'moment';
 import { userInfo as config } from '../../../config/commands/info';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import type { UserInfoCommandArguments } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/utils';
 
 class UserInfoCommand extends Command {
   constructor() {

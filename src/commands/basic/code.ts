@@ -2,8 +2,8 @@ import { Command } from 'discord-akairo';
 import { code as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import type { CodeCommandArguments } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class CodeCommand extends Command {

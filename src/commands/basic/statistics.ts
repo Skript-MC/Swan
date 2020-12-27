@@ -4,9 +4,9 @@ import moment from 'moment';
 import { statistics as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import pkg from '../../../package.json';
+import { Rules } from '../../types';
+import type { GuildMessage } from '../../types';
 import type { StatisticsCommandArguments } from '../../types/CommandArguments';
-import Rules from '../../types/rules';
-import type { GuildMessage } from '../../types/utils';
 
 class StatisticsCommand extends Command {
   constructor() {

@@ -3,8 +3,8 @@ import { MessageEmbed } from 'discord.js';
 import { move as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import type { MoveCommandArguments } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class MoveCommand extends Command {

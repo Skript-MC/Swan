@@ -12,7 +12,7 @@ import ModerationData from '../../moderation/ModerationData';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import BanAction from '../../moderation/actions/BanAction';
 import KickAction from '../../moderation/actions/KickAction';
-import { SanctionTypes } from '../../types/sanctionsTypes';
+import { SanctionTypes } from '../../types';
 
 interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
   action: 'MEMBER_KICK';

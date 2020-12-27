@@ -1,8 +1,8 @@
 import { Argument, Command } from 'discord-akairo';
 import { purge as config } from '../../../config/commands/moderation';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import type { PurgeCommandArgument } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class PurgeCommand extends Command {

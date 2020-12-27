@@ -6,7 +6,7 @@ import RemoveWarnAction from '../moderation/actions/RemoveWarnAction';
 import UnbanAction from '../moderation/actions/UnbanAction';
 import UnmuteAction from '../moderation/actions/UnmuteAction';
 import Task from '../structures/Task';
-import { SanctionCreations, SanctionTypes } from '../types/sanctionsTypes';
+import { SanctionCreations, SanctionTypes } from '../types';
 import { noop } from '../utils';
 
 class ModerationTask extends Task {

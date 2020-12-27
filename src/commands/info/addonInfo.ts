@@ -6,8 +6,8 @@ import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
+import type { GuildMessage } from '../../types';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/utils';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 
 class AddonInfoCommand extends Command {
