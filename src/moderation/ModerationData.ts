@@ -10,6 +10,7 @@ import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
 import type { SanctionTypes } from '../types/sanctionsTypes';
+import type { GuildTextBasedChannel, GuildMessage } from '../types/utils';
 
 interface VictimInformations {
   id?: string;
@@ -38,7 +39,7 @@ class ModerationData {
   moderator: GuildMember;
   guild: Guild;
   client: AkairoClient;
-  channel: TextChannel;
+  channel: GuildTextBasedChannel;
   type?: SanctionTypes;
   config?: Record<string, string>;
   victim: VictimInformations;
@@ -58,12 +59,11 @@ class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data
    * * If the argument is a AkairoClient, then the channel is set to the log channel, and it is used to get all the data
    */
-  constructor(argument: Message | TextChannel | AkairoClient) {
+  constructor(argument: GuildMessage | GuildTextBasedChannel | AkairoClient) {
     if (argument instanceof Message) {
       this.moderator = argument.member;
       this.guild = argument.guild;
       this.client = argument.client as AkairoClient;
-      // @ts-expect-error
       this.channel = argument.channel;
     } else if (argument instanceof AkairoClient) {
       this.client = argument;

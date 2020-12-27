@@ -5,6 +5,7 @@ import moment from 'moment';
 import { userInfo as config } from '../../../config/commands/info';
 import settings from '../../../config/settings';
 import type { UserInfoCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 
 class UserInfoCommand extends Command {
   constructor() {
@@ -22,7 +23,7 @@ class UserInfoCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: UserInfoCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, args: UserInfoCommandArguments): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';

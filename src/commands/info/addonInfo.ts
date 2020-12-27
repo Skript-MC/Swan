@@ -7,6 +7,7 @@ import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 
 class AddonInfoCommand extends Command {
@@ -28,7 +29,7 @@ class AddonInfoCommand extends Command {
     });
   }
 
-  public async exec(message: Message, { addon }: AddonInfoCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
     interface MatchingAddon {
       file: string;
       name: string;

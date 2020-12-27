@@ -1,10 +1,10 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
 import { ping as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import type { PingCommandArguments } from '../../types/CommandArguments';
 import Rules from '../../types/rules';
+import type { GuildMessage } from '../../types/utils';
 
 class PingCommand extends Command {
   constructor() {
@@ -18,7 +18,7 @@ class PingCommand extends Command {
     this.rules = [Rules.OnlyBotChannel];
   }
 
-  public async exec(message: Message, _args: PingCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
     const sent = await message.util.send(config.messages.firstMessage);
     const timeDiff = (sent.editedAt || sent.createdAt).getTime() - (message.editedAt || message.createdAt).getTime();
 

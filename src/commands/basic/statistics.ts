@@ -1,12 +1,12 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
 import moment from 'moment';
 import { statistics as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import pkg from '../../../package.json';
 import type { StatisticsCommandArguments } from '../../types/CommandArguments';
 import Rules from '../../types/rules';
+import type { GuildMessage } from '../../types/utils';
 
 class StatisticsCommand extends Command {
   constructor() {
@@ -20,7 +20,7 @@ class StatisticsCommand extends Command {
     this.rules = [Rules.OnlyBotChannel];
   }
 
-  public async exec(message: Message, _args: StatisticsCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, _args: StatisticsCommandArguments): Promise<void> {
     const totalCommands = this.handler.categories.array().flatMap(cat => cat.array()).length;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
