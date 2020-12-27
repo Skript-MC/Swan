@@ -28,6 +28,10 @@ declare module 'discord-akairo' {
     exec(message: GuildMessage, args: unknown): unknown;
   }
 
+  interface AkairoModule {
+    toString(): string;
+  }
+
   interface CachedChannels {
     idea: TextChannel;
     suggestions: TextChannel;
