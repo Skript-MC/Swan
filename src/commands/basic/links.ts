@@ -1,9 +1,9 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
 import { links as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import type { LinksCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
@@ -24,7 +24,7 @@ class LinksCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: LinksCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
     let { page } = args;
     const msg = await message.util.send(this._getEmbedForPage(page));
 

@@ -1,6 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
 import { GuildMember } from 'discord.js';
-import type { Message } from 'discord.js';
 import { unban as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
@@ -9,6 +8,7 @@ import UnbanAction from '../../moderation/actions/UnbanAction';
 import Logger from '../../structures/Logger';
 import type { UnbanCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class UnbanCommand extends Command {
@@ -34,7 +34,7 @@ class UnbanCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: UnbanCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: UnbanCommandArgument): Promise<void> {
     if (args.member instanceof GuildMember
       && args.member.roles.highest.position >= message.member.roles.highest.position) {
       // TODO: Change this message and the next one when the 3 TODO above are fixed

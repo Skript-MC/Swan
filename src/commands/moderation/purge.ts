@@ -1,8 +1,8 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { purge as config } from '../../../config/commands/moderation';
 import settings from '../../../config/settings';
 import type { PurgeCommandArgument } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class PurgeCommand extends Command {
@@ -33,12 +33,7 @@ class PurgeCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: PurgeCommandArgument): Promise<void> {
-    // FIXME: For now we just type-guard even though this will never happen, because we specified
-    // "channel": "guild" in the config ; but the typings aren't changed so TS is complaining.
-    if (message.channel.type !== 'text')
-      return;
-
+  public async exec(message: GuildMessage, args: PurgeCommandArgument): Promise<void> {
     const { amount, member, force } = args;
 
     message.util.messages.set(message.id, message);

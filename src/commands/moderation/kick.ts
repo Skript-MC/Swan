@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { kick as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
@@ -7,6 +6,7 @@ import KickAction from '../../moderation/actions/KickAction';
 import Logger from '../../structures/Logger';
 import type { KickCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class KickCommand extends Command {
@@ -40,7 +40,7 @@ class KickCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: KickCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: KickCommandArgument): Promise<void> {
     try {
       const data = new ModerationData(message)
         .setVictim(args.member)

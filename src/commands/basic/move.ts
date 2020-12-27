@@ -1,10 +1,10 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
 import { move as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import type { MoveCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class MoveCommand extends Command {
@@ -40,12 +40,7 @@ class MoveCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: MoveCommandArguments): Promise<void> {
-    // FIXME: For now we just type-guard even though this will never happen, because we specified
-    // "channel": "guild" in the config ; but the typings aren't changed so TS is complaining.
-    if (message.channel.type !== 'text')
-      return;
-
+  public async exec(message: GuildMessage, args: MoveCommandArguments): Promise<void> {
     const { channel: targetedChannel, message: targetedMessage } = args;
 
     if (targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) {

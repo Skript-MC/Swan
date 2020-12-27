@@ -1,10 +1,10 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
 import { help as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import type { HelpCommandArguments } from '../../types/CommandArguments';
 import Rules from '../../types/rules';
+import type { GuildMessage } from '../../types/utils';
 import { capitalize } from '../../utils';
 
 class HelpCommand extends Command {
@@ -23,7 +23,7 @@ class HelpCommand extends Command {
     this.rules = [Rules.OnlyBotChannel];
   }
 
-  public async exec(message: Message, args: HelpCommandArguments): Promise<void> {
+  public async exec(message: GuildMessage, args: HelpCommandArguments): Promise<void> {
     const { command } = args;
     const { prefix } = this.handler;
 

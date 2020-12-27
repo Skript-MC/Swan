@@ -1,9 +1,9 @@
 import { Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { code as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import type { CodeCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class CodeCommand extends Command {
@@ -26,12 +26,7 @@ class CodeCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: CodeCommandArguments): Promise<void> {
-    // FIXME: For now we just type-guard even though this will never happen, because we specified
-    // "channel": "guild" in the config ; but the typings aren't changed so TS is complaining.
-    if (message.channel.type !== 'text')
-      return;
-
+  public async exec(message: GuildMessage, args: CodeCommandArguments): Promise<void> {
     try {
       message.util.messages.set(message.id, message);
       await message.channel.bulkDelete(message.util.messages, true).catch(noop);

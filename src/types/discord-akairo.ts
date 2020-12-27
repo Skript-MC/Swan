@@ -5,6 +5,7 @@ import type {
 } from 'discord-akairo';
 import type { Guild, TextChannel } from 'discord.js';
 import type TaskHandler from '../structures/TaskHandler';
+import type { GuildMessage } from './utils';
 
 
 declare module 'discord-akairo' {
@@ -23,6 +24,8 @@ declare module 'discord-akairo' {
   interface Command {
     rules?: number[];
     details: CommandDetails;
+
+    exec(message: GuildMessage, args: unknown): unknown;
   }
 
   interface CachedChannels {

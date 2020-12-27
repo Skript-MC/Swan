@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { mute as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -9,6 +8,7 @@ import MuteAction from '../../moderation/actions/MuteAction';
 import Logger from '../../structures/Logger';
 import type { MuteCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class MuteCommand extends Command {
@@ -54,7 +54,7 @@ class MuteCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: MuteCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: MuteCommandArgument): Promise<void> {
     if (await ModerationHelper.isBanned(args.member.id)) {
       await message.util.send(messages.global.impossibleBecauseBanned).catch(noop);
       return;

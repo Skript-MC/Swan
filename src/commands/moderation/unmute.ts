@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { unmute as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ConvictedUser from '../../models/convictedUser';
@@ -8,6 +7,7 @@ import UnmuteAction from '../../moderation/actions/UnmuteAction';
 import Logger from '../../structures/Logger';
 import type { UnmuteCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class UnmuteCommand extends Command {
@@ -39,7 +39,7 @@ class UnmuteCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: UnmuteCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: UnmuteCommandArgument): Promise<void> {
     try {
       const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
       if (!convictedUser?.lastMuteId) {

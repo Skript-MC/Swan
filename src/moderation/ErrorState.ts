@@ -1,16 +1,16 @@
 import type { AkairoClient } from 'discord-akairo';
-import type { TextChannel } from 'discord.js';
 import messages from '../../config/messages';
 import Logger from '../structures/Logger';
+import type { GuildTextBasedChannel } from '../types/utils';
 import { noop } from '../utils';
 import ModerationError from './ModerationError';
 
 class ErrorState {
   client: AkairoClient;
-  channel: TextChannel;
+  channel: GuildTextBasedChannel;
   errors: ModerationError[];
 
-  constructor(client: AkairoClient, channel: TextChannel) {
+  constructor(client: AkairoClient, channel: GuildTextBasedChannel) {
     this.client = client;
     this.channel = channel;
     this.errors = [];

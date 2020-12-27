@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { ban as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -8,6 +7,7 @@ import BanAction from '../../moderation/actions/BanAction';
 import Logger from '../../structures/Logger';
 import type { BanCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class BanCommand extends Command {
@@ -57,7 +57,7 @@ class BanCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: BanCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: BanCommandArgument): Promise<void> {
     const data = new ModerationData(message)
       .setVictim(args.member)
       .setReason(args.reason);

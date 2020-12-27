@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { removeWarn as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ConvictedUser from '../../models/convictedUser';
@@ -8,6 +7,7 @@ import RemoveWarnAction from '../../moderation/actions/RemoveWarnAction';
 import Logger from '../../structures/Logger';
 import type { RemoveWarnCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class RemoveWarnCommand extends Command {
@@ -39,7 +39,7 @@ class RemoveWarnCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: RemoveWarnCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: RemoveWarnCommandArgument): Promise<void> {
     try {
       const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
       if (!convictedUser || convictedUser.currentWarnCount === 0) {

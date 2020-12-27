@@ -1,5 +1,4 @@
 import { Argument, Command } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import { warn as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -9,6 +8,7 @@ import WarnAction from '../../moderation/actions/WarnAction';
 import Logger from '../../structures/Logger';
 import type { WarnCommandArgument } from '../../types/CommandArguments';
 import { SanctionTypes } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class WarnCommand extends Command {
@@ -43,7 +43,7 @@ class WarnCommand extends Command {
     });
   }
 
-  public async exec(message: Message, args: WarnCommandArgument): Promise<void> {
+  public async exec(message: GuildMessage, args: WarnCommandArgument): Promise<void> {
     const isBanned = await ModerationHelper.isBanned(args.member.id);
     if (isBanned) {
       await message.util.send(messages.global.impossibleBecauseBanned).catch(noop);

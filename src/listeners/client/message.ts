@@ -8,6 +8,7 @@ import Sanction from '../../models/sanction';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
 import { SanctionCreations } from '../../types/sanctionsTypes';
+import type { GuildMessage } from '../../types/utils';
 import { noop, trimText } from '../../utils';
 
 interface TaskResult {
@@ -31,13 +32,13 @@ class MessageListener extends Listener {
     // Run all needed tasks, and stop when there is either no more tasks or
     // when one returned true (= want to stop)
     let task: TaskResult = { done: false, value: false };
-    const tasks = this._getTasks(message);
+    const tasks = this._getTasks(message as GuildMessage);
 
     while (!task.done && !task.value)
       task = await tasks.next();
   }
 
-  private async * _getTasks(message: Message): AsyncGenerator<boolean, null> {
+  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, null> {
     yield await this._confirmBannedMemberSentMessages(message);
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInNeededChannels(message);
@@ -48,7 +49,7 @@ class MessageListener extends Listener {
     return null;
   }
 
-  private async _confirmBannedMemberSentMessages(message: Message): Promise<boolean> {
+  private async _confirmBannedMemberSentMessages(message: GuildMessage): Promise<boolean> {
     const isBanned = await ModerationHelper.isBanned(message.member.id, false);
     if (isBanned) {
       try {
@@ -74,7 +75,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _preventActiveMembersToPostDocLinks(message: Message): Promise<boolean> {
+  private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
     if (message.member.roles.cache.has(settings.roles.activeMember)
       && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
       await message.delete();
@@ -88,7 +89,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _addReactionsInNeededChannels(message: Message): Promise<boolean> {
+  private async _addReactionsInNeededChannels(message: GuildMessage): Promise<boolean> {
     if ([settings.channels.idea, settings.channels.suggestions].includes(message.channel.id)) {
       try {
         await message.react(settings.emojis.yes);
@@ -105,7 +106,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _quoteLinkedMessage(message: Message): Promise<boolean> {
+  private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
     const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'gimu');
     if (!linkRegex.exec(message.content))
       return false;
@@ -154,7 +155,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _uploadFileOnHastebin(message: Message): Promise<boolean> {
+  private async _uploadFileOnHastebin(message: GuildMessage): Promise<boolean> {
     if (message.attachments.size === 0)
       return false;
 
@@ -178,7 +179,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _antispamSnippetsChannel(message: Message): Promise<boolean> {
+  private async _antispamSnippetsChannel(message: GuildMessage): Promise<boolean> {
     if (message.channel.id === settings.channels.snippets
       && !message.member.roles.cache.has(settings.roles.staff)) {
       // We check that they are not the author of the last message... In case they exceed the 2.000 chars limit
@@ -197,7 +198,7 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _checkCreationsChannelRules(message: Message): Promise<boolean> {
+  private async _checkCreationsChannelRules(message: GuildMessage): Promise<boolean> {
     if (message.channel.id === settings.channels.creations
         && !message.member.roles.cache.has(settings.roles.staff)
         && message?.content
