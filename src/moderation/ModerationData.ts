@@ -9,30 +9,15 @@ import type { Guild } from 'discord.js';
 import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
-import type { GuildTextBasedChannel, GuildMessage, SanctionTypes } from '../types';
+import type {
+  GuildTextBasedChannel,
+  GuildMessage,
+  SanctionTypes,
+  VictimInformations,
+  SanctionInformations,
+  DataResult,
+} from '../types';
 
-interface VictimInformations {
-  id?: string;
-  user?: User;
-  member?: GuildMember;
-}
-
-interface SanctionInformations {
-  hasSentMessages?: boolean;
-}
-
-interface DataResult {
-  memberId: string;
-  type: SanctionTypes;
-  moderator: string;
-  start: number;
-  finish: number;
-  duration: number;
-  reason: string;
-  revoked: boolean;
-  informations: SanctionInformations;
-  id: string;
-}
 
 class ModerationData {
   moderator: GuildMember;

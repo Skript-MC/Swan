@@ -1,27 +1,13 @@
 import { Listener } from 'discord-akairo';
 import { GuildAuditLogs } from 'discord.js';
-import type {
-  Collection,
-  GuildAuditLogsEntry,
-  GuildMember,
-  Snowflake,
-  User,
-} from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import BanAction from '../../moderation/actions/BanAction';
 import KickAction from '../../moderation/actions/KickAction';
+import type { GuildKickAuditLogs } from '../../types';
 import { SanctionTypes } from '../../types';
-
-interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
-  action: 'MEMBER_KICK';
-  target: User;
-}
-
-interface GuildKickAuditLogs extends GuildAuditLogs {
-  entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
-}
 
 class GuildMemberRemoveListener extends Listener {
   constructor() {

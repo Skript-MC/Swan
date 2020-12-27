@@ -2,12 +2,8 @@ import { AkairoError, AkairoHandler } from 'discord-akairo';
 import type { AkairoClient } from 'discord-akairo';
 import { Collection } from 'discord.js';
 import cron from 'node-cron';
+import type { TaskInformations } from '../types';
 import Task from './Task';
-
-interface TaskInformations {
-  interval?: NodeJS.Timeout;
-  schedule?: cron.ScheduledTask;
-}
 
 class TaskHandler extends AkairoHandler {
   tasks: Collection<string, TaskInformations>;
