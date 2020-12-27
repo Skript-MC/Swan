@@ -9,8 +9,7 @@ import type { Guild } from 'discord.js';
 import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
-import type { SanctionTypes } from '../types/sanctionsTypes';
-import type { GuildTextBasedChannel, GuildMessage } from '../types/utils';
+import type { GuildTextBasedChannel, GuildMessage, SanctionTypes } from '../types';
 
 interface VictimInformations {
   id?: string;

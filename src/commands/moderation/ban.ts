@@ -5,9 +5,9 @@ import settings from '../../../config/settings';
 import ModerationData from '../../moderation/ModerationData';
 import BanAction from '../../moderation/actions/BanAction';
 import Logger from '../../structures/Logger';
+import { SanctionTypes } from '../../types';
+import type { GuildMessage } from '../../types';
 import type { BanCommandArgument } from '../../types/CommandArguments';
-import { SanctionTypes } from '../../types/sanctionsTypes';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class BanCommand extends Command {

@@ -6,9 +6,9 @@ import ModerationData from '../../moderation/ModerationData';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import WarnAction from '../../moderation/actions/WarnAction';
 import Logger from '../../structures/Logger';
+import { SanctionTypes } from '../../types';
+import type { GuildMessage } from '../../types';
 import type { WarnCommandArgument } from '../../types/CommandArguments';
-import { SanctionTypes } from '../../types/sanctionsTypes';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class WarnCommand extends Command {

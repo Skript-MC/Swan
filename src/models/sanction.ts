@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { nanoid } from 'nanoid';
-import type { SanctionDocument } from '../types/documents';
-import { SanctionCreations, SanctionsUpdates } from '../types/sanctionsTypes';
+import type { SanctionDocument } from '../types';
+import { SanctionCreations, SanctionsUpdates } from '../types';
 
 const SanctionSchema: Schema = new Schema({
   memberId: {

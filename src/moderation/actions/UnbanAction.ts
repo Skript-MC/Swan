@@ -1,8 +1,8 @@
 import { GuildMember, User, Permissions } from 'discord.js';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
-import type { SanctionDocument } from '../../types/documents';
-import { SanctionCreations, SanctionsUpdates } from '../../types/sanctionsTypes';
+import type { SanctionDocument } from '../../types';
+import { SanctionCreations, SanctionsUpdates } from '../../types';
 import { noop } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';

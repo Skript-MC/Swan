@@ -5,7 +5,7 @@ import type {
 } from 'discord-akairo';
 import type { Guild, TextChannel } from 'discord.js';
 import type TaskHandler from '../structures/TaskHandler';
-import type { GuildMessage } from './utils';
+import type { GuildMessage } from './index';
 
 
 declare module 'discord-akairo' {

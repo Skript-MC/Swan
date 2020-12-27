@@ -3,7 +3,7 @@ import type { GuildChannel } from 'discord.js';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import Logger from '../structures/Logger';
-import { SanctionCreations } from '../types/sanctionsTypes';
+import { SanctionCreations } from '../types';
 import { noop, prunePseudo } from '../utils';
 import type ModerationData from './ModerationData';
 

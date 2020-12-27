@@ -4,7 +4,7 @@ import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import Logger from '../../structures/Logger';
-import { SanctionCreations, SanctionsUpdates, SanctionTypes } from '../../types/sanctionsTypes';
+import { SanctionCreations, SanctionsUpdates, SanctionTypes } from '../../types';
 import { noop } from '../../utils';
 import ModerationData from '../ModerationData';
 import ModerationError from '../ModerationError';

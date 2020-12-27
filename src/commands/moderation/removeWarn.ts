@@ -5,9 +5,9 @@ import ConvictedUser from '../../models/convictedUser';
 import ModerationData from '../../moderation/ModerationData';
 import RemoveWarnAction from '../../moderation/actions/RemoveWarnAction';
 import Logger from '../../structures/Logger';
+import { SanctionTypes } from '../../types';
+import type { GuildMessage } from '../../types';
 import type { RemoveWarnCommandArgument } from '../../types/CommandArguments';
-import { SanctionTypes } from '../../types/sanctionsTypes';
-import type { GuildMessage } from '../../types/utils';
 import { noop } from '../../utils';
 
 class RemoveWarnCommand extends Command {

@@ -4,7 +4,7 @@ import messages from '../../../config/messages';
 import ModerationData from '../../moderation/ModerationData';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import UnbanAction from '../../moderation/actions/UnbanAction';
-import { SanctionTypes } from '../../types/sanctionsTypes';
+import { SanctionTypes } from '../../types';
 
 class GuildBanRemoveListener extends Listener {
   constructor() {

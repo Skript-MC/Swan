@@ -7,8 +7,8 @@ import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { SanctionCreations } from '../../types/sanctionsTypes';
-import type { GuildMessage } from '../../types/utils';
+import { SanctionCreations } from '../../types';
+import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
 interface TaskResult {
