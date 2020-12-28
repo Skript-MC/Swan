@@ -10,8 +10,6 @@ module.exports = {
     'node/file-extension-in-import': 'off',
     'import/extensions': ['error', 'never', { ts: 'never' }],
 
-    // Because discord.js is promised base
-
     // @typescript-eslint can't find the .toString() method for those types, but it
     // really exists as it is inherited from the Channel class.
     '@typescript-eslint/no-base-to-string': ['error', {
@@ -23,7 +21,7 @@ module.exports = {
     '@typescript-eslint/no-misused-promises': 'off',
     'no-await-in-loop': 'off',
 
-    // String#replaceAll is neither in NodeJS nor in babel yet...
+    // String#replaceAll is not in NodeJS yet...
     'unicorn/prefer-replace-all': 'off',
   },
   globals: {
