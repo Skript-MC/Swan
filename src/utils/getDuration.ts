@@ -97,6 +97,12 @@ function convert(num: number, type: string): number {
   }
 }
 
+/**
+ * Parses a human duration to a timestamp in seconds.
+ *
+ * @param {string} val - The value to parse as a duration.
+ * @returns number
+ */
 function getDuration(val: string): number {
   let abs: number;
   let total = 0;
