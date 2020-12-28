@@ -9,7 +9,7 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import type { Document, Model } from 'mongoose';
+import type { Document, FilterQuery, Model } from 'mongoose';
 import type cron from 'node-cron';
 
 // Represent an addon that matches the requirements, used in commands/addonInfo.ts
@@ -126,13 +126,23 @@ export interface CommandStatDocument extends CommandStatBase, Document {}
 // Interface for the "CommandStat"'s mongoose model
 export type CommandStatModel = Model<CommandStatDocument>;
 
-
-// Document for the "ConvictedUser"'s mongoose collection
-export interface ConvictedUserDocument extends Document {
+// Interface for the "ConvictedUser"'s mongoose schema
+export interface ConvictedUserBase {
   memberId: string;
   lastBanId?: string;
   lastMuteId?: string;
-  currentWarnCount: number;
+  currentWarnCount?: number;
+}
+
+// Interface for the "ConvictedUser"'s mongoose document
+export interface ConvictedUserDocument extends ConvictedUserBase, Document {}
+
+// Interface for the "ConvictedUser"'s mongoose model
+export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
+  findOneOrCreate(
+    condition: FilterQuery<ConvictedUserDocument>,
+    doc: ConvictedUserBase,
+  ): Promise<ConvictedUserDocument>;
 }
 
 // Type of updates in SanctionDocument.updates
