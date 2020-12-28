@@ -2,7 +2,7 @@ import { GuildMember, User, Permissions } from 'discord.js';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import type { SanctionDocument } from '../../types';
-import { SanctionCreations, SanctionsUpdates } from '../../types';
+import { SanctionTypes, SanctionsUpdates } from '../../types';
 import { noop } from '../../utils';
 import ModerationError from '../ModerationError';
 import ModerationHelper from '../ModerationHelper';
@@ -27,7 +27,7 @@ class UnbanAction extends ModerationAction {
     try {
       const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastBanId: null });
       ban = await Sanction.findOneAndUpdate(
-        { id: user.lastBanId },
+        { sanctionId: user.lastBanId },
         {
           $set: { revoked: true },
           $push: {
@@ -45,7 +45,7 @@ class UnbanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occured while revoking a ban in the Database')
-          .addDetail('Ban: ID', this.data.id)
+          .addDetail('Ban: ID', this.data.sanctionId)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Unban Reason', this.data.reason),
       );
@@ -53,11 +53,11 @@ class UnbanAction extends ModerationAction {
 
     // 2. Unban (hard-unban or remove roles)
     try {
-      if (ban.type === SanctionCreations.Hardban || !this.data.victim.member) {
+      if (ban.type === SanctionTypes.Hardban || !this.data.victim.member) {
         const isHardbanned = await this.data.guild.fetchBan(this.data.victim.id).catch(noop);
         if (isHardbanned)
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
-      } else if (ban.type === SanctionCreations.Ban) {
+      } else if (ban.type === SanctionTypes.Ban) {
         await this.data.victim.member.roles.set([]);
         // TODO: Find channel by id (which will be stored in the database, in the "ban" object)
         await ModerationHelper.removeChannel(this.data);

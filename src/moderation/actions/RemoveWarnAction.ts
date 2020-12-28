@@ -1,7 +1,7 @@
 import { User } from 'discord.js';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
-import { SanctionCreations, SanctionsUpdates } from '../../types';
+import { SanctionTypes, SanctionsUpdates } from '../../types';
 import ModerationError from '../ModerationError';
 import ModerationAction from './ModerationAction';
 
@@ -25,7 +25,7 @@ class RemoveWarnAction extends ModerationAction {
       await Sanction.findOneAndUpdate(
         {
           memberId: this.data.victim.id,
-          type: SanctionCreations.Warn,
+          type: SanctionTypes.Warn,
           revoked: false,
         },
         {
@@ -46,7 +46,7 @@ class RemoveWarnAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occured while revoking a warn in the Database')
-          .addDetail('RemoveWarn ID', this.data.id)
+          .addDetail('RemoveWarn ID', this.data.sanctionId)
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)
           .addDetail('RemoveWarn Reason', this.data.reason),

@@ -9,7 +9,12 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import type { Document, FilterQuery, Model } from 'mongoose';
+import type {
+  Document,
+  FilterQuery,
+  Model,
+  Types,
+} from 'mongoose';
 import type cron from 'node-cron';
 
 // Represent an addon that matches the requirements, used in commands/addonInfo.ts
@@ -70,7 +75,7 @@ export interface DataResult {
   reason: string;
   revoked: boolean;
   informations: SanctionInformations;
-  id: string;
+  sanctionId: string;
 }
 
 // A TextChannel which is in a guild
@@ -79,24 +84,25 @@ export type GuildTextBasedChannel = TextChannel | NewsChannel;
 // Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel.
 export type GuildMessage = { channel: GuildTextBasedChannel } & Message;
 
+// TODO: Find a better way to do this. We can take inspiration from https://stackoverflow.com/a/55827534/11687747
+// Better type the sanction types with 2 distincts types: creations and revokations.
 // Sanctions types that *create* a new sanction
-export enum SanctionCreations {
-  Hardban = 'hardban',
-  Ban = 'ban',
-  Mute = 'mute',
-  Warn = 'warn',
-  Kick = 'kick',
-}
+// export enum SanctionCreations {
+//   Hardban = 'hardban',
+//   Ban = 'ban',
+//   Mute = 'mute',
+//   Warn = 'warn',
+//   Kick = 'kick',
+// }
 
 // Sanctions types that *revoke* a new sanction
-export enum SanctionRevokations {
-  Unban = 'unban',
-  Unmute = 'unmute',
-  RemoveWarn = 'removeWarn',
-}
+// export enum SanctionRevokations {
+//   Unban = 'unban',
+//   Unmute = 'unmute',
+//   RemoveWarn = 'removeWarn',
+// }
 
-// TODO: Find a better way to do this. We can take inspiration from https://stackoverflow.com/a/55827534/11687747
-// SanctionTypes is a merge of SanctionCreations and SanctionRevokations
+// Different types of possible sanctions
 export enum SanctionTypes {
   Hardban = 'hardban',
   Ban = 'ban',
@@ -155,21 +161,41 @@ export interface SanctionUpdate {
   reason: string;
 }
 
-// Document for the "Sanction"'s mongoose collection
-export interface SanctionDocument extends Document {
+// Interface for the "Sanction"'s mongoose schema
+export interface SanctionBase {
   memberId: string;
-  user: ConvictedUserDocument['_id'];
-  type: SanctionCreations;
+  user: Types.ObjectId | ConvictedUserDocument;
+  type: SanctionTypes;
   moderator: string;
   start: number;
   duration?: number;
   finish?: number;
   reason: string;
-  revoked: boolean;
-  id: string;
+  revoked?: boolean;
+  sanctionId: string;
   informations?: SanctionInformations;
-  updates: SanctionUpdate[];
+  updates?: SanctionUpdate[];
 }
+
+// Interface for the "Sanction"'s mongoose document.
+// It is not meant to be used, it is just a base which extends document, and modify SanctionBase to use
+// mongoose's types (allow things like .addToSet on the mongoose array)
+interface SanctionBaseDocument extends SanctionBase, Document {
+  updates?: Types.Array<SanctionUpdate>;
+}
+
+// Interface for the "Sanction"'s mongoose document, when the user field is not populated
+export interface SanctionDocument extends SanctionBaseDocument {
+  user: ConvictedUserDocument['_id'];
+}
+
+// Interface for the "Sanction"'s mongoose document, when the user field is populated
+export interface SanctionPopulatedDocument extends SanctionBaseDocument {
+  user: ConvictedUserDocument;
+}
+
+// Interface for the "Sanction"'s mongoose model
+export type SanctionModel = Model<SanctionDocument>;
 
 // Types of rules for where a command can be executed
 export enum Rules {

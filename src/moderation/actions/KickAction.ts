@@ -20,7 +20,6 @@ class KickAction extends ModerationAction {
         { memberId: this.data.victim.id },
         { memberId: this.data.victim.id },
       );
-      // @ts-expect-error
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (unknownError: unknown) {
       this.errorState.addError(

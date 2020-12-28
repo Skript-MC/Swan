@@ -7,7 +7,7 @@ import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { SanctionCreations } from '../../types';
+import { SanctionTypes } from '../../types';
 import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
@@ -52,7 +52,7 @@ class MessageListener extends Listener {
           {
             memberId: message.member.id,
             revoked: false,
-            type: SanctionCreations.Ban,
+            type: SanctionTypes.Ban,
           },
           {
             $set: { informations: { hasSentMessage: true } },

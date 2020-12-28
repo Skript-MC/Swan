@@ -37,7 +37,7 @@ class BanAction extends ModerationAction {
     try {
       if (this.updateInfos.isUpdate()) {
         await Sanction.findOneAndUpdate(
-          { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastBanId },
+          { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.lastBanId },
           {
             $set: {
               duration: this.data.duration,
@@ -58,10 +58,9 @@ class BanAction extends ModerationAction {
       } else {
         const user = await ConvictedUser.findOneAndUpdate(
           { memberId: this.data.victim.id },
-          { lastBanId: this.data.id },
+          { lastBanId: this.data.sanctionId },
           { upsert: true, new: true },
         );
-        // @ts-expect-error
         await Sanction.create({ ...this.data.toSchema(), user: user._id });
       }
     } catch (unknownError: unknown) {
@@ -95,7 +94,7 @@ class BanAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastBanId },
+        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.lastBanId },
         {
           $set: {
             duration: this.data.duration,
@@ -130,10 +129,9 @@ class BanAction extends ModerationAction {
     try {
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },
-        { lastBanId: this.data.id },
+        { lastBanId: this.data.sanctionId },
         { upsert: true, new: true },
       );
-      // @ts-expect-error
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (unknownError: unknown) {
       this.errorState.addError(
