@@ -1,4 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
+import type { GuildMember } from 'discord.js';
 import { removeWarn as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import ConvictedUser from '../../models/convictedUser';
@@ -20,7 +21,7 @@ class RemoveWarnCommand extends Command {
         id: 'member',
         type: Argument.validate(
           'member',
-          (message, _phrase, value) => value.id !== message.author.id
+          (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
             && value.roles.highest.position < message.member.roles.highest.position,
         ),
         prompt: {
