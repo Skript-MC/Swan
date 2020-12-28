@@ -109,7 +109,7 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
-    this.commandHandler.resolver.addType('duration', (_message, phrase) => {
+    this.commandHandler.resolver.addType('duration', (_message, phrase): number | null => {
       if (!phrase)
         return null;
 
@@ -118,7 +118,7 @@ class SwanClient extends AkairoClient {
       return getDuration(phrase) || null;
     });
 
-    this.commandHandler.resolver.addType('finiteDuration', (_message, phrase) => {
+    this.commandHandler.resolver.addType('finiteDuration', (_message, phrase): number | null => {
       if (!phrase)
         return null;
 
