@@ -16,7 +16,7 @@ class WarnAction extends ModerationAction {
 
   protected async after(): Promise<void> {
     try {
-      // Check if they have exceeded the warning limit (before banishment)
+      // Check if they have exceeded the warning limit (before banishment).
       const user = await ConvictedUser.findOne({ memberId: this.data.victim.id });
 
       if (!user) {
@@ -52,7 +52,7 @@ class WarnAction extends ModerationAction {
           },
         );
 
-        // 3. Ban
+        // 3. Ban the member
         const data = new ModerationData(this.client)
           .setVictim(this.data.victim.member || this.data.victim.user, false)
           .setReason(messages.moderation.reasons.autoBanWarnLimitExceeded)
@@ -62,7 +62,7 @@ class WarnAction extends ModerationAction {
 
         await new BanAction(data).commit();
 
-        // 4. Send message
+        // 4. Send the message
         this.data.channel.send(this.data.config.banSuccess).catch(noop);
       }
     } catch (unknownError: unknown) {
@@ -82,7 +82,7 @@ class WarnAction extends ModerationAction {
   }
 
   private async _warn(): Promise<void> {
-    // Add to the database
+    // Add to the Database
     try {
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },

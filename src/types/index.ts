@@ -24,8 +24,8 @@ export interface MatchingAddon {
 }
 
 /**
- * Represent the object that is returned when calling the skripttools API,
- * requesting informations for a specific addon.
+ * Represent the object that is returned when calling the skripttools API
+ * when requesting informations for a specific addon.
  */
 export interface AddonResponse {
   author: string[];

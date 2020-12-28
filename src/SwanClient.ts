@@ -21,13 +21,12 @@ class SwanClient extends AkairoClient {
       disableMentions: 'everyone',
       ws: {
         intents: [
-          'GUILDS', // Access to channels, create some, pin messages etc etc
-          'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal)
-          'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events
-          'GUILD_VOICE_STATES', // Access to VoiceStateUpdate event
-          'GUILD_PRESENCES', // Access to users' presence (for .userinfo)
-          'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events
-          'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events
+          'GUILDS', // Get access to channels, create some, pin messages etc.
+          'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal).
+          'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events.
+          'GUILD_PRESENCES', // Access to users' presence (for .userinfo).
+          'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events.
+          'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events.
         ],
       },
     });
@@ -162,7 +161,7 @@ class SwanClient extends AkairoClient {
 
     // TODO: Also check for emojis IDs
 
-    // Check client's se rver-level permissions
+    // Check client's server-level permissions
     const permissions: PermissionString[] = [
       'ADD_REACTIONS',
       'VIEW_CHANNEL',

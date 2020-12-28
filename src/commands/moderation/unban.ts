@@ -18,9 +18,9 @@ class UnbanCommand extends Command {
       details: config.details,
       args: [{
         id: 'member',
-        // TODO: Make the validation of member here, not in #exec()
-        // TODO: Also fetch the user, don't only take it from the cache (make a new custom type?)
-        // TODO: Add a prompt (when the validation is done correctly)
+        // TODO: Make the validation of member here, not in #exec().
+        // TODO: Fetch the user, don't only take it from the cache (make a new custom type?).
+        // TODO: Add a prompt (when the validation is done correctly).
         type: Argument.union('member', 'user'),
       }, {
         id: 'reason',
@@ -37,12 +37,12 @@ class UnbanCommand extends Command {
   public async exec(message: GuildMessage, args: UnbanCommandArgument): Promise<void> {
     if (args.member instanceof GuildMember
       && args.member.roles.highest.position >= message.member.roles.highest.position) {
-      // TODO: Change this message and the next one when the 3 TODO above are fixed
+      // TODO: Change this message and the next one when the 3 TODOs above are fixed.
       await message.util.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
       return;
     }
 
-    // NOTE: This is really badly done, but will be fixed when all the TODO above are fixed.
+    // NOTE: This is really badly done, but will be fixed when all the TODOs above are fixed.
     if (!args.member)
       args.member = await this.client.users.fetch(message.content.split(' ')[1]);
     if (!args.member) {

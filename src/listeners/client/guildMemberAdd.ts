@@ -56,7 +56,7 @@ class GuildMemberAddListener extends Listener {
 
     const requiredPercentage = settings.miscellaneous.validNamePercentage;
 
-    // If the percentage of correct name is >= required percentage
+    // If the percentage of correct name >= required percentage.
     const newName = Math.round((strippedName.length / name.length) * 100) >= requiredPercentage
       ? strippedName
       : messages.miscellaneous.renameList[Math.floor(Math.random() * messages.miscellaneous.renameList.length)];

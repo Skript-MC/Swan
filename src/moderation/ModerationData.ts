@@ -36,12 +36,12 @@ class ModerationData {
   informations: SanctionInformations;
 
   /**
-   * Create moderation data from a message or from individual informations
+   * Create moderation data from a message or from individual informations.
    *
    * @param {Message | TextChannel | AkairoClient} messageOrChannelOrClient
-   * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...)
-   * * If the argument is a TextChannel, then the channel is used to get all the data
-   * * If the argument is a AkairoClient, then the channel is set to the log channel, and it is used to get all the data
+   * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...).
+   * * If the argument is a TextChannel, then the channel is used to get all the data.
+   * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
   constructor(argument: GuildMessage | GuildTextBasedChannel | AkairoClient) {
     if (argument instanceof Message) {
@@ -60,20 +60,20 @@ class ModerationData {
       this.moderator = this.guild.me;
       this.client = this.guild.client as AkairoClient;
     }
-    this.type = null;            // The sanction type (one of the SanctionTypes enum)
-    this.config = null;          // The configuration of the action (all the messages)
-    this.victim = {              // The victim of the case. It contains an ID, a User? and a GuildMember?
+    this.type = null;            // The sanction type (one of the SanctionTypes enum).
+    this.config = null;          // The configuration of the action (all the messages).
+    this.victim = {              // The victim of the case. It contains an ID, a User and a GuildMember.
       id: null,
       user: null,
       member: null,
     };
-    this.reason = messages.global.noReason; // The reason
-    this.duration = null;        // The duration
-    this.finish = null;          // The finish timestamp
-    this.start = Date.now();     // The start timestamp
-    this.privateChannel = null;  // The private channel (in case of a ban)
-    this.sanctionId = nanoid(8); // The id of the case
-    this.informations = {};      // The additional information to be given to the sanction model
+    this.reason = messages.global.noReason; // The reason.
+    this.duration = null;        // The duration.
+    this.finish = null;          // The finish timestamp.
+    this.start = Date.now();     // The start timestamp.
+    this.privateChannel = null;  // The private channel (in case of a ban).
+    this.sanctionId = nanoid(8); // The id of the case.
+    this.informations = {};      // The additional information to be given to the sanction model.
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {

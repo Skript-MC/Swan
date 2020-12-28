@@ -25,8 +25,8 @@ declare module 'discord-akairo' {
     rules?: number[];
     details: CommandDetails;
 
-    // Added a signature where the message is of type GuildMessage, which can be useful
-    // when the `channel: "guild"` option is given in the constructor options
+    // We add a signature where the message is of type GuildMessage, which can be useful
+    // when the `channel: "guild"` option is given in the constructor options.
     exec(message: GuildMessage, args: unknown): unknown;
   }
 

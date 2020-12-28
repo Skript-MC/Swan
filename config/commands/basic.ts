@@ -13,14 +13,14 @@ export const code = {
   },
   details: {
     name: 'Code',
-    content: "Permet d'afficher du code bien présenté, avec des balises de code et une coloration syntaxique.",
+    content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique.",
     usage: 'code <code>',
     examples: ['code broadcast "Yeah!"'],
   },
   messages: {
     emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
     startPrompt: 'Ajoute un code à formatter :',
-    retryPrompt: 'Code invalid. Ré-entre ton code :',
+    retryPrompt: 'Code invalide. Ré-entre ton code :',
   },
 };
 
@@ -47,7 +47,7 @@ export const help = {
     },
     commandsList: {
       title: 'Commandes de Swan ({NUMBER})',
-      description: "Faites `{COMMAND}` pour avoir plus d'informations sur une commande",
+      description: "Faites `{COMMAND}` pour avoir plus d'informations sur une commande.",
       category: '❯ {CATEGORY}',
     },
   },
@@ -61,18 +61,26 @@ export const links = {
   },
   details: {
     name: 'Liens',
-    content: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addon...",
+    content: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
     usage: 'links [page]',
     examples: ['links', 'liens 4'],
   },
   messages: {
     embed: {
-      summary: 'Voici la liste des liens importants relatifs à Skript. Sommaire :\n:zero: Sommaire\n:one: Liens sur les documentations de Skript\n:two: Liens sur les documentations des addons de Skript\n:three: Liens de téléchargement de Skript et de ses addons\n:four: Liens vers quelques Discord importants\n:five: Divers liens importants',
+      summary: `
+        Voici la liste des liens importants relatifs à Skript. Sommaire :
+        :zero: Sommaire.
+        :one: Liens sur les documentations de Skript.
+        :two: Liens sur les documentations des addons de Skript.
+        :three: Liens de téléchargement de Skript et de ses addons.
+        :four: Liens vers quelques Discord importants.
+        :five: Divers liens importants.
+      `,
       fields: [
         [
           {
             title: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
-            description: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si vous avez une suggestion ou si vous voyez une erreur, n'hésitez pas à nous en faire part !",
+            description: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
           }, {
             title: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
             description: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
@@ -80,7 +88,7 @@ export const links = {
         ], [
           {
             title: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
-            description: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et complète.',
+            description: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
           }, {
             title: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
             description: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
@@ -88,10 +96,10 @@ export const links = {
         ], [
           {
             title: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
-            description: "Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript en date ne supporte que les dernières versions de Minecraft de la 1.9 à la 1.13 inclus. Cela veut dire que la 1.12.1 n'est pas supportée, mais la 1.12.2 l'est.",
+            description: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
           }, {
             title: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-            description: 'Lien de téléchargement des dernières versions de tous les addons existants de Skript.',
+            description: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
           },
         ], [
           {
@@ -99,15 +107,15 @@ export const links = {
             description: 'Lien officiel de ce Discord.',
           }, {
             title: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
-            description: "Lien du Discord \"Skript Chat\", étant le serveur Discord officiel de Skript. Vous pouvez y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+            description: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
           },
         ], [
           {
             title: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
-            description: "Forum français de Skript-MC. Vous pouvez y demander des scripts, de l'aide Skript, Java ou sur vos serveurs, discuter avec des membres de la communauté ou mettre en ligne vos scripts !",
+            description: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
           }, {
             title: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
-            description: 'GitHub officiel du projet Skript. Vous pouvez y consulter son développement, y signaler des problèmes ou y contribuer.',
+            description: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
           },
         ],
       ],
@@ -123,16 +131,16 @@ export const move = {
   },
   details: {
     name: 'Déplacer un message',
-    content: "Permet de déplacer un message d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
+    content: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
     permissions: 'Membre Actif',
   },
   messages: {
-    startChannelPrompt: "Vous n'avez pas spécifié de salon ! Entrez son ID ou mentionnez-le.",
-    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée ne sont pas des salons d'aide, ou ce sont les mêmes salons.",
-    startMessagePrompt: "Vous n'avez pas spécifié de message à déplacer. Entrez son ID.",
-    retryMessagePrompt: 'Identifiant du message invalide. Vérifiez que le message spécifié est bien dans ce salon',
+    startChannelPrompt: "Tu n'as pas spécifié de salon ! Entre son ID ou mentionne-le.",
+    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons.",
+    startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
+    retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
     successfullyMoved: ':twisted_rightwards_arrows: {TARGET_MEMBER}, ton message a été déplacé vers {TARGET_CHANNEL} par {EXECUTOR}.',
     moveInfos: "{EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}.\nEn cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.",
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
@@ -147,7 +155,7 @@ export const ping = {
   },
   details: {
     name: 'Ping',
-    content: "Permet de savoir la __latence de Swan__ et de __l'API Discord__.",
+    content: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
   },
@@ -169,7 +177,7 @@ export const statistics = {
   },
   details: {
     name: 'Statistique',
-    content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc...',
+    content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
     usage: 'stats',
     examples: ['stats'],
   },
@@ -185,8 +193,8 @@ export const statistics = {
       developersContent: '<@188341077902753794>\n<@191495299884122112>',
       thanks: '❯ Remerciements',
       thanksContent: '<@218505052015296512> : ancien développeur\n<@173542833364533249> : contributions\n<@294134773901688833> : contributions',
-      bugs: 'Signalement des bugs/problèmes et suggestions',
-      bugsContent: 'Vous pouvez les signaler sur le [GitHub](<{URL}>). Vous pouvez aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
+      bugs: 'Support',
+      bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{URL}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
   },
 };
