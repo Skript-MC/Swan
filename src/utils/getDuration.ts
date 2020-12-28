@@ -1,15 +1,15 @@
-// eslint-disable-next-line unicorn/no-unsafe-regex
-const REGEX = /^(?:\d+)?\.?\d+ *(?:[\w+]+)?$/i;
-const DURATION = {
-  /* eslint-disable key-spacing */
-  SECOND: 1,
-  MINUTE: 1 * 60,
-  HOUR:   1 * 60 * 60,
-  DAY:    1 * 60 * 60 * 24,
-  WEEK:   1 * 60 * 60 * 24 * 7,
-  MONTH:  1 * 60 * 60 * 24 * 30,
-  YEAR:   1 * 60 * 60 * 24 * 365.25,
-};
+const REGEX = /^(?<number>\d+) ?(?<unit>\w+)$/i;
+
+enum Durations {
+  /* eslint-disable no-multi-spaces, @typescript-eslint/prefer-literal-enum-member */
+  Second = 1,
+  Minute = 1 * 60,
+  Hour   = 1 * 60 * 60,
+  Day    = 1 * 60 * 60 * 24,
+  Week   = 1 * 60 * 60 * 24 * 7,
+  Month  = 1 * 60 * 60 * 24 * 30,
+  Year   = 1 * 60 * 60 * 24 * 365,
+}
 
 function tokenize(str: string): string[] {
   const units: string[] = [];
@@ -50,26 +50,26 @@ function convert(num: number, type: string): number {
     case 'ans':
     case 'an':
     case 'a':
-      return num * DURATION.YEAR;
+      return num * Durations.Year;
     case 'months':
     case 'month':
     case 'mois':
     case 'mo':
-      return num * DURATION.MONTH;
+      return num * Durations.Month;
     case 'weeks':
     case 'week':
     case 'w':
     case 'semaines':
     case 'semaine':
     case 'sem':
-      return num * DURATION.WEEK;
+      return num * Durations.Week;
     case 'days':
     case 'day':
     case 'd':
     case 'jours':
     case 'jour':
     case 'j':
-      return num * DURATION.DAY;
+      return num * Durations.Day;
     case 'hours':
     case 'hour':
     case 'heures':
@@ -77,13 +77,13 @@ function convert(num: number, type: string): number {
     case 'hrs':
     case 'hr':
     case 'h':
-      return num * DURATION.HOUR;
+      return num * Durations.Hour;
     case 'minutes':
     case 'minute':
     case 'mins':
     case 'min':
     case 'm':
-      return num * DURATION.MINUTE;
+      return num * Durations.Minute;
     case 'seconds':
     case 'second':
     case 'secondes':
@@ -91,7 +91,7 @@ function convert(num: number, type: string): number {
     case 'secs':
     case 'sec':
     case 's':
-      return num * DURATION.SECOND;
+      return num * Durations.Second;
     default:
       throw new Error(`Invalid duration unit: ${type}`);
   }
@@ -101,13 +101,13 @@ function getDuration(val: string): number {
   let abs: number;
   let total = 0;
   if (val.length > 0 && val.length < 101) {
-    const units: string[] = tokenize(val.toLowerCase());
-    for (const unit of units) {
-      const fmt = REGEX.exec(unit);
-      if (fmt) {
-        abs = Number.parseFloat(fmt[1]);
+    const parts: string[] = tokenize(val.toLowerCase());
+    for (const part of parts) {
+      const { number, unit } = REGEX.exec(part).groups;
+      if (number && unit) {
+        abs = Number.parseInt(number, 10);
         try {
-          total += convert(abs, fmt[2]);
+          total += convert(abs, unit);
         } catch {
           return;
         }
