@@ -1,3 +1,12 @@
+/**
+ * Get back the proximity percentage between two given strings using the jaro-winkler distance algorithm.
+ *
+ * @see https://en.wikipedia.org/wiki/Jaro–Winkler_distance
+ *
+ * @param {string} s1 - The first string to compare.
+ * @param {string} s2 - The second string to compare.
+ * @returns string - A percentage between 0 and 1 of the proximity of the two given strings.
+ */
 function jaroWinklerDistance(s1: string, s2: string): number {
   s1 = s1.toUpperCase();
   s2 = s2.toUpperCase();
