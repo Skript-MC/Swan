@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
-import type { Query } from 'mongoose';
-import type { ConvictedUserDocument } from '../types';
+import type { FilterQuery } from 'mongoose';
+import type { ConvictedUserBase, ConvictedUserDocument, ConvictedUserModel } from '../types';
 
-const ConvictedUserSchema: Schema = new Schema({
+const ConvictedUserSchema = new Schema({
   memberId: {
     type: String,
     required: true,
@@ -18,18 +18,18 @@ const ConvictedUserSchema: Schema = new Schema({
   },
   currentWarnCount: {
     type: Number,
-    required: true,
     default: 0,
     min: 0,
   },
 });
 
 ConvictedUserSchema.statics.findOneOrCreate = async function (
-  condition: Query<ConvictedUserDocument, ConvictedUserDocument>,
-  doc: ConvictedUserDocument,
+  this: ConvictedUserModel,
+  condition: FilterQuery<ConvictedUserDocument>,
+  doc: ConvictedUserBase,
 ): Promise<ConvictedUserDocument> {
   const result = await this.findOne(condition);
   return result || this.create(doc);
 };
 
-export default model<ConvictedUserDocument>('ConvictedUser', ConvictedUserSchema);
+export default model<ConvictedUserDocument, ConvictedUserModel>('ConvictedUser', ConvictedUserSchema);

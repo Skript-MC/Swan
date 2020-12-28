@@ -16,7 +16,6 @@ class KickAction extends ModerationAction {
   private async _kick(): Promise<void> {
     // 1. Add to the database
     try {
-      // @ts-expect-error
       const user = await ConvictedUser.findOneOrCreate(
         { memberId: this.data.victim.id },
         { memberId: this.data.victim.id },
