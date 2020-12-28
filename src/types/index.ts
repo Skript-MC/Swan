@@ -9,7 +9,7 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import type { Document } from 'mongoose';
+import type { Document, Model } from 'mongoose';
 import type cron from 'node-cron';
 
 // Represent an addon that matches the requirements, used in commands/addonInfo.ts
@@ -114,11 +114,18 @@ export enum SanctionsUpdates {
   Duration = 'duration',
 }
 
-// Document for the "CommandStat"'s mongoose collection
-export interface CommandStatDocument extends Document {
+// Interface for the "CommandStat"'s mongoose schema
+export interface CommandStatBase {
   commandId: string;
   uses: number;
 }
+
+// Interface for the "CommandStat"'s mongoose document
+export interface CommandStatDocument extends CommandStatBase, Document {}
+
+// Interface for the "CommandStat"'s mongoose model
+export type CommandStatModel = Model<CommandStatDocument>;
+
 
 // Document for the "ConvictedUser"'s mongoose collection
 export interface ConvictedUserDocument extends Document {

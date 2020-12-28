@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import type { CommandStatDocument } from '../types';
+import type { CommandStatDocument, CommandStatModel } from '../types';
 
-const CommandStatSchema: Schema = new Schema({
+const CommandStatSchema = new Schema({
   commandId: {
     type: String,
     required: true,
@@ -12,4 +12,4 @@ const CommandStatSchema: Schema = new Schema({
   },
 });
 
-export default model<CommandStatDocument>('CommandStat', CommandStatSchema);
+export default model<CommandStatDocument, CommandStatModel>('CommandStat', CommandStatSchema);
