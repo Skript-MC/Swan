@@ -1,7 +1,6 @@
 import { Inhibitor } from 'discord-akairo';
 import type { Message } from 'discord.js';
 import ConvictedUser from '../models/convictedUser';
-import { noop } from '../utils';
 
 class PreventBannedUsersInhibitor extends Inhibitor {
   constructor() {
@@ -11,7 +10,8 @@ class PreventBannedUsersInhibitor extends Inhibitor {
   }
 
   public async exec(message: Message): Promise<boolean> {
-    const result = await ConvictedUser.findOne({ memberId: message.author.id }).catch(noop) || null;
+    const result = await ConvictedUser.findOne({ memberId: message.author.id });
+    console.log('DEBUG ~ file: preventBannedUser.ts ~ line 14 ~ PreventBannedUsersInhibitor ~ exec ~ result', result);
     return typeof result?.lastBanId !== 'undefined';
   }
 }

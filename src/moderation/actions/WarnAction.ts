@@ -4,7 +4,7 @@ import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import Logger from '../../structures/Logger';
-import { SanctionCreations, SanctionsUpdates, SanctionTypes } from '../../types';
+import { SanctionTypes, SanctionsUpdates } from '../../types';
 import { noop } from '../../utils';
 import ModerationData from '../ModerationData';
 import ModerationError from '../ModerationError';
@@ -36,7 +36,7 @@ class WarnAction extends ModerationAction {
         await Sanction.updateMany(
           {
             memberId: this.data.victim.id,
-            type: SanctionCreations.Warn,
+            type: SanctionTypes.Warn,
             revoked: false,
           },
           {
@@ -89,7 +89,6 @@ class WarnAction extends ModerationAction {
         { $inc: { currentWarnCount: 1 } },
         { upsert: true, new: true },
       );
-      // @ts-expect-error
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (unknownError: unknown) {
       this.errorState.addError(

@@ -2,7 +2,6 @@ import ConvictedUser from '../models/convictedUser';
 import Sanction from '../models/sanction';
 import type { ConvictedUserDocument, SanctionDocument } from '../types';
 import { SanctionTypes } from '../types';
-import { noop } from '../utils';
 import type ModerationData from './ModerationData';
 
 const lastSanctionField = {
@@ -24,7 +23,7 @@ class ActionUpdateInformations {
   }
 
   public async load(): Promise<void> {
-    this.userDocument = await ConvictedUser.findOne({ memberId: this.data.victim.id }).catch(noop) || null;
+    this.userDocument = await ConvictedUser.findOne({ memberId: this.data.victim.id });
 
     const fieldName = lastSanctionField[this.data.type];
     if (!fieldName)
@@ -33,8 +32,8 @@ class ActionUpdateInformations {
     this.sanctionDocument = await Sanction.findOne({
       memberId: this.data.victim.id,
       revoked: false,
-      id: this.userDocument?.[fieldName],
-    }).catch(noop) || null;
+      sanctionId: this.userDocument?.[fieldName],
+    });
   }
 
   public setUserDocument(userDocument: ConvictedUserDocument): void {

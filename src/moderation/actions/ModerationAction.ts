@@ -131,7 +131,7 @@ abstract class ModerationAction {
 
     const embed = new MessageEmbed()
       .setColor(this.color)
-      .setTitle(messages.moderation.newCase.replace('{ID}', this.data.id))
+      .setTitle(messages.moderation.newCase.replace('{ID}', this.data.sanctionId))
       .setTimestamp()
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
       .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)

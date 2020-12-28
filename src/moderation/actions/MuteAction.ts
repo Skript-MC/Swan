@@ -28,7 +28,7 @@ class MuteAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { memberId: this.data.victim.id, id: this.updateInfos.userDocument.lastMuteId },
+        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.lastMuteId },
         {
           $set: {
             duration: this.data.duration,
@@ -50,7 +50,7 @@ class MuteAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while inserting mute to database')
+          .setMessage('An error occured while updating a mute of the database')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id),
@@ -63,10 +63,9 @@ class MuteAction extends ModerationAction {
     try {
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },
-        { lastMuteId: this.data.id },
+        { lastMuteId: this.data.sanctionId },
         { upsert: true, new: true },
       );
-      // @ts-expect-error
       await Sanction.create({ ...this.data.toSchema(), user: user._id });
     } catch (unknownError: unknown) {
       this.errorState.addError(

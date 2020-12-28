@@ -20,7 +20,7 @@ class UnmuteAction extends ModerationAction {
     try {
       const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastMuteId: null });
       await Sanction.findOneAndUpdate(
-        { id: user.lastMuteId },
+        { sanctionId: user.lastMuteId },
         {
           $set: { revoked: true },
           $push: {
@@ -38,7 +38,7 @@ class UnmuteAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occured while revoking a mute in the Database')
-          .addDetail('Unmute ID', this.data.id)
+          .addDetail('Unmute ID', this.data.sanctionId)
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)
           .addDetail('Unmute Reason', this.data.reason),

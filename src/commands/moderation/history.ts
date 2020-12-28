@@ -5,7 +5,7 @@ import { history as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
-import { SanctionsUpdates, SanctionCreations } from '../../types';
+import { SanctionsUpdates, SanctionTypes } from '../../types';
 import type { GuildMessage } from '../../types';
 import type { HistoryCommandArgument } from '../../types/CommandArguments';
 import {
@@ -44,10 +44,10 @@ class HistoryCommand extends Command {
     }
 
     const stats = {
-      hardbans: sanctions.filter(s => s.type === SanctionCreations.Hardban).length,
-      bans: sanctions.filter(s => s.type === SanctionCreations.Ban).length,
-      mutes: sanctions.filter(s => s.type === SanctionCreations.Mute).length,
-      kicks: sanctions.filter(s => s.type === SanctionCreations.Kick).length,
+      hardbans: sanctions.filter(s => s.type === SanctionTypes.Hardban).length,
+      bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
+      mutes: sanctions.filter(s => s.type === SanctionTypes.Mute).length,
+      kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
     };
 
     let privateHistory = config.messages.title
@@ -64,12 +64,12 @@ class HistoryCommand extends Command {
     for (const sanction of sanctions) {
       let infos = config.messages.sanctionDescription.main
         .replace('{NAME}', config.messages.sanctionsName[sanction.type])
-        .replace('{ID}', sanction.id)
+        .replace('{ID}', sanction.sanctionId)
         .replace('{MODERATOR}', sanction.moderator)
         .replace('{DATE}', moment(sanction.start).format(settings.miscellaneous.durationFormat))
         .replace('{REASON}', sanction.reason);
 
-      if (sanction.duration && sanction.type !== SanctionCreations.Warn)
+      if (sanction.duration && sanction.type !== SanctionTypes.Warn)
         infos += config.messages.sanctionDescription.duration.replace('{DURATION}', toHumanDuration(sanction.duration));
 
       infos += '\n';

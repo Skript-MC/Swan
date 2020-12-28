@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { nanoid } from 'nanoid';
-import type { SanctionDocument } from '../types';
-import { SanctionCreations, SanctionsUpdates } from '../types';
+import { SanctionTypes, SanctionsUpdates } from '../types';
+import type { SanctionDocument, SanctionModel } from '../types';
 
-const SanctionSchema: Schema = new Schema({
+const SanctionSchema = new Schema({
   memberId: {
     type: String,
     required: true,
@@ -18,7 +18,7 @@ const SanctionSchema: Schema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: Object.values(SanctionCreations),
+    enum: Object.values(SanctionTypes),
   },
   moderator: {
     type: String,
@@ -44,7 +44,7 @@ const SanctionSchema: Schema = new Schema({
     required: true,
     default: false,
   },
-  id: {
+  sanctionId: {
     type: String,
     required: true,
     default: (): string => nanoid(8),
@@ -84,4 +84,4 @@ const SanctionSchema: Schema = new Schema({
 
 SanctionSchema.plugin(autopopulate);
 
-export default model<SanctionDocument>('Sanction', SanctionSchema);
+export default model<SanctionDocument, SanctionModel>('Sanction', SanctionSchema);

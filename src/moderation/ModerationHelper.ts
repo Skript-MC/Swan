@@ -3,8 +3,8 @@ import type { GuildChannel } from 'discord.js';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import Logger from '../structures/Logger';
-import { SanctionCreations } from '../types';
-import { noop, prunePseudo } from '../utils';
+import { SanctionTypes } from '../types';
+import { prunePseudo } from '../utils';
 import type ModerationData from './ModerationData';
 
 export default {
@@ -58,15 +58,15 @@ export default {
   },
 
   async isBanned(memberId: string, includeHardban = false): Promise<boolean> {
-    const banTypes = [SanctionCreations.Ban];
+    const banTypes = [SanctionTypes.Ban];
     if (includeHardban)
-      banTypes.push(SanctionCreations.Hardban);
+      banTypes.push(SanctionTypes.Hardban);
 
     const banObject = await Sanction.findOne({
       memberId,
       revoked: false,
       type: { $in: banTypes },
-    }).catch(noop);
+    });
     return Boolean(banObject);
   },
 
@@ -74,8 +74,8 @@ export default {
     const muteObject = await Sanction.findOne({
       memberId,
       revoked: false,
-      type: SanctionCreations.Mute,
-    }).catch(noop);
+      type: SanctionTypes.Mute,
+    });
     return Boolean(muteObject);
   },
 };

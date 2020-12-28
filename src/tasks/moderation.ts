@@ -6,7 +6,7 @@ import RemoveWarnAction from '../moderation/actions/RemoveWarnAction';
 import UnbanAction from '../moderation/actions/UnbanAction';
 import UnmuteAction from '../moderation/actions/UnmuteAction';
 import Task from '../structures/Task';
-import { SanctionCreations, SanctionTypes } from '../types';
+import { SanctionTypes } from '../types';
 import { noop } from '../utils';
 
 class ModerationTask extends Task {
@@ -43,7 +43,7 @@ class ModerationTask extends Task {
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (sanction.type) {
-        case SanctionCreations.Ban: {
+        case SanctionTypes.Ban: {
           if (sanction.informations?.hasSentMessage) {
             data.setType(SanctionTypes.Unban);
             await new UnbanAction(data).commit();
@@ -55,20 +55,19 @@ class ModerationTask extends Task {
           break;
         }
 
-        case SanctionCreations.Mute: {
+        case SanctionTypes.Mute: {
           data.setType(SanctionTypes.Unmute);
           await new UnmuteAction(data).commit();
           break;
         }
 
-        case SanctionCreations.Warn: {
+        case SanctionTypes.Warn: {
           data.setType(SanctionTypes.RemoveWarn);
           await new RemoveWarnAction(data).commit();
           break;
         }
 
-        case SanctionCreations.Hardban:
-        case SanctionCreations.Kick:
+        default:
           break;
       }
     }
