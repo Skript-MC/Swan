@@ -1,6 +1,6 @@
 /**
- * Split a long text into an Array of strings of 2000 chars. max, and between each line.
- * @param {String} text - The  text to split
+ * Split a long text into an array of strings of 2000 characters. max, and between each line.
+ * @param {String} text - The text to split
  */
 function splitText(text: string): string[] {
   const blocks: string[] = [];

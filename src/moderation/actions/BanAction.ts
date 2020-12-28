@@ -33,7 +33,7 @@ class BanAction extends ModerationAction {
       ?.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695')
       .catch(noop);
 
-    // 1. Add/Update to the database
+    // 1. Add/Update the database
     try {
       if (this.updateInfos.isUpdate()) {
         await Sanction.findOneAndUpdate(

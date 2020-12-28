@@ -10,20 +10,20 @@ export const addonInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'AddonInfo',
-    content: "Permet d'afficher diverses informations sur un addon choisi, à partir du moment ou il est sur skripttools.net.",
+    name: 'Addon Info',
+    content: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
     usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
   },
   messages: {
     startPrompt: "Entre le nom de l'addon que tu souhaites chercher.",
     retryPrompt: "Nom invalide, ré-envoie le nom de l'addon que tu souhaites chercher.",
-    unknownAddon: "Désolé, mais je ne trouve pas cet addon... Es-tu sur qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q={ADDON}>) ?",
+    unknownAddon: "Désolé, mais je ne trouve pas cet addon... Es-tu sûr qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q={ADDON}>) ?",
     searchResults: "{AMOUNT} addons trouvés pour la recherche `{QUERY}`. Quel addon t'intéresse ?",
     more: '\n...et {AMOUNT} de plus...',
     embed: {
       title: 'Informations sur {NAME}',
-      noDescription: 'Aucune description disponible',
+      noDescription: 'Aucune description disponible.',
       author: ':bust_in_silhouette: Auteur(s)',
       version: ':gear: Dernière version',
       download: ':inbox_tray: Lien de téléchargement',
@@ -46,8 +46,8 @@ export const userInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'UserInfo',
-    content: "Permet d'afficher diverses informations sur un member du discord choisi.",
+    name: 'User Info',
+    content: "Permet d'afficher diverses __informations sur un membre__ du discord choisi.",
     usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],
   },
@@ -56,7 +56,7 @@ export const userInfo = {
       title: 'Informations sur {MEMBER}',
       names: {
         title: '❯ Noms',
-        content: stripIndent`
+        content: `
           Pseudo : {PSEUDO}
           Surnom : {NICKNAME}
           Discriminant : \`{DISCRIMINATOR}\`

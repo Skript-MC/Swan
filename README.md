@@ -1,18 +1,18 @@
 <p align="center"><img width=400px src="https://skript-mc.fr/assets/images/logo.png"></p>
 <h2 align="center">Swan</h2>
 <p align="center">
-    Swan est un bot développé spécialement pour le serveur <a href="https://discord.com/invite/J3NSGaE">Discord de Skript-MC</a>.
+    Swan est un bot développé spécialement pour le serveur <a href="https://discord.com/invite/J3NSGaE">Discord</a> de <a href="https://skript-mc.fr">Skript-MC</a>.
 </p>
 
 
 ## 🚀 Installation
 
-- Installer [NodeJS](https://nodejs.org/fr/) sur votre machine. Il vous faudra NodeJS 12 ou supérieur.
-- Télécharger la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest), ou cloner ce dépôt pour tester les dernières modifications.
-- Copier le fichier `.env.example` vers `.env` et le remplir.
-- Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activer les options `Server Members Intent` et `Presence Intent` de l'application.
-- Exécuter la commande `npm i` pour installer les dépendances nécessaires.
-- C'est parti ! Exécuter la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.
+- Installez [Node.js](https://nodejs.org/fr/) sur votre machine. Il vous faudra Node.js 12 ou supérieur.
+- Téléchargez la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest), ou clonez ce dépôt pour tester les dernières modifications.
+- Copiez le fichier `.env.example` vers `.env` et remplissez-le.
+- Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activez les options `Server Members Intent` et `Presence Intent` de l'application.
+- Exécutez la commande `npm i` pour installer les dépendances nécessaires.
+- C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.
 
 
 ## 🔍 Rapport de bug et suggestions
@@ -30,10 +30,10 @@ veuillez en faire part en envoyant un message privé sur discord à un des [dév
 
 ## 🔨 Développement et contributions
 
-Nos Pull Request (PR) sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Skript-MC/Swan/fork) (= une copie) de ce dépôt et y faire vos modifications.
+Nos Pull Request (PR) sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Skript-MC/Swan/fork) (= une copie) de ce dépôt et y faire vos modifications. \
 Voici quelques informations utiles avant de créer une Pull Request :
 
-- 🏷️ Créez votre PR vers la branche `dev` uniquement.
+- 🏷️ Créez votre PR vers la branche `dev` uniquement. (:warning: Le bot est actuellement en train d'être réécrit. Pensez à bien faire vos PR sur la version 2, donc sur la branche `v2`).
 - 📦 Ajoutez le moins de dépendance possible.
 - 🚨 Respectez les règles ESLint ; vous pouvez vérifier avec la commande `npm run lint`.
 - ⚡️ Vérifiez qu'aucune vulnérabilité n'est présente ; via la commande `npm audit`.
@@ -54,18 +54,18 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 ## 📂 Organisation du projet
 
 - **`assets` :** 🏞 Dossier où se trouvent les images utilisées.
-- **`build`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouve le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
+- **`build`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouvent le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
 - **`config` :** 📑 Dossier où se trouve tous les fichiers de configuration.
-- **`patches` :** 🩹 Dossier où se trouve les patchs des librairies (le script `post-install` modifie leur code directement dans `node_modules`)
+- **`patches` :** 🩹 Dossier où se trouvent les patches des librairies (le script `post-install` modifie leur code directement dans `node_modules`).
 - **`src` :** 💻
     - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
     - **`inhibitors` :** ⚙️ Fichiers éxecutés avant qu'un message soit envoyé au `commandHandler`.
-    - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant à leurs émetteurs.
-    - **`models` :** 🗄 Fichiers des schemas Mongoose.
+    - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant aux émetteurs.
+    - **`models` :** 🗄 Fichiers des schemas mongoose.
     - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
     - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
     - **`tasks` :** ⏱ Fichiers éxecutés périodiquement (tâches).
-    - **`types` :** 🏷 Fichiers contenant les typings TypeScript
+    - **`types` :** 🏷 Fichiers contenant les typings TypeScript.
     - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
 
 

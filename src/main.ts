@@ -52,7 +52,7 @@ if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
     dsn: process.env.SENTRY_TOKEN,
     release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
     integrations: [
-      // Debug is used to send details about handled errors
+      // Debug is used to send details about handled errors.
       new Integrations.CaptureConsole({ levels: ['debug', 'warn', 'error'] }),
       new Sentry.Integrations.OnUncaughtException({ onFatalError: (err: Error): void => { throw err; } }),
       new Sentry.Integrations.OnUnhandledRejection({ mode: 'strict' }),

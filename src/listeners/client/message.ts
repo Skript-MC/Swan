@@ -25,7 +25,7 @@ class MessageListener extends Listener {
       return;
 
     // Run all needed tasks, and stop when there is either no more tasks or
-    // when one returned true (= want to stop)
+    // one returned true (= wants to stop).
     let task: { done?: boolean; value: boolean } = { done: false, value: false };
     const tasks = this._getTasks(message as GuildMessage);
 
@@ -177,8 +177,8 @@ class MessageListener extends Listener {
   private async _antispamSnippetsChannel(message: GuildMessage): Promise<boolean> {
     if (message.channel.id === settings.channels.snippets
       && !message.member.roles.cache.has(settings.roles.staff)) {
-      // We check that they are not the author of the last message... In case they exceed the 2.000 chars limit
-      // and they want to add details or informations, or even just post another snipper.
+      // We check that they are not the author of the last message in case they exceed the 2.000 chars limit
+      // and they want to add details or informations.
       try {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })

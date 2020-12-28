@@ -41,8 +41,8 @@ class GuildMemberRemoveListener extends Listener {
       await new KickAction(data).commit();
     }
 
+    // Check if they're leaving while being banned
     if (isBanned) {
-      // Check if they're leaving while being banned
       const data = new ModerationData(this.client)
         .setVictim(member)
         .setDuration(-1, false)

@@ -30,7 +30,7 @@ function jaroWinklerDistance(s1: string, s2: string): number {
   let k = 0;
   let numTrans = 0;
 
-  // Nooo! This is a string, not an array
+  // No! This is a string, not an array. See https://github.com/sindresorhus/eslint-plugin-unicorn/issues/738
   // eslint-disable-next-line unicorn/no-for-loop
   for (let i = 0; i < s1.length; i++) {
     if (s1Matches[i]) {
