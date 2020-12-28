@@ -192,8 +192,8 @@ Et voici des exemples d'utilisation : `.warn @Rémi Il faut penser à respecter 
 Chaque sanction est une action qui hérite de la classe `ModerationAction`. Il faut donner un paramètre un objet `ModerationData`, qui contient les informations relatives à la sanction.
 Il faut ensuite appeler la méthode `commit()` de l'action, pour lancer l'action.
 Si une erreur se produit lors du code, elle sera ajoutée à la classe `ModerationError` attachée à l'action.
-Diverses fonctions utilitaires relatives à la modération se trouvent dans la classe `ModerationHelper`.
-Chaque action a, avec elle, une propriété instance de la classe `ActionUpdateInformations@ , qui contient des informations, notamment pour savoir si cette action est une mise à jour.
+Diverses fonctions utilitaires relatives à la modération se trouvent dans l'objet `ModerationHelper`.
+Chaque action a, avec elle, une propriété instance de la classe `ActionUpdateInformations` , qui contient des informations, notamment pour savoir si cette action est une mise à jour.
 
 ## Organisation des bases de données
 
@@ -249,7 +249,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
   "type": {
     "type": "String",
     "required": true,
-    "enum": "SANCTIONS.TYPES"
+    "enum": "SanctionTypes"
   },
   "moderator": {
     "type": "String",
@@ -275,7 +275,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
     "required": true,
     "default": false
   },
-  "id": {
+  "sanctionId": {
     "type": "String",
     "required": true,
     "default": "nanoid(8)"
@@ -315,14 +315,14 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 ```
 
 - `user` est une référence à l'objet de l'utilisateur correspondant dans la base de données `ConvictedUsers`.
-- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`.
+- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`. En théorie, il peut aussi être un des suivants : `unban`, `unmute`, `removeWarn`, mais en pratique il ne le sera jamais car ces types sont des modifications de sanction.
 - `moderator` est l'ID Discord du modérateur qui a donné la sanction.
 - `start` est le timestamp de création de la sanction.
 - `duration` est la durée, en millisecondes, de la sanction.
 - `finish` est le timestamp auquel la sanction se terminera.
 - `reason` est la raison de la sanction.
 - `revoked` indique si la sanction est terminée (révoquée) ou non.
-- `id`, à ne pas confondre avec l'id MongoDB `_id`, est l'identifiant unique de la sanction (8 caractères).
+- `sanctionId` est l'identifiant unique de la sanction (8 caractères).
 - `informations` est un objet comprenant diverses informations concernant la sanction :
   - `hasSentMessage` est un boolean qui ne sera définit que si la sanction est un ban. Il indique si l'utilisateur a envoyé des messages en étant banni (pour le drapeau `--autoban`).
 - `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
