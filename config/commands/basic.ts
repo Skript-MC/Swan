@@ -29,7 +29,7 @@ export const help = {
   settings: {
     aliases: ['help', 'aide'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: null,
+    userPermissions: [],
   },
   details: {
     name: 'Aide',
@@ -58,7 +58,7 @@ export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: null,
+    userPermissions: [],
   },
   details: {
     name: 'Liens',
@@ -155,7 +155,7 @@ export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: null,
+    userPermissions: [],
   },
   details: {
     name: 'Ping',
@@ -177,7 +177,7 @@ export const statistics = {
   settings: {
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: null,
+    userPermissions: [],
   },
   details: {
     name: 'Statistique',
