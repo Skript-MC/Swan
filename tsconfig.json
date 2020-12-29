@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "./build",
     "allowJs": true,
-    "target": "es2019",
-    "moduleResolution": "node",
-    "module": "CommonJS",
-    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
+    "checkJs": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "./build",
+    "pretty": false,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "target": "es2019"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["gulpfile.js"]
+  "exclude": ["gulpfile.js", "node_modules/"]
 }
