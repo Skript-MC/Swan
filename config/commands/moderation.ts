@@ -8,14 +8,14 @@ const hasStaffRole = (message: Message): string | null => (message.member.roles.
 const see = (where: string): string => `Voir [la documentation](https://github.com/Skript-MC/Swan/wiki/Modération#${where}) pour plus d'informations.`;
 
 const commonMessages = {
-  promptStartMember: 'Il faut ajouter un membre. Il doit être présent sur le discord. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :',
-  promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement le membre :",
+  promptStartMember: 'Il faut ajouter un membre qui doit être présent sur le Discord. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :',
+  promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :",
 
-  promptStartDuration: `Il faut ajouter une durée (en anglais ou en francais). Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en postant un message contenant seulement la durée :`,
-  promptRetryDuration: `Cette durée n'est pas valide. Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en postant un message contenant seulement la durée :`,
+  promptStartDuration: `Il faut ajouter une durée (en anglais ou en francais). Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en envoyant un message contenant seulement la durée :`,
+  promptRetryDuration: `Cette durée n'est pas valide. Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en envoyant un message contenant seulement la durée :`,
 
-  promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
-  promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
+  promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en envoyant un message contenant seulement la raison :',
+  promptRetryReason: "Cette raison n'est pas valide. Entre-la en envoyant un message contenant seulement la raison :",
 
   creationNotification: stripIndent`
     Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.
@@ -23,7 +23,7 @@ const commonMessages = {
     **Durée :** {DURATION}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
-  revokationNotification: stripIndent`
+  revocationNotification: stripIndent`
     Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été révoquée.
     **Raison :** {REASON}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
@@ -81,9 +81,9 @@ export const history = {
     permissions: 'Staff',
   },
   messages: {
-    sentInDm: "L'historique des sanctions de l'utilisateur t'as bien été envoyé en privé !",
-    promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
-    promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en postant un message contenant seulement l'utilisateur :",
+    sentInDm: "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
+    promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
+    promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
     title: "**__SANCTIONS DE L'UTILISATEUR {NAME}__** (*{COUNT}*)\n\n",
     sanctionsName: {
@@ -179,14 +179,14 @@ export const purge = {
   },
   details: {
     name: 'Purge',
-    content: "Permet de __supprimer plusieurs messages__ à la fois dans un salon, avec la possibilité de spécifier un membre en particulier. Il n'est possible que de supprimer des messages ayant été envoyés il y a __moins de 15 jours__ : c'est une limitation de discord. Par défaut, les messages des membres du staff ne seront pas inclus. Si tu veux aussi supprimer les messages du Staff, ajoute le drapeau `--force` (ou `-f`).",
+    content: "Permet de __supprimer plusieurs messages__ à la fois dans un salon, avec la possibilité de spécifier un membre en particulier. Il n'est possible que de supprimer des messages ayant été envoyés il y a __moins de 15 jours__ : c'est une limitation de Discord. Par défaut, les messages des membres du staff ne seront pas inclus. Si tu veux aussi supprimer les messages du staff, ajoute le drapeau `--force` (ou `-f`).",
     usage: 'purge <nombre> [<@mention | pseudo | ID>] [--force | -f]',
     examples: ['purge 10 -f', 'purge @membre 40'],
     permissions: 'Staff',
   },
   messages: {
     startPrompt: 'Entre un nombre de message à supprimer.',
-    retryPrompt: "Ce montant n'est pas valide. Entre-le en postant un message contenant seulement un nombre :",
+    retryPrompt: "Ce montant n'est pas valide. Entre-le en envoyant un message contenant seulement un nombre :",
     success: "J'ai bien supprimé {AMOUNT} messages.",
   },
 };
@@ -201,11 +201,11 @@ export const removeWarn = {
     name: "Suppression d'avertissement",
     content: `Permet de __révoquer le dernier avertissement__ d'un membre. ${see('mise-à-jour-annulation')}`,
     usage: 'removewarn <@mention | pseudo | ID> [raison]',
-    examples: ['removewarn @Rémi'],
+    examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.revokationNotification,
+    notification: commonMessages.revocationNotification,
     success: 'Avertissement révoqué avec succès !',
     notWarned: "Ce membre n'a aucun avertissement en cours.",
     promptStartMember: commonMessages.promptStartMember,
@@ -223,13 +223,13 @@ export const unban = {
   },
   details: {
     name: 'Unban',
-    content: `Permet de __retirer une restriction du Discord__ à un membre, ou le débannir s'il est bannit définitivement. ${see('annulation')}`,
+    content: `Permet de __retirer une restriction du Discord__ à un membre, ou le débannir s'il est banni définitivement. ${see('annulation')}`,
     usage: 'unban <@mention | pseudo | ID> [raison]',
     examples: ['unban @WeeskyBDW', 'unban @Vengelis désolé !'],
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.revokationNotification,
+    notification: commonMessages.revocationNotification,
     notBanned: "Cet utilisateur n'est pas banni.",
     success: 'Utilisateur débanni avec succès !',
   },
@@ -249,7 +249,7 @@ export const unmute = {
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.revokationNotification,
+    notification: commonMessages.revocationNotification,
     notMuted: "Cet utilisateur n'est pas muet.",
     success: 'Utilisateur dé-mute avec succès !',
     promptStartMember: commonMessages.promptStartMember,

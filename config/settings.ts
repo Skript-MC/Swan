@@ -13,7 +13,7 @@ export default {
     validNamePercentage: 0.5,
     durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
-    connectionCheckDuration: 15_000, // 15 seconds in miliseconds
+    connectionCheckDuration: 15_000, // 15 seconds in milliseconds
   },
   moderation: {
     purgeLimit: 50,
