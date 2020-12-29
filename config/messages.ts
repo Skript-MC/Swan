@@ -17,13 +17,13 @@ export default {
   },
   miscellaneous: {
     noDocLink: stripIndent`
-      Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin d'améliorer la documentation.
+      Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
       Voici ton message, si tu souhaites le récupérer : \`\`\`
       {MESSAGE}
       \`\`\`
     `,
     noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
-    invalidMessage: 'Ton message ne respecte pas le règlement du salon {CHANNEL}, il a donc été supprimé. Tu peux réessayer, ou contacter un modérateur Discord pour en savoir plus.',
+    invalidMessage: 'Ton message ne respecte pas le règlement du salon {CHANNEL}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
     ghostPingSingular: ':warning: {MENTIONS}, tu as été ghost-ping par {MEMBER}. :innocent:',
     ghostPingPlural: ':warning: {MENTIONS}, vous avez été ghost-ping par {MEMBER}. :innocent:',
     renamed: stripIndent`
@@ -55,13 +55,13 @@ export default {
       "Ne soyez pas timides ! Dites bonjour à {MEMBER}, qui vient d'arriver :)",
       '{MEMBER} vient de se glisser dans le serveur...',
       'Content de te voir, {MEMBER} :)',
-      "{MEMBER} vient juste d'attérir...",
+      "{MEMBER} vient juste d'atterrir...",
     ],
   },
   prompt: {
     footer: '\n*Tape "retour" pour annuler cette commande.*',
     timeout: 'Temps écoulé !',
-    ended: "Tu as fait trop d'erreurs....",
+    ended: "Tu as fait trop d'erreurs...",
     canceled: 'Commande annulée !',
     cancelWord: 'retour',
     stopWord: 'stop',
@@ -69,7 +69,7 @@ export default {
   moderation: {
     permanent: 'Définitif',
     never: 'jamais',
-    memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à l'en lui informer !",
+    memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à lui en informer !",
     newCase: 'Nouveau cas ({ID})',
     banExplanation: stripIndent`
       Bonjour {MEMBER}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
@@ -80,7 +80,7 @@ export default {
       **Expire :** {EXPIRATION}.`,
     durationChange: 'Durée passée de {OLD_DURATION} à {NEW_DURATION}',
     reasons: {
-      leaveBan: "Déconnexion du Discord lors d'un banissement (automatique)",
+      leaveBan: "Déconnexion du Discord lors d'un bannissement (automatique)",
       autoBanInactivity: 'Inactivité après un bannissement (automatique)',
       autoRevoke: 'Sanction expirée (automatique)',
       revokeWarnsLimitExceeded: 'Avertissement révoqué car la limite a été atteinte : le membre a été sanctionné (automatique)',
@@ -96,19 +96,19 @@ export default {
       privateChannelTitle: ':speech_left: Salon privé',
     },
     sanctionNames: {
-      banUpdate: 'Modification du bannisseemnt',
+      banUpdate: 'Modification du bannissement',
       ban: 'Bannissement',
-      hardban: 'Banissement définitif',
+      hardban: 'Bannissement définitif',
       muteUpdate: "Modification du mute des salons d'aide",
       mute: "Mute des salons d'aide",
       kick: 'Expulsion',
       warn: 'Avertissement',
-      unban: 'Débanissement',
+      unban: 'Débannissement',
       unmute: 'Démute',
       removeWarn: "Suppression d'avertissement",
     },
     updateNames: {
-      revoked: 'Révoquation',
+      revoked: 'Révocation',
       duration: 'Durée',
     },
   },
