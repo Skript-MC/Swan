@@ -44,8 +44,7 @@ Le module de modération de Swan consiste en une grosse partie du bot. Voici com
 
 #### Drapeau
 
-Un drapeau (*flag* en anglais) est une option qui peut être spécifiée **n'importe où** dans une commande. Il est précédé de deux tirets
-`--` s'il contient plusieurs lettres, sinon un seul tiret : `-`.
+Un drapeau (*flag* en anglais) est une option qui peut être spécifiée **n'importe où** dans une commande. Il est précédé de deux tirets `--` s'il contient plusieurs lettres, sinon un seul tiret : `-`.
 
 #### Utilisateur
 
@@ -57,15 +56,15 @@ Les durées des sanctions peuvent être écrites en français ou en anglais. Ell
 Plusieurs associations de nombres et d'unités peuvent être mises à la suite, mais il ne faut jamais d'espace. Exemple : `<nombre><unité><nombre><unité>`.
 L'unité est le type de durée (années, mois, semaines, jours, heures, minutes, secondes).
 Voici les unités possibles :
-- Années : `years`, `year`, `y`, `annees`, `années`, `annee`, `année`, `ans`, `an`, `a`
-- Mois : `months`, `month`, `mois`, `mo`
-- Semaines : `weeks`, `week`, `w`, `semaines`, `semaine`, `sem`
-- Jours : `days`, `day`, `d`, `jours`, `jour`, `j`
-- Heures : `hours`, `hour`, `heures`, `heure`, `hrs`, `hr`, `h`
-- Minutes : `minutes`, `minute`, `mins`, `min`, `m`
-- Secondes : `seconds`, `second`, `secondes`, `seconde`, `secs`, `sec`, `s`
+- Années : `years`, `year`, `y`, `annees`, `années`, `annee`, `année`, `ans`, `an`, `a`.
+- Mois : `months`, `month`, `mois`, `mo`.
+- Semaines : `weeks`, `week`, `w`, `semaines`, `semaine`, `sem`.
+- Jours : `days`, `day`, `d`, `jours`, `jour`, `j`.
+- Heures : `hours`, `hour`, `heures`, `heure`, `hrs`, `hr`, `h`.
+- Minutes : `minutes`, `minute`, `mins`, `min`, `m`.
+- Secondes : `seconds`, `second`, `secondes`, `seconde`, `secs`, `sec`, `s`.
 
-Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 10 minutes
+Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 10 minutes.
 
 #### Rôles
 
@@ -84,8 +83,7 @@ et les bannissements permanents, nommés `hard ban` dans le code, qui consistent
 ##### Durée
 
 Pour mettre à jour la durée d'un bannissement, il faut simplement ré-exécuter la commande de bannissement en spécifiant l'utilisateur.
-S'il n'est pas banni, alors cela va créer le bannissement, sinon, s'il est déjà banni, cela va mettre à jour la durée en la **remplaçant**
-par la durée spécifiée. La raison entrée sera alors le motif pour avoir mis à jour la durée.
+S'il n'est pas banni, alors cela va créer le bannissement, sinon, s'il est déjà banni, cela va mettre à jour la durée en la **remplaçant** par la durée spécifiée. La raison entrée sera alors le motif pour avoir changé la durée.
 
 ##### Annulation
 
@@ -101,11 +99,9 @@ Modèle : `.unban <@mention | pseudo | ID> [raison]`
 
 #### Commande
 
-La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'en suit l'utilisateur à bannir, puis la durée pour un
-bannissement temporaire (salon des bannis), ou `perma` ou `def` pour un bannissement permanant. Enfin, il faut entrer la raison du bannissement.
+La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'en suit l'utilisateur à bannir, puis la durée pour un bannissement temporaire (salon des bannis), ou `perma` ou `def` pour un bannissement permanant. Enfin, il faut entrer la raison du bannissement.
 
-Cette commande accepte aussi un drapeau, le drapeau `--autoban` (ou encore `--auto-ban` et `-a`). Avec ce drapeau, si la personne n'a écrit
-aucun message dans son salon privé à la fin de la sanction, il sera banni définitivement, au lieu d'être simplement débanni.
+Cette commande accepte aussi un drapeau : `--autoban` (ou encore `--auto-ban` ou `-a`). Avec ce drapeau, si la personne n'a écrit aucun message dans son salon privé à la fin de la sanction, il sera banni définitivement, au lieu d'être simplement débanni.
 
 Voici donc le modèle d'une commande : `.ban <@mention | pseudo | ID> <durée> <raison> [--autoban]`
 Et voici des exemples d'utilisation :\
@@ -123,8 +119,7 @@ Un mute empêche un membre de pouvoir écrire des messages dans les salons d'aid
 
 ##### Durée
 
-Pour mettre à jour la durée d'un mute, il faut simplement ré-exécuter la commande de mute en spécifiant l'utilisateur. S'il n'est pas mute,
-alors cela va créer le mute, sinon, s'il est déjà mute, cela va mettre à jour la durée en la **remplaçant** par la durée spécifiée.
+Pour mettre à jour la durée d'un mute, il faut simplement ré-exécuter la commande de mute en spécifiant l'utilisateur. S'il n'est pas mute, alors cela va créer le mute, sinon, s'il est déjà mute, cela va mettre à jour la durée en la **remplaçant** par la durée spécifiée.
 La raison entrée sera alors le motif pour avoir mis à jour la durée.
 
 ##### Annulation
@@ -135,14 +130,14 @@ Modèle : `.unmute <@mention | pseudo | ID> [raison]`
 
 #### Précisions
 
-- Il est important de noter que les mutes ne fonctionnent que dans la catégorie de salon "Aide".
+- Il est important de noter que les membres ne seront mutes que dans la catégorie de salon "Aide".
 - Si un membre quitte le discord en étant mute, puis qu'il le rejoint est que le bot est hors-ligne, alors il n'aura plus son rôle "Mute" et pourra continuer à envoyer des messages, même si le bot revient en ligne.
 
 #### Commande
 
 La commande est le `.mute`. S'en suit l'utilisateur à rendre muet. Il faut ensuite spécifier la durée pour le mute, et enfin, la raison du mute.
 
-Voici donc le modèle d'une commande : `.mute <@mention | pseudo | ID> <durée> <raison>`
+Voici donc le modèle d'une commande : `.mute <@mention | pseudo | ID> <durée> <raison>`\
 Et voici des exemples d'utilisation : `.mute @Xamez chuuuut`
 
 
@@ -156,8 +151,8 @@ Un kick permet d'expulser un membre du discord. Il peut ensuite la rejoindre via
 
 La commande est le `.kick`. S'en suit l'utilisateur à expulser. Il faut ensuite préciser la raison de l'expulsion.
 
-Voici donc le modèle d'une commande : `.kick <@mention | pseudo | ID> <raison>`
-Et voici des exemples d'utilisation : `.mute @GonPVP Tu es un espion.....`
+Voici donc le modèle d'une commande : `.kick <@mention | pseudo | ID> <raison>`\
+Et voici des exemples d'utilisation : `.mute @random Cheh :kappa:`
 
 
 ### Warn
@@ -169,7 +164,7 @@ Un warn permet de donner un avertissement à un membre. Au bout de deux avertiss
 #### Mise à jour (Annulation)
 
 Vous pouvez annuler l'avertissement d'un membre en utilisant la commande `.removewarn` (ou `.remove-warn`, `.remove_warn`, `.unwarn` et `.dewarn`).
-Il faut ensuite ajouter l'utilisateur auquel il faut retirer un avertissement, ce sera toujours le dernier avertissement du membre qui sera annulé.
+Il faut ensuite ajouter l'utilisateur auquel il faut retirer un avertissement, **ce sera toujours le dernier avertissement du membre qui sera annulé**.
 Enfin, vous pouvez, optionnellement, ajouter une raison pour annuler cet avertissement.
 
 Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
@@ -183,17 +178,17 @@ Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
 
 La commande est le `.warn`. S'en suit l'utilisateur à avertir, et la raison de l'avertissement.
 
-Voici donc le modèle d'une commande : `.warn <@mention | pseudo | ID> <raison>`
+Voici donc le modèle d'une commande : `.warn <@mention | pseudo | ID> <raison>`\
 Et voici des exemples d'utilisation : `.warn @Rémi Il faut penser à respecter le modèle d'aide !`
 
 
 ## Fonctionnement et organisation du code
 
 Chaque sanction est une action qui hérite de la classe `ModerationAction`. Il faut donner un paramètre un objet `ModerationData`, qui contient les informations relatives à la sanction.
-Il faut ensuite appeler la méthode `commit()` de l'action, pour lancer l'action.
+Il faut ensuite appeler la méthode `commit()` de l'action, pour la lancer.
 Si une erreur se produit lors du code, elle sera ajoutée à la classe `ModerationError` attachée à l'action.
-Diverses fonctions utilitaires relatives à la modération se trouvent dans la classe `ModerationHelper`.
-Chaque action a, avec elle, une propriété instance de la classe `ActionUpdateInformations@ , qui contient des informations, notamment pour savoir si cette action est une mise à jour.
+Diverses fonctions utilitaires relatives à la modération se trouvent dans l'objet `ModerationHelper`.
+Chaque action a, avec elle, une propriété instance de la classe `ActionUpdateInformations`, qui contient des informations, notamment pour savoir si cette action est une mise à jour.
 
 ## Organisation des bases de données
 
@@ -249,7 +244,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
   "type": {
     "type": "String",
     "required": true,
-    "enum": "SANCTIONS.TYPES"
+    "enum": "SanctionTypes"
   },
   "moderator": {
     "type": "String",
@@ -275,7 +270,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
     "required": true,
     "default": false
   },
-  "id": {
+  "sanctionId": {
     "type": "String",
     "required": true,
     "default": "nanoid(8)"
@@ -301,10 +296,10 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
       "enum": "SANCTIONS.UPDATES"
     },
     "valueBefore": {
-      "type": "Mixed"
+      "type": "Number"
     },
     "valueAfter": {
-      "type": "Mixed"
+      "type": "Number"
     },
     "reason": {
       "type": "String",
@@ -315,22 +310,22 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 ```
 
 - `user` est une référence à l'objet de l'utilisateur correspondant dans la base de données `ConvictedUsers`.
-- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`, `unban`, `unmute`, `removeWarn`. En théorie, ca ne peut pas être un des 3 derniers car ce sera considéré comme une mise à jour.
-- `moderator` est l'ID du modérateur qui a donné la sanction.
+- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`. En théorie, il peut aussi être un des suivants : `unban`, `unmute`, `removeWarn`, mais en pratique il ne le sera jamais car ces types sont des modifications de sanction.
+- `moderator` est l'ID Discord du modérateur qui a donné la sanction.
 - `start` est le timestamp de création de la sanction.
 - `duration` est la durée, en millisecondes, de la sanction.
 - `finish` est le timestamp auquel la sanction se terminera.
 - `reason` est la raison de la sanction.
 - `revoked` indique si la sanction est terminée (révoquée) ou non.
-- `id`, à ne pas confondre avec l'id MongoDB `_id`, est l'identifiant unique de la sanction (8 caractères).
+- `sanctionId` est l'identifiant unique de la sanction (8 caractères).
 - `informations` est un objet comprenant diverses informations concernant la sanction :
   - `hasSentMessage` est un boolean qui ne sera définit que si la sanction est un ban. Il indique si l'utilisateur a envoyé des messages en étant banni (pour le drapeau `--autoban`).
-- `updates` est un array contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
+- `updates` est un tableau contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
   - `date` est le timestamp de création de la modification.
-  - `moderator` est l'ID du modérateur qui a fait la modification.
+  - `moderator` est l'ID Discord du modérateur qui a fait la modification.
   - `type` est le type de modification, qui peut être un des suivants :
     - `revoked` si la modification est une annulation.
     - `duration` si la modification concerne la durée.
-  - `valueBefore` est la valeur avant la modification, par exemple la durée avant la modification.
-  - `valueBefore` est la valeur après la modification, par exemple la durée après la modification.
-  - `reason` est la raison pour laquelle la modification a été faite.
+  - `valueBefore` est la valeur avant la modification. Pour le moment, ça ne peut être que la durée, donc ce sera un nombre.
+  - `valueBefore` est la valeur après la modification. Pour le moment, ça ne peut être que la durée, donc ce sera un nombre.
+  - `reason` est le motif de la modification.
