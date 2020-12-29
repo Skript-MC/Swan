@@ -17,9 +17,22 @@ const commonMessages = {
   promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en postant un message contenant seulement la raison :',
   promptRetryReason: "Cette raison n'est pas valide. Entre-la en postant un message contenant seulement la raison :",
 
-  creationNotification: "Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\nNous t'invitons à revoir ton comportement pour éviter que cela se reproduise.",
-  revokationNotification: "Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été révoquée.\n**Raison :** {REASON}.\nNous t'invitons à revoir ton comportement pour éviter que cela se reproduise.",
-  notificationUpdate: 'Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.\n**Motif :** {REASON}.\n**Changement :** {CHANGE}.',
+  creationNotification: stripIndent`
+    Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.
+    **Raison :** {REASON}.
+    **Durée :** {DURATION}.
+    Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
+    `,
+  revokationNotification: stripIndent`
+    Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été révoquée.
+    **Raison :** {REASON}.
+    Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
+    `,
+  notificationUpdate: stripIndent`
+    Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.
+    **Motif :** {REASON}.
+    **Changement :** {CHANGE}.
+    `,
 };
 
 export const ban = {

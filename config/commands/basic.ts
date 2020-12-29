@@ -1,3 +1,4 @@
+import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
 
@@ -142,7 +143,10 @@ export const move = {
     startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
     retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
     successfullyMoved: ':twisted_rightwards_arrows: {TARGET_MEMBER}, ton message a été déplacé vers {TARGET_CHANNEL} par {EXECUTOR}.',
-    moveInfos: "{EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}.\nEn cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.",
+    moveInfos: stripIndent`
+      {EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}.
+      En cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.
+    `,
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
 };
@@ -192,7 +196,11 @@ export const statistics = {
       developers: '❯ Développeurs',
       developersContent: '<@188341077902753794>\n<@191495299884122112>',
       thanks: '❯ Remerciements',
-      thanksContent: '<@218505052015296512> : ancien développeur\n<@173542833364533249> : contributions\n<@294134773901688833> : contributions',
+      thanksContent: stripIndent`
+        <@218505052015296512> : ancien développeur
+        <@173542833364533249> : contributions
+        <@294134773901688833> : contributions
+      `,
       bugs: 'Support',
       bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{URL}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
