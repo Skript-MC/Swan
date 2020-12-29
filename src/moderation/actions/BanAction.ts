@@ -169,7 +169,7 @@ class BanAction extends ModerationAction {
       const explanation = messages.moderation.banExplanation
         .replace('{MEMBER}', this.nameString)
         .replace('{REASON}', this.data.reason)
-        .replace('{DURATION}', this.duration)
+        .replace('{DURATION}', this.formatDuration(this.data.duration))
         .replace('{EXPIRATION}', this.expiration);
       const message = await channel.send(explanation).catch(noop);
       if (message)

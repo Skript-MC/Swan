@@ -1,3 +1,5 @@
+import { stripIndent } from 'common-tags';
+
 export default {
   global: {
     oops: process.env.NODE_ENV === 'production'
@@ -60,7 +62,14 @@ export default {
     never: 'jamais',
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à l'en lui informer !",
     newCase: 'Nouveau cas ({ID})',
-    banExplanation: "Bonjour {MEMBER}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.\nSi tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.\n\n**Raison :** {REASON}.\n**Durée :** {DURATION}.\n**Expire :** {EXPIRATION}.",
+    banExplanation: stripIndent`
+      Bonjour {MEMBER}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
+      Si tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.
+
+      **Raison :** {REASON}.
+      **Durée :** {DURATION}.
+      **Expire :** {EXPIRATION}.`,
+    durationChange: 'Durée passée de {OLD_DURATION} à {NEW_DURATION}',
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un banissement (automatique)",
       autoBanInactivity: 'Inactivité après un bannissement (automatique)',
