@@ -55,10 +55,10 @@ class HistoryCommand extends Command {
       .replace('{COUNT}', sanctions.length.toString());
 
     privateHistory += config.messages.overview
-      .replace('{HARDBANS}', stats.hardbans)
-      .replace('{BANS}', stats.bans)
-      .replace('{MUTES}', stats.mutes)
-      .replace('{KICKS}', stats.kicks);
+      .replace('{HARDBANS}', stats.hardbans.toString())
+      .replace('{BANS}', stats.bans.toString())
+      .replace('{MUTES}', stats.mutes.toString())
+      .replace('{KICKS}', stats.kicks.toString());
     privateHistory += '\n\n';
 
     for (const sanction of sanctions) {
