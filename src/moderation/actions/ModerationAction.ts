@@ -53,6 +53,19 @@ abstract class ModerationAction {
     return true;
   }
 
+  protected formatDuration(duration: number): string {
+    return duration === -1
+      ? messages.moderation.permanent
+      : moment.duration(duration).humanize();
+  }
+
+  protected getFormattedChange(): string {
+    return messages.moderation.durationChange
+      .replace('{OLD_DURATION}', this.formatDuration(this.updateInfos.sanctionDocument.duration))
+      .replace('{NEW_DURATION}', this.formatDuration(this.data.duration));
+  }
+
+
   protected get nameString(): string {
     return this.data.victim?.user?.toString() || messages.global.unknownName;
   }
@@ -90,12 +103,6 @@ abstract class ModerationAction {
     return settings.moderation.colors[this.data.type];
   }
 
-  protected get duration(): string {
-    return this.data.duration === -1
-      ? messages.moderation.permanent
-      : moment.duration(this.data.duration).humanize();
-  }
-
   protected get expiration(): string {
     return this.data.duration === -1
       ? messages.moderation.never
@@ -110,13 +117,12 @@ abstract class ModerationAction {
         .replace('{MEMBER}', this.nameString)
         .replace('{SANCTION}', this.action)
         .replace('{REASON}', this.data.reason)
-        // TODO: Format the {CHANGE} better.
-        .replace('{CHANGE}', this.duration)
+        .replace('{CHANGE}', this.getFormattedChange())
       : this.data.config.notification
         .replace('{MEMBER}', this.nameString)
         .replace('{SANCTION}', this.action)
         .replace('{REASON}', this.data.reason)
-        .replace('{DURATION}', this.duration);
+        .replace('{DURATION}', this.formatDuration(this.data.duration));
 
     try {
       await (this.data.victim.member || this.data.victim.user)?.send(message);
@@ -139,7 +145,7 @@ abstract class ModerationAction {
       .addField(messages.moderation.log.reasonTitle, this.data.reason.toString(), true);
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
-      let content = this.duration;
+      let content = this.formatDuration(this.data.duration);
       if (this.data?.finish !== -1)
         content += messages.moderation.log.durationDescription.replace('{EXPIRATION}', this.expiration);
       embed.addField(messages.moderation.log.durationTitle, content, true);
