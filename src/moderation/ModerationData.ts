@@ -1,11 +1,6 @@
 import { AkairoClient } from 'discord-akairo';
-import {
-  User,
-  GuildMember,
-  Message,
-  TextChannel,
-} from 'discord.js';
-import type { Guild } from 'discord.js';
+import { GuildMember, Message, TextChannel } from 'discord.js';
+import type { Guild, User } from 'discord.js';
 import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
@@ -13,10 +8,11 @@ import type {
   GuildTextBasedChannel,
   GuildMessage,
   SanctionTypes,
-  VictimInformations,
+  PersonInformations,
   SanctionInformations,
   DataResult,
 } from '../types';
+import { getPersonFromCache } from '../utils';
 
 
 class ModerationData {
@@ -26,7 +22,7 @@ class ModerationData {
   channel: GuildTextBasedChannel;
   type?: SanctionTypes;
   config?: Record<string, string>;
-  victim: VictimInformations;
+  victim: PersonInformations;
   reason: string;
   duration?: number;
   finish?: number;
@@ -77,26 +73,7 @@ class ModerationData {
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
-    const member = personResolvable instanceof GuildMember
-      ? personResolvable
-      : this.guild.members.resolve(personResolvable);
-
-    let user = this.client.users.resolve(personResolvable);
-    if (member instanceof GuildMember)
-      user = member.user;
-    else if (personResolvable instanceof User)
-      user = personResolvable;
-
-    const missingData = resolveMemberAndUser
-      ? !member || !user
-      : !member && !user;
-    if (missingData)
-      throw new Error('Victim Not Found');
-
-    this.victim.id = (member || user).id;
-    this.victim.user = user;
-    this.victim.member = member;
-
+    this.victim = getPersonFromCache(personResolvable, this.client, resolveMemberAndUser);
     return this;
   }
 

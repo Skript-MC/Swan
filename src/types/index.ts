@@ -55,7 +55,7 @@ export interface GuildKickAuditLogs extends GuildAuditLogs {
 }
 
 /** Represent the victim object of ModerationData#victim */
-export interface VictimInformations {
+export interface PersonInformations {
   id?: string;
   user?: User;
   member?: GuildMember;
