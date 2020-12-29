@@ -1,10 +1,16 @@
 import ConvictedUser from '../models/convictedUser';
 import Sanction from '../models/sanction';
-import type { ConvictedUserDocument, SanctionDocument } from '../types';
+import type {
+  ConvictedUserDocument,
+  SanctionDocument,
+  TrackedSanctionTypes,
+  TrackedFieldNames,
+} from '../types';
 import { SanctionTypes } from '../types';
 import type ModerationData from './ModerationData';
 
-const lastSanctionField = {
+
+const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {
   [SanctionTypes.Ban]: 'lastBanId',
   [SanctionTypes.Hardban]: 'lastBanId',
   [SanctionTypes.Mute]: 'lastMuteId',
@@ -24,8 +30,10 @@ class ActionUpdateInformations {
 
   public async load(): Promise<void> {
     this.userDocument = await ConvictedUser.findOne({ memberId: this.data.victim.id });
+    if (!this.userDocument)
+      return;
 
-    const fieldName = lastSanctionField[this.data.type];
+    const fieldName: TrackedFieldNames = lastSanctionField[this.data.type as TrackedSanctionTypes];
     if (!fieldName)
       return;
 

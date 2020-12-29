@@ -54,6 +54,13 @@ export interface GuildKickAuditLogs extends GuildAuditLogs {
   entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
 }
 
+/** The sanctions types that we track in the ConvictedUser database */
+export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
+
+/** The name of the fields of the TrackedSanctionTypes */
+export type TrackedFieldNames = 'lastBanId' | 'lastMuteId';
+
+
 /** Represent the victim object of ModerationData#victim */
 export interface PersonInformations {
   id?: string;
