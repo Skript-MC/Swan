@@ -6,6 +6,7 @@ import settings from '../../../config/settings';
 import Poll from '../../models/poll';
 import PollManager from '../../structures/PollManager';
 import { QuestionType } from '../../types';
+import { noop } from '../../utils';
 
 class MessageReactionAddListener extends Listener {
   constructor() {
@@ -40,7 +41,10 @@ class MessageReactionAddListener extends Listener {
         if (previousUserVote === reaction.emoji.name) {
           // If they already voted for this option
           const infoMessage = await message.channel.send(messages.poll.alreadyVoted);
-          await infoMessage.delete({ timeout: 5000 });
+          setTimeout(async () => {
+            if (infoMessage.deletable)
+              await infoMessage.delete().catch(noop);
+          }, 5000);
         } else if (previousUserVote) {
           // They have already voted, but they want to change
           // TODO: Support the "poll.multiple" option
@@ -76,7 +80,10 @@ class MessageReactionAddListener extends Listener {
           await member.send(text);
 
           const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member }));
-          await infoMessage.delete({ timeout: 5000 });
+          setTimeout(async () => {
+            if (infoMessage.deletable)
+              await infoMessage.delete().catch(noop);
+          }, 5000);
         } catch {
           await message.reply(messages.global.dmAreClosed);
         }

@@ -18,6 +18,7 @@ import { getDuration } from './utils';
 class SwanClient extends AkairoClient {
   constructor() {
     super({}, {
+      // FIXME: Will break with discord.js v13
       disableMentions: 'everyone',
       ws: {
         intents: [

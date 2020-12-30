@@ -26,7 +26,7 @@ class ModerationTask extends Task {
     for (const sanction of sanctions) {
       const { memberId } = sanction;
 
-      const member = this.client.guild.member(memberId)
+      const member = this.client.guild.members.cache.get(memberId)
         || await this.client.guild.members.fetch(memberId).catch(noop)
         || null;
 
