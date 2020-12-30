@@ -114,14 +114,22 @@ class SwanClient extends AkairoClient {
 
       if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(phrase))
         return -1;
-      return getDuration(phrase) || null;
+      try {
+        return getDuration(phrase);
+       } catch {
+        return null;
+       }
     });
 
     this.commandHandler.resolver.addType('finiteDuration', (_message, phrase): number | null => {
       if (!phrase)
         return null;
 
-      return getDuration(phrase) || null;
+      try {
+        return getDuration(phrase);
+      } catch {
+        return null;
+      }
     });
 
     void this._loadCommandStats();

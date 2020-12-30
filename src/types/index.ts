@@ -43,6 +43,11 @@ export interface AddonResponse {
   };
 }
 
+export interface DurationPart {
+  number: string;
+  unit: string;
+}
+
 /** Represent a Kick entry in the guild audit logs */
 export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
   action: 'MEMBER_KICK';
