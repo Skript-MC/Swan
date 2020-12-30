@@ -8,7 +8,7 @@ export default {
         > (Cc: <@188341077902753794>, <@191495299884122112>)`
       : ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.",
     notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
-    insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {COMMAND}. (Permissions manquantes : {PERMISSIONS})",
+    insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {command.details.name}. (Permissions manquantes : {permissions})",
     memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
     dmAreClosed: "Je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
     unknownName: 'Pseudo inconnu',
@@ -19,13 +19,13 @@ export default {
     noDocLink: stripIndent`
       Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
       Voici ton message, si tu souhaites le récupérer : \`\`\`
-      {MESSAGE}
+      {content}
       \`\`\`
     `,
     noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
-    invalidMessage: 'Ton message ne respecte pas le règlement du salon {CHANNEL}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
-    ghostPingSingular: ':warning: {MENTIONS}, tu as été ghost-ping par {MEMBER}. :innocent:',
-    ghostPingPlural: ':warning: {MENTIONS}, vous avez été ghost-ping par {MEMBER}. :innocent:',
+    invalidMessage: 'Ton message ne respecte pas le règlement du salon {message.channel}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
+    ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {member.displayName}. :innocent:',
+    ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {member.displayName}. :innocent:',
     renamed: stripIndent`
       Ton pseudonyme contenait des caractères spéciaux, donc je me suis permis de te les retirer (voire de te renommer complètement), pour que ce soit plus simple de te mentionner. J'espère que mes modifications te plairont.
       Si malheureusement ce n'est pas le cas, tu peux demander à un modérateur Discord (pseudonymes vert clair) pour être renommé.`,
@@ -41,21 +41,21 @@ export default {
       'Tarte',
     ],
     greetings: [
-      '{MEMBER} arrive, faites comme si vous étiez occupés ! :books:',
-      "Aujourd'hui, nous accueillons {MEMBER} !",
-      'On dit bonjour à {MEMBER}. *Tous en choeur* Boooonnnjouuuur {MEMBER}...',
-      'Holà {MEMBER} ! Bienvenue !',
-      "On t'attendait, {MEMBER} ! Prend place.",
-      'Bienvenue sur Skript-MC, {MEMBER} !',
-      '{MEMBER} rejoint la fête ;)',
-      '{MEMBER} est arrivé ! La fête peut commencer ! :partying_face:',
-      "Salut {MEMBER} ! Le voyage s'est bien passé ?",
-      "Félicitations {MEMBER} ! Tu as réussi à venir jusqu'ici sans te casser de jambes ;)",
-      'Faites place, {MEMBER} est parmi nous !',
-      "Ne soyez pas timides ! Dites bonjour à {MEMBER}, qui vient d'arriver :)",
-      '{MEMBER} vient de se glisser dans le serveur...',
-      'Content de te voir, {MEMBER} :)',
-      "{MEMBER} vient juste d'atterrir...",
+      '{member} arrive, faites comme si vous étiez occupés ! :books:',
+      "Aujourd'hui, nous accueillons {member} !",
+      'On dit bonjour à {member}. *Tous en choeur* Boooonnnjouuuur {member}...',
+      'Holà {member} ! Bienvenue !',
+      "On t'attendait, {member} ! Prend place.",
+      'Bienvenue sur Skript-MC, {member} !',
+      '{member} rejoint la fête ;)',
+      '{member} est arrivé ! La fête peut commencer ! :partying_face:',
+      "Salut {member} ! Le voyage s'est bien passé ?",
+      "Félicitations {member} ! Tu as réussi à venir jusqu'ici sans te casser de jambes ;)",
+      'Faites place, {member} est parmi nous !',
+      "Ne soyez pas timides ! Dites bonjour à {member}, qui vient d'arriver :)",
+      '{member} vient de se glisser dans le serveur...',
+      'Content de te voir, {member} :)',
+      "{member} vient juste d'atterrir...",
     ],
   },
   prompt: {
@@ -70,15 +70,15 @@ export default {
     permanent: 'Définitif',
     never: 'jamais',
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à lui en informer !",
-    newCase: 'Nouveau cas ({ID})',
+    newCase: 'Nouveau cas ({action.data.sanctionId})',
     banExplanation: stripIndent`
-      Bonjour {MEMBER}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
+      Bonjour {action.nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
       Si tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.
 
-      **Raison :** {REASON}.
-      **Durée :** {DURATION}.
-      **Expire :** {EXPIRATION}.`,
-    durationChange: 'Durée passée de {OLD_DURATION} à {NEW_DURATION}',
+      **Raison :** {action.data.reason}.
+      **Durée :** {duration}.
+      **Expire :** {action.expiration}.`,
+    durationChange: 'Durée passée de {oldDuration} à {newDuration}',
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un bannissement (automatique)",
       autoBanInactivity: 'Inactivité après un bannissement (automatique)',
@@ -92,7 +92,7 @@ export default {
       actionTitle: ':tools: Action',
       reasonTitle: ':label: Raison',
       durationTitle: ':stopwatch: Durée',
-      durationDescription: '\nExpire {EXPIRATION}',
+      durationDescription: '\nExpire {action.expiration}',
       privateChannelTitle: ':speech_left: Salon privé',
     },
     sanctionNames: {
@@ -114,7 +114,7 @@ export default {
   },
   poll: {
     alreadyVoted: 'Tu as déjà voté pour ce choix !',
-    dmSent: "{MEMBER}, je t'ai envoyé plus d'informations en privé !",
+    dmSent: "{member}, je t'ai envoyé plus d'informations en privé !",
     informationsYesNo: stripIndent`
       **Informations sur les sondages :**
       Réagissez par :white_check_mark: pour voter **Oui** à la question posée, ou réagissez par :x: pour voter **Non**.
@@ -130,11 +130,11 @@ export default {
       Le créateur du vote peut l'arrêter en cliquant sur le :octagonal_sign:.
     `,
     resultYesno: stripIndent`
-      white_check_mark: : {AMOUNT_YES} oui ({PERCENTAGE_YES}%)
-      :x: : {AMOUNT_NO} non ({PERCENTAGE_NO}%)
+      :white_check_mark: : {yes} oui ({percentageYes}%)
+      :x: : {no} non ({percentageNo}%)
     `,
-    resultCustomLine: '{REACTION} : {AMOUNT} {ANSWER} ({PERCENTAGE}%)\n',
-    totalVoters: '\n:bust_in_silhouette: : {TOTAL_VOTERS} votant(s).',
+    resultCustomLine: '{reaction} : {amount} {answer} ({percentage}%)\n',
+    totalVoters: '\n:bust_in_silhouette: : {totalVoters} votant(s).',
     pollEnded: 'Ce vote est terminé !',
     stopped: '*(arrêté)*',
     results: 'Résultats',

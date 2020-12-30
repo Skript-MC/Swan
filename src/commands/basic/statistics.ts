@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
+import pupa from 'pupa';
 import { statistics as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import pkg from '../../../package.json';
@@ -22,18 +23,24 @@ class StatisticsCommand extends Command {
 
   public async exec(message: GuildMessage, _args: StatisticsCommandArguments): Promise<void> {
     const totalCommands = this.handler.categories.array().flatMap(cat => cat.array()).length;
+    const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .attachFiles([settings.bot.avatar])
       .setAuthor(config.messages.embed.title, 'attachment://logo.png')
-      .setDescription(config.messages.embed.description.replace('{PREFIX}', settings.bot.prefix).replace('{HELP}', `${settings.bot.prefix}help`))
-      .addField(config.messages.embed.version, pkg.version, true)
-      .addField(config.messages.embed.memory, `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
-      .addField(config.messages.embed.uptime, moment.duration(this.client.uptime).humanize(), true)
-      .addField(config.messages.embed.commands, totalCommands.toString(), true)
-      .addField(config.messages.embed.developers, config.messages.embed.developersContent, true)
-      .addField(config.messages.embed.thanks, config.messages.embed.thanksContent, true)
-      .addField(config.messages.embed.bugs, config.messages.embed.bugsContent.replace('{URL}', pkg.bugs?.url || pkg.homepage), true)
+      .setDescription(
+        pupa(config.messages.embed.description, {
+          prefix: settings.bot.prefix,
+          helpCommand: `${settings.bot.prefix}help`,
+        }),
+      )
+      .addField(embedMessages.version, pkg.version, true)
+      .addField(embedMessages.memory, `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
+      .addField(embedMessages.uptime, moment.duration(this.client.uptime).humanize(), true)
+      .addField(embedMessages.commands, totalCommands.toString(), true)
+      .addField(embedMessages.developers, embedMessages.developersContent, true)
+      .addField(embedMessages.thanks, embedMessages.thanksContent, true)
+      .addField(embedMessages.bugs, pupa(embedMessages.bugsContent, { url: pkg.bugs?.url || pkg.homepage }), true)
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 

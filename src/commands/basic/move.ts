@@ -1,5 +1,6 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import pupa from 'pupa';
 import { move as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -49,20 +50,24 @@ class MoveCommand extends Command {
     }
 
 
-    const successMessage = config.messages.successfullyMoved
-      .replace('{TARGET_MEMBER}', targetedMessage.member.displayName)
-      .replace('{TARGET_CHANNEL}', targetedChannel.toString())
-      .replace('{EXECUTOR}', message.member.displayName);
+    const successMessage = pupa(config.messages.successfullyMoved, {
+      targetDisplayName: targetedMessage.member.displayName,
+      targetChannel: targetedChannel,
+      memberDisplayName: message.member.displayName,
+    });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(`Message de ${targetedMessage.member.displayName} :`, targetedMessage.author.avatarURL())
-      .setDescription(config.messages.moveInfos
-        .replace('{EXECUTOR}', message.member.toString())
-        .replace('{TARGET_MEMBER}', targetedMessage.member.toString())
-        .replace('{SOURCE_CHANNEL}', message.channel.toString())
-        .replace('{TARGET_CHANNEL}', targetedChannel.toString())
-        .replace('{EMOJI}', message.guild.emojis.resolve(settings.emojis.remove).toString() || settings.emojis.remove));
+      .setDescription(
+        pupa(config.messages.moveInfos, {
+          memberDisplayName: message.member,
+          targetDisplayName: targetedMessage.member,
+          sourceChannel: targetedMessage.channel,
+          targetChannel: targetedChannel,
+          emoji: message.guild.emojis.resolve(settings.emojis.remove) || settings.emojis.remove,
+        }),
+      );
 
     try {
       // Remove all messages from prompts, as well as messages from the user.

@@ -50,7 +50,8 @@
     "mongoose-autopopulate": "^0.12.3",
     "nanoid": "^3.1.20",
     "node-cron": "^2.0.3",
-    "patch-package": "^6.2.2"
+    "patch-package": "^6.2.2",
+    "pupa": "^2.1.1"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.0",

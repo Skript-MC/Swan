@@ -1,4 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
+import pupa from 'pupa';
 import { purge as config } from '../../../config/commands/moderation';
 import settings from '../../../config/settings';
 import type { GuildMessage } from '../../types';
@@ -44,7 +45,7 @@ class PurgeCommand extends Command {
       .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
     const deletedMessages = await message.channel.bulkDelete(messages, true);
 
-    const msg = await message.util.send(config.messages.success.replace('{AMOUNT}', deletedMessages.size.toString()));
+    const msg = await message.util.send(pupa(config.messages.success, { deletedMessages }));
     await msg.delete({ timeout: 5000 }).catch(noop);
   }
 }

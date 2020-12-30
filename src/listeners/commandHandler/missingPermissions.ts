@@ -1,6 +1,7 @@
 import { Listener } from 'discord-akairo';
 import type { Command } from 'discord-akairo';
 import type { Message } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import Logger from '../../structures/Logger';
 
@@ -18,9 +19,10 @@ class MissingPermissionsListener extends Listener {
         Logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command} command.`);
       } else {
         await message.util.send(
-          messages.global.insufficientClientPermissions
-            .replace('{COMMAND}', command.details.name)
-            .replace('{PERMISSIONS}', missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', ')),
+          pupa(messages.global.insufficientClientPermissions, {
+            command,
+            permissions: missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', '),
+          }),
         );
       }
     } else {

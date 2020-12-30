@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { Message } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import { noop } from '../../utils';
@@ -36,11 +37,8 @@ class MessageDeleteListener extends Listener {
       ? messages.miscellaneous.ghostPingPlural
       : messages.miscellaneous.ghostPingSingular;
 
-    await message.channel.send(
-      baseMessage
-        .replace('{MENTIONS}', mentions.join(', '))
-        .replace('{MEMBER}', message.member.displayName),
-    ).catch(noop);
+    await message.channel.send(pupa(baseMessage, { mentions: mentions.join(', '), member: message.member }))
+      .catch(noop);
   }
 }
 

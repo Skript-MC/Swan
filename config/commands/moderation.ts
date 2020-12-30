@@ -18,20 +18,20 @@ const commonMessages = {
   promptRetryReason: "Cette raison n'est pas valide. Entre-la en envoyant un message contenant seulement la raison :",
 
   creationNotification: stripIndent`
-    Bonjour {MEMBER}, tu viens de recevoir une sanction ({SANCTION}) sur le serveur Skript-MC.
-    **Raison :** {REASON}.
-    **Durée :** {DURATION}.
+    Bonjour {action.nameString}, tu viens de recevoir une sanction ({action.action}) sur le serveur Skript-MC.
+    **Raison :** {action.data.reason}.
+    **Durée :** {duration}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   revocationNotification: stripIndent`
-    Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été révoquée.
-    **Raison :** {REASON}.
+    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été révoquée.
+    **Raison :** {action.data.reason}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   notificationUpdate: stripIndent`
-    Bonjour {MEMBER}, ta sanction ({SANCTION}) sur le serveur Skript-MC a été modifiée.
-    **Motif :** {REASON}.
-    **Changement :** {CHANGE}.
+    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été modifiée.
+    **Motif :** {action.data.reason}.
+    **Changement :** {change}.
     `,
 };
 
@@ -85,7 +85,7 @@ export const history = {
     promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
-    title: "**__SANCTIONS DE L'UTILISATEUR {NAME}__** (*{COUNT}*)\n\n",
+    title: "**__SANCTIONS DE L'UTILISATEUR {name}__** (*{sanctions.length}*)\n\n",
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
       ban: ':hammer: Bannissement',
@@ -97,12 +97,12 @@ export const history = {
       unwarn: ":repeat: Suppression d'avertissement",
     },
     overview: stripIndent`
-      :bomb: Bannissements définitifs : {HARDBANS}
-      :hammer: Bannissements : {BANS}
-      :mute: Mutes : {MUTES}
-      :door: Kicks : {KICKS}
-      :stop_sign: Avertissements totaux : {WARNS}
-      :warning: Avertissements en cours : {CURRENT_WARNS}/{WARN_LIMIT}`,
+      :bomb: Bannissements définitifs : {stats.hardbans}
+      :hammer: Bannissements : {stats.bans}
+      :mute: Mutes : {stats.mutes}
+      :door: Kicks : {stats.kicks}
+      :stop_sign: Avertissements totaux : {stats.warns}
+      :warning: Avertissements en cours : {stats.currentWarns}/{warnLimit}`,
     updateReasons: {
       duration: 'a changé la durée',
       revoked: 'a révoqué la sanction',
@@ -111,13 +111,13 @@ export const history = {
       main: stripIndent`
         ━━━━━━━━━━━━━━━
 
-        **{NAME}** (\`{ID}\`)
-            __Modérateur :__ <@{MODERATOR}>
-            __Date :__ {DATE}
-            __Raison :__ {REASON}
+        **{name}** (\`{sanction.sanctionId}\`)
+            __Modérateur :__ <@{sanction.moderator}>
+            __Date :__ {date}
+            __Raison :__ {sanction.reason}
       `,
-      duration: '\n    __Durée :__ {DURATION}',
-      modifications: '    __Modification{PLURAL} :__\n',
+      duration: '\n    __Durée :__ {duration}',
+      modifications: '    __Modification{plural} :__\n',
     },
   },
 };
@@ -187,7 +187,7 @@ export const purge = {
   messages: {
     startPrompt: 'Entre un nombre de message à supprimer.',
     retryPrompt: "Ce montant n'est pas valide. Entre-le en envoyant un message contenant seulement un nombre :",
-    success: "J'ai bien supprimé {AMOUNT} messages.",
+    success: "J'ai bien supprimé {deletedMessages.size} messages.",
   },
 };
 

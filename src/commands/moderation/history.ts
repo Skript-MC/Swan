@@ -1,6 +1,7 @@
 import { oneLine, stripIndent } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
 import moment from 'moment';
+import pupa from 'pupa';
 import { history as config } from '../../../config/commands/moderation';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -50,34 +51,34 @@ class HistoryCommand extends Command {
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
     };
 
-    let privateHistory = config.messages.title
-      .replace('{NAME}', getUsername(args.member))
-      .replace('{COUNT}', sanctions.length.toString());
+    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member), sanctions });
 
-    privateHistory += config.messages.overview
-      .replace('{HARDBANS}', stats.hardbans.toString())
-      .replace('{BANS}', stats.bans.toString())
-      .replace('{MUTES}', stats.mutes.toString())
-      .replace('{KICKS}', stats.kicks.toString());
+    privateHistory += pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan });
     privateHistory += '\n\n';
 
     for (const sanction of sanctions) {
-      let infos = config.messages.sanctionDescription.main
-        .replace('{NAME}', config.messages.sanctionsName[sanction.type])
-        .replace('{ID}', sanction.sanctionId)
-        .replace('{MODERATOR}', sanction.moderator)
-        .replace('{DATE}', moment(sanction.start).format(settings.miscellaneous.durationFormat))
-        .replace('{REASON}', sanction.reason);
+      let stringBuilder = pupa(config.messages.sanctionDescription.main, {
+        name: config.messages.sanctionsName[sanction.type],
+        date: moment(sanction.start).format(settings.miscellaneous.durationFormat),
+        sanction,
+      });
 
-      if (sanction.duration && sanction.type !== SanctionTypes.Warn)
-        infos += config.messages.sanctionDescription.duration.replace('{DURATION}', toHumanDuration(sanction.duration));
+      if (sanction.duration && sanction.type !== SanctionTypes.Warn) {
+        stringBuilder += pupa(config.messages.sanctionDescription.duration, {
+          duration: toHumanDuration(sanction.duration),
+        });
+      }
 
-      infos += '\n';
+      stringBuilder += '\n';
       if (sanction.updates?.length > 0) {
-        infos += config.messages.sanctionDescription.modifications.replace('{PLURAL}', sanction.updates.length > 1 ? 's' : '');
+        stringBuilder += pupa(config.messages.sanctionDescription.modifications, {
+          plural: sanction.updates.length > 1 ? 's' : '',
+        });
+
         for (const update of sanction.updates) {
           const diff = update.type === SanctionsUpdates.Duration
             ? stripIndent`
+
                 \`\`\`diff
                 - ${toHumanDuration(update.valueBefore)}
                 + ${toHumanDuration(update.valueAfter)}
@@ -85,16 +86,16 @@ class HistoryCommand extends Command {
               `
             : '\n';
 
-          infos += '        ';
-          infos += oneLine`
+          stringBuilder += '        ';
+          stringBuilder += oneLine`
             - ${moment(update.date).format(settings.miscellaneous.durationFormat)},
             <@${update.moderator}> ${config.messages.updateReasons[update.type]}
             (motif: "${update.reason}")`;
-          infos += diff;
+            stringBuilder += diff;
         }
       }
 
-      privateHistory += `${infos}\n`;
+      privateHistory += `${stringBuilder}\n`;
     }
 
     const splittedText = splitText(privateHistory);

@@ -39,7 +39,7 @@ export const help = {
   },
   messages: {
     commandInfo: {
-      title: ':star: Commande "{NAME}"',
+      title: ':star: Commande "{command.details.name}"',
       description: '❯ Description',
       usage: '❯ Utilisation',
       usableBy: '❯ Utilisable par',
@@ -47,9 +47,9 @@ export const help = {
       examples: '❯ Exemples',
     },
     commandsList: {
-      title: 'Commandes de Swan ({NUMBER})',
-      description: "Faites `{COMMAND}` pour avoir plus d'informations sur une commande.",
-      category: '❯ {CATEGORY}',
+      title: 'Commandes de Swan ({amount})',
+      description: "Faites `{helpCommand}` pour avoir plus d'informations sur une commande.",
+      category: '❯ {categoryName}',
     },
   },
 };
@@ -142,10 +142,10 @@ export const move = {
     retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons.",
     startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
     retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
-    successfullyMoved: ':twisted_rightwards_arrows: {TARGET_MEMBER}, ton message a été déplacé vers {TARGET_CHANNEL} par {EXECUTOR}.',
+    successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
     moveInfos: stripIndent`
-      {EXECUTOR} à déplacé un message de {TARGET_MEMBER}, depuis {SOURCE_CHANNEL} vers {TARGET_CHANNEL}.
-      En cas d'erreur, réagissez avec {EMOJI} pour supprimer ce re-post.
+      {memberDisplayName} à déplacé un message de {targetDisplayName}, depuis {sourceChannel} vers {targetChannel}.
+      En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
@@ -166,9 +166,9 @@ export const ping = {
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
     secondMessage: `
-      :hourglass: Swan : {SWAN_PING} ms {SWAN_INDICATOR}
+      :hourglass: Swan : {swanPing} ms {swanIndicator}
 
-      :globe_with_meridians: API Discord : {DISCORD_PING} ms {DISCORD_INDICATOR}
+      :globe_with_meridians: API Discord : {discordPing} ms {discordIndicator}
     `,
   },
 };
@@ -188,7 +188,7 @@ export const statistics = {
   messages: {
     embed: {
       title: 'Statistiques de Swan',
-      description: 'Le préfixe est `{PREFIX}`. Faites `{HELP}` pour avoir la liste des commandes.',
+      description: 'Le préfixe est `{prefix}`. Faites `{helpCommand}` pour avoir la liste des commandes.',
       version: '❯ Version',
       uptime: '❯ Temps de fonctionnement',
       memory: '❯ Mémoire',
@@ -202,7 +202,7 @@ export const statistics = {
         <@294134773901688833> : contributions
       `,
       bugs: 'Support',
-      bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{URL}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
+      bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
   },
 };

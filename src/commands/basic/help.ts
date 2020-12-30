@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import pupa from 'pupa';
 import { help as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import { Rules } from '../../types';
@@ -32,7 +33,7 @@ class HelpCommand extends Command {
 
     if (command) {
       const messages = config.messages.commandInfo;
-      embed.setTitle(messages.title.replace('{NAME}', command.details.name))
+      embed.setTitle(pupa(messages.title, { command }))
         .addField(messages.usage, `\`${prefix}${command.details.usage}\``)
         .addField(messages.description, command.details.content)
         .addField(messages.usableBy, command.details?.permissions || 'Tout le monde');
@@ -48,12 +49,12 @@ class HelpCommand extends Command {
         .flatMap(category => category.array())
         .length;
 
-      embed.setTitle(messages.title.replace('{NUMBER}', amount.toString()))
-        .setDescription(messages.description.replace('{COMMAND}', `${prefix}${this.details.usage}`));
+      embed.setTitle(pupa(messages.title, { amount }))
+        .setDescription(pupa(messages.description, { helpCommand: `${prefix}${this.details.usage}` }));
 
       for (const category of this.handler.categories.array()) {
         embed.addField(
-          messages.category.replace('{CATEGORY}', capitalize(category.id)),
+          pupa(messages.category, { categoryName: capitalize(category.id) }),
           category.map(cmd => `\`${cmd.aliases[0]}\``).join(' • '),
         );
       }

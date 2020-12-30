@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { User, MessageReaction } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Poll from '../../models/poll';
@@ -74,7 +75,7 @@ class MessageReactionAddListener extends Listener {
             : messages.poll.informationsCustom;
           await member.send(text);
 
-          const infoMessage = await message.channel.send(messages.poll.dmSent.replace('{MEMBER}', member.toString()));
+          const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member }));
           await infoMessage.delete({ timeout: 5000 });
         } catch {
           await message.reply(messages.global.dmAreClosed);

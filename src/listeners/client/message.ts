@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Listener } from 'discord-akairo';
 import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
 import type { Message } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
@@ -77,7 +78,7 @@ class MessageListener extends Listener {
       const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
         : message.content;
-      await message.author.send(messages.miscellaneous.noDocLink.replace('{MESSAGE}', content));
+      await message.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
 
       return true;
     }
@@ -201,7 +202,7 @@ class MessageListener extends Listener {
           .some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
     ) {
       await message.delete();
-      await message.member.send(messages.miscellaneous.invalidMessage.replace('{CHANNEL}', message.channel.toString()));
+      await message.member.send(pupa(messages.miscellaneous.invalidMessage, { message }));
       await message.member.send(message.content);
     }
     return false;

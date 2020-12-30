@@ -28,7 +28,7 @@ export default {
     warnLimitBanDuration: 60 * 60 * 24 * 4, // 4 days in seconds
     maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days in seconds
     banChannelPrefix: 'b-',
-    banChannelTopic: "Salon du bannissement de {MEMBER}. Regardez les messages épinglés pour plus d'informations.",
+    banChannelTopic: "Salon du bannissement de {member.displayName}. Regardez les messages épinglés pour plus d'informations.",
     colors: {
       warn: '#ffe200',
       kick: '#ff6b61',

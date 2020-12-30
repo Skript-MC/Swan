@@ -2,6 +2,7 @@ import type { AkairoClient } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import moment from 'moment';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import { SanctionTypes } from '../../types';
@@ -60,9 +61,10 @@ abstract class ModerationAction {
   }
 
   protected getFormattedChange(): string {
-    return messages.moderation.durationChange
-      .replace('{OLD_DURATION}', this.formatDuration(this.updateInfos.sanctionDocument.duration))
-      .replace('{NEW_DURATION}', this.formatDuration(this.data.duration));
+    return pupa(messages.moderation.durationChange, {
+      oldDuration: this.formatDuration(this.updateInfos.sanctionDocument.duration),
+      newDuration: this.formatDuration(this.data.duration),
+    });
   }
 
 
@@ -113,16 +115,8 @@ abstract class ModerationAction {
     let message = '';
 
     message = this.updateInfos.isUpdate()
-      ? this.data.config.notificationUpdate
-        .replace('{MEMBER}', this.nameString)
-        .replace('{SANCTION}', this.action)
-        .replace('{REASON}', this.data.reason)
-        .replace('{CHANGE}', this.getFormattedChange())
-      : this.data.config.notification
-        .replace('{MEMBER}', this.nameString)
-        .replace('{SANCTION}', this.action)
-        .replace('{REASON}', this.data.reason)
-        .replace('{DURATION}', this.formatDuration(this.data.duration));
+      ? pupa(this.data.config.notificationUpdate, { action: this, change: this.getFormattedChange() })
+      : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
 
     try {
       await (this.data.victim.member || this.data.victim.user)?.send(message);
@@ -137,7 +131,7 @@ abstract class ModerationAction {
 
     const embed = new MessageEmbed()
       .setColor(this.color)
-      .setTitle(messages.moderation.newCase.replace('{ID}', this.data.sanctionId))
+      .setTitle(pupa(messages.moderation.newCase, { action: this }))
       .setTimestamp()
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
       .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)
@@ -147,7 +141,7 @@ abstract class ModerationAction {
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);
       if (this.data?.finish !== -1)
-        content += messages.moderation.log.durationDescription.replace('{EXPIRATION}', this.expiration);
+        content += pupa(messages.moderation.log.durationDescription, { action: this });
       embed.addField(messages.moderation.log.durationTitle, content, true);
     }
     if (this.data.privateChannel)
