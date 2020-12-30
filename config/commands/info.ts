@@ -86,6 +86,7 @@ export const userInfo = {
           listening: 'Écoute (sur {activity.name}) :\n',
           watching: 'Regarde : {activity.name}\n',
           custom_status: '{activity.name}\n', // eslint-disable-line @typescript-eslint/naming-convention
+          competing: 'En compétition ({activity.name})',
         },
         details: '↳ {activity.details}\n',
         state: '↳ {activity.state}\n',

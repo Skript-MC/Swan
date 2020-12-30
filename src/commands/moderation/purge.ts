@@ -46,7 +46,10 @@ class PurgeCommand extends Command {
     const deletedMessages = await message.channel.bulkDelete(messages, true);
 
     const msg = await message.util.send(pupa(config.messages.success, { deletedMessages }));
-    await msg.delete({ timeout: 5000 }).catch(noop);
+    setTimeout(async () => {
+      if (msg.deletable)
+        await msg.delete().catch(noop);
+    }, 5000);
   }
 }
 
