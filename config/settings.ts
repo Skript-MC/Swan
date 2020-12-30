@@ -10,6 +10,12 @@ export default {
     guild: process.env.GUILD_ID,
   },
   miscellaneous: {
+    maxPollDuration: 60 * 60 * 24 * 7, // 7 days in seconds
+    pollReactions: {
+      yesno: ['✅', '❌'],
+      multiple: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟', '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭'],
+      specials: ['ℹ', '🛑'],
+    },
     validNamePercentage: 0.5,
     durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
@@ -36,6 +42,7 @@ export default {
   },
   colors: {
     default: '#4286f4',
+    success: '#1fc622',
   },
   apis: {
     hastebin: 'https://hastebin.com/documents',
