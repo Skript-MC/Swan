@@ -1,3 +1,5 @@
+import type { DurationPart } from '../types';
+
 const REGEX = /^(?<number>\d+) ?(?<unit>\w+)$/i;
 
 enum Durations {
@@ -93,7 +95,7 @@ function convert(num: number, type: string): number {
     case 's':
       return num * Durations.Second;
     default:
-      throw new Error(`Invalid duration unit: ${type}`);
+      throw new TypeError(`Invalid duration unit: ${type}`);
   }
 }
 
@@ -102,26 +104,31 @@ function convert(num: number, type: string): number {
  *
  * @param {string} val - The value to parse as a duration.
  * @returns number
+ * @throws {TypeError} - If the given duration is invalid, it will throw a TypeError
  */
 function getDuration(val: string): number {
   let abs: number;
   let total = 0;
   if (val.length > 0 && val.length < 101) {
-    const parts: string[] = tokenize(val.toLowerCase());
-    for (const part of parts) {
-      const { number, unit } = REGEX.exec(part).groups;
-      if (number && unit) {
-        abs = Number.parseInt(number, 10);
-        try {
+    const parts: DurationPart[] = tokenize(val.toLowerCase())
+      .map((part: string): DurationPart => {
+        const groups = REGEX.exec(part)?.groups;
+        if (!groups || !groups.number || !groups.unit)
+          throw new TypeError(`Value is an invalid duration (${JSON.stringify(val)})`);
+
+        return { number: groups.number, unit: groups.unit };
+      });
+    if (parts.length > 0) {
+      for (const { number, unit } of parts) {
+        if (number && unit) {
+          abs = Number.parseInt(number, 10);
           total += convert(abs, unit);
-        } catch {
-          return;
         }
       }
     }
     return total;
   }
-  throw new Error(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
+  throw new TypeError(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
 }
 
 export default getDuration;
