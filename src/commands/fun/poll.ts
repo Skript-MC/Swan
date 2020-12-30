@@ -1,6 +1,7 @@
 import { Argument, Command } from 'discord-akairo';
 import { Permissions, MessageEmbed } from 'discord.js';
 import moment from 'moment';
+import pupa from 'pupa';
 import { poll as config } from '../../../config/commands/fun';
 import settings from '../../../config/settings';
 import Poll from '../../models/poll';
@@ -78,9 +79,10 @@ class PollCommand extends Command {
       possibleAnswers = config.messages.answersDisplayYesno;
     } else {
       for (const [i, answer] of answers.entries()) {
-        possibleAnswers += config.messages.answersDisplayCustom
-          .replace('{REACTION}', settings.miscellaneous.pollReactions.multiple[i])
-          .replace('{ANSWER}', answer);
+        possibleAnswers += pupa(config.messages.answersDisplayCustom, {
+          reaction: settings.miscellaneous.pollReactions.multiple[i],
+          answer,
+        });
       }
     }
 
@@ -91,12 +93,10 @@ class PollCommand extends Command {
       details.push(config.messages.informationMultiple);
 
     const embedMessages = config.messages.embed;
-    const durationContent = embedMessages.durationContent
-      .replace('{DURATION}', formattedDuration)
-      .replace('{END}', formattedEnd);
+    const durationContent = pupa(embedMessages.durationContent, { formattedDuration, formattedEnd });
 
     const embed = new MessageEmbed()
-      .setAuthor(embedMessages.author.replace('{MEMBER}', message.member.toString()), message.author.avatarURL())
+      .setAuthor(pupa(embedMessages.author, { message }), message.author.avatarURL())
       .addField(embedMessages.question, question)
       .addField(embedMessages.answers, possibleAnswers)
       .addField(embedMessages.duration, durationContent)

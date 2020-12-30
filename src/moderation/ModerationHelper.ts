@@ -1,5 +1,6 @@
 import { Permissions, TextChannel } from 'discord.js';
 import type { GuildChannel } from 'discord.js';
+import pupa from 'pupa';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
 import Logger from '../structures/Logger';
@@ -21,7 +22,7 @@ export default {
         channelName,
         {
           type: 'text',
-          topic: `${data.victim.id} - ${settings.moderation.banChannelTopic.replace('{MEMBER}', data.victim.member.displayName)}`,
+          topic: `${data.victim.id} - ${pupa(settings.moderation.banChannelTopic, { member: data.victim.member })}`,
           parent: settings.channels.privateChannelsCategory,
           permissionOverwrites: [{
             id: settings.roles.everyone,

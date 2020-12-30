@@ -27,15 +27,15 @@ export const poll = {
       :white_check_mark: Oui
       :x: Non
     `,
-    answersDisplayCustom: '{REACTION} {ANSWER}',
+    answersDisplayCustom: '{reaction} {answer}\n',
     informationAnonymous: 'Ce sondage est anonyme.',
     informationMultiple: 'Plusieurs réponses sont possibles.',
     embed: {
-      author: 'Vote de {MEMBER}',
+      author: 'Vote de {message.member.displayName}',
       question: 'Question',
       answers: 'Réponses possibles',
       duration: 'Durée',
-      durationContent: 'Ce vote dure {DURATION} (Fini {END})',
+      durationContent: 'Ce vote dure {formattedDuration} (fini {formattedEnd})',
     },
   },
 };

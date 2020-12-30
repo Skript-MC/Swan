@@ -1,5 +1,6 @@
 import { Permissions, User, GuildMember } from 'discord.js';
 import type { TextChannel } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
@@ -166,11 +167,10 @@ class BanAction extends ModerationAction {
       channel = await ModerationHelper.getOrCreateChannel(this.data);
       this.data.setPrivateChannel(channel);
 
-      const explanation = messages.moderation.banExplanation
-        .replace('{MEMBER}', this.nameString)
-        .replace('{REASON}', this.data.reason)
-        .replace('{DURATION}', this.formatDuration(this.data.duration))
-        .replace('{EXPIRATION}', this.expiration);
+      const explanation = pupa(messages.moderation.banExplanation, {
+        action: this,
+        duration: this.formatDuration(this.data.duration),
+      });
       const message = await channel.send(explanation).catch(noop);
       if (message)
         await message.pin().catch(noop);

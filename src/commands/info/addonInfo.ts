@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Message } from 'discord.js';
+import pupa from 'pupa';
 import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -38,7 +39,7 @@ class AddonInfoCommand extends Command {
     const isExactMatch = (match: MatchingAddon): boolean => addon.toLowerCase() === match.name.toLowerCase();
 
     if (matchingAddons.length === 0) {
-      await message.util.send(config.messages.unknownAddon.replace('{ADDON}', addon));
+      await message.util.send(pupa(config.messages.unknownAddon, { addon }));
       return;
     }
     if (matchingAddons.length === 1) {
@@ -51,15 +52,13 @@ class AddonInfoCommand extends Command {
     }
 
     const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-    let content = config.messages.searchResults
-      .replace('{AMOUNT}', matchingAddons.length.toString())
-      .replace('{QUERY}', addon);
+    let content = pupa(config.messages.searchResults, { matchingAddons, addon });
 
     for (const [i, match] of matchingAddons.entries())
       content += `\n${reactionsNumbers[i]} ${match.name}`;
 
     if (matchingAddons.length - 10 > 0)
-      content += config.messages.more.replace('{AMOUNT}', (matchingAddons.length - 10).toString());
+      content += pupa(config.messages.more, { amount: matchingAddons.length - 10 });
 
     const selectorMessage = await message.util.send(content);
 
@@ -90,31 +89,34 @@ class AddonInfoCommand extends Command {
       return;
     }
 
+    const embedMessages = config.messages.embed;
+
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(config.messages.embed.title.replace('{NAME}', addon.plugin))
+      .setAuthor(pupa(embedMessages.title, { addon }))
       .setTimestamp()
-      .setDescription(addon.description || config.messages.embed.noDescription)
-      .setFooter(config.messages.embed.footer.replace('{MEMBER}', message.member.displayName));
+      .setDescription(addon.description || embedMessages.noDescription)
+      .setFooter(pupa(embedMessages.footer, { member: message.member }));
 
     if (addon.unmaintained)
-      embed.addField(config.messages.embed.unmaintained, config.messages.embed.unmaintainedDescription, true);
+      embed.addField(embedMessages.unmaintained, embedMessages.unmaintainedDescription, true);
     if (addon.author)
-      embed.addField(config.messages.embed.author, addon.author, true);
+      embed.addField(embedMessages.author, addon.author, true);
     if (addon.version)
-      embed.addField(config.messages.embed.version, addon.version, true);
+      embed.addField(embedMessages.version, addon.version, true);
     if (addon.download) {
-      const content = config.messages.embed.downloadDescription
-        .replace('{LINK}', addon.download)
-        .replace('{SIZE}', convertFileSize(Number.parseInt(addon.bytes, 10)));
-      embed.addField(config.messages.embed.download, content, true);
+      const content = pupa(embedMessages.downloadDescription, {
+        addon,
+        size: convertFileSize(Number.parseInt(addon.bytes, 10)),
+      });
+      embed.addField(embedMessages.download, content, true);
     }
     if (addon.sourcecode)
-      embed.addField(config.messages.embed.sourcecode, config.messages.embed.sourcecodeDescription.replace('{LINK}', addon.sourcecode), true);
+      embed.addField(embedMessages.sourcecode, pupa(embedMessages.sourcecodeDescription, { addon }), true);
     if (addon.depend?.depend)
-      embed.addField(config.messages.embed.depend, addon.depend.depend.join(', '), true);
+      embed.addField(embedMessages.depend, addon.depend.depend.join(', '), true);
     if (addon.depend?.softdepend)
-      embed.addField(config.messages.embed.softdepend, addon.depend.softdepend.join(', '), true);
+      embed.addField(embedMessages.softdepend, addon.depend.softdepend.join(', '), true);
 
     await message.util.send(embed);
   }

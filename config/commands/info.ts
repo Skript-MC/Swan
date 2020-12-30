@@ -18,23 +18,23 @@ export const addonInfo = {
   messages: {
     startPrompt: "Entre le nom de l'addon que tu souhaites chercher.",
     retryPrompt: "Nom invalide, ré-envoie le nom de l'addon que tu souhaites chercher.",
-    unknownAddon: "Désolé, mais je ne trouve pas cet addon... Es-tu sûr qu'il est disponible sur [skripttools](<https://skripttools.net/addons?q={ADDON}>) ?",
-    searchResults: "{AMOUNT} addons trouvés pour la recherche `{QUERY}`. Quel addon t'intéresse ?",
-    more: '\n...et {AMOUNT} de plus...',
+    unknownAddon: "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
+    searchResults: "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
+    more: '\n...et {amount} de plus...',
     embed: {
-      title: 'Informations sur {NAME}',
+      title: 'Informations sur {addon.plugin}',
       noDescription: 'Aucune description disponible.',
       author: ':bust_in_silhouette: Auteur(s)',
       version: ':gear: Dernière version',
       download: ':inbox_tray: Lien de téléchargement',
-      downloadDescription: '[Téléchargez ici]({LINK}) ({SIZE})',
+      downloadDescription: '[Téléchargez ici]({addon.download}) ({size})',
       sourcecode: ':computer: Code source',
-      sourcecodeDescription: '[Voir ici]({LINK})',
+      sourcecodeDescription: '[Voir ici]({addon.sourcecode})',
       depend: ':link: Dépendances obligatoires',
       softdepend: ':link: Dépendances facultatives',
       unmaintained: ':warning: Addon abandonné',
       unmaintainedDescription: "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser.",
-      footer: 'Exécuté par {MEMBER} | Données fournies par https://skripttools.net',
+      footer: 'Exécuté par {member.displayName} | Données fournies par https://skripttools.net',
     },
   },
 };
@@ -53,43 +53,43 @@ export const userInfo = {
   },
   messages: {
     embed: {
-      title: 'Informations sur {MEMBER}',
+      title: 'Informations sur {member.user.username}',
       names: {
         title: '❯ Noms',
         content: `
-          Pseudo : {PSEUDO}
-          Surnom : {NICKNAME}
-          Discriminant : \`{DISCRIMINATOR}\`
-          Identifiant : \`{ID}\``,
+          Pseudo : {member.user.username}
+          Surnom : {member.displayName}
+          Discriminant : \`{member.user.discriminator}\`
+          Identifiant : \`{member.id}\``,
       },
       created: {
         title: '❯ A créé son compte',
-        content: '{CREATION}',
+        content: '{creation}',
       },
       joined: {
         title: '❯ A rejoint le serveur',
-        content: '{JOINED}',
+        content: '{joined}',
       },
       roles: {
         title: '❯ Rôles',
-        content: '{AMOUNT} : {ROLES}',
+        content: '{amount} : {roles}',
         noRole: 'Aucun',
       },
       presence: {
         title: '❯ Présence',
         content: stripIndent`
-          Statut : {STATUS}
-          {DETAILS}`,
+          Statut : {status}
+          {presenceDetails}`,
         types: {
-          playing: 'Joue à {NAME}\n',
+          playing: 'Joue à {activity.name}\n',
           streaming: 'Est en live\n',
-          listening: 'Écoute (sur {NAME}) :\n',
-          watching: 'Regarde : {NAME}\n',
-          custom_status: '{NAME}\n', // eslint-disable-line @typescript-eslint/naming-convention
+          listening: 'Écoute (sur {activity.name}) :\n',
+          watching: 'Regarde : {activity.name}\n',
+          custom_status: '{activity.name}\n', // eslint-disable-line @typescript-eslint/naming-convention
         },
-        details: '↳ {DETAILS}\n',
-        state: '↳ {STATE}\n',
-        timestamps: '↳ A commencé {TIMESTAMP}',
+        details: '↳ {activity.details}\n',
+        state: '↳ {activity.state}\n',
+        timestamps: '↳ A commencé {timestamp}',
         status: {
           online: 'En ligne',
           idle: 'AFK',
@@ -97,7 +97,7 @@ export const userInfo = {
           offline: 'Hors ligne',
         },
       },
-      footer: 'Exécuté par {MEMBER}',
+      footer: 'Exécuté par {member.user.username}',
     },
   },
 };

@@ -1,6 +1,7 @@
 import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
 import type { GuildMember, GuildChannel } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ModerationHelper from '../../moderation/ModerationHelper';
@@ -29,7 +30,7 @@ class GuildMemberAddListener extends Listener {
     if (!channel.isText())
       return;
 
-    const content = randomMessage.replace(/{MEMBER}/g, member.toString());
+    const content = pupa(randomMessage, { member });
     await channel.send(content).catch(noop);
   }
 

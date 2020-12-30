@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { Message } from 'discord.js';
+import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import { noop } from '../../utils';
@@ -46,11 +47,8 @@ class MessageUpdateListener extends Listener {
       ? messages.miscellaneous.ghostPingPlural
       : messages.miscellaneous.ghostPingSingular;
 
-    await newMessage.channel.send(
-      baseMessage
-        .replace('{MENTIONS}', deletedMentions.join(', '))
-        .replace('{MEMBER}', newMessage.member.displayName),
-    ).catch(noop);
+    await newMessage.channel.send(pupa(baseMessage, { mentions: deletedMentions.join(', '), member: newMessage.member }))
+      .catch(noop);
   }
 }
 

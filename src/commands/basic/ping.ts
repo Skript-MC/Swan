@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import pupa from 'pupa';
 import { ping as config } from '../../../config/commands/basic';
 import settings from '../../../config/settings';
 import { Rules } from '../../types';
@@ -20,13 +21,15 @@ class PingCommand extends Command {
 
   public async exec(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
     const sent = await message.util.send(config.messages.firstMessage);
-    const timeDiff = (sent.editedAt || sent.createdAt).getTime() - (message.editedAt || message.createdAt).getTime();
+    const swanPing = (sent.editedAt || sent.createdAt).getTime() - (message.editedAt || message.createdAt).getTime();
+    const discordPing = Math.round(this.client.ws.ping);
 
-    const description = config.messages.secondMessage
-      .replace('{SWAN_PING}', timeDiff.toString())
-      .replace('{SWAN_INDICATOR}', this._getColorFromPing(timeDiff))
-      .replace('{DISCORD_PING}', Math.round(this.client.ws.ping).toString())
-      .replace('{DISCORD_INDICATOR}', this._getColorFromPing(Math.round(this.client.ws.ping)));
+    const description = pupa(config.messages.secondMessage, {
+      swanPing,
+      discordPing,
+      swanIndicator: this._getColorFromPing(swanPing),
+      discordIndicator: this._getColorFromPing(discordPing),
+    });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
