@@ -7,12 +7,32 @@ import type {
   User,
 } from 'discord.js';
 
+
+export interface AddonInfoCommandArguments {
+  addon: string;
+}
+
+export interface BanCommandArgument {
+  member: GuildMember;
+  duration: number;
+  reason: string;
+  autoban: boolean;
+}
+
 export interface CodeCommandArguments {
   code: string;
 }
 
 export interface HelpCommandArguments {
   command: Command;
+}
+
+export interface HistoryCommandArgument {
+  member: GuildMember | User | string;
+}
+
+export interface KickCommandArgument {
+  member: GuildMember; reason: string;
 }
 
 export interface LinksCommandArguments {
@@ -24,40 +44,18 @@ export interface MoveCommandArguments {
   message: Message;
 }
 
+export interface MuteCommandArgument {
+  member: GuildMember; duration: number; reason: string;
+}
+
 export interface PingCommandArguments {}
 
-export interface StatisticsCommandArguments {}
-
-export interface AddonInfoCommandArguments {
-  addon: string;
-}
-
-export interface UserInfoCommandArguments {
-  member: GuildMember;
-}
-
-export interface BanCommandArgument {
-  member: GuildMember;
+export interface PollCommandArguments {
   duration: number;
-  reason: string;
-  autoban: boolean;
+  content: string;
+  anonymous: boolean;
+  multiple: boolean;
 }
-
-export interface HistoryCommandArgument {
-  member: GuildMember | User | string;
-}
-
-export interface KickCommandArgument {
-  member: GuildMember;
-  reason: string;
-}
-
-export interface MuteCommandArgument {
-  member: GuildMember;
-  duration: number;
-  reason: string;
-}
-
 export interface PurgeCommandArgument {
   amount: number;
   member: GuildMember;
@@ -69,6 +67,8 @@ export interface RemoveWarnCommandArgument {
   reason: string;
 }
 
+export interface StatisticsCommandArguments {}
+
 export interface UnbanCommandArgument {
   member: GuildMember | User;
   reason: string;
@@ -77,6 +77,10 @@ export interface UnbanCommandArgument {
 export interface UnmuteCommandArgument {
   member: GuildMember;
   reason: string;
+}
+
+export interface UserInfoCommandArguments {
+  member: GuildMember;
 }
 
 export interface WarnCommandArgument {

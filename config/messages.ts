@@ -112,4 +112,31 @@ export default {
       duration: 'Durée',
     },
   },
+  poll: {
+    alreadyVoted: 'Tu as déjà voté pour ce choix !',
+    dmSent: "{MEMBER}, je t'ai envoyé plus d'informations en privé !",
+    informationsYesNo: stripIndent`
+      **Informations sur les sondages :**
+      Réagissez par :white_check_mark: pour voter **Oui** à la question posée, ou réagissez par :x: pour voter **Non**.
+      Au bout du temps défini, le décompte des votes est fait.
+      Si tu enlèves ta réaction, elle sera tout de même comptée. Si tu mets plusieurs réactions, c'est la dernière mise qui sera comptée. Le vote commence lorsque l'embed devient bleu.
+      Le créateur du vote peut l'arrêter en cliquant sur le :octagonal_sign:.
+    `,
+    informationsCustom: stripIndent`
+      **Informations sur les sondages :**
+      Tu peux réagir avec :one:, :two:, :three: etc. pour voter pour la réponse qui te convient.
+      Au bout du temps défini, le décompte des votes est fait.
+      Si tu enlèves ta réaction, elle sera tout de même comptée. Si tu mets plusieurs réactions, c'est la dernière mise qui sera comptée. Le vote commence lorsque l'embed devient bleu.
+      Le créateur du vote peut l'arrêter en cliquant sur le :octagonal_sign:.
+    `,
+    resultYesno: stripIndent`
+      white_check_mark: : {AMOUNT_YES} oui ({PERCENTAGE_YES}%)
+      :x: : {AMOUNT_NO} non ({PERCENTAGE_NO}%)
+    `,
+    resultCustomLine: '{REACTION} : {AMOUNT} {ANSWER} ({PERCENTAGE}%)\n',
+    totalVoters: '\n:bust_in_silhouette: : {TOTAL_VOTERS} votant(s).',
+    pollEnded: 'Ce vote est terminé !',
+    stopped: '*(arrêté)*',
+    results: 'Résultats',
+  },
 };

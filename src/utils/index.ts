@@ -1,5 +1,6 @@
 export { default as capitalize } from './capitalize';
 export { default as convertFileSize } from './convertFileSize';
+export { default as extractQuotedText } from './extractQuotedText';
 export { default as getDuration } from './getDuration';
 export { default as getPersonFromCache } from './getPersonFromCache';
 export { default as getUsername } from './getUsername';
