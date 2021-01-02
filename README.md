@@ -24,8 +24,7 @@
 Vous pouvez vous rendre dans le [menu des issues](https://github.com/Skript-MC/Swan/issues) et en créer une ; nous y jetterons un œil dès que possible !
 Si vous n'êtes pas très sûr de vous, vous pouvez nous en parler sur le [Discord de développement](https://discord.com/njSgX3w).
 
-:warning: Si vous pensez avoir trouvé une faille de sécurité, ou un bug pouvant compromettre Swan, la machine hébergeant Swan, ou n'importe quel utilisateur ou personne physique,
-veuillez en faire part en envoyant un message privé sur discord à un des [développeurs](#-Merci).
+:warning: Si vous pensez avoir trouvé une faille de sécurité, ou un bug pouvant compromettre Swan, la machine hébergeant Swan, ou n'importe quel utilisateur ou personne physique, veuillez en faire part en envoyant un message privé sur discord à un des [développeurs](#-Merci).
 
 
 ## 🔨 Développement et contributions
@@ -54,17 +53,17 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 ## 📂 Organisation du projet
 
 - **`assets` :** 🏞 Dossier où se trouvent les images utilisées.
-- **`build`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouvent le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
-- **`config` :** 📑 Dossier où se trouve tous les fichiers de configuration.
+- **`build`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouve le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
+- **`config` :** 📑 Dossier où se trouvent tous les fichiers de configuration de Swan.
 - **`patches` :** 🩹 Dossier où se trouvent les patches des librairies (le script `post-install` modifie leur code directement dans `node_modules`).
 - **`src` :** 💻
     - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
-    - **`inhibitors` :** ⚙️ Fichiers éxecutés avant qu'un message soit envoyé au `commandHandler`.
+    - **`inhibitors` :** ⚙️ Fichiers exécutés avant qu'un message soit envoyé au `commandHandler`.
     - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant aux émetteurs.
     - **`models` :** 🗄 Fichiers des schemas mongoose.
     - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
     - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
-    - **`tasks` :** ⏱ Fichiers éxecutés périodiquement (tâches).
+    - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
     - **`types` :** 🏷 Fichiers contenant les typings TypeScript.
     - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
 
