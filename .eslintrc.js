@@ -20,14 +20,5 @@ module.exports = {
     // be resolved before continuing! (i.e to send reactions or messages in the right order).
     '@typescript-eslint/no-misused-promises': 'off',
     'no-await-in-loop': 'off',
-
-    // String#replaceAll is not in Node.js yet.
-    'unicorn/prefer-replace-all': 'off',
-  },
-  globals: {
-    NodeJS: true,
-  },
-  env: {
-    node: true,
   },
 };
