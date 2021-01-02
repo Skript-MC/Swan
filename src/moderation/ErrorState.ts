@@ -21,7 +21,7 @@ class ErrorState {
   }
 
   public hasError(): boolean {
-    return Boolean(this.errors.length);
+    return this.errors.length > 0;
   }
 
   public log(): void {

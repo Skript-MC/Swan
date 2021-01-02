@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { nanoid } from 'nanoid';
-import { SanctionTypes, SanctionsUpdates } from '../types';
+import { SanctionsUpdates, SanctionTypes } from '../types';
 import type { SanctionDocument, SanctionModel } from '../types';
 
 const SanctionSchema = new Schema({

@@ -1,12 +1,12 @@
 import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
-import type { GuildMember, GuildChannel } from 'discord.js';
+import type { GuildChannel, GuildMember } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { toValidName, noop } from '../../utils';
+import { noop, toValidName } from '../../utils';
 
 class GuildMemberAddListener extends Listener {
   constructor() {

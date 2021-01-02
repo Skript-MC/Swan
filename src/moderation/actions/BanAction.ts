@@ -1,4 +1,4 @@
-import { Permissions, User, GuildMember } from 'discord.js';
+import { GuildMember, Permissions, User } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';

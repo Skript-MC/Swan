@@ -1,10 +1,10 @@
-import { User, GuildMember } from 'discord.js';
+import { GuildMember, User } from 'discord.js';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
 import Logger from '../../structures/Logger';
-import { SanctionTypes, SanctionsUpdates } from '../../types';
+import { SanctionsUpdates, SanctionTypes } from '../../types';
 import { noop } from '../../utils';
 import ModerationData from '../ModerationData';
 import ModerationError from '../ModerationError';

@@ -1,5 +1,5 @@
 import type { AkairoClient } from 'discord-akairo';
-import type { TextChannel, NewsChannel } from 'discord.js';
+import type { NewsChannel, TextChannel } from 'discord.js';
 import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import messages from '../../config/messages';

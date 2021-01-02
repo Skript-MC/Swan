@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import type { CommandStatDocument, CommandStatModel } from '../types';
 
 const CommandStatSchema = new Schema({

@@ -18,7 +18,8 @@ class ReadyListener extends Listener {
     const resolve = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan);
     const isText = (chan: GuildChannel): boolean => chan instanceof TextChannel;
 
-    const entries: Array<[string, GuildChannel | GuildChannel[]]> = Object.entries(settings.channels)
+    type ChannelEntry = [channelSlug: string, resolvedChannel: GuildChannel | GuildChannel[]];
+    const entries: ChannelEntry[] = Object.entries(settings.channels)
       .map(([slug, ids]) => (Array.isArray(ids)
         ? [slug, ids.map(resolve)]
         : [slug, resolve(ids)]
