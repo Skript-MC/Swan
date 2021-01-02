@@ -3,7 +3,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   extends: ['noftalint', 'noftalint/typescript'],
-  ignorePatterns: ['.eslintrc.js', 'gulpfile.js', 'node_modules/', 'build/'],
+  ignorePatterns: ['.eslintrc.js', 'node_modules/', 'build/'],
   reportUnusedDisableDirectives: true,
   rules: {
     // node/file-extension-in-import has too many false positives with .json.
