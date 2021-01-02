@@ -15,5 +15,5 @@
     "target": "es2019"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["gulpfile.js", "node_modules/"]
+  "exclude": ["node_modules/"]
 }
