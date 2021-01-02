@@ -1,5 +1,5 @@
 import type { AkairoClient } from 'discord-akairo';
-import type { User, GuildMember } from 'discord.js';
+import type { GuildMember, User } from 'discord.js';
 import getPersonFromCache from './getPersonFromCache';
 
 /**

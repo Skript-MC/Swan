@@ -1,4 +1,4 @@
-import { GuildMember, User, Permissions } from 'discord.js';
+import { GuildMember, Permissions, User } from 'discord.js';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';

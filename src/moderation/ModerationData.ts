@@ -5,12 +5,12 @@ import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
 import type {
-  GuildTextBasedChannel,
+  DataResult,
   GuildMessage,
-  SanctionTypes,
+  GuildTextBasedChannel,
   PersonInformations,
   SanctionInformations,
-  DataResult,
+  SanctionTypes,
 } from '../types';
 import { getPersonFromCache } from '../utils';
 

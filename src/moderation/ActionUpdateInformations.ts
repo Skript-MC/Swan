@@ -3,8 +3,8 @@ import Sanction from '../models/sanction';
 import type {
   ConvictedUserDocument,
   SanctionDocument,
-  TrackedSanctionTypes,
   TrackedFieldNames,
+  TrackedSanctionTypes,
 } from '../types';
 import { SanctionTypes } from '../types';
 import type ModerationData from './ModerationData';

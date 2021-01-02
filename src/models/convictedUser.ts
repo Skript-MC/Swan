@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import type { FilterQuery } from 'mongoose';
 import type { ConvictedUserBase, ConvictedUserDocument, ConvictedUserModel } from '../types';
 

@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import type { User, MessageReaction } from 'discord.js';
+import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';

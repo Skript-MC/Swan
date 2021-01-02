@@ -1,4 +1,4 @@
-import type { User, GuildMember } from 'discord.js';
+import type { GuildMember, User } from 'discord.js';
 import messages from '../../config/messages';
 
 /**

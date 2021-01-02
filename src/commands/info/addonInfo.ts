@@ -7,7 +7,7 @@ import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
-import type { GuildMessage, MatchingAddon, AddonResponse } from '../../types';
+import type { AddonResponse, GuildMessage, MatchingAddon } from '../../types';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 

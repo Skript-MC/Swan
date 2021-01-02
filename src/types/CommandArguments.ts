@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { Command } from 'discord-akairo';
 import type {
-  TextChannel,
-  Message,
   GuildMember,
+  Message,
+  TextChannel,
   User,
 } from 'discord.js';
 

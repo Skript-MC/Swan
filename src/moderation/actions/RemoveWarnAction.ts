@@ -1,7 +1,7 @@
 import { User } from 'discord.js';
 import ConvictedUser from '../../models/convictedUser';
 import Sanction from '../../models/sanction';
-import { SanctionTypes, SanctionsUpdates } from '../../types';
+import { SanctionsUpdates, SanctionTypes } from '../../types';
 import ModerationError from '../ModerationError';
 import ModerationAction from './ModerationAction';
 

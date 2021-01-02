@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Listener } from 'discord-akairo';
-import { DMChannel, Permissions, MessageEmbed } from 'discord.js';
+import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';

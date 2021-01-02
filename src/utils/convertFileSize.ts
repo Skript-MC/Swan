@@ -1,4 +1,4 @@
-const units: Array<[number, string]> = [
+const units: Array<[size: number, suffix: string]> = [
   [1024 ** 0, 'octets'],
   [1024 ** 1, 'Ko'],
   [1024 ** 2, 'Mo'],

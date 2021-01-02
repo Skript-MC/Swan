@@ -1,8 +1,8 @@
 import {
-  Role,
-  Permissions,
-  User,
   GuildMember,
+  Permissions,
+  Role,
+  User,
 } from 'discord.js';
 import settings from '../../../config/settings';
 import ConvictedUser from '../../models/convictedUser';

@@ -1,12 +1,12 @@
 import { Argument, Command } from 'discord-akairo';
-import { Permissions, MessageEmbed } from 'discord.js';
+import { MessageEmbed, Permissions } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import { poll as config } from '../../../config/commands/fun';
 import settings from '../../../config/settings';
 import Poll from '../../models/poll';
 import type { GuildMessage } from '../../types';
-import { Rules, QuestionType } from '../../types';
+import { QuestionType, Rules } from '../../types';
 import type { PollCommandArguments } from '../../types/CommandArguments';
 import { extractQuotedText } from '../../utils';
 

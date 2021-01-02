@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message, GuildMember } from 'discord.js';
+import type { GuildMember, Message } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import { userInfo as config } from '../../../config/commands/info';
