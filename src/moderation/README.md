@@ -56,6 +56,7 @@ Les durées des sanctions peuvent être écrites en français ou en anglais. Ell
 Plusieurs associations de nombres et d'unités peuvent être mises à la suite, mais il ne faut jamais d'espace. Exemple : `<nombre><unité><nombre><unité>`.
 L'unité est le type de durée (années, mois, semaines, jours, heures, minutes, secondes).
 Voici les unités possibles :
+
 - Années : `years`, `year`, `y`, `annees`, `années`, `annee`, `année`, `ans`, `an`, `a`.
 - Mois : `months`, `month`, `mois`, `mo`.
 - Semaines : `weeks`, `week`, `w`, `semaines`, `semaine`, `sem`.
@@ -193,12 +194,14 @@ Chaque action a, avec elle, une propriété instance de la classe `ActionUpdateI
 ## Organisation des bases de données
 
 Les sanctions sont réparties en 2 bases de données :
+
 - `ConvictedUsers` : contient la liste des membres ayant ou ayant eu des sanctions.
 - `Sanctions` : contient la liste de toutes les sanctions terminées ou non, et des informations les concernant.
 
 ### ConvictedUsers
 
 Voici à quoi ressemble un schema de la base de données ConvictedUsers :
+
 ```json
 {
   "memberId": {
@@ -229,6 +232,7 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
 ### Sanctions
 
 Voici à quoi ressemble un schema de la base de données Sanctions :
+
 ```json
 {
   "memberId": {
