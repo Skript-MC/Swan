@@ -57,23 +57,26 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 - **`config` :** 📑 Dossier où se trouvent tous les fichiers de configuration de Swan.
 - **`patches` :** 🩹 Dossier où se trouvent les patches des librairies (le script `post-install` modifie leur code directement dans `node_modules`).
 - **`src` :** 💻
-    - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
-    - **`inhibitors` :** ⚙️ Fichiers exécutés avant qu'un message soit envoyé au `commandHandler`.
-    - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant aux émetteurs.
-    - **`models` :** 🗄 Fichiers des schemas mongoose.
-    - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
-    - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
-    - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
-    - **`types` :** 🏷 Fichiers contenant les typings TypeScript.
-    - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
+  - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
+  - **`inhibitors` :** ⚙️ Fichiers exécutés avant qu'un message soit envoyé au `commandHandler`.
+  - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant aux émetteurs.
+  - **`models` :** 🗄 Fichiers des schemas mongoose.
+  - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
+  - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
+  - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
+  - **`types` :** 🏷 Fichiers contenant les typings TypeScript.
+  - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
 
 
 ## 🙏 Merci
 
 #### 👥 Développeurs
+
 - [noftaly](https://github.com/noftaly) (noftaly#0359)
 - [Romitou](https://github.com/Romitou) (Romitou#9685)
+
 #### 👷 Contributeurs
+
 - [Olyno](https://github.com/Olyno), ancien développeur (Olyno#1234)
 - [WeeskyBDW](https://github.com/WeeskyBDW) (WeeskyBDW#6172)
 - [iTrooz](https://github.com/iTrooz) (iTrooz_#2050)
