@@ -1,3 +1,5 @@
+import { promises as fs } from 'fs';
+import path from 'path';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
@@ -8,6 +10,7 @@ import pkg from '../../../package.json';
 import { Rules } from '../../types';
 import type { GuildMessage } from '../../types';
 import type { StatisticsCommandArguments } from '../../types/CommandArguments';
+import { trimText } from '../../utils';
 
 class StatisticsCommand extends Command {
   constructor() {
@@ -24,6 +27,7 @@ class StatisticsCommand extends Command {
   public async exec(message: GuildMessage, _args: StatisticsCommandArguments): Promise<void> {
     const totalCommands = this.handler.categories.array().flatMap(cat => cat.array()).length;
     const embedMessages = config.messages.embed;
+    const commitHash = await this._getGitRev();
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .attachFiles([settings.bot.avatar])
@@ -34,7 +38,14 @@ class StatisticsCommand extends Command {
           helpCommand: `${settings.bot.prefix}help`,
         }),
       )
-      .addField(embedMessages.version, pkg.version, true)
+      .addField(
+        embedMessages.version,
+        pupa(embedMessages.versionContent, {
+          version: pkg.version,
+          commitLink: `[${trimText(commitHash, 10)}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
+        }),
+        true,
+      )
       .addField(embedMessages.memory, `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, true)
       .addField(embedMessages.uptime, moment.duration(this.client.uptime).humanize(), true)
       .addField(embedMessages.commands, totalCommands.toString(), true)
@@ -45,6 +56,15 @@ class StatisticsCommand extends Command {
       .setTimestamp();
 
     await message.util.send(embed);
+  }
+
+  private async _getGitRev(): Promise<string> {
+    let rev = (await fs.readFile(path.join(process.cwd(), '.git', 'HEAD'))).toString();
+    if (!rev.includes(':'))
+      return rev;
+
+    rev = (await fs.readFile(path.join(process.cwd(), '.git', rev.slice(5).trim()))).toString();
+    return rev;
   }
 }
 

@@ -1,10 +1,10 @@
 import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
-import type { Message } from 'discord.js';
+import type { GuildMessage } from '../../src/types';
 
 const permissions = Permissions.FLAGS;
 
-const hasActiveMemberRole = (message: Message): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
+const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
 
 export const code = {
   settings: {
@@ -190,6 +190,10 @@ export const statistics = {
       title: 'Statistiques de Swan',
       description: 'Le préfixe est `{prefix}`. Faites `{helpCommand}` pour avoir la liste des commandes.',
       version: '❯ Version',
+      versionContent: stripIndent`
+        Version : {version}
+        Commit : {commitLink}
+      `,
       uptime: '❯ Temps de fonctionnement',
       memory: '❯ Mémoire',
       commands: '❯ Commandes',
