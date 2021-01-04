@@ -90,7 +90,7 @@ class ModerationData {
   }
 
   public setReason(reason: string): this {
-    if (reason.length > 0)
+    if (reason?.length > 0)
       this.reason = reason;
     return this;
   }
