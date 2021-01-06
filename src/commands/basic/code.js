@@ -8,6 +8,7 @@ class Code extends Command {
     this.usage = 'code [-l [-s <entier>]] <votre code>';
     this.examples = ['code broadcast "Yeah!"', 'code -l on join: message "salut !"'];
   }
+
   async execute(_client, message, args) {
     const printLines = args[0] === '-l';
     let startAtLine = 0;
@@ -64,11 +65,12 @@ class Code extends Command {
         collector.stop();
       });
   }
+
   isNumeric(str) {
     // On vérifie que ce soit bien un string
     if (typeof str !== 'string') return false;
     // On vérifie qu'il ne soit pas null et que le parseInt non plus
-    return !isNaN(str) && !isNaN(parseInt(str), 10);
+    return !isNaN(str) && !isNaN(parseInt(str, 10));
   }
 }
 
