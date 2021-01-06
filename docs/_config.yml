@@ -1,2 +1,2 @@
-theme: jekyll-theme-cayman # Use the Jeykyll Cayman theme
+theme: jekyll-theme-hacker
 markdown: kramdown # Use the kramdown motor for Markdown
