@@ -16,17 +16,16 @@ class Code extends Command {
       args.shift();
       if (args[0] === '-s') {
         args.shift();
-        const value = args.shift();
-        if (this.isNumeric(value)) {
+        const value = parseInt(args.shift(), 10);
+        if (!isNaN(value)) {
           // On enlève 1 car il est rajouté plus tard
-          startAtLine = parseInt(value, 10) - 1;
+          startAtLine = value - 1;
           // Pour éviter des p'tits malins
           if (startAtLine < 0) startAtLine = 0;
         } else {
           // Si c'est pas un nombre après l'argument s on le réinjecte
           // dans le tableau d'argument, au début
-          args.reverse().push(value);
-          args.reverse();
+          args.unshift(value);
         }
       }
     }
@@ -64,13 +63,6 @@ class Code extends Command {
         for (const block of codeBlocks) block.delete();
         collector.stop();
       });
-  }
-
-  isNumeric(str) {
-    // On vérifie que ce soit bien un string
-    if (typeof str !== 'string') return false;
-    // On vérifie qu'il ne soit pas null et que le parseInt non plus
-    return !isNaN(str) && !isNaN(parseInt(str, 10));
   }
 }
 
