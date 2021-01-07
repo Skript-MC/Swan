@@ -29,7 +29,7 @@ class SkriptReleasesTask extends Task {
       return;
 
     const channel = this.client.channels.cache.get(settings.channels.skriptTalk);
-    if (!channel.isText())
+    if (!channel?.isText())
       return;
 
     const body = latestRelease.body.length >= 1900

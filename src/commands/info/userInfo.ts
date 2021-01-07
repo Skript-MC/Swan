@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { GuildMember, Message } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import { userInfo as config } from '../../../config/commands/info';
@@ -16,7 +16,7 @@ class UserInfoCommand extends Command {
       args: [{
         id: 'member',
         type: 'member',
-        default: (message: Message): GuildMember => message.member,
+        default: (message: GuildMessage): GuildMember => message.member,
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,

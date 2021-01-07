@@ -34,7 +34,7 @@ class MessageListener extends Listener {
       task = await tasks.next();
   }
 
-  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, null> {
+  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
     yield await this._confirmBannedMemberSentMessages(message);
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInNeededChannels(message);
@@ -42,7 +42,7 @@ class MessageListener extends Listener {
     yield await this._uploadFileOnHastebin(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
-    return null;
+    return false;
   }
 
   private async _confirmBannedMemberSentMessages(message: GuildMessage): Promise<boolean> {
@@ -152,11 +152,8 @@ class MessageListener extends Listener {
   }
 
   private async _uploadFileOnHastebin(message: GuildMessage): Promise<boolean> {
-    if (message.attachments.size === 0)
-      return false;
-
     const attachment = message.attachments.first();
-    if (!settings.miscellaneous.hastebinExtensions.some(ext => attachment.name.endsWith(ext)))
+    if (!attachment || !settings.miscellaneous.hastebinExtensions.some(ext => attachment?.name?.endsWith(ext)))
       return false;
 
     const attachmentContent = await axios.get(attachment.url).catch(noop);
@@ -197,9 +194,9 @@ class MessageListener extends Listener {
   private async _checkCreationsChannelRules(message: GuildMessage): Promise<boolean> {
     if (message.channel.id === settings.channels.creations
         && !message.member.roles.cache.has(settings.roles.staff)
-        && message?.content
+        && message.content
           .match(/(?:https?:\/\/\S+)/g)
-          .some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
+          ?.some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
     ) {
       await message.delete();
       await message.member.send(pupa(messages.miscellaneous.invalidMessage, { message }));

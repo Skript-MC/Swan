@@ -51,7 +51,7 @@ class HistoryCommand extends Command {
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
     };
 
-    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member), sanctions });
+    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member, this.client), sanctions });
 
     privateHistory += pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan });
     privateHistory += '\n\n';
@@ -70,9 +70,9 @@ class HistoryCommand extends Command {
       }
 
       stringBuilder += '\n';
-      if (sanction.updates?.length > 0) {
+      if (sanction.updates?.length) {
         stringBuilder += pupa(config.messages.sanctionDescription.modifications, {
-          plural: sanction.updates.length > 1 ? 's' : '',
+          plural: sanction.updates?.length > 1 ? 's' : '',
         });
 
         for (const update of sanction.updates) {
