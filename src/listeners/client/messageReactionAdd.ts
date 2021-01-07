@@ -35,8 +35,12 @@ class MessageReactionAddListener extends Listener {
           && pollReactions.multiple.includes(reaction.emoji.name))) {
         // Find the reaction they choosed before (undefined if they never answered).
         type PollAnswer = [reactionName: string, votersIds: string[]];
-        const previousUserVote = Object.entries(poll.votes)
-          .find((entry: PollAnswer): PollAnswer => (entry[1].includes(user.id) ? entry : null))?.[0];
+
+        const previousUserVote: string | undefined = Object.entries(poll.votes)
+          // We find all the entries where the user id is in the votersIds array.
+          .find((entry: PollAnswer): PollAnswer | null => (entry[1].includes(user.id) ? entry : null))
+          // We take the reactionName if it exists.
+          ?.[0];
 
         if (previousUserVote === reaction.emoji.name) {
           // If they already voted for this option
@@ -54,9 +58,9 @@ class MessageReactionAddListener extends Listener {
           });
 
           if (!poll.anonymous) {
-            const userReactions = message.reactions.cache.find(r => r.emoji.name === previousUserVote).users;
-            if (typeof userReactions.cache.get(user.id) !== 'undefined')
-              await userReactions.remove(user);
+            const userReactions = message.reactions.cache.find(r => r.emoji.name === previousUserVote)?.users;
+            if (typeof userReactions?.cache.get(user.id) !== 'undefined')
+              await userReactions?.remove(user);
           }
         } else {
           // If they want to vote, and have never done so

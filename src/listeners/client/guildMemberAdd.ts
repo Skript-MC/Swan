@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
-import type { GuildChannel, GuildMember } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -26,8 +26,8 @@ class GuildMemberAddListener extends Listener {
     const { greetings } = messages.miscellaneous;
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
-    const channel: GuildChannel = member.guild.channels.resolve(settings.channels.main);
-    if (!channel.isText())
+    const channel = member.guild.channels.resolve(settings.channels.main);
+    if (!channel?.isText())
       return;
 
     const content = pupa(randomMessage, { member });
@@ -39,7 +39,8 @@ class GuildMemberAddListener extends Listener {
     if (isMuted) {
       try {
         const muteRole = member.guild.roles.resolve(settings.roles.mute);
-        await member.roles.add(muteRole);
+        if (muteRole)
+          await member.roles.add(muteRole);
       } catch (unknownError: unknown) {
         Logger.error('Could not add the mute role to a member.');
         Logger.detail(`MuteObject: "${JSON.stringify(isMuted)}"`);

@@ -22,18 +22,17 @@ class GuildMemberRemoveListener extends Listener {
     if (isBanned && this.client.currentlyBanning.includes(member.id))
       return;
 
-    const kicks: GuildKickAuditLogs = await member.guild.fetchAuditLogs({
+    const kicks = await member.guild.fetchAuditLogs({
       type: GuildAuditLogs.Actions.MEMBER_KICK,
     }) as GuildKickAuditLogs;
 
     const lastKick = kicks.entries.first();
-    const isKicked = lastKick
-      && lastKick.target.id === member.id
-      && !lastKick.executor.bot
-      && lastKick.createdTimestamp >= Date.now() - 1000;
 
     // Check if they've been kicked
-    if (isKicked) {
+    if (lastKick
+      && lastKick.target.id === member.id
+      && !lastKick.executor.bot
+      && lastKick.createdTimestamp >= Date.now() - 1000) {
       const data = new ModerationData(this.client)
         .setVictim(member)
         .setReason(lastKick.reason)

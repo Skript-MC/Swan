@@ -1,8 +1,10 @@
 import { Listener } from 'discord-akairo';
+import { DMChannel } from 'discord.js';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import { noop } from '../../utils';
 
 class MessageDeleteListener extends Listener {
@@ -13,10 +15,15 @@ class MessageDeleteListener extends Listener {
     });
   }
 
-  public async exec(message: Message): Promise<void> {
-    if (message.author.bot
-      || message.system
-      || message.member?.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff).position)
+  public async exec(globalMessage: Message): Promise<void> {
+    if (globalMessage.channel instanceof DMChannel)
+      return;
+
+    const message = globalMessage as GuildMessage;
+
+    const memberPosition = message.member.roles.highest.position;
+    const maxPosition = message.guild.roles.cache.get(settings.roles.staff)?.position ?? 0;
+    if (message.author.bot || message.system || memberPosition >= maxPosition)
       return;
 
     const userMentions = message.mentions.users

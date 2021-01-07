@@ -1,5 +1,6 @@
 import type { AkairoClient } from 'discord-akairo';
 import type { GuildMember, User } from 'discord.js';
+import messages from '../../config/messages';
 import getPersonFromCache from './getPersonFromCache';
 
 /**
@@ -9,9 +10,9 @@ import getPersonFromCache from './getPersonFromCache';
  * @param {AkairoClient?} client - The client used to fetch the member/user from cache, if we only get a string.
  * @returns string
  */
-function getUsername(personResolvable: GuildMember | User | string, client?: AkairoClient): string {
+function getUsername(personResolvable: GuildMember | User | string, client: AkairoClient): string {
   const person = getPersonFromCache(personResolvable, client);
-  return person.member?.displayName || person.user?.username || person.id;
+  return person.member?.displayName ?? person.user?.username ?? person.id ?? messages.global.unknownName;
 }
 
 export default getUsername;
