@@ -1,7 +1,5 @@
-import type { AkairoClient } from 'discord-akairo';
-import type { GuildMember, User } from 'discord.js';
-import messages from '../../config/messages';
-import getPersonFromCache from './getPersonFromCache';
+import type { User } from 'discord.js';
+import { GuildMember } from 'discord.js';
 
 /**
  * Get the displayName or username of the given person, or the ID if it is not available.
@@ -10,9 +8,13 @@ import getPersonFromCache from './getPersonFromCache';
  * @param {AkairoClient?} client - The client used to fetch the member/user from cache, if we only get a string.
  * @returns string
  */
-function getUsername(personResolvable: GuildMember | User | string, client: AkairoClient): string {
-  const person = getPersonFromCache(personResolvable, client);
-  return person.member?.displayName ?? person.user?.username ?? person.id ?? messages.global.unknownName;
+function getUsername(user: GuildMember | User | string): string {
+  return typeof user === 'string'
+    ? user
+    : (user instanceof GuildMember
+      ? user.displayName
+      : user.username
+    );
 }
 
 export default getUsername;
