@@ -23,7 +23,7 @@ class HistoryCommand extends Command {
       details: config.details,
       args: [{
         id: 'member',
-        type: Argument.union('member', 'user'),
+        type: Argument.union('member', 'user', 'string'),
         prompt: {
           start: config.messages.promptStartUser,
           retry: config.messages.promptStartUser,
@@ -51,7 +51,7 @@ class HistoryCommand extends Command {
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
     };
 
-    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member, this.client), sanctions });
+    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member), sanctions });
 
     privateHistory += pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan });
     privateHistory += '\n\n';
