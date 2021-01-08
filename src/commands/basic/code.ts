@@ -1,4 +1,5 @@
 import { Command } from 'discord-akairo';
+import type { MessageReaction, User } from 'discord.js';
 import { code as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
@@ -36,7 +37,7 @@ class CodeCommand extends Command {
       await codeMessage.react(settings.emojis.remove);
 
       const collector = codeMessage
-        .createReactionCollector((reaction, user) => user.id === message.author.id
+        .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
           && !user.bot
           && (reaction.emoji.id || reaction.emoji.name) === settings.emojis.remove)
         .on('collect', async () => {

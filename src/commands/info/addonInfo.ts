@@ -80,9 +80,9 @@ class AddonInfoCommand extends Command {
   }
 
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
-    const addon: AddonResponse | null = await axios(settings.apis.addons + addonFile)
+    const addon: AddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
-      .catch((err) => { Logger.error(err.message); }) || null;
+      .catch((err) => { Logger.error(err.message); });
 
     if (!addon) {
       await message.util.send(messages.global.oops);

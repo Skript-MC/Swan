@@ -30,7 +30,7 @@ class BanAction extends ModerationAction {
   }
 
   private async _hardban(): Promise<void> {
-    await (this.data.victim.member || this.data.victim.user)
+    await (this.data.victim.member ?? this.data.victim.user)
       ?.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695')
       .catch(noop);
 
