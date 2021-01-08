@@ -27,19 +27,17 @@ class ModerationTask extends Task {
       const { memberId } = sanction;
 
       const member = this.client.guild.members.cache.get(memberId)
-        || await this.client.guild.members.fetch(memberId).catch(noop)
-        || null;
+        ?? (await this.client.guild.members.fetch(memberId).catch(noop) || null);
 
       const user = member?.user
-        || this.client.users.resolve(memberId)
-        || await this.client.users.fetch(memberId).catch(noop)
-        || null;
+        ?? this.client.users.resolve(memberId)
+        ?? (await this.client.users.fetch(memberId).catch(noop) || null);
 
       if (!member && !user)
         continue;
 
       const data = new ModerationData(this.client)
-        .setVictim(member || user, false)
+        .setVictim(member ?? user, false)
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (sanction.type) {
