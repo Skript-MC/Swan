@@ -175,6 +175,17 @@ export interface PollDocument extends PollBase, Document {}
 /** Interface for the "Poll"'s mongoose model */
 export type PollModel = Model<PollDocument>;
 
+export interface MessageBase {
+  messageType: string;
+  name: string;
+  aliases: string[];
+  content: string;
+}
+
+export interface MessageDocument extends MessageBase, Document {}
+
+export type MessageModel = Model<MessageDocument>;
+
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
   memberId: string;

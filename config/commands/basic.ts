@@ -210,3 +210,21 @@ export const statistics = {
     },
   },
 };
+
+export const errorDetails = {
+  settings: {
+    aliases: ['error', 'errorDetails'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Détails d\'erreur',
+    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    usage: 'error <erreur>',
+    examples: ['error Invalid amount and/or placement of double quotes'],
+  },
+  messages: {
+    startPrompt: 'Ajoute une erreur dont tu souhaites avoir plus d\'informations :',
+    notFound: 'Je n\'ai pas pu trouver d\'information sur ton erreur. Réessaye uniquement avec le début de l\'erreur ou demande son ajout.',
+  },
+};

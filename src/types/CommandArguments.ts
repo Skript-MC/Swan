@@ -23,6 +23,10 @@ export interface CodeCommandArguments {
   code: string;
 }
 
+export interface ErrorDetailsCommandArguments {
+  error: string;
+}
+
 export interface HelpCommandArguments {
   command: Command;
 }
