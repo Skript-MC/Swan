@@ -6,6 +6,44 @@ const permissions = Permissions.FLAGS;
 
 const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
 
+export const addonPack = {
+  settings: {
+    aliases: ['addonPack'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: "Pack d'add-on",
+    content: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    usage: 'addonPack <version>',
+    examples: ['addonPack 1.16.4', 'addonPack 1.13'],
+  },
+  messages: {
+    startPrompt: 'Ajoute la version Minecraft dont tu souhaites connaître les versions recommandées :',
+    retryPrompt: 'Version Minecraft invalide. Ré-entre ta version :',
+    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie ou demande son ajout.",
+  },
+};
+
+export const autoMessage = {
+  settings: {
+    aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Message rapide',
+    content: "Permet d'envoyer rapidement un message prédéfini.",
+    usage: 'auto <message>',
+    examples: ['auto skript-gui', 'autoMsg 1.8'],
+  },
+  messages: {
+    startPrompt: 'Ajoute une le nom du message rapide que tu souhaites envoyer :',
+    retryPrompt: 'Nom de message invalide. Ré-entre son nom :',
+    notFound: "Aucun message n'existe avec ce nom. Réessaye ou suggère son ajout.",
+  },
+};
+
 export const code = {
   settings: {
     aliases: ['code', 'balise', 'balises'],

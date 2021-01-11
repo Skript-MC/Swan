@@ -12,6 +12,7 @@ function searchMessageSimilarity(entries: MessageDocument[], wanted: string): Me
     }
   }
   search.sort((a, b) => b[1] - a[1]);
+  if (search.length === 0) return null;
   return search[0][0];
 }
 
