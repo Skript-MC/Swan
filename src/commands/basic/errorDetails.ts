@@ -13,8 +13,10 @@ class ErrorDetailsCommand extends Command {
       args: [{
         id: 'error',
         type: 'string',
+        match: 'content',
         prompt: {
           start: config.messages.startPrompt,
+          retry: config.messages.retryPrompt,
         },
       }],
       clientPermissions: config.settings.clientPermissions,

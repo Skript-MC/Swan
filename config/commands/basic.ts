@@ -25,6 +25,25 @@ export const code = {
   },
 };
 
+export const errorDetails = {
+  settings: {
+    aliases: ['error', 'errorDetails'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: "Détails d'erreur",
+    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    usage: 'error <erreur>',
+    examples: ['error Invalid amount and/or placement of double quotes'],
+  },
+  messages: {
+    startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
+    retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
+    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur ou demande son ajout.",
+  },
+};
+
 export const help = {
   settings: {
     aliases: ['help', 'aide'],
@@ -208,23 +227,5 @@ export const statistics = {
       bugs: 'Support',
       bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
-  },
-};
-
-export const errorDetails = {
-  settings: {
-    aliases: ['error', 'errorDetails'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
-  },
-  details: {
-    name: 'Détails d\'erreur',
-    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
-    usage: 'error <erreur>',
-    examples: ['error Invalid amount and/or placement of double quotes'],
-  },
-  messages: {
-    startPrompt: 'Ajoute une erreur dont tu souhaites avoir plus d\'informations :',
-    notFound: 'Je n\'ai pas pu trouver d\'information sur ton erreur. Réessaye uniquement avec le début de l\'erreur ou demande son ajout.',
   },
 };
