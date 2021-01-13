@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": "Bot discord de Skript-Mc.",
   "main": "./src/main.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "@discordjs/opus": "^0.3.2",
     "@sentry/integrations": "^5.21.1",
     "@sentry/node": "^5.21.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "discord-ytdl-core": "^3.0.1",
     "discord.js": "^12.5.0",
@@ -41,7 +41,11 @@
     "nedb-promises": "^4.0.4",
     "rss-parser": "^3.9.0",
     "sanitize-html": "^1.27.3",
-    "simple-youtube-api": "^5.2.1"
+    "simple-youtube-api": "^5.2.1",
+    "bufferutil": "^4.0.1",
+    "erlpack": "^0.1.3",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
