@@ -75,7 +75,8 @@ export interface PersonInformations {
 
 /** Extra sanctions informations in SanctionDocument#informations */
 export interface SanctionInformations {
-  hasSentMessage?: boolean;
+  shouldAutobanIfNoMessages?: boolean;
+  banChannelId?: string;
 }
 
 /** The object returned by ModerationData#toSchema */
