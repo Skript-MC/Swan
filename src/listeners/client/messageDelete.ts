@@ -16,7 +16,7 @@ class MessageDeleteListener extends Listener {
   }
 
   public async exec(globalMessage: Message): Promise<void> {
-    if (globalMessage.channel instanceof DMChannel)
+    if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
       return;
 
     const message = globalMessage as GuildMessage;
