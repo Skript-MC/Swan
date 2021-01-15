@@ -3,7 +3,7 @@ import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import { noop, trimText} from '../../utils';
+import { noop, trimText } from '../../utils';
 
 class MessageUpdateListener extends Listener {
   constructor() {
