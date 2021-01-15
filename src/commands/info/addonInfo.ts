@@ -36,8 +36,6 @@ class AddonInfoCommand extends Command {
       .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
       .slice(0, 10);
 
-    const isExactMatch = (match: MatchingAddon): boolean => addon.toLowerCase() === match.name.toLowerCase();
-
     if (matchingAddons.length === 0) {
       await message.util.send(pupa(config.messages.unknownAddon, { addon }));
       return;
@@ -46,8 +44,10 @@ class AddonInfoCommand extends Command {
       await this._sendDetail(message, matchingAddons[0].file);
       return;
     }
-    if (matchingAddons.some(isExactMatch)) {
-      await this._sendDetail(message, matchingAddons.find(isExactMatch).file);
+
+    const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
+    if (possibleMatch) {
+      await this._sendDetail(message, possibleMatch.file);
       return;
     }
 
