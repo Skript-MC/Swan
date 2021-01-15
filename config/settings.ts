@@ -20,6 +20,10 @@ export default {
     durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
+    activeMemberBlacklistedLinks: [
+      'skripthub.net/docs',
+      'docs.skunity.com',
+    ],
   },
   moderation: {
     purgeLimit: 50,
@@ -76,4 +80,5 @@ export default {
     no: process.env.NO_EMOJI || '❌',
     remove: process.env.REMOVE_EMOJI || '🗑️',
   },
+
 };

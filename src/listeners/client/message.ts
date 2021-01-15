@@ -3,7 +3,6 @@ import { Listener } from 'discord-akairo';
 import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
-import blacklist from '../../../config/docs-blacklist';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Sanction from '../../models/sanction';
@@ -74,7 +73,7 @@ class MessageListener extends Listener {
 
   private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
     if (message.member.roles.cache.has(settings.roles.activeMember)
-      && (blacklist.some(link => message.content.includes(link)))) {
+      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
       await message.delete();
       const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)

@@ -1,7 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
-import blacklist from '../../../config/docs-blacklist';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import { noop, trimText} from '../../utils';
@@ -15,12 +14,9 @@ class MessageUpdateListener extends Listener {
   }
 
   public async exec(oldMessage: Message, newMessage: Message): Promise<void> {
-    /*
-      Block active members to not post an other documentation link than Skript-MC's doc
-      The Goal: incite active members to complete the Skript-MC's doc
-     */
+    // Prevent active members from posting another documentation than Skript-MC's.
     if (newMessage.member.roles.cache.has(settings.roles.activeMember)
-      && (blacklist.some(link => newMessage.content.includes(link)))) {
+      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
       await newMessage.delete();
       const content = (oldMessage.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(oldMessage.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
@@ -29,9 +25,7 @@ class MessageUpdateListener extends Listener {
 
       return;
     }
-    /*
-      Check for Ghostping(s)
-     */
+    // Check for ghostpings.
     if (newMessage.author.bot
       || newMessage.system
       || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff).position)
