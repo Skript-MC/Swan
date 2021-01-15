@@ -27,13 +27,14 @@ class ModerationTask extends Task {
       const { memberId } = sanction;
 
       const member = this.client.guild.members.cache.get(memberId)
-        ?? (await this.client.guild.members.fetch(memberId).catch(noop) || null);
+        ?? (await this.client.guild.members.fetch(memberId).catch(noop));
+      if (!member)
+        continue;
 
       const user = member?.user
         ?? this.client.users.resolve(memberId)
-        ?? (await this.client.users.fetch(memberId).catch(noop) || null);
-
-      if (!member && !user)
+        ?? (await this.client.users.fetch(memberId).catch(noop));
+      if (!user)
         continue;
 
       const data = new ModerationData(this.client)
@@ -42,13 +43,14 @@ class ModerationTask extends Task {
 
       switch (sanction.type) {
         case SanctionTypes.Ban: {
-          if (sanction.informations?.hasSentMessage) {
-            data.setType(SanctionTypes.Unban);
-            await new UnbanAction(data).commit();
-          } else {
+          if (sanction.informations?.shouldAutobanIfNoMessages
+            && member.lastMessageChannelID !== sanction.informations?.banChannelId) {
             data.setReason(messages.moderation.reasons.autoBanInactivity)
               .setType(SanctionTypes.Hardban);
             await new BanAction(data).commit();
+          } else {
+            data.setType(SanctionTypes.Unban);
+            await new UnbanAction(data).commit();
           }
           break;
         }

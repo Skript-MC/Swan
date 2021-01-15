@@ -50,8 +50,11 @@ const SanctionSchema = new Schema({
     default: (): string => nanoid(8),
   },
   informations: {
-    hasSentMessage: {
+    shouldAutobanIfNoMessages: {
       type: Boolean,
+    },
+    banChannelId: {
+      type: String,
     },
   },
   updates: [{

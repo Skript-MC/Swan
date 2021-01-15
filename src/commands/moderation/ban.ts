@@ -70,7 +70,7 @@ class BanCommand extends Command {
     } else {
       args.duration *= 1000;
       data.setDuration(args.duration, true)
-        .setInformations({ hasSentMessage: !args.autoban })
+        .setInformations({ shouldAutobanIfNoMessages: args.autoban })
         .setType(SanctionTypes.Ban);
     }
 

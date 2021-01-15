@@ -5,10 +5,7 @@ import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import Sanction from '../../models/sanction';
-import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
 import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
@@ -25,8 +22,7 @@ class MessageListener extends Listener {
     if (isCommand || message.author.bot || message.system || message.channel instanceof DMChannel)
       return;
 
-    // Run all needed tasks, and stop when there is either no more tasks or
-    // one returned true (= wants to stop).
+    // Run all needed tasks, and stop when there is either no more tasks or one returned true (= wants to stop).
     let task: { done?: boolean; value: boolean } = { done: false, value: false };
     const tasks = this._getTasks(message as GuildMessage);
 
@@ -35,39 +31,12 @@ class MessageListener extends Listener {
   }
 
   private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
-    yield await this._confirmBannedMemberSentMessages(message);
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInNeededChannels(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._uploadFileOnHastebin(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
-    return false;
-  }
-
-  private async _confirmBannedMemberSentMessages(message: GuildMessage): Promise<boolean> {
-    const isBanned = await ModerationHelper.isBanned(message.member.id, false);
-    if (isBanned) {
-      try {
-        await Sanction.updateOne(
-          {
-            memberId: message.member.id,
-            revoked: false,
-            type: SanctionTypes.Ban,
-          },
-          {
-            $set: { informations: { hasSentMessage: true } },
-          },
-        );
-      } catch (unknownError: unknown) {
-        Logger.error('Unable to confirm that the author (which is banned) has sent messages.');
-        Logger.detail(`isBanned: ${isBanned}`);
-        Logger.detail(`Member ID: ${message.member.id}`);
-        Logger.detail(`Message: ${message.url}`);
-        Logger.error((unknownError as Error).stack);
-        return true;
-      }
-    }
     return false;
   }
 
@@ -116,7 +85,7 @@ class MessageListener extends Listener {
     }
 
     for (const quote of quotes) {
-      const channel = await this.client.channels.fetch(quote.channelId);
+      const channel = await this.client.channels.fetch(quote.channelId).catch(noop) || null;
       if (!channel.isText() || channel.type === 'dm')
         continue;
 

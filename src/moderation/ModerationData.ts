@@ -10,8 +10,8 @@ import type {
   GuildTextBasedChannel,
   PersonInformations,
   SanctionInformations,
-  SanctionTypes,
 } from '../types';
+import { SanctionTypes } from '../types';
 import { getPersonFromCache } from '../utils';
 
 
@@ -67,7 +67,6 @@ class ModerationData {
     this.duration = null;        // The duration.
     this.finish = null;          // The finish timestamp.
     this.start = Date.now();     // The start timestamp.
-    this.privateChannel = null;  // The private channel (in case of a ban).
     this.sanctionId = nanoid(8); // The id of the case.
     this.informations = {};      // The additional information to be given to the sanction model.
   }
@@ -80,6 +79,8 @@ class ModerationData {
   public setType(type: SanctionTypes): this {
     this.type = type;
     this.config = configs[this.type].messages;
+    if (this.type === SanctionTypes.Hardban)
+      this.setDuration(-1, false);
     return this;
   }
 

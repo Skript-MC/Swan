@@ -59,8 +59,9 @@ class UnbanAction extends ModerationAction {
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
       } else if (ban.type === SanctionTypes.Ban) {
         await this.data.victim.member.roles.set([]);
-        // TODO: Find channel by id (which will be stored in the database, in the "ban" object).
-        await ModerationHelper.removeChannel(this.data);
+        const channelId = ban.informations?.banChannelId;
+        if (channelId)
+          await ModerationHelper.removeChannel(channelId, this.data.guild);
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
