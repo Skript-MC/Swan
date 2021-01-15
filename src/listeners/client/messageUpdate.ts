@@ -3,7 +3,7 @@ import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import { noop } from '../../utils';
+import { noop, trimText } from '../../utils';
 
 class MessageUpdateListener extends Listener {
   constructor() {
@@ -14,6 +14,18 @@ class MessageUpdateListener extends Listener {
   }
 
   public async exec(oldMessage: Message, newMessage: Message): Promise<void> {
+    // Prevent active members from posting another documentation than Skript-MC's.
+    if (newMessage.member.roles.cache.has(settings.roles.activeMember)
+      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
+      await newMessage.delete();
+      const content = (oldMessage.content.length + messages.miscellaneous.noDocLink.length) >= 2000
+        ? trimText(oldMessage.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
+        : oldMessage.content;
+      await newMessage.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
+
+      return;
+    }
+    // Check for ghostpings.
     if (newMessage.author.bot
       || newMessage.system
       || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff).position)

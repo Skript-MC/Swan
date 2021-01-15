@@ -73,7 +73,7 @@ class MessageListener extends Listener {
 
   private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
     if (message.member.roles.cache.has(settings.roles.activeMember)
-      && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
+      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
       await message.delete();
       const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
