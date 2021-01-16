@@ -45,7 +45,7 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "moment": "^2.29.1",
-    "mongoose": "^5.11.12",
+    "mongoose": "^5.11.10",
     "mongoose-autopopulate": "^0.12.3",
     "nanoid": "^3.1.20",
     "node-cron": "^2.0.3",
