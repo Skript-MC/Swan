@@ -47,15 +47,19 @@ export const documentation = {
   },
   details: {
     name: 'Documentation',
-    content: oneLine`
+    content: stripIndent`
       Permet de chercher une syntaxe de Skript ou d'un addon dans la [documentation de Skript-MC](https://skript-mc.fr/documentation/skript/).
-      Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
-      Tu peux affiner tes recherches grâce à deux options (que tu peux combiner) :
-        - Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
-        - Utilise \`-t=ton_type\` (ou \`--type=ton_type\`) pour rechercher seulement les syntaxes d'un certain type (effet, évènement, condition...).`,
 
-    usage: 'documentation <syntaxe> [--addon=un_addon] [--type=un_type]',
-    examples: ['documentation join', 'documentation tablist --type=effect --addon=skbee'],
+      Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
+
+      Tu peux affiner tes recherches grâce à deux options (que tu peux combiner) :
+
+        • Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
+
+        • Utilise \`-c=ta_categorie\` (ou \`--categorie=ta_categorie\`) pour rechercher seulement les syntaxes d'une certaine catégorie (effet, évènement, condition...).`,
+
+    usage: 'documentation <syntaxe> [--addon=un_addon] [--categorie=une_categorie]',
+    examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
     startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher.',
