@@ -26,7 +26,7 @@ class HelpCommand extends Command {
 
   public async exec(message: GuildMessage, args: HelpCommandArguments): Promise<void> {
     const { command } = args;
-    const { prefix } = this.handler;
+    const { prefix, categories } = this.handler;
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default);
@@ -44,7 +44,7 @@ class HelpCommand extends Command {
         embed.addField(messages.examples, `\`${prefix}${command.details.examples.join(`\` • \`${prefix}`)}\``);
     } else {
       const messages = config.messages.commandsList;
-      const amount = this.handler.categories
+      const amount = categories
         .array()
         .flatMap(category => category.array())
         .length;
@@ -52,7 +52,7 @@ class HelpCommand extends Command {
       embed.setTitle(pupa(messages.title, { amount }))
         .setDescription(pupa(messages.description, { helpCommand: `${prefix}${this.details.usage}` }));
 
-      for (const category of this.handler.categories.array()) {
+      for (const category of categories.array()) {
         embed.addField(
           pupa(messages.category, { categoryName: capitalize(category.id) }),
           category.map(cmd => `\`${cmd.aliases[0]}\``).join(' • '),

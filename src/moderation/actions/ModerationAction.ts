@@ -150,11 +150,11 @@ abstract class ModerationAction {
     await this.logChannel.send(embed);
   }
 
-  protected abstract before(): void | Promise<void>;
+  protected abstract before(): Promise<void> | void;
 
   protected abstract exec(): Promise<void>;
 
-  protected abstract after(): void | Promise<void>;
+  protected abstract after(): Promise<void> | void;
 }
 
 export default ModerationAction;

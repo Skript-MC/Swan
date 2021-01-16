@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
-  extends: ['noftalint', 'noftalint/typescript'],
+  extends: ['noftalint/typescript'],
   ignorePatterns: ['.eslintrc.js', 'node_modules/', 'build/'],
   reportUnusedDisableDirectives: true,
   rules: {

@@ -73,12 +73,12 @@ class MessageListener extends Listener {
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
     const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'gimu');
-    if (!linkRegex.exec(message.content))
+    if (!linkRegex.test(message.content))
       return false;
 
     const quotes = [];
     let text = message.content;
-    while (linkRegex.exec(text)) {
+    while (linkRegex.test(text)) {
       const [full, channelId, messageId] = linkRegex.exec(text);
       quotes.push({ channelId, messageId });
       text = text.replace(full, '');
@@ -150,7 +150,7 @@ class MessageListener extends Listener {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
           .then(elt => elt.first().author.id);
-        if (previousAuthorId !== message.author.id && !message.content.match(/```(?:.|\n)*```/gmu)) {
+        if (previousAuthorId !== message.author.id && !/```(?:.|\n)*```/gmu.test(message.content)) {
           await message.delete();
           await message.member.send(messages.miscellaneous.noSpam);
           await message.member.send(message.content);
@@ -165,7 +165,7 @@ class MessageListener extends Listener {
         && !message.member.roles.cache.has(settings.roles.staff)
         && message.content
           .match(/(?:https?:\/\/\S+)/g)
-          ?.some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
+          ?.some(link => !/(?:https?:\/\/skript-mc\.fr\S+)/g.test(link))
     ) {
       await message.delete();
       await message.member.send(pupa(messages.miscellaneous.invalidMessage, { message }));

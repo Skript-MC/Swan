@@ -20,7 +20,7 @@ class MessageReactionAddListener extends Listener {
     if (user.bot)
       return;
 
-    const { message } = reaction;
+    const { message, emoji, users } = reaction;
     const member = message.guild.members.resolve(user.id);
     const { pollReactions } = settings.miscellaneous;
 
@@ -30,9 +30,9 @@ class MessageReactionAddListener extends Listener {
     if (poll) {
       // Whether they react with the appropriate "answer reaction" for this poll
       if ((poll.questionType === QuestionType.Yesno
-          && pollReactions.yesno.includes(reaction.emoji.name))
+          && pollReactions.yesno.includes(emoji.name))
         || (poll.questionType === QuestionType.Choice
-          && pollReactions.multiple.includes(reaction.emoji.name))) {
+          && pollReactions.multiple.includes(emoji.name))) {
         // Find the reaction they choosed before (undefined if they never answered).
         type PollAnswer = [reactionName: string, votersIds: string[]];
 
@@ -42,7 +42,7 @@ class MessageReactionAddListener extends Listener {
           // We take the reactionName if it exists.
           ?.[0];
 
-        if (previousUserVote === reaction.emoji.name) {
+        if (previousUserVote === emoji.name) {
           // If they already voted for this option
           const infoMessage = await message.channel.send(messages.poll.alreadyVoted);
           setTimeout(async () => {
@@ -54,7 +54,7 @@ class MessageReactionAddListener extends Listener {
           // TODO: Support the "poll.multiple" option
           await Poll.findByIdAndUpdate(poll._id, {
             $pull: { [`votes.${previousUserVote}`]: user.id },
-            $push: { [`votes.${reaction.emoji.name}`]: user.id },
+            $push: { [`votes.${emoji.name}`]: user.id },
           });
 
           if (!poll.anonymous) {
@@ -66,17 +66,17 @@ class MessageReactionAddListener extends Listener {
           // If they want to vote, and have never done so
           await Poll.findByIdAndUpdate(
             poll._id,
-            { $push: { [`votes.${reaction.emoji.name}`]: user.id } },
+            { $push: { [`votes.${emoji.name}`]: user.id } },
           );
         }
         if (poll.anonymous)
-          await reaction.users.remove(user);
-      } else if (pollReactions.specials[1] === reaction.emoji.name && user.id === poll.memberId) {
+          await users.remove(user);
+      } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
         // If the poll's creator clicked the "Stop" button
         await PollManager.end(this.client, poll._id, true);
-      } else if (pollReactions.specials[0] === reaction.emoji.name) {
+      } else if (pollReactions.specials[0] === emoji.name) {
         // If someone clicked the "Info" button
-        await reaction.users.remove(user);
+        await users.remove(user);
         try {
           const text = poll.questionType === QuestionType.Yesno
             ? messages.poll.informationsYesNo
