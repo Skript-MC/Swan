@@ -11,6 +11,7 @@ export default {
   },
   miscellaneous: {
     maxPollDuration: 60 * 60 * 24 * 7, // 7 days in seconds
+    reactionNumbers: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'],
     pollReactions: {
       yesno: ['✅', '❌'],
       multiple: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟', '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭'],
@@ -52,6 +53,7 @@ export default {
     hastebin: 'https://hastebin.com/documents',
     github: 'https://api.github.com',
     addons: 'https://api.skripttools.net/v4/addons/',
+    skriptmc: 'https://skript-mc.fr/api/',
   },
   roles: {
     staff: process.env.STAFF_ROLE,

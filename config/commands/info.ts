@@ -1,4 +1,4 @@
-import { stripIndent } from 'common-tags';
+import { oneLine, stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
@@ -35,6 +35,56 @@ export const addonInfo = {
       unmaintained: ':warning: Addon abandonné',
       unmaintainedDescription: "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser.",
       footer: 'Exécuté par {member.displayName} | Données fournies par https://skripttools.net',
+    },
+  },
+};
+
+export const documentation = {
+  settings: {
+    aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntaxinfo'],
+    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Documentation',
+    content: oneLine`
+      Permet de chercher une syntaxe de Skript ou d'un addon dans la [documentation de Skript-MC](https://skript-mc.fr/documentation/skript/).
+      Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
+      Tu peux affiner tes recherches grâce à deux options (que tu peux combiner) :
+        - Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
+        - Utilise \`-t=ton_type\` (ou \`--type=ton_type\`) pour rechercher seulement les syntaxes d'un certain type (effet, évènement, condition...).`,
+
+    usage: 'documentation <syntaxe> [--addon=un_addon] [--type=un_type]',
+    examples: ['documentation join', 'documentation tablist --type=effect --addon=skbee'],
+  },
+  messages: {
+    startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher.',
+    retryPrompt: 'Mots clés sont invalides, ré-envoie des mots-clés afin de trouver la syntaxe que tu souhaites chercher.',
+    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.net/documentation/skript/>).",
+    searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
+    more: '\n...et {amount} de plus...',
+    embed: {
+      title: '{syntax.name} ({syntax.category} — #{syntax.id})',
+      description: '{syntax.content}',
+      deprecated: ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
+      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({syntax.deprecationLink}) pour la remplacer.',
+      noDescription: 'Aucune description disponible.',
+      version: ':bookmark: À partir de la version',
+      addon: ':link: Addon requis',
+      pattern: ':notepad_spiral: Pattern',
+      patternContent: stripIndent`
+        Dans le pattern, les parties entre \`[]\` sont facultatives, et il faut choisir entre un des choix proposés par ce genre de motif : \`(choix 1| choix 2|choix 3)\`. Enfin, remplacez \`%type%\` par une donnée ou une variable du type indiqué.
+        \`\`\`applescript
+        {pattern}
+        \`\`\`
+      `,
+      example: ':books: Exemples',
+      exampleContent: stripIndent`
+        \`\`\`applescript
+        {example}
+        \`\`\`
+      `,
+      footer: 'Exécuté par {member.displayName} | Données fournies par https://skript-mc.fr/api',
     },
   },
 };
