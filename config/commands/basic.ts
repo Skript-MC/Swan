@@ -6,6 +6,44 @@ const permissions = Permissions.FLAGS;
 
 const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
 
+export const addonPack = {
+  settings: {
+    aliases: ['addonPack'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: "Pack d'add-on",
+    content: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    usage: 'addonPack <version>',
+    examples: ['addonPack 1.16.4', 'addonPack 1.13'],
+  },
+  messages: {
+    startPrompt: 'Ajoute la version Minecraft dont tu souhaites connaître les versions recommandées :',
+    retryPrompt: 'Version Minecraft invalide. Ré-entre ta version :',
+    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie ou demande son ajout.",
+  },
+};
+
+export const autoMessage = {
+  settings: {
+    aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Message rapide',
+    content: "Permet d'envoyer rapidement un message prédéfini.",
+    usage: 'auto <message>',
+    examples: ['auto skript-gui', 'autoMsg 1.8'],
+  },
+  messages: {
+    startPrompt: 'Ajoute une le nom du message rapide que tu souhaites envoyer :',
+    retryPrompt: 'Nom de message invalide. Ré-entre son nom :',
+    notFound: "Aucun message n'existe avec ce nom. Réessaye ou suggère son ajout.",
+  },
+};
+
 export const code = {
   settings: {
     aliases: ['code', 'balise', 'balises'],
@@ -22,6 +60,25 @@ export const code = {
     emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
     startPrompt: 'Ajoute un code à formatter :',
     retryPrompt: 'Code invalide. Ré-entre ton code :',
+  },
+};
+
+export const errorDetails = {
+  settings: {
+    aliases: ['error', 'errorDetails'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: "Détails d'erreur",
+    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    usage: 'error <erreur>',
+    examples: ['error Invalid amount and/or placement of double quotes'],
+  },
+  messages: {
+    startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
+    retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
+    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur ou demande son ajout.",
   },
 };
 

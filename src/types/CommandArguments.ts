@@ -12,6 +12,14 @@ export interface AddonInfoCommandArguments {
   addon: string;
 }
 
+export interface AddonPackCommandArguments {
+  version: string;
+}
+
+export interface AutoMessageCommandArguments {
+  message: string;
+}
+
 export interface BanCommandArgument {
   member: GuildMember;
   duration: number;
@@ -21,6 +29,10 @@ export interface BanCommandArgument {
 
 export interface CodeCommandArguments {
   code: string;
+}
+
+export interface ErrorDetailsCommandArguments {
+  error: string;
 }
 
 export interface DocumentationCommandArguments {
