@@ -1,4 +1,4 @@
-import { oneLine, stripIndent } from 'common-tags';
+import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
