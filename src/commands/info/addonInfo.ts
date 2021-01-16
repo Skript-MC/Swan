@@ -51,11 +51,10 @@ class AddonInfoCommand extends Command {
       return;
     }
 
-    const reactionsNumbers = ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
     let content = pupa(config.messages.searchResults, { matchingAddons, addon });
 
     for (const [i, match] of matchingAddons.entries())
-      content += `\n${reactionsNumbers[i]} ${match.name}`;
+      content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;
 
     if (matchingAddons.length - 10 > 0)
       content += pupa(config.messages.more, { amount: matchingAddons.length - 10 });
@@ -65,17 +64,18 @@ class AddonInfoCommand extends Command {
     const collector = selectorMessage
       .createReactionCollector((reaction, user) => !user.bot
         && user.id === message.author.id
-        && reactionsNumbers.includes(reaction.emoji.name))
+        && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
       .once('collect', async (reaction) => {
         await selectorMessage.reactions.removeAll();
-        await this._sendDetail(message, matchingAddons[reactionsNumbers.indexOf(reaction.emoji.name)].file);
+        const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
+        await this._sendDetail(message, matchingAddons[index].file);
         collector.stop();
       });
 
     for (const [i] of matchingAddons.entries()) {
       if (collector.ended)
         break;
-      await selectorMessage.react(reactionsNumbers[i]);
+      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]);
     }
   }
 
