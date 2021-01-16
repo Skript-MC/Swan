@@ -29,7 +29,7 @@ class DocumentationCommand extends Command {
       }, {
         id: 'category',
         match: 'option',
-        flag: ['--category=', '--cat=', '-c=', '--type=', '-t='],
+        flag: ['--category=', '--categorie=', '--catégorie=', '--cat=', '-c=', '--type=', '-t='],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
@@ -40,7 +40,7 @@ class DocumentationCommand extends Command {
   public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
     const matchingSyntaxes: DocumentationSyntax[] = this.client.skriptMcSyntaxes
       .filter((elt) => {
-        if (args.category && elt.category !== args.category)
+        if (args.category && jaroWinklerDistance(elt.category.toLowerCase(), args.category.toUpperCase()) < 0.9)
           return false;
         if (args.addon && elt.addon.name.toLowerCase() !== args.addon.toLowerCase())
           return false;
