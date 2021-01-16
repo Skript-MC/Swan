@@ -54,10 +54,10 @@ class WarnAction extends ModerationAction {
 
         // 3. Ban the member
         const data = new ModerationData(this.client)
-          .setVictim(this.data.victim.member || this.data.victim.user, false)
+          .setVictim(this.data.victim.member ?? this.data.victim.user, false)
           .setReason(messages.moderation.reasons.autoBanWarnLimitExceeded)
           .setDuration(settings.moderation.warnLimitBanDuration * 1000, true)
-          .setInformations({ hasSentMessage: true })
+          .setInformations({ shouldAutobanIfNoMessages: false })
           .setType(SanctionTypes.Ban);
 
         await new BanAction(data).commit();

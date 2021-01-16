@@ -1,5 +1,5 @@
 import { Permissions, TextChannel } from 'discord.js';
-import type { GuildChannel } from 'discord.js';
+import type { Guild, GuildChannel } from 'discord.js';
 import pupa from 'pupa';
 import settings from '../../config/settings';
 import Sanction from '../models/sanction';
@@ -47,9 +47,9 @@ export default {
     }
   },
 
-  async removeChannel(data: ModerationData): Promise<null> {
-    const filter = (chan: GuildChannel): boolean => chan instanceof TextChannel && chan?.topic?.split(' ')[0] === data.victim.id;
-    const channel = data.guild.channels.cache.find((chan): chan is TextChannel => filter(chan)) as TextChannel;
+  async removeChannel(channelId: string, guild: Guild): Promise<null> {
+    const filter = (chan: GuildChannel): boolean => chan.id === channelId;
+    const channel = guild.channels.cache.find((chan): chan is TextChannel => filter(chan)) as TextChannel;
 
     if (channel) {
       // TODO: Get the message history here and upload it to a file.

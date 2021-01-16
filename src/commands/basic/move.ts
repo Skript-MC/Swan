@@ -1,4 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
+import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import { move as config } from '../../../config/commands/basic';
@@ -80,9 +81,11 @@ class MoveCommand extends Command {
       const repostMessage = await targetedChannel.send(targetedMessage.content);
 
       const collector = informationEmbed
-        .createReactionCollector((r, user) => (r.emoji.id || r.emoji.name) === settings.emojis.remove
+        .createReactionCollector(
+          (r: MessageReaction, user: User) => (r.emoji.id || r.emoji.name) === settings.emojis.remove
             && (user.id === message.author.id || user.id === targetedMessage.author.id)
-            && !user.bot)
+            && !user.bot,
+          )
         .on('collect', async () => {
           try {
             collector.stop();

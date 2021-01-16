@@ -5,10 +5,7 @@ import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
-import Sanction from '../../models/sanction';
-import ModerationHelper from '../../moderation/ModerationHelper';
 import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
 import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
@@ -25,8 +22,7 @@ class MessageListener extends Listener {
     if (isCommand || message.author.bot || message.system || message.channel instanceof DMChannel)
       return;
 
-    // Run all needed tasks, and stop when there is either no more tasks or
-    // one returned true (= wants to stop).
+    // Run all needed tasks, and stop when there is either no more tasks or one returned true (= wants to stop).
     let task: { done?: boolean; value: boolean } = { done: false, value: false };
     const tasks = this._getTasks(message as GuildMessage);
 
@@ -34,46 +30,19 @@ class MessageListener extends Listener {
       task = await tasks.next();
   }
 
-  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, null> {
-    yield await this._confirmBannedMemberSentMessages(message);
+  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInNeededChannels(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._uploadFileOnHastebin(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
-    return null;
-  }
-
-  private async _confirmBannedMemberSentMessages(message: GuildMessage): Promise<boolean> {
-    const isBanned = await ModerationHelper.isBanned(message.member.id, false);
-    if (isBanned) {
-      try {
-        await Sanction.updateOne(
-          {
-            memberId: message.member.id,
-            revoked: false,
-            type: SanctionTypes.Ban,
-          },
-          {
-            $set: { informations: { hasSentMessage: true } },
-          },
-        );
-      } catch (unknownError: unknown) {
-        Logger.error('Unable to confirm that the author (which is banned) has sent messages.');
-        Logger.detail(`isBanned: ${isBanned}`);
-        Logger.detail(`Member ID: ${message.member.id}`);
-        Logger.detail(`Message: ${message.url}`);
-        Logger.error((unknownError as Error).stack);
-        return true;
-      }
-    }
     return false;
   }
 
   private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
     if (message.member.roles.cache.has(settings.roles.activeMember)
-      && (message.content.includes('docs.skunity.com') || message.content.includes('skripthub.net/docs/'))) {
+      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
       await message.delete();
       const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
@@ -104,19 +73,19 @@ class MessageListener extends Listener {
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
     const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'gimu');
-    if (!linkRegex.exec(message.content))
+    if (!linkRegex.test(message.content))
       return false;
 
     const quotes = [];
     let text = message.content;
-    while (linkRegex.exec(text)) {
+    while (linkRegex.test(text)) {
       const [full, channelId, messageId] = linkRegex.exec(text);
       quotes.push({ channelId, messageId });
       text = text.replace(full, '');
     }
 
     for (const quote of quotes) {
-      const channel = await this.client.channels.fetch(quote.channelId);
+      const channel = await this.client.channels.fetch(quote.channelId).catch(noop) || null;
       if (!channel.isText() || channel.type === 'dm')
         continue;
 
@@ -152,11 +121,8 @@ class MessageListener extends Listener {
   }
 
   private async _uploadFileOnHastebin(message: GuildMessage): Promise<boolean> {
-    if (message.attachments.size === 0)
-      return false;
-
     const attachment = message.attachments.first();
-    if (!settings.miscellaneous.hastebinExtensions.some(ext => attachment.name.endsWith(ext)))
+    if (!attachment || !settings.miscellaneous.hastebinExtensions.some(ext => attachment?.name?.endsWith(ext)))
       return false;
 
     const attachmentContent = await axios.get(attachment.url).catch(noop);
@@ -184,7 +150,7 @@ class MessageListener extends Listener {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
           .then(elt => elt.first().author.id);
-        if (previousAuthorId !== message.author.id && !message.content.match(/```(?:.|\n)*```/gmu)) {
+        if (previousAuthorId !== message.author.id && !/```(?:.|\n)*```/gmu.test(message.content)) {
           await message.delete();
           await message.member.send(messages.miscellaneous.noSpam);
           await message.member.send(message.content);
@@ -197,9 +163,9 @@ class MessageListener extends Listener {
   private async _checkCreationsChannelRules(message: GuildMessage): Promise<boolean> {
     if (message.channel.id === settings.channels.creations
         && !message.member.roles.cache.has(settings.roles.staff)
-        && message?.content
+        && message.content
           .match(/(?:https?:\/\/\S+)/g)
-          .some(link => !link.match(/(?:https?:\/\/skript-mc\.fr\S+)/g))
+          ?.some(link => !/(?:https?:\/\/skript-mc\.fr\S+)/g.test(link))
     ) {
       await message.delete();
       await message.member.send(pupa(messages.miscellaneous.invalidMessage, { message }));

@@ -30,7 +30,7 @@ class BanAction extends ModerationAction {
   }
 
   private async _hardban(): Promise<void> {
-    await (this.data.victim.member || this.data.victim.user)
+    await (this.data.victim.member ?? this.data.victim.user)
       ?.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695')
       .catch(noop);
 
@@ -126,7 +126,29 @@ class BanAction extends ModerationAction {
   }
 
   private async _ban(): Promise<void> {
-    // 1. Add to the database
+    // 1. Create the private channel
+    let channel: TextChannel;
+    try {
+      channel = await ModerationHelper.getOrCreateChannel(this.data);
+      this.data.setInformations({ banChannelId: channel.id });
+
+      const explanation = pupa(messages.moderation.banExplanation, {
+        action: this,
+        duration: this.formatDuration(this.data.duration),
+      });
+      const message = await channel.send(explanation).catch(noop);
+      if (message)
+        await message.pin().catch(noop);
+    } catch (unknownError: unknown) {
+      this.errorState.addError(
+        new ModerationError()
+          .from(unknownError as Error)
+          .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
+          .addDetail('Manage Channel Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+      );
+    }
+
+    // 2. Add to the database
     try {
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },
@@ -145,7 +167,7 @@ class BanAction extends ModerationAction {
       );
     }
 
-    // 2. Add needed roles
+    // 3. Add needed roles
     try {
       const role = this.data.guild.roles.resolve(settings.roles.ban);
       await this.data.victim.member?.roles.set([role]);
@@ -158,28 +180,6 @@ class BanAction extends ModerationAction {
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Manage Role Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
-      );
-    }
-
-    // 3. Create the private channel
-    let channel: TextChannel;
-    try {
-      channel = await ModerationHelper.getOrCreateChannel(this.data);
-      this.data.setPrivateChannel(channel);
-
-      const explanation = pupa(messages.moderation.banExplanation, {
-        action: this,
-        duration: this.formatDuration(this.data.duration),
-      });
-      const message = await channel.send(explanation).catch(noop);
-      if (message)
-        await message.pin().catch(noop);
-    } catch (unknownError: unknown) {
-      this.errorState.addError(
-        new ModerationError()
-          .from(unknownError as Error)
-          .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
-          .addDetail('Manage Channel Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
   }

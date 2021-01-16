@@ -17,8 +17,8 @@ function jaroWinklerDistance(s1: string, s2: string): number {
 
   let m = 0;
   const range = (Math.floor(Math.max(s1.length, s2.length) / 2)) - 1;
-  const s1Matches: boolean[] = new Array(s1.length);
-  const s2Matches: boolean[] = new Array(s2.length);
+  const s1Matches: boolean[] = Array.from({ length: s1.length });
+  const s2Matches: boolean[] = Array.from({ length: s2.length });
 
   for (const [i, element] of [...s1].entries()) {
     const low = i >= range ? i - range : 0;

@@ -15,6 +15,9 @@ class ReadyListener extends Listener {
   public exec(): void {
     this.client.guild = this.client.guilds.resolve(settings.bot.guild);
 
+    if (!this.client.guild)
+      throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
+
     const resolve = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan);
     const isText = (chan: GuildChannel): boolean => chan instanceof TextChannel;
 

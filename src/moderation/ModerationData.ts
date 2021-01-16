@@ -10,8 +10,8 @@ import type {
   GuildTextBasedChannel,
   PersonInformations,
   SanctionInformations,
-  SanctionTypes,
 } from '../types';
+import { SanctionTypes } from '../types';
 import { getPersonFromCache } from '../utils';
 
 
@@ -39,7 +39,7 @@ class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument: GuildMessage | GuildTextBasedChannel | AkairoClient) {
+  constructor(argument: AkairoClient | GuildMessage | GuildTextBasedChannel) {
     if (argument instanceof Message) {
       this.moderator = argument.member;
       this.guild = argument.guild;
@@ -67,7 +67,6 @@ class ModerationData {
     this.duration = null;        // The duration.
     this.finish = null;          // The finish timestamp.
     this.start = Date.now();     // The start timestamp.
-    this.privateChannel = null;  // The private channel (in case of a ban).
     this.sanctionId = nanoid(8); // The id of the case.
     this.informations = {};      // The additional information to be given to the sanction model.
   }
@@ -80,6 +79,8 @@ class ModerationData {
   public setType(type: SanctionTypes): this {
     this.type = type;
     this.config = configs[this.type].messages;
+    if (this.type === SanctionTypes.Hardban)
+      this.setDuration(-1, false);
     return this;
   }
 
@@ -89,8 +90,8 @@ class ModerationData {
     return this;
   }
 
-  public setReason(reason: string): this {
-    if (reason?.length > 0)
+  public setReason(reason?: string): this {
+    if (reason)
       this.reason = reason;
     return this;
   }

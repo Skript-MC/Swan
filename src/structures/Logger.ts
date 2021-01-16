@@ -34,13 +34,15 @@ export default {
     );
   },
 
-  error(message: string): void {
-    console.error(
-      chalk.cyan('Swan:'),
-      chalk.bold.blue('ERROR  '),
-      chalk.italic.gray(`(${this._getTime()})`),
-      chalk.red(`✖ ${message}`),
-    );
+  error(message?: string): void {
+    if (message) {
+      console.error(
+        chalk.cyan('Swan:'),
+        chalk.bold.blue('ERROR  '),
+        chalk.italic.gray(`(${this._getTime()})`),
+        chalk.red(`✖ ${message}`),
+      );
+    }
   },
 
   detail(message: string, neutral = false): void {

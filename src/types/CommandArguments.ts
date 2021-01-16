@@ -33,6 +33,11 @@ export interface CodeCommandArguments {
 
 export interface ErrorDetailsCommandArguments {
   error: string;
+  
+export interface DocumentationCommandArguments {
+  query: string;
+  addon?: string;
+  category?: string;
 }
 
 export interface HelpCommandArguments {

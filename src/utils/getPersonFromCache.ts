@@ -23,7 +23,7 @@ function getPersonFromCache(
   // Get the User from the member, the personResolvable or the cache.
   const user: User = personResolvable instanceof User
     ? personResolvable
-    : member.user ?? client.users.resolve(personResolvable);
+    : member?.user ?? client.users.resolve(personResolvable);
 
   const missingData = resolveMemberAndUser
     ? !member || !user // If we are missing either the member or the user

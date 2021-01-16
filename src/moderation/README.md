@@ -280,8 +280,11 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
     "default": "nanoid(8)"
   },
   "informations": {
-    "hasSentMessage": {
-      "type": "Boolean"
+    "shouldAutobanIfNoMessages": {
+      "type": "String"
+    },
+    "banChannelId": {
+      "type": "String"
     }
   },
   "updates": [{
@@ -323,7 +326,8 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 - `revoked` indique si la sanction est terminée (révoquée) ou non.
 - `sanctionId` est l'identifiant unique de la sanction (8 caractères).
 - `informations` est un objet comprenant diverses informations concernant la sanction :
-  - `hasSentMessage` est un boolean qui ne sera définit que si la sanction est un ban. Il indique si l'utilisateur a envoyé des messages en étant banni (pour le drapeau `--autoban`).
+  - `shouldAutobanIfNoMessages` est un boolean qui sera définit que si la sanction est un ban. Il indique si le membre doit être bannit quand, à la fin de la sanction il doit être banni ou débanni s'il n'a toujours pas envoyé de message dans son salon privé (`informations.banChannelId`).
+  - `banChannelId` est un l'id du salon privé du membre s'il est banni. S'il n'est pas banni, ce champs ne sera pas définit.
 - `updates` est un tableau contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
   - `date` est le timestamp de création de la modification.
   - `moderator` est l'ID Discord du modérateur qui a fait la modification.
