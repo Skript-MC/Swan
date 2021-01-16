@@ -94,10 +94,10 @@ export interface DataResult {
 }
 
 /** A TextChannel which is in a guild */
-export type GuildTextBasedChannel = TextChannel | NewsChannel;
+export type GuildTextBasedChannel = NewsChannel | TextChannel;
 
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
-export type GuildMessage = { channel: GuildTextBasedChannel } & Message;
+export type GuildMessage = Message & { channel: GuildTextBasedChannel };
 
 // TODO: Better type the sanction types with 2 distincts types: creations and revokations.
 // If we do that, then we will need to find a better way to create the SanctionTypes enum.
@@ -208,7 +208,7 @@ export interface SanctionUpdate {
 /** Interface for the "Sanction"'s mongoose schema */
 export interface SanctionBase {
   memberId: string;
-  user: Types.ObjectId | ConvictedUserDocument;
+  user: ConvictedUserDocument | Types.ObjectId;
   type: SanctionTypes;
   moderator: string;
   start: number;

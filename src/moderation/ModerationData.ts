@@ -39,7 +39,7 @@ class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument: GuildMessage | GuildTextBasedChannel | AkairoClient) {
+  constructor(argument: AkairoClient | GuildMessage | GuildTextBasedChannel) {
     if (argument instanceof Message) {
       this.moderator = argument.member;
       this.guild = argument.guild;

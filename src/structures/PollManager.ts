@@ -11,7 +11,7 @@ export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
     const poll = await Poll.findByIdAndRemove(pollId);
 
-    const channel = client.guild.channels.resolve(poll.channelId) as TextChannel | NewsChannel;
+    const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
     if (!channel)
       return;
 

@@ -24,7 +24,7 @@ class ModerationTask extends Task {
     });
 
     for (const sanction of sanctions) {
-      const { memberId } = sanction;
+      const { memberId, type, informations } = sanction;
 
       const member = this.client.guild.members.cache.get(memberId)
         ?? (await this.client.guild.members.fetch(memberId).catch(noop));
@@ -41,10 +41,10 @@ class ModerationTask extends Task {
         .setVictim(member ?? user, false)
         .setReason(messages.moderation.reasons.autoRevoke);
 
-      switch (sanction.type) {
+      switch (type) {
         case SanctionTypes.Ban: {
-          if (sanction.informations?.shouldAutobanIfNoMessages
-            && member.lastMessageChannelID !== sanction.informations?.banChannelId) {
+          if (informations?.shouldAutobanIfNoMessages
+            && member.lastMessageChannelID !== informations?.banChannelId) {
             data.setReason(messages.moderation.reasons.autoBanInactivity)
               .setType(SanctionTypes.Hardban);
             await new BanAction(data).commit();

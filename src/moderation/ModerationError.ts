@@ -25,7 +25,7 @@ class ModerationError extends Error {
     return this;
   }
 
-  public addDetail(name: string, value: string | boolean): this {
+  public addDetail(name: string, value: boolean | string): this {
     this.details.set(name, value.toString());
     return this;
   }
