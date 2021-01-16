@@ -23,6 +23,12 @@ export interface CodeCommandArguments {
   code: string;
 }
 
+export interface DocumentationCommandArguments {
+  query: string;
+  addon?: string;
+  category?: string;
+}
+
 export interface HelpCommandArguments {
   command: Command;
 }

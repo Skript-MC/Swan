@@ -13,6 +13,8 @@ import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
+import type { DocumentationAddon, DocumentationFullAddon } from './types';
+
 import { getDuration } from './utils';
 
 class SwanClient extends AkairoClient {
@@ -49,6 +51,7 @@ class SwanClient extends AkairoClient {
       privateChannelsCategory: null,
     };
     this.addonsVersions = [];
+    this.skriptMcSyntaxes = [];
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
 
@@ -136,6 +139,8 @@ class SwanClient extends AkairoClient {
     void this._loadCommandStats();
     Logger.info('Loading addons from SkriptTools');
     void this._loadAddons();
+    Logger.info('Loading syntaxes from Skript-MC');
+    void this._loadSkriptMcSyntaxes();
 
     Logger.info('Client initialization finished');
   }
@@ -213,6 +218,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadAddons(): Promise<void> {
     try {
+      // FIXME: Implicit any for allAddons
       const allAddons = await axios(settings.apis.addons).then(res => res?.data?.data);
       if (!allAddons)
         return;
@@ -224,6 +230,45 @@ class SwanClient extends AkairoClient {
       }
     } catch (unknownError: unknown) {
       Logger.error('Could not load some addons:');
+      Logger.error((unknownError as Error).stack);
+    }
+  }
+
+  private async _loadSkriptMcSyntaxes(): Promise<void> {
+    try {
+      const token = `?api_key=${process.env.SKRIPTMC_TOKEN}`;
+      const allAddons: DocumentationAddon[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
+      if (!allAddons)
+        return;
+
+      // FIXME: Find a more optimized way of doing this, this is horrible
+      // - Don't iterate through all syntaxes inside all addons... Double for loop and useless performance loss
+      // - Don't do the async expression inside the loop
+      // - Add an endpoint on the API to bulk-fetch syntaxes with already all of those information?
+      for (const addon of allAddons) {
+        try {
+          const fullAddon: DocumentationFullAddon = await axios(`${settings.apis.skriptmc}addons/${addon.slug}${token}`).then(res => res?.data);
+          if (!fullAddon || !fullAddon.articles)
+            throw new Error(`No syntax to load for addon ${addon.name}`);
+
+          const addonObject = {
+            name: addon.name,
+            documentationUrl: addon.documentationUrl,
+            dependency: addon.dependency,
+          };
+
+          for (const syntax of fullAddon.articles)
+            syntax.addon = addonObject;
+
+          this.skriptMcSyntaxes.push(...fullAddon.articles);
+        } catch (unknownError: unknown) {
+          Logger.error(`Could not load syntaxes from addon ${addon.name}`);
+          Logger.error((unknownError as Error).stack);
+          continue;
+        }
+      }
+    } catch (unknownError: unknown) {
+      Logger.error('Could not fetch addons:');
       Logger.error((unknownError as Error).stack);
     }
   }

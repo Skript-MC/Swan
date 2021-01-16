@@ -43,6 +43,43 @@ export interface AddonResponse {
   };
 }
 
+/**
+ * Represent the objects that are in the "articles" array that is returned
+ * when calling the Skript-MC's API when requesting a specific addon.
+ */
+export interface DocumentationSyntax {
+  addon: Pick<DocumentationAddon, 'dependency' | 'documentationUrl' | 'name'>;
+  id: number;
+  name: string;
+  content: string;
+  version: string;
+  example: string;
+  pattern: string;
+  category: 'conditions' | 'effets' | 'evenements' | 'expressions' | 'fonctions' | 'types';
+  documentationUrl: string;
+  deprecation?: string | null;
+  deprecationLink?: string | null;
+}
+
+/** Represent the object that is returned by the Skript-MC's API for addons, without the syntax list */
+export interface DocumentationAddon {
+  id: number;
+  name: string;
+  version: string;
+  description: string;
+  slug: string;
+  github: string;
+  author: string;
+  documentationUrl: string;
+  dependency?: string | null;
+}
+
+/** Represent the object that is returned by the Skript-MC's API for addons */
+export interface DocumentationFullAddon extends DocumentationAddon {
+  articles: DocumentationSyntax[];
+}
+
+/** The types of objects that is returned by the `tokenize()` function in `getDuration()` */
 export interface DurationPart {
   number: string;
   unit: string;

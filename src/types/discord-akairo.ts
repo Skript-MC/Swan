@@ -5,7 +5,7 @@ import type {
 } from 'discord-akairo';
 import type { Guild, TextChannel } from 'discord.js';
 import type TaskHandler from '../structures/TaskHandler';
-import type { GuildMessage } from './index';
+import type { DocumentationSyntax, GuildMessage } from './index';
 
 
 declare module 'discord-akairo' {
@@ -51,6 +51,8 @@ declare module 'discord-akairo' {
 
   interface AkairoClient {
     addonsVersions: string[];
+    skriptMcSyntaxes: DocumentationSyntax[];
+
     currentlyBanning: string[];
     currentlyUnbanning: string[];
     cachedChannels: CachedChannels;
