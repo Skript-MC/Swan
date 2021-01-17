@@ -5,9 +5,9 @@ import { nanoid } from 'nanoid';
 import * as configs from '../../config/commands/moderation';
 import messages from '../../config/messages';
 import type {
-  DataResult,
   GuildMessage,
   GuildTextBasedChannel,
+  ModerationDataResult,
   PersonInformations,
   SanctionInformations,
 } from '../types';
@@ -114,7 +114,7 @@ class ModerationData {
     return this;
   }
 
-  public toSchema(): DataResult {
+  public toSchema(): ModerationDataResult {
     return {
       memberId: this.victim.id,
       type: this.type,
