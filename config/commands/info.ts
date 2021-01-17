@@ -93,6 +93,44 @@ export const documentation = {
   },
 };
 
+export const skriptInfo = {
+  settings: {
+    aliases: ['skript', 'skriptinfo'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Skript Info',
+    content: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
+    usage: 'skriptinfo',
+    examples: ['skriptinfo'],
+  },
+  messages: {
+    embed: {
+      downloadTitle: '📥 Informations sur les Versions',
+      informationsTitle: '📄 Informations sur Skript',
+      information: stripIndent`
+        :small_blue_diamond: Pour installer Skript, vous pouvez simplement éteindre votre serveur, glisser le plugin dans votre dossier \`/plugins/\`, et redémarrer votre serveur.
+
+        :small_blue_diamond: Skript ne fonctionnera pas avec Bukkit, il faut avoir Spigot ou un dérivé comme PaperSpigot. Ce dernier est fortement conseillé, car il vous permettera d'utiliser plus de fonctionnalitées de Skript.
+
+        :small_blue_diamond: La dernière version de Skript ne supporte que les dernières versions de Minecraft, à partir de la 1.9.
+
+        :small_blue_diamond: Pour utiliser Skript en 1.8.x, vous pouvez essayer d'utiliser [cette version non officielle](<https://github.com/Matocolotoe/Skript-1.8/releases>) qui est une adaptation des dernières versions de Skript. Sinon, vous pouvez utiliser la [2.2-dev27](<https://github.com/bensku/Skript/releases/tag/dev27>) ou la [2.2-dev36](<https://github.com/bensku/Skript/releases/tag/dev36>).
+
+        :small_blue_diamond: Pour les versions 1.7.x et antérieures, vous pouvez essayer d'utiliser [une de ces versions](<https://dev.bukkit.org/projects/skript/files>).
+      `,
+      versionsWithPrerelease: stripIndent`
+        [Dernière version : {latest.tag_name}]({latest.html_url})
+
+        [Dernière version stable : {latestStable.tag_name}]({latestStable.html_url})
+      `,
+      versionsWithoutPrerelease: '[Dernière version : {latestStable.tag_name}]({latestStable.html_url})',
+      footer: 'Exécuté par {member.displayName} | Données fournies par https://github.com',
+    },
+  },
+};
+
 export const userInfo = {
   settings: {
     aliases: ['userinfo'],
