@@ -51,6 +51,9 @@ export interface AddonResponse {
   };
 }
 
+/** Represent the object that is returned when calling the skripttools API to get all addons */
+export type AddonListResponse = Record<string, string[] | null>;
+
 /**
  * Represent the objects that are in the "articles" array that is returned
  * when calling the Skript-MC's API when requesting a specific addon.

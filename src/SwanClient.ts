@@ -13,7 +13,7 @@ import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
-import type { DocumentationAddon, DocumentationFullAddon } from './types';
+import type { AddonListResponse, DocumentationAddon, DocumentationFullAddon } from './types';
 
 import { getDuration } from './utils';
 
@@ -218,8 +218,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadAddons(): Promise<void> {
     try {
-      // FIXME: Implicit any for allAddons
-      const allAddons = await axios(settings.apis.addons).then(res => res?.data?.data);
+      const allAddons: AddonListResponse = await axios(settings.apis.addons).then(res => res?.data?.data);
       if (!allAddons)
         return;
 
