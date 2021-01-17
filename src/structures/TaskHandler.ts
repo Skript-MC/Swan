@@ -46,27 +46,25 @@ class TaskHandler extends AkairoHandler {
     if (!task || !(task instanceof Task))
       throw new AkairoError('MODULE_NOT_FOUND', this.classToHandle.name, id);
 
+
+    const taskFunction = async (): Promise<void> => {
+      try {
+        await task.exec();
+      } catch (unknownError: unknown) {
+        this.emit('error', unknownError as Error, task);
+      }
+    };
+
     if (typeof task.interval === 'number') {
-      const interval = setInterval(async () => {
-        try {
-          await task.exec();
-        } catch (unknownError: unknown) {
-          this.emit('error', unknownError as Error, task);
-        }
-      }, task.interval);
+      const interval = setInterval(taskFunction, task.interval);
       this.tasks.set(task.id, { interval });
     } else if (cron.validate(task.cron)) {
-      const schedule = cron.schedule(task.cron, async () => {
-        try {
-          await task.exec();
-        } catch (unknownError: unknown) {
-          this.emit('error', unknownError as Error, task);
-        }
-      });
+      const schedule = cron.schedule(task.cron, taskFunction);
       this.tasks.set(task.id, { schedule });
     } else {
       throw new AkairoError('INVALID_TYPE', 'cron or interval', `cron schedule or a number (${id})`);
     }
+    void taskFunction();
 
     return task;
   }
