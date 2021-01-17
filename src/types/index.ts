@@ -18,6 +18,11 @@ import type {
 } from 'mongoose';
 import type cron from 'node-cron';
 
+
+/* ****************** */
+/*  API Result Types  */
+/* ****************** */
+
 /** Types for the Github API's releases endpoint */
 type RawGithubReleaseResponse = Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
 
@@ -25,17 +30,11 @@ export type GithubRelease = RawGithubReleaseResponse['data'][0];
 export type GithubPrerelease = GithubRelease & { prerelease: true };
 export type GithubStableRelease = GithubRelease & { prerelease: false };
 
-/** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
-export interface MatchingAddon {
-  file: string;
-  name: string;
-}
-
 /**
  * Represent the object that is returned when calling the skripttools API
  * when requesting informations for a specific addon.
  */
-export interface AddonResponse {
+export interface SkriptToolsAddonResponse {
   author: string[];
   plugin: string;
   version: string;
@@ -52,14 +51,14 @@ export interface AddonResponse {
 }
 
 /** Represent the object that is returned when calling the skripttools API to get all addons */
-export type AddonListResponse = Record<string, string[] | null>;
+export type SkriptToolsAddonListResponse = Record<string, string[] | null>;
 
 /**
  * Represent the objects that are in the "articles" array that is returned
  * when calling the Skript-MC's API when requesting a specific addon.
  */
-export interface DocumentationSyntax {
-  addon: Pick<DocumentationAddon, 'dependency' | 'documentationUrl' | 'name'>;
+export interface SkriptMcDocumentationSyntaxResponse {
+  addon: Pick<SkriptMcDocumentationAddonResponse, 'dependency' | 'documentationUrl' | 'name'>;
   id: number;
   name: string;
   content: string;
@@ -73,7 +72,7 @@ export interface DocumentationSyntax {
 }
 
 /** Represent the object that is returned by the Skript-MC's API for addons, without the syntax list */
-export interface DocumentationAddon {
+export interface SkriptMcDocumentationAddonResponse {
   id: number;
   name: string;
   version: string;
@@ -86,8 +85,32 @@ export interface DocumentationAddon {
 }
 
 /** Represent the object that is returned by the Skript-MC's API for addons */
-export interface DocumentationFullAddon extends DocumentationAddon {
-  articles: DocumentationSyntax[];
+export interface SkriptMcDocumentationFullAddonResponse extends SkriptMcDocumentationAddonResponse {
+  articles: SkriptMcDocumentationSyntaxResponse[];
+}
+
+/* ********************************************* */
+/*  Miscellaneous types used at specific places  */
+/* ********************************************* */
+
+/** Types of rules for where a command can be executed */
+export enum Rules {
+  OnlyBotChannel,
+  NoHelpChannel,
+  OnlyHelpChannel,
+}
+
+/** Informations associated to a task in the TaskHandler */
+export interface TaskInformations {
+  interval?: NodeJS.Timeout;
+  schedule?: cron.ScheduledTask;
+}
+
+
+/** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
+export interface MatchingAddon {
+  file: string;
+  name: string;
 }
 
 /** The types of objects that is returned by the `tokenize()` function in `getDuration()` */
@@ -95,6 +118,16 @@ export interface DurationPart {
   number: string;
   unit: string;
 }
+
+/** A TextChannel which is in a guild */
+export type GuildTextBasedChannel = NewsChannel | TextChannel;
+
+/** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
+export type GuildMessage = Message & { channel: GuildTextBasedChannel };
+
+/* ************************** */
+/*  Various Moderation Types  */
+/* ************************** */
 
 /** Represent a Kick entry in the guild audit logs */
 export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
@@ -113,7 +146,6 @@ export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | S
 /** The name of the fields of the TrackedSanctionTypes */
 export type TrackedFieldNames = 'lastBanId' | 'lastMuteId';
 
-
 /** Represent the victim object of ModerationData#victim */
 export interface PersonInformations {
   id?: string;
@@ -128,7 +160,7 @@ export interface SanctionInformations {
 }
 
 /** The object returned by ModerationData#toSchema */
-export interface DataResult {
+export interface ModerationDataResult {
   memberId: string;
   type: SanctionTypes;
   moderator: string;
@@ -140,12 +172,6 @@ export interface DataResult {
   informations: SanctionInformations;
   sanctionId: string;
 }
-
-/** A TextChannel which is in a guild */
-export type GuildTextBasedChannel = NewsChannel | TextChannel;
-
-/** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
-export type GuildMessage = Message & { channel: GuildTextBasedChannel };
 
 // TODO: Better type the sanction types with 2 distincts types: creations and revokations.
 // If we do that, then we will need to find a better way to create the SanctionTypes enum.
@@ -185,6 +211,10 @@ export enum SanctionsUpdates {
   Duration = 'duration',
 }
 
+/* **************************** */
+/*  CommandStat Database Types  */
+/* **************************** */
+
 /** Interface for the "CommandStat"'s mongoose schema */
 export interface CommandStatBase {
   commandId: string;
@@ -197,6 +227,11 @@ export interface CommandStatDocument extends CommandStatBase, Document {}
 /** Interface for the "CommandStat"'s mongoose model */
 export type CommandStatModel = Model<CommandStatDocument>;
 
+/* ********************* */
+/*  Poll Database Types  */
+/* ********************* */
+
+/** The different question types available for the poll command */
 export enum QuestionType {
   Yesno,
   Choice,
@@ -224,6 +259,10 @@ export interface PollDocument extends PollBase, Document {}
 /** Interface for the "Poll"'s mongoose model */
 export type PollModel = Model<PollDocument>;
 
+/* ************************ */
+/*  Message Database Types  */
+/* ************************ */
+
 /** Interface for the "Message"'s mongoose schema */
 export interface MessageBase {
   messageType: string;
@@ -237,6 +276,10 @@ export interface MessageDocument extends MessageBase, Document {}
 
 /** Interface for the "Message"'s mongoose model */
 export type MessageModel = Model<MessageDocument>;
+
+/* ****************************** */
+/*  ConvictedUser Database Types  */
+/* ****************************** */
 
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
@@ -256,6 +299,10 @@ export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
     doc: ConvictedUserBase,
   ): Promise<ConvictedUserDocument>;
 }
+
+/* ************************* */
+/*  Sanction Database Types  */
+/* ************************* */
 
 /** Type of updates in SanctionDocument.updates */
 export interface SanctionUpdate {
@@ -304,16 +351,3 @@ export interface SanctionPopulatedDocument extends SanctionBaseDocument {
 
 /** Interface for the "Sanction"'s mongoose model */
 export type SanctionModel = Model<SanctionDocument>;
-
-/** Types of rules for where a command can be executed */
-export enum Rules {
-  OnlyBotChannel,
-  NoHelpChannel,
-  OnlyHelpChannel,
-}
-
-/** Informations associated to a task in the TaskHandler */
-export interface TaskInformations {
-  interval?: NodeJS.Timeout;
-  schedule?: cron.ScheduledTask;
-}

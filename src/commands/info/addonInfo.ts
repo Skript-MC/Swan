@@ -7,7 +7,7 @@ import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
-import type { AddonResponse, GuildMessage, MatchingAddon } from '../../types';
+import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '../../types';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
 import { convertFileSize, jaroWinklerDistance } from '../../utils';
 
@@ -80,7 +80,7 @@ class AddonInfoCommand extends Command {
   }
 
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
-    const addon: AddonResponse = await axios(settings.apis.addons + addonFile)
+    const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
       .catch((err) => { Logger.error(err.message); });
 

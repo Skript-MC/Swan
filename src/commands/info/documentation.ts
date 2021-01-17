@@ -5,7 +5,7 @@ import pupa from 'pupa';
 import { documentation as config } from '../../../config/commands/info';
 import settings from '../../../config/settings';
 import type{ DocumentationCommandArguments } from '../../types/CommandArguments';
-import type { DocumentationSyntax, GuildMessage } from '../../types/index';
+import type { GuildMessage, SkriptMcDocumentationSyntaxResponse } from '../../types/index';
 import { jaroWinklerDistance } from '../../utils';
 
 
@@ -38,7 +38,7 @@ class DocumentationCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
-    const matchingSyntaxes: DocumentationSyntax[] = this.client.skriptMcSyntaxes
+    const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.skriptMcSyntaxes
       .filter((elt) => {
         if (args.category && jaroWinklerDistance(elt.category.toLowerCase(), args.category.toUpperCase()) < 0.9)
           return false;
@@ -97,7 +97,7 @@ class DocumentationCommand extends Command {
     }
   }
 
-  private async _sendDetail(message: GuildMessage, syntax: DocumentationSyntax): Promise<void> {
+  private async _sendDetail(message: GuildMessage, syntax: SkriptMcDocumentationSyntaxResponse): Promise<void> {
     const embedMessages = config.messages.embed;
 
     const embed = new MessageEmbed()

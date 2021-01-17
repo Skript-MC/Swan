@@ -6,10 +6,10 @@ import type {
 import type { Guild, TextChannel } from 'discord.js';
 import type TaskHandler from '../structures/TaskHandler';
 import type {
- DocumentationSyntax,
- GithubPrerelease,
- GithubStableRelease,
- GuildMessage,
+  GithubPrerelease,
+  GithubStableRelease,
+  GuildMessage,
+  SkriptMcDocumentationSyntaxResponse,
 } from './index';
 
 
@@ -56,7 +56,7 @@ declare module 'discord-akairo' {
 
   interface AkairoClient {
     addonsVersions: string[];
-    skriptMcSyntaxes: DocumentationSyntax[];
+    skriptMcSyntaxes: SkriptMcDocumentationSyntaxResponse[];
     githubCache: {
       lastPrerelease: GithubPrerelease;
       lastStableRelease: GithubStableRelease;

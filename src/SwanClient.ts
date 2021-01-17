@@ -13,7 +13,7 @@ import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
-import type { AddonListResponse, DocumentationAddon, DocumentationFullAddon } from './types';
+import type { SkriptMcDocumentationAddonResponse, SkriptMcDocumentationFullAddonResponse, SkriptToolsAddonListResponse } from './types';
 
 import { getDuration } from './utils';
 
@@ -218,7 +218,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadAddons(): Promise<void> {
     try {
-      const allAddons: AddonListResponse = await axios(settings.apis.addons).then(res => res?.data?.data);
+      const allAddons: SkriptToolsAddonListResponse = await axios(settings.apis.addons).then(res => res?.data?.data);
       if (!allAddons)
         return;
 
@@ -236,7 +236,7 @@ class SwanClient extends AkairoClient {
   private async _loadSkriptMcSyntaxes(): Promise<void> {
     try {
       const token = `?api_key=${process.env.SKRIPTMC_TOKEN}`;
-      const allAddons: DocumentationAddon[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
+      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
       if (!allAddons)
         return;
 
@@ -246,7 +246,7 @@ class SwanClient extends AkairoClient {
       // - Add an endpoint on the API to bulk-fetch syntaxes with already all of those information?
       for (const addon of allAddons) {
         try {
-          const fullAddon: DocumentationFullAddon = await axios(`${settings.apis.skriptmc}addons/${addon.slug}${token}`).then(res => res?.data);
+          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(`${settings.apis.skriptmc}addons/${addon.slug}${token}`).then(res => res?.data);
           if (!fullAddon || !fullAddon.articles)
             throw new Error(`No syntax to load for addon ${addon.name}`);
 
