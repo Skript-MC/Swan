@@ -35,6 +35,7 @@
     "url": "git+https://github.com/Skript-MC/Swan.git"
   },
   "dependencies": {
+    "@octokit/rest": "^18.0.12",
     "@sentry/integrations": "^5.30.0",
     "@sentry/node": "^5.30.0",
     "axios": "^0.21.1",
@@ -52,13 +53,16 @@
     "node-cron": "^2.0.3",
     "patch-package": "^6.2.2",
     "pupa": "^2.1.1",
+    "semver": "^7.3.4",
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
+    "@octokit/types": "^6.3.1",
     "@types/common-tags": "^1.8.0",
     "@types/he": "^1.1.1",
     "@types/node": "^14.14.21",
     "@types/node-cron": "^2.0.3",
+    "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "cross-env": "^7.0.3",

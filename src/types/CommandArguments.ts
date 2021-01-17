@@ -85,6 +85,10 @@ export interface RemoveWarnCommandArgument {
   reason: string;
 }
 
+export interface SkriptInfoCommandArguments {
+  display: 'all' | 'dl' | 'download' | 'link' | 'links';
+}
+
 export interface StatisticsCommandArguments {}
 
 export interface UnbanCommandArgument {

@@ -51,7 +51,6 @@ export default {
   },
   apis: {
     hastebin: 'https://hastebin.com/documents',
-    github: 'https://api.github.com',
     addons: 'https://api.skripttools.net/v4/addons/',
     skriptmc: 'https://skript-mc.fr/api/',
   },

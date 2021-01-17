@@ -1,3 +1,4 @@
+import type { Endpoints } from '@octokit/types';
 import type {
   Collection,
   GuildAuditLogs,
@@ -16,6 +17,13 @@ import type {
   Types,
 } from 'mongoose';
 import type cron from 'node-cron';
+
+/** Types for the Github API's releases endpoint */
+type RawGithubReleaseResponse = Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
+
+export type GithubRelease = RawGithubReleaseResponse['data'][0];
+export type GithubPrerelease = GithubRelease & { prerelease: true };
+export type GithubStableRelease = GithubRelease & { prerelease: false };
 
 /** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
 export interface MatchingAddon {
