@@ -4,7 +4,6 @@ export { default as extractQuotedText } from './extractQuotedText';
 export { default as getDuration } from './getDuration';
 export { default as getPersonFromCache } from './getPersonFromCache';
 export { default as getUsername } from './getUsername';
-export { default as jaroWinklerDistance } from './jaroWinklerDistance';
 export { default as noop } from './noop';
 export { default as padNumber } from './padNumber';
 export { default as prunePseudo } from './prunePseudo';
