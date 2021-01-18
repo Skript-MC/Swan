@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Message } from 'discord.js';
+import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import { addonInfo as config } from '../../../config/commands/info';
 import messages from '../../../config/messages';
@@ -9,7 +10,7 @@ import settings from '../../../config/settings';
 import Logger from '../../structures/Logger';
 import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '../../types';
 import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
-import { convertFileSize, jaroWinklerDistance } from '../../utils';
+import { convertFileSize } from '../../utils';
 
 class AddonInfoCommand extends Command {
   constructor() {

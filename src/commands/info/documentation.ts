@@ -1,12 +1,12 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import he from 'he';
+import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import { documentation as config } from '../../../config/commands/info';
 import settings from '../../../config/settings';
 import type{ DocumentationCommandArguments } from '../../types/CommandArguments';
 import type { GuildMessage, SkriptMcDocumentationSyntaxResponse } from '../../types/index';
-import { jaroWinklerDistance } from '../../utils';
 
 
 class DocumentationCommand extends Command {
