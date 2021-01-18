@@ -76,7 +76,7 @@ export default {
     creations: process.env.SKRIPT_CREATIONS_CHANNEL,
     log: process.env.LOG_CHANNEL,
     privateChannelsCategory: process.env.PRIVATE_CHANNEL_CATEGORY,
-    forumUpdates: process.env.FORUM_UPDATES_CHANNEL,
+    forumUpdates: process.env.FORUM_FEED_CHANNEL,
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',
