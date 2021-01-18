@@ -12,9 +12,7 @@ const turndownService = new Turndown()
   .addRule('code', {
     filter: 'pre',
     replacement: (content, node) => {
-      let className;
-      if ('className' in node)
-        className = node.className;
+      const { className } = node as Element;
       const language = new RegExp(/lang-(?<lang>\S+)/).exec(className)?.groups.lang;
       const code = node.textContent;
       return `\n\`\`\`${language}\n${code}\n\`\`\``;
