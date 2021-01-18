@@ -83,7 +83,7 @@ class ForumFeedTask extends Task {
       return;
 
     ressources.results
-      .filter(ressource => (Date.now() - new Date(ressource.updated).getTime()) > config.timeDifference)
+      .filter(ressource => (Date.now() - new Date(ressource.updated).getTime()) < config.timeDifference)
       .forEach((ressource) => {
         const markdown = turndownService.turndown(ressource.changelog || ressource.description);
         const embed = new MessageEmbed()

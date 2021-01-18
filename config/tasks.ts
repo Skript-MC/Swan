@@ -6,7 +6,7 @@ export const skriptReleases = {
 };
 
 export const forumFeed = {
-  timeDifference: 60_000,
+  timeDifference: 600_000,
   dataProvider: 'Automatiquement envoyé depuis Skript-MC',
   baseAxiosParams: {
     params: {
