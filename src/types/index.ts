@@ -140,6 +140,175 @@ export interface GuildKickAuditLogs extends GuildAuditLogs {
   entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
 }
 
+export interface InvisionRessourceFieldGroup {
+  name: string;
+  fields: InvisionRessourceField[];
+}
+
+export interface InvisionRessourceField {
+  name: string;
+  value: string;
+}
+
+export interface InvisionFile {
+  name: string;
+  url: string;
+  size: number;
+}
+
+export interface InvisionCategory {
+  id: number;
+  name: string;
+  url: string;
+  class: string;
+  parentId: number;
+}
+
+export interface InvisionSearchResult {
+  title: string;
+  content: string;
+  class: string;
+  objectId: number;
+  itemClass: string;
+  itemId: number;
+  started: string;
+  updated: string;
+  itemUrl: string;
+  objectUrl: string;
+  reputation: number;
+  comments?: number;
+  reviews?: number;
+  container: string;
+  containerUrl: string;
+  author: string;
+  authorUrl?: string;
+  authorPhoto: string;
+  authorPhotoThumbnail: string;
+  tags: string[];
+}
+
+export interface InvisionRessourceComment {
+ id: number;
+ // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+ item_id: number;
+ author: InvisionMember;
+ date: string;
+ content: string;
+ hidden: boolean;
+ url: string;
+}
+
+export interface InvisionRessource {
+  id: number;
+  title: string;
+  category: InvisionCategory;
+  author: InvisionMember;
+  date: string;
+  updated: string;
+  description: string;
+  version: string;
+  changelog: string;
+  files: InvisionFile[];
+  primaryScreenshot: InvisionFile;
+  screenshots: InvisionFile[];
+  screenshotsThumbnails: InvisionFile[];
+  primaryScreenshotThumb: InvisionFile;
+  downloads: number;
+  comments: number;
+  reviews: number;
+  views: number;
+  prefix?: string;
+  tags: string[];
+  locked: boolean;
+  hidden: boolean;
+  pinned: boolean;
+  featured: boolean;
+  url: string;
+  topic: InvisionTopic;
+  isPaid: boolean;
+  prices: number[];
+  rating: number;
+  purchases: number;
+  hasPendingVersion: boolean;
+}
+
+export interface InvisionResponse {
+  page: number;
+  perPage: number;
+  totalResults: number;
+  totalPages: number;
+}
+
+export interface InvisionForum {
+  id: number;
+  name: string;
+  path: string;
+  topics: number;
+  url: string;
+  parentId?: number;
+}
+
+export interface InvisionFullRessource extends InvisionResponse {
+  results: InvisionRessource[];
+}
+
+export interface InvisionFullTopic extends InvisionResponse {
+  results: InvisionTopic[];
+}
+
+export interface InvisionPost {
+  id: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+  item_id: number;
+  author: InvisionMember;
+  date: string;
+  content: string;
+  hidden: boolean;
+  url: string;
+}
+
+export interface InvisionMember {
+  id: number;
+  name: string;
+  title: string;
+  timezone: string;
+  formattedName: string;
+  primaryGroup: InvisionGroup;
+  secondaryGroups: InvisionGroup[];
+  photoUrl: string;
+  photoUrlIsDefault: boolean;
+  coverPhotoUrl: string;
+  profileUrl?: string;
+  validating: boolean;
+  posts: number;
+}
+
+export interface InvisionGroup {
+  id: number;
+  name: string;
+  formattedName: string;
+}
+
+export interface InvisionTopic {
+  id: number;
+  title: string;
+  forum: InvisionForum;
+  posts: number;
+  views: number;
+  prefix: string;
+  tags: string[];
+  firstPost: InvisionPost;
+  lastPost: InvisionPost;
+  bestAnswer: InvisionPost;
+  locked: boolean;
+  hidden: boolean;
+  pinned: boolean;
+  featured: boolean;
+  archived: boolean;
+  url: string;
+  rating: number;
+}
+
 /** The sanctions types that we track in the ConvictedUser database */
 export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
 
