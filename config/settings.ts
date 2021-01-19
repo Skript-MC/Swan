@@ -53,6 +53,7 @@ export default {
     hastebin: 'https://hastebin.com/documents',
     addons: 'https://api.skripttools.net/v4/addons/',
     skriptmc: 'https://skript-mc.fr/api/',
+    forum: 'https://skript-mc.fr/forum/api/',
   },
   roles: {
     staff: process.env.STAFF_ROLE,
@@ -75,6 +76,7 @@ export default {
     creations: process.env.SKRIPT_CREATIONS_CHANNEL,
     log: process.env.LOG_CHANNEL,
     privateChannelsCategory: process.env.PRIVATE_CHANNEL_CATEGORY,
+    forumUpdates: process.env.FORUM_FEED_CHANNEL,
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',
