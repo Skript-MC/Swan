@@ -8,6 +8,7 @@
     "exec": "node -r source-map-support/register ./build/src/main.js",
     "start": "npm run build && cross-env NODE_ENV=production npm run exec -- --no-color",
     "dev": "npm run build && cross-env NODE_ENV=development npm run exec",
+    "tools:update-databases": "npm run build && node ./build/src/tools/update-databases.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "patch": "npx patch-package",
