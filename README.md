@@ -4,7 +4,6 @@
     Swan est un bot développé spécialement pour le serveur <a href="https://discord.com/invite/J3NSGaE">Discord</a> de <a href="https://skript-mc.fr">Skript-MC</a>.
 </p>
 
-
 ## 🚀 Installation
 
 - Installez [Node.js](https://nodejs.org/fr/) sur votre machine. Il vous faudra Node.js 12 ou supérieur.
@@ -13,7 +12,6 @@
 - Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activez les options `Server Members Intent` et `Presence Intent` de l'application.
 - Exécutez la commande `npm i` pour installer les dépendances nécessaires.
 - C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.
-
 
 ## 🔍 Rapport de bug et suggestions
 
@@ -25,7 +23,6 @@ Vous pouvez vous rendre dans le [menu des issues](https://github.com/Skript-MC/S
 Si vous n'êtes pas très sûr de vous, vous pouvez nous en parler sur le [Discord de développement](https://discord.com/njSgX3w).
 
 :warning: Si vous pensez avoir trouvé une faille de sécurité, ou un bug pouvant compromettre Swan, la machine hébergeant Swan, ou n'importe quel utilisateur ou personne physique, veuillez en faire part en envoyant un message privé sur discord à un des [développeurs](#-Merci).
-
 
 ## 🔨 Développement et contributions
 
@@ -40,7 +37,6 @@ Voici quelques informations utiles avant de créer une Pull Request :
 N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.com/njSgX3w) !
 Vous pouvez trouver des idées de choses à faire en regardant les projets en cours, dans [l'onglet Projects](https://github.com/Skript-MC/Swan/projects), ou en regardant la [liste des Issues](https://github.com/Skript-MC/Swan/issues).
 
-
 ## ℹ️ Informations
 
 Swan est un bot Discord développé en JavaScript. Il utilise la librairie [discord.js](https://npmjs.com/package/discord.js) pour les appels à l'API Discord.
@@ -48,7 +44,6 @@ Depuis la version 2, il utilise également le framework [discord-akairo](https:/
 Il sert notamment à gérer les évènements, les commandes et les arguments...
 
 Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter la [License](https://github.com/Skript-MC/Swan/blob/master/LICENSE) (GNU-GPL-v3)
-
 
 ## 📂 Organisation du projet
 
@@ -64,9 +59,10 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
   - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
   - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
   - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
-  - **`types` :** 🏷 Fichiers contenant les typings TypeScript.
+  - **`tools` :** 📄 Petits outils que l'on peut utiliser via `npm run tools:<nom du fichier>`. *(À déplacer en dehors de `src/`)*
+  - **`types` :** 🏷 Fichiers contenant les typings TypeScript nécessaires pour Swan.
   - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
-
+- **`typings` :** 🏷 Fichiers contenant les typings TypeScript des librairies externes.
 
 ## 🙏 Merci
 
