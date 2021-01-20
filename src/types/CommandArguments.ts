@@ -29,6 +29,8 @@ export interface BanCommandArgument {
 
 export interface CodeCommandArguments {
   code: string;
+  displayLines?: boolean;
+  startLinesAt?: string;
 }
 
 export interface ErrorDetailsCommandArguments {
