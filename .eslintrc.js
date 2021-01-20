@@ -5,6 +5,9 @@ module.exports = {
   extends: ['noftalint/typescript'],
   ignorePatterns: ['.eslintrc.js', 'node_modules/', 'build/'],
   reportUnusedDisableDirectives: true,
+  parserOptions: {
+    project: './tsconfig.eslint.json',
+  },
   rules: {
     // node/file-extension-in-import has too many false positives with .json.
     'node/file-extension-in-import': 'off',
