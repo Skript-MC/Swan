@@ -1,11 +1,12 @@
 import { Command } from 'discord-akairo';
-import type { MessageReaction, User } from 'discord.js';
+import type { Message, MessageReaction, User } from 'discord.js';
+import pupa from 'pupa';
 import { code as config } from '../../../config/commands/basic';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import type { GuildMessage } from '../../types';
 import type { CodeCommandArguments } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import { noop, splitText } from '../../utils';
 
 class CodeCommand extends Command {
   constructor() {
@@ -15,11 +16,19 @@ class CodeCommand extends Command {
       args: [{
         id: 'code',
         type: 'string',
-        match: 'content',
+        match: 'rest',
         prompt: {
           start: config.messages.startPrompt,
           retry: config.messages.retryPrompt,
         },
+      }, {
+        id: 'displayLines',
+        match: 'flag',
+        flag: ['-l', '--line', '--lines', '--ligne', '--lignes'],
+      }, {
+        id: 'startLinesAt',
+        match: 'option',
+        flag: ['-s=', '--start='],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
@@ -32,11 +41,37 @@ class CodeCommand extends Command {
       message.util.messages.set(message.id, message);
       await message.channel.bulkDelete(message.util.messages, true).catch(noop);
 
-      const titleMessage = await message.util.send(`**Code de ${message.member.displayName} :**`);
-      const codeMessage = await message.util.sendNew(args.code, { code: 'applescript' });
-      await codeMessage.react(settings.emojis.remove);
+      let startAtLine = 0;
+      if (args.displayLines && args.startLinesAt) {
+        const value = Number.parseInt(args.startLinesAt, 10);
+        if (!Number.isNaN(value))
+          startAtLine = Math.max(value - 1, 0);
+      }
 
-      const collector = codeMessage
+      let { code } = args;
+      // eslint-disable-next-line unicorn/consistent-destructuring
+      if (args.displayLines) {
+        const lines = code.split('\n');
+        code = '';
+        for (const [i, line] of lines.entries()) {
+          const finalLine = (startAtLine + lines.length).toString();
+          const currentLine = (startAtLine + i + 1).toString();
+          const space = finalLine.length - currentLine.length;
+          code += `\n${startAtLine + i + 1}${' '.repeat(space)} | ${line}`;
+        }
+      }
+
+      const titleMessage = await message.util.send(pupa(config.messages.title, { message }));
+      const splittedCode = splitText(code);
+      const codeBlocks: Message[] = [];
+
+      for (let i = 0; i < splittedCode.length; i++)
+        codeBlocks.push(await message.channel.send(splittedCode[i], { code: 'applescript' }));
+
+      const lastMessage = codeBlocks[codeBlocks.length - 1];
+      await lastMessage?.react(settings.emojis.remove).catch(noop);
+
+      const collector = lastMessage
         .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
           && !user.bot
           && (reaction.emoji.id || reaction.emoji.name) === settings.emojis.remove)
@@ -44,7 +79,8 @@ class CodeCommand extends Command {
           try {
             collector.stop();
             await titleMessage.delete();
-            await codeMessage.delete();
+            for (const block of codeBlocks)
+              await block.delete().catch(noop);
           } catch {
             await message.util.send(messages.global.oops).catch(noop);
           }
