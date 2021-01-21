@@ -235,7 +235,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadSkriptMcSyntaxes(): Promise<void> {
     try {
-      const token = `?api_key=${process.env.SKRIPTMC_TOKEN}`;
+      const token = `?api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
       const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
       if (!allAddons)
         return;
