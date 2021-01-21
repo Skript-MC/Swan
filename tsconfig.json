@@ -12,8 +12,9 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "target": "es2019"
+    "target": "es2019",
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules/"]
+  "exclude": ["node_modules/", "typings/"]
 }
