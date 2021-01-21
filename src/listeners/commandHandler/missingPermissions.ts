@@ -18,7 +18,7 @@ class MissingPermissionsListener extends Listener {
       if (missing.includes('SEND_MESSAGES')) {
         Logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command} command.`);
       } else {
-        await message.util.send(
+        await message.channel.send(
           pupa(messages.global.insufficientClientPermissions, {
             command,
             permissions: missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', '),
@@ -26,7 +26,7 @@ class MissingPermissionsListener extends Listener {
         );
       }
     } else {
-      await message.util.send(messages.global.notAllowed);
+      await message.channel.send(messages.global.notAllowed);
     }
   }
 }

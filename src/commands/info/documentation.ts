@@ -51,7 +51,7 @@ class DocumentationCommand extends Command {
       .slice(0, 10);
 
     if (matchingSyntaxes.length === 0) {
-      await message.util.send(
+      await message.channel.send(
         pupa(config.messages.unknownSyntax, {
           query: `${args.query}${args.addon ? ` pour l'addon "${args.addon}"` : ''}${args.category ? ` dans la catégorie "${args.category}"` : ''}`,
         }),
@@ -77,7 +77,7 @@ class DocumentationCommand extends Command {
     if (matchingSyntaxes.length - 10 > 0)
       content += pupa(config.messages.more, { amount: matchingSyntaxes.length - 10 });
 
-    const selectorMessage = await message.util.send(content);
+    const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
       .createReactionCollector((reaction, user) => !user.bot
@@ -128,7 +128,7 @@ class DocumentationCommand extends Command {
     embed.addField(embedMessages.pattern, pupa(embedMessages.patternContent, { pattern: he.decode(syntax.pattern) }));
     embed.addField(embedMessages.example, pupa(embedMessages.exampleContent, { example: he.decode(syntax.example) }));
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 }
 

@@ -40,7 +40,7 @@ class HistoryCommand extends Command {
 
     const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
-      await message.util.send(config.messages.notFound);
+      await message.channel.send(config.messages.notFound);
       return;
     }
 
@@ -102,9 +102,9 @@ class HistoryCommand extends Command {
     try {
       for (const chunk of splittedText)
         await message.member.send(chunk);
-      await message.util.send(config.messages.sentInDm);
+      await message.channel.send(config.messages.sentInDm);
     } catch {
-      await message.util.send(messages.global.dmAreClosed).catch(noop);
+      await message.channel.send(messages.global.dmAreClosed).catch(noop);
     }
   }
 }

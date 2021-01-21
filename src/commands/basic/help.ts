@@ -60,7 +60,7 @@ class HelpCommand extends Command {
       }
     }
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 }
 

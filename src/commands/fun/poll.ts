@@ -65,12 +65,12 @@ class PollCommand extends Command {
     const formattedDuration = moment.duration(duration).humanize();
 
     if (answers.length === 1) {
-      await message.util.send(config.messages.notEnoughAnswers);
+      await message.channel.send(config.messages.notEnoughAnswers);
       return;
     }
 
     if (answers.length > 18) {
-      await message.util.send(config.messages.tooManyAnswers);
+      await message.channel.send(config.messages.tooManyAnswers);
       return;
     }
 
@@ -105,7 +105,7 @@ class PollCommand extends Command {
     if (details.length > 0)
       embed.setDescription(details.join('\n'));
 
-    const pollMessage = await message.util.send(embed);
+    const pollMessage = await message.channel.send(embed);
 
     const possibleReactions = [];
     if (questionType === QuestionType.Yesno) {

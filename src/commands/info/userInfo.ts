@@ -76,7 +76,7 @@ class UserInfoCommand extends Command {
       .addField(embedConfig.roles.title, rolesContent, false)
       .addField(embedConfig.presence.title, presenceContent, true);
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 }
 
