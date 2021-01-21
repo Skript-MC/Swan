@@ -44,7 +44,7 @@ class RemoveWarnCommand extends Command {
     try {
       const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
       if (!convictedUser || convictedUser.currentWarnCount === 0) {
-        await message.util.send(config.messages.notWarned);
+        await message.channel.send(config.messages.notWarned);
         return;
       }
 
@@ -55,13 +55,13 @@ class RemoveWarnCommand extends Command {
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success).catch(noop);
+        await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       Logger.error('An unexpected error occured while removing a warn from member!');
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);
-      await message.util.send(messages.global.oops).catch(noop);
+      await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }

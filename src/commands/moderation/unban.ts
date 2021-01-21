@@ -38,7 +38,7 @@ class UnbanCommand extends Command {
     if (args.member instanceof GuildMember
       && args.member.roles.highest.position >= message.member.roles.highest.position) {
       // TODO: Change this message and the next one when the 3 TODOs above are fixed.
-      await message.util.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
+      await message.channel.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
       return;
     }
 
@@ -46,14 +46,14 @@ class UnbanCommand extends Command {
     if (!args.member)
       args.member = await this.client.users.fetch(message.content.split(' ')[1]);
     if (!args.member) {
-      await message.util.send('*[Le contenu du message est temporaire]* Le membre est (impossible de le récupérer), veuillez refaire la commande.');
+      await message.channel.send('*[Le contenu du message est temporaire]* Le membre est (impossible de le récupérer), veuillez refaire la commande.');
       return;
     }
 
     try {
       const isBanned = await ModerationHelper.isBanned(args.member.id, true);
       if (!isBanned) {
-        await message.util.send(config.messages.notBanned);
+        await message.channel.send(config.messages.notBanned);
         return;
       }
 
@@ -64,13 +64,13 @@ class UnbanCommand extends Command {
 
       const success = await new UnbanAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success).catch(noop);
+        await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       Logger.error('An unexpected error occured while unbanning a member!');
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);
-      await message.util.send(messages.global.oops).catch(noop);
+      await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }

@@ -45,7 +45,7 @@ class PurgeCommand extends Command {
       .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
     const deletedMessages = await message.channel.bulkDelete(messages, true);
 
-    const msg = await message.util.send(pupa(config.messages.success, { deletedMessages }));
+    const msg = await message.channel.send(pupa(config.messages.success, { deletedMessages }));
     setTimeout(async () => {
       if (msg.deletable)
         await msg.delete().catch(noop);

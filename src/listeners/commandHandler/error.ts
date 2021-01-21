@@ -14,7 +14,7 @@ class CommandHandlerErrorListener extends Listener {
   }
 
   public async exec(error: Error, message: Message, command: Command): Promise<void> {
-    await message.util.send(messages.global.oops).catch(noop);
+    await message.channel.send(messages.global.oops).catch(noop);
     Logger.error('Oops, something went wrong with a command!');
     Logger.detail(`Command: ${command}`);
     Logger.detail(`Message: ${message.url}`);

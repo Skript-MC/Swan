@@ -58,7 +58,7 @@ class MuteCommand extends Command {
 
   public async exec(message: GuildMessage, args: MuteCommandArgument): Promise<void> {
     if (await ModerationHelper.isBanned(args.member.id)) {
-      await message.util.send(messages.global.impossibleBecauseBanned).catch(noop);
+      await message.channel.send(messages.global.impossibleBecauseBanned).catch(noop);
       return;
     }
 
@@ -73,14 +73,14 @@ class MuteCommand extends Command {
 
       const success = await new MuteAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success).catch(noop);
+        await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       Logger.error('An unexpected error occured while muting a member!');
       Logger.detail(`Duration: ${args.duration}`);
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);
-      await message.util.send(messages.global.oops).catch(noop);
+      await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }

@@ -55,7 +55,7 @@ class StatisticsCommand extends Command {
       .setFooter(`Exécuté par ${message.author.username}`)
       .setTimestamp();
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 
   private async _getGitRev(): Promise<string> {

@@ -77,7 +77,7 @@ class BanCommand extends Command {
     try {
       const success = await new BanAction(data).commit();
       if (success)
-        await message.util.send(config.messages.success).catch(noop);
+        await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       Logger.error('An unexpected error occured while banning a member!');
       Logger.detail(`Duration: ${args.duration}`);
@@ -85,7 +85,7 @@ class BanCommand extends Command {
       Logger.detail(`Autoban: ${args.autoban}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);
-      await message.util.send(messages.global.oops).catch(noop);
+      await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }

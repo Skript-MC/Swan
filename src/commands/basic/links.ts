@@ -26,7 +26,7 @@ class LinksCommand extends Command {
 
   public async exec(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
     let { page } = args;
-    const msg = await message.util.send(this._getEmbedForPage(page));
+    const msg = await message.channel.send(this._getEmbedForPage(page));
 
     const collector = msg
       .createReactionCollector((reaction, user) => user.id === message.author.id

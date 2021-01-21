@@ -20,7 +20,7 @@ class PingCommand extends Command {
   }
 
   public async exec(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
-    const sent = await message.util.send(config.messages.firstMessage);
+    const sent = await message.channel.send(config.messages.firstMessage);
     const swanPing = (sent.editedAt || sent.createdAt).getTime() - (message.editedAt || message.createdAt).getTime();
     const discordPing = Math.round(this.client.ws.ping);
 
@@ -37,7 +37,7 @@ class PingCommand extends Command {
       .setFooter(`Exécuté par ${message.member.displayName}`)
       .setTimestamp();
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 
   private _getColorFromPing(ping: number): string {

@@ -38,7 +38,7 @@ class AddonInfoCommand extends Command {
       .slice(0, 10);
 
     if (matchingAddons.length === 0) {
-      await message.util.send(pupa(config.messages.unknownAddon, { addon }));
+      await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
       return;
     }
     if (matchingAddons.length === 1) {
@@ -60,7 +60,7 @@ class AddonInfoCommand extends Command {
     if (matchingAddons.length - 10 > 0)
       content += pupa(config.messages.more, { amount: matchingAddons.length - 10 });
 
-    const selectorMessage = await message.util.send(content);
+    const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
       .createReactionCollector((reaction, user) => !user.bot
@@ -86,7 +86,7 @@ class AddonInfoCommand extends Command {
       .catch((err) => { Logger.error(err.message); });
 
     if (!addon) {
-      await message.util.send(messages.global.oops);
+      await message.channel.send(messages.global.oops);
       return;
     }
 
@@ -119,7 +119,7 @@ class AddonInfoCommand extends Command {
     if (addon.depend?.softdepend)
       embed.addField(embedMessages.softdepend, addon.depend.softdepend.join(', '), true);
 
-    await message.util.send(embed);
+    await message.channel.send(embed);
   }
 }
 
