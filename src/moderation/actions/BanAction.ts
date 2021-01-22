@@ -52,7 +52,7 @@ class BanAction extends ModerationAction {
                 date: this.data.start,
                 moderator: this.data.moderator?.id,
                 type: SanctionsUpdates.Duration,
-                valueBefore: this.updateInfos.sanctionDocument.duration!,
+                valueBefore: this.updateInfos.sanctionDocument.duration,
                 valueAfter: this.data.duration,
                 reason: this.data.reason,
               },

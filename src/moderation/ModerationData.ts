@@ -49,11 +49,11 @@ class ModerationData {
       this.client = argument;
       this.channel = this.client.cachedChannels.log;
       this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
+      this.moderator = this.guild.me;
     } else {
       this.channel = argument;
       this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
+      this.moderator = this.guild.me;
       this.client = this.guild.client as AkairoClient;
     }
     this.type = null;            // The sanction type (one of the SanctionTypes enum).
