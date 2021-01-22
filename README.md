@@ -57,6 +57,7 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
   - **`listeners` :** 👂 Dossier où se trouvent tous les gestionnaires d'évènement, rangés dans des sous-dossiers correspondant aux émetteurs.
   - **`models` :** 🗄 Fichiers des schemas mongoose.
   - **`moderation` :** 🔨 Dossier où se trouvent tous les fichiers concernant la modération, à l'exception des commandes (rangées dans `commands`) et des tâches (rangées dans `tasks`).
+  - **`resolvers` :** 🧷 Type resolvers for custom `discord-akairo` argument's types.
   - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
   - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
   - **`tools` :** 📄 Petits outils que l'on peut utiliser via `npm run tools:<nom du fichier>`. *(À déplacer en dehors de `src/`)*
