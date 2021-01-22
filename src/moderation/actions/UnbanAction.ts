@@ -30,7 +30,7 @@ class UnbanAction extends ModerationAction {
         throw new TypeError('The user to unban was not found in the database.');
 
       ban = await Sanction.findOneAndUpdate(
-        { sanctionId: user.lastBanId! },
+        { sanctionId: user.lastBanId },
         {
           $set: { revoked: true },
           $push: {
