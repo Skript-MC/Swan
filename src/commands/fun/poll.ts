@@ -57,7 +57,7 @@ class PollCommand extends Command {
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
     // TODO: Create a custom argument type that automatically parses quoted text to an array?
     const answers = extractQuotedText(args.content);
-    const question = answers.shift() || args.content;
+    const question = answers.shift() ?? args.content;
     const questionType = answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
     const duration = args.duration * 1000;
     const finishDate = new Date(Date.now() + duration);
@@ -86,7 +86,7 @@ class PollCommand extends Command {
       }
     }
 
-    const details = [];
+    const details: string[] = [];
     if (args.anonymous)
       details.push(config.messages.informationAnonymous);
     if (args.multiple)
@@ -107,7 +107,7 @@ class PollCommand extends Command {
 
     const pollMessage = await message.channel.send(embed);
 
-    const possibleReactions = [];
+    const possibleReactions: string[] = [];
     if (questionType === QuestionType.Yesno) {
       for (const r of settings.miscellaneous.pollReactions.yesno) {
         await pollMessage.react(r);

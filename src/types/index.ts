@@ -1,6 +1,7 @@
 import type { Endpoints } from '@octokit/types';
 import type {
   Collection,
+  Guild,
   GuildAuditLogs,
   GuildAuditLogsEntry,
   GuildMember,
@@ -306,7 +307,7 @@ export interface DurationPart {
 export type GuildTextBasedChannel = NewsChannel | TextChannel;
 
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
-export type GuildMessage = Message & { channel: GuildTextBasedChannel };
+export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
 
 /* ************************** */
 /*  Various Moderation Types  */

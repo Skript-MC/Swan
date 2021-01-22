@@ -12,10 +12,12 @@ export default {
     memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
     dmAreClosed: "Je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
     unknownName: 'Pseudo inconnu',
+    unknown: (feminine = false): string => `Inconnu${feminine ? 'e' : ''}`,
     noReason: 'Aucune raison spécifiée.',
     impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
   },
   miscellaneous: {
+    noDescription: 'Aucune description disponible.',
     noDocLink: stripIndent`
       Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
       Voici ton message, si tu souhaites le récupérer : \`\`\`

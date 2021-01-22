@@ -76,7 +76,7 @@ class MessageListener extends Listener {
     if (!linkRegex.test(message.content))
       return false;
 
-    const quotes = [];
+    const quotes: Array<{ channelId: string; messageId: string }> = [];
     let text = message.content;
     while (linkRegex.test(text)) {
       const [full, channelId, messageId] = linkRegex.exec(text);
@@ -86,7 +86,7 @@ class MessageListener extends Listener {
 
     for (const quote of quotes) {
       const channel = await this.client.channels.fetch(quote.channelId).catch(noop) || null;
-      if (!channel.isText() || channel.type === 'dm')
+      if (!channel?.isText() || channel.type === 'dm')
         continue;
 
       const targetedMessage = await channel.messages.fetch(quote.messageId);
@@ -95,7 +95,7 @@ class MessageListener extends Listener {
 
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setAuthor(`Message de ${targetedMessage.member?.displayName || targetedMessage.author.username}`, targetedMessage.author.avatarURL())
+        .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL())
         .setDescription(`${targetedMessage.content}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
 
@@ -149,7 +149,7 @@ class MessageListener extends Listener {
       try {
         const previousAuthorId = await message.channel.messages
           .fetch({ before: message.channel.lastMessageID, limit: 1 })
-          .then(elt => elt.first().author.id);
+          .then(elt => elt.first()?.author.id);
         if (previousAuthorId !== message.author.id && !/```(?:.|\n)*```/gmu.test(message.content)) {
           await message.delete();
           await message.member.send(messages.miscellaneous.noSpam);

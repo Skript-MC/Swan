@@ -45,7 +45,7 @@ export default {
     }
   },
 
-  detail(message: string, neutral = false): void {
+  detail(message = '', neutral = false): void {
     const messages = message.split('\n');
     console.group();
     for (const msg of messages)

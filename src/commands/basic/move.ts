@@ -43,13 +43,13 @@ class MoveCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: MoveCommandArguments): Promise<void> {
-    const { channel: targetedChannel, message: targetedMessage } = args;
+    const { channel: targetedChannel } = args;
+    const targetedMessage = args.message as GuildMessage;
 
     if (targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) {
       await message.channel.send(messages.global.memberTooPowerful);
       return;
     }
-
 
     const successMessage = pupa(config.messages.successfullyMoved, {
       targetDisplayName: targetedMessage.member.displayName,
@@ -66,7 +66,7 @@ class MoveCommand extends Command {
           targetDisplayName: targetedMessage.member,
           sourceChannel: targetedMessage.channel,
           targetChannel: targetedChannel,
-          emoji: message.guild.emojis.resolve(settings.emojis.remove) || settings.emojis.remove,
+          emoji: message.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
         }),
       );
 
@@ -82,7 +82,7 @@ class MoveCommand extends Command {
 
       const collector = informationEmbed
         .createReactionCollector(
-          (r: MessageReaction, user: User) => (r.emoji.id || r.emoji.name) === settings.emojis.remove
+          (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
             && (user.id === message.author.id || user.id === targetedMessage.author.id)
             && !user.bot,
           )

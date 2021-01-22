@@ -21,6 +21,9 @@ class BanAction extends ModerationAction {
   }
 
   protected async exec(): Promise<void> {
+    if (!this.data.duration)
+      throw new TypeError('Unexpected missing property: data.duration is not set.');
+
     if (this.data.duration === -1)
       await this._hardban();
     else if (this.updateInfos.isUpdate())
@@ -49,7 +52,7 @@ class BanAction extends ModerationAction {
                 date: this.data.start,
                 moderator: this.data.moderator?.id,
                 type: SanctionsUpdates.Duration,
-                valueBefore: this.updateInfos.sanctionDocument.duration,
+                valueBefore: this.updateInfos.sanctionDocument.duration!,
                 valueAfter: this.data.duration,
                 reason: this.data.reason,
               },
@@ -170,7 +173,10 @@ class BanAction extends ModerationAction {
     // 3. Add needed roles
     try {
       const role = this.data.guild.roles.resolve(settings.roles.ban);
-      await this.data.victim.member?.roles.set([role]);
+      if (role)
+        await this.data.victim.member?.roles.set([role]);
+      else
+        throw new TypeError('Unable to resolve the ban role.');
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

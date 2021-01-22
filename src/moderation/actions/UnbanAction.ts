@@ -26,8 +26,11 @@ class UnbanAction extends ModerationAction {
     // 1. Update the Database
     try {
       const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastBanId: null });
+      if (!user)
+        throw new TypeError('The user to unban was not found in the database.');
+
       ban = await Sanction.findOneAndUpdate(
-        { sanctionId: user.lastBanId },
+        { sanctionId: user.lastBanId! },
         {
           $set: { revoked: true },
           $push: {
@@ -53,13 +56,13 @@ class UnbanAction extends ModerationAction {
 
     // 2. Unban (hard-unban or remove roles)
     try {
-      if (ban.type === SanctionTypes.Hardban || !this.data.victim.member) {
+      if (ban?.type === SanctionTypes.Hardban || !this.data.victim.member) {
         const isHardbanned = await this.data.guild.fetchBan(this.data.victim.id).catch(noop);
         if (isHardbanned)
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
-      } else if (ban.type === SanctionTypes.Ban) {
+      } else {
         await this.data.victim.member.roles.set([]);
-        const channelId = ban.informations?.banChannelId;
+        const channelId = ban?.informations?.banChannelId;
         if (channelId)
           await ModerationHelper.removeChannel(channelId, this.data.guild);
       }

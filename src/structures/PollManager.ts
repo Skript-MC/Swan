@@ -6,16 +6,19 @@ import messages from '../../config/messages';
 import settings from '../../config/settings';
 import Poll from '../models/poll';
 import { QuestionType } from '../types';
+import { noop } from '../utils';
 
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
-    const poll = await Poll.findByIdAndRemove(pollId);
+    const poll = await Poll.findByIdAndRemove(pollId).catch(noop);
+    if (!poll)
+      return;
 
     const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
     if (!channel)
       return;
 
-    const message = channel?.messages?.resolve(poll.messageId) || await channel?.messages?.fetch(poll.messageId);
+    const message = channel?.messages?.resolve(poll.messageId) ?? await channel?.messages?.fetch(poll.messageId);
     if (!message)
       return;
 

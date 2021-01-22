@@ -8,13 +8,18 @@ import {
 } from 'discord-akairo';
 import type { Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
+import type { Query } from 'mongoose';
 import messages from '../config/messages';
 import settings from '../config/settings';
 import CommandStat from './models/commandStat';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
-import type { SkriptMcDocumentationAddonResponse, SkriptMcDocumentationFullAddonResponse, SkriptToolsAddonListResponse } from './types';
-
+import type {
+  CommandStatDocument,
+  SkriptMcDocumentationAddonResponse,
+  SkriptMcDocumentationFullAddonResponse,
+  SkriptToolsAddonListResponse,
+} from './types';
 import { getDuration } from './utils';
 
 class SwanClient extends AkairoClient {
@@ -36,22 +41,10 @@ class SwanClient extends AkairoClient {
 
     this.isLoading = true;
 
-    this.cachedChannels = {
-      idea: null,
-      suggestions: null,
-      bot: null,
-      main: null,
-      snippets: null,
-      skriptHelp: null,
-      otherHelp: null,
-      help: null,
-      skriptTalk: null,
-      creations: null,
-      log: null,
-      privateChannelsCategory: null,
-    };
+    this.cachedChannels = {};
     this.addonsVersions = [];
     this.skriptMcSyntaxes = [];
+    this.githubCache = {};
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
 
@@ -146,6 +139,9 @@ class SwanClient extends AkairoClient {
   }
 
   public checkValidity(): void {
+    if (!this.guild)
+      return;
+
     // Check tokens
     if (!process.env.SENTRY_TOKEN)
       Logger.info('Disabling Sentry as the DSN was not set in the environment variables (SENTRY_TOKEN).');
@@ -184,7 +180,7 @@ class SwanClient extends AkairoClient {
       'ATTACH_FILES',
       'READ_MESSAGE_HISTORY',
     ];
-    if (!this.guild.me.hasPermission(permissions))
+    if (!this.guild.me?.hasPermission(permissions))
       Logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
 
     // Check client's channels permissions
@@ -192,8 +188,8 @@ class SwanClient extends AkairoClient {
       if (!channel.isText())
         continue;
 
-      const channelPermissions = channel.permissionsFor(this.guild.me).toArray();
-      if (!permissions.every(perm => channelPermissions.includes(perm)))
+      const channelPermissions = channel.permissionsFor(this.guild.me)?.toArray();
+      if (channelPermissions && !permissions.every(perm => channelPermissions.includes(perm)))
         Logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
     }
   }
@@ -204,7 +200,7 @@ class SwanClient extends AkairoClient {
       .flatMap((category: Category<string, Command>) => category.array())
       .map((cmd: Command) => cmd.id);
 
-    const documents = [];
+    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 

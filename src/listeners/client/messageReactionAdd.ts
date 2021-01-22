@@ -6,6 +6,7 @@ import settings from '../../../config/settings';
 import Poll from '../../models/poll';
 import PollManager from '../../structures/PollManager';
 import { QuestionType } from '../../types';
+import type { GuildMessage } from '../../types';
 import { noop } from '../../utils';
 
 class MessageReactionAddListener extends Listener {
@@ -17,10 +18,12 @@ class MessageReactionAddListener extends Listener {
   }
 
   public async exec(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot)
+    if (user.bot || reaction.message.channel.type === 'dm')
       return;
 
-    const { message, emoji, users } = reaction;
+    const { emoji, users } = reaction;
+    const message = reaction.message as GuildMessage;
+
     const member = message.guild.members.resolve(user.id);
     const { pollReactions } = settings.miscellaneous;
 
@@ -78,16 +81,18 @@ class MessageReactionAddListener extends Listener {
         // If someone clicked the "Info" button
         await users.remove(user);
         try {
-          const text = poll.questionType === QuestionType.Yesno
-            ? messages.poll.informationsYesNo
-            : messages.poll.informationsCustom;
-          await member.send(text);
+          if (member) {
+            const text = poll.questionType === QuestionType.Yesno
+              ? messages.poll.informationsYesNo
+              : messages.poll.informationsCustom;
+            await member.send(text);
 
-          const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member }));
-          setTimeout(async () => {
-            if (infoMessage.deletable)
-              await infoMessage.delete().catch(noop);
-          }, 5000);
+            const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member }));
+            setTimeout(async () => {
+              if (infoMessage.deletable)
+                await infoMessage.delete().catch(noop);
+            }, 5000);
+          }
         } catch {
           await message.reply(messages.global.dmAreClosed);
         }

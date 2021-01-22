@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { MessageEmbed } from 'discord.js';
+import messages from '../../config/messages';
 import settings from '../../config/settings';
 import { skriptReleases as config } from '../../config/tasks';
 import Logger from '../structures/Logger';
@@ -26,10 +27,16 @@ class SkriptReleasesTask extends Task {
       return;
 
     const lastRelease = githubReleases.data[0];
+    if (!lastRelease)
+      return;
     this.client.githubCache = {
       lastPrerelease: githubReleases.data.find((release): release is GithubPrerelease => release.prerelease),
       lastStableRelease: githubReleases.data.find((release): release is GithubStableRelease => !release.prerelease),
     };
+
+    // We can't know if we've already posted it, so we don't post anything to prevent from spamming unnecessarily.
+    if (!lastRelease.published_at)
+      return;
 
     if ((Date.now() - new Date(lastRelease.published_at).getTime()) > config.timeDifference)
       return;
@@ -38,12 +45,12 @@ class SkriptReleasesTask extends Task {
     if (!channel?.isText())
       return;
 
-    const body = lastRelease.body.length >= 1900
+    const body = lastRelease.body && lastRelease.body.length >= 1900
       ? trimText(lastRelease.body, 1900)
-      : lastRelease.body;
+      : lastRelease.body ?? messages.miscellaneous.noDescription;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(lastRelease.author.login, lastRelease.author.avatar_url)
+      .setAuthor(lastRelease.author?.login ?? 'SkriptLang', lastRelease.author?.avatar_url)
       .setTitle(`${lastRelease.name} (${lastRelease.tag_name})`)
       .setURL(lastRelease.html_url)
       .setDescription(body)

@@ -58,8 +58,8 @@ declare module 'discord-akairo' {
     addonsVersions: string[];
     skriptMcSyntaxes: SkriptMcDocumentationSyntaxResponse[];
     githubCache: {
-      lastPrerelease: GithubPrerelease;
-      lastStableRelease: GithubStableRelease;
+      lastPrerelease?: GithubPrerelease;
+      lastStableRelease?: GithubStableRelease;
     };
 
     currentlyBanning: string[];

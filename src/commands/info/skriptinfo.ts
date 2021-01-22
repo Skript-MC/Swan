@@ -29,8 +29,8 @@ class SkriptInfoCommand extends Command {
 
       const isPrereleaseImportant = lastPrerelease
         ? semver.gt(
-            semver.coerce(lastPrerelease.tag_name),
-            semver.coerce(lastStableRelease.tag_name),
+            semver.coerce(lastPrerelease.tag_name) ?? '',
+            semver.coerce(lastStableRelease?.tag_name) ?? '',
           )
         : true;
 

@@ -80,8 +80,8 @@ class HistoryCommand extends Command {
             ? stripIndent`
 
                 \`\`\`diff
-                - ${toHumanDuration(update.valueBefore)}
-                + ${toHumanDuration(update.valueAfter)}
+                - ${update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true)}
+                + ${update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true)}
                 \`\`\`
               `
             : '\n';
