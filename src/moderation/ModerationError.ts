@@ -9,9 +9,11 @@ class ModerationError extends Error {
 
   public from(error: Error): this {
     this.addDetail('Original', `${error.name}: ${error.message}`);
-    const stack = error.stack.split('\n');
-    stack.shift();
-    this.stack = stack.join('\n');
+    if (error.stack) {
+      const stack = error.stack.split('\n');
+      stack.shift();
+      this.stack = stack.join('\n');
+    }
     return this;
   }
 
@@ -25,8 +27,8 @@ class ModerationError extends Error {
     return this;
   }
 
-  public addDetail(name: string, value: boolean | string): this {
-    this.details.set(name, value.toString());
+  public addDetail(name: string, value: boolean | string | undefined): this {
+    this.details.set(name, value?.toString() ?? 'Unknown');
     return this;
   }
 }

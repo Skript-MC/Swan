@@ -26,7 +26,7 @@ class AddonPackCommand extends Command {
 
   public async exec(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
     const messages: MessageDocument[] = await Message.find({ messageType: 'addonpack' });
-    const search: MessageDocument = searchMessageSimilarity(messages, args.version);
+    const search: MessageDocument | null = searchMessageSimilarity(messages, args.version);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;

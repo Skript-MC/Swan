@@ -38,10 +38,10 @@ export default {
       );
       return channel;
     } catch (unknownError: unknown) {
-      Logger.error(`Could not create the private channel for the ban of ${data.victim.member.displayName}.`);
-      Logger.detail(`Member's name: "${data.victim.member.displayName}"`);
+      Logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
+      Logger.detail(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
       Logger.detail(`Stripped name: "${pseudo}"`);
-      Logger.detail(`Create channel permissions: ${data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)}`);
+      Logger.detail(`Create channel permissions: ${data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
       Logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }

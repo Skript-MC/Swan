@@ -18,14 +18,14 @@ class ReadyListener extends Listener {
     if (!this.client.guild)
       throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
 
-    const resolve = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan);
+    const resolveChannel = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan)!;
     const isText = (chan: GuildChannel): boolean => chan instanceof TextChannel;
 
     type ChannelEntry = [channelSlug: string, resolvedChannel: GuildChannel | GuildChannel[]];
     const entries: ChannelEntry[] = Object.entries(settings.channels)
       .map(([slug, ids]) => (Array.isArray(ids)
-        ? [slug, ids.map(resolve)]
-        : [slug, resolve(ids)]
+        ? [slug, ids.map(resolveChannel)]
+        : [slug, resolveChannel(ids)]
       ));
     const channels: Record<string, GuildChannel | GuildChannel[]> = Object.fromEntries(entries);
 

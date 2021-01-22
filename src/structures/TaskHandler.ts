@@ -58,7 +58,7 @@ class TaskHandler extends AkairoHandler {
     if (typeof task.interval === 'number') {
       const interval = setInterval(taskFunction, task.interval);
       this.tasks.set(task.id, { interval });
-    } else if (cron.validate(task.cron)) {
+    } else if (task.cron && cron.validate(task.cron)) {
       const schedule = cron.schedule(task.cron, taskFunction);
       this.tasks.set(task.id, { schedule });
     } else {
@@ -75,9 +75,9 @@ class TaskHandler extends AkairoHandler {
       throw new AkairoError('MODULE_NOT_FOUND', this.classToHandle.name, id);
 
     const taskInfos = this.tasks.get(task.id);
-    if (taskInfos.interval)
+    if (taskInfos?.interval)
       clearInterval(taskInfos.interval);
-    else if (taskInfos.schedule)
+    else if (taskInfos?.schedule)
       taskInfos.schedule.stop().destroy();
 
     this.tasks.delete(task.id);

@@ -74,7 +74,7 @@ class CodeCommand extends Command {
       const collector = lastMessage
         .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
           && !user.bot
-          && (reaction.emoji.id || reaction.emoji.name) === settings.emojis.remove)
+          && (reaction.emoji.id ?? reaction.emoji.name) === settings.emojis.remove)
         .on('collect', async () => {
           try {
             collector.stop();

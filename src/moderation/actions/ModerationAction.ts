@@ -61,15 +61,17 @@ abstract class ModerationAction {
   }
 
   protected getFormattedChange(): string {
+    const oldDuration = this.updateInfos.sanctionDocument.duration;
+    const newDuration = this.data.duration;
     return pupa(messages.moderation.durationChange, {
-      oldDuration: this.formatDuration(this.updateInfos.sanctionDocument.duration),
-      newDuration: this.formatDuration(this.data.duration),
+      oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
+      newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
     });
   }
 
 
   protected get nameString(): string {
-    return this.data.victim?.user?.toString() || messages.global.unknownName;
+    return this.data.victim?.user?.toString() ?? messages.global.unknownName;
   }
 
   protected get moderatorString(): string {
@@ -98,6 +100,8 @@ abstract class ModerationAction {
         return messages.moderation.sanctionNames.unmute;
       case SanctionTypes.RemoveWarn:
         return messages.moderation.sanctionNames.removeWarn;
+      default:
+        throw new Error(`Received unexpected moderation type: ${this.data.type}`);
     }
   }
 
@@ -119,7 +123,7 @@ abstract class ModerationAction {
       : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
 
     try {
-      await (this.data.victim.member || this.data.victim.user)?.send(message);
+      await (this.data.victim.member ?? this.data.victim.user)?.send(message);
     } catch {
       await this.data.channel.send(messages.moderation.memberHasClosedDm).catch(noop);
     }

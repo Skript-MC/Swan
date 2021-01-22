@@ -1,8 +1,8 @@
 import { Listener } from 'discord-akairo';
-import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import messages from '../../../config/messages';
 import settings from '../../../config/settings';
+import type { GuildMessage } from '../../types';
 import { noop, trimText } from '../../utils';
 
 class MessageUpdateListener extends Listener {
@@ -13,7 +13,7 @@ class MessageUpdateListener extends Listener {
     });
   }
 
-  public async exec(oldMessage: Message, newMessage: Message): Promise<void> {
+  public async exec(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
     // Prevent active members from posting another documentation than Skript-MC's.
     if (newMessage.member.roles.cache.has(settings.roles.activeMember)
       && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
@@ -28,7 +28,7 @@ class MessageUpdateListener extends Listener {
     // Check for ghostpings.
     if (newMessage.author.bot
       || newMessage.system
-      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff).position)
+      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
       return;
 
     const oldUserMentions = oldMessage.mentions.users

@@ -4,6 +4,7 @@ import type { GuildMember } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import { userInfo as config } from '../../../config/commands/info';
+import messages from '../../../config/messages';
 import settings from '../../../config/settings';
 import type { GuildMessage } from '../../types';
 import type { UserInfoCommandArguments } from '../../types/CommandArguments';
@@ -54,9 +55,10 @@ class UserInfoCommand extends Command {
     const createdContent = pupa(embedConfig.created.content, {
       creation: moment(args.member.user.createdAt).format(settings.miscellaneous.durationFormat),
     });
-    const joinedContent = pupa(embedConfig.joined.content, {
-      joined: moment(new Date(args.member.joinedTimestamp)).format(settings.miscellaneous.durationFormat),
-    });
+    const joinedContent = pupa(embedConfig.joined.content,
+      args.member.joinedTimestamp
+        ? { joined: moment(new Date(args.member.joinedTimestamp)).format(settings.miscellaneous.durationFormat) }
+        : { joined: messages.global.unknown(true) });
     const rolesContent = args.member.roles.cache.size - 1 === 0
       ? embedConfig.roles.noRole
       : pupa(embedConfig.roles.content, {

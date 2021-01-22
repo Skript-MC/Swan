@@ -28,7 +28,7 @@ class WarnAction extends ModerationAction {
       }
 
       // If they have exceeded the warning limit
-      if (user.currentWarnCount >= settings.moderation.warnLimitBeforeBan) {
+      if (user.currentWarnCount && user.currentWarnCount >= settings.moderation.warnLimitBeforeBan) {
         // 1. Reset their warning count
         await ConvictedUser.findByIdAndUpdate(user._id, { $set: { currentWarnCount: 0 } });
 

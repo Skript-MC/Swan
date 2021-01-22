@@ -19,6 +19,9 @@ class UnmuteAction extends ModerationAction {
     // 1. Update the Database
     try {
       const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastMuteId: null });
+      if (!user)
+        throw new TypeError('The user to unmute was not found in the database.');
+
       await Sanction.findOneAndUpdate(
         { sanctionId: user.lastMuteId },
         {
@@ -46,9 +49,12 @@ class UnmuteAction extends ModerationAction {
     }
 
     // 2. Unmute (remove roles)
-    const role = this.data.guild.roles.resolve(settings.roles.mute);
     try {
-      await this.data.victim.member?.roles.remove(role, this.data.reason);
+      const role = this.data.guild.roles.resolve(settings.roles.mute);
+      if (role)
+        await this.data.victim.member?.roles.remove(role, this.data.reason);
+      else
+        throw new TypeError('Unable to resolve the mute role.');
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

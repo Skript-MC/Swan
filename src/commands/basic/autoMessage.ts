@@ -27,7 +27,7 @@ class AutoMessageCommand extends Command {
 
   public async exec(message: GuildMessage, args: AutoMessageCommandArguments): Promise<void> {
     const messages: MessageDocument[] = await Message.find({ messageType: 'auto' });
-    const search: MessageDocument = searchMessageSimilarity(messages, args.message);
+    const search: MessageDocument | null = searchMessageSimilarity(messages, args.message);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;

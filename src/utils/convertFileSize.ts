@@ -19,6 +19,7 @@ function convertFileSize(size: number): string {
     if (size < units[i][0])
       return `${(size / units[i - 1][0]).toFixed(2)} ${units[i - 1][1]}`;
   }
+  return 'Plusieurs pétaoctets';
 }
 
 export default convertFileSize;

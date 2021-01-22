@@ -24,8 +24,8 @@ class ModerationData {
   config?: Record<string, string>;
   victim: PersonInformations;
   reason: string;
-  duration?: number;
-  finish?: number;
+  duration?: number | null;
+  finish?: number | null;
   start: number;
   privateChannel?: TextChannel;
   sanctionId: string;
@@ -49,11 +49,11 @@ class ModerationData {
       this.client = argument;
       this.channel = this.client.cachedChannels.log;
       this.guild = this.channel.guild;
-      this.moderator = this.guild.me;
+      this.moderator = this.guild.me!;
     } else {
       this.channel = argument;
       this.guild = this.channel.guild;
-      this.moderator = this.guild.me;
+      this.moderator = this.guild.me!;
       this.client = this.guild.client as AkairoClient;
     }
     this.type = null;            // The sanction type (one of the SanctionTypes enum).

@@ -27,7 +27,7 @@ class ErrorDetailsCommand extends Command {
 
   public async exec(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
     const messages = await Message.find({ messageType: 'error' });
-    const search: MessageDocument = searchMessageSimilarity(messages, args.error);
+    const search: MessageDocument | null = searchMessageSimilarity(messages, args.error);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
