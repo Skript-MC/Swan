@@ -8,7 +8,6 @@ import Poll from '../../models/poll';
 import type { GuildMessage } from '../../types';
 import { QuestionType, Rules } from '../../types';
 import type { PollCommandArguments } from '../../types/CommandArguments';
-import { extractQuotedText } from '../../utils';
 
 class PollCommand extends Command {
   constructor() {
@@ -27,10 +26,10 @@ class PollCommand extends Command {
           retry: config.messages.promptRetryDuration,
         },
       }, {
-        id: 'content',
+        id: 'answers',
         type: Argument.validate(
-          'string',
-          (_message: GuildMessage, _phrase: string, value: string) => (value.match(/"/gi)?.length ?? 0) % 2 === 0,
+          'quotedText',
+          (_message: GuildMessage, phrase: string) => (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
         ),
         match: 'rest',
         prompt: {
@@ -55,21 +54,19 @@ class PollCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
-    // TODO: Create a custom argument type that automatically parses quoted text to an array?
-    const answers = extractQuotedText(args.content);
-    const question = answers.shift() ?? args.content;
-    const questionType = answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
+    const question = args.answers.shift();
+    const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
     const duration = args.duration * 1000;
     const finishDate = new Date(Date.now() + duration);
     const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
     const formattedDuration = moment.duration(duration).humanize();
 
-    if (answers.length === 1) {
+    if (args.answers.length === 1) {
       await message.channel.send(config.messages.notEnoughAnswers);
       return;
     }
 
-    if (answers.length > 18) {
+    if (args.answers.length > 18) {
       await message.channel.send(config.messages.tooManyAnswers);
       return;
     }
@@ -78,7 +75,7 @@ class PollCommand extends Command {
     if (questionType === QuestionType.Yesno) {
       possibleAnswers = config.messages.answersDisplayYesno;
     } else {
-      for (const [i, answer] of answers.entries()) {
+      for (const [i, answer] of args.answers.entries()) {
         possibleAnswers += pupa(config.messages.answersDisplayCustom, {
           reaction: settings.miscellaneous.pollReactions.multiple[i],
           answer,
@@ -114,7 +111,7 @@ class PollCommand extends Command {
         possibleReactions.push(r);
       }
     } else {
-      for (let i = 0; i < answers.length; i++) {
+      for (let i = 0; i < args.answers.length; i++) {
         await pollMessage.react(settings.miscellaneous.pollReactions.multiple[i]);
         possibleReactions.push(settings.miscellaneous.pollReactions.multiple[i]);
       }
@@ -139,7 +136,7 @@ class PollCommand extends Command {
       questionType,
       votes,
       question,
-      customAnswers: answers.length === 0 ? null : answers,
+      customAnswers: args.answers.length === 0 ? null : args.answers,
       anonymous: args.anonymous,
       multiple: args.multiple,
     });

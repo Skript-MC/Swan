@@ -72,7 +72,7 @@ export interface PingCommandArguments {}
 
 export interface PollCommandArguments {
   duration: number;
-  content: string;
+  answers: string[];
   anonymous: boolean;
   multiple: boolean;
 }
