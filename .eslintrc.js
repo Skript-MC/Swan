@@ -19,6 +19,9 @@ module.exports = {
       ignoredTypeNames: ['TextChannel', 'NewsChannel'],
     }],
 
+    // We don't want to forbid non-null-assertions!
+    '@typescript-eslint/no-non-null-assertion': 'off',
+
     // Because discord.js is promised base, we use a lot of promises in loops/callbacks that needs
     // be resolved before continuing! (i.e to send reactions or messages in the right order).
     '@typescript-eslint/no-misused-promises': 'off',
