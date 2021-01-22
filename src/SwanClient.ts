@@ -12,7 +12,7 @@ import type { Query } from 'mongoose';
 import messages from '../config/messages';
 import settings from '../config/settings';
 import CommandStat from './models/commandStat';
-import { duration, finiteDuration } from './resolvers';
+import { duration, finiteDuration, quotedText } from './resolvers';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
 import type {
@@ -120,6 +120,7 @@ class SwanClient extends AkairoClient {
 
     this.commandHandler.resolver.addType('duration', duration);
     this.commandHandler.resolver.addType('finiteDuration', finiteDuration);
+    this.commandHandler.resolver.addType('quotedText', quotedText);
 
     void this._loadCommandStats();
     Logger.info('Loading addons from SkriptTools');
