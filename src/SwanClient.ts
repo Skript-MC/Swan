@@ -41,7 +41,20 @@ class SwanClient extends AkairoClient {
 
     this.isLoading = true;
 
-    this.cachedChannels = {};
+    this.cachedChannels = {
+      idea: null,
+      suggestions: null,
+      bot: null,
+      main: null,
+      snippets: null,
+      skriptHelp: null,
+      otherHelp: null,
+      help: null,
+      skriptTalk: null,
+      creations: null,
+      log: null,
+      privateChannelsCategory: null,
+    };
     this.addonsVersions = [];
     this.skriptMcSyntaxes = [];
     this.githubCache = {};

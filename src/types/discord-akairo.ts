@@ -9,6 +9,7 @@ import type {
   GithubPrerelease,
   GithubStableRelease,
   GuildMessage,
+  Nullable,
   SkriptMcDocumentationSyntaxResponse,
 } from './index';
 
@@ -64,7 +65,7 @@ declare module 'discord-akairo' {
 
     currentlyBanning: string[];
     currentlyUnbanning: string[];
-    cachedChannels: CachedChannels;
+    cachedChannels: Nullable<CachedChannels>;
     isLoading: boolean;
 
     commandHandler: CommandHandler;
