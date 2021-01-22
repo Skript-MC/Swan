@@ -12,6 +12,7 @@ import type { Query } from 'mongoose';
 import messages from '../config/messages';
 import settings from '../config/settings';
 import CommandStat from './models/commandStat';
+import { duration, finiteDuration } from './resolvers';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
 import type {
@@ -20,7 +21,6 @@ import type {
   SkriptMcDocumentationFullAddonResponse,
   SkriptToolsAddonListResponse,
 } from './types';
-import { getDuration } from './utils';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -118,29 +118,8 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
-    this.commandHandler.resolver.addType('duration', (_message, phrase): number | null => {
-      if (!phrase)
-        return null;
-
-      if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(phrase))
-        return -1;
-      try {
-        return getDuration(phrase);
-       } catch {
-        return null;
-       }
-    });
-
-    this.commandHandler.resolver.addType('finiteDuration', (_message, phrase): number | null => {
-      if (!phrase)
-        return null;
-
-      try {
-        return getDuration(phrase);
-      } catch {
-        return null;
-      }
-    });
+    this.commandHandler.resolver.addType('duration', duration);
+    this.commandHandler.resolver.addType('finiteDuration', finiteDuration);
 
     void this._loadCommandStats();
     Logger.info('Loading addons from SkriptTools');
