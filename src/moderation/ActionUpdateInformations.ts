@@ -1,12 +1,12 @@
-import ConvictedUser from '../models/convictedUser';
-import Sanction from '../models/sanction';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
 import type {
   ConvictedUserDocument,
   SanctionDocument,
   TrackedFieldNames,
   TrackedSanctionTypes,
-} from '../types';
-import { SanctionTypes } from '../types';
+} from '@/app/types';
+import { SanctionTypes } from '@/app/types';
 import type ModerationData from './ModerationData';
 
 

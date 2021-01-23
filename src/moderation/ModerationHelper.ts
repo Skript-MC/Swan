@@ -1,11 +1,11 @@
 import { Permissions, TextChannel } from 'discord.js';
 import type { Guild, GuildChannel } from 'discord.js';
 import pupa from 'pupa';
-import settings from '../../config/settings';
-import Sanction from '../models/sanction';
-import Logger from '../structures/Logger';
-import { SanctionTypes } from '../types';
-import { prunePseudo } from '../utils';
+import Sanction from '@/app/models/sanction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import { prunePseudo } from '@/app/utils';
+import settings from '@/conf/settings';
 import type ModerationData from './ModerationData';
 
 export default {

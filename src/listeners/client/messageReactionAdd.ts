@@ -1,13 +1,13 @@
 import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import Poll from '../../models/poll';
-import PollManager from '../../structures/PollManager';
-import { QuestionType } from '../../types';
-import type { GuildMessage } from '../../types';
-import { noop } from '../../utils';
+import Poll from '@/app/models/poll';
+import PollManager from '@/app/structures/PollManager';
+import { QuestionType } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class MessageReactionAddListener extends Listener {
   constructor() {

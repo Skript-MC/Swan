@@ -1,8 +1,8 @@
 import { Listener } from 'discord-akairo';
 import type { Guild, User } from 'discord.js';
-import ModerationData from '../../moderation/ModerationData';
-import BanAction from '../../moderation/actions/BanAction';
-import { SanctionTypes } from '../../types';
+import ModerationData from '@/app/moderation/ModerationData';
+import BanAction from '@/app/moderation/actions/BanAction';
+import { SanctionTypes } from '@/app/types';
 
 class GuildBanAddListener extends Listener {
   constructor() {

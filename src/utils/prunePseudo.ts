@@ -1,5 +1,5 @@
 import type { GuildMember, User } from 'discord.js';
-import messages from '../../config/messages';
+import messages from '@/conf/messages';
 
 /**
  * Remove characters that are neither letters nor numbers from a guild member / user / string.

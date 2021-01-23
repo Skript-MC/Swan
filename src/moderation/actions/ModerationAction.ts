@@ -3,14 +3,14 @@ import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import { SanctionTypes } from '../../types';
-import { noop } from '../../utils';
+import type ModerationData from '@/app/moderation/ModerationData';
+import ModerationError from '@/app/moderation/ModerationError';
+import { SanctionTypes } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 import ActionUpdateInformations from '../ActionUpdateInformations';
 import ErrorState from '../ErrorState';
-import type ModerationData from '../ModerationData';
-import ModerationError from '../ModerationError';
 
 abstract class ModerationAction {
   data: ModerationData;

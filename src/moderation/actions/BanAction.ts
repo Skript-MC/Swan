@@ -1,14 +1,14 @@
 import { GuildMember, Permissions, User } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
-import { SanctionsUpdates } from '../../types';
-import { noop } from '../../utils';
-import ModerationError from '../ModerationError';
-import ModerationHelper from '../ModerationHelper';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
+import ModerationError from '@/app/moderation/ModerationError';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
+import { SanctionsUpdates } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
 class BanAction extends ModerationAction {

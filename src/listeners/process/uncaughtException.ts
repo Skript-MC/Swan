@@ -1,5 +1,5 @@
 import { Listener } from 'discord-akairo';
-import Logger from '../../structures/Logger';
+import Logger from '@/app/structures/Logger';
 
 class UncaughtExceptionListener extends Listener {
   constructor() {

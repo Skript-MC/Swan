@@ -1,12 +1,12 @@
 import { Command } from 'discord-akairo';
 import type { Message, MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
-import { code as config } from '../../../config/commands/basic';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import type { CodeCommandArguments } from '../../types/CommandArguments';
-import { noop, splitText } from '../../utils';
+import type { GuildMessage } from '@/app/types';
+import type { CodeCommandArguments } from '@/app/types/CommandArguments';
+import { noop, splitText } from '@/app/utils';
+import { code as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class CodeCommand extends Command {
   constructor() {

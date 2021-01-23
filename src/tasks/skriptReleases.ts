@@ -1,12 +1,12 @@
 import { Octokit } from '@octokit/rest';
 import { MessageEmbed } from 'discord.js';
-import messages from '../../config/messages';
-import settings from '../../config/settings';
-import { skriptReleases as config } from '../../config/tasks';
-import Logger from '../structures/Logger';
-import Task from '../structures/Task';
-import type { GithubPrerelease, GithubStableRelease } from '../types';
-import { noop, trimText } from '../utils';
+import Logger from '@/app/structures/Logger';
+import Task from '@/app/structures/Task';
+import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
+import { noop, trimText } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
+import { skriptReleases as config } from '@/conf/tasks';
 
 class SkriptReleasesTask extends Task {
   constructor() {

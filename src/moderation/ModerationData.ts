@@ -2,17 +2,17 @@ import { AkairoClient } from 'discord-akairo';
 import { GuildMember, Message, TextChannel } from 'discord.js';
 import type { Guild, User } from 'discord.js';
 import { nanoid } from 'nanoid';
-import * as configs from '../../config/commands/moderation';
-import messages from '../../config/messages';
 import type {
   GuildMessage,
   GuildTextBasedChannel,
   ModerationDataResult,
   PersonInformations,
   SanctionInformations,
-} from '../types';
-import { SanctionTypes } from '../types';
-import { getPersonFromCache } from '../utils';
+} from '@/app/types';
+import { SanctionTypes } from '@/app/types';
+import { getPersonFromCache } from '@/app/utils';
+import * as configs from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
 
 
 class ModerationData {

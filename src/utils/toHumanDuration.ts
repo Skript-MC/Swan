@@ -1,5 +1,5 @@
 import moment from 'moment';
-import messages from '../../config/messages';
+import messages from '@/conf/messages';
 
 /**
  * Get back the humanized duration format from miliseconds, or a string (config/messages.moderation.permanent)

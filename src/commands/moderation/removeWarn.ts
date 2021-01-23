@@ -1,15 +1,15 @@
 import { Argument, Command } from 'discord-akairo';
 import type { GuildMember } from 'discord.js';
-import { removeWarn as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import ConvictedUser from '../../models/convictedUser';
-import ModerationData from '../../moderation/ModerationData';
-import RemoveWarnAction from '../../moderation/actions/RemoveWarnAction';
-import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { RemoveWarnCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import ConvictedUser from '@/app/models/convictedUser';
+import ModerationData from '@/app/moderation/ModerationData';
+import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { RemoveWarnCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { removeWarn as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
 
 class RemoveWarnCommand extends Command {
   constructor() {

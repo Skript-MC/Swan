@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { PollDocument, PollModel } from '../types';
+import type { PollDocument, PollModel } from '@/app/types';
 
 const PollSchema = new Schema({
   messageId: {

@@ -1,9 +1,9 @@
 import { Listener } from 'discord-akairo';
 import type { Command } from 'discord-akairo';
 import type { Message } from 'discord.js';
-import messages from '../../../config/messages';
-import Logger from '../../structures/Logger';
-import { noop } from '../../utils';
+import Logger from '@/app/structures/Logger';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
 
 class CommandHandlerErrorListener extends Listener {
   constructor() {

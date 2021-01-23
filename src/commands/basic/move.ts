@@ -2,12 +2,12 @@ import { Argument, Command } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import { move as config } from '../../../config/commands/basic';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import type { MoveCommandArguments } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import type { GuildMessage } from '@/app/types';
+import type { MoveCommandArguments } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { move as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class MoveCommand extends Command {
   constructor() {

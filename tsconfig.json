@@ -2,11 +2,17 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "checkJs": true,
     "esModuleInterop": true,
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "./build",
+    "paths": {
+      "@/app/*": ["./src/*"],
+      "@/conf/*": ["./config/*"],
+      "@/root/*": ["./*"]
+    },
     "pretty": false,
     "removeComments": true,
     "resolveJsonModule": true,

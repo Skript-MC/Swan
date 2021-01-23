@@ -2,8 +2,8 @@ import { Listener } from 'discord-akairo';
 import type { Command } from 'discord-akairo';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import Logger from '../../structures/Logger';
+import Logger from '@/app/structures/Logger';
+import messages from '@/conf/messages';
 
 class MissingPermissionsListener extends Listener {
   constructor() {

@@ -1,8 +1,8 @@
 import { Inhibitor } from 'discord-akairo';
 import type { Command } from 'discord-akairo';
 import type { Message } from 'discord.js';
-import settings from '../../config/settings';
-import { Rules } from '../types';
+import { Rules } from '@/app/types';
+import settings from '@/conf/settings';
 
 class RulesInhibitor extends Inhibitor {
   constructor() {

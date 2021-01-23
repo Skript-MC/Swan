@@ -4,13 +4,13 @@ import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { statistics as config } from '../../../config/commands/basic';
-import settings from '../../../config/settings';
-import pkg from '../../../package.json';
-import { Rules } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { StatisticsCommandArguments } from '../../types/CommandArguments';
-import { trimText } from '../../utils';
+import { Rules } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { StatisticsCommandArguments } from '@/app/types/CommandArguments';
+import { trimText } from '@/app/utils';
+import { statistics as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
+import pkg from '@/root/package.json';
 
 class StatisticsCommand extends Command {
   constructor() {

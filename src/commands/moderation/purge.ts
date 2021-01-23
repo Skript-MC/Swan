@@ -1,10 +1,10 @@
 import { Argument, Command } from 'discord-akairo';
 import pupa from 'pupa';
-import { purge as config } from '../../../config/commands/moderation';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import type { PurgeCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import type { GuildMessage } from '@/app/types';
+import type { PurgeCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { purge as config } from '@/conf/commands/moderation';
+import settings from '@/conf/settings';
 
 class PurgeCommand extends Command {
   constructor() {

@@ -9,8 +9,8 @@ import {
 import type { Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
 import type { Query } from 'mongoose';
-import messages from '../config/messages';
-import settings from '../config/settings';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
 import { duration, finiteDuration, quotedText } from './resolvers';
 import Logger from './structures/Logger';

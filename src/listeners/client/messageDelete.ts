@@ -2,10 +2,10 @@ import { Listener } from 'discord-akairo';
 import { DMChannel } from 'discord.js';
 import type { Message } from 'discord.js';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import { noop } from '../../utils';
+import type { GuildMessage } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class MessageDeleteListener extends Listener {
   constructor() {
