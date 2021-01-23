@@ -2,44 +2,35 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import ConvictedUser from '../models/convictedUser';
-import Sanction from '../models/sanction';
-import Logger from '../structures/Logger';
-import { SanctionsUpdates, SanctionTypes } from '../types/index';
+import ConvictedUser from '../src/models/convictedUser';
+import Sanction from '../src/models/sanction';
 
 dotenv.config();
 
-function getNewType(type: string): SanctionTypes {
+function getNewType(type: string): 'ban' | 'hardban' | 'kick' | 'mute' | 'removeWarn' | 'unban' | 'unmute' | 'warn' {
   switch (type) {
     case 'hardban':
-      return SanctionTypes.Hardban;
     case 'ban':
-      return SanctionTypes.Ban;
     case 'unban':
-      return SanctionTypes.Unban;
     case 'mute':
-      return SanctionTypes.Mute;
     case 'unmute':
-      return SanctionTypes.Unmute;
     case 'warn':
-      return SanctionTypes.Warn;
+      return type;
     case 'remove_warn':
-      return SanctionTypes.RemoveWarn;
-    case 'kick':
-      return SanctionTypes.Kick;
+      return 'removeWarn';
     default:
       throw new TypeError(`Unexpected sanction type ${type}`);
   }
 }
 
-function getNewUpdateType(type: string): SanctionsUpdates {
+function getNewUpdateType(type: string): 'duration' | 'revoked' {
   switch (type) {
     case 'hardban':
-      return SanctionsUpdates.Duration;
+      return 'duration';
     case 'unban':
     case 'unmute':
     case 'remove_warn':
-      return SanctionsUpdates.Revoked;
+      return 'revoked';
     default:
       throw new TypeError(`Unexpected sanction update type ${type}`);
   }
@@ -73,7 +64,7 @@ export interface SanctionNedbSchema {
 void (async (): Promise<void> => {
   console.log('Starting conversion of sanction databases from v1 to v2...');
 
-  const rawContent = await fs.readFile(path.join(__dirname, '..', '..', '..', 'databases', 'sanctionsHistory.db'));
+  const rawContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'sanctionsHistory.db'));
   const parsableContent = `[${rawContent}]`;
   const inputArray: SanctionNedbSchema[] = JSON.parse(parsableContent);
 
@@ -84,10 +75,10 @@ void (async (): Promise<void> => {
     useFindAndModify: false,
   });
   mongoose.connection.on('connected', () => {
-    Logger.success('MongoDB is connected!');
+    console.log('MongoDB is connected!');
   });
   mongoose.connection.on('error', (err) => {
-    Logger.error('MongoDB connection error. Please make sure MongoDB is running.');
+    console.error('MongoDB connection error. Please make sure MongoDB is running.');
     throw err;
   });
 
