@@ -60,9 +60,9 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
   - **`resolvers` :** 🧷 Types customs pour les arguments des commandes.
   - **`structures` :** 📦 Différentes classes utilisées à travers Swan.
   - **`tasks` :** ⏱ Fichiers exécutés périodiquement (appelés des "tâches").
-  - **`tools` :** 📄 Petits outils que l'on peut utiliser via `npm run tools:<nom du fichier>`. *(À déplacer en dehors de `src/`)*
   - **`types` :** 🏷 Fichiers contenant les typings TypeScript nécessaires pour Swan.
   - **`utils` :** 🧰 Dossier contenant différentes fonctions utilitaires.
+- **`tools` :** 📄 Petits outils que l'on peut utiliser via `npm run tools:<nom du fichier>`.
 - **`typings` :** 🏷 Fichiers contenant les typings TypeScript des librairies externes.
 
 ## 🙏 Merci
