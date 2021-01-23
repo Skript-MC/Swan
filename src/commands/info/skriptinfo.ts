@@ -2,10 +2,10 @@ import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import { skriptInfo as config } from '../../../config/commands/info';
-import settings from '../../../config/settings';
-import type { SkriptInfoCommandArguments } from '../../types/CommandArguments';
-import type { GuildMessage } from '../../types/index';
+import type { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage } from '@/app/types/index';
+import { skriptInfo as config } from '@/conf/commands/info';
+import settings from '@/conf/settings';
 
 class SkriptInfoCommand extends Command {
   constructor() {

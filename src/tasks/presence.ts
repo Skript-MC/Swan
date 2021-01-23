@@ -1,6 +1,6 @@
 import type { PresenceData } from 'discord.js';
-import settings from '../../config/settings';
-import Task from '../structures/Task';
+import Task from '@/app/structures/Task';
+import settings from '@/conf/settings';
 
 class PresenceTask extends Task {
   activities: Generator<PresenceData, never>;

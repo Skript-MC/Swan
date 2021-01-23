@@ -1,15 +1,15 @@
 import { Argument, Command } from 'discord-akairo';
 import { GuildMember } from 'discord.js';
-import { unban as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import ModerationData from '../../moderation/ModerationData';
-import ModerationHelper from '../../moderation/ModerationHelper';
-import UnbanAction from '../../moderation/actions/UnbanAction';
-import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { UnbanCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import ModerationData from '@/app/moderation/ModerationData';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
+import UnbanAction from '@/app/moderation/actions/UnbanAction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { UnbanCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { unban as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
 
 class UnbanCommand extends Command {
   constructor() {

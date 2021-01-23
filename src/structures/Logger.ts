@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { padNumber } from '../utils';
+import { padNumber } from '@/app/utils';
 
 export default {
   _getTime(): string {

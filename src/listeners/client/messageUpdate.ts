@@ -1,9 +1,9 @@
 import { Listener } from 'discord-akairo';
 import pupa from 'pupa';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import { noop, trimText } from '../../utils';
+import type { GuildMessage } from '@/app/types';
+import { noop, trimText } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class MessageUpdateListener extends Listener {
   constructor() {

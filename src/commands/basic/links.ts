@@ -1,9 +1,9 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import { links as config } from '../../../config/commands/basic';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import type { LinksCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '@/app/types';
+import type { LinksCommandArguments } from '@/app/types/CommandArguments';
+import { links as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;

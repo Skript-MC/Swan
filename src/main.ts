@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/node';
 import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import settings from '../config/settings';
+import settings from '@/conf/settings';
 import SwanClient from './SwanClient';
 import Logger from './structures/Logger';
 

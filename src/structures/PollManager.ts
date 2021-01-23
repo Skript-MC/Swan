@@ -2,11 +2,11 @@ import type { AkairoClient } from 'discord-akairo';
 import type { NewsChannel, TextChannel } from 'discord.js';
 import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
-import messages from '../../config/messages';
-import settings from '../../config/settings';
-import Poll from '../models/poll';
-import { QuestionType } from '../types';
-import { noop } from '../utils';
+import Poll from '@/app/models/poll';
+import { QuestionType } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {

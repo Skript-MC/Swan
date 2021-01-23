@@ -1,13 +1,13 @@
-import messages from '../../config/messages';
-import Sanction from '../models/sanction';
-import ModerationData from '../moderation/ModerationData';
-import BanAction from '../moderation/actions/BanAction';
-import RemoveWarnAction from '../moderation/actions/RemoveWarnAction';
-import UnbanAction from '../moderation/actions/UnbanAction';
-import UnmuteAction from '../moderation/actions/UnmuteAction';
-import Task from '../structures/Task';
-import { SanctionTypes } from '../types';
-import { noop } from '../utils';
+import Sanction from '@/app/models/sanction';
+import ModerationData from '@/app/moderation/ModerationData';
+import BanAction from '@/app/moderation/actions/BanAction';
+import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
+import UnbanAction from '@/app/moderation/actions/UnbanAction';
+import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
+import Task from '@/app/structures/Task';
+import { SanctionTypes } from '@/app/types';
+import { noop } from '@/app/utils';
+import messages from '@/conf/messages';
 
 class ModerationTask extends Task {
   constructor() {

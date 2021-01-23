@@ -1,6 +1,6 @@
 import { Inhibitor } from 'discord-akairo';
 import type { Message } from 'discord.js';
-import ConvictedUser from '../models/convictedUser';
+import ConvictedUser from '@/app/models/convictedUser';
 
 class PreventBannedUsersInhibitor extends Inhibitor {
   constructor() {

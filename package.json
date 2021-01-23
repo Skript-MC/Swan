@@ -5,7 +5,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "build": "tsc && cpy --parents ./assets/ ./build/",
-    "exec": "node -r source-map-support/register ./build/src/main.js",
+    "exec": "node -r source-map-support/register -r module-alias/register ./build/src/main.js",
     "start": "npm run build && cross-env NODE_ENV=production npm run exec -- --no-color",
     "dev": "npm run build && cross-env NODE_ENV=development npm run exec",
     "tools:update-databases": "npm run build && node ./build/src/tools/update-databases.js",
@@ -49,6 +49,7 @@
     "dotenv": "^8.2.0",
     "he": "^1.2.0",
     "jaro-winkler": "^0.2.8",
+    "module-alias": "^2.2.2",
     "moment": "^2.29.1",
     "mongoose": "^5.11.10",
     "mongoose-autopopulate": "^0.12.3",
@@ -72,9 +73,15 @@
     "cross-env": "^7.0.3",
     "eslint": "^7.18.0",
     "eslint-config-noftalint": "^1.18.1",
+    "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-unicorn": "^26.0.1",
     "typescript": "^4.1.3"
+  },
+  "_moduleAliases": {
+    "@/app": "./build/src",
+    "@/conf": "./build/config",
+    "@/root": "./build/"
   }
 }

@@ -1,15 +1,15 @@
 import { Argument, Command } from 'discord-akairo';
 import type { GuildMember } from 'discord.js';
-import { unmute as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import ConvictedUser from '../../models/convictedUser';
-import ModerationData from '../../moderation/ModerationData';
-import UnmuteAction from '../../moderation/actions/UnmuteAction';
-import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { UnmuteCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import ConvictedUser from '@/app/models/convictedUser';
+import ModerationData from '@/app/moderation/ModerationData';
+import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { UnmuteCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { unmute as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
 
 class UnmuteCommand extends Command {
   constructor() {

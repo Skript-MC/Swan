@@ -1,8 +1,8 @@
 import { User } from 'discord.js';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
-import { SanctionsUpdates, SanctionTypes } from '../../types';
-import ModerationError from '../ModerationError';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
+import ModerationError from '@/app/moderation/ModerationError';
+import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import ModerationAction from './ModerationAction';
 
 class RemoveWarnAction extends ModerationAction {

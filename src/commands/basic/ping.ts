@@ -1,11 +1,11 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import { ping as config } from '../../../config/commands/basic';
-import settings from '../../../config/settings';
-import { Rules } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { PingCommandArguments } from '../../types/CommandArguments';
+import { Rules } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { PingCommandArguments } from '@/app/types/CommandArguments';
+import { ping as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
 class PingCommand extends Command {
   constructor() {

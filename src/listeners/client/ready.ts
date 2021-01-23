@@ -1,8 +1,8 @@
 import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
-import settings from '../../../config/settings';
-import Logger from '../../structures/Logger';
+import Logger from '@/app/structures/Logger';
+import settings from '@/conf/settings';
 
 class ReadyListener extends Listener {
   constructor() {

@@ -1,11 +1,11 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
-import type { SanctionDocument } from '../../types';
-import { SanctionsUpdates, SanctionTypes } from '../../types';
-import { noop } from '../../utils';
-import ModerationError from '../ModerationError';
-import ModerationHelper from '../ModerationHelper';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
+import ModerationError from '@/app/moderation/ModerationError';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
+import type { SanctionDocument } from '@/app/types';
+import { SanctionsUpdates, SanctionTypes } from '@/app/types';
+import { noop } from '@/app/utils';
 import ModerationAction from './ModerationAction';
 
 class UnbanAction extends ModerationAction {

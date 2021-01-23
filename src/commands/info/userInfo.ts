@@ -3,11 +3,11 @@ import { MessageEmbed } from 'discord.js';
 import type { GuildMember } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { userInfo as config } from '../../../config/commands/info';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import type { GuildMessage } from '../../types';
-import type { UserInfoCommandArguments } from '../../types/CommandArguments';
+import type { GuildMessage } from '@/app/types';
+import type { UserInfoCommandArguments } from '@/app/types/CommandArguments';
+import { userInfo as config } from '@/conf/commands/info';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class UserInfoCommand extends Command {
   constructor() {

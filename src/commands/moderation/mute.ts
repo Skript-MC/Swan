@@ -1,16 +1,16 @@
 import { Argument, Command } from 'discord-akairo';
 import type { GuildMember } from 'discord.js';
-import { mute as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import ModerationData from '../../moderation/ModerationData';
-import ModerationHelper from '../../moderation/ModerationHelper';
-import MuteAction from '../../moderation/actions/MuteAction';
-import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { MuteCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import ModerationData from '@/app/moderation/ModerationData';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
+import MuteAction from '@/app/moderation/actions/MuteAction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { MuteCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { mute as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class MuteCommand extends Command {
   constructor() {

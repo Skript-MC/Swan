@@ -3,11 +3,11 @@ import {
   Permissions,
   User,
 } from 'discord.js';
-import settings from '../../../config/settings';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
-import { SanctionsUpdates } from '../../types';
-import ModerationError from '../ModerationError';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
+import ModerationError from '@/app/moderation/ModerationError';
+import { SanctionsUpdates } from '@/app/types';
+import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
 class MuteAction extends ModerationAction {

@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
-import Logger from '../../structures/Logger';
-import type Task from '../../structures/Task';
+import Logger from '@/app/structures/Logger';
+import type Task from '@/app/structures/Task';
 
 class TaskHandlerErrorListener extends Listener {
   constructor() {

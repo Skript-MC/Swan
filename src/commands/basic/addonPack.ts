@@ -1,9 +1,9 @@
 import { Command } from 'discord-akairo';
-import { addonPack as config } from '../../../config/commands/basic';
-import Message from '../../models/message';
-import type { GuildMessage, MessageDocument } from '../../types';
-import type { AddonPackCommandArguments } from '../../types/CommandArguments';
-import { searchMessageSimilarity } from '../../utils';
+import Message from '@/app/models/message';
+import type { GuildMessage, MessageDocument } from '@/app/types';
+import type { AddonPackCommandArguments } from '@/app/types/CommandArguments';
+import { searchMessageSimilarity } from '@/app/utils';
+import { addonPack as config } from '@/conf/commands/basic';
 
 class AddonPackCommand extends Command {
   constructor() {

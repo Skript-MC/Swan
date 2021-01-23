@@ -4,7 +4,7 @@ import type {
   ListenerHandler,
 } from 'discord-akairo';
 import type { Guild, TextChannel } from 'discord.js';
-import type TaskHandler from '../structures/TaskHandler';
+import type TaskHandler from '@/app/structures/TaskHandler';
 import type {
   GithubPrerelease,
   GithubStableRelease,

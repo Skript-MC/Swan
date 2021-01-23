@@ -1,7 +1,7 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import ConvictedUser from '../../models/convictedUser';
-import Sanction from '../../models/sanction';
-import ModerationError from '../ModerationError';
+import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
+import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from './ModerationAction';
 
 class KickAction extends ModerationAction {

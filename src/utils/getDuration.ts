@@ -1,4 +1,4 @@
-import type { DurationPart } from '../types';
+import type { DurationPart } from '@/app/types';
 
 const REGEX = /^(?<number>\d+) ?(?<unit>\w+)$/i;
 

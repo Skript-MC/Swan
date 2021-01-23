@@ -2,19 +2,19 @@ import { oneLine, stripIndent } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
 import moment from 'moment';
 import pupa from 'pupa';
-import { history as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import Sanction from '../../models/sanction';
-import { SanctionsUpdates, SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { HistoryCommandArgument } from '../../types/CommandArguments';
+import Sanction from '@/app/models/sanction';
+import { SanctionsUpdates, SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { HistoryCommandArgument } from '@/app/types/CommandArguments';
 import {
   getUsername,
   noop,
   splitText,
   toHumanDuration,
- } from '../../utils';
+ } from '@/app/utils';
+import { history as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class HistoryCommand extends Command {
   constructor() {

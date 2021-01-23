@@ -1,15 +1,15 @@
 import { Argument, Command } from 'discord-akairo';
 import type { GuildMember } from 'discord.js';
-import { ban as config } from '../../../config/commands/moderation';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import ModerationData from '../../moderation/ModerationData';
-import BanAction from '../../moderation/actions/BanAction';
-import Logger from '../../structures/Logger';
-import { SanctionTypes } from '../../types';
-import type { GuildMessage } from '../../types';
-import type { BanCommandArgument } from '../../types/CommandArguments';
-import { noop } from '../../utils';
+import ModerationData from '@/app/moderation/ModerationData';
+import BanAction from '@/app/moderation/actions/BanAction';
+import Logger from '@/app/structures/Logger';
+import { SanctionTypes } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
+import type { BanCommandArgument } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
+import { ban as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class BanCommand extends Command {
   constructor() {

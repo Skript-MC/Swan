@@ -4,13 +4,13 @@ import { MessageEmbed } from 'discord.js';
 import type { Message } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
-import { addonInfo as config } from '../../../config/commands/info';
-import messages from '../../../config/messages';
-import settings from '../../../config/settings';
-import Logger from '../../structures/Logger';
-import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '../../types';
-import type { AddonInfoCommandArguments } from '../../types/CommandArguments';
-import { convertFileSize } from '../../utils';
+import Logger from '@/app/structures/Logger';
+import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '@/app/types';
+import type { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
+import { convertFileSize } from '@/app/utils';
+import { addonInfo as config } from '@/conf/commands/info';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class AddonInfoCommand extends Command {
   constructor() {

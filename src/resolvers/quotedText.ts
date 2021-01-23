@@ -1,5 +1,5 @@
 import type { Message } from 'discord.js';
-import { extractQuotedText } from '../utils';
+import { extractQuotedText } from '@/app/utils';
 
 export default function quotedText(_message: Message, phrase: string): string[] | null {
   const parsedText = extractQuotedText(phrase);

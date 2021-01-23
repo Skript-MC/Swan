@@ -1,5 +1,5 @@
 import jaroWinklerDistance from 'jaro-winkler';
-import type { MessageDocument } from '../types';
+import type { MessageDocument } from '@/app/types';
 
 function searchMessageSimilarity(entries: MessageDocument[], wanted: string): MessageDocument | null {
   const search: Array<[message: MessageDocument, similarity: number]> = [];

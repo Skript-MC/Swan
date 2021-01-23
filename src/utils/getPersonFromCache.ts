@@ -1,6 +1,6 @@
 import type { AkairoClient } from 'discord-akairo';
 import { GuildMember, User } from 'discord.js';
-import type { PersonInformations } from '../types';
+import type { PersonInformations } from '@/app/types';
 
 /**
  * Get the id, the member and the user of a person from the cache.

@@ -1,6 +1,6 @@
 import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
-import type { GuildMessage } from '../../src/types';
+import type { GuildMessage } from '@/app/types';
 
 const permissions = Permissions.FLAGS;
 

@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import Turndown from 'turndown';
-import settings from '../../config/settings';
-import { forumFeed as config } from '../../config/tasks';
-import Logger from '../structures/Logger';
-import Task from '../structures/Task';
-import type { InvisionFullRessource, InvisionFullTopic } from '../types';
-import { noop, trimText } from '../utils';
+import Logger from '@/app/structures/Logger';
+import Task from '@/app/structures/Task';
+import type { InvisionFullRessource, InvisionFullTopic } from '@/app/types';
+import { noop, trimText } from '@/app/utils';
+import settings from '@/conf/settings';
+import { forumFeed as config } from '@/conf/tasks';
 
 const turndownService = new Turndown()
   .addRule('code', {

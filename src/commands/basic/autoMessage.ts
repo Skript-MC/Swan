@@ -1,9 +1,9 @@
 import { Command } from 'discord-akairo';
-import { autoMessage as config } from '../../../config/commands/basic';
-import Message from '../../models/message';
-import type { GuildMessage, MessageDocument } from '../../types';
-import type { AutoMessageCommandArguments } from '../../types/CommandArguments';
-import { searchMessageSimilarity } from '../../utils';
+import Message from '@/app/models/message';
+import type { GuildMessage, MessageDocument } from '@/app/types';
+import type { AutoMessageCommandArguments } from '@/app/types/CommandArguments';
+import { searchMessageSimilarity } from '@/app/utils';
+import { autoMessage as config } from '@/conf/commands/basic';
 
 class AutoMessageCommand extends Command {
   constructor() {

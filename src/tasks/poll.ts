@@ -1,6 +1,6 @@
-import Poll from '../models/poll';
-import PollManager from '../structures/PollManager';
-import Task from '../structures/Task';
+import Poll from '@/app/models/poll';
+import PollManager from '@/app/structures/PollManager';
+import Task from '@/app/structures/Task';
 
 class PollTask extends Task {
   constructor() {

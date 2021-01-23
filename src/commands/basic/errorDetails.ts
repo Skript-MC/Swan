@@ -1,9 +1,9 @@
 import { Command } from 'discord-akairo';
-import { errorDetails as config } from '../../../config/commands/basic';
-import Message from '../../models/message';
-import type { GuildMessage, MessageDocument } from '../../types';
-import type { ErrorDetailsCommandArguments } from '../../types/CommandArguments';
-import { searchMessageSimilarity } from '../../utils';
+import Message from '@/app/models/message';
+import type { GuildMessage, MessageDocument } from '@/app/types';
+import type { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
+import { searchMessageSimilarity } from '@/app/utils';
+import { errorDetails as config } from '@/conf/commands/basic';
 
 class ErrorDetailsCommand extends Command {
   constructor() {
