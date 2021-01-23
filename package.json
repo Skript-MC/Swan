@@ -36,10 +36,10 @@
     "url": "git+https://github.com/Skript-MC/Swan.git"
   },
   "dependencies": {
-    "@octokit/rest": "^18.0.12",
-    "@octokit/types": "^6.3.1",
-    "@sentry/integrations": "^5.30.0",
-    "@sentry/node": "^5.30.0",
+    "@octokit/rest": "^18.0.14",
+    "@octokit/types": "^6.5.0",
+    "@sentry/integrations": "^6.0.1",
+    "@sentry/node": "^6.0.1",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@types/common-tags": "^1.8.0",
     "@types/he": "^1.1.1",
-    "@types/node": "^14.14.21",
+    "@types/node": "^14.14.22",
     "@types/node-cron": "^2.0.3",
     "@types/semver": "^7.3.4",
     "@types/turndown": "^5.0.0",
