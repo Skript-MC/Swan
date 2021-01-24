@@ -30,6 +30,7 @@ class ModerationData {
   privateChannel?: TextChannel;
   sanctionId: string;
   informations: SanctionInformations;
+  file: { path: string; name: string };
 
   /**
    * Create moderation data from a message or from individual informations.
@@ -69,6 +70,7 @@ class ModerationData {
     this.start = Date.now();     // The start timestamp.
     this.sanctionId = nanoid(8); // The id of the case.
     this.informations = {};      // The additional information to be given to the sanction model.
+    this.file = null;            // File informations if it is a ban.
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
@@ -111,6 +113,11 @@ class ModerationData {
 
   public setInformations(infos: Record<string, unknown>): this {
     this.informations = { ...this.informations, ...infos };
+    return this;
+  }
+
+  public setFile(fileInfo: { path: string; name: string }): this {
+    this.file = fileInfo;
     return this;
   }
 

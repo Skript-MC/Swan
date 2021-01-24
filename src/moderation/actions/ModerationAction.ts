@@ -151,7 +151,21 @@ abstract class ModerationAction {
     if (this.data.privateChannel)
       embed.addField(messages.moderation.log.privateChannelTitle, this.data.privateChannel.toString(), true);
 
+    if (this.data.file)
+      embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogAvailableDescription, true);
+    else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument.duration !== -1)
+      embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogUnavailableDescription, true);
+
     await this.logChannel.send(embed);
+
+    if (this.data.file) {
+      await this.logChannel.send({
+        files: [{
+          attachment: this.data.file.path,
+          name: `${this.data.file.name}.txt`,
+        }],
+      });
+    }
   }
 
   protected abstract before(): Promise<void> | void;
