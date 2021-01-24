@@ -25,6 +25,7 @@ export interface BanCommandArgument {
   duration: number;
   reason: string;
   autoban: boolean;
+  purge: boolean;
 }
 
 export interface CodeCommandArguments {

@@ -30,7 +30,12 @@ class ModerationData {
   privateChannel?: TextChannel;
   sanctionId: string;
   informations: SanctionInformations;
+
+  // These informations don't have much to do with moderation data, they are just used to pass
+  // data from the specific moderation action to the parent class, ModerationAction.
+  // TODO: Maybe this should be put in a separate class that acts the same as ModerationData.
   file: { path: string; name: string };
+  shouldPurge: boolean;
 
   /**
    * Create moderation data from a message or from individual informations.
@@ -71,6 +76,7 @@ class ModerationData {
     this.sanctionId = nanoid(8); // The id of the case.
     this.informations = {};      // The additional information to be given to the sanction model.
     this.file = null;            // File informations if it is a ban.
+    this.shouldPurge = false;    // Whether we should purge the messages of the member while hard-banning them.
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
@@ -118,6 +124,11 @@ class ModerationData {
 
   public setFile(fileInfo: { path: string; name: string }): this {
     this.file = fileInfo;
+    return this;
+  }
+
+  public setShouldPurge(bool: boolean): this {
+    this.shouldPurge = bool;
     return this;
   }
 

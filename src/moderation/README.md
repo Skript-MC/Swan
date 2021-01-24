@@ -45,6 +45,7 @@ Le module de modération de Swan consiste en une grosse partie du bot. Voici com
 #### Drapeau
 
 Un drapeau (*flag* en anglais) est une option qui peut être spécifiée **n'importe où** dans une commande. Il est précédé de deux tirets `--` s'il contient plusieurs lettres, sinon un seul tiret : `-`.
+Pour les power-users, vous ne pouvez pas combiner les drapeaux comme vous le feriez dans votre CLI (par exemple le drapeau `f` et `r` dans `rm -rf`). Si vous utilisez la version courte de plusieurs drapeaux, vous devrez les séparer (`rm -r -f`).
 
 #### Utilisateur
 
@@ -102,11 +103,14 @@ Modèle : `.unban <@mention | pseudo | ID> [raison]`
 
 La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'en suit l'utilisateur à bannir, puis la durée pour un bannissement temporaire (salon des bannis), ou `perma` ou `def` pour un bannissement permanant. Enfin, il faut entrer la raison du bannissement.
 
-Cette commande accepte aussi un drapeau : `--autoban` (ou encore `--auto-ban` ou `-a`). Avec ce drapeau, si la personne n'a écrit aucun message dans son salon privé à la fin de la sanction, il sera banni définitivement, au lieu d'être simplement débanni.
+Cette commande accepte aussi des drapeaux :
 
-Voici donc le modèle d'une commande : `.ban <@mention | pseudo | ID> <durée> <raison> [--autoban]`
+- `--autoban` (ou encore `--auto-ban` ou `-a`). Avec ce drapeau, si la personne n'a écrit aucun message dans son salon privé à la fin de la sanction, il sera banni définitivement, au lieu d'être simplement débanni.
+- `--purge` (ou en court : `-p`). Ce drapeau permet de supprimer les messages envoyés par le membre dans les septs derniers jours. Si ce drapeau n'est pas mis, aucun message du membre ne sera supprimé. **__Attention :__ ce drapeau fonctionne uniquement pour les bannissements définitifs (mises à jour de bannissement inclus)**
+
+Voici donc le modèle d'une commande : `.ban <@mention | pseudo | ID> <durée> <raison> [--autoban] [--purge]`
 Et voici des exemples d'utilisation :\
-`.ban @WeeskyBDW 3j --autoban t'es paumé !`\
+`.ban @WeeskyBDW 3j --autoban -p t'es paumé !`\
 `.ban 1h @Vengelis La vie est dure...`
 
 

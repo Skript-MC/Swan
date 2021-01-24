@@ -80,7 +80,7 @@ class BanAction extends ModerationAction {
 
     // 2. Ban the member
     try {
-      await this.data.victim.member?.ban({ reason: this.data.reason });
+      await this.data.victim.member?.ban({ days: this.data.shouldPurge ? 7 : 0, reason: this.data.reason });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

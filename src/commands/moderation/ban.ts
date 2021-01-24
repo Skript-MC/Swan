@@ -52,6 +52,10 @@ class BanCommand extends Command {
         id: 'autoban',
         match: 'flag',
         flag: ['--autoban', '--auto-ban', '-a'],
+      }, {
+        id: 'purge',
+        match: 'flag',
+        flag: ['--purge', '-p'],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
@@ -62,7 +66,8 @@ class BanCommand extends Command {
   public async exec(message: GuildMessage, args: BanCommandArgument): Promise<void> {
     const data = new ModerationData(message)
       .setVictim(args.member)
-      .setReason(args.reason);
+      .setReason(args.reason)
+      .setShouldPurge(args.purge);
 
     if (args.duration === -1) {
       data.setDuration(args.duration, false)
