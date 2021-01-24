@@ -1,5 +1,5 @@
 import type { AkairoClient } from 'discord-akairo';
-import { GuildMember, User } from 'discord.js';
+import type { GuildMember, User } from 'discord.js';
 import type { PersonInformations } from '@/app/types';
 
 /**
@@ -15,15 +15,8 @@ function getPersonFromCache(
   client: AkairoClient,
   resolveMemberAndUser = true,
 ): PersonInformations {
-  // Get the GuildMember from the personResolvable or the cache.
-  const member: GuildMember = personResolvable instanceof GuildMember
-    ? personResolvable
-    : client.guild.members.resolve(personResolvable);
-
-  // Get the User from the member, the personResolvable or the cache.
-  const user: User = personResolvable instanceof User
-    ? personResolvable
-    : member?.user ?? client.users.resolve(personResolvable);
+  const member = client.util.resolveMember(personResolvable.toString(), client.guild.members.cache);
+  const user = member?.user ?? client.util.resolveUser(personResolvable.toString(), client.users.cache);
 
   const missingData = resolveMemberAndUser
     ? !member || !user // If we are missing either the member or the user
