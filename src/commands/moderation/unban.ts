@@ -1,5 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
-import { GuildMember } from 'discord.js';
+import type { GuildMember, User } from 'discord.js';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
@@ -18,10 +18,31 @@ class UnbanCommand extends Command {
       details: config.details,
       args: [{
         id: 'member',
-        // TODO: Make the validation of member here, not in #exec().
-        // TODO: Fetch the user, don't only take it from the cache (make a new custom type?).
-        // TODO: Add a prompt (when the validation is done correctly).
-        type: Argument.union('member', 'user'),
+        type: Argument.union(
+          // Try resolving to a GuildMember
+          'member',
+          // Try resolving to a User
+          'user',
+          // Try resolving the first part of the message (possibly the name/ID of the victim) to a User
+          (_message, value) => this.client.util.resolveUser(value, this.client.users.cache),
+          // Try parsing the first part of the message to an ID
+          async (_message, value) => {
+            let resolvedMember: GuildMember | User;
+            const id = /<@!?(?<id>\d{17,19})>/.exec(value)?.groups?.id;
+            // If we found a valid ID, try resolving the User from cache
+            if (id) {
+              resolvedMember = this.client.util.resolveUser(id, this.client.users.cache);
+              // If it is not found in the cache, try fetching it
+              if (!resolvedMember)
+                resolvedMember = await this.client.users.fetch(id).catch(noop) || null;
+            }
+            return resolvedMember;
+          },
+        ),
+        prompt: {
+          start: config.messages.promptStartMember,
+          retry: config.messages.promptRetryMember,
+        },
       }, {
         id: 'reason',
         type: 'string',
@@ -35,21 +56,6 @@ class UnbanCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: UnbanCommandArgument): Promise<void> {
-    if (args.member instanceof GuildMember
-      && args.member.roles.highest.position >= message.member.roles.highest.position) {
-      // TODO: Change this message and the next one when the 3 TODOs above are fixed.
-      await message.channel.send('*[Le contenu du message est temporaire]* Le membre est invalide (il a des permissions supérieures ou égales aux vôtres), veuillez refaire la commande.');
-      return;
-    }
-
-    // NOTE: This is really badly done, but will be fixed when all the TODOs above are fixed.
-    if (!args.member)
-      args.member = await this.client.users.fetch(message.content.split(' ')[1]);
-    if (!args.member) {
-      await message.channel.send('*[Le contenu du message est temporaire]* Le membre est (impossible de le récupérer), veuillez refaire la commande.');
-      return;
-    }
-
     try {
       const isBanned = await ModerationHelper.isBanned(args.member.id, true);
       if (!isBanned) {
