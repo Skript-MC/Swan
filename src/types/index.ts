@@ -319,6 +319,16 @@ export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: G
 /*  Various Moderation Types  */
 /* ************************** */
 
+export interface BanChannelMessage {
+  id: string;
+  content: string;
+  authorName: string;
+  authorId: string;
+  sentAt: number;
+  edited?: number;
+  attachments?: Array<{ name: string; url: string }>;
+}
+
 /** Represent a Kick entry in the guild audit logs */
 export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
   action: 'MEMBER_KICK';

@@ -96,6 +96,9 @@ export default {
       durationTitle: ':stopwatch: Durée',
       durationDescription: '\nExpire {action.expiration}',
       privateChannelTitle: ':speech_left: Salon privé',
+      banlogTitle: ':scroll: Historique des messages',
+      banlogAvailableDescription: 'Disponible ci-dessous',
+      banlogUnavailableDescription: 'Indisponible',
     },
     sanctionNames: {
       banUpdate: 'Modification du bannissement',

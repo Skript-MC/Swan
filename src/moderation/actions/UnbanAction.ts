@@ -62,9 +62,19 @@ class UnbanAction extends ModerationAction {
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
       } else {
         await this.data.victim.member.roles.set([]);
+
         const channelId = ban?.informations?.banChannelId;
-        if (channelId)
-          await ModerationHelper.removeChannel(channelId, this.data.guild);
+        if (!channelId)
+          return;
+        const channel = this.data.guild.channels.resolve(channelId);
+        if (!channel || !channel.isText())
+          return;
+
+        const messages = await ModerationHelper.getAllChannelMessages(channel);
+        const fileInfo = await ModerationHelper.getMessageFile(this.data, messages);
+        this.data.setFile(fileInfo);
+
+        await channel.delete();
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
