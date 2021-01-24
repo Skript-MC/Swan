@@ -153,7 +153,7 @@ abstract class ModerationAction {
 
     if (this.data.file)
       embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogAvailableDescription, true);
-    else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument.duration !== -1)
+    else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument?.duration !== -1)
       embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogUnavailableDescription, true);
 
     await this.logChannel.send(embed);
