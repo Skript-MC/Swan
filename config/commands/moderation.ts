@@ -47,9 +47,9 @@ export const ban = {
   },
   details: {
     name: 'Ban',
-    content: `Appliquer une restriction du Discord à un membre (= salon des bannis (SDB)), ou le bannir définitivement. Entre une durée pour un SDB, ou \`def\` pour un bannissement permanent. Utilise le drapeau \`--autoban\` (\`-a\`) pour automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message. ${see('bannissement')}`,
-    usage: 'ban <@mention | pseudo | ID> <durée> <raison> [--autoban]',
-    examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure...'],
+    content: `Appliquer une restriction du Discord à un membre (= salon des bannis (SDB)), ou le bannir définitivement. Entre une durée pour un SDB, ou \`def\` pour un bannissement permanent. Utilise le drapeau \`--autoban\` (\`-a\`) pour automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message. Utilisez le drapeau \`--purge\` (\`-p\`) pour supprimer les messages postés par le membre dans les 7 derniers jours. ${see('bannissement')}`,
+    usage: 'ban <@mention | pseudo | ID> <durée> <raison> [--autoban] [--purge]',
+    examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
     permissions: 'Staff',
   },
   messages: {
