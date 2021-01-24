@@ -88,6 +88,10 @@ export interface RemoveWarnCommandArgument {
   reason: string;
 }
 
+export interface ServerInfoCommandArguments {
+  server: string;
+}
+
 export interface SkriptInfoCommandArguments {
   display: 'all' | 'dl' | 'download' | 'link' | 'links';
 }

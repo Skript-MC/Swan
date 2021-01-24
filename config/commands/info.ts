@@ -93,6 +93,36 @@ export const documentation = {
   },
 };
 
+export const serverInfo = {
+  settings: {
+    aliases: ['server', 'serveur', 'serverinfo', 'serveurinfo'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Serveur Info',
+    content: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
+    usage: 'serverinfo <nom de domaine>',
+    examples: ['skriptinfo hypixel.net'],
+  },
+  messages: {
+    embed: {
+      title: 'Informations sur {query}',
+      online: 'En ligne',
+      offline: 'Hors ligne',
+      status: ':satellite: Statut',
+      ip: ':label: Adresse IP',
+      players: ':busts_in_silhouette: Joueurs en ligne',
+      version: ':desktop: Version Minecraft',
+      hostname: ":bookmark_tabs: Nom d'hôte",
+      software: ':pager: Software',
+      plugins: ':toolbox: Plugins',
+      mods: ':toolbox: Mods',
+      footer: 'Exécuté par {member.displayName} | Données fournies par https://api.mcsrcstat.us',
+    },
+  },
+};
+
 export const skriptInfo = {
   settings: {
     aliases: ['skript', 'skriptinfo'],
