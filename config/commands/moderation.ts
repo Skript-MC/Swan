@@ -232,6 +232,8 @@ export const unban = {
     notification: commonMessages.revocationNotification,
     notBanned: "Cet utilisateur n'est pas banni.",
     success: 'Utilisateur débanni avec succès !',
+    promptStartMember: commonMessages.promptStartMember,
+    promptRetryMember: commonMessages.promptRetryMember,
   },
 };
 
