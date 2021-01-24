@@ -91,6 +91,35 @@ export interface SkriptMcDocumentationAddonResponse {
   dependency?: string | null;
 }
 
+/** Represent a server object from the McSrvStat's API. */
+export interface ServerStatResponse {
+  online: boolean;
+  ip: string;
+  port: number;
+  motd: {
+    raw: string[];
+    clean: string[];
+    html: string[];
+  };
+  players: {
+    online: number;
+    max: number;
+  };
+  version: string;
+  protocol?: number;
+  hostname?: string;
+  icon?: string;
+  software?: string;
+  plugins?: {
+    names: string[];
+    raw: string[];
+  };
+  mods?: {
+    names: string[];
+    raw: string[];
+  };
+}
+
 /** Represent a category object from the Skript-MC's Invision forums API. */
 export interface InvisionCategory {
   id: number;
