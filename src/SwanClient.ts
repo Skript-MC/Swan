@@ -61,7 +61,7 @@ class SwanClient extends AkairoClient {
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
 
-    Logger.info('Creating Command handler');
+    Logger.info('Creating Command handler...');
     this.commandHandler = new CommandHandler(this, {
       directory: path.join(__dirname, 'commands/'),
       prefix: settings.bot.prefix,
@@ -85,19 +85,19 @@ class SwanClient extends AkairoClient {
       },
     });
 
-    Logger.info('Creating Inhibitor handler');
+    Logger.info('Creating Inhibitor handler...');
     this.inhibitorHandler = new InhibitorHandler(this, {
       directory: path.join(__dirname, 'inhibitors/'),
       automateCategories: true,
     });
 
-    Logger.info('Creating Task handler');
+    Logger.info('Creating Task handler...');
     this.taskHandler = new TaskHandler(this, {
       directory: path.join(__dirname, 'tasks/'),
       automateCategories: true,
     });
 
-    Logger.info('Creating Listener handler');
+    Logger.info('Creating Listener handler...');
     this.listenerHandler = new ListenerHandler(this, {
       directory: path.join(__dirname, 'listeners/'),
       automateCategories: true,
@@ -122,12 +122,12 @@ class SwanClient extends AkairoClient {
       this.commandHandler.resolver.addType(name, resolver);
 
     void this._loadCommandStats();
-    Logger.info('Loading addons from SkriptTools');
-    void this._loadAddons();
-    Logger.info('Loading syntaxes from Skript-MC');
+    Logger.info('Loading addons from SkriptTools...');
+    void this._loadSkriptToolsAddons();
+    Logger.info('Loading syntaxes from Skript-MC...');
     void this._loadSkriptMcSyntaxes();
 
-    Logger.info('Client initialization finished');
+    Logger.info('Client initialization finished!');
   }
 
   public checkValidity(): void {
@@ -204,7 +204,7 @@ class SwanClient extends AkairoClient {
     }
   }
 
-  private async _loadAddons(): Promise<void> {
+  private async _loadSkriptToolsAddons(): Promise<void> {
     try {
       const allAddons: SkriptToolsAddonListResponse = await axios(settings.apis.addons).then(res => res?.data?.data);
       if (!allAddons)
@@ -216,7 +216,7 @@ class SwanClient extends AkairoClient {
           this.addonsVersions.push(versions[versions.length - 1]);
       }
     } catch (unknownError: unknown) {
-      Logger.error('Could not load some addons:');
+      Logger.error("Could not load SkriptTool's addons:");
       Logger.error((unknownError as Error).stack);
     }
   }
@@ -255,7 +255,7 @@ class SwanClient extends AkairoClient {
         }
       }
     } catch (unknownError: unknown) {
-      Logger.error('Could not fetch addons:');
+      Logger.error("Could not fetch Skript-MC's addons/syntaxes:");
       Logger.error((unknownError as Error).stack);
     }
   }
