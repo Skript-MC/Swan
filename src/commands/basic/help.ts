@@ -55,12 +55,39 @@ class HelpCommand extends Command {
       for (const category of categories.array()) {
         embed.addField(
           pupa(messages.category, { categoryName: capitalize(category.id) }),
-          category.map(cmd => `\`${cmd.aliases[0]}\``).join(' • '),
+          category
+            .map(cmd => (this._isAllowed(cmd, message) ? `\`${cmd.aliases[0]}\`` : `~~\`${cmd.aliases[0]}\`~~`))
+            .join(' • '),
         );
       }
     }
 
     await message.channel.send(embed);
+  }
+
+  // Permission-check borrowed from https://github.com/discord-akairo/discord-akairo/blob/23bb3c1765d58059e43e587a1dd602d4394d3f54/src/struct/commands/CommandHandler.js#L669
+  private _isAllowed(cmd: Command, message: GuildMessage): boolean {
+    if (cmd.userPermissions) {
+      const ignorer = cmd.ignorePermissions || this.ignorePermissions;
+      const isIgnored = Array.isArray(ignorer)
+        ? ignorer.includes(message.author.id)
+        : typeof ignorer === 'function'
+          ? ignorer(message, cmd)
+          : message.author.id === ignorer;
+
+      if (!isIgnored) {
+        if (typeof cmd.userPermissions === 'function') {
+          // TODO: Support async `userPermissions` functions?
+          if (cmd.userPermissions(message) !== null)
+            return false;
+        } else if (message.guild) {
+          const missing = message.channel.permissionsFor(message.author).missing(cmd.userPermissions);
+          if (missing.length > 0)
+            return false;
+        }
+      }
+    }
+    return true;
   }
 }
 
