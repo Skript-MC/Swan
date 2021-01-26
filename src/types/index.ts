@@ -30,6 +30,9 @@ export type Nullable<T> = { [P in keyof T]: T[P] | null };
 /*  API Result Types  */
 /* ****************** */
 
+// #region API Result Types (VS Code)
+// region API Result Types (JetBrains)
+
 /** Types for the Github API's releases endpoint */
 type RawGithubReleaseResponse = Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
 
@@ -344,9 +347,14 @@ export type GuildTextBasedChannel = NewsChannel | TextChannel;
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
 
+// #endregion
+
 /* ************************** */
 /*  Various Moderation Types  */
 /* ************************** */
+
+// #region Various Moderation Types (VS Code)
+// region Various Moderation Types (JetBrains)
 
 export interface BanChannelMessage {
   id: string;
@@ -440,9 +448,14 @@ export enum SanctionsUpdates {
   Duration = 'duration',
 }
 
+// #endregion
+
 /* **************************** */
 /*  CommandStat Database Types  */
 /* **************************** */
+
+// #region CommandStat Database Types (VS Code)
+// region CommandStat Database Types (JetBrains)
 
 /** Interface for the "CommandStat"'s mongoose schema */
 export interface CommandStatBase {
@@ -456,9 +469,14 @@ export interface CommandStatDocument extends CommandStatBase, Document {}
 /** Interface for the "CommandStat"'s mongoose model */
 export type CommandStatModel = Model<CommandStatDocument>;
 
+// #endregion
+
 /* ********************* */
 /*  Poll Database Types  */
 /* ********************* */
+
+// #region Poll Database Types (VS Code)
+// region Poll Database Types (JetBrains)
 
 /** The different question types available for the poll command */
 export enum QuestionType {
@@ -488,9 +506,14 @@ export interface PollDocument extends PollBase, Document {}
 /** Interface for the "Poll"'s mongoose model */
 export type PollModel = Model<PollDocument>;
 
+// #endregion
+
 /* ************************ */
 /*  Message Database Types  */
 /* ************************ */
+
+// #region Message Database Types (VS Code)
+// region Message Database Types (JetBrains)
 
 /** Interface for the "Message"'s mongoose schema */
 export interface MessageBase {
@@ -506,9 +529,14 @@ export interface MessageDocument extends MessageBase, Document {}
 /** Interface for the "Message"'s mongoose model */
 export type MessageModel = Model<MessageDocument>;
 
+// #endregion
+
 /* ****************************** */
 /*  ConvictedUser Database Types  */
 /* ****************************** */
+
+// #region ConvictedUser Database Types (VS Code)
+// region ConvictedUser Database Types (JetBrains)
 
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
@@ -529,9 +557,14 @@ export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
   ): Promise<ConvictedUserDocument>;
 }
 
+// #endregion
+
 /* ************************* */
 /*  Sanction Database Types  */
 /* ************************* */
+
+// #region Sanction Database Types (VS Code)
+// region Sanction Database Types (JetBrains)
 
 /** Type of updates in SanctionDocument.updates */
 export interface SanctionUpdate {
@@ -580,3 +613,5 @@ export interface SanctionPopulatedDocument extends SanctionBaseDocument {
 
 /** Interface for the "Sanction"'s mongoose model */
 export type SanctionModel = Model<SanctionDocument>;
+
+// #endregion
