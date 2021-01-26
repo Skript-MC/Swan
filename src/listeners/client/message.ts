@@ -5,7 +5,7 @@ import type { Message } from 'discord.js';
 import pupa from 'pupa';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
-import { noop, trimText } from '@/app/utils';
+import { noop, nullop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
@@ -85,7 +85,7 @@ class MessageListener extends Listener {
     }
 
     for (const quote of quotes) {
-      const channel = await this.client.channels.fetch(quote.channelId).catch(noop) || null;
+      const channel = await this.client.channels.fetch(quote.channelId).catch(nullop);
       if (!channel?.isText() || channel.type === 'dm')
         continue;
 
@@ -129,7 +129,7 @@ class MessageListener extends Listener {
     if (!attachmentContent)
       return false;
 
-    const response = await axios.post(settings.apis.hastebin, attachmentContent.data).catch(noop) || null;
+    const response = await axios.post(settings.apis.hastebin, attachmentContent.data).catch(nullop);
     if (!response?.data?.key)
       return false;
 

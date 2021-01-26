@@ -7,7 +7,7 @@ import Logger from '@/app/structures/Logger';
 import { SanctionTypes } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { UnbanCommandArgument } from '@/app/types/CommandArguments';
-import { noop } from '@/app/utils';
+import { noop, nullop } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 
@@ -36,7 +36,7 @@ class UnbanCommand extends Command {
                 // If it is not found in the cache, try fetching it
                 || await this.client.users.fetch(id).catch(noop)
                 // If we failed to fetch it, look in the Discord's bans
-                || (await message.guild.fetchBan(id).catch(noop) || null)?.user
+                || (await message.guild.fetchBan(id).catch(nullop))?.user
                 || null;
             }
             return resolvedMember;
