@@ -123,7 +123,7 @@ void (async (): Promise<void> => {
         moderator: sanction.modId,
         start: sanction.date,
         duration: sanction.duration ?? -1,
-        finish: sanction.date + sanction.duration || null,
+        finish: (sanction.date + sanction.duration) || null,
         reason: sanction.reason,
         revoked: sanction.revoked ?? false,
         sanctionId: sanction.id,
