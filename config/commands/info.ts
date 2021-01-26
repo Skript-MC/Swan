@@ -10,7 +10,7 @@ export const addonInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'Addon Info',
+    name: 'Informations sur un add-on',
     content: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
     usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
@@ -100,7 +100,7 @@ export const serverInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'Serveur Info',
+    name: 'Informations sur un serveur',
     content: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
     usage: 'serverinfo <nom de domaine>',
     examples: ['skriptinfo hypixel.net'],
@@ -130,7 +130,7 @@ export const skriptInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'Skript Info',
+    name: 'Informations sur Skript',
     content: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
     usage: 'skriptinfo',
     examples: ['skriptinfo'],
@@ -168,7 +168,7 @@ export const userInfo = {
     userPermissions: [],
   },
   details: {
-    name: 'User Info',
+    name: 'Informations sur un utilisateur (discord)',
     content: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
     usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],

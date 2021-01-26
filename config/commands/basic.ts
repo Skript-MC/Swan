@@ -13,7 +13,7 @@ export const addonPack = {
     userPermissions: [],
   },
   details: {
-    name: "Pack d'add-on",
+    name: "Pack d'add-ons",
     content: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
     usage: 'addonPack <version>',
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
@@ -238,7 +238,7 @@ export const statistics = {
     userPermissions: [],
   },
   details: {
-    name: 'Statistique',
+    name: 'Statistiques',
     content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
     usage: 'stats',
     examples: ['stats'],
