@@ -26,15 +26,18 @@ class UnbanCommand extends Command {
           // Try resolving the first part of the message (possibly the name/ID of the victim) to a User
           (_message, value) => this.client.util.resolveUser(value, this.client.users.cache),
           // Try parsing the first part of the message to an ID
-          async (_message, value) => {
+          async (message: GuildMessage, value: string) => {
             let resolvedMember: GuildMember | User;
-            const id = /<@!?(?<id>\d{17,19})>/.exec(value)?.groups?.id;
+            const id = /<@!?(?<id>\d{17,19})>/.exec(value)?.groups?.id
+              || /(?<id>\d{17,19})/.exec(value)?.groups?.id;
             // If we found a valid ID, try resolving the User from cache
             if (id) {
-              resolvedMember = this.client.util.resolveUser(id, this.client.users.cache);
-              // If it is not found in the cache, try fetching it
-              if (!resolvedMember)
-                resolvedMember = await this.client.users.fetch(id).catch(noop) || null;
+              resolvedMember = this.client.util.resolveUser(id, this.client.users.cache)
+                // If it is not found in the cache, try fetching it
+                || await this.client.users.fetch(id).catch(noop)
+                // If we failed to fetch it, look in the Discord's bans
+                || (await message.guild.fetchBan(id).catch(noop) || null)?.user
+                || null;
             }
             return resolvedMember;
           },
