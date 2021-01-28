@@ -34,6 +34,10 @@ export interface CodeCommandArguments {
   startLinesAt?: string;
 }
 
+export interface EightBallCommandArguments {
+  question: string;
+}
+
 export interface ErrorDetailsCommandArguments {
   error: string;
 }
