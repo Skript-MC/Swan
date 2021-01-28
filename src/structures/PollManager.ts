@@ -4,13 +4,14 @@ import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import { QuestionType } from '@/app/types';
+import type { PollDocument } from '@/app/types/index';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
-    const poll = await Poll.findByIdAndRemove(pollId).catch(noop);
+    const poll: PollDocument = await Poll.findByIdAndRemove(pollId).catch(noop);
     if (!poll)
       return;
 

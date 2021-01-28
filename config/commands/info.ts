@@ -1,5 +1,6 @@
 import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
+import type { PermissionResolvable } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
 
@@ -7,7 +8,7 @@ export const addonInfo = {
   settings: {
     aliases: ['addoninfo'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Informations sur un add-on',
@@ -43,7 +44,7 @@ export const documentation = {
   settings: {
     aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntaxinfo'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Documentation',
@@ -97,7 +98,7 @@ export const serverInfo = {
   settings: {
     aliases: ['server', 'serveur', 'serverinfo', 'serveurinfo'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Informations sur un serveur',
@@ -127,7 +128,7 @@ export const skriptInfo = {
   settings: {
     aliases: ['skript', 'skriptinfo'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Informations sur Skript',
@@ -165,7 +166,7 @@ export const userInfo = {
   settings: {
     aliases: ['userinfo'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Informations sur un utilisateur (discord)',
@@ -218,6 +219,7 @@ export const userInfo = {
           idle: 'AFK',
           dnd: 'Ne pas déranger',
           offline: 'Hors ligne',
+          invisible: 'Hors ligne',
         },
       },
       footer: 'Exécuté par {member.user.username}',
