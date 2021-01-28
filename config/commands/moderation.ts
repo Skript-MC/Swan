@@ -94,7 +94,7 @@ export const history = {
       unmute: ':loud_sound: Unmute',
       kick: ':door: Expulsion',
       warn: ':warning: Avertissement',
-      unwarn: ":repeat: Suppression d'avertissement",
+      removeWarn: ":repeat: Suppression d'avertissement",
     },
     overview: stripIndent`
       :bomb: Bannissements définitifs : {stats.hardbans}

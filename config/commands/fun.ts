@@ -1,5 +1,6 @@
 import { stripIndent } from 'common-tags';
 import { Permissions } from 'discord.js';
+import type { PermissionResolvable } from 'discord.js';
 
 const permissions = Permissions.FLAGS;
 
@@ -8,7 +9,7 @@ export const poll = {
   settings: {
     aliases: ['poll', 'sondage'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [],
+    userPermissions: [] as PermissionResolvable[],
   },
   details: {
     name: 'Sondage',

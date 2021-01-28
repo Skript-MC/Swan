@@ -123,7 +123,7 @@ class PollCommand extends Command {
     embed.setColor(settings.colors.default);
     await pollMessage.edit(embed);
 
-    const votes = {};
+    const votes: Record<string, string[]> = {};
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
 
