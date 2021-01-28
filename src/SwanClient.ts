@@ -192,7 +192,8 @@ class SwanClient extends AkairoClient {
       .flatMap((category: Category<string, Command>) => category.array())
       .map((cmd: Command) => cmd.id);
 
-    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
+    // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
+    const documents: Array<Query<CommandStatDocument, CommandStatDocument, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 
