@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 import type { FilterQuery } from 'mongoose';
 import type { ConvictedUserBase, ConvictedUserDocument, ConvictedUserModel } from '@/app/types';
 
-const ConvictedUserSchema = new Schema({
+const ConvictedUserSchema = new Schema<ConvictedUserDocument, ConvictedUserModel>({
   memberId: {
     type: String,
     required: true,
