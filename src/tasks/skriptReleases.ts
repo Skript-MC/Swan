@@ -45,15 +45,12 @@ class SkriptReleasesTask extends Task {
     if (!channel?.isText())
       return;
 
-    const body = lastRelease.body && lastRelease.body.length >= 1900
-      ? trimText(lastRelease.body, 1900)
-      : lastRelease.body ?? messages.miscellaneous.noDescription;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(lastRelease.author?.login ?? 'SkriptLang', lastRelease.author?.avatar_url)
       .setTitle(`${lastRelease.name} (${lastRelease.tag_name})`)
       .setURL(lastRelease.html_url)
-      .setDescription(body)
+      .setDescription(trimText(lastRelease.body || messages.miscellaneous.noDescription, 1900))
       .setFooter(`${config.dataProvider} (#${lastRelease.id})`)
       .setTimestamp(new Date(lastRelease.published_at));
 

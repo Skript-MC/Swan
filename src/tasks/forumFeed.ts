@@ -56,9 +56,7 @@ class ForumFeedTask extends Task {
           .setAuthor(topic.firstPost.author.name, 'https:' + topic.firstPost.author.photoUrl)
           .setTitle(`💬 ${topic.title}`)
           .setURL(topic.url)
-          .setDescription(markdown.length >= 500
-            ? trimText(markdown, 500)
-            : markdown)
+          .setDescription(trimText(markdown, 500))
           .setFooter(config.dataProvider)
           .setTimestamp(new Date(topic.firstPost.date));
         void channel.send(embed).catch(noop);
@@ -87,9 +85,9 @@ class ForumFeedTask extends Task {
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
           .setAuthor(ressource.author.name, ressource.author.photoUrlIsDefault ? null : 'https:' + ressource.author.photoUrl)
-          .setTitle(`📥 ${ressource.changelog ? 'Mise à jour de' : 'Publication de'} ${ressource.title}`)
+          .setTitle(trimText(`📥 ${ressource.changelog ? 'Mise à jour de' : 'Publication de'} ${ressource.title}`, 250))
           .setURL(ressource.url)
-          .setDescription(markdown.length >= 150 ? trimText(markdown, 150) : markdown)
+          .setDescription(trimText(markdown, 150))
           .addField('Catégorie', ressource.category.name, true)
           .addField('Version', ressource.version, true)
           .addField('Notation', '⭐'.repeat(Math.round(ressource.rating)) || 'Aucune notation', true)
