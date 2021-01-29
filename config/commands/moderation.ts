@@ -85,7 +85,11 @@ export const history = {
     promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
-    title: "**__SANCTIONS DE L'UTILISATEUR {name}__** (*{sanctions.length}*)\n\n",
+    title: stripIndent`
+      **__Sanctions de l'utilisateur {name}__** ({sanctions.length})
+
+      Voir sur le dashboard : <{link}>
+    `,
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
       ban: ':hammer: Bannissement',

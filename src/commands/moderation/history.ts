@@ -49,9 +49,15 @@ class HistoryCommand extends Command {
       bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
       mutes: sanctions.filter(s => s.type === SanctionTypes.Mute).length,
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
+      currentWarns: sanctions.filter(s => s.type === SanctionTypes.Warn && !s.revoked).length,
+      warns: sanctions.filter(s => s.type === SanctionTypes.Warn).length,
     };
 
-    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member), sanctions });
+    let privateHistory = pupa(config.messages.title, {
+      name: getUsername(args.member),
+      sanctions,
+      link: settings.moderation.dashboardSanctionLink + memberId,
+    }) + '\n';
 
     privateHistory += pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan });
     privateHistory += '\n\n';
@@ -101,10 +107,9 @@ class HistoryCommand extends Command {
     const splittedText = splitText(privateHistory);
     try {
       for (const chunk of splittedText)
-        await message.member.send(chunk);
-      await message.channel.send(config.messages.sentInDm);
+        await message.channel.send(chunk);
     } catch {
-      await message.channel.send(messages.global.dmAreClosed).catch(noop);
+      await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }
