@@ -7,7 +7,7 @@ import pupa from 'pupa';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '@/app/types';
 import type { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
-import { convertFileSize } from '@/app/utils';
+import { convertFileSize, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -96,7 +96,7 @@ class AddonInfoCommand extends Command {
       .setColor(settings.colors.default)
       .setAuthor(pupa(embedMessages.title, { addon }))
       .setTimestamp()
-      .setDescription(addon.description || embedMessages.noDescription)
+      .setDescription(trimText(addon.description || embedMessages.noDescription, 2000))
       .setFooter(pupa(embedMessages.footer, { member: message.member }));
 
     if (addon.unmaintained)

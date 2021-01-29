@@ -5,6 +5,7 @@ import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import type{ DocumentationCommandArguments } from '@/app/types/CommandArguments';
 import type { GuildMessage, SkriptMcDocumentationSyntaxResponse } from '@/app/types/index';
+import { trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
@@ -106,13 +107,15 @@ class DocumentationCommand extends Command {
       .setURL(syntax.documentationUrl)
       .setTimestamp()
       .setDescription(
-        he.decode(
-          pupa(embedMessages.description, {
-            syntax: {
-              ...syntax,
-              content: syntax.content || embedMessages.noDescription,
-            },
-          }),
+        trimText(
+          he.decode(
+            pupa(embedMessages.description, {
+              syntax: {
+                ...syntax,
+                content: syntax.content || embedMessages.noDescription,
+              },
+            }),
+          ), 2000,
         ),
       )
       .setFooter(pupa(embedMessages.footer, { member: message.member }));
