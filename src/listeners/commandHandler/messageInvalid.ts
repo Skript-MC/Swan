@@ -31,7 +31,9 @@ class MessageInvalidListener extends Listener {
     const possibleCommandsAliases: string[] = [];
 
     for (const commandCandidate of allCommands) {
-      if (commandCandidate.aliases.some(alias => jaroWinklerDistance(alias, command.alias) > 0.7))
+      const matchAliases = commandCandidate.aliases
+        .some(alias => jaroWinklerDistance(alias, command.alias, { caseSensitive: false }) > 0.7);
+      if (matchAliases)
         possibleCommandsAliases.push(commandCandidate.aliases[0]);
     }
 

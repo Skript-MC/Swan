@@ -7,7 +7,7 @@ import pupa from 'pupa';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '@/app/types';
 import type { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
-import { convertFileSize, trimText } from '@/app/utils';
+import { convertFileSize, noop, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -33,7 +33,7 @@ class AddonInfoCommand extends Command {
 
   public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
     const matchingAddons: MatchingAddon[] = this.client.addonsVersions
-      .filter(elt => jaroWinklerDistance(elt.split(' ').shift().toUpperCase(), addon) >= 0.7)
+      .filter(elt => jaroWinklerDistance(elt.split(' ').shift(), addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
       .slice(0, 10);
 
@@ -67,7 +67,7 @@ class AddonInfoCommand extends Command {
         && user.id === message.author.id
         && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
       .once('collect', async (reaction) => {
-        await selectorMessage.reactions.removeAll();
+        await selectorMessage.delete();
         const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
         await this._sendDetail(message, matchingAddons[index].file);
         collector.stop();
@@ -76,7 +76,7 @@ class AddonInfoCommand extends Command {
     for (const [i] of matchingAddons.entries()) {
       if (collector.ended)
         break;
-      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]);
+      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]).catch(noop);
     }
   }
 

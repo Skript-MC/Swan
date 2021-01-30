@@ -8,7 +8,7 @@ function searchMessageSimilarity(entries: MessageDocument[], wanted: string): Me
     if (entry.aliases.some(alias => alias === wanted) || entry.name === wanted)
       return entry;
     for (const alias of entry.aliases) {
-      const distance = jaroWinklerDistance(alias, wanted);
+      const distance = jaroWinklerDistance(alias, wanted, { caseSensitive: false });
       if (distance >= 0.7)
         search.push([entry, distance]);
     }
