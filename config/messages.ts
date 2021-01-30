@@ -26,6 +26,7 @@ export default {
     `,
     noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
     invalidMessage: 'Ton message ne respecte pas le règlement du salon {message.channel}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
+    commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {command.alias}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
     ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {member.displayName}. :innocent:',
     ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {member.displayName}. :innocent:',
     renamed: stripIndent`
