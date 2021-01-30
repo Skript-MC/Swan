@@ -4,6 +4,7 @@ import pupa from 'pupa';
 import { Rules } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { PingCommandArguments } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
 import { ping as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
@@ -37,6 +38,7 @@ class PingCommand extends Command {
       .setFooter(`Exécuté par ${message.member.displayName}`)
       .setTimestamp();
 
+    await sent.delete().catch(noop);
     await message.channel.send(embed);
   }
 
