@@ -42,6 +42,8 @@ export interface ErrorDetailsCommandArguments {
   error: string;
 }
 
+export interface DiscoverCommandArguments {}
+
 export interface DocumentationCommandArguments {
   query: string;
   addon?: string;
