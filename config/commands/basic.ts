@@ -65,6 +65,28 @@ export const code = {
   },
 };
 
+export const discover = {
+  settings: {
+    aliases: ['découvrir', 'decouvrir', 'discover'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [] as PermissionResolvable[],
+  },
+  details: {
+    name: 'Découvrir',
+    content: 'Permet de __découvrir une commande__ présente dans Swan.',
+    usage: 'découvrir',
+    examples: ['decouvrir'],
+  },
+  messages: {
+    title: ':star: Commande "{randomCommand.details.name}"',
+    description: '❯ Description',
+    usage: '❯ Utilisation',
+    usableBy: '❯ Utilisable par',
+    aliases: '❯ Aliases',
+    examples: '❯ Exemples',
+  },
+};
+
 export const errorDetails = {
   settings: {
     aliases: ['error', 'errorDetails'],
