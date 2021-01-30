@@ -96,7 +96,7 @@ class HistoryCommand extends Command {
           stringBuilder += oneLine`
             - ${moment(update.date).format(settings.miscellaneous.durationFormat)},
             <@${update.moderator}> ${config.messages.updateReasons[update.type]}
-            (motif: "${update.reason}")`;
+            (motif : "${update.reason}")`;
             stringBuilder += diff;
         }
       }
