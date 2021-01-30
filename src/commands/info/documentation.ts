@@ -5,7 +5,7 @@ import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import type{ DocumentationCommandArguments } from '@/app/types/CommandArguments';
 import type { GuildMessage, SkriptMcDocumentationSyntaxResponse } from '@/app/types/index';
-import { trimText } from '@/app/utils';
+import { noop, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
@@ -41,12 +41,12 @@ class DocumentationCommand extends Command {
   public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
     const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.skriptMcSyntaxes
       .filter((elt) => {
-        if (args.category && jaroWinklerDistance(elt.category.toLowerCase(), args.category.toUpperCase()) < 0.9)
+        if (args.category && jaroWinklerDistance(elt.category, args.category, { caseSensitive: false }) < 0.9)
           return false;
         if (args.addon && elt.addon.name.toLowerCase() !== args.addon.toLowerCase())
           return false;
-        return jaroWinklerDistance(elt.name, args.query) >= 0.7
-          || jaroWinklerDistance(elt.content, args.query) >= 0.7
+        return jaroWinklerDistance(elt.name, args.query, { caseSensitive: false }) >= 0.7
+          || jaroWinklerDistance(elt.content, args.query, { caseSensitive: false }) >= 0.7
           || elt.name.toLowerCase().includes(args.query.toLowerCase());
       })
       .slice(0, 10);
@@ -85,7 +85,7 @@ class DocumentationCommand extends Command {
         && user.id === message.author.id
         && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
       .once('collect', async (reaction) => {
-        await selectorMessage.reactions.removeAll();
+        await selectorMessage.delete();
         const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
         await this._sendDetail(message, matchingSyntaxes[index]);
         collector.stop();
@@ -94,7 +94,7 @@ class DocumentationCommand extends Command {
     for (const [i] of matchingSyntaxes.entries()) {
       if (collector.ended)
         break;
-      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]);
+      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]).catch(noop);
     }
   }
 
