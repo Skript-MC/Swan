@@ -55,7 +55,7 @@ export const code = {
     name: 'Code',
     content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes.",
     usage: 'code <code>',
-    examples: ['code broadcast "Yeah!"'],
+    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"'],
   },
   messages: {
     title: '**Code de {message.author.username} :**',
