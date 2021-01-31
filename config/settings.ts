@@ -18,7 +18,7 @@ export default {
       specials: ['ℹ', '🛑'],
     },
     validNamePercentage: 0.5,
-    durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
+    durationFormat: '[le] DD/MM/YYYY [à] HH:mm:ss',
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
     activeMemberBlacklistedLinks: [
