@@ -4,6 +4,7 @@ import type {
   ListenerHandler,
 } from 'discord-akairo';
 import type { Guild, TextChannel } from 'discord.js';
+import type { Redis } from 'ioredis';
 import type TaskHandler from '@/app/structures/TaskHandler';
 import type {
   GithubPrerelease,
@@ -56,6 +57,8 @@ declare module 'discord-akairo' {
   }
 
   interface AkairoClient {
+    redis: Redis;
+
     addonsVersions: string[];
     skriptMcSyntaxes: SkriptMcDocumentationSyntaxResponse[];
     githubCache: {

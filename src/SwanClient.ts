@@ -8,6 +8,7 @@ import {
 } from 'discord-akairo';
 import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
+import Redis from 'ioredis';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
@@ -24,6 +25,7 @@ import type {
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
 } from './types';
+import { uncapitalize } from './utils';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -41,6 +43,9 @@ class SwanClient extends AkairoClient {
         ],
       },
     });
+
+    this.redis = new Redis();
+    void this.redis.subscribe('module');
 
     this.isLoading = true;
 
@@ -115,6 +120,7 @@ class SwanClient extends AkairoClient {
       taskHandler: this.taskHandler,
       listenerHandler: this.listenerHandler,
       mongodb: mongoose.connection,
+      redis: this.redis,
       process,
     });
 
@@ -134,7 +140,7 @@ class SwanClient extends AkairoClient {
             handler.remove(id);
             Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
           } else if (!module) {
-            void SwanModule.create({ name: id, enabled: true });
+            void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
           }
         }
       };
