@@ -4,7 +4,7 @@
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "tsc && cpy --parents ./assets/ ./build/",
+    "build": "rm -rf ./build && tsc && cpy --parents ./assets/ ./build/",
     "exec": "node -r source-map-support/register -r module-alias/register ./build/src/main.js",
     "start": "npm run build && cross-env NODE_ENV=production npm run exec -- --no-color",
     "dev": "npm run build && cross-env NODE_ENV=development npm run exec",
