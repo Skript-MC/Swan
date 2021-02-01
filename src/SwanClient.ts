@@ -44,7 +44,7 @@ class SwanClient extends AkairoClient {
       },
     });
 
-    this.redis = new Redis();
+    this.redis = new Redis(process.env.REDIS_URI);
     void this.redis.subscribe('module');
 
     this.isLoading = true;
