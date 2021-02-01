@@ -27,9 +27,9 @@ class RedisMessageListener extends Listener {
       case 'module':
         if (!('name' in parsedMessage) || !('handler' in parsedMessage) || !('enabled' in parsedMessage)) {
           Logger.warn('Received invalid message through Redis.');
-          Logger.detail('Required: "name", "enabled"');
-          Logger.detail('Channel: module');
-          Logger.detail(`Message: ${JSON.stringify(parsedMessage)}`);
+          Logger.detail('Required: "name", "handler", "enabled"');
+          Logger.detail('Redis channel: module');
+          Logger.detail(`Redis message: ${JSON.stringify(parsedMessage)}`);
           return;
         }
 
