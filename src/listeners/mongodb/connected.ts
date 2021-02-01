@@ -3,7 +3,7 @@ import Logger from '@/app/structures/Logger';
 
 class MongodbConnectedListener extends Listener {
   constructor() {
-    super('mongodbConnected', {
+    super('connected', {
       event: 'connected',
       emitter: 'mongodb',
     });
