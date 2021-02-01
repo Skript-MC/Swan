@@ -16,6 +16,7 @@ declare namespace NodeJS {
     SKRIPTMC_FORUM_TOKEN: string;
 
     MONGO_URI: string;
+    REDIS_URI: string;
 
     GUILD_ID: string;
 
