@@ -8,6 +8,7 @@ import {
 } from 'discord-akairo';
 import type { Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
+import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -111,6 +112,7 @@ class SwanClient extends AkairoClient {
       inhibitorHandler: this.inhibitorHandler,
       taskHandler: this.taskHandler,
       listenerHandler: this.listenerHandler,
+      mongodb: mongoose.connection,
       process,
     });
 

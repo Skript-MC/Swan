@@ -22,6 +22,13 @@ if (!process.env.DISCORD_TOKEN) {
   throw new Error('Unable to load Swan, stopping.');
 }
 
+void mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
+
 const client = new SwanClient();
 void client.login(process.env.DISCORD_TOKEN);
 
@@ -31,20 +38,6 @@ setTimeout(() => {
     process.exit(1); // eslint-disable-line node/no-process-exit
   }
 }, settings.miscellaneous.connectionCheckDuration);
-
-void mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
-mongoose.connection.on('connected', () => {
-  Logger.success('MongoDB is connected!');
-});
-mongoose.connection.on('error', (err) => {
-  Logger.error('MongoDB connection error. Please make sure MongoDB is running.');
-  throw err;
-});
 
 if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
   Logger.info('Initializing Sentry');
