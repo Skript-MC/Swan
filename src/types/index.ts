@@ -471,6 +471,27 @@ export type CommandStatModel = Model<CommandStatDocument>;
 
 // #endregion
 
+/* **************************** */
+/*     Module Database Types    */
+/* **************************** */
+
+// #region Module Database Types (VS Code)
+// region Module Database Types (JetBrains)
+
+/** Interface for the "Module"'s mongoose schema */
+export interface SwanModuleBase {
+  name: string;
+  enabled: boolean;
+}
+
+/** Interface for the "Module"'s mongoose document */
+export interface SwanModuleDocument extends SwanModuleBase, Document {}
+
+/** Interface for the "Module"'s mongoose model */
+export type SwanModuleModel = Model<SwanModuleDocument>;
+
+// #endregion
+
 /* ********************* */
 /*  Poll Database Types  */
 /* ********************* */

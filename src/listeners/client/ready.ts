@@ -39,7 +39,6 @@ class ReadyListener extends Listener {
     }
 
     this.client.checkValidity();
-    this.client.taskHandler.loadAll();
 
     Logger.success('Swan is ready to listen for messages.');
 
