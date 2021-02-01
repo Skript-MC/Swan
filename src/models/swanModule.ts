@@ -6,6 +6,10 @@ const SwanModuleSchema = new Schema({
     type: String,
     required: true,
   },
+  handler: {
+    type: String,
+    required: true,
+  },
   enabled: {
     type: Boolean,
     default: true,
