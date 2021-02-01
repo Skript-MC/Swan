@@ -3,7 +3,7 @@ import Logger from '@/app/structures/Logger';
 
 class RedisConnectListener extends Listener {
   constructor() {
-    super('redisConnect', {
+    super('connect', {
       event: 'connect',
       emitter: 'redis',
     });
