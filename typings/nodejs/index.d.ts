@@ -1,6 +1,8 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     /* eslint-disable @typescript-eslint/naming-convention */
+    NODE_ENV: string;
+
     BOT_PREFIX: string;
 
     DISCORD_TOKEN: string;
