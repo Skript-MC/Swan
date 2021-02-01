@@ -6,13 +6,14 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
-import type { Category, Command } from 'discord-akairo';
+import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
+import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
@@ -21,6 +22,7 @@ import type {
   SkriptMcDocumentationAddonResponse,
   SkriptMcDocumentationFullAddonResponse,
   SkriptToolsAddonListResponse,
+  SwanModuleDocument,
 } from './types';
 
 class SwanClient extends AkairoClient {
@@ -119,6 +121,31 @@ class SwanClient extends AkairoClient {
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
+    this.on('ready', () => {
+      this.taskHandler.loadAll();
+    });
+
+    // Unload modules from handlers if they are disabled (in the database)
+    SwanModule.find().then((modules: SwanModuleDocument[]): void => {
+      const unloadModules = (handler: AkairoHandler): void => {
+        for (const id of handler.modules.keys()) {
+          const module = modules.find(mod => mod.name === id);
+          if (module && !module.enabled) {
+            handler.remove(id);
+            Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
+          } else if (!module) {
+            void SwanModule.create({ name: id, enabled: true });
+          }
+        }
+      };
+
+      unloadModules(this.commandHandler);
+      unloadModules(this.inhibitorHandler);
+      unloadModules(this.listenerHandler);
+      this.on('ready', () => {
+        unloadModules(this.taskHandler);
+      });
+    });
 
     for (const [name, resolver] of Object.entries(resolvers))
       this.commandHandler.resolver.addType(name, resolver);
