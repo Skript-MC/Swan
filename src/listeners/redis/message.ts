@@ -1,6 +1,5 @@
-import path from 'path';
-import type { AkairoModule } from 'discord-akairo';
-import { AkairoHandler, Listener } from 'discord-akairo';
+import { Listener } from 'discord-akairo';
+import type { AkairoHandler } from 'discord-akairo';
 import Logger from '@/app/structures/Logger';
 import type { SwanModuleBase } from '@/app/types/index';
 
@@ -18,8 +17,8 @@ class RedisMessageListener extends Listener {
       parsedMessage = JSON.parse(message);
     } catch {
       Logger.warn('Received malformed message through Redis.');
-      Logger.detail(`Channel: ${channel}`);
-      Logger.detail(`Message: ${message}`);
+      Logger.detail(`Redis channel: ${channel}`);
+      Logger.detail(`Redis message: ${message}`);
       return;
     }
 
@@ -36,8 +35,11 @@ class RedisMessageListener extends Listener {
         // https://github.com/microsoft/TypeScript/issues/15300
         this._handleModuleChange(parsedMessage as unknown as SwanModuleBase);
         break;
+
       default:
         Logger.warn('Received message from unknown channel');
+        Logger.detail(`Redis channel: ${channel}`);
+        Logger.detail(`Redis message: ${JSON.stringify(parsedMessage)}`);
         break;
     }
   }
