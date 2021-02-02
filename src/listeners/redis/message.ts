@@ -42,45 +42,11 @@ class RedisMessageListener extends Listener {
     }
   }
 
-  private _loadModuleWithId(id: string, handler: AkairoHandler): void {
-    // TODO: Improve this method's code, and add typings.
-
-    // Code to resolve the module adapted from https://github.com/discord-akairo/discord-akairo/blob/29810b9e5d5cd804c649948ad60e5f2ac3897141/src/struct/AkairoHandler.js#L118
-    const filepaths = AkairoHandler.readdirRecursive(handler.directory);
-    for (let filepath of filepaths) {
-      filepath = path.resolve(filepath);
-
-      if (!handler.extensions.has(path.extname(filepath)))
-        continue;
-
-      // I have no clue of what type this is. Again, this code is borrowed from Akairo's core.
-      let Module = function findExport(module): AkairoModule | null {
-        if (!module)
-          return null;
-        if (module.prototype instanceof handler.classToHandle)
-          return module;
-        return module.default ? findExport.call(handler, module.default) : null;
-      }.call(handler, require(filepath));
-
-      if (Module && Module.prototype instanceof handler.classToHandle)
-        Module = new Module(handler);
-
-      if (Module.id === id) {
-        handler.load(filepath);
-        break;
-      } else {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete require.cache[require.resolve(filepath)];
-      }
-    }
-  }
-
   private _handleModuleChange(message: SwanModuleBase): void {
     const handler: AkairoHandler = this.client[message.handler];
     if (handler) {
-      // When the module is disabled, it is not loaded so not in handler.modules. Hence we have to resolve it by hand.
       if (message.enabled)
-        this._loadModuleWithId(message.name, handler);
+        handler.load(this.client.modules.find(mod => mod.id === message.name).filepath);
       else
         handler.remove(message.name);
     }
