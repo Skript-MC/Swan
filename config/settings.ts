@@ -53,8 +53,7 @@ export default {
   apis: {
     hastebin: 'https://hastebin.com/documents',
     addons: 'https://api.skripttools.net/v4/addons/',
-    // skriptmc: 'https://skript-mc.fr/api/',
-    skriptmc: 'https://skmc.romitou.fr/api/',
+    skriptmc: 'https://skript-mc.fr/api/',
     forum: 'https://skript-mc.fr/forum/api/',
     server: 'https://api.mcsrvstat.us/2/',
   },
