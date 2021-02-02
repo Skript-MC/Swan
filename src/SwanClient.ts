@@ -68,6 +68,7 @@ class SwanClient extends AkairoClient {
     this.githubCache = {};
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
+    this.modules = [];
 
     Logger.info('Creating Command handler...');
     this.commandHandler = new CommandHandler(this, {
@@ -127,28 +128,33 @@ class SwanClient extends AkairoClient {
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
+
+    this.modules = [
+      ...this.commandHandler.modules.array(),
+      ...this.inhibitorHandler.modules.array(),
+      ...this.listenerHandler.modules.array(),
+    ];
+
     this.on('ready', () => {
       this.taskHandler.loadAll();
-    });
+      this.modules = [...this.modules, ...this.taskHandler.modules.array()];
 
-    // Unload modules from handlers if they are disabled (in the database)
-    SwanModule.find().then((modules: SwanModuleDocument[]): void => {
-      const unloadModules = (handler: AkairoHandler): void => {
-        for (const id of handler.modules.keys()) {
-          const module = modules.find(mod => mod.name === id);
-          if (module && !module.enabled) {
-            handler.remove(id);
-            Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
-          } else if (!module) {
-            void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+      SwanModule.find().then((modules: SwanModuleDocument[]): void => {
+        const unloadModules = (handler: AkairoHandler): void => {
+          for (const id of handler.modules.keys()) {
+            const module = modules.find(mod => mod.name === id);
+            if (module && !module.enabled) {
+              handler.remove(id);
+              Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
+            } else if (!module) {
+              void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+            }
           }
-        }
-      };
+        };
 
-      unloadModules(this.commandHandler);
-      unloadModules(this.inhibitorHandler);
-      unloadModules(this.listenerHandler);
-      this.on('ready', () => {
+        unloadModules(this.commandHandler);
+        unloadModules(this.inhibitorHandler);
+        unloadModules(this.listenerHandler);
         unloadModules(this.taskHandler);
       });
     });

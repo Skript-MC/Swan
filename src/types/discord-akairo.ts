@@ -75,6 +75,7 @@ declare module 'discord-akairo' {
     inhibitorHandler: InhibitorHandler;
     taskHandler: TaskHandler;
     listenerHandler: ListenerHandler;
+    modules: AkairoModule[];
 
     guild: Guild;
 
