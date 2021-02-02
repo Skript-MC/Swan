@@ -26,18 +26,20 @@ class RedisMessageListener extends Listener {
     switch (channel) {
       case 'module':
         try {
-          const requiredShape = { name: ow.string, handler: ow.string, enabled: ow.boolean };
-          ow(parsedMessage, ow.object.exactShape(requiredShape));
+          ow(parsedMessage, ow.object.exactShape({
+            name: ow.string,
+            handler: ow.string.oneOf(['commandHandler', 'listenerHandler', 'inhibitorHandler', 'taskHandler']),
+            enabled: ow.boolean,
+          }));
         } catch (unknownError: unknown) {
           Logger.warn('Received invalid message through Redis.');
-          Logger.detail('Required: "name", "handler", "enabled"');
           Logger.detail(`Error: ${(unknownError as Error).message}`);
           Logger.detail('Redis channel: module');
           Logger.detail(`Redis message: ${JSON.stringify(parsedMessage)}`);
           return;
         }
 
-        this._handleModuleChange(parsedMessage as SwanModuleBase);
+        this._handleModuleChange(parsedMessage);
         break;
 
       default:
