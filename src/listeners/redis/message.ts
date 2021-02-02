@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { AkairoHandler } from 'discord-akairo';
+import ow from 'ow';
 import Logger from '@/app/structures/Logger';
 import type { SwanModuleBase } from '@/app/types/index';
 
@@ -24,16 +25,19 @@ class RedisMessageListener extends Listener {
 
     switch (channel) {
       case 'module':
-        if (!('name' in parsedMessage) || !('handler' in parsedMessage) || !('enabled' in parsedMessage)) {
+        try {
+          const requiredShape = { name: ow.string, handler: ow.string, enabled: ow.boolean };
+          ow(parsedMessage, ow.object.exactShape(requiredShape));
+        } catch (unknownError: unknown) {
           Logger.warn('Received invalid message through Redis.');
           Logger.detail('Required: "name", "handler", "enabled"');
+          Logger.detail(`Error: ${(unknownError as Error).message}`);
           Logger.detail('Redis channel: module');
           Logger.detail(`Redis message: ${JSON.stringify(parsedMessage)}`);
           return;
         }
 
-        // https://github.com/microsoft/TypeScript/issues/15300
-        this._handleModuleChange(parsedMessage as unknown as SwanModuleBase);
+        this._handleModuleChange(parsedMessage as SwanModuleBase);
         break;
 
       default:
