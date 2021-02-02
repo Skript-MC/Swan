@@ -1,3 +1,7 @@
+import 'source-map-support/register';
+import 'module-alias/register';
+import 'dotenv/config';
+
 import * as Integrations from '@sentry/integrations';
 import * as Sentry from '@sentry/node';
 import moment from 'moment';
