@@ -1,13 +1,10 @@
 import * as Integrations from '@sentry/integrations';
 import * as Sentry from '@sentry/node';
-import dotenv from 'dotenv';
 import moment from 'moment';
 import mongoose from 'mongoose';
 import settings from '@/conf/settings';
 import SwanClient from './SwanClient';
 import Logger from './structures/Logger';
-
-dotenv.config();
 
 moment.locale('fr');
 moment.relativeTimeThreshold('M', 12);
