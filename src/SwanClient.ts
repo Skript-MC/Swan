@@ -8,7 +8,6 @@ import {
 } from 'discord-akairo';
 import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
-import Redis from 'ioredis';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
@@ -43,9 +42,6 @@ class SwanClient extends AkairoClient {
         ],
       },
     });
-
-    this.redis = new Redis(process.env.REDIS_URI);
-    void this.redis.subscribe('module');
 
     this.isLoading = true;
 
@@ -121,7 +117,6 @@ class SwanClient extends AkairoClient {
       taskHandler: this.taskHandler,
       listenerHandler: this.listenerHandler,
       mongodb: mongoose.connection,
-      redis: this.redis,
       process,
     });
 
