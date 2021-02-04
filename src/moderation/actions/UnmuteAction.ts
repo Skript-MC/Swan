@@ -18,12 +18,12 @@ class UnmuteAction extends ModerationAction {
   private async _unmute(): Promise<void> {
     // 1. Update the Database
     try {
-      const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastMuteId: null });
+      const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { currentMuteId: null });
       if (!user)
         throw new TypeError('The user to unmute was not found in the database.');
 
       await Sanction.findOneAndUpdate(
-        { sanctionId: user.lastMuteId },
+        { sanctionId: user.currentMuteId },
         {
           $set: { revoked: true },
           $push: {

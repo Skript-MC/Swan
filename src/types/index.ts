@@ -381,7 +381,7 @@ export interface GuildKickAuditLogs extends GuildAuditLogs {
 export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
 
 /** The name of the fields of the TrackedSanctionTypes */
-export type TrackedFieldNames = 'lastBanId' | 'lastMuteId';
+export type TrackedFieldNames = 'currentBanId' | 'currentMuteId';
 
 /** Represent the victim object of ModerationData#victim */
 export interface PersonInformations {
@@ -563,8 +563,8 @@ export type MessageModel = Model<MessageDocument>;
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
   memberId: string;
-  lastBanId?: string;
-  lastMuteId?: string;
+  currentBanId?: string;
+  currentMuteId?: string;
   currentWarnCount?: number;
 }
 

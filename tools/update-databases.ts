@@ -88,8 +88,8 @@ void (async (): Promise<void> => {
     // Add the user to the database of the convicted users (= users that have had at least 1 sanction).
     const { _id: userId } = await ConvictedUser.create({
       memberId: document.memberId,
-      lastBanId: document.lastBanId,
-      lastMuteId: document.lastMuteId,
+      currentBanId: document.lastBanId,
+      currentMuteId: document.lastMuteId,
       currentWarnCount: document.currentWarnCount,
     });
 
