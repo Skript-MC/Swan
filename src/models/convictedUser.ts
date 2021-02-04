@@ -8,11 +8,11 @@ const ConvictedUserSchema = new Schema<ConvictedUserDocument, ConvictedUserModel
     required: true,
     unique: true,
   },
-  lastBanId: {
+  currentBanId: {
     type: String,
     default: null,
   },
-  lastMuteId: {
+  currentMuteId: {
     type: String,
     default: null,
   },

@@ -30,7 +30,7 @@ class MuteAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.lastMuteId },
+        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentMuteId },
         {
           $set: {
             duration: this.data.duration,
@@ -65,7 +65,7 @@ class MuteAction extends ModerationAction {
     try {
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },
-        { lastMuteId: this.data.sanctionId },
+        { currentMuteId: this.data.sanctionId },
         { upsert: true, new: true },
       );
       await Sanction.create({ ...this.data.toSchema(), user: user._id });

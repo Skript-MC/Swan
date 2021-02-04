@@ -43,7 +43,7 @@ class UnmuteCommand extends Command {
   public async exec(message: GuildMessage, args: UnmuteCommandArgument): Promise<void> {
     try {
       const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
-      if (!convictedUser?.lastMuteId) {
+      if (!convictedUser?.currentMuteId) {
         await message.channel.send(config.messages.notMuted);
         return;
       }

@@ -11,9 +11,9 @@ import type ModerationData from './ModerationData';
 
 
 const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {
-  [SanctionTypes.Ban]: 'lastBanId',
-  [SanctionTypes.Hardban]: 'lastBanId',
-  [SanctionTypes.Mute]: 'lastMuteId',
+  [SanctionTypes.Ban]: 'currentBanId',
+  [SanctionTypes.Hardban]: 'currentBanId',
+  [SanctionTypes.Mute]: 'currentMuteId',
 };
 
 

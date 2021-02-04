@@ -25,12 +25,12 @@ class UnbanAction extends ModerationAction {
     let ban: SanctionDocument;
     // 1. Update the Database
     try {
-      const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { lastBanId: null });
+      const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { currentBanId: null });
       if (!user)
         throw new TypeError('The user to unban was not found in the database.');
 
       ban = await Sanction.findOneAndUpdate(
-        { sanctionId: user.lastBanId },
+        { sanctionId: user.currentBanId },
         {
           $set: { revoked: true },
           $push: {
