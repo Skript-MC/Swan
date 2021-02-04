@@ -89,6 +89,8 @@ export interface PurgeCommandArgument {
   force: boolean;
 }
 
+export interface RefreshCommandArgument {}
+
 export interface RemoveWarnCommandArgument {
   member: GuildMember;
   reason: string;
