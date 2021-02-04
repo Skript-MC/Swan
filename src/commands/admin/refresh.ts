@@ -3,7 +3,6 @@ import { Command } from 'discord-akairo';
 import SwanModule from '@/app/models/swanModule';
 import type { GuildMessage } from '@/app/types';
 import type { RefreshCommandArgument } from '@/app/types/CommandArguments';
-import { noop } from '@/app/utils';
 import { refresh as config } from '@/conf/commands/admin';
 
 class RefreshCommand extends Command {
