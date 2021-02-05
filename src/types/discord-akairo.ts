@@ -65,6 +65,7 @@ declare module 'discord-akairo' {
 
     currentlyBanning: string[];
     currentlyUnbanning: string[];
+    currentlyModerating: string[];
     cachedChannels: Nullable<CachedChannels>;
     isLoading: boolean;
 

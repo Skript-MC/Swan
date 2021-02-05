@@ -64,6 +64,7 @@ class SwanClient extends AkairoClient {
     this.githubCache = {};
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
+    this.currentlyModerating = [];
     this.modules = [];
 
     Logger.info('Creating Command handler...');
