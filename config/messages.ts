@@ -72,6 +72,7 @@ export default {
   moderation: {
     permanent: 'Définitif',
     never: 'jamais',
+    alreadyModerated: "Cet utilisateur est déjà pris en charge par un autre modérateur ! Ta commande n'a pas été exécutée pour éviter les conflits ou les doublons. Sinon, réessaye dans quelques secondes.",
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à lui en informer !",
     newCase: 'Nouveau cas ({action.data.sanctionId})',
     banExplanation: stripIndent`
