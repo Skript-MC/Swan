@@ -73,7 +73,7 @@ export const latex = {
   },
   details: {
     name: 'Latex',
-    content: 'Permet de transformer une série de symboles pas belle du tout en une merveilleuse équation toute jolie.',
+    content: 'Permet de transformer une série de symboles pas belle du tout en une merveilleuse équation toute jolie, grâce au moteur mathématique LaTeX.',
     usage: 'latex <equation>',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
