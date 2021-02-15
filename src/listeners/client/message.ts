@@ -72,7 +72,7 @@ class MessageListener extends Listener {
   }
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
-    const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
+    const linkRegex = new RegExp(`https://(?:ptb.|canary.)?discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
     if (!linkRegex.test(message.content))
       return false;
 
