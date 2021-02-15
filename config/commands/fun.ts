@@ -65,6 +65,24 @@ export const eightBall = {
   },
 };
 
+export const latex = {
+  settings: {
+    aliases: ['latex'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: noPermissions,
+  },
+  details: {
+    name: 'Latex',
+    content: 'Permet de transformer une série de symboles pas belle du tout en une merveilleuse équation toute jolie, grâce au moteur mathématique LaTeX.',
+    usage: 'latex <equation>',
+    examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
+  },
+  messages: {
+    startPrompt: 'Ajoute une équation à formater :',
+    retryPrompt: 'Équation invalide. Ré-entre-la :',
+  },
+};
+
 export const poll = {
   settings: {
     aliases: ['poll', 'sondage'],
