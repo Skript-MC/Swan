@@ -19,18 +19,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-
 
-      - name: Install Node v14
+      - name: Install Node 14
         uses: actions/setup-node@v1
         with:
           node-version: 14
 
-      - name: Install ESLint v7
+      - name: Install modules
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install -g eslint@7
-
-      - name: Install ESLint Configs and Plugins
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install eslint-config-noftalint eslint-plugin-import eslint-plugin-unicorn eslint-plugin-node babel-eslint@11.0.0-beta.2
+        run: npm install @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-noftalint eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-node eslint-plugin-unicorn
 
       - name: Run ESLint
         run: npm run lint
