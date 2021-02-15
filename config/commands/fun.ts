@@ -78,7 +78,7 @@ export const latex = {
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
   messages: {
-    startPrompt: 'Ajoute une équation à formatter :',
+    startPrompt: 'Ajoute une équation à formater :',
     retryPrompt: 'Équation invalide. Ré-entre-la :',
   },
 };
