@@ -30,7 +30,7 @@ class LatexCommand extends Command {
 
   public async exec(message: GuildMessage, args: LatexCommandArguments): Promise<void> {
     const sendMessage = await message.channel.send(settings.apis.latex + args.equation.replace(/\s/g, '&space;'));
-
+    await sendMessage.react(settings.emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
         && !user.bot
