@@ -737,6 +737,11 @@
                 "changed": "Je vais répeter cette musique ! `.loop off` pour arrêter la répétition.",
                 "alreadyEnabled": "La répétition est déjà activée ! `.loop off` pour répéter une musique.",
                 "alreadyDisabled": "La répétition est déjà désactivée ! `.loop on` pour répéter une musique."
+            },
+            "latex": {
+                "help": "Transforme une équation LaTeX en image.",
+                "noEquation": "Vous n'avez pas mis d'équations.",
+                "link": "https://latex.codecogs.com/png.latex?\\bg_black&space;"
             }
         }
     }
