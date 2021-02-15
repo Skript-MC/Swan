@@ -1,17 +1,11 @@
 import { stripIndent } from 'common-tags';
-import { Permissions } from 'discord.js';
-import type { PermissionResolvable } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
-
-const permissions = Permissions.FLAGS;
-
-const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
+import { hasActiveMemberRole, noPermissions, permissions } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
     aliases: ['addonPack'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: "Pack d'add-ons",
@@ -30,7 +24,7 @@ export const autoMessage = {
   settings: {
     aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Message rapide',
@@ -49,7 +43,7 @@ export const code = {
   settings: {
     aliases: ['code', 'balise', 'balises'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Code',
@@ -69,7 +63,7 @@ export const discover = {
   settings: {
     aliases: ['découvrir', 'decouvrir', 'discover'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Découvrir',
@@ -91,7 +85,7 @@ export const errorDetails = {
   settings: {
     aliases: ['error', 'errorDetails'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: "Détails d'erreur",
@@ -110,7 +104,7 @@ export const help = {
   settings: {
     aliases: ['help', 'aide'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Aide',
@@ -139,7 +133,7 @@ export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Liens',
@@ -236,7 +230,7 @@ export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Ping',
@@ -258,7 +252,7 @@ export const statistics = {
   settings: {
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Statistiques',

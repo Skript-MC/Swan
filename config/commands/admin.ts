@@ -1,14 +1,11 @@
-import { Permissions } from 'discord.js';
-import type { PermissionResolvable } from 'discord.js';
-
-const permissions = Permissions.FLAGS;
+import { hasActiveMemberRole, permissions } from '@/conf/configUtils';
 
 // eslint-disable-next-line import/prefer-default-export
 export const refresh = {
   settings: {
     aliases: ['refresh'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: hasActiveMemberRole,
   },
   details: {
     name: 'Rafraîchir le cache',
