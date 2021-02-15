@@ -230,7 +230,7 @@ class SwanClient extends AkairoClient {
       .map((cmd: Command) => cmd.id);
 
     // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
-    const documents: Array<Query<CommandStatDocument, CommandStatDocument, CommandStatDocument>> = [];
+    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 
