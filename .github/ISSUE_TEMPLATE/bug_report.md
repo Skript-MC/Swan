@@ -1,38 +1,27 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+name: Rapport de bug
+about: Aidez nous en nous faisant part des bugs que vous rencontrez !
+title: 'Bug: ___'
+labels: 'bug'
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Expliquez le bug**
+Une description claire et concise du bug.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Pour le reproduire**
+Étapes à suivre pour reproduire le bug:
+1. Allez dans le salon #....
+2. Faites la commande `...`
+3. Supprimez le message '....'
+4. L'erreur apparait
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Comportement attendu**
+Une description claire et concise de ce que Swan aurait du faire.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Liens**
+Si possible, incluez une capture d'écran du bug ou un lien vers le message qui a posé problème.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+**Autres informations**
+Incluez ici toutes autres informations que vous avez à propos du bug.
