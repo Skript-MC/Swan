@@ -53,6 +53,7 @@ export default {
     skriptmc: 'https://skript-mc.fr/api/',
     forum: 'https://skript-mc.fr/forum/api/',
     server: 'https://api.mcsrvstat.us/2/',
+    latex: 'https://latex.codecogs.com/png.latex?\\bg_black&space;',
   },
   roles: {
     staff: process.env.STAFF_ROLE,
