@@ -6,12 +6,15 @@ import {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
-import type { Category, Command } from 'discord-akairo';
+import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
+import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
+import Poll from './models/poll';
+import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
 import TaskHandler from './structures/TaskHandler';
@@ -20,7 +23,9 @@ import type {
   SkriptMcDocumentationAddonResponse,
   SkriptMcDocumentationFullAddonResponse,
   SkriptToolsAddonListResponse,
+  SwanModuleDocument,
 } from './types';
+import { nullop, uncapitalize } from './utils';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -60,6 +65,9 @@ class SwanClient extends AkairoClient {
     this.githubCache = {};
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
+    this.currentlyModerating = [];
+    this.pollMessagesIds = [];
+    this.modules = [];
 
     Logger.info('Creating Command handler...');
     this.commandHandler = new CommandHandler(this, {
@@ -111,6 +119,7 @@ class SwanClient extends AkairoClient {
       inhibitorHandler: this.inhibitorHandler,
       taskHandler: this.taskHandler,
       listenerHandler: this.listenerHandler,
+      mongodb: mongoose.connection,
       process,
     });
 
@@ -118,10 +127,48 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
+    this.modules = [
+      ...this.commandHandler.modules.array(),
+      ...this.inhibitorHandler.modules.array(),
+      ...this.listenerHandler.modules.array(),
+    ];
+
+    this.on('ready', () => {
+      this.taskHandler.loadAll();
+      this.modules = [...this.modules, ...this.taskHandler.modules.array()];
+
+      SwanModule.find()
+        .then((modules: SwanModuleDocument[]): void => {
+          const unloadModules = (handler: AkairoHandler): void => {
+            for (const id of handler.modules.keys()) {
+              const module = modules.find(mod => mod.name === id);
+              if (module && !module.enabled) {
+                handler.remove(id);
+                Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
+              } else if (!module) {
+                void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+              }
+            }
+          };
+
+          unloadModules(this.commandHandler);
+          unloadModules(this.inhibitorHandler);
+          unloadModules(this.listenerHandler);
+          unloadModules(this.taskHandler);
+        })
+        .catch((error) => {
+          Logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
+          Logger.error(error);
+        });
+    });
+
     for (const [name, resolver] of Object.entries(resolvers))
       this.commandHandler.resolver.addType(name, resolver);
 
+    Logger.info('Loading & caching databases...');
+    void this._loadPolls();
     void this._loadCommandStats();
+
     Logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
     Logger.info('Loading syntaxes from Skript-MC...');
@@ -186,12 +233,19 @@ class SwanClient extends AkairoClient {
     }
   }
 
+  private async _loadPolls(): Promise<void> {
+    const polls = await Poll.find().catch(nullop);
+    if (polls)
+      this.pollMessagesIds.push(...polls.map(poll => poll.messageId));
+  }
+
   private async _loadCommandStats(): Promise<void> {
     const commandIds: string[] = this.commandHandler.categories
       .array()
       .flatMap((category: Category<string, Command>) => category.array())
       .map((cmd: Command) => cmd.id);
 
+    // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
     const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
@@ -223,18 +277,20 @@ class SwanClient extends AkairoClient {
 
   private async _loadSkriptMcSyntaxes(): Promise<void> {
     try {
-      const token = `?api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
-      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
+      const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
+      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`).then(res => res?.data);
       if (!allAddons)
         return;
 
-      // FIXME: Find a more optimized way of doing this, this is horrible
-      // - Don't iterate through all syntaxes inside all addons... Double for loop and useless performance loss
-      // - Don't do the async expression inside the loop
+      // FIXME: Find a more optimized way of doing this:
+      // - Don't iterate through all syntaxes inside all addons. This uses a double for-loop and is
+      // useless performance loss
+      // - Don't do async operations (fetch) inside the loop
       // - Add an endpoint on the API to bulk-fetch syntaxes with already all of those information?
       for (const addon of allAddons) {
         try {
-          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(`${settings.apis.skriptmc}addons/${addon.slug}${token}`).then(res => res?.data);
+          const url = `${settings.apis.skriptmc}addons/${addon.slug}?${token}`;
+          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(url).then(res => res?.data);
           if (!fullAddon || !fullAddon.articles)
             throw new Error(`No syntax to load for addon ${addon.name}`);
 

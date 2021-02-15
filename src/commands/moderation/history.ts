@@ -1,17 +1,13 @@
-import { oneLine, stripIndent } from 'common-tags';
+import { stripIndent } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
+import type { GuildMessage, SanctionDocument } from '@/app/types';
 import type { HistoryCommandArgument } from '@/app/types/CommandArguments';
-import {
-  getUsername,
-  noop,
-  splitText,
-  toHumanDuration,
- } from '@/app/utils';
+import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -38,7 +34,7 @@ class HistoryCommand extends Command {
   public async exec(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
     const memberId = typeof args.member === 'string' ? args.member : args.member.id;
 
-    const sanctions = await Sanction.find({ memberId });
+    const sanctions: SanctionDocument[] = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -49,29 +45,42 @@ class HistoryCommand extends Command {
       bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
       mutes: sanctions.filter(s => s.type === SanctionTypes.Mute).length,
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
+      currentWarns: sanctions.filter(s => s.type === SanctionTypes.Warn && !s.revoked).length,
+      warns: sanctions.filter(s => s.type === SanctionTypes.Warn).length,
     };
 
-    let privateHistory = pupa(config.messages.title, { name: getUsername(args.member), sanctions });
+    const sanctionUrl = settings.moderation.dashboardSanctionLink + memberId;
+    const embed = new MessageEmbed()
+      .setTitle(pupa(config.messages.title, { name: getUsername(args.member), sanctions }))
+      .setURL(sanctionUrl)
+      .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
+      .setColor(settings.colors.default)
+      .setTimestamp();
 
-    privateHistory += pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan });
-    privateHistory += '\n\n';
+    for (const [i, sanction] of sanctions.entries()) {
+      if (i >= 4) {
+        embed.addField(
+          pupa(config.messages.overflowTitle, { overflowed: sanctions.length - 4 }),
+          pupa(config.messages.overflowDescription, { url: sanctionUrl }),
+        );
+        break;
+      }
 
-    for (const sanction of sanctions) {
-      let stringBuilder = pupa(config.messages.sanctionDescription.main, {
+      let sanctionContent = pupa(config.messages.sanctionDescription.content, {
         name: config.messages.sanctionsName[sanction.type],
         date: moment(sanction.start).format(settings.miscellaneous.durationFormat),
         sanction,
       });
 
       if (sanction.duration && sanction.type !== SanctionTypes.Warn) {
-        stringBuilder += pupa(config.messages.sanctionDescription.duration, {
+        sanctionContent += pupa(config.messages.sanctionDescription.duration, {
           duration: toHumanDuration(sanction.duration),
         });
       }
 
-      stringBuilder += '\n';
+      sanctionContent += '\n';
       if (sanction.updates?.length) {
-        stringBuilder += pupa(config.messages.sanctionDescription.modifications, {
+        sanctionContent += pupa(config.messages.sanctionDescription.modifications, {
           plural: sanction.updates?.length > 1 ? 's' : '',
         });
 
@@ -86,26 +95,26 @@ class HistoryCommand extends Command {
               `
             : '\n';
 
-          stringBuilder += '        ';
-          stringBuilder += oneLine`
-            - ${moment(update.date).format(settings.miscellaneous.durationFormat)},
-            <@${update.moderator}> ${config.messages.updateReasons[update.type]}
-            (motif: "${update.reason}")`;
-            stringBuilder += diff;
+          sanctionContent += pupa(config.messages.sanctionDescription.update, {
+            date: moment(update.date).format(settings.miscellaneous.durationFormat),
+            sanction,
+            update,
+            action: config.messages.updateReasons[update.type],
+          });
+          sanctionContent += diff;
         }
       }
 
-      privateHistory += `${stringBuilder}\n`;
+      embed.addField(
+        pupa(config.messages.sanctionDescription.title, {
+          name: config.messages.sanctionsName[sanction.type],
+          sanction,
+        }),
+        sanctionContent,
+      );
     }
 
-    const splittedText = splitText(privateHistory);
-    try {
-      for (const chunk of splittedText)
-        await message.member.send(chunk);
-      await message.channel.send(config.messages.sentInDm);
-    } catch {
-      await message.channel.send(messages.global.dmAreClosed).catch(noop);
-    }
+    await message.channel.send(embed);
   }
 }
 

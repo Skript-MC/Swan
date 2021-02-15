@@ -49,7 +49,6 @@ class CodeCommand extends Command {
       }
 
       let { code } = args;
-      // eslint-disable-next-line unicorn/consistent-destructuring
       if (args.displayLines) {
         const lines = code.split('\n');
         code = '';

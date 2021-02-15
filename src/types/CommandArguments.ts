@@ -34,9 +34,15 @@ export interface CodeCommandArguments {
   startLinesAt?: string;
 }
 
+export interface EightBallCommandArguments {
+  question: string;
+}
+
 export interface ErrorDetailsCommandArguments {
   error: string;
 }
+
+export interface DiscoverCommandArguments {}
 
 export interface DocumentationCommandArguments {
   query: string;
@@ -82,6 +88,8 @@ export interface PurgeCommandArgument {
   member: GuildMember;
   force: boolean;
 }
+
+export interface RefreshCommandArgument {}
 
 export interface RemoveWarnCommandArgument {
   member: GuildMember;

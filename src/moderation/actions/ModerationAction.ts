@@ -6,7 +6,7 @@ import pupa from 'pupa';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
 import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
+import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import ActionUpdateInformations from '../ActionUpdateInformations';
@@ -140,7 +140,7 @@ abstract class ModerationAction {
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
       .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)
       .addField(messages.moderation.log.actionTitle, this.action.toString(), true)
-      .addField(messages.moderation.log.reasonTitle, this.data.reason.toString(), true);
+      .addField(messages.moderation.log.reasonTitle, trimText(this.data.reason.toString(), 1000), true);
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);

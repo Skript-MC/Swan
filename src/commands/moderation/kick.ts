@@ -42,6 +42,16 @@ class KickCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: KickCommandArgument): Promise<void> {
+    if (this.client.currentlyModerating.includes(args.member.id)) {
+      await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
+      return;
+    }
+
+    this.client.currentlyModerating.push(args.member.id);
+    setTimeout(() => {
+      this.client.currentlyModerating.splice(this.client.currentlyModerating.indexOf(args.member.id), 1);
+    }, 10_000);
+
     try {
       const data = new ModerationData(message)
         .setVictim(args.member)

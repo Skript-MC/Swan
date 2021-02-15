@@ -381,7 +381,7 @@ export interface GuildKickAuditLogs extends GuildAuditLogs {
 export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
 
 /** The name of the fields of the TrackedSanctionTypes */
-export type TrackedFieldNames = 'lastBanId' | 'lastMuteId';
+export type TrackedFieldNames = 'currentBanId' | 'currentMuteId';
 
 /** Represent the victim object of ModerationData#victim */
 export interface PersonInformations {
@@ -471,6 +471,28 @@ export type CommandStatModel = Model<CommandStatDocument>;
 
 // #endregion
 
+/* **************************** */
+/*     Module Database Types    */
+/* **************************** */
+
+// #region Module Database Types (VS Code)
+// region Module Database Types (JetBrains)
+
+/** Interface for the "Module"'s mongoose schema */
+export interface SwanModuleBase {
+  name: string;
+  handler: string;
+  enabled: boolean;
+}
+
+/** Interface for the "Module"'s mongoose document */
+export interface SwanModuleDocument extends SwanModuleBase, Document {}
+
+/** Interface for the "Module"'s mongoose model */
+export type SwanModuleModel = Model<SwanModuleDocument>;
+
+// #endregion
+
 /* ********************* */
 /*  Poll Database Types  */
 /* ********************* */
@@ -541,8 +563,8 @@ export type MessageModel = Model<MessageDocument>;
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
   memberId: string;
-  lastBanId?: string;
-  lastMuteId?: string;
+  currentBanId?: string;
+  currentMuteId?: string;
   currentWarnCount?: number;
 }
 

@@ -1,16 +1,11 @@
 import { stripIndent } from 'common-tags';
-import { Permissions } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
-
-const permissions = Permissions.FLAGS;
-
-const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
+import { hasActiveMemberRole, noPermissions, permissions } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
     aliases: ['addonPack'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: "Pack d'add-ons",
@@ -29,7 +24,7 @@ export const autoMessage = {
   settings: {
     aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Message rapide',
@@ -48,13 +43,13 @@ export const code = {
   settings: {
     aliases: ['code', 'balise', 'balises'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Code',
     content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes.",
     usage: 'code <code>',
-    examples: ['code broadcast "Yeah!"'],
+    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"'],
   },
   messages: {
     title: '**Code de {message.author.username} :**',
@@ -64,11 +59,33 @@ export const code = {
   },
 };
 
+export const discover = {
+  settings: {
+    aliases: ['découvrir', 'decouvrir', 'discover'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: noPermissions,
+  },
+  details: {
+    name: 'Découvrir',
+    content: 'Permet de __découvrir une commande__ présente dans Swan.',
+    usage: 'découvrir',
+    examples: ['decouvrir'],
+  },
+  messages: {
+    title: ':star: Commande "{randomCommand.details.name}"',
+    description: '❯ Description',
+    usage: '❯ Utilisation',
+    usableBy: '❯ Utilisable par',
+    aliases: '❯ Aliases',
+    examples: '❯ Exemples',
+  },
+};
+
 export const errorDetails = {
   settings: {
     aliases: ['error', 'errorDetails'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: "Détails d'erreur",
@@ -87,7 +104,7 @@ export const help = {
   settings: {
     aliases: ['help', 'aide'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Aide',
@@ -116,7 +133,7 @@ export const links = {
   settings: {
     aliases: ['links', 'link', 'liens', 'lien'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Liens',
@@ -213,7 +230,7 @@ export const ping = {
   settings: {
     aliases: ['ping', 'ms'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Ping',
@@ -235,7 +252,7 @@ export const statistics = {
   settings: {
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Statistiques',

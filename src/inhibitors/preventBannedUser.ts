@@ -11,7 +11,7 @@ class PreventBannedUsersInhibitor extends Inhibitor {
 
   public async exec(message: Message): Promise<boolean> {
     const result = await ConvictedUser.findOne({ memberId: message.author.id });
-    return typeof result?.lastBanId !== 'undefined';
+    return typeof result?.currentBanId !== 'undefined';
   }
 }
 

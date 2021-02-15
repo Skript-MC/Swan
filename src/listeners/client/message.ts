@@ -72,7 +72,7 @@ class MessageListener extends Listener {
   }
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
-    const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'gimu');
+    const linkRegex = new RegExp(`https://discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
     if (!linkRegex.test(message.content))
       return false;
 
@@ -96,7 +96,7 @@ class MessageListener extends Listener {
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
         .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL())
-        .setDescription(`${targetedMessage.content}\n[(lien)](${targetedMessage.url})`)
+        .setDescription(`${trimText(targetedMessage.content, 1900)}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
 
       if (targetedMessage.attachments.size > 0) {

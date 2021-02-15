@@ -1,10 +1,6 @@
 import { stripIndent } from 'common-tags';
-import { Permissions } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
+import { hasStaffRole, permissions } from '@/conf/configUtils';
 
-const permissions = Permissions.FLAGS;
-
-const hasStaffRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.STAFF_ROLE) ? null : 'No staff role');
 const see = (where: string): string => `Voir [la documentation](https://github.com/Skript-MC/Swan/wiki/Modération#${where}) pour plus d'informations.`;
 
 const commonMessages = {
@@ -85,7 +81,9 @@ export const history = {
     promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
-    title: "**__SANCTIONS DE L'UTILISATEUR {name}__** (*{sanctions.length}*)\n\n",
+    title: "**__Sanctions de l'utilisateur {name}__** ({sanctions.length})",
+    overflowTitle: '...et {overflowed} de plus...',
+    overflowDescription: "Toutes les sanctions de l'utilisateur n'ont pas pu être affichées. Vous pouvez toutes les consulter sur le [panel de gestion]({url})",
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
       ban: ':hammer: Bannissement',
@@ -94,7 +92,7 @@ export const history = {
       unmute: ':loud_sound: Unmute',
       kick: ':door: Expulsion',
       warn: ':warning: Avertissement',
-      unwarn: ":repeat: Suppression d'avertissement",
+      removeWarn: ":repeat: Suppression d'avertissement",
     },
     overview: stripIndent`
       :bomb: Bannissements définitifs : {stats.hardbans}
@@ -103,21 +101,20 @@ export const history = {
       :door: Kicks : {stats.kicks}
       :stop_sign: Avertissements totaux : {stats.warns}
       :warning: Avertissements en cours : {stats.currentWarns}/{warnLimit}`,
-    updateReasons: {
-      duration: 'a changé la durée',
-      revoked: 'a révoqué la sanction',
-    },
     sanctionDescription: {
-      main: stripIndent`
-        ━━━━━━━━━━━━━━━
-
-        **{name}** (\`{sanction.sanctionId}\`)
-            __Modérateur :__ <@{sanction.moderator}>
-            __Date :__ {date}
-            __Raison :__ {sanction.reason}
+      title: '**{name}** (`{sanction.sanctionId}`)',
+      content: stripIndent`
+      __Modérateur :__ <@{sanction.moderator}>
+      __Date :__ {date}
+      __Raison :__ {sanction.reason}
       `,
       duration: '\n    __Durée :__ {duration}',
       modifications: '    __Modification{plural} :__\n',
+      update: '    - {date}, <@{sanction.moderator}> {action} (motif : {update.reason})',
+    },
+    updateReasons: {
+      duration: 'a changé la durée',
+      revoked: 'a révoqué la sanction',
     },
   },
 };

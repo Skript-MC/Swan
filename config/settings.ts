@@ -1,7 +1,4 @@
 import path from 'path';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 export default {
   bot: {
@@ -18,7 +15,7 @@ export default {
       specials: ['ℹ', '🛑'],
     },
     validNamePercentage: 0.5,
-    durationFormat: '[à] HH:mm:ss [le] DD/MM/YYYY',
+    durationFormat: '[le] DD/MM/YYYY [à] HH:mm:ss',
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
     activeMemberBlacklistedLinks: [
@@ -34,6 +31,7 @@ export default {
     maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days in seconds
     banChannelPrefix: 'b-',
     banChannelTopic: "Salon du bannissement de {member.displayName}. Regardez les messages épinglés pour plus d'informations.",
+    dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?form%5BmemberId%5D=',
     colors: {
       warn: '#ffe200',
       kick: '#ff6b61',

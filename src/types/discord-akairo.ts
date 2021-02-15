@@ -65,6 +65,8 @@ declare module 'discord-akairo' {
 
     currentlyBanning: string[];
     currentlyUnbanning: string[];
+    currentlyModerating: string[];
+    pollMessagesIds: string[];
     cachedChannels: Nullable<CachedChannels>;
     isLoading: boolean;
 
@@ -72,6 +74,7 @@ declare module 'discord-akairo' {
     inhibitorHandler: InhibitorHandler;
     taskHandler: TaskHandler;
     listenerHandler: ListenerHandler;
+    modules: AkairoModule[];
 
     guild: Guild;
 

@@ -7,7 +7,6 @@ import pupa from 'pupa';
 import { Rules } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { StatisticsCommandArguments } from '@/app/types/CommandArguments';
-import { trimText } from '@/app/utils';
 import { statistics as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 import pkg from '@/root/package.json';
@@ -42,7 +41,7 @@ class StatisticsCommand extends Command {
         embedMessages.version,
         pupa(embedMessages.versionContent, {
           version: pkg.version,
-          commitLink: `[${trimText(commitHash, 10)}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
+          commitLink: `[${commitHash.slice(0, 7)}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
         }),
         true,
       )

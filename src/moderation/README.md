@@ -37,7 +37,6 @@ Le module de modération de Swan consiste en une grosse partie du bot. Voici com
   - [ConvictedUsers](#convictedusers)
   - [Sanctions](#sanctions)
 
-
 ## Liste des sanctions
 
 ### Informations diverses
@@ -72,7 +71,6 @@ Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 10 mi
 
 Toutes les commandes de modération sont exécutables par les personnes ayant le rôle "Staff". Cependant, les modérateurs forum ont une restriction de durée : il ne peuvent pas sanctionner pour une durée de plus de 2 jours.
 
-
 ### Bannissement
 
 #### Description
@@ -106,13 +104,12 @@ La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'en suit
 Cette commande accepte aussi des drapeaux :
 
 - `--autoban` (ou encore `--auto-ban` ou `-a`). Avec ce drapeau, si la personne n'a écrit aucun message dans son salon privé à la fin de la sanction, il sera banni définitivement, au lieu d'être simplement débanni.
-- `--purge` (ou en court : `-p`). Ce drapeau permet de supprimer les messages envoyés par le membre dans les septs derniers jours. Si ce drapeau n'est pas mis, aucun message du membre ne sera supprimé. **__Attention :__ ce drapeau fonctionne uniquement pour les bannissements définitifs (mises à jour de bannissement inclus)**
+- `--purge` (ou en cours : `-p`). Ce drapeau permet de supprimer les messages envoyés par le membre dans les septs derniers jours. Si ce drapeau n'est pas mis, aucun message du membre ne sera supprimé. **__Attention :__ ce drapeau fonctionne uniquement pour les bannissements définitifs (mises à jour de bannissement inclus).**
 
 Voici donc le modèle d'une commande : `.ban <@mention | pseudo | ID> <durée> <raison> [--autoban] [--purge]`
 Et voici des exemples d'utilisation :\
 `.ban @WeeskyBDW 3j --autoban -p t'es paumé !`\
 `.ban 1h @Vengelis La vie est dure...`
-
 
 ### Mute
 
@@ -145,7 +142,6 @@ La commande est le `.mute`. S'en suit l'utilisateur à rendre muet. Il faut ensu
 Voici donc le modèle d'une commande : `.mute <@mention | pseudo | ID> <durée> <raison>`\
 Et voici des exemples d'utilisation : `.mute @Xamez chuuuut`
 
-
 ### Kick
 
 #### Description
@@ -158,7 +154,6 @@ La commande est le `.kick`. S'en suit l'utilisateur à expulser. Il faut ensuite
 
 Voici donc le modèle d'une commande : `.kick <@mention | pseudo | ID> <raison>`\
 Et voici des exemples d'utilisation : `.mute @random Cheh :kappa:`
-
 
 ### Warn
 
@@ -186,7 +181,6 @@ La commande est le `.warn`. S'en suit l'utilisateur à avertir, et la raison de 
 Voici donc le modèle d'une commande : `.warn <@mention | pseudo | ID> <raison>`\
 Et voici des exemples d'utilisation : `.warn @Rémi Il faut penser à respecter le modèle d'aide !`
 
-
 ## Fonctionnement et organisation du code
 
 Chaque sanction est une action qui hérite de la classe `ModerationAction`. Il faut donner un paramètre un objet `ModerationData`, qui contient les informations relatives à la sanction.
@@ -213,11 +207,11 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
     "required": true,
     "unique": true,
   },
-  "lastBanId": {
+  "currentBanId": {
     "type": "String",
     "default": null,
   },
-  "lastMuteId": {
+  "currentMuteId": {
     "type": "String",
     "default": null,
   },
@@ -229,8 +223,8 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
 }
 ```
 
-- `lastBanId` est l'ID du bannissement actuellement en cours, ou `null` si aucun n'est en cours.
-- `lastMuteId` est l'ID du mute actuellement en cours, ou `null` si aucun n'est en cours.
+- `currentBanId` est l'ID du bannissement actuellement en cours, ou `null` si aucun n'est en cours.
+- `currentMuteId` est l'ID du mute actuellement en cours, ou `null` si aucun n'est en cours.
 - `currentWarnCount` est le nombre d'avertissement en cours. Il se remettra à 0 dès que l'utilisateur a dépassé la limite d'avertissements avant bannissement.
 
 ### Sanctions

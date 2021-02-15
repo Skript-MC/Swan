@@ -8,6 +8,7 @@
 
 - Installez [Node.js](https://nodejs.org/fr/) sur votre machine. Il vous faudra Node.js 12 ou supérieur.
 - Téléchargez la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest), ou clonez ce dépôt pour tester les dernières modifications.
+- Pensez à avoir une base de donnée MongoDB, le plus simple serait en local.
 - Copiez le fichier `.env.example` vers `.env` et remplissez-le.
 - Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activez les options `Server Members Intent` et `Presence Intent` de l'application.
 - Exécutez la commande `npm i` pour installer les dépendances nécessaires.

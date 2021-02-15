@@ -6,6 +6,7 @@ import Poll from '@/app/models/poll';
 import type { GuildMessage } from '@/app/types';
 import { QuestionType, Rules } from '@/app/types';
 import type { PollCommandArguments } from '@/app/types/CommandArguments';
+import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import settings from '@/conf/settings';
 
@@ -18,8 +19,8 @@ class PollCommand extends Command {
         id: 'duration',
         type: Argument.validate(
           'finiteDuration',
-          (_message: GuildMessage, _phrase: string, value: number) => value < settings.miscellaneous.maxPollDuration
-            || Date.now() + value > Date.now(),
+          (_message: GuildMessage, _phrase: string, value: number) => Date.now() + value > Date.now()
+            && value < settings.miscellaneous.maxPollDuration,
         ),
         prompt: {
           start: config.messages.promptStartDuration,
@@ -29,7 +30,7 @@ class PollCommand extends Command {
         id: 'answers',
         type: Argument.validate(
           'quotedText',
-          (_message: GuildMessage, phrase: string) => (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
+          (_message: GuildMessage, phrase: string) => phrase.length > 0 && (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
         ),
         match: 'rest',
         prompt: {
@@ -94,8 +95,8 @@ class PollCommand extends Command {
 
     const embed = new MessageEmbed()
       .setAuthor(pupa(embedMessages.author, { message }), message.author.avatarURL())
-      .addField(embedMessages.question, question)
-      .addField(embedMessages.answers, possibleAnswers)
+      .addField(embedMessages.question, trimText(question, 1000))
+      .addField(embedMessages.answers, trimText(possibleAnswers, 1000))
       .addField(embedMessages.duration, durationContent)
       .setTimestamp();
 
@@ -123,9 +124,11 @@ class PollCommand extends Command {
     embed.setColor(settings.colors.default);
     await pollMessage.edit(embed);
 
-    const votes = {};
+    const votes: Record<string, string[]> = {};
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
+
+    this.client.pollMessagesIds.push(pollMessage.id);
 
     await Poll.create({
       messageId: pollMessage.id,

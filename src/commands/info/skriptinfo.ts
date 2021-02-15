@@ -9,7 +9,7 @@ import settings from '@/conf/settings';
 
 class SkriptInfoCommand extends Command {
   constructor() {
-    super('Skript Info', {
+    super('skriptInfo', {
       aliases: config.settings.aliases,
       details: config.details,
       args: [{

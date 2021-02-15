@@ -1,11 +1,10 @@
+import 'dotenv/config';
+
 import { promises as fs } from 'fs';
 import path from 'path';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import ConvictedUser from '../src/models/convictedUser';
 import Sanction from '../src/models/sanction';
-
-dotenv.config();
 
 function getNewType(type: string): 'ban' | 'hardban' | 'kick' | 'mute' | 'removeWarn' | 'unban' | 'unmute' | 'warn' {
   switch (type) {
@@ -89,8 +88,8 @@ void (async (): Promise<void> => {
     // Add the user to the database of the convicted users (= users that have had at least 1 sanction).
     const { _id: userId } = await ConvictedUser.create({
       memberId: document.memberId,
-      lastBanId: document.lastBanId,
-      lastMuteId: document.lastMuteId,
+      currentBanId: document.lastBanId,
+      currentMuteId: document.lastMuteId,
       currentWarnCount: document.currentWarnCount,
     });
 

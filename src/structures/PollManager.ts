@@ -4,15 +4,18 @@ import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import { QuestionType } from '@/app/types';
-import { noop } from '@/app/utils';
+import type { PollDocument } from '@/app/types/index';
+import { nullop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
-    const poll = await Poll.findByIdAndRemove(pollId).catch(noop);
+    const poll: PollDocument = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)
       return;
+
+    client.pollMessagesIds.slice(client.pollMessagesIds.indexOf(poll.messageId), 1);
 
     const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
     if (!channel)
