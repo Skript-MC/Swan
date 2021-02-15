@@ -5,7 +5,7 @@ function searchMessageSimilarity(entries: MessageDocument[], wanted: string): Me
   const search: Array<[message: MessageDocument, similarity: number]> = [];
   for (const entry of entries) {
     // Avoid useless double loop after
-    if (entry.aliases.some(alias => alias === wanted) || entry.name === wanted)
+    if (entry.aliases.includes(wanted) || entry.name === wanted)
       return entry;
     for (const alias of entry.aliases) {
       const distance = jaroWinklerDistance(alias, wanted, { caseSensitive: false });
