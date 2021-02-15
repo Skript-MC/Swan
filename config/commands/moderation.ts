@@ -1,10 +1,6 @@
 import { stripIndent } from 'common-tags';
-import { Permissions } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
+import { hasStaffRole, permissions } from '@/conf/configUtils';
 
-const permissions = Permissions.FLAGS;
-
-const hasStaffRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.STAFF_ROLE) ? null : 'No staff role');
 const see = (where: string): string => `Voir [la documentation](https://github.com/Skript-MC/Swan/wiki/Modération#${where}) pour plus d'informations.`;
 
 const commonMessages = {

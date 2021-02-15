@@ -1,14 +1,11 @@
 import { stripIndent } from 'common-tags';
-import { Permissions } from 'discord.js';
-import type { PermissionResolvable } from 'discord.js';
-
-const permissions = Permissions.FLAGS;
+import { noPermissions, permissions } from '@/conf/configUtils';
 
 export const eightBall = {
   settings: {
     aliases: ['8ball', 'eightball'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: '8 Ball',
@@ -72,7 +69,7 @@ export const poll = {
   settings: {
     aliases: ['poll', 'sondage'],
     clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: [] as PermissionResolvable[],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Sondage',
