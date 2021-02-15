@@ -1,4 +1,5 @@
 import Command from '../../structures/Command';
+
 const request = require('request');
 const fs = require('fs');
 
