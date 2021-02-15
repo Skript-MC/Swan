@@ -267,18 +267,20 @@ class SwanClient extends AkairoClient {
 
   private async _loadSkriptMcSyntaxes(): Promise<void> {
     try {
-      const token = `?api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
-      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons${token}`).then(res => res?.data);
+      const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
+      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`).then(res => res?.data);
       if (!allAddons)
         return;
 
-      // FIXME: Find a more optimized way of doing this, this is horrible
-      // - Don't iterate through all syntaxes inside all addons... Double for loop and useless performance loss
-      // - Don't do the async expression inside the loop
+      // FIXME: Find a more optimized way of doing this:
+      // - Don't iterate through all syntaxes inside all addons. This uses a double for-loop and is
+      // useless performance loss
+      // - Don't do async operations (fetch) inside the loop
       // - Add an endpoint on the API to bulk-fetch syntaxes with already all of those information?
       for (const addon of allAddons) {
         try {
-          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(`${settings.apis.skriptmc}addons/${addon.slug}${token}`).then(res => res?.data);
+          const url = `${settings.apis.skriptmc}addons/${addon.slug}?${token}`;
+          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(url).then(res => res?.data);
           if (!fullAddon || !fullAddon.articles)
             throw new Error(`No syntax to load for addon ${addon.name}`);
 
