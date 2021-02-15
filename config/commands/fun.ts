@@ -69,7 +69,7 @@ export const latex = {
   settings: {
     aliases: ['latex'],
     clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: [],
+    userPermissions: noPermissions,
   },
   details: {
     name: 'Latex',
