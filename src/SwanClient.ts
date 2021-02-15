@@ -135,24 +135,29 @@ class SwanClient extends AkairoClient {
       this.taskHandler.loadAll();
       this.modules = [...this.modules, ...this.taskHandler.modules.array()];
 
-      SwanModule.find().then((modules: SwanModuleDocument[]): void => {
-        const unloadModules = (handler: AkairoHandler): void => {
-          for (const id of handler.modules.keys()) {
-            const module = modules.find(mod => mod.name === id);
-            if (module && !module.enabled) {
-              handler.remove(id);
-              Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
-            } else if (!module) {
-              void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+      SwanModule.find()
+        .then((modules: SwanModuleDocument[]): void => {
+          const unloadModules = (handler: AkairoHandler): void => {
+            for (const id of handler.modules.keys()) {
+              const module = modules.find(mod => mod.name === id);
+              if (module && !module.enabled) {
+                handler.remove(id);
+                Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
+              } else if (!module) {
+                void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+              }
             }
-          }
-        };
+          };
 
-        unloadModules(this.commandHandler);
-        unloadModules(this.inhibitorHandler);
-        unloadModules(this.listenerHandler);
-        unloadModules(this.taskHandler);
-      });
+          unloadModules(this.commandHandler);
+          unloadModules(this.inhibitorHandler);
+          unloadModules(this.listenerHandler);
+          unloadModules(this.taskHandler);
+        })
+        .catch((error) => {
+          Logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
+          Logger.error(error);
+        });
     });
 
     for (const [name, resolver] of Object.entries(resolvers))
