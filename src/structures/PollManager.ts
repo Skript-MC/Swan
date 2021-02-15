@@ -15,6 +15,8 @@ export default {
     if (!poll)
       return;
 
+    client.pollMessagesIds.slice(client.pollMessagesIds.indexOf(poll.messageId), 1);
+
     const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
     if (!channel)
       return;

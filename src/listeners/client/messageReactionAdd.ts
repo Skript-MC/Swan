@@ -27,10 +27,9 @@ class MessageReactionAddListener extends Listener {
     const member = message.guild.members.resolve(user.id);
     const { pollReactions } = settings.miscellaneous;
 
-    // TODO: Cache polls in the client, to prevent doing a DB call at each reaction given.
-    const poll = await Poll.findOne({ messageId: message.id });
+    if (this.client.pollMessagesIds.includes(message.id)) {
+      const poll = await Poll.findOne({ messageId: message.id });
 
-    if (poll) {
       // Whether they react with the appropriate "answer reaction" for this poll
       if ((poll.questionType === QuestionType.Yesno
           && pollReactions.yesno.includes(emoji.name))
