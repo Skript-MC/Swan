@@ -65,6 +65,7 @@ class SwanClient extends AkairoClient {
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
     this.currentlyModerating = [];
+    this.pollMessagesIds = [];
     this.modules = [];
 
     Logger.info('Creating Command handler...');
