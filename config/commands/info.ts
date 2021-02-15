@@ -62,7 +62,7 @@ export const documentation = {
   messages: {
     startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher.',
     retryPrompt: 'Mots clés sont invalides, ré-envoie des mots-clés afin de trouver la syntaxe que tu souhaites chercher.',
-    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.net/documentation/skript/>).",
+    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
