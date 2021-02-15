@@ -13,6 +13,7 @@ import type { Query } from 'mongoose';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
+import Poll from './models/poll';
 import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
@@ -24,7 +25,7 @@ import type {
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
 } from './types';
-import { uncapitalize } from './utils';
+import { nullop, uncapitalize } from './utils';
 
 class SwanClient extends AkairoClient {
   constructor() {
@@ -164,7 +165,10 @@ class SwanClient extends AkairoClient {
     for (const [name, resolver] of Object.entries(resolvers))
       this.commandHandler.resolver.addType(name, resolver);
 
+    Logger.info('Loading & caching databases...');
+    void this._loadPolls();
     void this._loadCommandStats();
+
     Logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
     Logger.info('Loading syntaxes from Skript-MC...');
@@ -227,6 +231,12 @@ class SwanClient extends AkairoClient {
       if (channelPermissions && !permissions.every(perm => channelPermissions.includes(perm)))
         Logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
     }
+  }
+
+  private async _loadPolls(): Promise<void> {
+    const polls = await Poll.find().catch(nullop);
+    if (polls)
+      this.pollMessagesIds.push(...polls.map(poll => poll.messageId));
   }
 
   private async _loadCommandStats(): Promise<void> {
