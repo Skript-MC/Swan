@@ -65,6 +65,25 @@ export const eightBall = {
   },
 };
 
+export const latex = {
+  settings: {
+    aliases: ['latex'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: [],
+  },
+  details: {
+    name: 'Latex',
+    content: '',
+    usage: 'latex <equation>',
+    examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
+  },
+  messages: {
+    noEquation: 'Vous avez oublié de renseigner une équation.',
+    startPrompt: 'Ajoute une équation à formatter :',
+    retryPrompt: 'Équation invalide. Ré-entre-la :',
+  },
+};
+
 export const poll = {
   settings: {
     aliases: ['poll', 'sondage'],
