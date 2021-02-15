@@ -28,6 +28,12 @@ class MessageInvalidListener extends Listener {
       return;
 
     const allCommands = this.client.commandHandler.categories.array().flatMap(cat => cat.array());
+
+    // If the command has an exact match, then it was refused because of an inhibitor or a permission check,
+    // so no need to show the message.
+    if (allCommands.some(cmd => cmd.aliases.includes(command.alias)))
+      return;
+
     const possibleCommandsAliases: string[] = [];
 
     for (const commandCandidate of allCommands) {
