@@ -19,8 +19,8 @@ class PollCommand extends Command {
         id: 'duration',
         type: Argument.validate(
           'finiteDuration',
-          (_message: GuildMessage, _phrase: string, value: number) => value < settings.miscellaneous.maxPollDuration
-            || Date.now() + value > Date.now(),
+          (_message: GuildMessage, _phrase: string, value: number) => Date.now() + value > Date.now()
+            && value < settings.miscellaneous.maxPollDuration,
         ),
         prompt: {
           start: config.messages.promptStartDuration,
@@ -30,7 +30,7 @@ class PollCommand extends Command {
         id: 'answers',
         type: Argument.validate(
           'quotedText',
-          (_message: GuildMessage, phrase: string) => (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
+          (_message: GuildMessage, phrase: string) => phrase.length > 0 && (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
         ),
         match: 'rest',
         prompt: {
