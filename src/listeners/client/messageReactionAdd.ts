@@ -5,7 +5,7 @@ import Poll from '@/app/models/poll';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
-import { noop } from '@/app/utils';
+import { noop, nullop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
@@ -87,14 +87,14 @@ class MessageReactionAddListener extends Listener {
                 : messages.poll.informationsCustom;
               await member.send(text);
 
-              const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member }));
+              const infoMessage = await message.channel.send(pupa(messages.poll.dmSent, { member })).catch(nullop);
               setTimeout(async () => {
-                if (infoMessage.deletable)
+                if (infoMessage?.deletable)
                   await infoMessage.delete().catch(noop);
               }, 5000);
             }
           } catch {
-            await message.reply(messages.global.dmAreClosed);
+            await message.channel.send(pupa(messages.global.dmAreClosed, { member }));
           }
         }
       }
