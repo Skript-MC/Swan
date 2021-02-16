@@ -61,7 +61,7 @@ class CodeCommand extends Command {
       }
 
       const titleMessage = await message.channel.send(pupa(config.messages.title, { message }));
-      const splittedCode = splitText(code);
+      const splittedCode = splitText(code, 1980);
       const codeBlocks: Message[] = [];
 
       for (let i = 0; i < splittedCode.length; i++)
@@ -86,7 +86,11 @@ class CodeCommand extends Command {
         });
     } catch (unknownError: unknown) {
       await message.member.send(config.messages.emergency).catch(noop);
-      await message.member.send(message.content).catch(noop);
+      const userMessages = message.util.messages
+        .array()
+        .filter(msg => !msg.author.bot);
+      for (const userMessage of userMessages)
+        await message.member.send(userMessage.content).catch(noop);
       throw unknownError as Error;
     }
   }
