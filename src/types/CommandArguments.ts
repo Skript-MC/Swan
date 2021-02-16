@@ -32,6 +32,7 @@ export interface CodeCommandArguments {
   code: string;
   displayLines?: boolean;
   startLinesAt?: string;
+  language?: string;
 }
 
 export interface EightBallCommandArguments {

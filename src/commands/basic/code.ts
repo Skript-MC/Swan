@@ -29,6 +29,10 @@ class CodeCommand extends Command {
         id: 'startLinesAt',
         match: 'option',
         flag: ['-s=', '--start='],
+      }, {
+        id: 'language',
+        match: 'option',
+        flag: ['--lang=', '--language='],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
@@ -64,8 +68,12 @@ class CodeCommand extends Command {
       const splittedCode = splitText(code);
       const codeBlocks: Message[] = [];
 
+      let language = 'applescript';
+      if (args.language)
+        language = args.language;
+
       for (let i = 0; i < splittedCode.length; i++)
-        codeBlocks.push(await message.channel.send(splittedCode[i], { code: 'applescript' }));
+        codeBlocks.push(await message.channel.send(splittedCode[i], { code: language }));
 
       const lastMessage = codeBlocks[codeBlocks.length - 1];
       await lastMessage?.react(settings.emojis.remove).catch(noop);
