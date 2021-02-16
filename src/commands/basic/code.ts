@@ -68,9 +68,7 @@ class CodeCommand extends Command {
       const splittedCode = splitText(code);
       const codeBlocks: Message[] = [];
 
-      let language = 'applescript';
-      if (args.language)
-        language = args.language;
+      const language = args.language ?? 'applescript';
 
       for (let i = 0; i < splittedCode.length; i++)
         codeBlocks.push(await message.channel.send(splittedCode[i], { code: language }));
