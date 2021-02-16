@@ -32,7 +32,8 @@ class MessageListener extends Listener {
 
   private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
     yield await this._preventActiveMembersToPostDocLinks(message);
-    yield await this._addReactionsInNeededChannels(message);
+    yield await this._addReactionsInIdeaChannel(message);
+    yield await this._formatMessageInSuggestionChannel(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._uploadFileOnHastebin(message);
     yield await this._antispamSnippetsChannel(message);
@@ -55,12 +56,37 @@ class MessageListener extends Listener {
     return false;
   }
 
-  private async _addReactionsInNeededChannels(message: GuildMessage): Promise<boolean> {
-    // Add reactions in the Idea and Suggestion channels.
-    if ([settings.channels.idea, settings.channels.suggestions].includes(message.channel.id)) {
+  private async _addReactionsInIdeaChannel(message: GuildMessage): Promise<boolean> {
+    // Add reactions in the Idea channel.
+    if (message.channel.id === settings.channels.idea) {
       try {
         await message.react(settings.emojis.yes);
         await message.react(settings.emojis.no);
+      } catch (unknownError: unknown) {
+        Logger.error('Unable to add emojis to the idea channel.');
+        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        Logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
+        Logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
+        Logger.detail(`Message: ${message.url}`);
+        Logger.error((unknownError as Error).stack);
+      }
+    }
+    return false;
+  }
+
+  private async _formatMessageInSuggestionChannel(message: GuildMessage): Promise<boolean> {
+    // Send embed and add reactions in the Suggestion channel.
+    if (message.channel.id === settings.channels.suggestions) {
+      try {
+        await message.delete();
+        const embed = new MessageEmbed()
+          .setColor(settings.colors.default)
+          .setTimestamp()
+          .setAuthor(`Suggestion de ${message.member.displayName}`, message.author.avatarURL())
+          .setDescription(message.content);
+        const suggestionMessage = await message.channel.send(embed);
+        await suggestionMessage.react(settings.emojis.yes);
+        await suggestionMessage.react(settings.emojis.no);
       } catch (unknownError: unknown) {
         Logger.error('Unable to add emojis to the idea channel.');
         Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
