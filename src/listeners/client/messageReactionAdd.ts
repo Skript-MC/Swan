@@ -23,7 +23,7 @@ class MessageReactionAddListener extends Listener {
 
     const message = reaction.message as GuildMessage;
 
-    if (this.client.pollMessagesIds.includes(message.id))
+    if (this.client.cache.pollMessagesIds.includes(message.id))
       await this._handlePoll(reaction, message, user);
     else if (settings.channels.suggestions === message.channel.id)
       await this._handleSuggestion(reaction, message, user);

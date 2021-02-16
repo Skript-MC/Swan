@@ -46,7 +46,7 @@ class DocumentationCommand extends Command {
     // - Or select if the query matches (70%) the description of the syntax;
     // - Or select if the query is included in the name of the syntax;
     // We then only take the first 10 results.
-    const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.skriptMcSyntaxes
+    const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.cache.skriptMcSyntaxes
       .filter((elt) => {
         if (args.category && jaroWinklerDistance(elt.category, args.category, { caseSensitive: false }) < 0.9)
           return false;

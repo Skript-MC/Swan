@@ -25,7 +25,7 @@ class SkriptInfoCommand extends Command {
 
   public async exec(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
     if (['dl', 'download', 'all'].includes(args.display)) {
-      const { lastPrerelease, lastStableRelease } = this.client.githubCache;
+      const { lastPrerelease, lastStableRelease } = this.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
       const isPrereleaseImportant = lastPrerelease

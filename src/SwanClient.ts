@@ -17,6 +17,7 @@ import Poll from './models/poll';
 import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
+import SwanCacheManager from './structures/SwanCacheManager';
 import TaskHandler from './structures/TaskHandler';
 import type {
   CommandStatDocument,
@@ -47,28 +48,11 @@ class SwanClient extends AkairoClient {
     this.isLoading = true;
 
     // Cache used internally to prevent unnecessary DB call when possible.
-    this.cachedChannels = {
-      idea: null,
-      suggestions: null,
-      bot: null,
-      main: null,
-      snippets: null,
-      skriptHelp: null,
-      otherHelp: null,
-      help: null,
-      skriptTalk: null,
-      creations: null,
-      log: null,
-      privateChannelsCategory: null,
-    };
-    this.addonsVersions = [];
-    this.skriptMcSyntaxes = [];
-    this.githubCache = {};
+    this.cache = new SwanCacheManager();
+
     this.currentlyBanning = [];
     this.currentlyUnbanning = [];
     this.currentlyModerating = [];
-    this.pollMessagesIds = [];
-    this.modules = [];
 
     Logger.info('Creating Command handler...');
     this.commandHandler = new CommandHandler(this, {
@@ -129,7 +113,7 @@ class SwanClient extends AkairoClient {
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
 
-    this.modules = [
+    this.cache.modules = [
       ...this.commandHandler.modules.array(),
       ...this.inhibitorHandler.modules.array(),
       ...this.listenerHandler.modules.array(),
@@ -138,7 +122,7 @@ class SwanClient extends AkairoClient {
     // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
     this.on('ready', () => {
       this.taskHandler.loadAll();
-      this.modules = [...this.modules, ...this.taskHandler.modules.array()];
+      this.cache.modules = [...this.cache.modules, ...this.taskHandler.modules.array()];
 
       SwanModule.find()
         .then((modules: SwanModuleDocument[]): void => {
@@ -241,7 +225,7 @@ class SwanClient extends AkairoClient {
     // Cache all polls' messages' ids.
     const polls = await Poll.find().catch(nullop);
     if (polls)
-      this.pollMessagesIds.push(...polls.map(poll => poll.messageId));
+      this.cache.pollMessagesIds.push(...polls.map(poll => poll.messageId));
   }
 
   private async _loadCommandStats(): Promise<void> {
@@ -275,7 +259,7 @@ class SwanClient extends AkairoClient {
       for (const addon of Object.keys(allAddons)) {
         const versions = allAddons[addon];
         if (versions)
-          this.addonsVersions.push(versions[versions.length - 1]);
+          this.cache.addonsVersions.push(versions[versions.length - 1]);
       }
     } catch (unknownError: unknown) {
       Logger.error("Could not load SkriptTool's addons:");
@@ -312,7 +296,7 @@ class SwanClient extends AkairoClient {
           for (const syntax of fullAddon.articles)
             syntax.addon = addonObject;
 
-          this.skriptMcSyntaxes.push(...fullAddon.articles);
+          this.cache.skriptMcSyntaxes.push(...fullAddon.articles);
         } catch (unknownError: unknown) {
           Logger.error(`Could not load syntaxes from addon ${addon.name}`);
           Logger.error((unknownError as Error).stack);
