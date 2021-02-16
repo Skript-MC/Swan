@@ -8,6 +8,7 @@ const SwanModuleSchema = new Schema({
   },
   handler: {
     type: String,
+    enum: ['commandHandler', 'inhibitorHandler', 'listenerHandler', 'taskHandler'],
     required: true,
   },
   enabled: {
