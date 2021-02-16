@@ -1,21 +1,24 @@
 /**
- * Split a long text into an array of strings of 2000 characters maximum, and between each line.
- *
+ * Split a long text into an array of strings of `n` characters maximum, and between each line.
  * @param {string} text - The text to split.
+ * @param {number} n - The size of each array. Defaults to 2000
  * @returns string[]
  */
-function splitText(text: string): string[] {
+function splitText(text: string, n = 2000): string[] {
   const blocks: string[] = [];
-  const lines: string [] = text.split(/\n/g);
+  const lines = text.split(/\n/g);
   let index = 0;
 
   for (const line of lines) {
-    if ((blocks[index] || '').length + line.length >= 2000)
+    if (line.length >= n - 2)
+      blocks[index] = `${line.slice(0, n)}\n`;
+
+    if ((blocks[index] || '').length + line.length >= n - 2)
       index++;
     if (!blocks[index])
       blocks[index] = '';
 
-    blocks[index] += `${line}\n`;
+    blocks[index] += `${line.slice(n - 1, -1)}\n`;
   }
 
   return blocks;
