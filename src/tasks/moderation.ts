@@ -18,6 +18,7 @@ class ModerationTask extends Task {
   }
 
   public async exec(): Promise<void> {
+    // Fetch all the sanctions that are not revoked but are expired.
     const sanctions = await Sanction.find({
       revoked: false,
       finish: { $lte: Date.now(), $ne: -1 },
@@ -43,8 +44,7 @@ class ModerationTask extends Task {
 
       switch (type) {
         case SanctionTypes.Ban: {
-          if (informations?.shouldAutobanIfNoMessages
-            && member.lastMessageChannelID !== informations?.banChannelId) {
+          if (informations?.shouldAutobanIfNoMessages && member.lastMessageChannelID !== informations?.banChannelId) {
             data.setReason(messages.moderation.reasons.autoBanInactivity)
               .setType(SanctionTypes.Hardban);
             await new BanAction(data).commit();

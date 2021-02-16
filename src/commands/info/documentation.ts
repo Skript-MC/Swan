@@ -39,6 +39,13 @@ class DocumentationCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
+    // Get all the matching syntaxes thanks to this very accurate and complex algorithm:
+    // - Discard if the category asked doesn't match (90%) the category of the syntax;
+    // - Discard if the addon asked isn't the same as the addon of the syntax;
+    // - Select if the query matches (70%) the name of the syntax;
+    // - Or select if the query matches (70%) the description of the syntax;
+    // - Or select if the query is included in the name of the syntax;
+    // We then only take the first 10 results.
     const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.skriptMcSyntaxes
       .filter((elt) => {
         if (args.category && jaroWinklerDistance(elt.category, args.category, { caseSensitive: false }) < 0.9)
@@ -51,6 +58,7 @@ class DocumentationCommand extends Command {
       })
       .slice(0, 10);
 
+    // If we found no match.
     if (matchingSyntaxes.length === 0) {
       await message.channel.send(
         pupa(config.messages.unknownSyntax, {
@@ -59,11 +67,13 @@ class DocumentationCommand extends Command {
       );
       return;
     }
+    // If we found one match, show it directly.
     if (matchingSyntaxes.length === 1) {
       await this._sendDetail(message, matchingSyntaxes[0]);
       return;
     }
 
+    // If we found multiple matches, present them nicely and ask the user which to choose.
     const possibleMatch = matchingSyntaxes.find(match => args.query.toLowerCase() === match.name.toLowerCase());
     if (possibleMatch) {
       await this._sendDetail(message, possibleMatch);

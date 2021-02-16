@@ -41,6 +41,7 @@ class MessageListener extends Listener {
   }
 
   private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
+    // Prevent member with the "Active member" role to post the link of a "banned" documentation.
     if (message.member.roles.cache.has(settings.roles.activeMember)
       && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
       await message.delete();
@@ -55,6 +56,7 @@ class MessageListener extends Listener {
   }
 
   private async _addReactionsInNeededChannels(message: GuildMessage): Promise<boolean> {
+    // Add reactions in the Idea and Suggestion channels.
     if ([settings.channels.idea, settings.channels.suggestions].includes(message.channel.id)) {
       try {
         await message.react(settings.emojis.yes);
@@ -72,6 +74,7 @@ class MessageListener extends Listener {
   }
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
+    // Quote a linked message.
     const linkRegex = new RegExp(`https://(?:ptb.|canary.)?discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
     if (!linkRegex.test(message.content))
       return false;
@@ -99,6 +102,7 @@ class MessageListener extends Listener {
         .setDescription(`${trimText(targetedMessage.content, 1900)}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
 
+      // We add all attachments if needed.
       if (targetedMessage.attachments.size > 0) {
         const attachments = targetedMessage.attachments.array().slice(0, 5);
         for (const [i, attachment] of attachments.entries())
@@ -121,6 +125,7 @@ class MessageListener extends Listener {
   }
 
   private async _uploadFileOnHastebin(message: GuildMessage): Promise<boolean> {
+    // Upload a file on hastebin, if it contains code.
     const attachment = message.attachments.first();
     if (!attachment || !settings.miscellaneous.hastebinExtensions.some(ext => attachment?.name?.endsWith(ext)))
       return false;
@@ -142,6 +147,7 @@ class MessageListener extends Listener {
   }
 
   private async _antispamSnippetsChannel(message: GuildMessage): Promise<boolean> {
+    // We prevent people from spamming unnecessarily the Snippets channel.
     if (message.channel.id === settings.channels.snippets
       && !message.member.roles.cache.has(settings.roles.staff)) {
       // We check that they are not the author of the last message in case they exceed the 2.000 chars limit
@@ -161,6 +167,7 @@ class MessageListener extends Listener {
   }
 
   private async _checkCreationsChannelRules(message: GuildMessage): Promise<boolean> {
+    // We oblige people to post a skript-mc's link of their resource in the Creation channel.
     if (message.channel.id === settings.channels.creations
         && !message.member.roles.cache.has(settings.roles.staff)
         && message.content

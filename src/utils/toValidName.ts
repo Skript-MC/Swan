@@ -1,6 +1,5 @@
 /**
  * Get back the given string with all ascii codes below 0x80 removed, except common accents.
- *
  * @param {string} str - The string to strip.
  * @returns string
  */

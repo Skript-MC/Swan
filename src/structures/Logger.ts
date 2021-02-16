@@ -7,6 +7,11 @@ export default {
     return `${padNumber(now.getDate())}/${padNumber(now.getMonth() + 1)} ${padNumber(now.getHours())}:${padNumber(now.getMinutes())}`;
   },
 
+  /**
+   * Logs a message in stdout, with a special formatting and the "LOG" prefix.
+   * @param {string} message - The message to log in stdout.
+   * @returns void
+   */
   info(message: string): void {
     console.log(
       chalk.cyan('Swan:'),
@@ -16,6 +21,11 @@ export default {
     );
   },
 
+  /**
+   * Logs a message in stdout, with a special formatting and the "SUCCESS" prefix.
+   * @param {string} message - The message to log in stdout.
+   * @returns void
+   */
   success(message: string): void {
     console.log(
       chalk.cyan('Swan:'),
@@ -25,6 +35,11 @@ export default {
     );
   },
 
+  /**
+   * Logs a message in stdout, with a special formatting and the "WARN" prefix.
+   * @param {string} message - The message to log in stdout.
+   * @returns void
+   */
   warn(message: string): void {
     console.warn(
       chalk.cyan('Swan:'),
@@ -34,6 +49,11 @@ export default {
     );
   },
 
+  /**
+   * Logs a message in stdout, with a special formatting and the "ERROR" prefix.
+   * @param {string} message - The message to log in stdout.
+   * @returns void
+   */
   error(message?: string): void {
     if (message) {
       console.error(
@@ -45,6 +65,12 @@ export default {
     }
   },
 
+  /**
+   * Logs a message in stdout, with aan arrow point from above to the message.
+   * @param {string?} message - The message to log in stdout. Defaults to ''.
+   * @param {boolean?} neutral - Whether to show the arrow or not. Defaults to false.
+   * @returns void
+   */
   detail(message = '', neutral = false): void {
     const messages = message.split('\n');
     console.group();

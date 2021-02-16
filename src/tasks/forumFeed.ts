@@ -33,6 +33,7 @@ class ForumFeedTask extends Task {
   }
 
   private async _checkTopics(): Promise<void> {
+    // Check if new topic has been posted by fetching all the latest, and filtering by date.
     const topics: InvisionFullTopic = await axios.get(
       settings.apis.forum + config.endpoints.forums.topics,
       config.baseAxiosParams,
@@ -48,6 +49,7 @@ class ForumFeedTask extends Task {
       return;
 
     topics.results
+      // We filter by only keeping those we didn't see in our time window (refresh-rate).
       .filter(topic => (Date.now() - new Date(topic.firstPost.date).getTime()) < config.timeDifference)
       .forEach((topic) => {
         const markdown = turndownService.turndown(topic.firstPost.content);
@@ -64,6 +66,7 @@ class ForumFeedTask extends Task {
   }
 
   private async _checkFiles(): Promise<void> {
+    // Check if new resource has been posted by fetching all the latest, and filtering by date.
     const ressources: InvisionFullRessource = await axios.get(
       settings.apis.forum + config.endpoints.files.files,
       config.baseAxiosParams,
@@ -79,6 +82,7 @@ class ForumFeedTask extends Task {
       return;
 
     ressources.results
+      // We filter by only keeping those we didn't see in our time window (refresh-rate).
       .filter(ressource => (Date.now() - new Date(ressource.updated).getTime()) < config.timeDifference)
       .forEach((ressource) => {
         const markdown = turndownService.turndown(ressource.changelog || ressource.description);

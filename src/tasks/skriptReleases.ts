@@ -17,6 +17,7 @@ class SkriptReleasesTask extends Task {
   }
 
   public async exec(): Promise<void> {
+    // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
     const octokit = new Octokit();
     const githubReleases = await octokit.repos.listReleases({ owner: 'SkriptLang', repo: 'Skript' })
       .catch((err) => {
@@ -29,6 +30,7 @@ class SkriptReleasesTask extends Task {
     const lastRelease = githubReleases.data[0];
     if (!lastRelease)
       return;
+    // We updated the cache of the releases with the one we just fetched.
     this.client.githubCache = {
       lastPrerelease: githubReleases.data.find((release): release is GithubPrerelease => release.prerelease),
       lastStableRelease: githubReleases.data.find((release): release is GithubStableRelease => !release.prerelease),
@@ -38,6 +40,7 @@ class SkriptReleasesTask extends Task {
     if (!lastRelease.published_at)
       return;
 
+    // If the release was not posted within the time window (refresh-rate), stop.
     if ((Date.now() - new Date(lastRelease.published_at).getTime()) > config.timeDifference)
       return;
 

@@ -7,6 +7,7 @@ export default function duration(_message: Message, phrase: string): number | nu
 
   if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(phrase))
     return -1;
+
   try {
     return getDuration(phrase);
    } catch {

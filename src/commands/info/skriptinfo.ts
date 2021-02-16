@@ -27,6 +27,7 @@ class SkriptInfoCommand extends Command {
     if (['dl', 'download', 'all'].includes(args.display)) {
       const { lastPrerelease, lastStableRelease } = this.client.githubCache;
 
+      // Check if a prerelease is greater than the last stable release.
       const isPrereleaseImportant = lastPrerelease
         ? semver.gt(
             semver.coerce(lastPrerelease.tag_name) ?? '',

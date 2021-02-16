@@ -11,12 +11,14 @@ import settings from '@/conf/settings';
 
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
+    // Remove the poll from the database and the cache.
     const poll: PollDocument = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)
       return;
 
     client.pollMessagesIds.slice(client.pollMessagesIds.indexOf(poll.messageId), 1);
 
+    // Validate the channel and the message ID.
     const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
     if (!channel)
       return;
@@ -25,6 +27,7 @@ export default {
     if (!message)
       return;
 
+    // Compute voters, percentages and other statistics.
     const totalVoters = Object.values(poll.votes).map(elt => elt.length).reduce((acc, cur) => acc + cur);
 
     let results = '';

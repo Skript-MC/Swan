@@ -22,14 +22,15 @@ class ReadyListener extends Listener {
     const isText = (chan: GuildChannel): boolean => chan instanceof TextChannel;
 
     type ChannelEntry = [channelSlug: string, resolvedChannel: GuildChannel | GuildChannel[]];
+
+    // Resolve all channels entered in the config, to put them in client.cachedChannels.<channel_name>.
     const entries: ChannelEntry[] = Object.entries(settings.channels)
       .map(([slug, ids]) => (Array.isArray(ids)
         ? [slug, ids.map(resolveChannel)]
         : [slug, resolveChannel(ids)]
       ));
-    const channels: Record<string, GuildChannel | GuildChannel[]> = Object.fromEntries(entries);
 
-    for (const [slug, channel] of Object.entries(channels)) {
+    for (const [slug, channel] of entries) {
       if (Array.isArray(channel)) {
         if (channel.some(isText))
           this.client.cachedChannels[slug] = channel.filter((chan): chan is TextChannel => isText(chan));

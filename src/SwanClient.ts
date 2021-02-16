@@ -46,6 +46,7 @@ class SwanClient extends AkairoClient {
 
     this.isLoading = true;
 
+    // Cache used internally to prevent unnecessary DB call when possible.
     this.cachedChannels = {
       idea: null,
       suggestions: null,
@@ -123,6 +124,7 @@ class SwanClient extends AkairoClient {
       process,
     });
 
+    // We start by loading all modules.
     this.commandHandler.loadAll();
     this.inhibitorHandler.loadAll();
     this.listenerHandler.loadAll();
@@ -133,6 +135,7 @@ class SwanClient extends AkairoClient {
       ...this.listenerHandler.modules.array(),
     ];
 
+    // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
     this.on('ready', () => {
       this.taskHandler.loadAll();
       this.modules = [...this.modules, ...this.taskHandler.modules.array()];
@@ -162,6 +165,7 @@ class SwanClient extends AkairoClient {
         });
     });
 
+    // We add all needed resolvers to the type resolver.
     for (const [name, resolver] of Object.entries(resolvers))
       this.commandHandler.resolver.addType(name, resolver);
 
@@ -181,11 +185,11 @@ class SwanClient extends AkairoClient {
     if (!this.guild)
       return;
 
-    // Check tokens
+    // Check tokens.
     if (!process.env.SENTRY_TOKEN)
       Logger.info('Disabling Sentry as the DSN was not set in the environment variables (SENTRY_TOKEN).');
 
-    // Check channels IDs
+    // Check channels IDs.
     const channels = this.guild.channels.cache;
     for (const [key, value] of Object.entries(settings.channels)) {
       if (Array.isArray(value)) {
@@ -200,7 +204,7 @@ class SwanClient extends AkairoClient {
       }
     }
 
-    // Check roles IDs
+    // Check roles IDs.
     for (const [key, value] of Object.entries(settings.roles)) {
       if (!value)
         Logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
@@ -208,9 +212,9 @@ class SwanClient extends AkairoClient {
         Logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
     }
 
-    // TODO: Also check for emojis IDs
+    // TODO: Also check for emojis IDs.
 
-    // Check client's server-level permissions
+    // Check client's server-level permissions.
     const permissions: PermissionString[] = [
       'ADD_REACTIONS',
       'VIEW_CHANNEL',
@@ -222,7 +226,7 @@ class SwanClient extends AkairoClient {
     if (!this.guild.me?.hasPermission(permissions))
       Logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
 
-    // Check client's channels permissions
+    // Check client's channels permissions.
     for (const channel of channels.array()) {
       if (!channel.isText())
         continue;
@@ -234,12 +238,14 @@ class SwanClient extends AkairoClient {
   }
 
   private async _loadPolls(): Promise<void> {
+    // Cache all polls' messages' ids.
     const polls = await Poll.find().catch(nullop);
     if (polls)
       this.pollMessagesIds.push(...polls.map(poll => poll.messageId));
   }
 
   private async _loadCommandStats(): Promise<void> {
+    // Add all needed commands not present in the DB, to DB.
     const commandIds: string[] = this.commandHandler.categories
       .array()
       .flatMap((category: Category<string, Command>) => category.array())
@@ -259,6 +265,8 @@ class SwanClient extends AkairoClient {
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {
+    // Fetch all addons' versions from their APIs, and add them to the array, to make it easier to fetch
+    // them later (becase we need their versions in the URL to fetch them.)
     try {
       const allAddons: SkriptToolsAddonListResponse = await axios(settings.apis.addons).then(res => res?.data?.data);
       if (!allAddons)
@@ -276,6 +284,7 @@ class SwanClient extends AkairoClient {
   }
 
   private async _loadSkriptMcSyntaxes(): Promise<void> {
+    // Load all syntaxes from Skript-MC's API.
     try {
       const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
       const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`).then(res => res?.data);

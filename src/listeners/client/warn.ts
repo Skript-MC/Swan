@@ -10,7 +10,7 @@ class WarnListener extends Listener {
   }
 
   public exec(info: string): void {
-    Logger.warn(`DiscordJS emitted a warning: ${info}`);
+    Logger.warn(`Discord.js emitted a warning: ${info}`);
   }
 }
 

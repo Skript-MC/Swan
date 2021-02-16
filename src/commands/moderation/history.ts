@@ -40,6 +40,7 @@ class HistoryCommand extends Command {
       return;
     }
 
+    // Get all the statistics.
     const stats = {
       hardbans: sanctions.filter(s => s.type === SanctionTypes.Hardban).length,
       bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
@@ -58,6 +59,7 @@ class HistoryCommand extends Command {
       .setTimestamp();
 
     for (const [i, sanction] of sanctions.entries()) {
+      // Cap the sanctions displayed in the embed to 3.
       if (i >= 4) {
         embed.addField(
           pupa(config.messages.overflowTitle, { overflowed: sanctions.length - 4 }),
@@ -85,6 +87,7 @@ class HistoryCommand extends Command {
         });
 
         for (const update of sanction.updates) {
+          // If there is a duration update, show it with a nice diff.
           const diff = update.type === SanctionsUpdates.Duration
             ? stripIndent`
 
