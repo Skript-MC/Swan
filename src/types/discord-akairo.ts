@@ -3,15 +3,10 @@ import type {
   InhibitorHandler,
   ListenerHandler,
 } from 'discord-akairo';
-import type { Guild, TextChannel } from 'discord.js';
+import type { Guild } from 'discord.js';
+import type SwanCacheManager from '@/app/structures/SwanCacheManager';
 import type TaskHandler from '@/app/structures/TaskHandler';
-import type {
-  GithubPrerelease,
-  GithubStableRelease,
-  GuildMessage,
-  Nullable,
-  SkriptMcDocumentationSyntaxResponse,
-} from './index';
+import type { GuildMessage } from './index';
 
 
 declare module 'discord-akairo' {
@@ -40,41 +35,18 @@ declare module 'discord-akairo' {
     toString(): string;
   }
 
-  interface CachedChannels {
-    idea: TextChannel;
-    suggestions: TextChannel;
-    bot: TextChannel;
-    main: TextChannel;
-    snippets: TextChannel;
-    skriptHelp: TextChannel[];
-    otherHelp: TextChannel[];
-    help: TextChannel[];
-    skriptTalk: TextChannel;
-    creations: TextChannel;
-    log: TextChannel;
-    privateChannelsCategory: TextChannel;
-  }
-
   interface AkairoClient {
-    addonsVersions: string[];
-    skriptMcSyntaxes: SkriptMcDocumentationSyntaxResponse[];
-    githubCache: {
-      lastPrerelease?: GithubPrerelease;
-      lastStableRelease?: GithubStableRelease;
-    };
+    cache: SwanCacheManager;
 
     currentlyBanning: string[];
     currentlyUnbanning: string[];
     currentlyModerating: string[];
-    pollMessagesIds: string[];
-    cachedChannels: Nullable<CachedChannels>;
     isLoading: boolean;
 
     commandHandler: CommandHandler;
     inhibitorHandler: InhibitorHandler;
     taskHandler: TaskHandler;
     listenerHandler: ListenerHandler;
-    modules: AkairoModule[];
 
     guild: Guild;
 

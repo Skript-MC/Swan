@@ -34,7 +34,7 @@ class AddonInfoCommand extends Command {
   public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
     // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
     // We keep only the first 10 matching addons.
-    const matchingAddons: MatchingAddon[] = this.client.addonsVersions
+    const matchingAddons: MatchingAddon[] = this.client.cache.addonsVersions
       .filter(elt => jaroWinklerDistance(elt.split(' ').shift(), addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
       .slice(0, 10);

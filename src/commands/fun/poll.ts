@@ -135,7 +135,7 @@ class PollCommand extends Command {
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
 
-    this.client.pollMessagesIds.push(pollMessage.id);
+    this.client.cache.pollMessagesIds.push(pollMessage.id);
 
     await Poll.create({
       messageId: pollMessage.id,
