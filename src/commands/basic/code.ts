@@ -32,7 +32,7 @@ class CodeCommand extends Command {
       }, {
         id: 'language',
         match: 'option',
-        flag: ['--lang=', '--language='],
+        flag: ['--lang=', '--language=', '--langage='],
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
