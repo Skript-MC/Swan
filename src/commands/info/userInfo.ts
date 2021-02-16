@@ -31,7 +31,7 @@ class UserInfoCommand extends Command {
     let presenceDetails = '';
     const activity = args.member.presence.activities[0];
     if (activity) {
-      presenceDetails = pupa(embedConfig.presence.types[activity.type.toLowerCase()], { activity });
+      presenceDetails = pupa(embedConfig.presence.types[activity.type], { activity });
 
       if (activity.details)
         presenceDetails += pupa(embedConfig.presence.details, { activity });
