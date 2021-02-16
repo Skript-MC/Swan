@@ -79,6 +79,7 @@ class MoveCommand extends Command {
       await message.channel.send(successMessage);
       const informationEmbed = await targetedChannel.send(embed);
       const repostMessage = await targetedChannel.send(targetedMessage.content);
+      await informationEmbed.react(settings.emojis.remove).catch(noop);
 
       const collector = informationEmbed
         .createReactionCollector(
