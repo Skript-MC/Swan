@@ -481,7 +481,7 @@ export type CommandStatModel = Model<CommandStatDocument>;
 /** Interface for the "Module"'s mongoose schema */
 export interface SwanModuleBase {
   name: string;
-  handler: string;
+  handler: 'commandHandler' | 'inhibitorHandler' | 'listenerHandler' | 'taskHandler';
   enabled: boolean;
 }
 
