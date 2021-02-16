@@ -8,7 +8,6 @@ const units: Array<[size: number, suffix: string]> = [
 
 /**
  * Convert a number to a file size in octets.
- *
  * @param {number} size - The size to convert.
  * @returns string
  */

@@ -55,8 +55,12 @@ class PollCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
+    // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
+    // the whole string given, and args.answers will be empty.
     const question = args.answers.shift();
+    // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
     const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
+
     const duration = args.duration * 1000;
     const finishDate = new Date(Date.now() + duration);
     const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
@@ -72,6 +76,7 @@ class PollCommand extends Command {
       return;
     }
 
+    // Show the possible answers.
     let possibleAnswers = '';
     if (questionType === QuestionType.Yesno) {
       possibleAnswers = config.messages.answersDisplayYesno;
@@ -105,6 +110,7 @@ class PollCommand extends Command {
 
     const pollMessage = await message.channel.send(embed);
 
+    // Add the reactions, depending on if there are choices, or if it is a Yes/No question.
     const possibleReactions: string[] = [];
     if (questionType === QuestionType.Yesno) {
       for (const r of settings.miscellaneous.pollReactions.yesno) {
@@ -124,6 +130,7 @@ class PollCommand extends Command {
     embed.setColor(settings.colors.default);
     await pollMessage.edit(embed);
 
+    // Create the objects with the votes, that has the reaction as a key, and the list of user IDs as a value.
     const votes: Record<string, string[]> = {};
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];

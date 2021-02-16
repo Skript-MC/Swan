@@ -11,6 +11,7 @@ class PollTask extends Task {
   }
 
   public async exec(): Promise<void> {
+    // Fetch all the poll that are expired.
     const polls = await Poll.find({
       finish: { $lte: Date.now(), $ne: -1 },
     });

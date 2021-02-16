@@ -38,9 +38,11 @@ class CodeCommand extends Command {
 
   public async exec(message: GuildMessage, args: CodeCommandArguments): Promise<void> {
     try {
+      // Add the message to the current-command-messages' store, to then bulk-delete them all.
       message.util.messages.set(message.id, message);
       await message.channel.bulkDelete(message.util.messages, true).catch(noop);
 
+      // Validate the "startAtLine" option.
       let startAtLine = 0;
       if (args.displayLines && args.startLinesAt) {
         const value = Number.parseInt(args.startLinesAt, 10);
@@ -48,18 +50,23 @@ class CodeCommand extends Command {
           startAtLine = Math.max(value - 1, 0);
       }
 
+      // Add the lines at the beginning, if needed.
       let { code } = args;
       if (args.displayLines) {
         const lines = code.split('\n');
         code = '';
+        // Compute the last line to know its length.
+        const finalLine = (startAtLine + lines.length).toString();
         for (const [i, line] of lines.entries()) {
-          const finalLine = (startAtLine + lines.length).toString();
+          // Compute current line index.
           const currentLine = (startAtLine + i + 1).toString();
+          // Compute the space needed between the last number and the separator ('|').
           const space = finalLine.length - currentLine.length;
           code += `\n${startAtLine + i + 1}${' '.repeat(space)} | ${line}`;
         }
       }
 
+      // Send the message by splitting the code into blocks that are 2000 caracters long max.
       const titleMessage = await message.channel.send(pupa(config.messages.title, { message }));
       const splittedCode = splitText(code, 1980);
       const codeBlocks: Message[] = [];
@@ -85,6 +92,7 @@ class CodeCommand extends Command {
           }
         });
     } catch (unknownError: unknown) {
+      // Send back all the messages the user sent, in case something went wrong.
       await message.member.send(config.messages.emergency).catch(noop);
       const userMessages = message.util.messages
         .array()

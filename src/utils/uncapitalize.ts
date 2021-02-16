@@ -1,6 +1,5 @@
 /**
  * Uncapitalize the first letter of a given string.
- *
  * @param {string} string - The string to un-capitalize.
  * @returns string
  */

@@ -3,7 +3,6 @@ import messages from '@/conf/messages';
 
 /**
  * Remove characters that are neither letters nor numbers from a guild member / user / string.
- *
  * @param {GuildMember} member - The member to get the nickname from.
  * @param {User} user - The user to get the username from.
  * @param {string} id - The id of the user.

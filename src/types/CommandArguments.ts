@@ -38,10 +38,6 @@ export interface EightBallCommandArguments {
   question: string;
 }
 
-export interface LatexCommandArguments {
-  equation: string;
-}
-
 export interface ErrorDetailsCommandArguments {
   error: string;
 }
@@ -64,6 +60,10 @@ export interface HistoryCommandArgument {
 
 export interface KickCommandArgument {
   member: GuildMember; reason: string;
+}
+
+export interface LatexCommandArguments {
+  equation: string;
 }
 
 export interface LinksCommandArguments {

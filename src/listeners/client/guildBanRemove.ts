@@ -14,7 +14,7 @@ class GuildBanRemoveListener extends Listener {
     });
   }
 
-  public async exec(guild: Guild, user: User): Promise<void> {
+  public async exec(_guild: Guild, user: User): Promise<void> {
     if (this.client.currentlyUnbanning.includes(user.id))
       return;
 

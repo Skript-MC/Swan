@@ -32,20 +32,25 @@ class AddonInfoCommand extends Command {
   }
 
   public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
+    // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
+    // We keep only the first 10 matching addons.
     const matchingAddons: MatchingAddon[] = this.client.addonsVersions
       .filter(elt => jaroWinklerDistance(elt.split(' ').shift(), addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift() }))
       .slice(0, 10);
 
+    // If we found no match.
     if (matchingAddons.length === 0) {
       await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
       return;
     }
+    // If we found one match, show it directly.
     if (matchingAddons.length === 1) {
       await this._sendDetail(message, matchingAddons[0].file);
       return;
     }
 
+    // If we found multiple matches, present them nicely and ask the user which to choose.
     const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
     if (possibleMatch) {
       await this._sendDetail(message, possibleMatch.file);

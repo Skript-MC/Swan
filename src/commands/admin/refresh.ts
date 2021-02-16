@@ -22,7 +22,9 @@ class RefreshCommand extends Command {
     for (const module of modules) {
       const handler: AkairoHandler = this.client[module.handler];
       const cachedModule = this.client.modules.find(mod => mod.id === module.name);
-      if (!cachedModule) continue;
+      if (!cachedModule)
+        continue;
+      // See if the module is present in handler.modules (= if it is loaded).x
       const currentState = Boolean(handler.modules.findKey((_, key) => key === cachedModule.id));
 
       if (handler && module.enabled !== currentState) {

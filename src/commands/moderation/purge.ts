@@ -37,9 +37,11 @@ class PurgeCommand extends Command {
   public async exec(message: GuildMessage, args: PurgeCommandArgument): Promise<void> {
     const { amount, member, force } = args;
 
+    // Add the message to the current-command-messages' store, to then bulk-delete them all.
     message.util.messages.set(message.id, message);
     await message.channel.bulkDelete(message.util.messages, true).catch(noop);
 
+    // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
     const messages = (await message.channel.messages.fetch({ limit: amount }))
       .filter(msg => (member ? msg.author.id === member.id : true))
       .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));

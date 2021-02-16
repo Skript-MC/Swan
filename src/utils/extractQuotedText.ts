@@ -1,3 +1,8 @@
+/**
+ * Extract parts between quotes from text
+ * @param {string} text - The text to get the parts from
+ * @returns string[]
+ */
 function extractQuotedText(text: string): string[] {
   const result: string[] = [];
   const regex = /(?:"(?<quotedContent>[^"]*)")/gimu;

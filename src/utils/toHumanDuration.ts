@@ -4,7 +4,6 @@ import messages from '@/conf/messages';
 /**
  * Get back the humanized duration format from miliseconds, or a string (config/messages.moderation.permanent)
  * if it is -1.
- *
  * @param {number} ms - The number of miliseconds to parse.
  * @returns string
  */
