@@ -1,4 +1,5 @@
 import { stripIndent } from 'common-tags';
+import { ActivityTypes } from '@/app/types/discord.js';
 import { noPermissions, permissions } from '@/conf/configUtils';
 
 export const addonInfo = {
@@ -203,12 +204,12 @@ export const userInfo = {
           Statut : {status}
           {presenceDetails}`,
         types: {
-          playing: 'Joue à {activity.name}\n',
-          streaming: 'Est en live\n',
-          listening: 'Écoute (sur {activity.name}) :\n',
-          watching: 'Regarde : {activity.name}\n',
-          custom_status: '{activity.name}\n', // eslint-disable-line @typescript-eslint/naming-convention
-          competing: 'En compétition ({activity.name})',
+          [ActivityTypes.Playing]: 'Joue à {activity.name}\n',
+          [ActivityTypes.Streaming]: 'Est en live\n',
+          [ActivityTypes.Listening]: 'Écoute (sur {activity.name}) :\n',
+          [ActivityTypes.Watching]: 'Regarde : {activity.name}\n',
+          [ActivityTypes.CustomStatus]: '{activity.name}\n',
+          [ActivityTypes.Competing]: 'En compétition ({activity.name})',
         },
         details: '↳ {activity.details}\n',
         state: '↳ {activity.state}\n',
