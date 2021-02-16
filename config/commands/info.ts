@@ -118,6 +118,8 @@ export const serverInfo = {
       mods: ':toolbox: Mods',
       footer: 'Exécuté par {member.displayName} | Données fournies par https://api.mcsrcstat.us',
     },
+    startPrompt: "Entre l'adresse du serveur que tu souhaites chercher.",
+    retryPrompt: 'Adresse invalide, renvoie-la :',
   },
 };
 

@@ -18,6 +18,10 @@ class ServerInfoCommand extends Command {
         id: 'server',
         type: 'string',
         match: 'content',
+        prompt: {
+          start: config.messages.startPrompt,
+          retry: config.messages.retryPrompt,
+        },
       }],
       clientPermissions: config.settings.clientPermissions,
       userPermissions: config.settings.userPermissions,
