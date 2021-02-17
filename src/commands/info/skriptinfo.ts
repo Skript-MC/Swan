@@ -2,8 +2,8 @@ import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
+import type { GuildMessage } from '@/app/types';
 import type { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
-import type { GuildMessage } from '@/app/types/index';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
