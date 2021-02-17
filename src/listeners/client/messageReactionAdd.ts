@@ -79,12 +79,6 @@ class MessageReactionAddListener extends Listener {
           $pull: { [`votes.${previousUserVote}`]: user.id },
           $push: { [`votes.${emoji.name}`]: user.id },
         });
-
-        if (!poll.anonymous) {
-          const userReactions = message.reactions.cache.find(r => r.emoji.name === previousUserVote)?.users;
-          if (typeof userReactions?.cache.get(user.id) !== 'undefined')
-            await userReactions?.remove(user);
-        }
       } else {
         // If they want to vote, and have never done so
         await Poll.findByIdAndUpdate(
@@ -93,6 +87,9 @@ class MessageReactionAddListener extends Listener {
         );
       }
 
+      message.reactions.cache
+        .filter(r => r.users.cache.has(user.id) && r.emoji.name !== emoji.name)
+        .map(r => void r.users.remove(user.id).catch(noop));
       if (poll.anonymous)
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
