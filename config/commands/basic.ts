@@ -47,9 +47,9 @@ export const code = {
   },
   details: {
     name: 'Code',
-    content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes.",
+    content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
     usage: 'code <code>',
-    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"'],
+    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=JAVA System.out.println("Le JAVA est cool aussi");'],
   },
   messages: {
     title: '**Code de {message.author.username} :**',
