@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
+import type { GuildMessage } from '@/app/types';
 import type { EightBallCommandArguments } from '@/app/types/CommandArguments';
-import type { GuildMessage } from '@/app/types/index';
 import { eightBall as config } from '@/conf/commands/fun';
 
 class EightBallCommand extends Command {
