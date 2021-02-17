@@ -17,7 +17,7 @@ export const forumFeed = {
     },
     auth: {
       username: process.env.SKRIPTMC_FORUM_TOKEN,
-      password: null,
+      password: null as string, // 'null as string' because if it is not null, then we want it to be a string.
     },
   },
   endpoints: {

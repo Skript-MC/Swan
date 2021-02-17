@@ -1,26 +1,11 @@
 import type { AkairoModule } from 'discord-akairo';
-import type { TextChannel } from 'discord.js';
 import type {
+  CachedChannels,
   GithubPrerelease,
   GithubStableRelease,
   Nullable,
   SkriptMcDocumentationSyntaxResponse,
 } from '@/app/types';
-
-interface CachedChannels {
-  idea: TextChannel;
-  suggestions: TextChannel;
-  bot: TextChannel;
-  main: TextChannel;
-  snippets: TextChannel;
-  skriptHelp: TextChannel[];
-  otherHelp: TextChannel[];
-  help: TextChannel[];
-  skriptTalk: TextChannel;
-  creations: TextChannel;
-  log: TextChannel;
-  privateChannelsCategory: TextChannel;
-}
 
 interface GithubCache {
   lastPrerelease?: GithubPrerelease;
@@ -49,6 +34,7 @@ class SwanCacheManager {
       creations: null,
       log: null,
       privateChannelsCategory: null,
+      forumUpdates: null,
     };
     this.addonsVersions = [];
     this.skriptMcSyntaxes = [];
