@@ -311,9 +311,14 @@ export interface InvisionTopic {
   rating: number;
 }
 
+// #endregion
+
 /* ********************************************* */
 /*  Miscellaneous types used at specific places  */
 /* ********************************************* */
+
+// #region Miscellaneous types used at specific places (VS Code)
+// region Miscellaneous types used at specific places (JetBrains)
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
