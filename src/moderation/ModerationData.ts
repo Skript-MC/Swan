@@ -53,7 +53,7 @@ class ModerationData {
       this.channel = argument.channel;
     } else if (argument instanceof AkairoClient) {
       this.client = argument;
-      this.channel = this.client.cache.channels.log;
+      this.channel = this.client.cache.channels.log as TextChannel;
       this.guild = this.channel.guild;
       this.moderator = this.guild.me;
     } else {

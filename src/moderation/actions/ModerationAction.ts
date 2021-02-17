@@ -23,7 +23,7 @@ abstract class ModerationAction {
   constructor(data: ModerationData) {
     this.data = data;
     this.client = this.data.client;
-    this.logChannel = this.client.cache.channels.log;
+    this.logChannel = this.client.cache.channels.log as TextChannel;
 
     this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);

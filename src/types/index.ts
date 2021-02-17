@@ -18,6 +18,7 @@ import type {
   Types,
 } from 'mongoose';
 import type cron from 'node-cron';
+import type settings from '@/conf/settings';
 
 
 /* ****************** */
@@ -351,6 +352,12 @@ export type GuildTextBasedChannel = NewsChannel | TextChannel;
 
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
+
+/** Union type of all the channel we cache */
+export type ChannelSlug = keyof typeof settings.channels;
+
+/** Record of all the channel we cache internally */
+export type CachedChannels = Record<ChannelSlug, TextChannel | TextChannel[]>;
 
 // #endregion
 

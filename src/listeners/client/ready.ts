@@ -2,6 +2,7 @@ import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import Logger from '@/app/structures/Logger';
+import type { ChannelSlug } from '@/app/types';
 import settings from '@/conf/settings';
 
 class ReadyListener extends Listener {
@@ -19,21 +20,21 @@ class ReadyListener extends Listener {
       throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
 
     const resolveChannel = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan)!;
-    const isText = (chan: GuildChannel): boolean => chan instanceof TextChannel;
+    const isText = (chan: GuildChannel): chan is TextChannel => chan instanceof TextChannel;
 
-    type ChannelEntry = [channelSlug: string, resolvedChannel: GuildChannel | GuildChannel[]];
+    type ChannelEntry = [channelSlug: ChannelSlug, resolvedChannel: GuildChannel | GuildChannel[]];
 
     // Resolve all channels entered in the config, to put them in client.cache.channels.<channel_name>.
     const entries: ChannelEntry[] = Object.entries(settings.channels)
       .map(([slug, ids]) => (Array.isArray(ids)
-        ? [slug, ids.map(resolveChannel)]
-        : [slug, resolveChannel(ids)]
+        ? [slug as ChannelSlug, ids.map(resolveChannel)]
+        : [slug as ChannelSlug, resolveChannel(ids)]
       ));
 
     for (const [slug, channel] of entries) {
       if (Array.isArray(channel)) {
         if (channel.some(isText))
-          this.client.cache.channels[slug] = channel.filter((chan): chan is TextChannel => isText(chan));
+          this.client.cache.channels[slug] = channel.filter(isText);
       } else if (isText(channel)) {
         this.client.cache.channels[slug] = channel;
       }
