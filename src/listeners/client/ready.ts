@@ -1,8 +1,10 @@
 import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
+import Poll from '@/app/models/poll';
 import Logger from '@/app/structures/Logger';
 import type { ChannelSlug } from '@/app/types';
+import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
 
 class ReadyListener extends Listener {
@@ -13,7 +15,7 @@ class ReadyListener extends Listener {
     });
   }
 
-  public exec(): void {
+  public async exec(): Promise<void> {
     this.client.guild = this.client.guilds.resolve(settings.bot.guild);
 
     if (!this.client.guild)
@@ -24,6 +26,7 @@ class ReadyListener extends Listener {
 
     type ChannelEntry = [channelSlug: ChannelSlug, resolvedChannel: GuildChannel | GuildChannel[]];
 
+    Logger.info('Caching channels...');
     // Resolve all channels entered in the config, to put them in client.cache.channels.<channel_name>.
     const entries: ChannelEntry[] = Object.entries(settings.channels)
       .map(([slug, ids]) => (Array.isArray(ids)
@@ -37,6 +40,32 @@ class ReadyListener extends Listener {
           this.client.cache.channels[slug] = channel.filter(isText);
       } else if (isText(channel)) {
         this.client.cache.channels[slug] = channel;
+      }
+    }
+
+    // Cache polls' messages
+    Logger.info('Caching polls...');
+    const polls = await Poll.find();
+    const cacheReactions = new Set([
+      ...settings.miscellaneous.pollReactions.yesno,
+      ...settings.miscellaneous.pollReactions.multiple,
+    ]);
+
+    for (const poll of polls) {
+      const channel = this.client.channels.resolve(poll.channelId);
+      if (!channel || !channel.isText()) {
+        await Poll.findByIdAndRemove(poll._id);
+        continue;
+      }
+
+      const message = await channel.messages.fetch(poll.messageId, true, true).catch(nullop);
+      if (!message) {
+        await Poll.findByIdAndRemove(poll._id);
+        continue;
+      }
+      for (const reaction of message.reactions.cache.array()) {
+        if (cacheReactions.has(reaction.emoji.name))
+          await reaction.users.fetch().catch(noop);
       }
     }
 
