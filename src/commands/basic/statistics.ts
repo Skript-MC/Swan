@@ -55,11 +55,17 @@ class StatisticsCommand extends Command {
   }
 
   private async _getGitRev(): Promise<string> {
+    if (this.client.cache.gitCommit)
+      return this.client.cache.gitCommit;
+
     let rev = (await fs.readFile(path.join(process.cwd(), '.git', 'HEAD'))).toString();
-    if (!rev.includes(':'))
+    if (!rev.includes(':')) {
+      this.client.cache.gitCommit = rev;
       return rev;
+    }
 
     rev = (await fs.readFile(path.join(process.cwd(), '.git', rev.slice(5).trim()))).toString();
+    this.client.cache.gitCommit = rev;
     return rev;
   }
 }

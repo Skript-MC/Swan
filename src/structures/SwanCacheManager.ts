@@ -19,6 +19,7 @@ class SwanCacheManager {
   channels: Nullable<CachedChannels>;
   modules: AkairoModule[];
   github: GithubCache;
+  gitCommit: string;
 
   constructor() {
     this.channels = {
@@ -41,6 +42,7 @@ class SwanCacheManager {
     this.github = {};
     this.pollMessagesIds = [];
     this.modules = [];
+    this.gitCommit = '';
   }
 }
 
