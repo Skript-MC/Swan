@@ -61,7 +61,7 @@ export const code = {
 
 export const discover = {
   settings: {
-    aliases: ['découvrir', 'decouvrir', 'discover'],
+    aliases: ['discover', 'découvrir', 'decouvrir'],
     clientPermissions: permissions.SEND_MESSAGES,
     userPermissions: noPermissions,
   },
