@@ -1,4 +1,3 @@
-import { stripIndent } from 'common-tags';
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
