@@ -218,7 +218,8 @@ export const move = {
     startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
     retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
     successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
-    moveInfos: stripIndent`
+    moveTitle: 'Message de {member.displayName}',
+    moveInfo: stripIndent`
       {memberDisplayName} à déplacé un message de {targetDisplayName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
@@ -263,7 +264,7 @@ export const statistics = {
   messages: {
     embed: {
       title: 'Statistiques de Swan',
-      description: 'Le préfixe est `{prefix}`. Faites `{helpCommand}` pour avoir la liste des commandes.',
+      description: 'Le préfixe est `{prefix}`. Faites `{prefix}aide` pour avoir la liste des commandes.',
       version: '❯ Version',
       versionContent: stripIndent`
         Version : {version}

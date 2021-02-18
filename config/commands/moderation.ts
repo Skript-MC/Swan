@@ -111,6 +111,13 @@ export const history = {
       duration: '\n    __Durée :__ {duration}',
       modifications: '    __Modification{plural} :__\n',
       update: '    - {date}, <@{sanction.moderator}> {action} (motif : {update.reason})',
+      timeDiff: stripIndent`
+
+        \`\`\`diff
+        - {valueBefore}
+        + {valueAfter}
+        \`\`\`
+      `,
     },
     updateReasons: {
       duration: 'a changé la durée',

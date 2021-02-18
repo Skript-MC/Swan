@@ -16,6 +16,7 @@ export default {
     },
     validNamePercentage: 0.5,
     durationFormat: '[le] DD/MM/YYYY [à] HH:mm:ss',
+    permanentKeywords: ['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'],
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
     activeMemberBlacklistedLinks: [

@@ -1,11 +1,12 @@
 import type { Message } from 'discord.js';
 import { getDuration } from '@/app/utils';
+import settings from '@/conf/settings';
 
 export default function duration(_message: Message, phrase: string): number | null {
   if (!phrase)
     return null;
 
-  if (['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'].includes(phrase))
+  if (settings.miscellaneous.permanentKeywords.includes(phrase))
     return -1;
 
   try {
