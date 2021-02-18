@@ -155,9 +155,9 @@ export interface InvisionForum {
   parentId?: number;
 }
 
-/** Represent the ressource response object that is returned by the Skript-MC's Invision forums API. */
-export interface InvisionFullRessource extends InvisionResponse {
-  results: InvisionRessource[];
+/** Represent the resource response object that is returned by the Skript-MC's Invision forums API. */
+export interface InvisionFullResource extends InvisionResponse {
+  results: InvisionResource[];
 }
 
 /** Represent the topic response object that is returned by the Skript-MC's Invision forums API. */
@@ -209,8 +209,8 @@ export interface InvisionResponse {
   totalPages: number;
 }
 
-/** Represent a ressource object from the Skript-MC's Invision forums API. */
-export interface InvisionRessource {
+/** Represent a resource object from the Skript-MC's Invision forums API. */
+export interface InvisionResource {
   id: number;
   title: string;
   category: InvisionCategory;
@@ -244,8 +244,8 @@ export interface InvisionRessource {
   hasPendingVersion: boolean;
 }
 
-/** Represent a ressource comment object from the Skript-MC's Invision forums API. */
-export interface InvisionRessourceComment {
+/** Represent a resource comment object from the Skript-MC's Invision forums API. */
+export interface InvisionResourceComment {
   id: number;
   // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
   item_id: number;
@@ -256,16 +256,16 @@ export interface InvisionRessourceComment {
   url: string;
 }
 
-/** Represent a ressource field object from the Skript-MC's Invision forums API. */
-export interface InvisionRessourceField {
+/** Represent a resource field object from the Skript-MC's Invision forums API. */
+export interface InvisionResourceField {
   name: string;
   value: string;
 }
 
-/** Represent a ressource field group object from the Skript-MC's Invision forums API. */
-export interface InvisionRessourceFieldGroup {
+/** Represent a resource field group object from the Skript-MC's Invision forums API. */
+export interface InvisionResourceFieldGroup {
   name: string;
-  fields: InvisionRessourceField[];
+  fields: InvisionResourceField[];
 }
 
 /** Represent the object that is returned by the Skript-MC's Invision forums API for search results */

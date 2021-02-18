@@ -7,8 +7,8 @@ export const forumFeed = {
     versionTitle: 'Version',
     ratingTitle: 'Notation',
     noRating: 'Aucune notation',
-    update: '📥 Mise à jour de {ressource.title}',
-    post: '📥 Publication de {ressource.title}',
+    update: '📥 Mise à jour de {resource.title}',
+    post: '📥 Publication de {resource.title}',
   },
   baseAxiosParams: {
     params: {

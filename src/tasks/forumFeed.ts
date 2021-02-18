@@ -4,7 +4,7 @@ import pupa from 'pupa';
 import Turndown from 'turndown';
 import Logger from '@/app/structures/Logger';
 import Task from '@/app/structures/Task';
-import type { InvisionFullRessource, InvisionFullTopic } from '@/app/types';
+import type { InvisionFullResource, InvisionFullTopic } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import settings from '@/conf/settings';
 import { forumFeed as config } from '@/conf/tasks';
@@ -68,7 +68,7 @@ class ForumFeedTask extends Task {
 
   private async _checkFiles(): Promise<void> {
     // Check if new resource has been posted by fetching all the latest, and filtering by date.
-    const ressources: InvisionFullRessource = await axios.get(
+    const resources: InvisionFullResource = await axios.get(
       settings.apis.forum + config.endpoints.files.files,
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
@@ -79,26 +79,26 @@ class ForumFeedTask extends Task {
 
     const channel = this.client.channels.cache.get(settings.channels.forumUpdates);
 
-    if (!ressources?.results || !channel?.isText())
+    if (!resources?.results || !channel?.isText())
       return;
 
-    ressources.results
+    resources.results
       // We filter by only keeping those we didn't see in our time window (refresh-rate).
-      .filter(ressource => (Date.now() - new Date(ressource.updated).getTime()) < config.timeDifference)
-      .forEach((ressource) => {
-        const markdown = turndownService.turndown(ressource.changelog || ressource.description);
+      .filter(resource => (Date.now() - new Date(resource.updated).getTime()) < config.timeDifference)
+      .forEach((resource) => {
+        const markdown = turndownService.turndown(resource.changelog || resource.description);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(ressource.author.name, ressource.author.photoUrlIsDefault ? null : 'https:' + ressource.author.photoUrl)
-          .setTitle(trimText(pupa(ressource.changelog ? config.embed.update : config.embed.post, { ressource }), 250))
-          .setURL(ressource.url)
+          .setAuthor(resource.author.name, resource.author.photoUrlIsDefault ? null : 'https:' + resource.author.photoUrl)
+          .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
+          .setURL(resource.url)
           .setDescription(trimText(markdown, 150))
-          .addField(config.embed.categoryTitle, ressource.category.name, true)
-          .addField(config.embed.versionTitle, ressource.version, true)
-          .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(ressource.rating)) || config.embed.noRating, true)
-          .setThumbnail(ressource.primaryScreenshotThumb ? ('https:' + ressource.primaryScreenshotThumb.url) : null)
+          .addField(config.embed.categoryTitle, resource.category.name, true)
+          .addField(config.embed.versionTitle, resource.version, true)
+          .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, true)
+          .setThumbnail(resource.primaryScreenshotThumb ? ('https:' + resource.primaryScreenshotThumb.url) : null)
           .setFooter(config.dataProvider)
-          .setTimestamp(new Date(ressource.date));
+          .setTimestamp(new Date(resource.date));
         void channel.send(embed).catch(noop);
       });
   }
