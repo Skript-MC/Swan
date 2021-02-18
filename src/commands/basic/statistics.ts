@@ -32,10 +32,7 @@ class StatisticsCommand extends Command {
       .attachFiles([settings.bot.avatar])
       .setAuthor(config.messages.embed.title, 'attachment://logo.png')
       .setDescription(
-        pupa(config.messages.embed.description, {
-          prefix: settings.bot.prefix,
-          helpCommand: `${settings.bot.prefix}help`,
-        }),
+        pupa(config.messages.embed.description, { prefix: settings.bot.prefix }),
       )
       .addField(
         embedMessages.version,

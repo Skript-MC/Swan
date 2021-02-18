@@ -89,13 +89,10 @@ class HistoryCommand extends Command {
         for (const update of sanction.updates) {
           // If there is a duration update, show it with a nice diff.
           const diff = update.type === SanctionsUpdates.Duration
-            ? stripIndent`
-
-                \`\`\`diff
-                - ${update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true)}
-                + ${update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true)}
-                \`\`\`
-              `
+            ? pupa(config.messages.sanctionDescription.timeDiff, {
+                valueBefore: update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true),
+                valueAfter: update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true),
+              })
             : '\n';
 
           sanctionContent += pupa(config.messages.sanctionDescription.update, {

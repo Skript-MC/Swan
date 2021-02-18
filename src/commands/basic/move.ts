@@ -59,9 +59,12 @@ class MoveCommand extends Command {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(`Message de ${targetedMessage.member.displayName} :`, targetedMessage.author.avatarURL())
+      .setAuthor(
+        pupa(config.messages.moveTitle, { member: targetedMessage.member }),
+        targetedMessage.author.avatarURL(),
+      )
       .setDescription(
-        pupa(config.messages.moveInfos, {
+        pupa(config.messages.moveInfo, {
           memberDisplayName: message.member,
           targetDisplayName: targetedMessage.member,
           sourceChannel: targetedMessage.channel,

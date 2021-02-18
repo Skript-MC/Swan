@@ -1,6 +1,8 @@
 import type { PresenceData } from 'discord.js';
+import pupa from 'pupa';
 import Task from '@/app/structures/Task';
 import settings from '@/conf/settings';
+import { presence as config } from '@/conf/tasks';
 
 class PresenceTask extends Task {
   activities: Generator<PresenceData, never>;
@@ -18,9 +20,21 @@ class PresenceTask extends Task {
   }
 
   private * _getActivity(): Generator<PresenceData, never> {
+    let i = 0;
     while (true) {
-      yield { activity: { name: `${this.client.guild.memberCount} membres 🎉`, type: 'WATCHING' }, status: 'online' };
-      yield { activity: { name: `${settings.bot.prefix}aide | Skript-MC`, type: 'WATCHING' }, status: 'online' };
+      yield {
+        activity: {
+          name: pupa(config.messages[i], {
+            memberCount: this.client.guild.memberCount,
+            prefix: settings.bot.prefix,
+          }),
+          type: 'WATCHING',
+        },
+        status: 'online',
+      };
+      i++;
+      if (i >= config.messages.length)
+        i = 0;
     }
   }
 }

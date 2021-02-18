@@ -5,6 +5,7 @@ import { Rules } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { DiscoverCommandArguments } from '@/app/types/CommandArguments';
 import { discover as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 class DiscoverCommand extends Command {
@@ -33,12 +34,12 @@ class DiscoverCommand extends Command {
     embed.setTitle(pupa(config.messages.title, { randomCommand }))
       .addField(config.messages.usage, `\`${prefix}${randomCommand.details.usage}\``)
       .addField(config.messages.description, randomCommand.details.content)
-      .addField(config.messages.usableBy, randomCommand.details?.permissions || 'Tout le monde');
+      .addField(config.messages.usableBy, randomCommand.details?.permissions || messages.global.everyone);
 
     if (randomCommand.aliases.length > 1)
-      embed.addField(config.messages.aliases, `\`${randomCommand.aliases.join('` • `')}\``);
+      embed.addField(config.messages.aliases, `\`${randomCommand.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
     if (randomCommand.details?.examples?.length)
-      embed.addField(config.messages.examples, `\`${prefix}${randomCommand.details.examples.join(`\` • \`${prefix}`)}\``);
+      embed.addField(config.messages.examples, `\`${prefix}${randomCommand.details.examples.join(`\`${messages.miscellaneous.separator}\`${prefix}`)}\``);
 
     await message.channel.send(embed);
   }

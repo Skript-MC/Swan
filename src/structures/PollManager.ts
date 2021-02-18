@@ -32,8 +32,8 @@ export default {
 
     let results = '';
     if (poll.questionType === QuestionType.Yesno) {
-      const yes = poll.votes['✅'].length;
-      const no = poll.votes['❌'].length;
+      const yes = poll.votes[settings.miscellaneous.pollReactions.yesno[0]].length;
+      const no = poll.votes[settings.miscellaneous.pollReactions.yesno[1]].length;
       results = pupa(messages.poll.resultYesno, {
         yes,
         no,

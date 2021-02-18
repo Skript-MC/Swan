@@ -12,6 +12,7 @@ export default {
     memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
     dmAreClosed: "{member}, je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
     unknownName: 'Pseudo inconnu',
+    everyone: 'Tout le monde',
     unknown: (feminine = false): string => `Inconnu${feminine ? 'e' : ''}`,
     noReason: 'Aucune raison spécifiée.',
     impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
@@ -29,6 +30,7 @@ export default {
     commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {command.alias}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
     ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {member.displayName}. :innocent:',
     ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {member.displayName}. :innocent:',
+    separator: ' • ',
     renamed: stripIndent`
       Ton pseudonyme contenait des caractères spéciaux, donc je me suis permis de te les retirer (voire de te renommer complètement), pour que ce soit plus simple de te mentionner. J'espère que mes modifications te plairont.
       Si malheureusement ce n'est pas le cas, tu peux demander à un modérateur Discord (pseudonymes vert clair) pour être renommé.`,

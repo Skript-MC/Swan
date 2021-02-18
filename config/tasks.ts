@@ -1,13 +1,15 @@
-export const skriptReleases = {
-  releaseAnnouncement: "Une nouvelle version de Skript vient d'être publiée ; vous pouvez la télécharger et consulter les changements ci-dessous.",
-  githubEndpoint: '/repos/SkriptLang/Skript/releases',
-  dataProvider: 'Données fournies par https://github.com',
-  timeDifference: 600_000,
-};
-
 export const forumFeed = {
   timeDifference: 600_000,
   dataProvider: 'Automatiquement envoyé depuis Skript-MC',
+  embed: {
+    title: '💬 {topic.title}',
+    categoryTitle: 'Catégorie',
+    versionTitle: 'Version',
+    ratingTitle: 'Notation',
+    noRating: 'Aucune notation',
+    update: '📥 Mise à jour de {ressource.title}',
+    post: '📥 Publication de {ressource.title}',
+  },
   baseAxiosParams: {
     params: {
       page: 1, // Fetch the 25 first objects, more is useless
@@ -33,4 +35,18 @@ export const forumFeed = {
       topics: 'forums/topics',
     },
   },
+};
+
+export const presence = {
+  messages: [
+    '{memberCount} membres 🎉',
+    '{prefix}aide | Skript-MC',
+  ],
+};
+
+export const skriptReleases = {
+  releaseAnnouncement: "Une nouvelle version de Skript vient d'être publiée ; vous pouvez la télécharger et consulter les changements ci-dessous.",
+  githubEndpoint: '/repos/SkriptLang/Skript/releases',
+  dataProvider: 'Données fournies par https://github.com',
+  timeDifference: 600_000,
 };

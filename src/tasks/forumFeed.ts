@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
+import pupa from 'pupa';
 import Turndown from 'turndown';
 import Logger from '@/app/structures/Logger';
 import Task from '@/app/structures/Task';
@@ -56,7 +57,7 @@ class ForumFeedTask extends Task {
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
           .setAuthor(topic.firstPost.author.name, 'https:' + topic.firstPost.author.photoUrl)
-          .setTitle(`💬 ${topic.title}`)
+          .setTitle(pupa(config.embed.title, { topic }))
           .setURL(topic.url)
           .setDescription(trimText(markdown, 500))
           .setFooter(config.dataProvider)
@@ -89,12 +90,12 @@ class ForumFeedTask extends Task {
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
           .setAuthor(ressource.author.name, ressource.author.photoUrlIsDefault ? null : 'https:' + ressource.author.photoUrl)
-          .setTitle(trimText(`📥 ${ressource.changelog ? 'Mise à jour de' : 'Publication de'} ${ressource.title}`, 250))
+          .setTitle(trimText(pupa(ressource.changelog ? config.embed.update : config.embed.post, { ressource }), 250))
           .setURL(ressource.url)
           .setDescription(trimText(markdown, 150))
-          .addField('Catégorie', ressource.category.name, true)
-          .addField('Version', ressource.version, true)
-          .addField('Notation', '⭐'.repeat(Math.round(ressource.rating)) || 'Aucune notation', true)
+          .addField(config.embed.categoryTitle, ressource.category.name, true)
+          .addField(config.embed.versionTitle, ressource.version, true)
+          .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(ressource.rating)) || config.embed.noRating, true)
           .setThumbnail(ressource.primaryScreenshotThumb ? ('https:' + ressource.primaryScreenshotThumb.url) : null)
           .setFooter(config.dataProvider)
           .setTimestamp(new Date(ressource.date));
