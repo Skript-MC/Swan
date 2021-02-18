@@ -6,6 +6,7 @@ import type { GuildMessage } from '@/app/types';
 import type { PingCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { ping as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 class PingCommand extends Command {
@@ -35,7 +36,7 @@ class PingCommand extends Command {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setDescription(description)
-      .setFooter(`Exécuté par ${message.member.displayName}`)
+      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
       .setTimestamp();
 
     await sent.delete().catch(noop);

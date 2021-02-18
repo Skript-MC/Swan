@@ -69,7 +69,7 @@ class UserInfoCommand extends Command {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(pupa(embedConfig.title, { member: args.member }))
-      .setFooter(pupa(embedConfig.footer, { member: message.member }))
+      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
       .setThumbnail(args.member.user.avatarURL())
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)

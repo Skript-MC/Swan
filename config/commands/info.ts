@@ -222,7 +222,6 @@ export const userInfo = {
           invisible: 'Hors ligne',
         },
       },
-      footer: 'Exécuté par {member.user.username}',
     },
   },
 };

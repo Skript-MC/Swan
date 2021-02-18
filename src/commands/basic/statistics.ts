@@ -8,6 +8,7 @@ import { Rules } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { StatisticsCommandArguments } from '@/app/types/CommandArguments';
 import { statistics as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import pkg from '@/root/package.json';
 
@@ -48,7 +49,7 @@ class StatisticsCommand extends Command {
       .addField(embedMessages.developers, embedMessages.developersContent, true)
       .addField(embedMessages.thanks, embedMessages.thanksContent, true)
       .addField(embedMessages.bugs, pupa(embedMessages.bugsContent, { url: pkg.bugs?.url || pkg.homepage }), true)
-      .setFooter(`Exécuté par ${message.author.username}`)
+      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
       .setTimestamp();
 
     await message.channel.send(embed);
