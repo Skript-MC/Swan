@@ -278,6 +278,7 @@ export const statistics = {
       thanks: '❯ Remerciements',
       thanksContent: stripIndent`
         <@218505052015296512> : ancien développeur
+        <@187971875845046272> : contributions
         <@173542833364533249> : contributions
         <@294134773901688833> : contributions
       `,

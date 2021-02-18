@@ -76,5 +76,6 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 #### 👷 Contributeurs
 
 - [Olyno](https://github.com/Olyno), ancien développeur (Olyno#1234)
+- [Aless#6161](https://github.com/BakaAless) (Aless#6161)
 - [WeeskyBDW](https://github.com/WeeskyBDW) (WeeskyBDW#6172)
 - [iTrooz](https://github.com/iTrooz) (iTrooz_#2050)
