@@ -7,6 +7,7 @@ import {
   ListenerHandler,
 } from 'discord-akairo';
 import type { AkairoHandler, Category, Command } from 'discord-akairo';
+import { Intents } from 'discord.js';
 import type { PermissionString } from 'discord.js';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
@@ -35,12 +36,12 @@ class SwanClient extends AkairoClient {
       disableMentions: 'everyone',
       ws: {
         intents: [
-          'GUILDS', // Get access to channels, create some, pin messages etc.
-          'GUILD_MEMBERS', // Access to GuildMemberAdd and GuildMemberRemove events (requires enabling via the discord dev portal).
-          'GUILD_BANS', // Access to GuildBanAdd and GuildBanRemove events.
-          'GUILD_PRESENCES', // Access to users' presence (for .userinfo).
-          'GUILD_MESSAGES', // Access to Message, MessageDelete and MessageUpdate events.
-          'GUILD_MESSAGE_REACTIONS', // Access to MessageReactionAdd events.
+          Intents.FLAGS.GUILDS, // Get access to channels, create some, pin messages etc.
+          Intents.FLAGS.GUILD_MEMBERS, // Access to GuildMemberAdd/GuildMemberRemove events.
+          Intents.FLAGS.GUILD_BANS, // Access to GuildBanAdd and GuildBanRemove events.
+          Intents.FLAGS.GUILD_PRESENCES, // Access to users' presence (for .userinfo).
+          Intents.FLAGS.GUILD_MESSAGES, // Access to Message, MessageDelete and MessageUpdate events.
+          Intents.FLAGS.GUILD_MESSAGE_REACTIONS, // Access to MessageReactionAdd events.
         ],
       },
     });
