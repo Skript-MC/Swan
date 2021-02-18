@@ -176,17 +176,25 @@ class SwanClient extends AkairoClient {
 
     // Check channels IDs.
     const channels = this.guild.channels.cache;
+    const invalidChannels: string[] = [];
     for (const [key, value] of Object.entries(settings.channels)) {
       if (Array.isArray(value)) {
         if (value.length === 0)
-          Logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+          invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
         else if (!value.every(elt => channels.has(elt)))
-          Logger.warn(`One of the id entered for settings.channels.${key} is not a valid channel.`);
+          invalidChannels.push(`One of the id entered for settings.channels.${key} is not a valid channel.`);
       } else if (!value) {
-        Logger.warn(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
+        invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
       } else if (!channels.has(value)) {
-        Logger.warn(`The id entered for settings.channels.${key} is not a valid channel.`);
+        invalidChannels.push(`The id entered for settings.channels.${key} is not a valid channel.`);
       }
+    }
+    if (invalidChannels.length > 0) {
+      Logger.error('Configured channels are invalid:');
+      for (const error of invalidChannels)
+        Logger.detail(error);
+      if (process.env.NODE_ENV === 'production')
+        throw new Error('Please fill correctly the configuration to start the bot.');
     }
 
     // Check roles IDs.
