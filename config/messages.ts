@@ -16,6 +16,7 @@ export default {
     unknown: (feminine = false): string => `Inconnu${feminine ? 'e' : ''}`,
     noReason: 'Aucune raison spécifiée.',
     impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
+    executedBy: 'Exécuté par {member.displayName}',
   },
   miscellaneous: {
     noDescription: 'Aucune description disponible.',

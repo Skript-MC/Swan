@@ -59,6 +59,8 @@ export interface HistoryCommandArgument {
   member: GuildMember | User | string;
 }
 
+export interface JokeCommandArguments {}
+
 export interface KickCommandArgument {
   member: GuildMember; reason: string;
 }
