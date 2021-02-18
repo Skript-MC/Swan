@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
 import { Permissions } from 'discord.js';
-import type { GuildMember } from 'discord.js';
+import type { GuildMember, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import Logger from '@/app/structures/Logger';
@@ -26,9 +26,7 @@ class GuildMemberAddListener extends Listener {
     const { greetings } = messages.miscellaneous;
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
-    const channel = member.guild.channels.resolve(settings.channels.main);
-    if (!channel?.isText())
-      return;
+    const channel = this.client.cache.channels.main as TextChannel;
 
     const content = pupa(randomMessage, { member });
     await channel.send(content).catch(noop);
