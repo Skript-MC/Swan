@@ -21,30 +21,32 @@
 - 💬 Vous souhaitez nous faire part de quelque chose ?
 
 Vous pouvez vous rendre dans le [menu des issues](https://github.com/Skript-MC/Swan/issues) et en créer une ; nous y jetterons un œil dès que possible !
-Si vous n'êtes pas très sûr de vous, vous pouvez nous en parler sur le [Discord de développement](https://discord.com/njSgX3w).
+Si vous n'êtes pas très sûrs de vous, vous pouvez nous en parler sur le [Discord de développement](https://discord.com/njSgX3w).
 
-:warning: Si vous pensez avoir trouvé une faille de sécurité, ou un bug pouvant compromettre Swan, la machine hébergeant Swan, ou n'importe quel utilisateur ou personne physique, veuillez en faire part en envoyant un message privé sur discord à un des [développeurs](#-Merci).
+:warning: Si vous pensez avoir trouvé une faille de sécurité, ou un bug pouvant compromettre Swan, veuillez en faire part en envoyant un message privé sur discord à un des [développeurs](#-Merci).
 
 ## 🔨 Développement et contributions
 
 Nos Pull Request (PR) sont ouvertes à toute contribution ! Vous pouvez [créer un fork](https://github.com/Skript-MC/Swan/fork) (= une copie) de ce dépôt et y faire vos modifications. \
 Voici quelques informations utiles avant de créer une Pull Request :
 
-- 🏷️ Créez votre PR vers la branche `dev` uniquement. (:warning: Le bot est actuellement en train d'être réécrit. Pensez à bien faire vos PR sur la version 2, donc sur la branche `v2`).
-- 📦 Ajoutez le moins de dépendance possible.
+- 🔀 Faites vos modifications sur une nouvelle branche ! Ce sera plus simple ensuite pour tenir votre PR à jour.
+- 🏷️ Créez votre PR vers la branche `v2` uniquement.
+- 📦 Ajoutez le moins de dépendances possible.
 - 🚨 Respectez les règles ESLint ; vous pouvez vérifier avec la commande `npm run lint`.
 - ⚡️ Vérifiez qu'aucune vulnérabilité n'est présente ; via la commande `npm audit`.
+- ✅ Pensez bien à tester votre nouvelle fonctionnalité, autant que possible !
 
 N'hésitez pas à venir discuter et tester les nouveautés sur notre [Discord de développement](https://discord.com/njSgX3w) !
 Vous pouvez trouver des idées de choses à faire en regardant les projets en cours, dans [l'onglet Projects](https://github.com/Skript-MC/Swan/projects), ou en regardant la [liste des Issues](https://github.com/Skript-MC/Swan/issues).
 
 ## ℹ️ Informations
 
-Swan est un bot Discord développé en JavaScript. Il utilise la librairie [discord.js](https://npmjs.com/package/discord.js) pour les appels à l'API Discord.
+Swan est un bot Discord développé en TypeScript (un dérivé de JavaScript avec un typage plus fort). Il utilise la librairie [discord.js](https://npmjs.com/package/discord.js) pour les appels à l'API Discord.
 Depuis la version 2, il utilise également le framework [discord-akairo](https://npmjs.com/package/discord-akairo), par-dessus discord.js.
-Il sert notamment à gérer les évènements, les commandes et les arguments...
+Ce framework sert notamment à gérer les évènements, les commandes et les arguments...
 
-Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter la [License](https://github.com/Skript-MC/Swan/blob/master/LICENSE) (GNU-GPL-v3)
+Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter la [License](https://github.com/Skript-MC/Swan/blob/master/LICENSE) (GNU-GPL-v3).
 
 ## 📂 Organisation du projet
 
@@ -76,6 +78,6 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 #### 👷 Contributeurs
 
 - [Olyno](https://github.com/Olyno), ancien développeur (Olyno#1234)
-- [Aless#6161](https://github.com/BakaAless) (Aless#6161)
+- [Aless](https://github.com/BakaAless) (Aless#6161)
 - [WeeskyBDW](https://github.com/WeeskyBDW) (WeeskyBDW#6172)
 - [iTrooz](https://github.com/iTrooz) (iTrooz_#2050)
