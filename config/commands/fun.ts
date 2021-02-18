@@ -65,6 +65,24 @@ export const eightBall = {
   },
 };
 
+export const idea = {
+  settings: {
+    aliases: ['idea', 'idée', 'idee'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: noPermissions,
+  },
+  details: {
+    name: 'Idée',
+    content: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
+    usage: 'idée',
+    examples: ['idea', 'idée'],
+  },
+  messages: {
+    noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
+    ideaTitle: 'Idée de {name} :',
+  },
+};
+
 export const joke = {
   settings: {
     aliases: ['joke', 'blague'],
@@ -176,7 +194,7 @@ export const latex = {
   },
   details: {
     name: 'Latex',
-    content: 'Permet de transformer une série de symboles pas belle du tout en une merveilleuse équation toute jolie, grâce au moteur mathématique LaTeX.',
+    content: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
     usage: 'latex <equation>',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
