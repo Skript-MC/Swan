@@ -61,7 +61,7 @@ class UnbanAction extends ModerationAction {
         if (isHardbanned)
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
       } else {
-        await this.data.victim.member.roles.set([]);
+        await ModerationHelper.removeAllRoles(this.data.victim.member);
 
         const channelId = ban?.informations?.banChannelId;
         if (!channelId)

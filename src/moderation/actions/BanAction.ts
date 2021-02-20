@@ -173,10 +173,14 @@ class BanAction extends ModerationAction {
     // 3. Add needed roles
     try {
       const role = this.data.guild.roles.resolve(settings.roles.ban);
-      if (role)
-        await this.data.victim.member?.roles.set([role]);
-      else
+      if (role) {
+        if (this.data.victim.member) {
+          await ModerationHelper.removeAllRoles(this.data.victim.member);
+          await this.data.victim.member.roles.add(role);
+        }
+      } else {
         throw new TypeError('Unable to resolve the ban role.');
+      }
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
