@@ -2,14 +2,14 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { stripIndent } from 'common-tags';
 import { Permissions, TextChannel } from 'discord.js';
-import type { GuildChannel, NewsChannel } from 'discord.js';
+import type { GuildChannel, GuildMember, NewsChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import Logger from '@/app/structures/Logger';
 import { SanctionTypes } from '@/app/types';
 import type { BanChannelMessage } from '@/app/types';
-import { prunePseudo } from '@/app/utils';
+import { nullop, prunePseudo } from '@/app/utils';
 import settings from '@/conf/settings';
 import type ModerationData from './ModerationData';
 
@@ -79,6 +79,16 @@ export default {
     }
 
     return allMessages.reverse();
+  },
+
+  async removeAllRoles(member: GuildMember): Promise<void> {
+    const removingRoles: Array<Promise<GuildMember | null>> = [];
+
+    // We remove the roles one by one, because even if we fail on one we want to continue and try for the others.
+    for (const memberRole of member.roles.cache.keys())
+      removingRoles.push(member.roles.remove(memberRole).catch(nullop));
+
+    await Promise.all(removingRoles);
   },
 
   async getMessageFile(
