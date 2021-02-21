@@ -4,7 +4,7 @@
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "rm -rf ./build && tsc && cpy --parents ./assets/ ./build/",
+    "build": "del ./build && tsc && cpy --parents ./assets/ ./build/",
     "exec": "node ./build/src/main.js",
     "start": "npm run build && cross-env NODE_ENV=production npm run exec -- --no-color",
     "dev": "npm run build && cross-env NODE_ENV=development npm run exec",
@@ -45,6 +45,7 @@
     "chalk": "^4.1.0",
     "common-tags": "^1.8.0",
     "cpy-cli": "^3.1.1",
+    "del-cli": "^3.0.1",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
