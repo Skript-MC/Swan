@@ -71,6 +71,7 @@ export const documentation = {
       description: '{syntax.content}',
       deprecated: ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
       depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({syntax.deprecationLink}) pour la remplacer.',
+      noReplacement: 'Pas de remplacement disponible.',
       noDescription: 'Aucune description disponible.',
       version: ':bookmark: À partir de la version',
       addon: ':link: Addon requis',

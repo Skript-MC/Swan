@@ -69,8 +69,8 @@ export type SkriptToolsAddonListResponse = Record<string, string[] | null>;
  * when calling the Skript-MC's API when requesting a specific addon.
  */
 export interface SkriptMcDocumentationSyntaxResponse {
-  addon: Pick<SkriptMcDocumentationAddonResponse, 'dependency' | 'documentationUrl' | 'name'>;
   id: number;
+  addon: string;
   name: string;
   content: string;
   version: string;
@@ -80,6 +80,14 @@ export interface SkriptMcDocumentationSyntaxResponse {
   documentationUrl: string;
   deprecation?: string | null;
   deprecationLink?: string | null;
+}
+
+/**
+ * Represent the objects that are in the "articles" array that is returned
+ * when calling the Skript-MC's API when requesting a specific addon.
+ */
+export interface SkriptMcDocumentationSyntaxAndAddon extends Omit<SkriptMcDocumentationSyntaxResponse, 'addon'> {
+  addon: Pick<SkriptMcDocumentationAddonResponse, 'dependency' | 'documentationUrl' | 'name'>;
 }
 
 /** Represent the object that is returned by the Skript-MC's API for addons, without the syntax list */

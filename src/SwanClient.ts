@@ -22,8 +22,9 @@ import SwanCacheManager from './structures/SwanCacheManager';
 import TaskHandler from './structures/TaskHandler';
 import type {
   CommandStatDocument,
-  SkriptMcDocumentationAddonResponse,
   SkriptMcDocumentationFullAddonResponse,
+  SkriptMcDocumentationSyntaxAndAddon,
+  SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
 } from './types';
@@ -279,38 +280,27 @@ class SwanClient extends AkairoClient {
   private async _loadSkriptMcSyntaxes(): Promise<void> {
     // Load all syntaxes from Skript-MC's API.
     try {
+      // TODO: Handle rate-limits. Currently set at 200 requests/hour, but with thoses 2 endpoints,
+      // we consume 11 requests. See https://skript-mc.fr/api#quotas
       const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
-      const allAddons: SkriptMcDocumentationAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`).then(res => res?.data);
-      if (!allAddons)
-        return;
+      const allSyntaxes: SkriptMcDocumentationSyntaxResponse[] = await axios(`${settings.apis.skriptmc}syntaxes?${token}`)
+        .then(res => res?.data);
+      const allAddons: SkriptMcDocumentationFullAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`)
+        .then(res => res?.data);
 
-      // FIXME: Find a more optimized way of doing this:
-      // - Don't iterate through all syntaxes inside all addons. This uses a double for-loop and is
-      // useless performance loss
-      // - Don't do async operations (fetch) inside the loop
-      // - Add an endpoint on the API to bulk-fetch syntaxes with already all of those information?
-      for (const addon of allAddons) {
-        try {
-          const url = `${settings.apis.skriptmc}addons/${addon.slug}?${token}`;
-          const fullAddon: SkriptMcDocumentationFullAddonResponse = await axios(url).then(res => res?.data);
-          if (!fullAddon || !fullAddon.articles)
-            throw new Error(`No syntax to load for addon ${addon.name}`);
-
-          const addonObject = {
+      for (const syntax of allSyntaxes) {
+        const addon = allAddons.find(adn => adn.name === syntax.addon);
+        if (!addon)
+          continue;
+        const syntaxWithAddon: SkriptMcDocumentationSyntaxAndAddon = {
+          ...syntax,
+          addon: {
             name: addon.name,
             documentationUrl: addon.documentationUrl,
             dependency: addon.dependency,
-          };
-
-          for (const syntax of fullAddon.articles)
-            syntax.addon = addonObject;
-
-          this.cache.skriptMcSyntaxes.push(...fullAddon.articles);
-        } catch (unknownError: unknown) {
-          Logger.error(`Could not load syntaxes from addon ${addon.name}`);
-          Logger.error((unknownError as Error).stack);
-          continue;
-        }
+          },
+        };
+        this.cache.skriptMcSyntaxes.push(syntaxWithAddon);
       }
     } catch (unknownError: unknown) {
       Logger.error("Could not fetch Skript-MC's addons/syntaxes:");

@@ -4,7 +4,7 @@ import type {
   GithubPrerelease,
   GithubStableRelease,
   Nullable,
-  SkriptMcDocumentationSyntaxResponse,
+  SkriptMcDocumentationSyntaxAndAddon,
 } from '@/app/types';
 
 interface GithubCache {
@@ -14,7 +14,7 @@ interface GithubCache {
 
 class SwanCacheManager {
   addonsVersions: string[];
-  skriptMcSyntaxes: SkriptMcDocumentationSyntaxResponse[];
+  skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: string[];
   channels: Nullable<CachedChannels>;
   modules: AkairoModule[];
