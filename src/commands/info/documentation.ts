@@ -3,7 +3,7 @@ import { MessageEmbed } from 'discord.js';
 import he from 'he';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
-import type { GuildMessage, SkriptMcDocumentationSyntaxResponse } from '@/app/types';
+import type { GuildMessage, SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
 import type{ DocumentationCommandArguments } from '@/app/types/CommandArguments';
 import { noop, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
@@ -46,7 +46,7 @@ class DocumentationCommand extends Command {
     // - Or select if the query matches (70%) the description of the syntax;
     // - Or select if the query is included in the name of the syntax;
     // We then only take the first 10 results.
-    const matchingSyntaxes: SkriptMcDocumentationSyntaxResponse[] = this.client.cache.skriptMcSyntaxes
+    const matchingSyntaxes: SkriptMcDocumentationSyntaxAndAddon[] = this.client.cache.skriptMcSyntaxes
       .filter((elt) => {
         if (args.category && jaroWinklerDistance(elt.category, args.category, { caseSensitive: false }) < 0.9)
           return false;
@@ -108,7 +108,7 @@ class DocumentationCommand extends Command {
     }
   }
 
-  private async _sendDetail(message: GuildMessage, syntax: SkriptMcDocumentationSyntaxResponse): Promise<void> {
+  private async _sendDetail(message: GuildMessage, syntax: SkriptMcDocumentationSyntaxAndAddon): Promise<void> {
     const embedMessages = config.messages.embed;
 
     const embed = new MessageEmbed()
@@ -130,8 +130,12 @@ class DocumentationCommand extends Command {
       )
       .setFooter(pupa(embedMessages.footer, { member: message.member }));
 
-    if (syntax.deprecation)
-      embed.addField(embedMessages.deprecated, syntax.deprecationLink ? embedMessages.depreactionReplacement : '');
+    if (syntax.deprecation) {
+      embed.addField(
+        embedMessages.deprecated,
+        syntax.deprecationLink ? embedMessages.depreactionReplacement : embedMessages.noReplacement,
+      );
+    }
 
     const dependency = syntax.addon.dependency ? ` (requiert ${syntax.addon.dependency})` : '';
     const addon = `[${syntax.addon.name}](${syntax.addon.documentationUrl})` + dependency;
