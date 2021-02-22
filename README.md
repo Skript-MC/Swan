@@ -12,7 +12,8 @@
 - Copiez le fichier `.env.example` vers `.env` et remplissez-le.
 - Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activez les options `Server Members Intent` et `Presence Intent` de l'application.
 - Exécutez la commande `npm i` pour installer les dépendances nécessaires.
-- C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.
+- C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.\
+⚠️ Si vous êtes sur windows, il faudra utiliser `npm run dev:win` ou `npm start:win` pour que les commandes fonctionnent.
 
 ## 🔍 Rapport de bug et suggestions
 
