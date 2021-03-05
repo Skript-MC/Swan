@@ -23,8 +23,7 @@ class LatexCommand extends Command {
           start: config.messages.startPrompt,
           retry: config.messages.retryPrompt,
         },
-      },
-      ],
+      }],
     });
   }
 
