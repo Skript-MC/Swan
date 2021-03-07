@@ -4,8 +4,9 @@ import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import Poll from '@/app/models/poll';
 import Logger from '@/app/structures/Logger';
 import type { ChannelSlug } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
+import { createReactionCollector, noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
+import reactionrole from '@/app/models/reactionrole';
 
 class ReadyListener extends Listener {
   constructor() {
@@ -67,6 +68,24 @@ class ReadyListener extends Listener {
         if (cacheReactions.has(reaction.emoji.name))
           await reaction.users.fetch().catch(noop);
       }
+    }
+
+    Logger.info("Loading reactions roles...");
+    const reactionRoles = await reactionrole.find();
+    for (const element of reactionRoles) {
+      const channel = this.client.guild.channels.cache.get(element.channelId);
+      const textChannel = channel as TextChannel;
+      textChannel.messages.fetch(element.messageId)
+        .then((message) => {
+          const emoji = element.reaction;
+          const givenRole = this.client.guild.roles.cache.get(element.givenRoleId);
+          const permRole = this.client.guild.roles.cache.get(element.permissionRoleId);
+          createReactionCollector(message, emoji, givenRole, permRole);
+        })
+        .catch(async function (err) {
+          await reactionrole.findByIdAndDelete(element._id);
+        });
+
     }
 
     this.client.checkValidity();

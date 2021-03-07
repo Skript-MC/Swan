@@ -13,3 +13,4 @@ export { default as toHumanDuration } from './toHumanDuration';
 export { default as toValidName } from './toValidName';
 export { default as trimText } from './trimText';
 export { default as uncapitalize } from './uncapitalize';
+export { default as createReactionCollector } from './createReactionRole';
