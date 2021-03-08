@@ -35,7 +35,7 @@ export const reactionRole = {
     Pour supprimer un Reaction Role, il suffit de supprimer le message correspondant !
 
     `,
-    usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du salon ou poster le message | --here]',
+    usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du salon où poster le message | --here]',
     examples: ['reactionrole 818086544593518593 :tada: #annonces'],
     permissions: 'Staff',
   },
