@@ -3,11 +3,9 @@ import type { Command } from 'discord-akairo';
 import type {
   GuildMember,
   Message,
-  TextChannel,
-  User,
+  Role,
+ TextChannel, User,
 } from 'discord.js';
-import { Role } from 'discord.js';
-import { GuildChannel } from 'discord.js';
 
 
 export interface AddonInfoCommandArguments {

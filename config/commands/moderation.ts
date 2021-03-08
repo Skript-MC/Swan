@@ -304,15 +304,15 @@ export const reactionrole = {
   embed: {
     title: 'Obtenir le role {0}',
     content: 'Cliquez sur la réaction {0} pour obtenir le role {1}',
-    color: 4886754,
+    color: 4_886_754,
     footer: {
-      image: "https://skript-mc.fr/assets/images/favicon.png",
-      text: "Skript-MC",
-    }
+      icon: 'https://skript-mc.fr/assets/images/favicon.png',
+      text: 'Skript-MC',
+    },
   },
   messages: {
     error: 'Une erreur est survenue lors de l\'ajout de ce ReactionRole. Erreur: {0}',
-    prompt_start: 'Merci de saisir le role à donner. (Mentionner le role ou donner l\'ID.)',
-    prompt_retry: 'Erreur ! Role invalide. Merci de réessayer !',
+    promptStart: 'Merci de saisir le role à donner. (Mentionner le role ou donner l\'ID.)',
+    promptRetry: 'Erreur ! Role invalide. Merci de réessayer !',
   },
 };

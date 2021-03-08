@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
-import { ReactionRoleDocument, ReactionRoleModel } from "../types";
+import { model, Schema } from 'mongoose';
+import type { ReactionRoleDocument, ReactionRoleModel } from '../types';
 
 const ReactionRoleSchema = new Schema({
     messageId: {
@@ -22,6 +22,6 @@ const ReactionRoleSchema = new Schema({
         type: String,
         required: false,
     },
-})
+});
 
-export default model<ReactionRoleDocument, ReactionRoleModel>("ReactionRole", ReactionRoleSchema);
+export default model<ReactionRoleDocument, ReactionRoleModel>('ReactionRole', ReactionRoleSchema);

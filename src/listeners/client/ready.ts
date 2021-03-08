@@ -2,11 +2,11 @@ import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import Poll from '@/app/models/poll';
+import reactionrole from '@/app/models/reactionrole';
 import Logger from '@/app/structures/Logger';
 import type { ChannelSlug } from '@/app/types';
-import { createReactionCollector, noop, nullop } from '@/app/utils';
+import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
-import reactionrole from '@/app/models/reactionrole';
 
 class ReadyListener extends Listener {
   constructor() {
@@ -70,22 +70,18 @@ class ReadyListener extends Listener {
       }
     }
 
-    Logger.info("Loading reactions roles...");
+    Logger.info('Caching reactions roles...');
     const reactionRoles = await reactionrole.find();
     for (const element of reactionRoles) {
       const channel = this.client.guild.channels.cache.get(element.channelId);
       const textChannel = channel as TextChannel;
       textChannel.messages.fetch(element.messageId)
         .then((message) => {
-          const emoji = element.reaction;
-          const givenRole = this.client.guild.roles.cache.get(element.givenRoleId);
-          const permRole = this.client.guild.roles.cache.get(element.permissionRoleId);
-          createReactionCollector(message, emoji, givenRole, permRole);
+          this.client.cache.reactionRolesIds.push(message.id);
         })
-        .catch(async function (err) {
+        .catch(async () => {
           await reactionrole.findByIdAndDelete(element._id);
         });
-
     }
 
     this.client.checkValidity();

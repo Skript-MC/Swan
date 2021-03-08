@@ -1,14 +1,12 @@
-import { Command } from "discord-akairo";
-import { reactionrole as config } from '@/conf/commands/moderation';
-import { GuildMessage } from "@/app/types";
-import { ReactionRoleCommandArguments } from "@/app/types/CommandArguments";
+import { Command } from 'discord-akairo';
+import { MessageEmbed } from 'discord.js';
+import type { TextChannel } from 'discord.js';
 import reactionrole from '@/app/models/reactionrole';
-import { TextChannel } from "discord.js";
-import settings from "@/conf/settings";
-import { MessageEmbed } from "discord.js";
-import { createReactionCollector } from "@/app/utils";
-import messages from "@/conf/messages";
-import { MessageReaction, User } from "discord.js";
+import Logger from '@/app/structures/Logger';
+import type { GuildMessage } from '@/app/types';
+import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
+import { reactionrole as config } from '@/conf/commands/moderation';
+import settings from '@/conf/settings';
 
 class ReactionRoleCommand extends Command {
   constructor() {
@@ -22,8 +20,8 @@ class ReactionRoleCommand extends Command {
         id: 'givenRole',
         type: 'role',
         prompt: {
-          start: config.messages.prompt_start,
-          retry: config.messages.prompt_retry,
+          start: config.messages.promptStart,
+          retry: config.messages.promptRetry,
         },
       },
       {
@@ -36,46 +34,56 @@ class ReactionRoleCommand extends Command {
       },
       {
         id: 'destinationChannel',
-        type: 'textChannel'
+        type: 'textChannel',
       }],
     });
   }
 
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
-    const { givenRole: givenRole } = args;
+    const { givenRole } = args;
     if (givenRole == null) {
-      message.channel.send(config.messages.error.replace('{0}', 'Le role saisi n\'est pas valide !'));
+      message.channel.send(config.messages.error.replace('{0}', 'Le role saisi n\'est pas valide !'))
+        .catch((err) => {
+          Logger.error('An error has occured while trying to send message: ');
+          Logger.error(err);
+        });
       return;
     }
     let { reaction: emoji } = args;
-    let { permRole: permRole } = args;
+    const { permRole } = args;
     let { destinationChannel: targetedChannel } = args;
-    if (emoji == undefined || emoji.toLowerCase() === "--default")
+    if (!emoji || emoji.toLowerCase() === '--default')
       emoji = settings.emojis.yes;
-    if (targetedChannel == undefined)
+    if (!targetedChannel)
       targetedChannel = message.channel as TextChannel;
 
-    const embed = new MessageEmbed({
-      title: config.embed.title.replace('{0}', givenRole.name),
-      description: config.embed.content.replace('{0}', emoji).replace('{1}', '<@&' + givenRole.id + '>'),
-      color: config.embed.color,
-      footer: {
-        icon_url: config.embed.footer.image,
-        text: config.embed.footer.text,
-      }
-    });
+    const embed = new MessageEmbed()
+      .setTitle(config.embed.title.replace('{0}', givenRole.name))
+      .setDescription(config.embed.content.replace('{0}', emoji).replace('{1}', '<@&' + givenRole.id + '>'))
+      .setColor(config.embed.color)
+      .setFooter(config.embed.footer.text, config.embed.footer.icon);
+
     const sendMessage = await targetedChannel.send(embed);
-    sendMessage.react(emoji);
-    createReactionCollector(sendMessage, emoji, givenRole, permRole);
+    sendMessage.react(emoji)
+      .catch((err) => {
+        Logger.error('An error has occured while trying to send message: ');
+        Logger.error(err);
+      });
 
     const document = {
       messageId: sendMessage.id,
       channelId: sendMessage.channel.id,
       givenRoleId: givenRole.id,
       reaction: emoji,
-      permissionRoleId: permRole == null ? "" : permRole.id,
-    }
-    reactionrole.create(document);
+      permissionRoleId: permRole == null ? '' : permRole.id,
+    };
+
+    this.client.cache.reactionRolesIds.push(document.messageId);
+    await reactionrole.create(document)
+      .catch((err) => {
+        Logger.error('An error has occured while trying to save the reaction role to the database: ');
+        Logger.error(err);
+      });
   }
 }
 
