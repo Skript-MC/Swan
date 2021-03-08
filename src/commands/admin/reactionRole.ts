@@ -21,7 +21,7 @@ class ReactionRoleCommand extends Command {
       args: [{
         id: 'givenRole',
         type: Argument.validate('role',
-          ((message: GuildMessage, _phrase: string, value: Role) => typeof value !== 'undefined' && typeof message.guild.roles.cache.get(value.id) !== 'undefined')),
+          (message: GuildMessage, _phrase: string, value: Role) => typeof message.guild.roles.cache.get(value?.id) !== 'undefined'),
         prompt: {
           start: config.messages.promptStart,
           retry: config.messages.promptRetry,
