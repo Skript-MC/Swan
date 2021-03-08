@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
-import reactionRole from '@/app/models/reactionRole';
+import ReactionRole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
@@ -23,7 +23,7 @@ class MessageReactionRemove extends Listener {
     }
 
     private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
-        const document = await reactionRole.findOne({ messageId: message.id });
+        const document = await ReactionRole.findOne({ messageId: message.id });
         if (!document)
             return;
         const emoji = document.reaction;

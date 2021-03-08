@@ -1,8 +1,8 @@
-import { Command } from 'discord-akairo';
+import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { TextChannel } from 'discord.js';
+import type { Role, TextChannel } from 'discord.js';
 import pupa from 'pupa';
-import reactionRole from '@/app/models/reactionRole';
+import ReactionRole from '@/app/models/reactionRole';
 import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
@@ -19,7 +19,8 @@ class ReactionRoleCommand extends Command {
       channel: 'guild',
       args: [{
         id: 'givenRole',
-        type: 'role',
+        type: Argument.validate('role',
+        ((message: GuildMessage, _phrase: string, value: Role) => typeof value !== 'undefined' && typeof message.guild.roles.cache.get(value.id) !== 'undefined')),
         prompt: {
           start: config.messages.promptStart,
           retry: config.messages.promptRetry,
@@ -30,10 +31,6 @@ class ReactionRoleCommand extends Command {
         type: 'string',
       },
       {
-        id: 'permRole',
-        type: 'role',
-      },
-      {
         id: 'destinationChannel',
         type: 'textChannel',
       }],
@@ -42,12 +39,7 @@ class ReactionRoleCommand extends Command {
 
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
     const { givenRole } = args;
-    if (givenRole == null) {
-      message.channel.send(pupa(config.messages.error, { error: 'Le rôle saisi n\'est pas valide !' })).catch(noop);
-      return;
-    }
     let { reaction: emoji } = args;
-    const { permRole } = args;
     let { destinationChannel: targetedChannel } = args;
     if (!emoji || emoji.toLowerCase() === '--default')
       emoji = settings.emojis.yes;
@@ -68,11 +60,10 @@ class ReactionRoleCommand extends Command {
       channelId: sendMessage.channel.id,
       givenRoleId: givenRole.id,
       reaction: emoji,
-      permissionRoleId: permRole == null ? '' : permRole.id,
     };
 
     this.client.cache.reactionRolesIds.push(document.messageId);
-    await reactionRole.create(document).catch(noop);
+    await ReactionRole.create(document).catch(noop);
   }
 }
 

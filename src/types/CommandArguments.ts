@@ -102,7 +102,6 @@ export interface PurgeCommandArgument {
 export interface ReactionRoleCommandArguments {
   givenRole: Role;
   reaction: string;
-  permRole: Role;
   destinationChannel: TextChannel;
 }
 

@@ -671,7 +671,6 @@ export interface ReactionRoleBase {
   channelId: string;
   givenRoleId: string;
   reaction: string;
-  permissionRoleId: string;
 }
 
 /** Interface for the "ReactionRole"'s mongoose document */

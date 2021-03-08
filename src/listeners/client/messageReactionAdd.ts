@@ -2,7 +2,7 @@ import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import reactionRole from '@/app/models/reactionRole';
+import ReactionRole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';
@@ -124,7 +124,7 @@ class MessageReactionAddListener extends Listener {
   }
 
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
-    const document = await reactionRole.findOne({ messageId: message.id });
+    const document = await ReactionRole.findOne({ messageId: message.id });
     if (!document)
       return;
     const emoji = document.reaction;
@@ -137,14 +137,9 @@ class MessageReactionAddListener extends Listener {
       Logger.warn('The role with id ' + document.givenRoleId + ' does not exists !');
       return;
     }
-    const permRole = message.guild.roles.cache.get(document.permissionRoleId);
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
       Logger.warn('An error has occured while trying to get member with id ' + user.id);
-      return;
-    }
-    if (permRole && !member.roles.cache.get(permRole.id)) {
-      reaction.users.remove(member.id).catch(noop);
       return;
     }
     if (!member.roles.cache.get(givenRole.id))

@@ -30,14 +30,13 @@ export const reactionRole = {
 
     __**Flags:**__
     • \`--default\`: Garder l'émoji par défaut, celui défini dans la config.
-    • \`--noperm\`: Ne pas exiger de rôle pour s'auto attribuer un nouveau rôle.
     • \`--here\`: Demander au bot d'envoyer le message dans le salon où est saisie la commande.
 
     Pour supprimer un Reaction Role, il suffit de supprimer le message du bot correspondant !
 
     `,
-    usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du rôle nécessaire | --noperm] [ID du salon ou poster le message | --here]',
-    examples: ['reactionrole 818086544593518593 :tada: --noperm #annonces'],
+    usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du salon ou poster le message | --here]',
+    examples: ['reactionrole 818086544593518593 :tada: #annonces'],
     permissions: 'Staff',
   },
   embed: {

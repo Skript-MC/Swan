@@ -18,10 +18,6 @@ const ReactionRoleSchema = new Schema({
         type: String,
         required: false,
     },
-    permissionRoleId: {
-        type: String,
-        required: false,
-    },
 });
 
 export default model<ReactionRoleDocument, ReactionRoleModel>('ReactionRole', ReactionRoleSchema);
