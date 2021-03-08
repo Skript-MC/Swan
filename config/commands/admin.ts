@@ -48,7 +48,7 @@ export const reactionRole = {
     },
   },
   messages: {
-    promptStart: 'Merci de saisir le rôle à donner. (Mentionner le rôle ou donner l\'ID.)',
-    promptRetry: 'Erreur ! Role invalide. Merci de réessayer !',
+    promptStart: 'Saisit le rôle à donner. (mentionne le rôle ou donne l\'ID).',
+    promptRetry: 'Erreur ! Rôle invalide. Réessaye en mentionnant le rôle ou en donnant un ID :',
   },
 };
