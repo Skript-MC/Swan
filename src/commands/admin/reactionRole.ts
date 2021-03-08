@@ -1,7 +1,7 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
-import reactionrole from '@/app/models/reactionRole';
+import reactionRole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
@@ -79,7 +79,7 @@ class ReactionRoleCommand extends Command {
     };
 
     this.client.cache.reactionRolesIds.push(document.messageId);
-    await reactionrole.create(document)
+    await reactionRole.create(document)
       .catch((err) => {
         Logger.error('An error has occured while trying to save the reaction role to the database: ');
         Logger.error(err);

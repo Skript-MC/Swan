@@ -2,7 +2,7 @@ import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import reactionrole from '@/app/models/reactionRole';
+import reactionRole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';
@@ -124,20 +124,20 @@ class MessageReactionAddListener extends Listener {
   }
 
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
-    const reactionRole = await reactionrole.findOne({ messageId: message.id });
-    if (!reactionRole)
+    const reactionRoleElement = await reactionRole.findOne({ messageId: message.id });
+    if (!reactionRoleElement)
       return;
-    const emoji = reactionRole.reaction;
+    const emoji = reactionRoleElement.reaction;
     if (reaction.emoji.toString() !== emoji) {
       reaction.remove().catch(noop);
       return;
     }
-    const givenRole = message.guild.roles.cache.get(reactionRole.givenRoleId);
+    const givenRole = message.guild.roles.cache.get(reactionRoleElement.givenRoleId);
     if (!givenRole) {
-      Logger.warn('The role with id ' + reactionRole.givenRoleId + ' does not exists !');
+      Logger.warn('The role with id ' + reactionRoleElement.givenRoleId + ' does not exists !');
       return;
     }
-    const permRole = message.guild.roles.cache.get(reactionRole.permissionRoleId);
+    const permRole = message.guild.roles.cache.get(reactionRoleElement.permissionRoleId);
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
       Logger.warn('An error has occured while trying to get member with id ' + user.id);
