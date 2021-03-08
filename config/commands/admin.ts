@@ -29,7 +29,7 @@ export const reactionRole = {
     Les membres pourront s'auto-attribuer un rôle, en ajoutant une réaction à un message de Swan.
 
     __**Flags:**__
-    • \`--default\`: Garder l'émoji par défaut, celui défini dans la config.
+    • \`--default\`: Garder l'émoji par défaut, celui défini dans la configuration.
     • \`--here\`: Demander au bot d'envoyer le message dans le salon où est saisie la commande.
 
     Pour supprimer un Reaction Role, il suffit de supprimer le message du bot correspondant !
