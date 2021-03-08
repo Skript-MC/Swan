@@ -658,9 +658,9 @@ export type SanctionModel = Model<SanctionDocument>;
 
 // #endregion
 
-/* **************************** */
+/* ***************************** */
 /*  ReactionRole Database Types  */
-/* **************************** */
+/* ***************************** */
 
 // #region ReactionRole Database Types (VS Code)
 // region ReactionRole Database Types (JetBrains)
