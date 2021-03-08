@@ -54,9 +54,10 @@ class ReactionRoleCommand extends Command {
 
     const sendMessage = await destinationChannel.send(embed);
     try {
-      void sendMessage.react(reaction);
+      await sendMessage.react(reaction);
     } catch {
       message.channel.send(messages.global.oops).catch(noop);
+      return;
     }
 
     const document = {
