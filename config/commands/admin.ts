@@ -26,7 +26,7 @@ export const reactionRole = {
   details: {
     name: 'Reaction Roles',
     content: `Permet de créer un nouvel espace de **ReactionRole**.
-    Les membres pourront s'auto attribuer un rôle, en ajoutant une réaction à un message du bot.
+    Les membres pourront s'auto-attribuer un rôle, en ajoutant une réaction à un message de Swan.
 
     __**Flags:**__
     • \`--default\`: Garder l'émoji par défaut, celui défini dans la config.
