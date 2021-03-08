@@ -134,7 +134,7 @@ class MessageReactionAddListener extends Listener {
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
     if (!givenRole) {
-      Logger.warn('The role with id ' + document.givenRoleId + ' does not exists !');
+      Logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
       return;
     }
     const member = message.guild.members.cache.get(user.id);
