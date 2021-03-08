@@ -38,7 +38,7 @@ class MessageReactionRemove extends Listener {
         }
         const member = message.guild.members.cache.get(user.id);
         if (!member) {
-            Logger.warn('An error has occured while trying to get member with id ' + user.id);
+            Logger.warn(`An error has occured while trying to get member with id ${user.id}`);
             return;
         }
         if (member.roles.cache.get(givenRole.id))
