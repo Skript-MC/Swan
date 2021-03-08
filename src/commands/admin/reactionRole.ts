@@ -1,14 +1,13 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
+import pupa from 'pupa';
 import reactionRole from '@/app/models/reactionRole';
-import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
+import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import settings from '@/conf/settings';
-import pupa from 'pupa';
-import { noop } from '@/app/utils';
 
 class ReactionRoleCommand extends Command {
   constructor() {
@@ -44,7 +43,7 @@ class ReactionRoleCommand extends Command {
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
     const { givenRole } = args;
     if (givenRole == null) {
-      message.channel.send(pupa(config.messages.error, { error: "Le role saisi n\'est pas valide !" })).catch(noop);
+      message.channel.send(pupa(config.messages.error, { error: 'Le role saisi n\'est pas valide !' })).catch(noop);
       return;
     }
     let { reaction: emoji } = args;
@@ -57,7 +56,7 @@ class ReactionRoleCommand extends Command {
 
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
-      .setDescription(pupa(config.embed.content, {emoji, givenRole}))
+      .setDescription(pupa(config.embed.content, { emoji, givenRole }))
       .setColor(settings.colors.default)
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 

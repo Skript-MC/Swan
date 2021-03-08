@@ -1,5 +1,4 @@
 import { hasActiveMemberRole, hasStaffRole, permissions } from '@/conf/configUtils';
-import { stripIndent } from 'common-tags';
 
 export const refresh = {
   settings: {
