@@ -264,7 +264,7 @@ class SwanClient extends AkairoClient {
     // Cache all reaction roles' messages' ids.
     const reactionRoles = await reactionRole.find().catch(nullop);
     if (reactionRoles)
-      this.cache.reactionRolesIds.push(...reactionRoles.map(reactionRoleElement => reactionRoleElement.messageId));
+      this.cache.reactionRolesIds.push(...reactionRoles.map(document => document.messageId));
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {

@@ -23,17 +23,17 @@ class MessageReactionRemove extends Listener {
     }
 
     private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
-        const reactionRoleElement = await reactionRole.findOne({ messageId: message.id });
-        if (!reactionRoleElement)
+        const document = await reactionRole.findOne({ messageId: message.id });
+        if (!document)
             return;
-        const emoji = reactionRoleElement.reaction;
+        const emoji = document.reaction;
         if (reaction.emoji.toString() !== emoji) {
             reaction.remove().catch(noop);
             return;
         }
-        const givenRole = message.guild.roles.cache.get(reactionRoleElement.givenRoleId);
+        const givenRole = message.guild.roles.cache.get(document.givenRoleId);
         if (!givenRole) {
-            Logger.warn('The role with id ' + reactionRoleElement.givenRoleId + ' does not exists !');
+            Logger.warn('The role with id ' + document.givenRoleId + ' does not exists !');
             return;
         }
         const member = message.guild.members.cache.get(user.id);

@@ -1,4 +1,5 @@
 import { hasActiveMemberRole, hasStaffRole, permissions } from '@/conf/configUtils';
+import { stripIndent } from 'common-tags';
 
 export const refresh = {
   settings: {
@@ -20,27 +21,36 @@ export const refresh = {
 export const reactionRole = {
   settings: {
     aliases: ['reactionrole', 'rr'],
-    clientPermissions: permissions.SEND_MESSAGES,
+    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
     userPermissions: hasStaffRole,
   },
   details: {
     name: 'Reaction Roles',
-    content: 'Permet de créer un nouvel espace de ReactionRole.',
+    content: `Permet de créer un nouvel espace de **ReactionRole**.
+    Les membres pourront s'auto attribuer un role, en ajoutant une réaction à un message du bot.
+
+    __**Flags:**__
+    • \`--default\`: Garder l'émoji par défaut, celui défini dans la config.
+    • \`--noperm\`: Ne pas exiger de role pour s'auto attribuer un nouveau role.
+    • \`--here\`: Demander au bot d'envoyer le message dans le salon où est saisie la commande.
+
+    Pour supprimer un Reaction Role, il suffit de supprimer le message du bot correspondant !
+
+    `,
     usage: 'reactionrole <@mention du role | ID du role> [Émoji pour obtenir le role | --default] [ID du role nécessaire | --noperm] [ID du salon ou poster le message | --here]',
     examples: ['reactionrole 818086544593518593 :tada: --noperm #annonces'],
     permissions: 'Staff',
   },
   embed: {
-    title: 'Obtenir le role {0}',
-    content: 'Cliquez sur la réaction {0} pour obtenir le role {1}',
-    color: 4_886_754,
+    title: 'Obtenir le role {givenRole.name}',
+    content: 'Cliquez sur la réaction {emoji} pour obtenir le role {givenRole}',
     footer: {
       icon: 'https://skript-mc.fr/assets/images/favicon.png',
       text: 'Skript-MC',
     },
   },
   messages: {
-    error: 'Une erreur est survenue lors de l\'ajout de ce ReactionRole. Erreur: {0}',
+    error: 'Une erreur est survenue lors de l\'ajout de ce ReactionRole. Erreur: {error}',
     promptStart: 'Merci de saisir le role à donner. (Mentionner le role ou donner l\'ID.)',
     promptRetry: 'Erreur ! Role invalide. Merci de réessayer !',
   },

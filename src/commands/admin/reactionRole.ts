@@ -7,6 +7,8 @@ import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
 import { reactionRole as config } from '@/conf/commands/admin';
 import settings from '@/conf/settings';
+import pupa from 'pupa';
+import { noop } from '@/app/utils';
 
 class ReactionRoleCommand extends Command {
   constructor() {
@@ -42,11 +44,7 @@ class ReactionRoleCommand extends Command {
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
     const { givenRole } = args;
     if (givenRole == null) {
-      message.channel.send(config.messages.error.replace('{0}', 'Le role saisi n\'est pas valide !'))
-        .catch((err) => {
-          Logger.error('An error has occured while trying to send message: ');
-          Logger.error(err);
-        });
+      message.channel.send(pupa(config.messages.error, { error: "Le role saisi n\'est pas valide !" })).catch(noop);
       return;
     }
     let { reaction: emoji } = args;
@@ -58,17 +56,13 @@ class ReactionRoleCommand extends Command {
       targetedChannel = message.channel as TextChannel;
 
     const embed = new MessageEmbed()
-      .setTitle(config.embed.title.replace('{0}', givenRole.name))
-      .setDescription(config.embed.content.replace('{0}', emoji).replace('{1}', '<@&' + givenRole.id + '>'))
-      .setColor(config.embed.color)
+      .setTitle(pupa(config.embed.title, { givenRole }))
+      .setDescription(pupa(config.embed.content, {emoji, givenRole}))
+      .setColor(settings.colors.default)
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 
     const sendMessage = await targetedChannel.send(embed);
-    sendMessage.react(emoji)
-      .catch((err) => {
-        Logger.error('An error has occured while trying to send message: ');
-        Logger.error(err);
-      });
+    sendMessage.react(emoji).catch(noop);
 
     const document = {
       messageId: sendMessage.id,
@@ -79,11 +73,7 @@ class ReactionRoleCommand extends Command {
     };
 
     this.client.cache.reactionRolesIds.push(document.messageId);
-    await reactionRole.create(document)
-      .catch((err) => {
-        Logger.error('An error has occured while trying to save the reaction role to the database: ');
-        Logger.error(err);
-      });
+    await reactionRole.create(document).catch(noop);
   }
 }
 
