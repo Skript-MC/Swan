@@ -32,7 +32,7 @@ export const reactionRole = {
     • \`--default\`: Garder l'émoji par défaut, celui défini dans la configuration.
     • \`--here\`: Demander au bot d'envoyer le message dans le salon où est saisie la commande.
 
-    Pour supprimer un Reaction Role, il suffit de supprimer le message du bot correspondant !
+    Pour supprimer un Reaction Role, il suffit de supprimer le message correspondant !
 
     `,
     usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du salon ou poster le message | --here]',
