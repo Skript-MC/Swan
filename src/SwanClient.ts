@@ -159,7 +159,7 @@ class SwanClient extends AkairoClient {
     Logger.info('Loading & caching databases...');
     void this._loadPolls();
     void this._loadCommandStats();
-    void this._loadreactionRoles();
+    void this._loadReactionRoles();
 
     Logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
@@ -260,7 +260,7 @@ class SwanClient extends AkairoClient {
     }
   }
 
-  private async _loadreactionRoles(): Promise<void> {
+  private async _loadReactionRoles(): Promise<void> {
     // Cache all reaction roles' messages' ids.
     const reactionRoles = await ReactionRole.find().catch(nullop);
     if (reactionRoles)
