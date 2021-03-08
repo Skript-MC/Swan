@@ -48,7 +48,6 @@ export const reactionRole = {
     },
   },
   messages: {
-    error: 'Une erreur est survenue lors de l\'ajout de ce ReactionRole. Erreur: {error}',
     promptStart: 'Merci de saisir le rôle à donner. (Mentionner le rôle ou donner l\'ID.)',
     promptRetry: 'Erreur ! Role invalide. Merci de réessayer !',
   },
