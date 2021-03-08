@@ -43,7 +43,7 @@ class ReactionRoleCommand extends Command {
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
     const { givenRole } = args;
     if (givenRole == null) {
-      message.channel.send(pupa(config.messages.error, { error: 'Le role saisi n\'est pas valide !' })).catch(noop);
+      message.channel.send(pupa(config.messages.error, { error: 'Le rôle saisi n\'est pas valide !' })).catch(noop);
       return;
     }
     let { reaction: emoji } = args;

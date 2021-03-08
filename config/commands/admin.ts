@@ -26,23 +26,23 @@ export const reactionRole = {
   details: {
     name: 'Reaction Roles',
     content: `Permet de créer un nouvel espace de **ReactionRole**.
-    Les membres pourront s'auto attribuer un role, en ajoutant une réaction à un message du bot.
+    Les membres pourront s'auto attribuer un rôle, en ajoutant une réaction à un message du bot.
 
     __**Flags:**__
     • \`--default\`: Garder l'émoji par défaut, celui défini dans la config.
-    • \`--noperm\`: Ne pas exiger de role pour s'auto attribuer un nouveau role.
+    • \`--noperm\`: Ne pas exiger de rôle pour s'auto attribuer un nouveau rôle.
     • \`--here\`: Demander au bot d'envoyer le message dans le salon où est saisie la commande.
 
     Pour supprimer un Reaction Role, il suffit de supprimer le message du bot correspondant !
 
     `,
-    usage: 'reactionrole <@mention du role | ID du role> [Émoji pour obtenir le role | --default] [ID du role nécessaire | --noperm] [ID du salon ou poster le message | --here]',
+    usage: 'reactionrole <@mention du rôle | ID du rôle> [Émoji pour obtenir le rôle | --default] [ID du rôle nécessaire | --noperm] [ID du salon ou poster le message | --here]',
     examples: ['reactionrole 818086544593518593 :tada: --noperm #annonces'],
     permissions: 'Staff',
   },
   embed: {
-    title: 'Obtenir le role {givenRole.name}',
-    content: 'Cliquez sur la réaction {emoji} pour obtenir le role {givenRole}',
+    title: 'Obtenir le rôle {givenRole.name}',
+    content: 'Cliquez sur la réaction {emoji} pour obtenir le rôle {givenRole}',
     footer: {
       icon: 'https://skript-mc.fr/assets/images/favicon.png',
       text: 'Skript-MC',
@@ -50,7 +50,7 @@ export const reactionRole = {
   },
   messages: {
     error: 'Une erreur est survenue lors de l\'ajout de ce ReactionRole. Erreur: {error}',
-    promptStart: 'Merci de saisir le role à donner. (Mentionner le role ou donner l\'ID.)',
+    promptStart: 'Merci de saisir le rôle à donner. (Mentionner le rôle ou donner l\'ID.)',
     promptRetry: 'Erreur ! Role invalide. Merci de réessayer !',
   },
 };
