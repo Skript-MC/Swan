@@ -2,7 +2,7 @@ import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import Poll from '@/app/models/poll';
-import reactionrole from '@/app/models/reactionrole';
+import reactionrole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { ChannelSlug } from '@/app/types';
 import { noop, nullop } from '@/app/utils';

@@ -484,7 +484,7 @@ export interface CommandStatBase {
 }
 
 /** Interface for the "CommandStat"'s mongoose document */
-export interface CommandStatDocument extends CommandStatBase, Document { }
+export interface CommandStatDocument extends CommandStatBase, Document {}
 
 /** Interface for the "CommandStat"'s mongoose model */
 export type CommandStatModel = Model<CommandStatDocument>;
@@ -506,7 +506,7 @@ export interface SwanModuleBase {
 }
 
 /** Interface for the "Module"'s mongoose document */
-export interface SwanModuleDocument extends SwanModuleBase, Document { }
+export interface SwanModuleDocument extends SwanModuleBase, Document {}
 
 /** Interface for the "Module"'s mongoose model */
 export type SwanModuleModel = Model<SwanModuleDocument>;
@@ -543,7 +543,7 @@ export interface PollBase {
 }
 
 /** Interface for the "Poll"'s mongoose document */
-export interface PollDocument extends PollBase, Document { }
+export interface PollDocument extends PollBase, Document {}
 
 /** Interface for the "Poll"'s mongoose model */
 export type PollModel = Model<PollDocument>;
@@ -566,7 +566,7 @@ export interface MessageBase {
 }
 
 /** Interface for the "Message"'s mongoose document */
-export interface MessageDocument extends MessageBase, Document { }
+export interface MessageDocument extends MessageBase, Document {}
 
 /** Interface for the "Message"'s mongoose model */
 export type MessageModel = Model<MessageDocument>;
@@ -589,7 +589,7 @@ export interface ConvictedUserBase {
 }
 
 /** Interface for the "ConvictedUser"'s mongoose document */
-export interface ConvictedUserDocument extends ConvictedUserBase, Document { }
+export interface ConvictedUserDocument extends ConvictedUserBase, Document {}
 
 /** Interface for the "ConvictedUser"'s mongoose model */
 export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
@@ -675,7 +675,7 @@ export interface ReactionRoleBase {
 }
 
 /** Interface for the "ReactionRole"'s mongoose document */
-export interface ReactionRoleDocument extends ReactionRoleBase, Document { }
+export interface ReactionRoleDocument extends ReactionRoleBase, Document {}
 
 /** Interface for the "ReactionRole"'s mongoose model */
 export type ReactionRoleModel = Model<ReactionRoleDocument>;

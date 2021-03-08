@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
-import reactionrole from '@/app/models/reactionrole';
+import reactionrole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';

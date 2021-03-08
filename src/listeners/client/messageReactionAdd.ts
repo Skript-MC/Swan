@@ -2,7 +2,7 @@ import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import reactionrole from '@/app/models/reactionrole';
+import reactionrole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';

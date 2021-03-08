@@ -1,11 +1,11 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
-import reactionrole from '@/app/models/reactionrole';
+import reactionrole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
-import { reactionrole as config } from '@/conf/commands/moderation';
+import { reactionRole as config } from '@/conf/commands/admin';
 import settings from '@/conf/settings';
 
 class ReactionRoleCommand extends Command {

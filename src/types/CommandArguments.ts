@@ -43,7 +43,7 @@ export interface ErrorDetailsCommandArguments {
   error: string;
 }
 
-export interface DiscoverCommandArguments { }
+export interface DiscoverCommandArguments {}
 
 export interface DocumentationCommandArguments {
   query: string;
@@ -59,9 +59,9 @@ export interface HistoryCommandArgument {
   member: GuildMember | User | string;
 }
 
-export interface IdeaCommandArguments { }
+export interface IdeaCommandArguments {}
 
-export interface JokeCommandArguments { }
+export interface JokeCommandArguments {}
 
 export interface KickCommandArgument {
   member: GuildMember; reason: string;
@@ -84,7 +84,7 @@ export interface MuteCommandArgument {
   member: GuildMember; duration: number; reason: string;
 }
 
-export interface PingCommandArguments { }
+export interface PingCommandArguments {}
 
 export interface PollCommandArguments {
   duration: number;
@@ -98,7 +98,14 @@ export interface PurgeCommandArgument {
   force: boolean;
 }
 
-export interface RefreshCommandArgument { }
+export interface ReactionRoleCommandArguments {
+  givenRole: Role;
+  reaction: string;
+  permRole: Role;
+  destinationChannel: TextChannel;
+}
+
+export interface RefreshCommandArgument {}
 
 export interface RemoveWarnCommandArgument {
   member: GuildMember;
@@ -113,7 +120,7 @@ export interface SkriptInfoCommandArguments {
   display: 'all' | 'dl' | 'download' | 'link' | 'links';
 }
 
-export interface StatisticsCommandArguments { }
+export interface StatisticsCommandArguments {}
 
 export interface UnbanCommandArgument {
   member: GuildMember | User;
@@ -132,11 +139,4 @@ export interface UserInfoCommandArguments {
 export interface WarnCommandArgument {
   member: GuildMember;
   reason: string;
-}
-
-export interface ReactionRoleCommandArguments {
-  givenRole: Role;
-  reaction: string;
-  permRole: Role;
-  destinationChannel: TextChannel;
 }

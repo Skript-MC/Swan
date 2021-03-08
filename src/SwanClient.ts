@@ -15,7 +15,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
 import Poll from './models/poll';
-import reactionrole from './models/reactionrole';
+import reactionrole from './models/reactionRole';
 import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
