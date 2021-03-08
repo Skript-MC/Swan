@@ -7,6 +7,7 @@ import type { GuildMessage } from '@/app/types';
 import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 class ReactionRoleCommand extends Command {
@@ -52,7 +53,11 @@ class ReactionRoleCommand extends Command {
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 
     const sendMessage = await destinationChannel.send(embed);
-    sendMessage.react(reaction).catch(noop);
+    try {
+      void sendMessage.react(reaction);
+    } catch {
+      message.channel.send(messages.global.oops).catch(noop);
+    }
 
     const document = {
       messageId: sendMessage.id,
