@@ -41,7 +41,7 @@ export const reactionRole = {
   },
   embed: {
     title: 'Obtenir le rôle {givenRole.name}',
-    content: 'Cliquez sur la réaction {emoji} pour obtenir le rôle {givenRole}',
+    content: 'Cliquez sur la réaction {reaction} pour obtenir le rôle {givenRole}',
     footer: {
       icon: 'https://skript-mc.fr/assets/images/favicon.png',
       text: 'Skript-MC',

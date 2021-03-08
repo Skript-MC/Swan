@@ -20,7 +20,7 @@ class ReactionRoleCommand extends Command {
       args: [{
         id: 'givenRole',
         type: Argument.validate('role',
-        ((message: GuildMessage, _phrase: string, value: Role) => typeof value !== 'undefined' && typeof message.guild.roles.cache.get(value.id) !== 'undefined')),
+          ((message: GuildMessage, _phrase: string, value: Role) => typeof value !== 'undefined' && typeof message.guild.roles.cache.get(value.id) !== 'undefined')),
         prompt: {
           start: config.messages.promptStart,
           retry: config.messages.promptRetry,
@@ -39,27 +39,26 @@ class ReactionRoleCommand extends Command {
 
   public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
     const { givenRole } = args;
-    let { reaction: emoji } = args;
-    let { destinationChannel: targetedChannel } = args;
-    if (!emoji || emoji.toLowerCase() === '--default')
-      emoji = settings.emojis.yes;
-    if (!targetedChannel)
-      targetedChannel = message.channel as TextChannel;
+    let { reaction, destinationChannel } = args;
+    if (!reaction || reaction.toLowerCase() === '--default')
+      reaction = settings.emojis.yes;
+    if (!destinationChannel)
+      destinationChannel = message.channel as TextChannel;
 
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
-      .setDescription(pupa(config.embed.content, { emoji, givenRole }))
+      .setDescription(pupa(config.embed.content, { reaction, givenRole }))
       .setColor(settings.colors.default)
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 
-    const sendMessage = await targetedChannel.send(embed);
-    sendMessage.react(emoji).catch(noop);
+    const sendMessage = await destinationChannel.send(embed);
+    sendMessage.react(reaction).catch(noop);
 
     const document = {
       messageId: sendMessage.id,
       channelId: sendMessage.channel.id,
       givenRoleId: givenRole.id,
-      reaction: emoji,
+      reaction,
     };
 
     this.client.cache.reactionRolesIds.push(document.messageId);
