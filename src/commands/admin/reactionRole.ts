@@ -29,7 +29,7 @@ class ReactionRoleCommand extends Command {
       },
       {
         id: 'reaction',
-        type: 'string',
+        type: 'emoji',
         default: settings.emojis.yes,
       },
       {
@@ -44,20 +44,15 @@ class ReactionRoleCommand extends Command {
     const { givenRole } = args;
     const { reaction, destinationChannel } = args;
 
-    const splitted = reaction.split(':');
-    const emojiId = splitted[splitted.length - 1].split('>')[0];
-    const isEmojiSet = this.client.emojis.cache.get(emojiId);
-    const emoji = isEmojiSet ? reaction : settings.emojis.yes;
-
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
-      .setDescription(pupa(config.embed.content, { emoji, givenRole }))
+      .setDescription(pupa(config.embed.content, { reaction, givenRole }))
       .setColor(settings.colors.default)
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 
     const sendMessage = await destinationChannel.send(embed);
     try {
-      await sendMessage.react(emoji);
+      await sendMessage.react(reaction);
     } catch {
       message.channel.send(messages.global.oops).catch(noop);
       return;
