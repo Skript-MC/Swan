@@ -1,6 +1,7 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Role, TextChannel } from 'discord.js';
+import * as nodeEmoji from 'node-emoji';
 import pupa from 'pupa';
 import ReactionRole from '@/app/models/reactionRole';
 import type { GuildMessage } from '@/app/types';
@@ -9,7 +10,6 @@ import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import * as nodeEmoji from 'node-emoji';
 
 class ReactionRoleCommand extends Command {
   constructor() {
