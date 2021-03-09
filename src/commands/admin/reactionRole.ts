@@ -9,6 +9,7 @@ import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
+import * as nodeEmoji from 'node-emoji';
 
 class ReactionRoleCommand extends Command {
   constructor() {
@@ -44,7 +45,8 @@ class ReactionRoleCommand extends Command {
     const { givenRole } = args;
     const { reaction, destinationChannel } = args;
 
-    const emoji = reaction === settings.emojis.yes ? message.guild.emojis.cache.get(reaction) : reaction;
+    const emoji = (reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
+      ? message.guild.emojis.cache.get(reaction) : reaction;
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
       .setDescription(pupa(config.embed.content, { reaction: emoji, givenRole }))
