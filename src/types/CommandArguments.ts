@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { Command } from 'discord-akairo';
 import type {
-  Emoji,
   GuildMember,
   Message,
   Role,
@@ -102,7 +101,7 @@ export interface PurgeCommandArgument {
 
 export interface ReactionRoleCommandArguments {
   givenRole: Role;
-  reaction: Emoji;
+  reaction: string;
   destinationChannel: TextChannel;
 }
 

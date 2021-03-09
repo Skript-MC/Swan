@@ -29,7 +29,7 @@ class ReactionRoleCommand extends Command {
       },
       {
         id: 'reaction',
-        type: 'emoji',
+        type: 'emote',
         default: settings.emojis.yes,
       },
       {
@@ -44,9 +44,10 @@ class ReactionRoleCommand extends Command {
     const { givenRole } = args;
     const { reaction, destinationChannel } = args;
 
+    const emoji = reaction === settings.emojis.yes ? message.guild.emojis.cache.get(reaction) : reaction;
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
-      .setDescription(pupa(config.embed.content, { reaction, givenRole }))
+      .setDescription(pupa(config.embed.content, { reaction: emoji, givenRole }))
       .setColor(settings.colors.default)
       .setFooter(config.embed.footer.text, config.embed.footer.icon);
 
