@@ -46,7 +46,9 @@ class ReactionRoleCommand extends Command {
     const { reaction, destinationChannel } = args;
 
     const emoji = (reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
-      ? message.guild.emojis.cache.get(reaction) : reaction;
+      ? message.guild.emojis.cache.get(reaction)
+      : reaction;
+
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
       .setDescription(pupa(config.embed.content, { reaction: emoji, givenRole }))
