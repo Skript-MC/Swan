@@ -1,6 +1,6 @@
 import * as nodeEmoji from 'node-emoji';
+import type { GuildMessage } from '@/app/types';
 import settings from '@/conf/settings';
-import type { GuildMessage } from '../types';
 
 export default function emote(message: GuildMessage, phrase: string): string | null {
   if (typeof phrase === 'undefined' || phrase === '')
