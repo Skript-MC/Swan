@@ -11,6 +11,7 @@ import { Intents } from 'discord.js';
 import type { PermissionString } from 'discord.js';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
+import sharedConfig from '@/app/models/sharedConfig';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
@@ -22,6 +23,7 @@ import SwanCacheManager from './structures/SwanCacheManager';
 import TaskHandler from './structures/TaskHandler';
 import type {
   CommandStatDocument,
+  SharedConfigDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxAndAddon,
   SkriptMcDocumentationSyntaxResponse,
@@ -158,6 +160,7 @@ class SwanClient extends AkairoClient {
     Logger.info('Loading & caching databases...');
     void this._loadPolls();
     void this._loadCommandStats();
+    void this._loadSharedConfigs();
 
     Logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
@@ -256,6 +259,12 @@ class SwanClient extends AkairoClient {
       Logger.error('Could not load some documents:');
       Logger.error((unknownError as Error).stack);
     }
+  }
+
+  private async _loadSharedConfigs(): Promise<void> {
+    // Load logged channels
+    const configDocument: SharedConfigDocument = await sharedConfig.findOne({ name: 'logged-channels' }).catch(nullop);
+    this.cache.savedChannelsIds = configDocument?.value as string[];
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {

@@ -1,8 +1,10 @@
 import type { AkairoHandler } from 'discord-akairo';
 import { Command } from 'discord-akairo';
+import sharedConfig from '@/app/models/sharedConfig';
 import SwanModule from '@/app/models/swanModule';
-import type { GuildMessage } from '@/app/types';
+import type { GuildMessage, SharedConfigDocument } from '@/app/types';
 import type { RefreshCommandArgument } from '@/app/types/CommandArguments';
+import { nullop } from '@/app/utils';
 import { refresh as config } from '@/conf/commands/admin';
 
 class RefreshCommand extends Command {
@@ -17,8 +19,8 @@ class RefreshCommand extends Command {
   }
 
   public async exec(message: GuildMessage, _args: RefreshCommandArgument): Promise<void> {
+    // Refresh modules
     const modules = await SwanModule.find();
-
     for (const module of modules) {
       const handler: AkairoHandler = this.client[module.handler];
       const cachedModule = this.client.cache.modules.find(mod => mod.id === module.name);
@@ -34,6 +36,10 @@ class RefreshCommand extends Command {
           handler.remove(module.name);
       }
     }
+
+    // Refresh saved channels
+    const configDocument: SharedConfigDocument = await sharedConfig.findOne({ name: 'logged-channels' }).catch(nullop);
+    this.client.cache.savedChannelsIds = configDocument?.value as string[];
 
     await message.channel.send(config.messages.success);
   }
