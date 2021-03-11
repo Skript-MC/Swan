@@ -263,7 +263,12 @@ class SwanClient extends AkairoClient {
 
   private async _loadSharedConfigs(): Promise<void> {
     // Load logged channels
-    const configDocument: SharedConfigDocument = await sharedConfig.findOne({ name: 'logged-channels' }).catch(nullop);
+    const configDocument: SharedConfigDocument = await sharedConfig.findOneOrCreate({
+      name: 'logged-channels',
+    }, {
+      name: 'logged-channels',
+      value: [],
+    }).catch(nullop);
     this.cache.savedChannelsIds = configDocument?.value as string[];
   }
 

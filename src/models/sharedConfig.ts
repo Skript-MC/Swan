@@ -1,5 +1,6 @@
+import type { FilterQuery } from 'mongoose';
 import { model, Schema } from 'mongoose';
-import type { SharedConfigDocument, SharedConfigModel } from '@/app/types';
+import type { SharedConfigBase, SharedConfigDocument, SharedConfigModel } from '@/app/types';
 
 const SharedConfigSchema = new Schema<SharedConfigDocument, SharedConfigModel>({
   name: {
@@ -12,5 +13,14 @@ const SharedConfigSchema = new Schema<SharedConfigDocument, SharedConfigModel>({
     required: true,
   },
 });
+
+SharedConfigSchema.statics.findOneOrCreate = async function (
+  this: SharedConfigModel,
+  condition: FilterQuery<SharedConfigDocument>,
+  doc: SharedConfigBase,
+): Promise<SharedConfigDocument> {
+  const result = await this.findOne(condition);
+  return result || this.create(doc);
+};
 
 export default model<SharedConfigDocument, SharedConfigModel>('SharedConfig', SharedConfigSchema);
