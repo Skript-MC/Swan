@@ -125,8 +125,10 @@ class MessageReactionAddListener extends Listener {
 
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
     const document = await ReactionRole.findOne({ messageId: message.id });
-    if (!document)
+    if (!document) {
+      this.client.cache.reactionRolesIds = this.client.cache.reactionRolesIds.filter(element => element !== message.id);
       return;
+    }
     const emoji = document.reaction;
     if (reaction.emoji.toString() !== emoji) {
       reaction.remove().catch(noop);
