@@ -40,7 +40,7 @@ class ModerationData {
   /**
    * Create moderation data from a message or from individual informations.
    *
-   * @param {Message | TextChannel | AkairoClient} messageOrChannelOrClient
+   * @param {Message | TextChannel | AkairoClient} argument
    * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...).
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.

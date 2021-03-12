@@ -70,15 +70,15 @@ class CodeCommand extends Command {
         }
       }
 
-      // Send the message by splitting the code into blocks that are 2000 caracters long max.
+      // Send the message by splitting the code into blocks that are 2000 characters long max.
       const titleMessage = await message.channel.send(pupa(config.messages.title, { message }));
-      const splittedCode = splitText(code, 1980);
+      const splitCode = splitText(code, 1980);
       const codeBlocks: Message[] = [];
 
       const language = args.language ?? 'applescript';
 
-      for (let i = 0; i < splittedCode.length; i++)
-        codeBlocks.push(await message.channel.send(splittedCode[i], { code: language }));
+      for (let i = 0; i < splitCode.length; i++)
+        codeBlocks.push(await message.channel.send(splitCode[i], { code: language }));
 
       const lastMessage = codeBlocks[codeBlocks.length - 1];
       await lastMessage?.react(settings.emojis.remove).catch(noop);

@@ -40,7 +40,7 @@ class UnmuteAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while revoking a mute in the Database')
+          .setMessage('An error occurred while revoking a mute in the Database')
           .addDetail('Unmute ID', this.data.sanctionId)
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)
@@ -59,7 +59,7 @@ class UnmuteAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while fetching unmute a member (removing roles)')
+          .setMessage('An error occurred while fetching unmute a member (removing roles)')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)

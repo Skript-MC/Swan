@@ -1,14 +1,14 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { stripIndent } from 'common-tags';
-import { Permissions, TextChannel } from 'discord.js';
 import type { GuildChannel, GuildMember, NewsChannel } from 'discord.js';
+import { Permissions, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import Logger from '@/app/structures/Logger';
-import { SanctionTypes } from '@/app/types';
 import type { BanChannelMessage } from '@/app/types';
+import { SanctionTypes } from '@/app/types';
 import { nullop, prunePseudo } from '@/app/utils';
 import settings from '@/conf/settings';
 import type ModerationData from './ModerationData';
@@ -23,7 +23,7 @@ export default {
       return data.guild.channels.cache.find((chan): chan is TextChannel => filter(chan)) as TextChannel;
 
     try {
-      const channel = await data.guild.channels.create(
+      return await data.guild.channels.create(
         channelName,
         {
           type: 'text',
@@ -41,7 +41,6 @@ export default {
           }],
         },
       );
-      return channel;
     } catch (unknownError: unknown) {
       Logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
       Logger.detail(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);

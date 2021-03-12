@@ -69,7 +69,7 @@ Voici un exemple de durée valide : `1mo3j10mins` pour 1 mois, 3 jours, et 10 mi
 
 #### Rôles
 
-Toutes les commandes de modération sont exécutables par les personnes ayant le rôle "Staff". Cependant, les modérateurs forum ont une restriction de durée : il ne peuvent pas sanctionner pour une durée de plus de 2 jours.
+Toutes les commandes de modération sont exécutables par les personnes ayant le rôle "Staff". Cependant, les modérateurs Forum ont une restriction de durée : ils ne peuvent pas sanctionner pour une durée de plus de 2 jours.
 
 ### Bannissement
 
@@ -99,7 +99,7 @@ Modèle : `.unban <@mention | pseudo | ID> [raison]`
 
 #### Commande
 
-La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'en suit l'utilisateur à bannir, puis la durée pour un bannissement temporaire (salon des bannis), ou `perma` ou `def` pour un bannissement permanant. Enfin, il faut entrer la raison du bannissement.
+La commande pour bannir un utilisateur est le `.ban` ou encore `.sdb`. S'ensuit l'utilisateur à bannir, puis la durée pour un bannissement temporaire (salon des bannis), ou `perma` ou `def` pour un bannissement permanant. Enfin, il faut entrer la raison du bannissement.
 
 Cette commande accepte aussi des drapeaux :
 
@@ -137,7 +137,7 @@ Modèle : `.unmute <@mention | pseudo | ID> [raison]`
 
 #### Commande
 
-La commande est le `.mute`. S'en suit l'utilisateur à rendre muet. Il faut ensuite spécifier la durée pour le mute, et enfin, la raison du mute.
+La commande est le `.mute`. S'ensuit l'utilisateur à rendre muet. Il faut ensuite spécifier la durée pour le mute, et enfin, la raison du mute.
 
 Voici donc le modèle d'une commande : `.mute <@mention | pseudo | ID> <durée> <raison>`\
 Et voici des exemples d'utilisation : `.mute @Xamez chuuuut`
@@ -150,7 +150,7 @@ Un kick permet d'expulser un membre du discord. Il peut ensuite la rejoindre via
 
 #### Commande
 
-La commande est le `.kick`. S'en suit l'utilisateur à expulser. Il faut ensuite préciser la raison de l'expulsion.
+La commande est le `.kick`. S'ensuit l'utilisateur à expulser. Il faut ensuite préciser la raison de l'expulsion.
 
 Voici donc le modèle d'une commande : `.kick <@mention | pseudo | ID> <raison>`\
 Et voici des exemples d'utilisation : `.mute @random Cheh :kappa:`
@@ -176,7 +176,7 @@ Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
 
 #### Commande
 
-La commande est le `.warn`. S'en suit l'utilisateur à avertir, et la raison de l'avertissement.
+La commande est le `.warn`. S'ensuit l'utilisateur à avertir, et la raison de l'avertissement.
 
 Voici donc le modèle d'une commande : `.warn <@mention | pseudo | ID> <raison>`\
 Et voici des exemples d'utilisation : `.warn @Rémi Il faut penser à respecter le modèle d'aide !`
@@ -225,7 +225,7 @@ Voici à quoi ressemble un schema de la base de données ConvictedUsers :
 
 - `currentBanId` est l'ID du bannissement actuellement en cours, ou `null` si aucun n'est en cours.
 - `currentMuteId` est l'ID du mute actuellement en cours, ou `null` si aucun n'est en cours.
-- `currentWarnCount` est le nombre d'avertissement en cours. Il se remettra à 0 dès que l'utilisateur a dépassé la limite d'avertissements avant bannissement.
+- `currentWarnCount` est le nombre d'avertissements en cours. Il se remettra à 0 dès que l'utilisateur a dépassé la limite d'avertissements avant bannissement.
 
 ### Sanctions
 
@@ -315,7 +315,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 ```
 
 - `user` est une référence à l'objet de l'utilisateur correspondant dans la base de données `ConvictedUsers`.
-- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`. En théorie, il peut aussi être un des suivants : `unban`, `unmute`, `removeWarn`, mais en pratique il ne le sera jamais car ces types sont des modifications de sanction.
+- `type` est le type de la sanction, qui peut être un des suivants : `hardban`, `ban`, `mute`, `warn`, `kick`. En théorie, il peut aussi être un des suivants : `unban`, `unmute`, `removeWarn`, mais en pratique, il ne le sera jamais car ces types sont des modifications de sanction.
 - `moderator` est l'ID Discord du modérateur qui a donné la sanction.
 - `start` est le timestamp de création de la sanction.
 - `duration` est la durée, en millisecondes, de la sanction.
@@ -324,7 +324,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
 - `revoked` indique si la sanction est terminée (révoquée) ou non.
 - `sanctionId` est l'identifiant unique de la sanction (8 caractères).
 - `informations` est un objet comprenant diverses informations concernant la sanction :
-  - `shouldAutobanIfNoMessages` est un boolean qui sera définit que si la sanction est un ban. Il indique si le membre doit être bannit quand, à la fin de la sanction il doit être banni ou débanni s'il n'a toujours pas envoyé de message dans son salon privé (`informations.banChannelId`).
+  - `shouldAutobanIfNoMessages` est un boolean qui sera défini que si la sanction est un ban. Il indique si le membre doit être bannit quand, à la fin de la sanction il doit être banni ou débanni s'il n'a toujours pas envoyé de message dans son salon privé (`informations.banChannelId`).
   - `banChannelId` est un l'id du salon privé du membre s'il est banni. S'il n'est pas banni, ce champs ne sera pas définit.
 - `updates` est un tableau contenant les modifications (mises à jour) de la sanction. Il y a un objet par modification, qui contient les propriétés suivantes :
   - `date` est le timestamp de création de la modification.

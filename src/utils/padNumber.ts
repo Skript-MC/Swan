@@ -1,5 +1,5 @@
 /**
- * Pads a number with a 0 (make it two-digits by adding a zero at the beggining if needed.)
+ * Pads a number with a 0 (make it two-digits by adding a zero at the beginning if needed.)
  * @param {number} x - The number to pad.
  * @returns string
  */
