@@ -42,7 +42,7 @@ abstract class ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while executing a moderation action.')
+          .setMessage('An error occurred while executing a moderation action.')
           .addDetail('Data', JSON.stringify(this.data.toSchema())),
       );
     }
@@ -116,9 +116,7 @@ abstract class ModerationAction {
   }
 
   protected async notify(): Promise<void> {
-    let message = '';
-
-    message = this.updateInfos.isUpdate()
+    const message = this.updateInfos.isUpdate()
       ? pupa(this.data.config.notificationUpdate, { action: this, change: this.getFormattedChange() })
       : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
 

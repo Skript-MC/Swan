@@ -55,7 +55,7 @@ class LinksCommand extends Command {
       });
 
     for (const reaction of reactions)
-      void msg.react(reaction);
+      void await msg.react(reaction);
   }
 
   private _getEmbedForPage(page: number): MessageEmbed {

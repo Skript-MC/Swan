@@ -16,7 +16,7 @@ class CommandStartedListener extends Listener {
     try {
       await CommandStat.findOneAndUpdate({ commandId: command.id }, { $inc: { uses: 1 } });
     } catch (unknownError: unknown) {
-      Logger.error("An error occured while updating commands's stats!");
+      Logger.error("An error occurred while updating command's stats!");
       Logger.detail(`Command: ${command}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.error((unknownError as Error).stack);

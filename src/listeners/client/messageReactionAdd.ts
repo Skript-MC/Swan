@@ -35,14 +35,14 @@ class MessageReactionAddListener extends Listener {
     // Remove the first reaction if the user change its mind.
     if (reactionIs(reaction, settings.emojis.yes)) {
       // If we clicked "yes" but already voted "no", then we remove the "no"
-      const reactionners = message.reactions.cache.find(r => reactionIs(r, settings.emojis.no))?.users;
-      if (reactionners?.cache.get(user.id))
-        await reactionners.remove(user);
+      const reactors = message.reactions.cache.find(r => reactionIs(r, settings.emojis.no))?.users;
+      if (reactors?.cache.get(user.id))
+        await reactors.remove(user);
     } else if (reactionIs(reaction, settings.emojis.no)) {
       // If we clicked "no" but already voted "yes", then we remove the "yes"
-      const reactionners = message.reactions.cache.find(r => reactionIs(r, settings.emojis.yes))?.users;
-      if (reactionners?.cache.get(user.id))
-        await reactionners.remove(user);
+      const reactors = message.reactions.cache.find(r => reactionIs(r, settings.emojis.yes))?.users;
+      if (reactors?.cache.get(user.id))
+        await reactors.remove(user);
     }
   }
 
@@ -56,7 +56,7 @@ class MessageReactionAddListener extends Listener {
     // Whether they react with the appropriate "answer reaction" for this poll
     if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name))
       || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name))) {
-      // Find the reaction they choosed before (undefined if they never answered).
+      // Find the reaction they chose before (undefined if they never answered).
       type PollAnswer = [reactionName: string, votersIds: string[]];
 
       const previousUserVote: string | undefined = Object.entries(poll.votes)

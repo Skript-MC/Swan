@@ -67,7 +67,7 @@ class RemoveWarnCommand extends Command {
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occured while removing a warn from member!');
+      Logger.error('An unexpected error occurred while removing a warn from member!');
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);

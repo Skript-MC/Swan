@@ -11,8 +11,8 @@ function toValidName(str: string): string {
       valid.push(char);
       continue;
     }
-    const charcode = str.charCodeAt(i);
-    if (charcode < 0x80)
+    const charCode = str.charCodeAt(i);
+    if (charCode < 0x80)
       valid.push(char);
   }
   return valid.join('');
