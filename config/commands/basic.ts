@@ -16,7 +16,7 @@ export const addonPack = {
   messages: {
     startPrompt: 'Ajoute la version Minecraft dont tu souhaites connaître les versions recommandées :',
     retryPrompt: 'Version Minecraft invalide. Ré-entre ta version :',
-    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie ou demande son ajout.",
+    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
 };
 
@@ -35,7 +35,7 @@ export const autoMessage = {
   messages: {
     startPrompt: 'Ajoute une le nom du message rapide que tu souhaites envoyer :',
     retryPrompt: 'Nom de message invalide. Ré-entre son nom :',
-    notFound: "Aucun message n'existe avec ce nom. Réessaye ou suggère son ajout.",
+    notFound: "Aucun message n'existe avec ce nom. Réessaye avec un autre nom !",
   },
 };
 
@@ -96,7 +96,7 @@ export const errorDetails = {
   messages: {
     startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
     retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
-    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur ou demande son ajout.",
+    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 };
 
@@ -246,6 +246,25 @@ export const ping = {
 
       :globe_with_meridians: API Discord : {discordPing} ms {discordIndicator}
     `,
+  },
+};
+
+export const rule = {
+  settings: {
+    aliases: ['rule', 'regle', 'règle'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: noPermissions,
+  },
+  details: {
+    name: 'Règles',
+    content: 'Affiche une règle prédéfinie.',
+    usage: 'regle <règle>',
+    examples: ['regle mentions', 'regle 2'],
+  },
+  messages: {
+    startPrompt: 'Ajoute une le nom de la règle que tu souhaites envoyer :',
+    retryPrompt: 'Nom de règle invalide. Ré-entre son nom :',
+    notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
   },
 };
 
