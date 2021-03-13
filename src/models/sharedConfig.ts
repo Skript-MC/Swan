@@ -1,11 +1,14 @@
 import type { FilterQuery } from 'mongoose';
 import { model, Schema } from 'mongoose';
 import type { SharedConfigBase, SharedConfigDocument, SharedConfigModel } from '@/app/types';
+import { SharedConfigName } from '@/app/types';
 
 const SharedConfigSchema = new Schema<SharedConfigDocument, SharedConfigModel>({
   name: {
     type: String,
     required: true,
+    enum: SharedConfigName,
+    default: SharedConfigName.LoggedChannels,
     unique: true,
   },
   value: {

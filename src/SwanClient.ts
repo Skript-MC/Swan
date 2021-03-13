@@ -30,6 +30,7 @@ import type {
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
 } from './types';
+import { SharedConfigName } from './types';
 import { nullop, uncapitalize } from './utils';
 
 class SwanClient extends AkairoClient {
@@ -264,12 +265,13 @@ class SwanClient extends AkairoClient {
   private async _loadSharedConfigs(): Promise<void> {
     // Load logged channels
     const configDocument: SharedConfigDocument = await sharedConfig.findOneOrCreate({
-      name: 'logged-channels',
+      name: SharedConfigName.LoggedChannels,
     }, {
-      name: 'logged-channels',
+      name: SharedConfigName.LoggedChannels,
       value: [],
     }).catch(nullop);
     this.cache.savedChannelsIds = configDocument?.value as string[];
+    console.log(this.cache.savedChannelsIds);
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {

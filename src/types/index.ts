@@ -692,9 +692,14 @@ export interface DiscordUserModel extends Model<DiscordUserDocument> {
 // #region SharedConfig Database Types (VS Code)
 // region SharedConfig Database Types (JetBrains)
 
+/** Enum for the "SharedConfig"'s mongoose schema */
+export enum SharedConfigName {
+  LoggedChannels = 'logged-channels',
+}
+
 /** Interface for the "SharedConfig"'s mongoose schema */
 export interface SharedConfigBase {
-  name: string;
+  name: SharedConfigName;
   value: unknown;
 }
 

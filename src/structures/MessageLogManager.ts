@@ -1,7 +1,7 @@
 import type { AkairoClient } from 'discord-akairo';
 import type { Message, User } from 'discord.js';
-import discordUser from '@/app/models/discordUser';
-import messageHistory from '@/app/models/messageLog';
+import DiscordUser from '@/app/models/discordUser';
+import MessageLog from '@/app/models/messageLog';
 import type { DiscordUserDocument, MessageLogDocument } from '@/app/types';
 
 export default {
@@ -13,7 +13,7 @@ export default {
     const cachedUser: DiscordUserDocument = client.cache.discordUsers.find(elt => elt.userId === author.id);
     if (cachedUser)
       return cachedUser;
-    const user: DiscordUserDocument = await discordUser.findOneOrCreate({
+    const user: DiscordUserDocument = await DiscordUser.findOneOrCreate({
       userId: author.id,
     }, {
       userId: author.id,
@@ -29,7 +29,7 @@ export default {
     if (!this.shouldSaveMessage(client, oldMessage) || oldMessage.content === newMessage.content)
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
-    const messageDoc: MessageLogDocument = await messageHistory.findOne({ messageId: oldMessage.id });
+    const messageDoc: MessageLogDocument = await MessageLog.findOne({ messageId: oldMessage.id });
     if (messageDoc) {
       const oldNewContent = messageDoc.newContent;
       if (oldNewContent)
@@ -37,7 +37,7 @@ export default {
       messageDoc.newContent = newMessage.content;
       await messageDoc.save();
     } else {
-      await messageHistory.create({
+      await MessageLog.create({
         user: userDoc,
         messageId: oldMessage.id,
         channelId: oldMessage.channel.id,
@@ -51,13 +51,13 @@ export default {
     if (!this.shouldSaveMessage(client, oldMessage))
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
-    const messageDoc: MessageLogDocument = await messageHistory.findOne({ messageId: oldMessage.id });
+    const messageDoc: MessageLogDocument = await MessageLog.findOne({ messageId: oldMessage.id });
     if (messageDoc) {
       messageDoc.editions.push(messageDoc.newContent);
       messageDoc.newContent = null;
       await messageDoc.save();
     } else {
-      await messageHistory.create({
+      await MessageLog.create({
         user: userDoc,
         messageId: oldMessage.id,
         channelId: oldMessage.channel.id,
