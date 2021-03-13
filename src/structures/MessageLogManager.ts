@@ -5,7 +5,6 @@ import messageHistory from '@/app/models/messageLog';
 import type { DiscordUserDocument, MessageLogDocument } from '@/app/types';
 
 export default {
-
   shouldMessageBeSaved(client: AkairoClient, message: Message): boolean {
     return client.cache.savedChannelsIds?.includes(message.channel.id) || false;
   },
