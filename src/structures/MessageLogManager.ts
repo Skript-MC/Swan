@@ -5,7 +5,7 @@ import messageHistory from '@/app/models/messageLog';
 import type { DiscordUserDocument, MessageLogDocument } from '@/app/types';
 
 export default {
-  shouldMessageBeSaved(client: AkairoClient, message: Message): boolean {
+  shouldSaveMessage(client: AkairoClient, message: Message): boolean {
     return client.cache.savedChannelsIds?.includes(message.channel.id) || false;
   },
 
@@ -25,7 +25,8 @@ export default {
   },
 
   async saveMessageEdit(client: AkairoClient, oldMessage: Message, newMessage: Message): Promise<void> {
-    if (!this.shouldMessageBeSaved(client, oldMessage))
+    // We check that the content of the message has changed, since it may not have changed
+    if (!this.shouldSaveMessage(client, oldMessage) || oldMessage.content === newMessage.content)
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
     const messageDoc: MessageLogDocument = await messageHistory.findOne({ messageId: oldMessage.id });
@@ -47,7 +48,7 @@ export default {
   },
 
   async saveMessageDelete(client: AkairoClient, oldMessage: Message): Promise<void> {
-    if (!this.shouldMessageBeSaved(client, oldMessage))
+    if (!this.shouldSaveMessage(client, oldMessage))
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
     const messageDoc: MessageLogDocument = await messageHistory.findOne({ messageId: oldMessage.id });
