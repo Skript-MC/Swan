@@ -271,7 +271,6 @@ class SwanClient extends AkairoClient {
       value: [],
     }).catch(nullop);
     this.cache.savedChannelsIds = configDocument?.value as string[];
-    console.log(this.cache.savedChannelsIds);
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {
