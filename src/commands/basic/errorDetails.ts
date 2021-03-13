@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo';
 import Message from '@/app/models/message';
 import type { GuildMessage, MessageDocument } from '@/app/types';
+import { MessageName } from '@/app/types';
 import type { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { errorDetails as config } from '@/conf/commands/basic';
@@ -26,7 +27,7 @@ class ErrorDetailsCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: 'error' });
+    const messages = await Message.find({ messageType: MessageName.ErrorDetail });
     const search: MessageDocument | null = searchMessageSimilarity(messages, args.error);
     if (!search) {
       await message.channel.send(config.messages.notFound);

@@ -557,9 +557,17 @@ export type PollModel = Model<PollDocument>;
 // #region Message Database Types (VS Code)
 // region Message Database Types (JetBrains)
 
+export enum MessageName {
+  AutoMessage = 'auto',
+  ErrorDetail = 'error',
+  AddonPack = 'addonpack',
+  Rule = 'rule',
+  Joke = 'joke',
+}
+
 /** Interface for the "Message"'s mongoose schema */
 export interface MessageBase {
-  messageType: string;
+  messageType: MessageName;
   name: string;
   aliases: string[];
   content: string;
