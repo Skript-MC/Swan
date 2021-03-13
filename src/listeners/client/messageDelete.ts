@@ -2,6 +2,7 @@ import { Listener } from 'discord-akairo';
 import { DMChannel, User } from 'discord.js';
 import type { Message, MessageReaction } from 'discord.js';
 import pupa from 'pupa';
+import MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
@@ -20,6 +21,7 @@ class MessageDeleteListener extends Listener {
       return;
 
     const message = globalMessage as GuildMessage;
+    await MessageLogManager.saveMessageDelete(this.client, message);
 
     if (message.author.bot
       || message.system
