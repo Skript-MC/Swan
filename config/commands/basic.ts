@@ -262,7 +262,7 @@ export const rule = {
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
-    startPrompt: 'Ajoute une le nom de la règle que tu souhaites envoyer :',
+    startPrompt: 'Ajoute le nom de la règle que tu souhaites envoyer :',
     retryPrompt: 'Nom de règle invalide. Ré-entre son nom :',
     notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
   },
