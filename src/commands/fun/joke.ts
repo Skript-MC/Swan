@@ -26,7 +26,6 @@ class JokeCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: JokeCommandArguments): Promise<void> {
-    console.log(args);
     let joke;
     if (args.jokeName) {
       joke = await Message.findOne({ aliases: args.jokeName, messageType: MessageName.Joke });
