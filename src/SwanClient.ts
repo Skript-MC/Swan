@@ -11,7 +11,7 @@ import { Intents } from 'discord.js';
 import type { PermissionString } from 'discord.js';
 import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
-import sharedConfig from '@/app/models/sharedConfig';
+import SharedConfig from '@/app/models/sharedConfig';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
@@ -264,7 +264,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadSharedConfigs(): Promise<void> {
     // Load logged channels
-    const configDocument: SharedConfigDocument = await sharedConfig.findOneOrCreate({
+    const configDocument: SharedConfigDocument = await SharedConfig.findOneOrCreate({
       name: SharedConfigName.LoggedChannels,
     }, {
       name: SharedConfigName.LoggedChannels,
