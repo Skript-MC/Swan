@@ -1,6 +1,6 @@
 import type { AkairoHandler } from 'discord-akairo';
 import { Command } from 'discord-akairo';
-import sharedConfig from '@/app/models/sharedConfig';
+import SharedConfig from '@/app/models/sharedConfig';
 import SwanModule from '@/app/models/swanModule';
 import type { GuildMessage, SharedConfigDocument } from '@/app/types';
 import { SharedConfigName } from '@/app/types';
@@ -39,7 +39,7 @@ class RefreshCommand extends Command {
     }
 
     // Refresh saved channels
-    const configDocument: SharedConfigDocument = await sharedConfig.findOne({
+    const configDocument: SharedConfigDocument = await SharedConfig.findOne({
       name: SharedConfigName.LoggedChannels,
     }).catch(nullop);
     this.client.cache.savedChannelsIds = configDocument?.value as string[];
