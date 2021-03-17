@@ -32,7 +32,7 @@ export default {
     maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days in seconds
     banChannelPrefix: 'b-',
     banChannelTopic: "Salon du bannissement de {member.displayName}. Regardez les messages épinglés pour plus d'informations.",
-    dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?form%5BmemberId%5D=',
+    dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?memberId=',
     colors: {
       warn: '#ffe200',
       kick: '#ff6b61',
