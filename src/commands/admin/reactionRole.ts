@@ -48,7 +48,7 @@ class ReactionRoleCommand extends Command {
     const botMember = this.client.guild.members.cache.get(this.client.user.id);
 
     if (botMember.roles.highest.position <= givenRole.position) {
-      message.reply(config.messages.notEnoughPermissions).catch(noop);
+      await message.channel.send(config.messages.notEnoughPermissions).catch(noop);
       return;
     }
 
