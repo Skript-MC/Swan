@@ -1,7 +1,6 @@
 import { Argument, Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Role, TextChannel } from 'discord.js';
-import * as nodeEmoji from 'node-emoji';
 import pupa from 'pupa';
 import ReactionRole from '@/app/models/reactionRole';
 import type { GuildMessage } from '@/app/types';
@@ -52,15 +51,8 @@ class ReactionRoleCommand extends Command {
       return;
     }
 
-    // const regex = /^\d+$/; // Regex to check for numbers
-    // const emoji = regex.test(reaction)
-    //   ? message.guild.emojis.cache.get(reaction).toString()
-    //   : ((reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
-    //     ? message.guild.emojis.cache.get(reaction).toString()
-    //     : reaction);
-
     const regex = /^\d+$/; // Regex to check for numbers
-    const emoji = regex.test(reaction) || (reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
+    const emoji = regex.test(reaction)
       ? message.guild.emojis.cache.get(reaction).toString()
       : reaction;
 
