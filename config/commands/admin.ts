@@ -54,6 +54,6 @@ export const reactionRole = {
   messages: {
     promptStart: 'Saisis le rôle à attribuer (mentionne le rôle ou donne son ID).',
     promptRetry: 'Erreur ! Rôle invalide. Réessaye en mentionnant le rôle ou en donnant son ID :',
-    notEnoughPermissions: 'Erreur ! Je n\'ai pas la permission d\'agir sur un rôle aussi puissant !',
+    notEnoughPermissions: "Erreur ! Je n'ai pas la permission d'agir sur un rôle aussi puissant !",
   },
 };
