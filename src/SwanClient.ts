@@ -16,6 +16,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
 import Poll from './models/poll';
+import ReactionRole from './models/reactionRole';
 import SwanModule from './models/swanModule';
 import * as resolvers from './resolvers';
 import Logger from './structures/Logger';
@@ -161,6 +162,7 @@ class SwanClient extends AkairoClient {
     Logger.info('Loading & caching databases...');
     void this._loadPolls();
     void this._loadCommandStats();
+    void this._loadReactionRoles();
     void this._loadSharedConfigs();
 
     Logger.info('Loading addons from SkriptTools...');
@@ -260,6 +262,13 @@ class SwanClient extends AkairoClient {
       Logger.error('Could not load some documents:');
       Logger.error((unknownError as Error).stack);
     }
+  }
+
+  private async _loadReactionRoles(): Promise<void> {
+    // Cache all reaction roles' messages' ids.
+    const reactionRoles = await ReactionRole.find().catch(nullop);
+    if (reactionRoles)
+      this.cache.reactionRolesIds.push(...reactionRoles.map(document => document.messageId));
   }
 
   private async _loadSharedConfigs(): Promise<void> {
