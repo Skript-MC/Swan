@@ -26,16 +26,19 @@ class ReactionRoleCommand extends Command {
           start: config.messages.promptStart,
           retry: config.messages.promptRetry,
         },
+        unordered: true,
       },
       {
         id: 'reaction',
         type: 'emote',
         default: settings.emojis.yes,
+        unordered: true,
       },
       {
         id: 'destinationChannel',
         type: 'textChannel',
         default: (message: GuildMessage): TextChannel => message.channel as TextChannel,
+        unordered: true,
       }],
     });
   }
