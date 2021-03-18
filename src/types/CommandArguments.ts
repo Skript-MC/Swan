@@ -3,6 +3,7 @@ import type { Command } from 'discord-akairo';
 import type {
   GuildMember,
   Message,
+  Role,
   TextChannel,
   User,
 } from 'discord.js';
@@ -98,6 +99,12 @@ export interface PurgeCommandArgument {
   amount: number;
   member: GuildMember;
   force: boolean;
+}
+
+export interface ReactionRoleCommandArguments {
+  givenRole: Role;
+  reaction: string;
+  destinationChannel: TextChannel;
 }
 
 export interface RefreshCommandArgument {}

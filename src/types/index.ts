@@ -666,6 +666,29 @@ export type SanctionModel = Model<SanctionDocument>;
 
 // #endregion
 
+/* ***************************** */
+/*  ReactionRole Database Types  */
+/* ***************************** */
+
+// #region ReactionRole Database Types (VS Code)
+// region ReactionRole Database Types (JetBrains)
+
+/** Interface for the "ReactionRole"'s mongoose schema */
+export interface ReactionRoleBase {
+  messageId: string;
+  channelId: string;
+  givenRoleId: string;
+  reaction: string;
+}
+
+/** Interface for the "ReactionRole"'s mongoose document */
+export interface ReactionRoleDocument extends ReactionRoleBase, Document {}
+
+/** Interface for the "ReactionRole"'s mongoose model */
+export type ReactionRoleModel = Model<ReactionRoleDocument>;
+
+// #endregion
+
 /* ****************************** */
 /*   DiscordUser Database Types   */
 /* ****************************** */

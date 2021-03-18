@@ -2,6 +2,7 @@ import { Listener } from 'discord-akairo';
 import { TextChannel } from 'discord.js';
 import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import Poll from '@/app/models/poll';
+import ReactionRole from '@/app/models/reactionRole';
 import Logger from '@/app/structures/Logger';
 import type { ChannelSlug } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
@@ -67,6 +68,20 @@ class ReadyListener extends Listener {
         if (cacheReactions.has(reaction.emoji.name))
           await reaction.users.fetch().catch(noop);
       }
+    }
+
+    Logger.info('Caching reactions roles...');
+    const reactionRoles = await ReactionRole.find();
+    for (const element of reactionRoles) {
+      const channel = this.client.guild.channels.cache.get(element.channelId);
+      const textChannel = channel as TextChannel;
+      textChannel.messages.fetch(element.messageId)
+        .then((message) => {
+          this.client.cache.reactionRolesIds.push(message.id);
+        })
+        .catch(async () => {
+          await ReactionRole.findByIdAndDelete(element._id);
+        });
     }
 
     this.client.checkValidity();

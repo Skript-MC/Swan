@@ -2,6 +2,8 @@ import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
+import ReactionRole from '@/app/models/reactionRole';
+import Logger from '@/app/structures/Logger';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
@@ -27,6 +29,8 @@ class MessageReactionAddListener extends Listener {
       await this._handlePoll(reaction, message, user);
     else if (settings.channels.suggestions === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
+    else if (this.client.cache.reactionRolesIds.includes(message.id))
+      await this._handleReactionRole(reaction, message, user);
   }
 
   private async _handleSuggestion(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
@@ -117,6 +121,31 @@ class MessageReactionAddListener extends Listener {
         await message.channel.send(pupa(messages.global.dmAreClosed, { member }));
       }
     }
+  }
+
+  private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
+    const document = await ReactionRole.findOne({ messageId: message.id });
+    if (!document) {
+      this.client.cache.reactionRolesIds = this.client.cache.reactionRolesIds.filter(element => element !== message.id);
+      return;
+    }
+    const emoji = document.reaction;
+    if (reaction.emoji.toString() !== emoji) {
+      reaction.remove().catch(noop);
+      return;
+    }
+    const givenRole = message.guild.roles.cache.get(document.givenRoleId);
+    if (!givenRole) {
+      Logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
+      return;
+    }
+    const member = message.guild.members.cache.get(user.id);
+    if (!member) {
+      Logger.warn(`An error has occured while trying to get member with id ${user.id}`);
+      return;
+    }
+    if (!member.roles.cache.get(givenRole.id))
+      member.roles.add(givenRole).catch(noop);
   }
 }
 
