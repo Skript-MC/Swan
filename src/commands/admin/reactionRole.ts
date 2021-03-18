@@ -52,12 +52,17 @@ class ReactionRoleCommand extends Command {
       return;
     }
 
+    // const regex = /^\d+$/; // Regex to check for numbers
+    // const emoji = regex.test(reaction)
+    //   ? message.guild.emojis.cache.get(reaction).toString()
+    //   : ((reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
+    //     ? message.guild.emojis.cache.get(reaction).toString()
+    //     : reaction);
+
     const regex = /^\d+$/; // Regex to check for numbers
-    const emoji = regex.test(reaction)
+    const emoji = regex.test(reaction) || (reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
       ? message.guild.emojis.cache.get(reaction).toString()
-      : ((reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
-        ? message.guild.emojis.cache.get(reaction).toString()
-        : reaction);
+      : reaction;
 
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
