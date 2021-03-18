@@ -45,9 +45,19 @@ class ReactionRoleCommand extends Command {
     const { givenRole } = args;
     const { reaction, destinationChannel } = args;
 
-    const emoji = (reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
-      ? message.guild.emojis.cache.get(reaction)
-      : reaction;
+    const botMember = this.client.guild.members.cache.get(this.client.user.id);
+
+    if (botMember.roles.highest.position <= givenRole.position) {
+      message.reply(config.messages.notEnoughPermissions).catch(noop);
+      return;
+    }
+
+    const regex = /^\d+$/; // Regex to check for numbers
+    const emoji = regex.test(reaction)
+      ? message.guild.emojis.cache.get(reaction).toString()
+      : ((reaction === settings.emojis.yes && !nodeEmoji.hasEmoji(reaction))
+        ? message.guild.emojis.cache.get(reaction).toString()
+        : reaction);
 
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))
@@ -57,7 +67,7 @@ class ReactionRoleCommand extends Command {
 
     const sendMessage = await destinationChannel.send(embed);
     try {
-      await sendMessage.react(reaction);
+      await sendMessage.react(emoji);
     } catch {
       message.channel.send(messages.global.oops).catch(noop);
       return;
@@ -67,7 +77,7 @@ class ReactionRoleCommand extends Command {
       messageId: sendMessage.id,
       channelId: sendMessage.channel.id,
       givenRoleId: givenRole.id,
-      reaction,
+      reaction: emoji,
     };
 
     this.client.cache.reactionRolesIds.push(document.messageId);
