@@ -1,6 +1,8 @@
+import type { AkairoClient } from 'discord-akairo';
 import { Inhibitor } from 'discord-akairo';
 import type { Message } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
+import type { ConvictedUserDocument } from '@/app/types';
 
 class PreventBannedUsersInhibitor extends Inhibitor {
   constructor() {
@@ -10,8 +12,18 @@ class PreventBannedUsersInhibitor extends Inhibitor {
   }
 
   public async exec(message: Message): Promise<boolean> {
-    const result = await ConvictedUser.findOne({ memberId: message.author.id });
-    return typeof result?.currentBanId !== 'undefined';
+    const convictedUser: ConvictedUserDocument = await this._getConvictedUser(this.client, message.author.id);
+    return Boolean(convictedUser?.currentBanId);
+  }
+
+  private async _getConvictedUser(client: AkairoClient, memberId: string): Promise<ConvictedUserDocument> {
+    const cachedUser: ConvictedUserDocument = client.cache.convictedUsers.find(elt => elt.memberId === memberId);
+    if (cachedUser)
+      return cachedUser;
+    const convictedUser = await ConvictedUser.findOne({ memberId });
+    if (convictedUser)
+      client.cache.convictedUsers.push(convictedUser);
+    return convictedUser;
   }
 }
 
