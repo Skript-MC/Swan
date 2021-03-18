@@ -23,12 +23,9 @@ class RulesInhibitor extends Inhibitor {
       return true;
 
     // If the command only works in the help channels.
-    if (command.rules?.includes(Rules.OnlyHelpChannel)
+    return command.rules?.includes(Rules.OnlyHelpChannel)
       && (!settings.channels.help.includes(message.channel.id)
-        || message.channel.id !== settings.channels.bot))
-      return true;
-
-    return false;
+        || message.channel.id !== settings.channels.bot);
   }
 }
 

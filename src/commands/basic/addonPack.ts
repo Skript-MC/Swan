@@ -1,6 +1,7 @@
 import { Command } from 'discord-akairo';
 import Message from '@/app/models/message';
 import type { GuildMessage, MessageDocument } from '@/app/types';
+import { MessageName } from '@/app/types';
 import type { AddonPackCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { addonPack as config } from '@/conf/commands/basic';
@@ -25,7 +26,7 @@ class AddonPackCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
-    const messages: MessageDocument[] = await Message.find({ messageType: 'addonpack' });
+    const messages: MessageDocument[] = await Message.find({ messageType: MessageName.AddonPack });
     const search: MessageDocument | null = searchMessageSimilarity(messages, args.version);
     if (!search) {
       await message.channel.send(config.messages.notFound);

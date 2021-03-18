@@ -45,7 +45,7 @@ class RemoveWarnAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while revoking a warn in the Database')
+          .setMessage('An error occurred while revoking a warn in the Database')
           .addDetail('RemoveWarn ID', this.data.sanctionId)
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)

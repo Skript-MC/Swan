@@ -62,7 +62,9 @@ export interface HistoryCommandArgument {
 
 export interface IdeaCommandArguments {}
 
-export interface JokeCommandArguments {}
+export interface JokeCommandArguments {
+  jokeName: string;
+}
 
 export interface KickCommandArgument {
   member: GuildMember; reason: string;
@@ -110,6 +112,10 @@ export interface RefreshCommandArgument {}
 export interface RemoveWarnCommandArgument {
   member: GuildMember;
   reason: string;
+}
+
+export interface RuleCommandArguments {
+  rule: string;
 }
 
 export interface ServerInfoCommandArguments {

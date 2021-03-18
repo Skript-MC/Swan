@@ -69,7 +69,7 @@ class WarnAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while checking for the warning limit')
+          .setMessage('An error occurred while checking for the warning limit')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id),
@@ -94,7 +94,7 @@ class WarnAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while inserting warning to database')
+          .setMessage('An error occurred while inserting warning to database')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id),

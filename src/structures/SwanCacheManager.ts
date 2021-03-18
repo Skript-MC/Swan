@@ -1,6 +1,7 @@
 import type { AkairoModule } from 'discord-akairo';
 import type {
   CachedChannels,
+  DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
   Nullable,
@@ -21,6 +22,8 @@ class SwanCacheManager {
   modules: AkairoModule[];
   github: GithubCache;
   gitCommit: string;
+  discordUsers: DiscordUserDocument[];
+  savedChannelsIds: string[];
 
   constructor() {
     this.channels = {
@@ -45,6 +48,8 @@ class SwanCacheManager {
     this.reactionRolesIds = [];
     this.modules = [];
     this.gitCommit = '';
+    this.discordUsers = [];
+    this.savedChannelsIds = [];
   }
 }
 

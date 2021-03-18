@@ -94,7 +94,7 @@ class BanCommand extends Command {
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occured while banning a member!');
+      Logger.error('An unexpected error occurred while banning a member!');
       Logger.detail(`Duration: ${args.duration}`);
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Autoban: ${args.autoban}`);

@@ -85,7 +85,7 @@ class MuteCommand extends Command {
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occured while muting a member!');
+      Logger.error('An unexpected error occurred while muting a member!');
       Logger.detail(`Duration: ${args.duration}`);
       Logger.detail(`Parsed member: ${args.member}`);
       Logger.detail(`Message: ${message.url}`);

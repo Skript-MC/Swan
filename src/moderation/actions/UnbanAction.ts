@@ -47,7 +47,7 @@ class UnbanAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while revoking a ban in the Database')
+          .setMessage('An error occurred while revoking a ban in the Database')
           .addDetail('Ban: ID', this.data.sanctionId)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Unban Reason', this.data.reason),
@@ -80,7 +80,7 @@ class UnbanAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occured while fetching ban/unbanning/fetching messages/removing channel')
+          .setMessage('An error occurred while fetching ban/unbanning/fetching messages/removing channel')
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)

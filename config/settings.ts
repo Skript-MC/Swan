@@ -32,7 +32,7 @@ export default {
     maximumDurationForumModerator: 60 * 60 * 24 * 2, // 2 days in seconds
     banChannelPrefix: 'b-',
     banChannelTopic: "Salon du bannissement de {member.displayName}. Regardez les messages épinglés pour plus d'informations.",
-    dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?form%5BmemberId%5D=',
+    dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?memberId=',
     colors: {
       warn: '#ffe200',
       kick: '#ff6b61',
@@ -54,7 +54,7 @@ export default {
     skriptmc: 'https://skript-mc.fr/api/',
     forum: 'https://skript-mc.fr/forum/api/',
     server: 'https://api.mcsrvstat.us/2/',
-    latex: 'https://latex.codecogs.com/png.latex?\\color{white}&space;',
+    latex: 'https://chart.apis.google.com/chart?cht=tx&chf=bg,s,FFFFFF00&chco=FFFFFF&chl=',
   },
   roles: {
     staff: process.env.STAFF_ROLE,

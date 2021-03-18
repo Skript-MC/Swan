@@ -2,17 +2,17 @@ import { Command } from 'discord-akairo';
 import Message from '@/app/models/message';
 import type { GuildMessage, MessageDocument } from '@/app/types';
 import { MessageName } from '@/app/types';
-import type { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
+import type { RuleCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
-import { errorDetails as config } from '@/conf/commands/basic';
+import { rule as config } from '@/conf/commands/basic';
 
-class ErrorDetailsCommand extends Command {
+class RuleCommand extends Command {
   constructor() {
-    super('errorDetails', {
+    super('rule', {
       aliases: config.settings.aliases,
       details: config.details,
       args: [{
-        id: 'error',
+        id: 'rule',
         type: 'string',
         match: 'content',
         prompt: {
@@ -26,9 +26,9 @@ class ErrorDetailsCommand extends Command {
     });
   }
 
-  public async exec(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.ErrorDetail });
-    const search: MessageDocument | null = searchMessageSimilarity(messages, args.error);
+  public async exec(message: GuildMessage, args: RuleCommandArguments): Promise<void> {
+    const messages = await Message.find({ messageType: MessageName.Rule });
+    const search: MessageDocument | null = searchMessageSimilarity(messages, args.rule);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -37,4 +37,4 @@ class ErrorDetailsCommand extends Command {
   }
 }
 
-export default ErrorDetailsCommand;
+export default RuleCommand;

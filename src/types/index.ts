@@ -557,9 +557,17 @@ export type PollModel = Model<PollDocument>;
 // #region Message Database Types (VS Code)
 // region Message Database Types (JetBrains)
 
+export enum MessageName {
+  AutoMessage = 'auto',
+  ErrorDetail = 'error',
+  AddonPack = 'addonpack',
+  Rule = 'rule',
+  Joke = 'joke',
+}
+
 /** Interface for the "Message"'s mongoose schema */
 export interface MessageBase {
-  messageType: string;
+  messageType: MessageName;
   name: string;
   aliases: string[];
   content: string;
@@ -678,5 +686,88 @@ export interface ReactionRoleDocument extends ReactionRoleBase, Document {}
 
 /** Interface for the "ReactionRole"'s mongoose model */
 export type ReactionRoleModel = Model<ReactionRoleDocument>;
+
+// #endregion
+
+/* ****************************** */
+/*   DiscordUser Database Types   */
+/* ****************************** */
+
+// #region DiscordUser Database Types (VS Code)
+// region DiscordUser Database Types (JetBrains)
+
+/** Interface for the "DiscordUser"'s mongoose schema */
+export interface DiscordUserBase {
+  userId: string;
+  username: string;
+  avatarUrl?: string;
+}
+
+/** Interface for the "DiscordUser"'s mongoose document */
+export interface DiscordUserDocument extends DiscordUserBase, Document {}
+
+/** Interface for the "DiscordUser"'s mongoose model */
+export interface DiscordUserModel extends Model<DiscordUserDocument> {
+  findOneOrCreate(
+    condition: FilterQuery<DiscordUserDocument>,
+    doc: DiscordUserBase,
+  ): Promise<DiscordUserDocument>;
+}
+
+// #endregion
+
+/* ****************************** */
+/*   SharedConfig Database Types   */
+/* ****************************** */
+
+// #region SharedConfig Database Types (VS Code)
+// region SharedConfig Database Types (JetBrains)
+
+/** Enum for the "SharedConfig"'s mongoose schema */
+export enum SharedConfigName {
+  LoggedChannels = 'logged-channels',
+}
+
+/** Interface for the "SharedConfig"'s mongoose schema */
+export interface SharedConfigBase {
+  name: SharedConfigName;
+  value: unknown;
+}
+
+/** Interface for the "SharedConfig"'s mongoose document */
+export interface SharedConfigDocument extends SharedConfigBase, Document {}
+
+/** Interface for the "SharedConfig"'s mongoose model */
+export interface SharedConfigModel extends Model<SharedConfigDocument> {
+  findOneOrCreate(
+    condition: FilterQuery<SharedConfigDocument>,
+    doc: SharedConfigBase,
+  ): Promise<SharedConfigDocument>;
+}
+
+// #endregion
+
+/* ****************************** */
+/*   MessageLog Database Types   */
+/* ****************************** */
+
+// #region MessageLog Database Types (VS Code)
+// region MessageLog Database Types (JetBrains)
+
+/** Interface for the "MessageLog"'s mongoose schema */
+export interface MessageLogBase {
+  user: DiscordUserDocument;
+  messageId: string;
+  channelId: string;
+  oldContent: string;
+  editions: string[];
+  newContent?: string;
+}
+
+/** Interface for the "MessageLog"'s mongoose document */
+export interface MessageLogDocument extends MessageLogBase, Document {}
+
+/** Interface for the "MessageLog"'s mongoose model */
+export type MessageLogModel = Model<MessageLogDocument>;
 
 // #endregion
