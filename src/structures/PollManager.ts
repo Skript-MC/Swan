@@ -23,7 +23,8 @@ export default {
     if (!channel)
       return;
 
-    const message = channel?.messages?.resolve(poll.messageId) ?? await channel?.messages?.fetch(poll.messageId);
+    const message = channel?.messages?.resolve(poll.messageId)
+      ?? await channel?.messages?.fetch(poll.messageId).catch(nullop);
     if (!message)
       return;
 
