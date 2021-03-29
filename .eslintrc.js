@@ -9,10 +9,6 @@ module.exports = {
     project: './tsconfig.eslint.json',
   },
   rules: {
-    // `node/file-extension-in-import` has too many false positives with `.json`.
-    'node/file-extension-in-import': 'off',
-    'import/extensions': ['error', 'never', { ts: 'never', json: 'always' }],
-
     // It cannot resolve TypeScript's path aliases. See https://github.com/mysticatea/eslint-plugin-node/issues/233
     'node/no-missing-import': 'off',
 
@@ -32,7 +28,6 @@ module.exports = {
 
     // Because discord.js is promised base, we use a lot of promises in loops/callbacks that needs
     // be resolved before continuing! (i.e to send reactions or messages in the right order).
-    '@typescript-eslint/no-misused-promises': 'off',
     'no-await-in-loop': 'off',
   },
   settings: {
