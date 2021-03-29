@@ -1,6 +1,7 @@
 import type { AkairoModule } from 'discord-akairo';
 import type {
   CachedChannels,
+  ConvictedUserDocument,
   DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
@@ -24,6 +25,7 @@ class SwanCacheManager {
   gitCommit: string;
   discordUsers: DiscordUserDocument[];
   savedChannelsIds: string[];
+  convictedUsers: ConvictedUserDocument[];
 
   constructor() {
     this.channels = {
@@ -50,6 +52,7 @@ class SwanCacheManager {
     this.gitCommit = '';
     this.discordUsers = [];
     this.savedChannelsIds = [];
+    this.convictedUsers = [];
   }
 }
 

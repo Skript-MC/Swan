@@ -15,6 +15,8 @@ class UnbanAction extends ModerationAction {
 
   protected after(): void {
     this.client.currentlyUnbanning.splice(this.client.currentlyUnbanning.indexOf(this.data.victim.id), 1);
+    this.client.cache.convictedUsers
+      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
   protected async exec(): Promise<void> {
