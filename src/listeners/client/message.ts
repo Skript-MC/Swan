@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Listener } from 'discord-akairo';
 import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
@@ -35,7 +34,6 @@ class MessageListener extends Listener {
     yield await this._addReactionsInIdeaChannel(message);
     yield await this._formatMessageInSuggestionChannel(message);
     yield await this._quoteLinkedMessage(message);
-    yield await this._uploadFileOnHastebin(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
     return false;
@@ -147,28 +145,6 @@ class MessageListener extends Listener {
 
       await msg.react(settings.emojis.remove);
     }
-    return false;
-  }
-
-  private async _uploadFileOnHastebin(message: GuildMessage): Promise<boolean> {
-    // Upload a file on hastebin, if it contains code.
-    const attachment = message.attachments.first();
-    if (!attachment || !settings.miscellaneous.hastebinExtensions.some(ext => attachment?.name?.endsWith(ext)))
-      return false;
-
-    const attachmentContent = await axios.get(attachment.url).catch(noop);
-    if (!attachmentContent)
-      return false;
-
-    const response = await axios.post(settings.apis.hastebin, attachmentContent.data).catch(nullop);
-    if (!response?.data?.key)
-      return false;
-
-    const embed = new MessageEmbed()
-      .setColor(settings.colors.default)
-      .setDescription(`[Ouvrir le fichier ${attachment.name} sans le télécharger](https://hastebin.com/${response.data.key})`);
-    await message.channel.send(embed);
-
     return false;
   }
 
