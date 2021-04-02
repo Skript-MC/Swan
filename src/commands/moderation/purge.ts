@@ -13,7 +13,7 @@ class PurgeCommand extends Command {
       details: config.details,
       args: [{
         id: 'amount',
-        type: Argument.range('integer', 0, settings.moderation.purgeLimit),
+        type: Argument.range('integer', 0, settings.moderation.purgeLimit + 1),
         unordered: true,
         prompt: {
           start: config.messages.startPrompt,
