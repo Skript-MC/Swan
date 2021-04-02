@@ -81,4 +81,5 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 - [Olyno](https://github.com/Olyno), ancien développeur (Olyno#1234)
 - [Aless](https://github.com/BakaAless) (Aless#6161)
 - [WeeskyBDW](https://github.com/WeeskyBDW) (WeeskyBDW#6172)
+- [Skylyxx](https://github.com/Skylyxx) (Skylyxx#8816)
 - [iTrooz](https://github.com/iTrooz) (iTrooz_#2050)
