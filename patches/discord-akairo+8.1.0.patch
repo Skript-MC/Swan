@@ -37,3 +37,35 @@ index 1003663..a88b9b2 100644
          /**
           * Command names.
           * @type {string[]}
+diff --git a/node_modules/discord-akairo/src/struct/commands/arguments/TypeResolver.js b/node_modules/discord-akairo/src/struct/commands/arguments/TypeResolver.js
+index 836fc0b..cbee525 100644
+--- a/node_modules/discord-akairo/src/struct/commands/arguments/TypeResolver.js
++++ b/node_modules/discord-akairo/src/struct/commands/arguments/TypeResolver.js
+@@ -124,23 +124,23 @@ class TypeResolver {
+ 
+             [ArgumentTypes.USER]: (message, phrase) => {
+                 if (!phrase) return null;
+-                return this.client.util.resolveUser(phrase, this.client.users.cache);
++                return this.client.util.resolveUser(phrase, this.client.users.cache, false, true);
+             },
+ 
+             [ArgumentTypes.USERS]: (message, phrase) => {
+                 if (!phrase) return null;
+-                const users = this.client.util.resolveUsers(phrase, this.client.users.cache);
++                const users = this.client.util.resolveUsers(phrase, this.client.users.cache, false, true);
+                 return users.size ? users : null;
+             },
+ 
+             [ArgumentTypes.MEMBER]: (message, phrase) => {
+                 if (!phrase) return null;
+-                return this.client.util.resolveMember(phrase, message.guild.members.cache);
++                return this.client.util.resolveMember(phrase, message.guild.members.cache, false, true);
+             },
+ 
+             [ArgumentTypes.MEMBERS]: (message, phrase) => {
+                 if (!phrase) return null;
+-                const members = this.client.util.resolveMembers(phrase, message.guild.members.cache);
++                const members = this.client.util.resolveMembers(phrase, message.guild.members.cache, false, true);
+                 return members.size ? members : null;
+             },
+ 
