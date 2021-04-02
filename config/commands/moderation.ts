@@ -13,10 +13,10 @@ const commonMessages = {
   promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en envoyant un message contenant seulement la raison :',
   promptRetryReason: "Cette raison n'est pas valide. Entre-la en envoyant un message contenant seulement la raison :",
 
-  creationNotification: stripIndent`
+  creationNotification: (showDuration: boolean): string => stripIndent`
     Bonjour {action.nameString}, tu viens de recevoir une sanction ({action.action}) sur le serveur Skript-MC.
     **Raison :** {action.data.reason}.
-    **Durée :** {duration}.
+    ${showDuration ? '**Durée :** {duration}.' : ''}
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   revocationNotification: stripIndent`
@@ -49,7 +49,7 @@ export const ban = {
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.creationNotification,
+    notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre banni avec succès !',
     promptStartMember: commonMessages.promptStartMember,
@@ -140,7 +140,7 @@ export const kick = {
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.creationNotification,
+    notification: commonMessages.creationNotification(false),
     success: 'Membre expulsé avec succès !',
     promptStartMember: commonMessages.promptStartMember,
     promptRetryMember: commonMessages.promptRetryMember,
@@ -163,7 +163,7 @@ export const mute = {
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.creationNotification,
+    notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre rendu muet avec succès !',
     promptStartMember: commonMessages.promptStartMember,
@@ -277,7 +277,7 @@ export const warn = {
     permissions: 'Staff',
   },
   messages: {
-    notification: commonMessages.creationNotification,
+    notification: commonMessages.creationNotification(false),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre averti avec succès !',
     banSuccess: "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
