@@ -29,7 +29,7 @@ class MoveCommand extends Command {
         },
       }, {
         id: 'message',
-        type: 'message',
+        type: 'channelMessage',
         unordered: true,
         prompt: {
           start: config.messages.startMessagePrompt,
