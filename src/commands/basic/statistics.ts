@@ -30,8 +30,7 @@ class StatisticsCommand extends Command {
     const commitHash = await this._getGitRev();
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .attachFiles([settings.bot.avatar])
-      .setAuthor(config.messages.embed.title, 'attachment://logo.png')
+      .setAuthor(config.messages.embed.title, settings.bot.avatar)
       .setDescription(
         pupa(config.messages.embed.description, { prefix: settings.bot.prefix }),
       )
