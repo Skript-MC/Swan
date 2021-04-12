@@ -17,6 +17,7 @@ function getNewType(type: string): 'ban' | 'hardban' | 'kick' | 'mute' | 'remove
     case 'mute':
     case 'unmute':
     case 'warn':
+    case 'kick':
       return type;
     case 'remove_warn':
       return 'removeWarn';
@@ -28,6 +29,8 @@ function getNewType(type: string): 'ban' | 'hardban' | 'kick' | 'mute' | 'remove
 function getNewUpdateType(type: string): 'duration' | 'revoked' {
   switch (type) {
     case 'hardban':
+    case 'ban':
+    case 'kick':
       return 'duration';
     case 'unban':
     case 'unmute':
@@ -104,10 +107,10 @@ void (async (): Promise<void> => {
   console.log('[0/2] Connecting to database...');
 
   const rawSanctionContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'sanctionsHistory.db'));
-  const sanctionInputArray: SanctionNedbSchema[] = JSON.parse(`[${rawSanctionContent}]`);
+  const sanctionInputArray: SanctionNedbSchema[] = JSON.parse(`[${rawSanctionContent.toString().split('\n').join(',').slice(0, -1)}]`);
 
-  const rawCommandStatsContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'commandStats.db'));
-  const commandStatsInputArray: CommandStatsNedbSchema[] = JSON.parse(`[${rawCommandStatsContent}]`);
+  const rawCommandStatsContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'commandsStats.db'));
+  const commandStatsInputArray: CommandStatsNedbSchema[] = JSON.parse(`[${rawCommandStatsContent.toString().split('\n').join(',').slice(0, -1)}]`);
 
   await mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -129,7 +132,7 @@ void (async (): Promise<void> => {
   // only contains sanctions happening currently, whereas history contains all the sanction...
   for (const [i, document] of sanctionInputArray.entries()) {
     // Add the user to the database of the convicted users (= users that have had at least 1 sanction).
-    const { _id: userId } = await ConvictedUser.create({
+    const { _id: userId } = await ConvictedUser.findOneOrCreate({ memberId: document.memberId }, {
       memberId: document.memberId,
       currentBanId: document.lastBanId,
       currentMuteId: document.lastMuteId,
