@@ -90,5 +90,9 @@
     "@/app": "./build/src",
     "@/conf": "./build/config",
     "@/root": "./build/"
+  },
+  "volta": {
+    "node": "15.14.0",
+    "npm": "7.9.0"
   }
 }
