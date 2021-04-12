@@ -4,8 +4,8 @@
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "rm -rf ./build && tsc && cp -r ./assets/ ./build/assets",
-    "build:win": "rd /s /q \"build\" && tsc && xcopy .\\assets\\ .\\build\\assets\\ /D",
+    "build": "rm -rf ./build && tsc",
+    "build:win": "rd /s /q \"build\" && tsc",
     "exec": "node --no-warnings ./build/src/main.js",
     "start": "npm run build && NODE_ENV=production npm run exec",
     "start:win": "npm run build:win && set NODE_ENV=production && npm run exec",
