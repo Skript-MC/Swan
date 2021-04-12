@@ -1,12 +1,13 @@
 name: Build
-on: [push, pull_request]
+on: [push]
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [12.x, 14.x]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
