@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import CommandStat from '../src/models/commandStat';
 import ConvictedUser from '../src/models/convictedUser';
 import Sanction from '../src/models/sanction';
+import { SanctionsUpdates, SanctionTypes } from '../src/types';
+import { noop } from '../src/utils';
 
 function getNewType(type: string): 'ban' | 'hardban' | 'kick' | 'mute' | 'removeWarn' | 'unban' | 'unmute' | 'warn' {
   switch (type) {
@@ -86,8 +88,7 @@ interface SanctionNedbSchema {
       date: number;
       modId: string;
       type: string;
-      changes: { reason: string; duration: number }
-             | { reason: string; revoked: boolean };
+      changes: { reason: string; duration: number; revoked: boolean };
     }>;
   }>;
   count: number;
@@ -103,31 +104,7 @@ interface CommandStatsNedbSchema {
   _id: string;
 }
 
-void (async (): Promise<void> => {
-  console.log('[0/2] Connecting to database...');
-
-  const rawSanctionContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'sanctionsHistory.db'));
-  const sanctionInputArray: SanctionNedbSchema[] = JSON.parse(`[${rawSanctionContent.toString().split('\n').join(',').slice(0, -1)}]`);
-
-  const rawCommandStatsContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'commandsStats.db'));
-  const commandStatsInputArray: CommandStatsNedbSchema[] = JSON.parse(`[${rawCommandStatsContent.toString().split('\n').join(',').slice(0, -1)}]`);
-
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  });
-  mongoose.connection.on('connected', () => {
-    console.log('MongoDB is connected!');
-  });
-  mongoose.connection.on('error', (err) => {
-    console.error('MongoDB connection error. Please make sure MongoDB is running.');
-    throw err;
-  });
-
-  console.log('[1/2] Starting conversion of sanction databases...');
-
+async function migrateSanctions(sanctionInputArray: SanctionNedbSchema[]): Promise<void> {
   // Iterate through all the old "histories". We don't care about the old "sanctions" database because it
   // only contains sanctions happening currently, whereas history contains all the sanction...
   for (const [i, document] of sanctionInputArray.entries()) {
@@ -170,7 +147,7 @@ void (async (): Promise<void> => {
         duration: sanction.duration ?? -1,
         finish: (sanction.date + sanction.duration) || null,
         reason: sanction.reason,
-        revoked: sanction.revoked ?? false,
+        revoked: sanction.updates.some(sanc => sanc.changes.revoked) ?? sanction.revoked ?? false,
         sanctionId: sanction.id,
         informations: {
           shouldAutobanIfNoMessages: false,
@@ -178,15 +155,92 @@ void (async (): Promise<void> => {
         updates,
       });
     }
-    // Draw the progress bar
-    const dots = '.'.repeat(i);
-    const left = sanctionInputArray.length - i;
-    const empty = ' '.repeat(left);
-    process.stdout.write(`\r[${dots}${empty}]   |   ${i + 1}/${sanctionInputArray.length}${i + 1 === sanctionInputArray.length ? '\n' : ''}`);
+
+    process.stdout.write(`\r${i + 1}/${sanctionInputArray.length}`);
   }
+}
 
-  console.log('\n[2/2] Starting conversion of command database...');
+async function fixRevoke1(sanctionInputArray: SanctionNedbSchema[]): Promise<void> {
+  const justSanctions = sanctionInputArray.flatMap(hist => hist.sanctions);
+  const abnormalSanctions = await Sanction.find({
+    revoked: false,
+    finish: { $lte: Date.now(), $ne: -1 },
+  });
+  for (const [i, sanction] of abnormalSanctions.entries()) {
+    const oldSanction = justSanctions.find(sanc => sanc.id === sanction.sanctionId);
+    const user = await ConvictedUser.findOneAndUpdate({ memberId: sanction.memberId }, { currentBanId: null });
+    await Sanction.findOneAndUpdate(
+      { sanctionId: user.currentBanId },
+      {
+        $set: { revoked: true },
+        $push: {
+          updates: {
+            date: oldSanction.date || Date.now(),
+            moderator: oldSanction.modId || '205963594658086912',
+            type: SanctionsUpdates.Revoked,
+            reason: oldSanction.reason || 'Migration de la BDD corrompue [E1] (automatique)',
+          },
+        },
+      },
+    );
 
+    process.stdout.write(`\r${i + 1}/${abnormalSanctions.length}`);
+  }
+}
+
+async function fixRevoke2(): Promise<void> {
+  const abnormalSanctions = (await Sanction.find()).filter(sanction => !sanction.revoked
+    && sanction.type === SanctionTypes.Ban
+    && sanction.user.currentBanId !== sanction.sanctionId);
+
+  for (const [i, sanction] of abnormalSanctions.entries()) {
+    await Sanction.findOneAndUpdate(
+      { sanctionId: sanction.sanctionId },
+      {
+        $set: { revoked: true },
+        $push: {
+          updates: {
+            date: Date.now(),
+            moderator: '205963594658086912',
+            type: SanctionsUpdates.Revoked,
+            reason: 'Migration de la BDD corrompue [E2] (automatique)',
+          },
+        },
+      },
+    );
+
+    process.stdout.write(`\r${i + 1}/${abnormalSanctions.length}`);
+  }
+}
+
+async function fixWarns(): Promise<void> {
+  const abnormalSanctions = await Sanction.find({
+    revoked: false,
+    type: SanctionTypes.Warn,
+    finish: { $lte: Date.now(), $ne: -1 },
+  });
+
+  for (const [i, sanction] of abnormalSanctions.entries()) {
+    await Sanction.findOneAndUpdate(
+      { sanctionId: sanction.sanctionId },
+      {
+        $set: { revoked: true },
+        $push: {
+          updates: {
+            date: Date.now(),
+            moderator: '205963594658086912',
+            type: SanctionsUpdates.Revoked,
+            reason: 'Migration de la BDD corrompue [E3] (automatique)',
+          },
+        },
+      },
+    );
+
+    process.stdout.write(`\r${i + 1}/${abnormalSanctions.length}`);
+  }
+}
+
+async function migrateCommands(commandStatsInputArray: CommandStatsNedbSchema[]): Promise<void> {
   for (const [i, document] of commandStatsInputArray.entries()) {
     const commandId = commandMap.get(document.command);
     if (commandId) {
@@ -196,14 +250,55 @@ void (async (): Promise<void> => {
       });
     }
 
-    // Draw the progress bar
-    const dots = '.'.repeat(i);
-    const left = commandStatsInputArray.length - i;
-    const empty = ' '.repeat(left);
-    process.stdout.write(`\r[${dots}${empty}]   |   ${i + 1}/${commandStatsInputArray.length}`);
+    process.stdout.write(`\r${i + 1}/${commandStatsInputArray.length}`);
   }
+}
+
+async function start(): Promise<void> {
+  console.log('[0/4] Connecting to database...');
+
+  const rawSanctionContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'sanctionsHistory.db'));
+  const sanctionInputArray: SanctionNedbSchema[] = JSON.parse(`[${rawSanctionContent.toString().split('\n').join(',').slice(0, -1)}]`);
+
+  const rawCommandStatsContent = await fs.readFile(path.join(__dirname, '..', '..', 'databases', 'commandsStats.db'));
+  const commandStatsInputArray: CommandStatsNedbSchema[] = JSON.parse(`[${rawCommandStatsContent.toString().split('\n').join(',').slice(0, -1)}]`);
+
+  await mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  });
+  mongoose.connection.on('connected', () => {
+    console.log('MongoDB is connected!');
+  });
+  mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error. Please make sure MongoDB is running.');
+    throw err;
+  });
+
+  console.log('[1/4] Cleaning Mongo databases...');
+  await mongoose.connection.db.dropCollection('convictedusers').catch(noop);
+  await mongoose.connection.db.dropCollection('sanctions').catch(noop);
+  await mongoose.connection.db.dropCollection('commandstats').catch(noop);
+
+  console.log('[2/4] Starting conversion of sanction databases...');
+  await migrateSanctions(sanctionInputArray);
+
+  console.log('\n[3/4] Patching sanctions (1/3)...');
+  await fixRevoke1(sanctionInputArray);
+
+  console.log('\n[3/4] Patching sanctions (2/3)...');
+  await fixRevoke2();
+
+  console.log('\n[3/4] Patching sanctions (3/3)...');
+  await fixWarns();
+
+  console.log('\n[4/4] Starting conversion of command database...');
+  await migrateCommands(commandStatsInputArray);
 
   console.log('\nConversion was successful! You can now check your MongoDB database to verify that everything is good, and you can delete the old databases (./databases/sanctions.db, ./databases/sanctionsHistory.db, ./databases/commandStats.db)');
   // eslint-disable-next-line node/no-process-exit
   process.exit(0);
-})();
+}
+void start();
