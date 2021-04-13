@@ -241,13 +241,15 @@ async function fixWarns(): Promise<void> {
 }
 
 async function migrateCommands(commandStatsInputArray: CommandStatsNedbSchema[]): Promise<void> {
+  const seen: string[] = [];
   for (const [i, document] of commandStatsInputArray.entries()) {
     const commandId = commandMap.get(document.command);
-    if (commandId) {
+    if (commandId && !seen.includes(commandId)) {
       await CommandStat.create({
         commandId,
         uses: document.used,
       });
+      seen.push(commandId);
     }
 
     process.stdout.write(`\r${i + 1}/${commandStatsInputArray.length}`);
