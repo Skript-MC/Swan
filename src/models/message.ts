@@ -8,6 +8,7 @@ const MessageSchema = new Schema({
     enum: MessageName,
     default: MessageName.AddonPack,
     required: true,
+    index: true,
   },
   name: {
     type: String,
