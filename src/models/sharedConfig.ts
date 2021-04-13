@@ -10,6 +10,7 @@ const SharedConfigSchema = new Schema<SharedConfigDocument, SharedConfigModel>({
     enum: SharedConfigName,
     default: SharedConfigName.LoggedChannels,
     unique: true,
+    index: true,
   },
   value: {
     type: Schema.Types.Mixed,
