@@ -7,6 +7,7 @@ const DiscordUserSchema = new Schema<DiscordUserDocument, DiscordUserModel>({
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   username: {
     type: String,
