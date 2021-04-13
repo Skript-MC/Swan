@@ -5,6 +5,7 @@ const PollSchema = new Schema({
   messageId: {
     type: String,
     required: true,
+    index: true,
   },
   memberId: {
     type: String,
