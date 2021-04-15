@@ -20,12 +20,12 @@ const commonMessages = {
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   revocationNotification: stripIndent`
-    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été révoquée.
+    Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été révoquée.
     **Raison :** {action.data.reason}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   notificationUpdate: stripIndent`
-    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été modifiée.
+    Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été modifiée.
     **Motif :** {action.data.reason}.
     **Changement :** {change}.
     `,
