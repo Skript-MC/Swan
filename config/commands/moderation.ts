@@ -212,8 +212,9 @@ export const removeWarn = {
     notification: commonMessages.revocationNotification,
     success: 'Avertissement révoqué avec succès !',
     notWarned: "Ce membre n'a aucun avertissement en cours.",
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
+    promptStartWarnId: "Entre l'identifiant d'un avertissement à supprimer.",
+    promptRetryWarnId: "Cet identifiant n'est pas valide. Entre-le en envoyant un message contenant un ID de warn :",
+    invalidWarnId: "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
   },
 };
 
