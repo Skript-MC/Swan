@@ -21,12 +21,12 @@ class RemoveWarnAction extends ModerationAction {
         { memberId: this.data.victim.id },
         { $inc: { currentWarnCount: -1 } },
       );
-      // TODO: Add the possibility to remove a specific warn, as long as it is not revoked yet.
       await Sanction.findOneAndUpdate(
         {
           memberId: this.data.victim.id,
           type: SanctionTypes.Warn,
           revoked: false,
+          sanctionId: this.data.originalWarnId,
         },
         {
           $set: { revoked: true },
