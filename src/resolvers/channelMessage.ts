@@ -9,9 +9,17 @@ export default async function channelMessage(message: Message, phrase: string): 
   if (!phrase)
     return null;
 
-  const linkRegex = new RegExp(`https://(?:ptb.|canary.)?discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
-  if (linkRegex.test(message.content)) {
-    const messageId = linkRegex.exec(phrase)[2];
+  const linkRegex = new RegExp(`https://(?:ptb.|canary.)?discord(?:app)?.com/channels/${message.guild.id}/(?<channelId>\\d{18})/(?<messageId>\\d{18})`, 'imu');
+  if (linkRegex.test(phrase)) {
+    const { messageId } = linkRegex.exec(phrase).groups;
+    if (!messageId)
+      return null;
+    return await getMessageById(message, messageId);
+  }
+
+  const idRegex = /(?<channelId>\d{18})-(?<messageId>\d{18})/imu;
+  if (idRegex.test(phrase)) {
+    const { messageId } = idRegex.exec(phrase).groups;
     if (!messageId)
       return null;
     return await getMessageById(message, messageId);
