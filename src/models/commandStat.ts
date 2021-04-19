@@ -5,6 +5,8 @@ const CommandStatSchema = new Schema({
   commandId: {
     type: String,
     required: true,
+    unique: true,
+    index: true,
   },
   uses: {
     type: Number,

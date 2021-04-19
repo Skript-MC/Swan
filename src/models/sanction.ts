@@ -8,6 +8,7 @@ const SanctionSchema = new Schema({
   memberId: {
     type: String,
     required: true,
+    index: true,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -48,6 +49,7 @@ const SanctionSchema = new Schema({
     type: String,
     required: true,
     default: (): string => nanoid(8),
+    index: true,
   },
   informations: {
     shouldAutobanIfNoMessages: {

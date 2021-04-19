@@ -1,14 +1,14 @@
 {
   "name": "swan",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.ts",
   "scripts": {
-    "build": "rm -rf ./build && tsc && cp -r ./assets/ ./build/assets",
-    "build:win": "rd /s /q \"build\" && tsc && xcopy .\\assets\\ .\\build\\assets\\ /D",
+    "build": "rm -rf ./build && tsc",
+    "build:win": "rd /s /q \"build\" && tsc",
     "exec": "node --no-warnings ./build/src/main.js",
-    "start": "npm run build && NODE_ENV=production npm run exec -- --no-color",
-    "start:win": "npm run build:win && set NODE_ENV=production && npm run exec -- --no-color",
+    "start": "npm run build && NODE_ENV=production npm run exec",
+    "start:win": "npm run build:win && set NODE_ENV=production && npm run exec",
     "dev": "npm run build && NODE_ENV=development npm run exec",
     "dev:win": "npm run build:win && set NODE_ENV=development && npm run exec",
     "tools:update-databases": "npm run build && node ./build/tools/update-databases.js",
@@ -90,5 +90,9 @@
     "@/app": "./build/src",
     "@/conf": "./build/config",
     "@/root": "./build/"
+  },
+  "volta": {
+    "node": "15.14.0",
+    "npm": "7.9.0"
   }
 }

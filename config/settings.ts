@@ -1,9 +1,7 @@
-import path from 'path';
-
 export default {
   bot: {
     prefix: process.env.BOT_PREFIX || '.',
-    avatar: path.join(__dirname, '..', 'assets', 'logo.png'),
+    avatar: 'https://skript-mc.fr/assets/images/logo.png',
     guild: process.env.GUILD_ID,
   },
   miscellaneous: {

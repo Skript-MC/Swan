@@ -11,6 +11,7 @@ const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
   messageId: {
     type: String,
     required: true,
+    index: true,
   },
   channelId: {
     type: String,

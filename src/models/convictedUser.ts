@@ -7,6 +7,7 @@ const ConvictedUserSchema = new Schema<ConvictedUserDocument, ConvictedUserModel
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
   currentBanId: {
     type: String,
