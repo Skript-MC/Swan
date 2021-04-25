@@ -69,6 +69,7 @@ export default {
     main: process.env.MAIN_CHANNEL,
     snippets: process.env.SNIPPETS_CHANNEL,
     skriptHelp: [...process.env.SKRIPT_HELP_CHANNELS.split(',')],
+    skriptExtraHelp: [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')],
     otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
     help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
     skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
