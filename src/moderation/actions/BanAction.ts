@@ -29,7 +29,7 @@ class BanAction extends ModerationAction {
     if (this.data.duration === -1)
       await this._hardban();
     else if (this.updateInfos.isUpdate())
-      await this._reban();
+      await this._updateBan();
     else
       await this._ban();
   }
@@ -96,7 +96,7 @@ class BanAction extends ModerationAction {
     }
   }
 
-  private async _reban(): Promise<void> {
+  private async _updateBan(): Promise<void> {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
