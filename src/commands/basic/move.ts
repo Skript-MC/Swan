@@ -2,7 +2,7 @@ import { Argument, Command } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
+import type { GuildMessage, GuildTextBasedChannel } from '@/app/types';
 import type { MoveCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
@@ -18,7 +18,7 @@ class MoveCommand extends Command {
         id: 'channel',
         type: Argument.validate(
           'textChannel',
-          (message, _phrase, value) => settings.channels.help.includes(message.channel.id)
+          (message, _phrase, value: GuildTextBasedChannel) => settings.channels.help.includes(message.channel.id)
             && settings.channels.help.includes(value.id)
             && message.channel.id !== value.id,
         ),

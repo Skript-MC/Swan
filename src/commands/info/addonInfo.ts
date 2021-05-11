@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
-import type { Message } from 'discord.js';
+import type { Message, MessageReaction, User } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import Logger from '@/app/structures/Logger';
@@ -68,7 +68,7 @@ class AddonInfoCommand extends Command {
     const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
-      .createReactionCollector((reaction, user) => !user.bot
+      .createReactionCollector((reaction: MessageReaction, user: User) => !user.bot
         && user.id === message.author.id
         && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
       .once('collect', async (reaction) => {
@@ -88,7 +88,7 @@ class AddonInfoCommand extends Command {
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
     const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
-      .catch((err) => { Logger.error(err.message); });
+      .catch((err: Error) => { Logger.error(err.message); });
 
     if (!addon) {
       await message.channel.send(messages.global.oops);
