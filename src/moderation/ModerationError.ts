@@ -1,8 +1,8 @@
 class ModerationError extends Error {
   details: Map<string, string>;
 
-  constructor(...args: any[]) {
-    super(...args);
+  constructor() {
+    super();
     this.name = 'ModerationError';
     this.details = new Map();
   }
@@ -22,7 +22,7 @@ class ModerationError extends Error {
     return this;
   }
 
-  public etStack(stack: string): this {
+  public setStack(stack: string): this {
     this.stack = stack;
     return this;
   }

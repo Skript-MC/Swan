@@ -149,9 +149,9 @@ class SwanClient extends AkairoClient {
           unloadModules(this.listenerHandler);
           unloadModules(this.taskHandler);
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           Logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
-          Logger.error(error);
+          Logger.error(error.message);
         });
     });
 

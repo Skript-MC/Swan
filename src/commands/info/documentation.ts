@@ -1,5 +1,6 @@
 import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
+import type { MessageReaction, User } from 'discord.js';
 import he from 'he';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
@@ -91,7 +92,7 @@ class DocumentationCommand extends Command {
     const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
-      .createReactionCollector((reaction, user) => !user.bot
+      .createReactionCollector((reaction: MessageReaction, user: User) => !user.bot
         && user.id === message.author.id
         && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
       .once('collect', async (reaction) => {
