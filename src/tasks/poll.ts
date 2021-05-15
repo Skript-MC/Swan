@@ -1,3 +1,4 @@
+import type { ObjectId } from 'mongoose';
 import Poll from '@/app/models/poll';
 import PollManager from '@/app/structures/PollManager';
 import Task from '@/app/structures/Task';
@@ -17,7 +18,7 @@ class PollTask extends Task {
     });
 
     for (const poll of polls)
-      await PollManager.end(this.client, poll._id);
+      await PollManager.end(this.client, poll._id as ObjectId);
   }
 }
 

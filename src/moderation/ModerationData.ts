@@ -36,6 +36,7 @@ class ModerationData {
   // TODO: Maybe this should be put in a separate class that acts the same as ModerationData.
   file: { path: string; name: string };
   shouldPurge: boolean;
+  originalWarnId: string;
 
   /**
    * Create moderation data from a message or from individual informations.
@@ -77,6 +78,7 @@ class ModerationData {
     this.informations = {};      // The additional information to be given to the sanction model.
     this.file = null;            // File informations if it is a ban.
     this.shouldPurge = false;    // Whether we should purge the messages of the member while hard-banning them.
+    this.originalWarnId = null;  // The ID of the original warn to remove in a `.removewarn`.
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
@@ -117,7 +119,7 @@ class ModerationData {
     return this;
   }
 
-  public setInformations(infos: Record<string, unknown>): this {
+  public setInformations(infos: Partial<SanctionInformations>): this {
     this.informations = { ...this.informations, ...infos };
     return this;
   }
@@ -129,6 +131,11 @@ class ModerationData {
 
   public setShouldPurge(bool: boolean): this {
     this.shouldPurge = bool;
+    return this;
+  }
+
+  public setOriginalWarnId(id: string): this {
+    this.originalWarnId = id;
     return this;
   }
 
