@@ -164,10 +164,10 @@ Un warn permet de donner un avertissement à un membre. Au bout de deux avertiss
 #### Mise à jour (Annulation)
 
 Vous pouvez annuler l'avertissement d'un membre en utilisant la commande `.removewarn` (ou `.remove-warn`, `.remove_warn`, `.unwarn` et `.dewarn`).
-Il faut ensuite ajouter l'utilisateur auquel il faut retirer un avertissement, **ce sera toujours le dernier avertissement du membre qui sera annulé**.
+Il faut ensuite ajouter l'ID de l'avertissement à supprimer.
 Enfin, vous pouvez, optionnellement, ajouter une raison pour annuler cet avertissement.
 
-Modèle : `.removewarn <@mention | pseudo | ID> [raison]`
+Modèle : `.removewarn <ID de l'avertissement> [raison]`
 
 #### Précisions
 
@@ -283,7 +283,7 @@ Voici à quoi ressemble un schema de la base de données Sanctions :
     },
     "banChannelId": {
       "type": "String"
-    }
+    },
   },
   "updates": [{
     "date": {

@@ -35,6 +35,7 @@ class SwanCacheManager {
       main: null,
       snippets: null,
       skriptHelp: null,
+      skriptExtraHelp: null,
       otherHelp: null,
       help: null,
       skriptTalk: null,

@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
+import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
@@ -98,7 +99,7 @@ class MessageReactionAddListener extends Listener {
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
       // If the poll's creator clicked the "Stop" button
-      await PollManager.end(this.client, poll._id, true);
+      await PollManager.end(this.client, poll._id as ObjectId, true);
     } else if (pollReactions.specials[0] === emoji.name) {
       // If someone clicked the "Info" button
       await users.remove(user);
