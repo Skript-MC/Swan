@@ -45,14 +45,14 @@ class RemoveWarnCommand extends Command {
 
     const member = message.guild.member(warn.memberId);
 
-    if (this.client.currentlyModerating.includes(member.id)) {
+    if (this.client.currentlyModerating.has(member.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.push(member.id);
+    this.client.currentlyModerating.add(member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.splice(this.client.currentlyModerating.indexOf(member.id), 1);
+      this.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
     try {

@@ -38,9 +38,9 @@ declare module 'discord-akairo' {
   interface AkairoClient {
     cache: SwanCacheManager;
 
-    currentlyBanning: string[];
-    currentlyUnbanning: string[];
-    currentlyModerating: string[];
+    currentlyBanning: Set<string>;
+    currentlyUnbanning: Set<string>;
+    currentlyModerating: Set<string>;
     isLoading: boolean;
 
     commandHandler: CommandHandler;

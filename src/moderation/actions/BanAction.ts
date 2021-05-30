@@ -13,11 +13,11 @@ import ModerationAction from './ModerationAction';
 
 class BanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyBanning.push(this.data.victim.id);
+    this.client.currentlyBanning.add(this.data.victim.id);
   }
 
   protected after(): void {
-    this.client.currentlyBanning.splice(this.client.currentlyBanning.indexOf(this.data.victim.id), 1);
+    this.client.currentlyBanning.delete(this.data.victim.id);
     this.client.cache.convictedUsers
       .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }

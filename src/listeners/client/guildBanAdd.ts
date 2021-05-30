@@ -13,7 +13,7 @@ class GuildBanAddListener extends Listener {
   }
 
   public async exec(guild: Guild, user: User): Promise<void> {
-    if (this.client.currentlyBanning.includes(user.id))
+    if (this.client.currentlyBanning.has(user.id))
       return;
 
     const member = guild.members.resolve(user.id) || await guild.members.fetch(user.id);
