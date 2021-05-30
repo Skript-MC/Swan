@@ -101,7 +101,7 @@ class ReadyListener extends Listener {
       const textChannel = channel as TextChannel;
       textChannel.messages.fetch(element.messageId)
         .then((message) => {
-          this.client.cache.reactionRolesIds.push(message.id);
+          this.client.cache.reactionRolesIds.add(message.id);
         })
         .catch(async () => {
           await ReactionRole.findByIdAndDelete(element._id);

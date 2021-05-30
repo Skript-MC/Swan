@@ -18,7 +18,7 @@ class MessageReactionRemove extends Listener {
       return;
 
     const message = reaction.message as GuildMessage;
-    if (this.client.cache.reactionRolesIds.includes(message.id))
+    if (this.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
   }
 

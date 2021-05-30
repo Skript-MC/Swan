@@ -26,11 +26,11 @@ class MessageReactionAddListener extends Listener {
 
     const message = reaction.message as GuildMessage;
 
-    if (this.client.cache.pollMessagesIds.includes(message.id))
+    if (this.client.cache.pollMessagesIds.has(message.id))
       await this._handlePoll(reaction, message, user);
     else if (settings.channels.suggestions === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
-    else if (this.client.cache.reactionRolesIds.includes(message.id))
+    else if (this.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
   }
 
@@ -127,7 +127,7 @@ class MessageReactionAddListener extends Listener {
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
     const document = await ReactionRole.findOne({ messageId: message.id });
     if (!document) {
-      this.client.cache.reactionRolesIds = this.client.cache.reactionRolesIds.filter(element => element !== message.id);
+      this.client.cache.reactionRolesIds.delete(message.id);
       return;
     }
     const emoji = document.reaction;
