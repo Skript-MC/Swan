@@ -30,7 +30,7 @@ class JokeCommand extends Command {
     if (args.jokeName) {
       joke = await Message.findOne({ aliases: args.jokeName, messageType: MessageName.Joke });
     } else {
-      const jokeCount = await Message.count({ messageType: MessageName.Joke });
+      const jokeCount = await Message.countDocuments({ messageType: MessageName.Joke });
       const random = Math.floor(Math.random() * jokeCount);
       joke = await Message.findOne({ messageType: MessageName.Joke }).skip(random);
     }
