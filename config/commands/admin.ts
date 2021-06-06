@@ -13,7 +13,7 @@ export const refresh = {
     examples: ['refresh'],
   },
   messages: {
-    success: ':white_check_mark: Le cache a été rafraîchit avec succès !',
+    success: ':white_check_mark: Le cache a été rafraîchi avec succès !',
   },
 };
 
