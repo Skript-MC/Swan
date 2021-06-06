@@ -331,9 +331,10 @@ export interface InvisionTopic {
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
-  OnlyBotChannel,
-  NoHelpChannel,
-  OnlyHelpChannel,
+  /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
+  OnlyBotChannel = 1,
+  NoHelpChannel = 1 << 1,
+  OnlyHelpChannel = 1 << 2,
 }
 
 /** Informations associated to a task in the TaskHandler */

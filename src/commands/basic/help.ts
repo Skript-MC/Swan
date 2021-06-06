@@ -22,7 +22,7 @@ class HelpCommand extends Command {
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
-    this.rules = [Rules.OnlyBotChannel];
+    this.rules = Rules.OnlyBotChannel;
   }
 
   public async exec(message: GuildMessage, args: HelpCommandArguments): Promise<void> {

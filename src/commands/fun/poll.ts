@@ -51,7 +51,7 @@ class PollCommand extends Command {
       channel: 'guild',
     });
 
-    this.rules = [Rules.NoHelpChannel];
+    this.rules = Rules.NoHelpChannel;
   }
 
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
