@@ -23,7 +23,7 @@ declare module 'discord-akairo' {
   }
 
   interface Command {
-    rules?: number[];
+    rules?: number;
     details: CommandDetails;
 
     // We add a signature where the message is of type GuildMessage, which can be useful
