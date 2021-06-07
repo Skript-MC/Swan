@@ -72,6 +72,8 @@ export interface SkriptMcDocumentationSyntaxResponse {
   id: number;
   addon: string;
   name: string;
+  frenchName?: string;
+  englishName?: string;
   content: string;
   version: string;
   example: string;
