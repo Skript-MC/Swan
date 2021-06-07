@@ -313,9 +313,17 @@ class SwanClient extends AkairoClient {
         .then(res => res?.data);
 
       for (const syntax of allSyntaxes) {
-        const addon = allAddons.find(adn => adn.name === syntax.addon);
+        const addon = allAddons.find(adn => adn.name.toLowerCase() === syntax.addon.toLowerCase());
         if (!addon)
           continue;
+        const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(syntax.name);
+        if (result) {
+          const { englishName, frenchName } = result.groups;
+          if (englishName && frenchName) {
+            syntax.englishName = englishName;
+            syntax.frenchName = frenchName;
+          }
+        }
         const syntaxWithAddon: SkriptMcDocumentationSyntaxAndAddon = {
           ...syntax,
           addon: {

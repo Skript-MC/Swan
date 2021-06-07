@@ -1,15 +1,16 @@
 import { Command } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
 import type { MessageReaction, User } from 'discord.js';
-import he from 'he';
+import { MessageEmbed } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
+import Turndown from 'turndown';
 import type { GuildMessage, SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import type{ DocumentationCommandArguments } from '@/app/types/CommandArguments';
-import { noop, trimText } from '@/app/utils';
+import type { DocumentationCommandArguments } from '@/app/types/CommandArguments';
+import { noop, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
+const turndownService = new Turndown();
 
 class DocumentationCommand extends Command {
   constructor() {
@@ -40,23 +41,52 @@ class DocumentationCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
-    // Get all the matching syntaxes thanks to this very accurate and complex algorithm:
-    // - Discard if the category asked doesn't match (90%) the category of the syntax;
-    // - Discard if the addon asked isn't the same as the addon of the syntax;
-    // - Select if the query matches (70%) the name of the syntax;
-    // - Or select if the query matches (70%) the description of the syntax;
-    // - Or select if the query is included in the name of the syntax;
-    // We then only take the first 10 results.
-    const matchingSyntaxes: SkriptMcDocumentationSyntaxAndAddon[] = this.client.cache.skriptMcSyntaxes
-      .filter((elt) => {
-        if (args.category && jaroWinklerDistance(elt.category, args.category, { caseSensitive: false }) < 0.9)
-          return false;
-        if (args.addon && elt.addon.name.toLowerCase() !== args.addon.toLowerCase())
-          return false;
-        return jaroWinklerDistance(elt.name, args.query, { caseSensitive: false }) >= 0.7
-          || jaroWinklerDistance(elt.content, args.query, { caseSensitive: false }) >= 0.7
-          || elt.name.toLowerCase().includes(args.query.toLowerCase());
-      })
+    // Get all the matching syntaxes thanks to this very accurate and complex algorithm.
+    // Each syntax is given a score between 0 and 1 symbolising the similarity with the user's query:
+    // - 1 if the query matches the syntax's ID
+    // - 0 if the query does not match the syntax's category
+    // - 0 if the query does not match the syntax's addon
+    // - 4 properties are tested: englishName, frenchName, name and content
+    //   The similarity of each is calculated in this order, and if this similarity exceeds 0.7,
+    //   then the syntax similarity score is defined.
+    // The list of syntaxes is sorted by their similarity score and we then only take the first 10 results.
+    // If a syntax has a similarity higher than 0.9, then we deduce that it is the best and most accurate syntax,
+    // so we send it directly. Otherwise, we propose to the user to choose which syntax he wants to display in the
+    // order of similarity. This algorithm is subject to change depending on its production effectiveness.
+
+    const similarity: Array<[article: SkriptMcDocumentationSyntaxAndAddon, similarity: number]> = [];
+    this.client.cache.skriptMcSyntaxes
+      .forEach((article) => {
+        if (args.query === article.id.toString())
+          return similarity.push([article, 1]);
+        if (args.category && jaroWinklerDistance(article.category, args.category, { caseSensitive: false }) < 0.9)
+          return similarity.push([article, 0]);
+        if (args.addon && article.addon.name.toLowerCase() !== args.addon.toLowerCase())
+          return similarity.push([article, 0]);
+        for (const property of [article.englishName, article.frenchName, article.name, article.content]) {
+          if (property) {
+            const distance = jaroWinklerDistance(property, args.query, { caseSensitive: false });
+            if (distance >= 0.7)
+              return similarity.push([article, distance]);
+          }
+        }
+        return similarity.push([article, 0]);
+      });
+
+    // Sorting in descending order.
+    similarity.sort((a, b) => b[1] - a[1]);
+
+    // Checking the existence of an accurate syntax.
+    const bestMatch = similarity.filter(elt => elt[1] > 0.9);
+    if (bestMatch.length === 1) {
+      await this._sendDetail(message, bestMatch[0][0]);
+      return;
+    }
+
+    // Formatting the data to return an array containing only 10 results.
+    const matchingSyntaxes: SkriptMcDocumentationSyntaxAndAddon[] = similarity
+      .filter(elt => elt[1] > 0.5)
+      .map(elt => elt[0])
       .slice(0, 10);
 
     // If we found no match.
@@ -114,12 +144,12 @@ class DocumentationCommand extends Command {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setTitle(he.decode(pupa(embedMessages.title, { syntax })))
+      .setTitle(stripTags(pupa(embedMessages.title, { syntax })))
       .setURL(syntax.documentationUrl)
       .setTimestamp()
       .setDescription(
         trimText(
-          he.decode(
+          turndownService.turndown(
             pupa(embedMessages.description, {
               syntax: {
                 ...syntax,
@@ -143,8 +173,8 @@ class DocumentationCommand extends Command {
 
     embed.addField(embedMessages.version, syntax.version, true);
     embed.addField(embedMessages.addon, addon, true);
-    embed.addField(embedMessages.pattern, pupa(embedMessages.patternContent, { pattern: he.decode(syntax.pattern) }));
-    embed.addField(embedMessages.example, pupa(embedMessages.exampleContent, { example: he.decode(syntax.example) }));
+    embed.addField(embedMessages.pattern, pupa(embedMessages.patternContent, { pattern: stripTags(syntax.pattern) }));
+    embed.addField(embedMessages.example, pupa(embedMessages.exampleContent, { example: stripTags(syntax.example) }));
 
     await message.channel.send(embed);
   }
