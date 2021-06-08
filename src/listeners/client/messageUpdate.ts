@@ -78,7 +78,7 @@ class MessageUpdateListener extends Listener {
         mentions: deletedMentions
           .map(mention => (mention instanceof User ? mention.username : mention.name))
           .join(', '),
-        member: newMessage.member,
+        user: newMessage.member.user,
       }),
     ).catch(noop);
     if (!botNotificationMessage)

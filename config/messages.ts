@@ -21,7 +21,8 @@ export default {
   miscellaneous: {
     noDescription: 'Aucune description disponible.',
     noDocLink: stripIndent`
-      Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
+      Tu ne peux pas poster ce lien ! Utilise plutôt la commande de documentation de Swan.
+      Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
       Voici ton message, si tu souhaites le récupérer : \`\`\`
       {content}
       \`\`\`
@@ -29,8 +30,8 @@ export default {
     noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
     invalidMessage: 'Ton message ne respecte pas le règlement du salon {message.channel}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
     commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {command.alias}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
-    ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {member.displayName}. :innocent:',
-    ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {member.displayName}. :innocent:',
+    ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {user.username}. :innocent:',
+    ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {user.username}. :innocent:',
     separator: ' • ',
     renamed: stripIndent`
       Ton pseudonyme contenait des caractères spéciaux, donc je me suis permis de te les retirer (voire de te renommer complètement), pour que ce soit plus simple de te mentionner. J'espère que mes modifications te plairont.

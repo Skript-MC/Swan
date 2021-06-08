@@ -19,7 +19,7 @@ class GuildMemberRemoveListener extends Listener {
 
   public async exec(member: GuildMember): Promise<void> {
     const isBanned = await ModerationHelper.isBanned(member.id, false);
-    if (isBanned && this.client.currentlyBanning.includes(member.id))
+    if (isBanned && this.client.currentlyBanning.has(member.id))
       return;
 
     const kicks = await member.guild.fetchAuditLogs({

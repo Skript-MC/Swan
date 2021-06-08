@@ -15,7 +15,7 @@ class GuildBanRemoveListener extends Listener {
   }
 
   public async exec(_guild: Guild, user: User): Promise<void> {
-    if (this.client.currentlyUnbanning.includes(user.id))
+    if (this.client.currentlyUnbanning.has(user.id))
       return;
 
     const isBanned = await ModerationHelper.isBanned(user.id, true);

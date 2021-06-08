@@ -80,7 +80,7 @@ class ReactionRoleCommand extends Command {
       reaction: emoji,
     };
 
-    this.client.cache.reactionRolesIds.push(document.messageId);
+    this.client.cache.reactionRolesIds.add(document.messageId);
     await ReactionRole.create(document).catch(noop);
   }
 }
