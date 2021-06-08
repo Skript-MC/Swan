@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Bot discord de Skript-MC.",
   "main": "./src/main.ts",
   "scripts": {
@@ -86,11 +86,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-unicorn": "^32.0.1",
     "typescript": "^4.3.2"
-  },
-  "_moduleAliases": {
-    "@/app": "./build/src",
-    "@/conf": "./build/config",
-    "@/root": "./build/"
   },
   "volta": {
     "node": "15.14.0",
