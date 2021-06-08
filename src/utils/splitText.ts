@@ -18,7 +18,7 @@ function splitText(text: string, n = 2000): string[] {
     if (!blocks[index])
       blocks[index] = '';
 
-    blocks[index] += `${line.slice(n - 1, -1)}\n`;
+    blocks[index] += `${line.slice(0, n - 1)}\n`;
   }
 
   return blocks;

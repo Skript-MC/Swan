@@ -15,15 +15,15 @@ class RulesInhibitor extends Inhibitor {
     // Return true to block the command.
 
     // If the command is forbidden in help channels.
-    if (command.rules?.includes(Rules.NoHelpChannel) && settings.channels.help.includes(message.channel.id))
+    if (command.rules & Rules.NoHelpChannel && settings.channels.help.includes(message.channel.id))
       return true;
 
     // If the command has to be executed in the bot channel.
-    if (command.rules?.includes(Rules.OnlyBotChannel) && message.channel.id !== settings.channels.bot)
+    if (command.rules & Rules.OnlyBotChannel && message.channel.id !== settings.channels.bot)
       return true;
 
     // If the command only works in the help channels.
-    return command.rules?.includes(Rules.OnlyHelpChannel)
+    return command.rules & Rules.OnlyHelpChannel
       && (!settings.channels.help.includes(message.channel.id)
         || message.channel.id !== settings.channels.bot);
   }

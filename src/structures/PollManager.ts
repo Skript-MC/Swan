@@ -16,7 +16,7 @@ export default {
     if (!poll)
       return;
 
-    client.cache.pollMessagesIds.slice(client.cache.pollMessagesIds.indexOf(poll.messageId), 1);
+    client.cache.pollMessagesIds.delete(poll.messageId);
 
     // Validate the channel and the message ID.
     const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;

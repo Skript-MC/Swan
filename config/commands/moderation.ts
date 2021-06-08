@@ -1,7 +1,7 @@
 import { stripIndent } from 'common-tags';
 import { hasStaffRole, permissions } from '@/conf/configUtils';
 
-const see = (where: string): string => `Voir [la documentation](https://github.com/Skript-MC/Swan/wiki/Modération#${where}) pour plus d'informations.`;
+const see = (where: string): string => `Voir la documentation disponible sur <https://github.com/Skript-MC/Swan/wiki/Modération#${where}> pour plus d'informations.`;
 
 const commonMessages = {
   promptStartMember: 'Il faut ajouter un membre qui doit être présent sur le Discord. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :',

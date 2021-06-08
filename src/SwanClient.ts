@@ -56,9 +56,9 @@ class SwanClient extends AkairoClient {
     // Cache used internally to prevent unnecessary DB call when possible.
     this.cache = new SwanCacheManager();
 
-    this.currentlyBanning = [];
-    this.currentlyUnbanning = [];
-    this.currentlyModerating = [];
+    this.currentlyBanning = new Set();
+    this.currentlyUnbanning = new Set();
+    this.currentlyModerating = new Set();
 
     Logger.info('Creating Command handler...');
     this.commandHandler = new CommandHandler(this, {
@@ -241,7 +241,7 @@ class SwanClient extends AkairoClient {
     // Cache all polls' messages' ids.
     const polls = await Poll.find().catch(nullop);
     if (polls)
-      this.cache.pollMessagesIds.push(...polls.map(poll => poll.messageId));
+      this.cache.pollMessagesIds.addAll(...polls.map(poll => poll.messageId));
   }
 
   private async _loadCommandStats(): Promise<void> {
@@ -268,7 +268,7 @@ class SwanClient extends AkairoClient {
     // Cache all reaction roles' messages' ids.
     const reactionRoles = await ReactionRole.find().catch(nullop);
     if (reactionRoles)
-      this.cache.reactionRolesIds.push(...reactionRoles.map(document => document.messageId));
+      this.cache.reactionRolesIds.addAll(...reactionRoles.map(document => document.messageId));
   }
 
   private async _loadSharedConfigs(): Promise<void> {
@@ -313,9 +313,17 @@ class SwanClient extends AkairoClient {
         .then(res => res?.data);
 
       for (const syntax of allSyntaxes) {
-        const addon = allAddons.find(adn => adn.name === syntax.addon);
+        const addon = allAddons.find(adn => adn.name.toLowerCase() === syntax.addon.toLowerCase());
         if (!addon)
           continue;
+        const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(syntax.name);
+        if (result) {
+          const { englishName, frenchName } = result.groups;
+          if (englishName && frenchName) {
+            syntax.englishName = englishName;
+            syntax.frenchName = frenchName;
+          }
+        }
         const syntaxWithAddon: SkriptMcDocumentationSyntaxAndAddon = {
           ...syntax,
           addon: {

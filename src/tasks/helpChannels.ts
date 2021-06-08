@@ -1,13 +1,13 @@
 import type { Message } from 'discord.js';
-import { Collection, Permissions, TextChannel } from 'discord.js';
+import { Permissions, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import Task from '@/app/structures/Task';
 import settings from '@/conf/settings';
 import { helpChannels as config } from '@/conf/tasks';
 
 class HelpChannels extends Task {
-  private readonly _basicHelpChannels: TextChannel[] = [];
-  private readonly _extraHelpChannels: TextChannel[] = [];
+  private _basicHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
+  private _extraHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
 
   constructor() {
     super('helpChannels', {
@@ -17,78 +17,90 @@ class HelpChannels extends Task {
   }
 
   public async exec(): Promise<void> {
-    if (this._basicHelpChannels.length === 0)
-      await this._init();
+    // Refresh channels data.
+    await this._initChannels();
 
-    if (this._extraHelpChannels.every(chan => this._isNotVisibleToEveryone(chan))) {
-      for (const channel of this._basicHelpChannels) {
-        if (await this._hasEnoughRecentMessages(channel)) {
-          await this._unlockChannels();
-          break;
-        }
-      }
-    } else if (this._extraHelpChannels.every(chan => !this._isRecent(chan.lastMessage))) {
-      await this._lockChannels();
+    // If the extra channels are locked and the basic channels meet the requirements.
+    if (this._extraHelpChannels.every(chan => this._isLocked(chan[0]))
+      && this._basicHelpChannels.every(chan => this._meetRequirements(chan[1], config.basic.inactivityTime))) {
+        for (const chan of this._extraHelpChannels)
+          await this._unlockChannel(chan[0]);
+        return;
+    }
+
+    // If the extra channels are unlocked.
+    if (this._extraHelpChannels.every(chan => !this._isLocked(chan[0]))
+      && this._extraHelpChannels.every(chan => !this._meetRequirements(chan[1], config.extra.inactivityTime))) {
+      for (const chan of this._extraHelpChannels)
+          await this._lockChannel(chan[0]);
     }
   }
 
-  private async _init(): Promise<void> {
-    for (const channelId of settings.channels.skriptHelp) {
-      const chan = await this.client.channels.fetch(channelId);
-      if (chan instanceof TextChannel)
-        this._basicHelpChannels.push(chan);
-    }
-    for (const channelId of settings.channels.skriptExtraHelp) {
-      const chan = await this.client.channels.fetch(channelId);
-      if (chan instanceof TextChannel)
-        this._extraHelpChannels.push(chan);
-    }
+  private async _fetchLastMessages(channel: TextChannel, limit: number): Promise<Message[]> {
+    const lastMessages = await channel.messages.fetch({ limit }, false).catch(console.error);
+    if (!lastMessages)
+      return [];
+    // Get the first message of the group of the last N messages (where N = this.inactivityMessages)
+    return lastMessages.array().sort((a, b) => b.createdTimestamp - a.createdTimestamp);
   }
 
-  private async _lockChannels(): Promise<void> {
-    for (const channel of this._extraHelpChannels) {
-      await channel.overwritePermissions([{
-        id: settings.roles.everyone,
-        deny: [Permissions.FLAGS.SEND_MESSAGES],
-      }, {
-        id: settings.roles.staff,
-        allow: [Permissions.FLAGS.SEND_MESSAGES],
-      }]);
-      await channel.send(pupa(config.lockMessage, { channels: this._basicHelpChannels.join(', ') }));
-    }
+  private _isMessageRecent(message: Message, time: number): boolean {
+    return message?.createdTimestamp > (Date.now() - time);
   }
 
-  private async _unlockChannels(): Promise<void> {
-    for (const channel of this._extraHelpChannels) {
-      await channel.overwritePermissions([{
-        id: settings.roles.everyone,
-        allow: [Permissions.FLAGS.SEND_MESSAGES],
-      }]);
-      await channel.send(config.unlockMessage);
-    }
+  private _meetRequirements(lastMessages: Message[], time: number): boolean {
+    const lastMessage = lastMessages[lastMessages.length - 1];
+    if (!lastMessage)
+      return false;
+    return this._isMessageRecent(lastMessage, time);
   }
 
-  private _isNotVisibleToEveryone(channel: TextChannel): boolean {
+  private async _unlockChannel(channel: TextChannel): Promise<void> {
+    await channel.overwritePermissions([{
+      id: settings.roles.everyone,
+      allow: [Permissions.FLAGS.SEND_MESSAGES],
+    }]);
+    await channel.send(config.unlockMessage);
+  }
+
+  private _isLocked(channel: TextChannel): boolean {
     const { everyone } = settings.roles;
-    // Check if @everyone can't see the channel
+    // Check if @everyone can't write in the channel
     return channel.permissionOverwrites
       .get(everyone)
       ?.deny.has(Permissions.FLAGS.SEND_MESSAGES);
   }
 
-  private _isRecent(message: Message): boolean {
-    return message?.createdTimestamp > (Date.now() - config.inactivityTime);
+  private async _lockChannel(channel: TextChannel): Promise<void> {
+    await channel.overwritePermissions([{
+      id: settings.roles.everyone,
+      deny: [Permissions.FLAGS.SEND_MESSAGES],
+    }, {
+      id: settings.roles.staff,
+      allow: [Permissions.FLAGS.SEND_MESSAGES],
+    }]);
+    await channel.send(pupa(config.lockMessage, { channels: this._basicHelpChannels.map(chan => chan[0]).join(', ') }));
   }
 
-  private async _hasEnoughRecentMessages(channel: TextChannel): Promise<boolean> {
-    const lastMessages = await channel.messages.fetch({ limit: config.inactivityMessages }, false).catch(console.error);
-    if (!(lastMessages instanceof Collection))
-      return true;
-    // Get the first message of the group of the last N messages (where N = this.inactivityMessages)
-    const sortedMessages = lastMessages.array().sort((a, b) => b.createdTimestamp - a.createdTimestamp);
-    const firstMessage = sortedMessages[config.inactivityMessages - 1];
-    // Check if it is recent
-    return this._isRecent(firstMessage);
+  private async _initChannels(): Promise<void> {
+    // Clear basic and extra help channels
+    this._basicHelpChannels = [];
+    this._extraHelpChannels = [];
+
+    for (const channelId of settings.channels.skriptHelp) {
+      const chan = await this.client.channels.fetch(channelId);
+      if (!(chan instanceof TextChannel))
+        continue;
+      const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
+      this._basicHelpChannels.push([chan, lastMessages]);
+    }
+    for (const channelId of settings.channels.skriptExtraHelp) {
+      const chan = await this.client.channels.fetch(channelId);
+      if (!(chan instanceof TextChannel))
+        continue;
+      const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
+      this._extraHelpChannels.push([chan, lastMessages]);
+    }
   }
 }
 
