@@ -21,7 +21,8 @@ export default {
   miscellaneous: {
     noDescription: 'Aucune description disponible.',
     noDocLink: stripIndent`
-      Tu ne peux pas poster ce lien ! Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
+      Tu ne peux pas poster ce lien ! Utilise plutôt la commande de documentation de Swan.
+      Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
       Voici ton message, si tu souhaites le récupérer : \`\`\`
       {content}
       \`\`\`
