@@ -1,5 +1,6 @@
 import { Listener } from 'discord-akairo';
 import type { MessageReaction, User } from 'discord.js';
+import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
@@ -25,11 +26,11 @@ class MessageReactionAddListener extends Listener {
 
     const message = reaction.message as GuildMessage;
 
-    if (this.client.cache.pollMessagesIds.includes(message.id))
+    if (this.client.cache.pollMessagesIds.has(message.id))
       await this._handlePoll(reaction, message, user);
     else if (settings.channels.suggestions === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
-    else if (this.client.cache.reactionRolesIds.includes(message.id))
+    else if (this.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
   }
 
@@ -98,7 +99,7 @@ class MessageReactionAddListener extends Listener {
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
       // If the poll's creator clicked the "Stop" button
-      await PollManager.end(this.client, poll._id, true);
+      await PollManager.end(this.client, poll._id as ObjectId, true);
     } else if (pollReactions.specials[0] === emoji.name) {
       // If someone clicked the "Info" button
       await users.remove(user);
@@ -126,7 +127,7 @@ class MessageReactionAddListener extends Listener {
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
     const document = await ReactionRole.findOne({ messageId: message.id });
     if (!document) {
-      this.client.cache.reactionRolesIds = this.client.cache.reactionRolesIds.filter(element => element !== message.id);
+      this.client.cache.reactionRolesIds.delete(message.id);
       return;
     }
     const emoji = document.reaction;

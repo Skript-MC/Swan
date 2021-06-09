@@ -1,4 +1,5 @@
 import { Argument, Command } from 'discord-akairo';
+import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import type { GuildMessage } from '@/app/types';
 import type { LinksCommandArguments } from '@/app/types/CommandArguments';
@@ -29,7 +30,7 @@ class LinksCommand extends Command {
     const msg = await message.channel.send(this._getEmbedForPage(page));
 
     const collector = msg
-      .createReactionCollector((reaction, user) => user.id === message.author.id
+      .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
         && reactions.includes(reaction.emoji.name))
       .on('collect', async (reaction) => {
         await reaction.users.remove(message.author);
@@ -41,14 +42,24 @@ class LinksCommand extends Command {
         }
 
         const oldPage = page;
-        if (reaction.emoji.name === '⏮')
-          page = 0;
-        else if (reaction.emoji.name === '◀')
-          page = page === 0 ? 0 : page - 1;
-        else if (reaction.emoji.name === '▶')
-          page = page === maxPage ? maxPage : page + 1;
-        else if (reaction.emoji.name === '⏭')
-          page = maxPage;
+        switch (reaction.emoji.name) {
+          case '⏮': {
+            page = 0;
+            break;
+          }
+          case '◀': {
+            page = page === 0 ? 0 : page - 1;
+            break;
+          }
+          case '▶': {
+            page = page === maxPage ? maxPage : page + 1;
+            break;
+          }
+          case '⏭': {
+            page = maxPage;
+            break;
+          }
+        }
 
         if (oldPage !== page)
           await msg.edit(this._getEmbedForPage(page));

@@ -1,6 +1,6 @@
 import { Listener } from 'discord-akairo';
 import { DMChannel } from 'discord.js';
-import type { Message } from 'discord.js';
+import type { Message, MessageReaction, User } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import type { GuildMessage } from '@/app/types';
@@ -62,7 +62,7 @@ class MessageInvalidListener extends Listener {
     }
 
     const collector = botMessage
-      .createReactionCollector((reaction, user) => !user.bot
+      .createReactionCollector((reaction: MessageReaction, user: User) => !user.bot
           && user.id === message.author.id
           && (reaction.emoji.name === '✅' || reactions.includes(reaction.emoji.name)))
       .once('collect', async (reaction) => {

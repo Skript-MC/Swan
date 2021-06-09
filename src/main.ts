@@ -1,3 +1,4 @@
+import 'core-js/proposals/collection-methods';
 import 'source-map-support/register';
 import 'module-alias/register';
 import 'dotenv/config';
@@ -49,7 +50,7 @@ if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
     beforeBreadcrumb(breadcrumb: Sentry.Breadcrumb): Sentry.Breadcrumb {
       // Strip color codes off
       if (breadcrumb.category === 'console') {
-        // eslint-disable-next-line unicorn/no-unsafe-regex, no-control-regex
+        // eslint-disable-next-line no-control-regex
         breadcrumb.message = breadcrumb.message.replace(/\u001B[();?[]{0,2}(?:;?\d)*./g, '');
       }
       return breadcrumb;

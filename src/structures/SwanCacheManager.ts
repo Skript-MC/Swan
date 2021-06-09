@@ -17,8 +17,8 @@ interface GithubCache {
 class SwanCacheManager {
   addonsVersions: string[];
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
-  pollMessagesIds: string[];
-  reactionRolesIds: string[];
+  pollMessagesIds: Set<string>;
+  reactionRolesIds: Set<string>;
   channels: Nullable<CachedChannels>;
   modules: AkairoModule[];
   github: GithubCache;
@@ -35,6 +35,7 @@ class SwanCacheManager {
       main: null,
       snippets: null,
       skriptHelp: null,
+      skriptExtraHelp: null,
       otherHelp: null,
       help: null,
       skriptTalk: null,
@@ -46,8 +47,8 @@ class SwanCacheManager {
     this.addonsVersions = [];
     this.skriptMcSyntaxes = [];
     this.github = {};
-    this.pollMessagesIds = [];
-    this.reactionRolesIds = [];
+    this.pollMessagesIds = new Set();
+    this.reactionRolesIds = new Set();
     this.modules = [];
     this.gitCommit = '';
     this.discordUsers = [];

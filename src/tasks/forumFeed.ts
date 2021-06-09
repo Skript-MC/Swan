@@ -39,7 +39,7 @@ class ForumFeedTask extends Task {
       settings.apis.forum + config.endpoints.forums.topics,
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
-      .catch((err) => {
+      .catch((err: Error) => {
         Logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
         Logger.detail(err.message);
       });
@@ -72,7 +72,7 @@ class ForumFeedTask extends Task {
       settings.apis.forum + config.endpoints.files.files,
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
-      .catch((err) => {
+      .catch((err: Error) => {
         Logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
         Logger.detail(err.message);
       });

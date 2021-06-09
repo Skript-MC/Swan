@@ -105,6 +105,27 @@ abstract class ModerationAction {
     }
   }
 
+  protected get originalAction(): string {
+    switch (this.data.type) {
+      case SanctionTypes.Ban:
+        if (this.updateInfos.isUpdate())
+          return messages.moderation.sanctionNames.ban;
+        return this.action;
+      case SanctionTypes.Mute:
+        if (this.updateInfos.isUpdate())
+          return messages.moderation.sanctionNames.mute;
+        return this.action;
+      case SanctionTypes.Unban:
+        return messages.moderation.sanctionNames.ban;
+      case SanctionTypes.Unmute:
+        return messages.moderation.sanctionNames.mute;
+      case SanctionTypes.RemoveWarn:
+        return messages.moderation.sanctionNames.warn;
+      default:
+        return this.action;
+    }
+  }
+
   protected get color(): string {
     return settings.moderation.colors[this.data.type];
   }

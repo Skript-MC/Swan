@@ -52,7 +52,7 @@ class MessageDeleteListener extends Listener {
         mentions: mentions
           .map(mention => (mention instanceof User ? mention.username : mention.name))
           .join(', '),
-        member: message.member,
+        user: message.member.user,
       }),
     ).catch(noop);
     if (!botNotificationMessage)

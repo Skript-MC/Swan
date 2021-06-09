@@ -23,7 +23,7 @@ declare module 'discord-akairo' {
   }
 
   interface Command {
-    rules?: number[];
+    rules?: number;
     details: CommandDetails;
 
     // We add a signature where the message is of type GuildMessage, which can be useful
@@ -38,9 +38,9 @@ declare module 'discord-akairo' {
   interface AkairoClient {
     cache: SwanCacheManager;
 
-    currentlyBanning: string[];
-    currentlyUnbanning: string[];
-    currentlyModerating: string[];
+    currentlyBanning: Set<string>;
+    currentlyUnbanning: Set<string>;
+    currentlyModerating: Set<string>;
     isLoading: boolean;
 
     commandHandler: CommandHandler;

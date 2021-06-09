@@ -59,14 +59,14 @@ class UnbanCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: UnbanCommandArgument): Promise<void> {
-    if (this.client.currentlyModerating.includes(args.member.id)) {
+    if (this.client.currentlyModerating.has(args.member.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.push(args.member.id);
+    this.client.currentlyModerating.add(args.member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.splice(this.client.currentlyModerating.indexOf(args.member.id), 1);
+      this.client.currentlyModerating.delete(args.member.id);
     }, 10_000);
 
     try {

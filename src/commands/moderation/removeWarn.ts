@@ -1,13 +1,13 @@
-import { Argument, Command } from 'discord-akairo';
-import type { GuildMember } from 'discord.js';
+import { Command } from 'discord-akairo';
 import ConvictedUser from '@/app/models/convictedUser';
+import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
 import Logger from '@/app/structures/Logger';
 import { SanctionTypes } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
 import type { RemoveWarnCommandArgument } from '@/app/types/CommandArguments';
-import { noop } from '@/app/utils';
+import { noop, nullop } from '@/app/utils';
 import { removeWarn as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 
@@ -18,15 +18,11 @@ class RemoveWarnCommand extends Command {
       details: config.details,
 
       args: [{
-        id: 'member',
-        type: Argument.validate(
-          'member',
-          (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
-            && value.roles.highest.position < message.member.roles.highest.position,
-        ),
+        id: 'warnId',
+        type: 'string',
         prompt: {
-          start: config.messages.promptStartMember,
-          retry: config.messages.promptRetryMember,
+          start: config.messages.promptStartWarnId,
+          retry: config.messages.promptRetryWarnId,
         },
       }, {
         id: 'reason',
@@ -41,34 +37,43 @@ class RemoveWarnCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: RemoveWarnCommandArgument): Promise<void> {
-    if (this.client.currentlyModerating.includes(args.member.id)) {
+    const warn = await Sanction.findOne({ sanctionId: args.warnId, revoked: false }).catch(nullop);
+    if (!warn) {
+      await message.channel.send(config.messages.invalidWarnId).catch(noop);
+      return;
+    }
+
+    const member = message.guild.member(warn.memberId);
+
+    if (this.client.currentlyModerating.has(member.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.push(args.member.id);
+    this.client.currentlyModerating.add(member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.splice(this.client.currentlyModerating.indexOf(args.member.id), 1);
+      this.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
     try {
-      const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
+      const convictedUser = await ConvictedUser.findOne({ memberId: member.id });
       if (!convictedUser || convictedUser.currentWarnCount === 0) {
         await message.channel.send(config.messages.notWarned);
         return;
       }
 
       const data = new ModerationData(message)
-        .setVictim(args.member)
+        .setVictim(member)
         .setReason(args.reason)
-        .setType(SanctionTypes.RemoveWarn);
+        .setType(SanctionTypes.RemoveWarn)
+        .setOriginalWarnId(warn.sanctionId);
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       Logger.error('An unexpected error occurred while removing a warn from member!');
-      Logger.detail(`Parsed member: ${args.member}`);
+      Logger.detail(`Parsed member: ${member}`);
       Logger.detail(`Message: ${message.url}`);
       Logger.detail((unknownError as Error).stack, true);
       await message.channel.send(messages.global.oops).catch(noop);

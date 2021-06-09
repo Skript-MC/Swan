@@ -37,6 +37,19 @@ export const forumFeed = {
   },
 };
 
+export const helpChannels = {
+  extra: {
+    inactivityTime: 1_200_000,
+    limitMessages: 1,
+  },
+  basic: {
+    inactivityTime: 300_000,
+    limitMessages: 5,
+  },
+  unlockMessage: ":white_check_mark: Les salons d'aide principaux étant actuellement fortement utilisés, ce salon a automatiquement été débloqué.",
+  lockMessage: ":chart_with_downwards_trend: Ce salon est désormais inactif, il a donc automatiquement été fermé.\nSi vous avez besoin d'aide, n'hésitez pas à utiliser les salons {channels}.",
+};
+
 export const presence = {
   messages: [
     '{memberCount} membres 🎉',
