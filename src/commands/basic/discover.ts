@@ -17,7 +17,7 @@ class DiscoverCommand extends Command {
       userPermissions: config.settings.userPermissions,
       channel: 'guild',
     });
-    this.rules = [Rules.OnlyBotChannel];
+    this.rules = Rules.OnlyBotChannel;
   }
 
   public async exec(message: GuildMessage, _args: DiscoverCommandArguments): Promise<void> {

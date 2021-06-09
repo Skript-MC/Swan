@@ -72,6 +72,8 @@ export interface SkriptMcDocumentationSyntaxResponse {
   id: number;
   addon: string;
   name: string;
+  frenchName?: string;
+  englishName?: string;
   content: string;
   version: string;
   example: string;
@@ -331,9 +333,10 @@ export interface InvisionTopic {
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
-  OnlyBotChannel,
-  NoHelpChannel,
-  OnlyHelpChannel,
+  /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
+  OnlyBotChannel = 1,
+  NoHelpChannel = 1 << 1,
+  OnlyHelpChannel = 1 << 2,
 }
 
 /** Informations associated to a task in the TaskHandler */
@@ -390,11 +393,24 @@ export interface BanChannelMessage {
 export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
   action: 'MEMBER_KICK';
   target: User;
+  targetType: 'USER';
+}
+
+/** Represent a Ban entry in the guild audit logs */
+export interface GuildBanAuditLogsEntry extends GuildAuditLogsEntry {
+  action: 'MEMBER_BAN_ADD';
+  target: User;
+  targetType: 'USER';
 }
 
 /** Represent an audit log where all entries are Kick entries */
 export interface GuildKickAuditLogs extends GuildAuditLogs {
   entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
+}
+
+/** Represent an audit log where all entries are Ban entries */
+export interface GuildBanAuditLogs extends GuildAuditLogs {
+  entries: Collection<Snowflake, GuildBanAuditLogsEntry>;
 }
 
 /** The sanctions types that we track in the ConvictedUser database */

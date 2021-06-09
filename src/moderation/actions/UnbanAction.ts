@@ -10,11 +10,11 @@ import ModerationAction from './ModerationAction';
 
 class UnbanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyUnbanning.push(this.data.victim.id);
+    this.client.currentlyUnbanning.add(this.data.victim.id);
   }
 
   protected after(): void {
-    this.client.currentlyUnbanning.splice(this.client.currentlyUnbanning.indexOf(this.data.victim.id), 1);
+    this.client.currentlyUnbanning.delete(this.data.victim.id);
     this.client.cache.convictedUsers
       .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }

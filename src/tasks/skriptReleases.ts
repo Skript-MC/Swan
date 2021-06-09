@@ -20,7 +20,7 @@ class SkriptReleasesTask extends Task {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
     const octokit = new Octokit();
     const githubReleases = await octokit.repos.listReleases({ owner: 'SkriptLang', repo: 'Skript' })
-      .catch((err) => {
+      .catch((err: Error) => {
         Logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
         Logger.detail(err.message);
       });

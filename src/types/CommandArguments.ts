@@ -110,7 +110,7 @@ export interface ReactionRoleCommandArguments {
 export interface RefreshCommandArgument {}
 
 export interface RemoveWarnCommandArgument {
-  member: GuildMember;
+  warnId: string;
   reason: string;
 }
 

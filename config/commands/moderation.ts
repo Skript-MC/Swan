@@ -1,7 +1,7 @@
 import { stripIndent } from 'common-tags';
 import { hasStaffRole, permissions } from '@/conf/configUtils';
 
-const see = (where: string): string => `Voir [la documentation](https://github.com/Skript-MC/Swan/wiki/Modération#${where}) pour plus d'informations.`;
+const see = (where: string): string => `Voir la documentation disponible sur <https://github.com/Skript-MC/Swan/wiki/Modération#${where}> pour plus d'informations.`;
 
 const commonMessages = {
   promptStartMember: 'Il faut ajouter un membre qui doit être présent sur le Discord. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :',
@@ -20,12 +20,12 @@ const commonMessages = {
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   revocationNotification: stripIndent`
-    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été révoquée.
+    Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été révoquée.
     **Raison :** {action.data.reason}.
     Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   notificationUpdate: stripIndent`
-    Bonjour {action.nameString}, ta sanction ({action.action}) sur le serveur Skript-MC a été modifiée.
+    Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été modifiée.
     **Motif :** {action.data.reason}.
     **Changement :** {change}.
     `,
@@ -212,8 +212,9 @@ export const removeWarn = {
     notification: commonMessages.revocationNotification,
     success: 'Avertissement révoqué avec succès !',
     notWarned: "Ce membre n'a aucun avertissement en cours.",
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
+    promptStartWarnId: "Entre l'identifiant d'un avertissement à supprimer.",
+    promptRetryWarnId: "Cet identifiant n'est pas valide. Entre-le en envoyant un message contenant un ID de warn :",
+    invalidWarnId: "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
   },
 };
 

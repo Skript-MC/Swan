@@ -51,7 +51,7 @@ class PollCommand extends Command {
       channel: 'guild',
     });
 
-    this.rules = [Rules.NoHelpChannel];
+    this.rules = Rules.NoHelpChannel;
   }
 
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
@@ -135,7 +135,7 @@ class PollCommand extends Command {
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
 
-    this.client.cache.pollMessagesIds.push(pollMessage.id);
+    this.client.cache.pollMessagesIds.add(pollMessage.id);
 
     await Poll.create({
       messageId: pollMessage.id,
