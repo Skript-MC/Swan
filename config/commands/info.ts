@@ -122,6 +122,7 @@ export const serverInfo = {
     },
     startPrompt: "Entre l'adresse du serveur que tu souhaites chercher.",
     retryPrompt: 'Adresse invalide, renvoie-la :',
+    requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
   },
 };
 
