@@ -6,7 +6,6 @@ import type { GuildMessage, ServerStatResponse } from '@/app/types';
 import type { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
-import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 class ServerInfoCommand extends Command {
@@ -35,11 +34,14 @@ class ServerInfoCommand extends Command {
       server = await axios(settings.apis.server + args.server)
         .then(response => (response.status >= 300 ? null : response.data));
     } catch {
-      message.channel.send(messages.global.oops).catch(noop);
+      message.channel.send(config.messages.requestFailed).catch(noop);
+      return;
     }
 
-    if (!server)
-      message.channel.send(messages.global.oops).catch(noop);
+    if (!server) {
+      message.channel.send(config.messages.requestFailed).catch(noop);
+      return;
+    }
 
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
