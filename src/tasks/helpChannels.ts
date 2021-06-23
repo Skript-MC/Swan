@@ -56,10 +56,7 @@ class HelpChannels extends Task {
   }
 
   private async _unlockChannel(channel: TextChannel): Promise<void> {
-    await channel.overwritePermissions([{
-      id: settings.roles.everyone,
-      allow: [Permissions.FLAGS.SEND_MESSAGES],
-    }]);
+    await channel.lockPermissions();
     await channel.send(config.unlockMessage);
   }
 
