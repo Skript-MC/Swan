@@ -64,8 +64,8 @@ class ModerationTask extends Task {
         }
 
         case SanctionTypes.Warn: {
-          data.setType(SanctionTypes.RemoveWarn);
-          data.setOriginalWarnId(sanctionId);
+          data.setType(SanctionTypes.RemoveWarn)
+            .setOriginalWarnId(sanctionId);
           await new RemoveWarnAction(data).commit();
           break;
         }
