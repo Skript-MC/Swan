@@ -1,5 +1,29 @@
 import { hasActiveMemberRole, hasStaffRole, permissions } from '@/conf/configUtils';
 
+export const module = {
+  settings: {
+    aliases: ['module'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: hasStaffRole,
+  },
+  details: {
+    name: 'Modifier les modules',
+    content: "Permet d'activer ou de désactiver certains modules de Swan.",
+    usage: 'module',
+    examples: ['module skriptReleases off'],
+  },
+  embed: {
+    title: 'Consultez la liste des modules sur Swan Dashboard',
+    link: 'https://swan.skript-mc.fr/modules',
+    content: "Vous pouvez consulter la liste des modules et modifier leurs états simplement depuis Swan Dashboard. Vous pouvez aussi directement utiliser Swan pour modifier l'état d'un de ces modules, via la commande `.module <nom> <on|off>`.",
+  },
+  messages: {
+    noModuleFound: ":x: Aucun module avec ce nom n'a été trouvé. Rendez-vous sur https://swan.skript-mc.fr/modules pour consulter la liste des modules.",
+    noStatus: ":x: Vous n'avez pas spécifié le statut à définir. Utilisez plutôt : `.module {module.name} <on|off>`.",
+    success: ':white_check_mark: Le module a bien été {status}.',
+  },
+};
+
 export const refresh = {
   settings: {
     aliases: ['refresh'],

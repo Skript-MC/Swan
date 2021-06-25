@@ -14,3 +14,4 @@ export { default as toValidName } from './toValidName';
 export { default as trimText } from './trimText';
 export { default as uncapitalize } from './uncapitalize';
 export { default as stripTags } from './stripTags';
+export { default as toggleModule } from './toggleModule';
