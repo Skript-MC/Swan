@@ -11,6 +11,8 @@ module.exports = {
   rules: {
     // It cannot resolve TypeScript's path aliases. See https://github.com/mysticatea/eslint-plugin-node/issues/233
     'node/no-missing-import': 'off',
+    // It doesn't work with TypeScript
+    'import/no-import-module-exports': 'off',
 
     // @typescript-eslint can't find the `.toString()` method for these types, but it
     // does exists as it is inherited from the `Channel` class.
