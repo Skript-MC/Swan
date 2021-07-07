@@ -95,7 +95,7 @@ class MuteAction extends ModerationAction {
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Role: ID', settings.roles.mute)
-          .addDetail('Add Role Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Add Role Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }

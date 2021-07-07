@@ -49,7 +49,7 @@ if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
     release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
     beforeBreadcrumb(breadcrumb: Sentry.Breadcrumb): Sentry.Breadcrumb {
       // Strip color codes off
-      if (breadcrumb.category === 'console') {
+      if (breadcrumb.category === 'console' && breadcrumb.message) {
         // eslint-disable-next-line no-control-regex
         breadcrumb.message = breadcrumb.message.replace(/\u001B[();?[]{0,2}(?:;?\d)*./g, '');
       }

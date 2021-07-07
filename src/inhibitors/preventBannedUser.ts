@@ -16,7 +16,7 @@ class PreventBannedUsersInhibitor extends Inhibitor {
     return Boolean(convictedUser?.currentBanId);
   }
 
-  private async _getConvictedUser(client: AkairoClient, memberId: string): Promise<ConvictedUserDocument> {
+  private async _getConvictedUser(client: AkairoClient, memberId: string): Promise<ConvictedUserDocument | null> {
     const cachedUser = client.cache.convictedUsers.find(elt => elt.memberId === memberId);
     if (cachedUser)
       return cachedUser;

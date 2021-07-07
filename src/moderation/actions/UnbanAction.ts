@@ -24,7 +24,7 @@ class UnbanAction extends ModerationAction {
   }
 
   private async _unban(): Promise<void> {
-    let ban: SanctionDocument;
+    let ban: SanctionDocument | null = null;
     // 1. Update the Database
     try {
       const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { currentBanId: null });
@@ -86,7 +86,7 @@ class UnbanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Channel Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
   }

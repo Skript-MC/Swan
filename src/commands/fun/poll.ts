@@ -57,7 +57,7 @@ class PollCommand extends Command {
   public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
     // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
     // the whole string given, and args.answers will be empty.
-    const question = args.answers.shift();
+    const question = args.answers.shift()!;
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
     const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
 
@@ -99,7 +99,7 @@ class PollCommand extends Command {
     const durationContent = pupa(embedMessages.durationContent, { formattedDuration, formattedEnd });
 
     const embed = new MessageEmbed()
-      .setAuthor(pupa(embedMessages.author, { message }), message.author.avatarURL())
+      .setAuthor(pupa(embedMessages.author, { message }), message.author.avatarURL() ?? '')
       .addField(embedMessages.question, trimText(question, 1000))
       .addField(embedMessages.answers, trimText(possibleAnswers, 1000))
       .addField(embedMessages.duration, durationContent)

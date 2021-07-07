@@ -211,6 +211,7 @@ export const removeWarn = {
   messages: {
     notification: commonMessages.revocationNotification,
     success: 'Avertissement révoqué avec succès !',
+    memberNotFound: "Je n'ai pas réussi à trouver ce membre...",
     notWarned: "Ce membre n'a aucun avertissement en cours.",
     promptStartWarnId: "Entre l'identifiant d'un avertissement à supprimer.",
     promptRetryWarnId: "Cet identifiant n'est pas valide. Entre-le en envoyant un message contenant un ID de warn :",

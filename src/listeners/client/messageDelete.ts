@@ -25,7 +25,7 @@ class MessageDeleteListener extends Listener {
 
     if (message.author.bot
       || message.system
-      || message.member.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff)?.position)
+      || message.member.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff)!.position)
       return;
 
     // List of all the usernames that were mentionned in the deleted message.
@@ -66,7 +66,7 @@ class MessageDeleteListener extends Listener {
     const collector = botNotificationMessage
       .createReactionCollector(
         (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
-          && (user.id === message.mentions.users.first().id)
+          && (user.id === message.mentions.users.first()!.id)
           && !user.bot,
         )
       .on('collect', async () => {

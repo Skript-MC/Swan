@@ -62,7 +62,7 @@ class UnmuteAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Roles Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Manage Roles Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }

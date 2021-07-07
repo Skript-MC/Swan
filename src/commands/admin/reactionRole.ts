@@ -49,15 +49,19 @@ class ReactionRoleCommand extends Command {
 
     const botMember = this.client.guild.me;
 
-    if (botMember.roles.highest.position <= givenRole.position) {
+    if (!botMember || botMember.roles.highest.position <= givenRole.position) {
       await message.channel.send(config.messages.notEnoughPermissions).catch(noop);
       return;
     }
 
     const regex = /^\d+$/; // Regex to check for numbers
     const emoji = regex.test(reaction)
-      ? message.guild.emojis.cache.get(reaction).toString()
+      ? message.guild.emojis.cache.get(reaction)?.toString()
       : reaction;
+    if (!emoji) {
+      await message.channel.send(config.messages.invalidEmoji).catch(noop);
+      return;
+    }
 
     const embed = new MessageEmbed()
       .setTitle(pupa(config.embed.title, { givenRole }))

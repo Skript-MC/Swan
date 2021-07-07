@@ -60,7 +60,7 @@ class MoveCommand extends Command {
       .setColor(settings.colors.default)
       .setAuthor(
         pupa(config.messages.moveTitle, { member: targetedMessage.member }),
-        targetedMessage.author.avatarURL(),
+        targetedMessage.author.avatarURL() ?? '',
       )
       .setDescription(
         pupa(config.messages.moveInfo, {

@@ -37,7 +37,7 @@ class HelpCommand extends Command {
       embed.setTitle(pupa(information.title, { command }))
         .addField(information.usage, `\`${prefix}${command.details.usage}\``)
         .addField(information.description, command.details.content)
-        .addField(information.usableBy, command.details?.permissions || messages.global.everyone);
+        .addField(information.usableBy, command.details?.permissions ?? messages.global.everyone);
 
       if (command.aliases.length > 1)
         embed.addField(information.aliases, `\`${command.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
@@ -69,7 +69,7 @@ class HelpCommand extends Command {
   // Permission-check borrowed from https://github.com/discord-akairo/discord-akairo/blob/23bb3c1765d58059e43e587a1dd602d4394d3f54/src/struct/commands/CommandHandler.js#L669
   private _isAllowed(cmd: Command, message: GuildMessage): boolean {
     if (cmd.userPermissions) {
-      const ignorer = cmd.ignorePermissions || this.ignorePermissions;
+      const ignorer = cmd.ignorePermissions ?? this.ignorePermissions;
       const isIgnored = Array.isArray(ignorer)
         ? ignorer.includes(message.author.id)
         : typeof ignorer === 'function'
@@ -82,8 +82,8 @@ class HelpCommand extends Command {
           if (cmd.userPermissions(message) !== null)
             return false;
         } else if (message.guild) {
-          const missing = message.channel.permissionsFor(message.author).missing(cmd.userPermissions);
-          if (missing.length > 0)
+          const missing = message.channel.permissionsFor(message.author)?.missing(cmd.userPermissions);
+          if (missing && missing.length > 0)
             return false;
         }
       }

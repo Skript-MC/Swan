@@ -33,6 +33,7 @@ declare namespace NodeJS {
     SNIPPETS_CHANNEL: string;
     SKRIPT_CREATIONS_CHANNEL: string;
     SKRIPT_HELP_CHANNELS: string;
+    SKRIPT_EXTRA_HELP_CHANNELS: string;
     OTHER_HELP_CHANNELS: string;
     LOG_CHANNEL: string;
     PRIVATE_CHANNEL_CATEGORY: string;

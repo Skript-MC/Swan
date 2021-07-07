@@ -21,7 +21,7 @@ class ReadyListener extends Listener {
   }
 
   public async exec(): Promise<void> {
-    this.client.guild = this.client.guilds.resolve(settings.bot.guild);
+    this.client.guild = this.client.guilds.resolve(settings.bot.guild)!;
 
     if (!this.client.guild)
       throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
@@ -117,14 +117,20 @@ class ReadyListener extends Listener {
         const logs = await this.client.guild.fetchAuditLogs({
           type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
         }) as GuildBanAuditLogs;
+
         const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
         if (!discordBan)
+          continue;
+
+        const moderator = this.client.guild.members.resolve(discordBan.executor)
+          ?? await this.client.guild.members.fetch(discordBan.executor).catch(nullop);
+        if (!moderator)
           continue;
 
         const data = new ModerationData(this.client)
           .setVictim(ban.user, false)
           .setReason(ban.reason)
-          .setModerator(this.client.guild.members.resolve(discordBan.executor))
+          .setModerator(moderator)
           .setDuration(-1, false)
           .setType(SanctionTypes.Hardban);
         try {

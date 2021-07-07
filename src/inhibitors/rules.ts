@@ -13,6 +13,8 @@ class RulesInhibitor extends Inhibitor {
 
   public exec(message: Message, command: Command): boolean {
     // Return true to block the command.
+    if (!command.rules)
+      return false;
 
     // If the command is forbidden in help channels.
     if (command.rules & Rules.NoHelpChannel && settings.channels.help.includes(message.channel.id))
@@ -23,9 +25,8 @@ class RulesInhibitor extends Inhibitor {
       return true;
 
     // If the command only works in the help channels.
-    return command.rules & Rules.OnlyHelpChannel
-      && (!settings.channels.help.includes(message.channel.id)
-        || message.channel.id !== settings.channels.bot);
+    return Boolean(command.rules & Rules.OnlyHelpChannel)
+      && (!settings.channels.help.includes(message.channel.id) || message.channel.id !== settings.channels.bot);
   }
 }
 

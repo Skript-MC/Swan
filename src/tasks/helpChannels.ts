@@ -63,9 +63,9 @@ class HelpChannels extends Task {
   private _isLocked(channel: TextChannel): boolean {
     const { everyone } = settings.roles;
     // Check if @everyone can't write in the channel
-    return channel.permissionOverwrites
+    return Boolean(channel.permissionOverwrites
       .get(everyone)
-      ?.deny.has(Permissions.FLAGS.SEND_MESSAGES);
+      ?.deny.has(Permissions.FLAGS.SEND_MESSAGES));
   }
 
   private async _lockChannel(channel: TextChannel): Promise<void> {

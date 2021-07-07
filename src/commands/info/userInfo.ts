@@ -70,7 +70,7 @@ class UserInfoCommand extends Command {
       .setColor(settings.colors.default)
       .setAuthor(pupa(embedConfig.title, { member: args.member }))
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))
-      .setThumbnail(args.member.user.avatarURL())
+      .setThumbnail(args.member.user.avatarURL() ?? '')
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)
       .addField(embedConfig.created.title, createdContent, true)
