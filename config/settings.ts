@@ -1,7 +1,7 @@
 export default {
   bot: {
     prefix: process.env.BOT_PREFIX || '.',
-    avatar: 'https://skript-mc.fr/assets/images/logo.png',
+    avatar: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
     guild: process.env.GUILD_ID,
   },
   miscellaneous: {
