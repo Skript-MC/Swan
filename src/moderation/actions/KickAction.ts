@@ -42,7 +42,7 @@ class KickAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Kick Member Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
+          .addDetail('Kick Member Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
       );
     }
   }

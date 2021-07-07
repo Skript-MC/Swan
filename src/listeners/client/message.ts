@@ -62,7 +62,7 @@ class MessageListener extends Listener {
         await message.react(settings.emojis.no);
       } catch (unknownError: unknown) {
         Logger.error('Unable to add emojis to the idea channel.');
-        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me?.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
         Logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
         Logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
         Logger.detail(`Message: ${message.url}`);
@@ -80,14 +80,14 @@ class MessageListener extends Listener {
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
           .setTimestamp()
-          .setAuthor(`Suggestion de ${message.member.displayName}`, message.author.avatarURL())
+          .setAuthor(`Suggestion de ${message.member.displayName}`, message.author.avatarURL() ?? '')
           .setDescription(message.content);
         const suggestionMessage = await message.channel.send(embed);
         await suggestionMessage.react(settings.emojis.yes);
         await suggestionMessage.react(settings.emojis.no);
       } catch (unknownError: unknown) {
         Logger.error('Unable to add emojis to the idea channel.');
-        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        Logger.detail(`Has "ADD_REACTION" permission: ${message.guild.me?.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
         Logger.detail(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
         Logger.detail(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
         Logger.detail(`Message: ${message.url}`);
@@ -111,7 +111,7 @@ class MessageListener extends Listener {
     const quotes: Array<{ channelId: string; messageId: string }> = [];
     let text = message.content;
     while (linkRegex.test(text)) {
-      const [full, channelId, messageId] = linkRegex.exec(text);
+      const [full, channelId, messageId] = linkRegex.exec(text)!;
       quotes.push({ channelId, messageId });
       text = text.replace(full, '');
     }
@@ -127,7 +127,7 @@ class MessageListener extends Listener {
 
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL())
+        .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL() ?? '')
         .setDescription(`${trimText(targetedMessage.content, 1900)}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
 

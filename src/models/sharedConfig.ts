@@ -24,7 +24,7 @@ SharedConfigSchema.statics.findOneOrCreate = async function (
   doc: SharedConfigBase,
 ): Promise<SharedConfigDocument> {
   const result = await this.findOne(condition);
-  return result || this.create(doc);
+  return result ?? this.create(doc);
 };
 
 export default model<SharedConfigDocument, SharedConfigModel>('SharedConfig', SharedConfigSchema);

@@ -91,7 +91,7 @@ class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Ban Member Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.BAN_MEMBERS)),
+          .addDetail('Ban Member Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.BAN_MEMBERS)),
       );
     }
   }
@@ -149,7 +149,7 @@ class BanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
-          .addDetail('Manage Channel Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permissions', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
 
@@ -191,7 +191,7 @@ class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Role Permissions', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Manage Role Permissions', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }

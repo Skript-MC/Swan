@@ -1,8 +1,14 @@
 diff --git a/node_modules/discord-akairo/src/index.d.ts b/node_modules/discord-akairo/src/index.d.ts
-index cb4d20a..76cd485 100644
+index cb4d20a..33f9e72 100644
 --- a/node_modules/discord-akairo/src/index.d.ts
 +++ b/node_modules/discord-akairo/src/index.d.ts
-@@ -18,6 +18,15 @@ declare module 'discord-akairo' {
+@@ -13,11 +13,20 @@ declare module 'discord-akairo' {
+ 
+     module 'discord.js' {
+         export interface Message {
+-            util?: CommandUtil;
++            util: CommandUtil;
+         }
      }
  
      export class AkairoError extends Error {
@@ -18,6 +24,28 @@ index cb4d20a..76cd485 100644
          public code: string;
      }
  
+@@ -267,7 +276,7 @@ declare module 'discord-akairo' {
+         public handler: CommandHandler;
+         public lastResponse?: Message;
+         public message: Message;
+-        public messages?: Collection<Snowflake, Message>;
++        public messages: Collection<Snowflake, Message>;
+         public parsed?: ParsedComponentData;
+         public shouldEdit: boolean;
+ 
+@@ -620,10 +629,10 @@ declare module 'discord-akairo' {
+ 
+     export interface ParsedComponentData {
+         afterPrefix?: string;
+-        alias?: string;
++        alias: string;
+         command?: Command;
+         content?: string;
+-        prefix?: string;
++        prefix: string;
+     }
+ 
+     export interface ProviderOptions {
 diff --git a/node_modules/discord-akairo/src/struct/commands/Command.js b/node_modules/discord-akairo/src/struct/commands/Command.js
 index 1003663..a88b9b2 100644
 --- a/node_modules/discord-akairo/src/struct/commands/Command.js

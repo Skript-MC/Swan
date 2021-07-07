@@ -45,7 +45,7 @@ export default {
       Logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
       Logger.detail(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
       Logger.detail(`Stripped name: "${pseudo}"`);
-      Logger.detail(`Create channel permissions: ${data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
+      Logger.detail(`Create channel permissions: ${data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
       Logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }
@@ -60,7 +60,7 @@ export default {
       if (messages.size === 0)
         break;
 
-      beforeId = messages.last().id;
+      beforeId = messages.last()!.id;
       const parsedMessages: BanChannelMessage[] = messages.array()
         .map(msg => ({
           id: msg.id,
@@ -69,7 +69,7 @@ export default {
           authorId: msg.author.id,
           sentAt: msg.createdTimestamp,
           edited: msg.editedTimestamp,
-          attachments: msg.attachments?.array().map(atc => ({ name: atc.name, url: atc.url })),
+          attachments: msg.attachments?.array().map((atc, i) => ({ name: atc.name ?? `Attachment n${i}`, url: atc.url })) ?? [],
         }));
       allMessages.push(...parsedMessages);
 

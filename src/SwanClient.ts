@@ -251,7 +251,7 @@ class SwanClient extends AkairoClient {
       .map((cmd: Command) => cmd.id);
 
     // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
-    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
+    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 
@@ -272,7 +272,7 @@ class SwanClient extends AkairoClient {
 
   private async _loadSharedConfigs(): Promise<void> {
     // Load logged channels
-    const configDocument: SharedConfigDocument = await SharedConfig.findOneOrCreate({
+    const configDocument: SharedConfigDocument | null = await SharedConfig.findOneOrCreate({
       name: SharedConfigName.LoggedChannels,
     }, {
       name: SharedConfigName.LoggedChannels,
@@ -316,7 +316,7 @@ class SwanClient extends AkairoClient {
         if (!addon)
           continue;
         const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(syntax.name);
-        if (result) {
+        if (result?.groups) {
           const { englishName, frenchName } = result.groups;
           if (englishName && frenchName) {
             syntax.englishName = englishName;

@@ -19,8 +19,8 @@ const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {
 
 class ActionUpdateInformations {
   data: ModerationData;
-  userDocument: ConvictedUserDocument;
-  sanctionDocument: SanctionDocument;
+  userDocument: ConvictedUserDocument | null;
+  sanctionDocument: SanctionDocument | null;
 
   constructor(data: ModerationData) {
     this.data = data;

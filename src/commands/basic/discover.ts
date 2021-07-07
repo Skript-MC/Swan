@@ -34,7 +34,7 @@ class DiscoverCommand extends Command {
     embed.setTitle(pupa(config.messages.title, { randomCommand }))
       .addField(config.messages.usage, `\`${prefix}${randomCommand.details.usage}\``)
       .addField(config.messages.description, randomCommand.details.content)
-      .addField(config.messages.usableBy, randomCommand.details?.permissions || messages.global.everyone);
+      .addField(config.messages.usableBy, randomCommand.details?.permissions ?? messages.global.everyone);
 
     if (randomCommand.aliases.length > 1)
       embed.addField(config.messages.aliases, `\`${randomCommand.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
