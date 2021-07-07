@@ -5,6 +5,7 @@ import moment from 'moment';
 import pupa from 'pupa';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
+import type { Awaited } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
@@ -33,11 +34,11 @@ abstract class ModerationAction {
     await this.updateInfos.load();
 
     try {
-      await this.before();
+      await this.before?.();
       await this.notify();
       await this.exec();
       await this.log();
-      await this.after();
+      await this.after?.();
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
@@ -187,11 +188,11 @@ abstract class ModerationAction {
     }
   }
 
-  protected abstract before(): Promise<void> | void;
+  protected abstract before?(): Awaited<void>;
 
-  protected abstract exec(): Promise<void>;
+  protected abstract exec(): Awaited<void>;
 
-  protected abstract after(): Promise<void> | void;
+  protected abstract after?(): Awaited<void>;
 }
 
 export default ModerationAction;

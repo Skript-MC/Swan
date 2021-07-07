@@ -109,7 +109,7 @@ function getDuration(val: string): number {
   let abs: number;
   let total = 0;
   if (val.length > 0 && val.length < 101) {
-    const parts: DurationPart[] = tokenize(val.toLowerCase())
+    const parts = tokenize(val.toLowerCase())
       .map((part: string): DurationPart => {
         const groups = REGEX.exec(part)?.groups;
         if (!groups || !groups.number || !groups.unit)

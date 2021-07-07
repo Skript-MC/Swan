@@ -11,9 +11,8 @@ import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
 class MuteAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     if (!this.data.duration)

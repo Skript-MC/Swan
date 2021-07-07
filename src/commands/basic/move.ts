@@ -43,8 +43,7 @@ class MoveCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: MoveCommandArguments): Promise<void> {
-    const { channel: targetedChannel } = args;
-    const targetedMessage = args.message as GuildMessage;
+    const { channel: targetedChannel, message: targetedMessage } = args;
 
     if (targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) {
       await message.channel.send(messages.global.memberTooPowerful);

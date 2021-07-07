@@ -66,7 +66,7 @@ class MessageReactionAddListener extends Listener {
 
       const previousUserVote: string | undefined = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.
-        .find((entry: PollAnswer): PollAnswer | null => (entry[1].includes(user.id) ? entry : null))
+        .find((entry: PollAnswer) => (entry[1].includes(user.id) ? entry : null))
         // We take the reactionName if it exists.
         ?.[0];
 

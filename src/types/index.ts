@@ -27,6 +27,8 @@ import type settings from '@/conf/settings';
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
+export type Awaited<T> = PromiseLike<T> | T;
+
 /* ****************** */
 /*  API Result Types  */
 /* ****************** */

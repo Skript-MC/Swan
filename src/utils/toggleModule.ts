@@ -1,8 +1,8 @@
-import type { AkairoClient, AkairoHandler } from 'discord-akairo';
+import type { AkairoClient } from 'discord-akairo';
 import type { SwanModuleDocument } from '@/app/types';
 
 export default function toggleModule(client: AkairoClient, module: SwanModuleDocument, isEnabled: boolean): void {
-  const handler: AkairoHandler = client[module.handler];
+  const handler = client[module.handler];
   const cachedModule = client.cache.modules.find(mod => mod.id === module.name);
   if (!cachedModule)
     return;

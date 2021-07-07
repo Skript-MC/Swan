@@ -5,9 +5,8 @@ import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from './ModerationAction';
 
 class KickAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     await this._kick();
