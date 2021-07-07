@@ -33,7 +33,7 @@ class ActionUpdateInformations {
     if (!this.userDocument)
       return;
 
-    const fieldName: TrackedFieldNames = lastSanctionField[this.data.type as TrackedSanctionTypes];
+    const fieldName = lastSanctionField[this.data.type as TrackedSanctionTypes];
     if (!fieldName)
       return;
 

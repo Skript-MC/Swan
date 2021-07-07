@@ -26,7 +26,6 @@ import type {
   CommandStatDocument,
   SharedConfigDocument,
   SkriptMcDocumentationFullAddonResponse,
-  SkriptMcDocumentationSyntaxAndAddon,
   SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
@@ -324,7 +323,7 @@ class SwanClient extends AkairoClient {
             syntax.frenchName = frenchName;
           }
         }
-        const syntaxWithAddon: SkriptMcDocumentationSyntaxAndAddon = {
+        const syntaxWithAddon = {
           ...syntax,
           addon: {
             name: addon.name,

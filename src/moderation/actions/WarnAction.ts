@@ -12,7 +12,7 @@ import BanAction from './BanAction';
 import ModerationAction from './ModerationAction';
 
 class WarnAction extends ModerationAction {
-  protected before(): void { /* */ }
+  protected before: undefined;
 
   protected async after(): Promise<void> {
     try {

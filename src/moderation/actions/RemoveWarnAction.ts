@@ -6,9 +6,8 @@ import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import ModerationAction from './ModerationAction';
 
 class RemoveWarnAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     await this._removeWarn();

@@ -2,7 +2,7 @@ import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import SwanModule from '@/app/models/swanModule';
-import type { GuildMessage, SwanModuleDocument } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
 import type { ModuleCommandArguments } from '@/app/types/CommandArguments';
 import { noop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
@@ -31,7 +31,7 @@ class ModuleCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: ModuleCommandArguments): Promise<void> {
-    const modules: SwanModuleDocument[] = await SwanModule.find();
+    const modules = await SwanModule.find();
 
     if (!args.moduleName) {
       const embed = new MessageEmbed()

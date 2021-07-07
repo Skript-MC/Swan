@@ -7,9 +7,8 @@ import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
 class UnmuteAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     await this._unmute();

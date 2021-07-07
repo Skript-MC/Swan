@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import Message from '@/app/models/message';
-import type { GuildMessage, MessageDocument } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
 import { MessageName } from '@/app/types';
 import type { AutoMessageCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
@@ -27,8 +27,8 @@ class AutoMessageCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: AutoMessageCommandArguments): Promise<void> {
-    const messages: MessageDocument[] = await Message.find({ messageType: MessageName.AutoMessage });
-    const search: MessageDocument | null = searchMessageSimilarity(messages, args.message);
+    const messages = await Message.find({ messageType: MessageName.AutoMessage });
+    const search = searchMessageSimilarity(messages, args.message);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;

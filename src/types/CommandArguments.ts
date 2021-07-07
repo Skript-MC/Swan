@@ -2,11 +2,11 @@
 import type { Command } from 'discord-akairo';
 import type {
   GuildMember,
-  Message,
   Role,
   TextChannel,
   User,
 } from 'discord.js';
+import type { GuildMessage } from './index';
 
 
 export interface AddonInfoCommandArguments {
@@ -85,7 +85,7 @@ export interface ModuleCommandArguments {
 
 export interface MoveCommandArguments {
   channel: TextChannel;
-  message: Message;
+  message: GuildMessage;
 }
 
 export interface MuteCommandArgument {
