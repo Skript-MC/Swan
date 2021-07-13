@@ -1,61 +1,59 @@
-import { Argument, Command } from 'discord-akairo';
-import type { GuildMember } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import WarnAction from '@/app/moderation/actions/WarnAction';
-import Logger from '@/app/structures/Logger';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { WarnCommandArgument } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { warn as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class WarnCommand extends Command {
-  constructor() {
-    super('warn', {
-      aliases: config.settings.aliases,
-      details: config.details,
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class WarnCommand extends SwanCommand {
+  // [{
+  //   id: 'member',
+  //   type: Argument.validate(
+  //     'member',
+  //     (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
+  //       && value.roles.highest.position < message.member.value.roles.highest.position,
+  //   ),
+  //   prompt: {
+  //     start: config.messages.promptStartMember,
+  //     retry: config.messages.promptRetryMember,
+  //   },
+  // }, {
+  //   id: 'reason',
+  //   type: 'string',
+  //   match: 'rest',
+  //   prompt: {
+  //     start: config.messages.promptStartReason,
+  //     retry: config.messages.promptRetryReason,
+  //   },
+  // }],
 
-      args: [{
-        id: 'member',
-        type: Argument.validate(
-          'member',
-          (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
-            && value.roles.highest.position < message.member.roles.highest.position,
-        ),
-        prompt: {
-          start: config.messages.promptStartMember,
-          retry: config.messages.promptRetryMember,
-        },
-      }, {
-        id: 'reason',
-        type: 'string',
-        match: 'rest',
-        prompt: {
-          start: config.messages.promptStartReason,
-          retry: config.messages.promptRetryReason,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const member = await args.pickResult('sanctionnableMember');
+    if (member.error)
+      return void await message.channel.send(config.messages.promptRetryMember);
 
-  public async exec(message: GuildMessage, args: WarnCommandArgument): Promise<void> {
-    if (this.client.currentlyModerating.has(args.member.id)) {
+    const reason = await args.restResult('string');
+    if (reason.error)
+      return void await message.channel.send(config.messages.promptRetryReason);
+
+    if (this.context.client.currentlyModerating.has(member.value.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.add(args.member.id);
+    this.context.client.currentlyModerating.add(member.value.id);
     setTimeout(() => {
-      this.client.currentlyModerating.delete(args.member.id);
+      this.context.client.currentlyModerating.delete(member.value.id);
     }, 10_000);
 
-    const isBanned = await ModerationHelper.isBanned(args.member.id);
+    const isBanned = await ModerationHelper.isBanned(member.value.id);
     if (isBanned) {
       await message.channel.send(messages.global.impossibleBecauseBanned).catch(noop);
       return;
@@ -63,8 +61,8 @@ class WarnCommand extends Command {
 
     try {
       const data = new ModerationData(message)
-        .setVictim(args.member)
-        .setReason(args.reason)
+        .setVictim(member.value)
+        .setReason(reason.value)
         .setDuration(settings.moderation.warnDuration * 1000, true)
         .setType(SanctionTypes.Warn);
 
@@ -72,13 +70,11 @@ class WarnCommand extends Command {
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occurred while warning a member!');
-      Logger.detail(`Parsed member: ${args.member}`);
-      Logger.detail(`Message: ${message.url}`);
-      Logger.detail((unknownError as Error).stack, true);
+      this.context.logger.error('An unexpected error occurred while warning a member!');
+      this.context.logger.info(`Parsed member: ${member.value}`);
+      this.context.logger.info(`Message: ${message.url}`);
+      this.context.logger.info((unknownError as Error).stack, true);
       await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }
-
-export default WarnCommand;

@@ -1,3 +1,10 @@
+import type { SwanCommandOptions } from '@/app/types';
+import { basePreconditions } from '@/conf/configUtils';
+
+const skriptHelp = [...process.env.SKRIPT_HELP_CHANNELS.split(',')];
+const skriptExtraHelp = [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')];
+const otherHelp = [...process.env.OTHER_HELP_CHANNELS.split(',')];
+
 export default {
   bot: {
     prefix: process.env.BOT_PREFIX || '.',
@@ -5,7 +12,7 @@ export default {
     guild: process.env.GUILD_ID,
   },
   miscellaneous: {
-    maxPollDuration: 60 * 60 * 24 * 7, // 7 days in seconds
+    maxPollDuration: 60 * 60 * 24 * 7 * 1000, // 7 days in seconds
     reactionNumbers: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'],
     pollReactions: {
       yesno: ['✅', '❌'],
@@ -54,6 +61,10 @@ export default {
     server: 'https://api.mcsrvstat.us/2/',
     latex: 'https://chart.apis.google.com/chart?cht=tx&chf=bg,s,FFFFFF00&chco=FFFFFF&chl=',
   },
+  globalCommandsOptions: {
+    generateDashLessAliases: true,
+    preconditions: basePreconditions,
+  } as Partial<SwanCommandOptions>,
   roles: {
     staff: process.env.STAFF_ROLE,
     forumModerator: process.env.FORUM_MODERATOR_ROLE,
@@ -68,10 +79,10 @@ export default {
     bot: process.env.BOT_CHANNEL,
     main: process.env.MAIN_CHANNEL,
     snippets: process.env.SNIPPETS_CHANNEL,
-    skriptHelp: [...process.env.SKRIPT_HELP_CHANNELS.split(',')],
-    skriptExtraHelp: [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')],
-    otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
-    help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
+    skriptHelp,
+    skriptExtraHelp,
+    otherHelp,
+    help: [...skriptHelp, ...skriptExtraHelp, ...otherHelp],
     skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
     creations: process.env.SKRIPT_CREATIONS_CHANNEL,
     log: process.env.LOG_CHANNEL,
@@ -83,5 +94,4 @@ export default {
     no: process.env.NO_EMOJI || '❌',
     remove: process.env.REMOVE_EMOJI || '🗑️',
   },
-
 };

@@ -6,11 +6,11 @@ import { SanctionsUpdates } from '@/app/types';
 import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
-class UnmuteAction extends ModerationAction {
+export default class UnmuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     await this._unmute();
   }
 
@@ -67,5 +67,3 @@ class UnmuteAction extends ModerationAction {
     }
   }
 }
-
-export default UnmuteAction;

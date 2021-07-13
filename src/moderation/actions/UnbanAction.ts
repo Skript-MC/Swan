@@ -8,18 +8,18 @@ import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import ModerationAction from './ModerationAction';
 
-class UnbanAction extends ModerationAction {
+export default class UnbanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyUnbanning.add(this.data.victim.id);
+    this.context.client.currentlyUnbanning.add(this.data.victim.id);
   }
 
   protected after(): void {
-    this.client.currentlyUnbanning.delete(this.data.victim.id);
-    this.client.cache.convictedUsers
-      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
+    this.context.client.currentlyUnbanning.delete(this.data.victim.id);
+    this.context.client.cache.convictedUsers
+      .splice(this.context.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     await this._unban();
   }
 
@@ -91,5 +91,3 @@ class UnbanAction extends ModerationAction {
     }
   }
 }
-
-export default UnbanAction;

@@ -1,4 +1,5 @@
 import type { Endpoints } from '@octokit/types';
+import type { CommandOptions, StoreRegistryEntries } from '@sapphire/framework';
 import type {
   Collection,
   Guild,
@@ -19,7 +20,6 @@ import type {
 } from 'mongoose';
 import type cron from 'node-cron';
 import type settings from '@/conf/settings';
-
 
 /* ****************** */
 /*     Util Types     */
@@ -333,6 +333,12 @@ export interface InvisionTopic {
 // #region Miscellaneous types used at specific places (VS Code)
 // region Miscellaneous types used at specific places (JetBrains)
 
+/** Options for the SwanCommand class */
+export interface SwanCommandOptions extends CommandOptions {
+  usage: string;
+  examples: string[];
+}
+
 /** Types of rules for where a command can be executed */
 export enum Rules {
   OnlyBotChannel = 1,
@@ -340,23 +346,10 @@ export enum Rules {
   OnlyHelpChannel = 1 << 2,
 }
 
-/** Informations associated to a task in the TaskHandler */
-export interface TaskInformations {
-  interval?: NodeJS.Timeout;
-  schedule?: cron.ScheduledTask;
-}
-
-
 /** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
 export interface MatchingAddon {
   file: string;
   name: string;
-}
-
-/** The types of objects that is returned by the `tokenize()` function in `getDuration()` */
-export interface DurationPart {
-  number: string;
-  unit: string;
 }
 
 /** A TextChannel which is in a guild */
@@ -518,7 +511,7 @@ export type CommandStatModel = Model<CommandStatDocument>;
 /** Interface for the "Module"'s mongoose schema */
 export interface SwanModuleBase {
   name: string;
-  handler: 'commandHandler' | 'inhibitorHandler' | 'listenerHandler' | 'taskHandler';
+  store: keyof StoreRegistryEntries;
   enabled: boolean;
 }
 

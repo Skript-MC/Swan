@@ -1,9 +1,10 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import Logger from '@/app/structures/Logger';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 import type { InvisionFullResource, InvisionFullTopic } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -20,15 +21,9 @@ const turndownService = new Turndown()
     },
   });
 
-class ForumFeedTask extends Task {
-  constructor() {
-    super('forumFeed', {
-      // Every 10 minutes
-      cron: '*/10 * * * *',
-    });
-  }
-
-  public async exec(): Promise<void> {
+@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
+export default class ForumFeedTask extends Task {
+  public async run(): Promise<void> {
     await this._checkTopics();
     await this._checkFiles();
   }
@@ -40,11 +35,11 @@ class ForumFeedTask extends Task {
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        Logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
-        Logger.detail(err.message);
+        this.context.logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
+        this.context.logger.info(err.message);
       });
 
-    const channel = this.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.context.client.channels.cache.get(settings.channels.forumUpdates);
 
     if (!topics?.results || !channel?.isText())
       return;
@@ -73,11 +68,11 @@ class ForumFeedTask extends Task {
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        Logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
-        Logger.detail(err.message);
+        this.context.logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
+        this.context.logger.info(err.message);
       });
 
-    const channel = this.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.context.client.channels.cache.get(settings.channels.forumUpdates);
 
     if (!resources?.results || !channel?.isText())
       return;
@@ -103,5 +98,3 @@ class ForumFeedTask extends Task {
       });
   }
 }
-
-export default ForumFeedTask;

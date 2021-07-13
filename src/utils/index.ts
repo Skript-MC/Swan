@@ -1,12 +1,12 @@
 export { default as capitalize } from './capitalize';
 export { default as convertFileSize } from './convertFileSize';
-export { default as extractQuotedText } from './extractQuotedText';
 export { default as getDuration } from './getDuration';
 export { default as getPersonFromCache } from './getPersonFromCache';
 export { default as getUsername } from './getUsername';
 export { noop, nullop } from './noop';
-export { default as padNumber } from './padNumber';
 export { default as prunePseudo } from './prunePseudo';
+export { default as resolveMember } from './resolveMember';
+export { default as resolveUser } from './resolveUser';
 export { default as searchMessageSimilarity } from './searchMessageSimilarity';
 export { default as splitText } from './splitText';
 export { default as toHumanDuration } from './toHumanDuration';

@@ -1,7 +1,7 @@
-import type { AkairoClient } from 'discord-akairo';
 import type { NewsChannel, TextChannel } from 'discord.js';
 import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
+import type SwanClient from '@/app/SwanClient';
 import Poll from '@/app/models/poll';
 import type { PollDocument } from '@/app/types';
 import { QuestionType } from '@/app/types';
@@ -10,7 +10,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default {
-  async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
+  async end(client: SwanClient, pollId: ObjectId, stopped = false): Promise<void> {
     // Remove the poll from the database and the cache.
     const poll: PollDocument | null = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)

@@ -1,37 +1,37 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { HistoryCommandArgument } from '@/app/types/CommandArguments';
-import { getUsername, toHumanDuration } from '@/app/utils';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { getUsername, nullop, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class HistoryCommand extends Command {
-  constructor() {
-    super('history', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'member',
-        type: Argument.union('member', 'user', 'string'),
-        prompt: {
-          start: config.messages.promptStartUser,
-          retry: config.messages.promptStartUser,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class HistoryCommand extends SwanCommand {
+  // [{
+  //   id: 'member',
+  //   type: Argument.union('member', 'user', 'string'),
+  //   prompt: {
+  //     start: config.messages.promptStartUser,
+  //     retry: config.messages.promptStartUser,
+  //   },
+  // }],
 
-  public async exec(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
-    const memberId = typeof args.member === 'string' ? args.member : args.member.id;
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const member = await args.pick('member')
+      .catch(async () => await args.pick('user'))
+      .catch(async () => await args.pick('string'))
+      .catch(nullop);
+    if (!member)
+      return void await message.channel.send(config.messages.promptRetryUser);
+
+    const memberId = typeof member === 'string' ? member : member.id;
 
     const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
@@ -51,7 +51,7 @@ class HistoryCommand extends Command {
 
     const sanctionUrl = settings.moderation.dashboardSanctionLink + memberId;
     const embed = new MessageEmbed()
-      .setTitle(pupa(config.messages.title, { name: getUsername(args.member), sanctions }))
+      .setTitle(pupa(config.messages.title, { name: getUsername(member), sanctions }))
       .setURL(sanctionUrl)
       .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
       .setColor(settings.colors.default)
@@ -116,5 +116,3 @@ class HistoryCommand extends Command {
     await message.channel.send(embed);
   }
 }
-
-export default HistoryCommand;

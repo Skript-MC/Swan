@@ -1,5 +1,3 @@
-import type { DurationPart } from '@/app/types';
-
 const REGEX = /^(?<number>\d+) ?(?<unit>\w+)$/i;
 
 enum Durations {
@@ -11,6 +9,11 @@ enum Durations {
   Week   = 1 * 60 * 60 * 24 * 7,
   Month  = 1 * 60 * 60 * 24 * 30,
   Year   = 1 * 60 * 60 * 24 * 365,
+}
+
+interface DurationPart {
+  number: string;
+  unit: string;
 }
 
 function tokenize(str: string): string[] {
@@ -105,7 +108,7 @@ function convert(num: number, type: string): number {
  * @returns number
  * @throws {TypeError} - If the given duration is invalid, it will throw a TypeError
  */
-function getDuration(val: string): number {
+export default function getDuration(val: string): number {
   let abs: number;
   let total = 0;
   if (val.length > 0 && val.length < 101) {
@@ -129,5 +132,3 @@ function getDuration(val: string): number {
   }
   throw new TypeError(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
 }
-
-export default getDuration;

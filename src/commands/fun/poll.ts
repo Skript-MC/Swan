@@ -1,77 +1,87 @@
-import { Argument, Command } from 'discord-akairo';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args, Result, UserError } from '@sapphire/framework';
+import { err } from '@sapphire/framework';
+import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import type { GuildMessage } from '@/app/types';
-import { QuestionType, Rules } from '@/app/types';
-import type { PollCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { QuestionType } from '@/app/types';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import settings from '@/conf/settings';
 
-class PollCommand extends Command {
-  constructor() {
-    super('poll', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'duration',
-        type: Argument.validate(
-          'finiteDuration',
-          (_message: GuildMessage, _phrase: string, value: number) => Date.now() + value > Date.now()
-            && value < settings.miscellaneous.maxPollDuration,
-        ),
-        prompt: {
-          start: config.messages.promptStartDuration,
-          retry: config.messages.promptRetryDuration,
-        },
-      }, {
-        id: 'answers',
-        type: Argument.validate(
-          'quotedText',
-          (_message: GuildMessage, phrase: string) => phrase.length > 0 && (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
-        ),
-        match: 'rest',
-        prompt: {
-          start: config.messages.promptStartContent,
-          retry: config.messages.promptRetryContent,
-        },
-      }, {
-        id: 'anonymous',
-        match: 'flag',
-        flag: ['--anonymous', '--anon', '-a'],
-      }, {
-        id: 'multiple',
-        match: 'flag',
-        flag: ['--multiple', '--mult', '-m'],
-      }],
-      clientPermissions: Permissions.FLAGS.SEND_MESSAGES,
-      userPermissions: Permissions.FLAGS.SEND_MESSAGES,
-      channel: 'guild',
-    });
+const anonymousFlags = ['a', 'anon', 'anonymous'];
+const multipleFlags = ['m', 'mult', 'multiple'];
 
-    this.rules = Rules.NoHelpChannel;
-  }
+@ApplyOptions<SwanCommandOptions>({
+  ...settings.globalCommandsOptions,
+  ...config.settings,
+  strategyOptions: {
+    flags: [...anonymousFlags, ...multipleFlags],
+  },
+})
+export default class PollCommand extends SwanCommand {
+  // [{
+  //   id: 'duration',
+  //   type: Argument.validate(
+  //     'finiteDuration',
+  //     (_message: GuildMessage, _phrase: string, value: number) => Date.now() + value > Date.now()
+  //       && value < settings.miscellaneous.maxPollDuration,
+  //   ),
+  //   prompt: {
+  //     start: config.messages.promptStartDuration,
+  //     retry: config.messages.promptRetryDuration,
+  //   },
+  // }, {
+  //   id: 'answers',
+  //   type: Argument.validate(
+  //     'quotedText',
+  //     (_message: GuildMessage, phrase: string) => phrase.length > 0 && (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
+  //   ),
+  //   match: 'rest',
+  //   prompt: {
+  //     start: config.messages.promptStartContent,
+  //     retry: config.messages.promptRetryContent,
+  //   },
+  // }, {
+  //   id: 'anonymous',
+  //   match: 'flag',
+  //   flag: ['--anonymous', '--anon', '-a'],
+  // }, {
+  //   id: 'multiple',
+  //   match: 'flag',
+  //   flag: ['--multiple', '--mult', '-m'],
+  // }],
 
-  public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const duration = await this._getDuration(args);
+    if (duration.error)
+      return void await message.channel.send(config.messages.promptRetryDuration);
+
+    const answers = await args.repeatResult('string');
+    if (answers.error || answers.value[0].replace(/\s+/, '').length === 0)
+      return void await message.channel.send(config.messages.promptRetryContent);
+
+    const anonymous = args.getFlags(...anonymousFlags);
+    const multiple = args.getFlags(...multipleFlags);
+
     // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
-    // the whole string given, and args.answers will be empty.
-    const question = args.answers.shift()!;
+    // the whole string given, and answers will be empty.
+    const question = answers.value.shift()!;
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
-    const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
-
-    const duration = args.duration * 1000;
-    const finishDate = new Date(Date.now() + duration);
+    const questionType = answers.value.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
+    const finishDate = new Date(Date.now() + duration.value);
     const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
-    const formattedDuration = moment.duration(duration).humanize();
+    const formattedDuration = moment.duration(duration.value).humanize();
 
-    if (args.answers.length === 1) {
+    if (answers.value.length === 1) {
       await message.channel.send(config.messages.notEnoughAnswers);
       return;
     }
 
-    if (args.answers.length > 18) {
+    if (answers.value.length > 18) {
       await message.channel.send(config.messages.tooManyAnswers);
       return;
     }
@@ -81,7 +91,7 @@ class PollCommand extends Command {
     if (questionType === QuestionType.Yesno) {
       possibleAnswers = config.messages.answersDisplayYesno;
     } else {
-      for (const [i, answer] of args.answers.entries()) {
+      for (const [i, answer] of answers.value.entries()) {
         possibleAnswers += pupa(config.messages.answersDisplayCustom, {
           reaction: settings.miscellaneous.pollReactions.multiple[i],
           answer,
@@ -90,9 +100,9 @@ class PollCommand extends Command {
     }
 
     const details: string[] = [];
-    if (args.anonymous)
+    if (anonymous)
       details.push(config.messages.informationAnonymous);
-    if (args.multiple)
+    if (multiple)
       details.push(config.messages.informationMultiple);
 
     const embedMessages = config.messages.embed;
@@ -118,7 +128,7 @@ class PollCommand extends Command {
         possibleReactions.push(r);
       }
     } else {
-      for (let i = 0; i < args.answers.length; i++) {
+      for (let i = 0; i < answers.value.length; i++) {
         await pollMessage.react(settings.miscellaneous.pollReactions.multiple[i]);
         possibleReactions.push(settings.miscellaneous.pollReactions.multiple[i]);
       }
@@ -135,22 +145,38 @@ class PollCommand extends Command {
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
 
-    this.client.cache.pollMessagesIds.add(pollMessage.id);
+    this.context.client.cache.pollMessagesIds.add(pollMessage.id);
 
     await Poll.create({
       messageId: pollMessage.id,
       memberId: message.author.id,
       channelId: message.channel.id,
       finish: finishDate.getTime(),
-      duration,
+      duration: duration.value,
       questionType,
       votes,
       question,
-      customAnswers: args.answers.length === 0 ? null : args.answers,
-      anonymous: args.anonymous,
-      multiple: args.multiple,
+      customAnswers: answers.value.length === 0 ? null : answers.value,
+      anonymous,
+      multiple,
     });
   }
-}
 
-export default PollCommand;
+  private async _getDuration(args: Args): Promise<Result<number, UserError>> {
+    const duration = await args.pickResult('duration');
+
+    if (duration.value < 1000 || duration.value > settings.miscellaneous.maxPollDuration) {
+      const argument = this.context.stores.get('arguments').get('duration');
+      return err({
+        argument,
+        parameter: duration.value.toString(),
+        identifier: argument.name,
+        name: argument.name,
+        message: 'Duration exceeded your limit.',
+        context: argument.context,
+      });
+    }
+
+    return duration;
+  }
+}
