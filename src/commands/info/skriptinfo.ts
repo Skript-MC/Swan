@@ -1,31 +1,28 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import type { GuildMessage } from '@/app/types';
-import type { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-class SkriptInfoCommand extends Command {
-  constructor() {
-    super('skriptInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'display',
-        type: Argument.validate('string', (_message, phrase) => ['all', 'dl', 'download', 'link', 'links'].includes(phrase)),
-        default: 'all',
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class SkriptInfoCommand extends SwanCommand {
+  // [{
+  //   id: 'display',
+  //   type: Argument.validate('string', (_message, phrase) =>
+  //     ['all', 'dl', 'download', 'link', 'links'].includes(phrase)),
+  //   default: 'all',
+  // }],
 
-  public async exec(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
-    if (['dl', 'download', 'all'].includes(args.display)) {
-      const { lastPrerelease, lastStableRelease } = this.client.cache.github;
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const displayQuery = (await args.pickResult('string'))?.value ?? 'all';
+    const display = ['all', 'dl', 'download', 'link', 'links'].includes(displayQuery) ? displayQuery : 'all';
+
+    if (['dl', 'download', 'all'].includes(display)) {
+      const { lastPrerelease, lastStableRelease } = this.context.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
       const isPrereleaseImportant = lastPrerelease
@@ -53,7 +50,7 @@ class SkriptInfoCommand extends Command {
       await message.channel.send(downloadEmbed);
     }
 
-    if (['link', 'links', 'all'].includes(args.display)) {
+    if (['link', 'links', 'all'].includes(display)) {
       const informationEmbed = new MessageEmbed()
         .setColor(settings.colors.default)
         .setTitle(config.messages.embed.informationsTitle)
@@ -65,5 +62,3 @@ class SkriptInfoCommand extends Command {
     }
   }
 }
-
-export default SkriptInfoCommand;

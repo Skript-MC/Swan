@@ -1,15 +1,12 @@
 import { stripIndent } from 'common-tags';
-import { hasActiveMemberRole, noPermissions, permissions } from '@/conf/configUtils';
+import { Rules } from '@/app/types';
+import { activeMemberRolePrecondition, basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
-    aliases: ['addonPack'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: "Pack d'add-ons",
-    content: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    aliases: ['addon-pack'],
+    description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
     usage: 'addonPack <version>',
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
@@ -22,13 +19,9 @@ export const addonPack = {
 
 export const autoMessage = {
   settings: {
-    aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Message rapide',
-    content: "Permet d'envoyer rapidement un message prédéfini.",
+    aliases: ['auto', 'auto-msg', 'auto-message', 'automatic-message'],
+    description: "Permet d'envoyer rapidement un message prédéfini.",
     usage: 'auto <message>',
     examples: ['auto skript-gui', 'autoMsg 1.8'],
   },
@@ -41,13 +34,9 @@ export const autoMessage = {
 
 export const code = {
   settings: {
-    aliases: ['code', 'balise', 'balises'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Code',
-    content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
+    aliases: ['code', 'balise', 'balises'],
+    description: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
     usage: 'code <code>',
     examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=JAVA System.out.println("Le JAVA est cool aussi");'],
   },
@@ -61,18 +50,15 @@ export const code = {
 
 export const discover = {
   settings: {
-    aliases: ['discover', 'découvrir', 'decouvrir'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Découvrir',
-    content: 'Permet de __découvrir une commande__ présente dans Swan.',
+    aliases: ['discover', 'découvrir', 'decouvrir'],
+    description: 'Permet de __découvrir une commande__ présente dans Swan.',
     usage: 'découvrir',
     examples: ['decouvrir'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
-    title: ':star: Commande "{randomCommand.details.name}"',
+    title: ':star: Commande "{randomCommand.name}"',
     description: '❯ Description',
     usage: '❯ Utilisation',
     usableBy: '❯ Utilisable par',
@@ -83,38 +69,31 @@ export const discover = {
 
 export const errorDetails = {
   settings: {
-    aliases: ['error', 'errorDetails'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: "Détails d'erreur",
-    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    aliases: ['error', 'error-details'],
+    description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
     usage: 'error <erreur>',
     examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
     startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
-    retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
+    retryPrompt: "Message d'erreur invalide. Ré-entre ton erreur :",
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 };
 
 export const help = {
   settings: {
-    aliases: ['help', 'aide'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Aide',
-    content: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
+    aliases: ['help', 'aide'],
+    description: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     commandInfo: {
-      title: ':star: Commande "{command.details.name}"',
+      title: ':star: Commande "{command.name}"',
       description: '❯ Description',
       usage: '❯ Utilisation',
       usableBy: '❯ Utilisable par',
@@ -131,13 +110,9 @@ export const help = {
 
 export const links = {
   settings: {
-    aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Liens',
-    content: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
+    aliases: ['links', 'link', 'liens', 'lien'],
+    description: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
     usage: 'links [page]',
     examples: ['links', 'liens 4'],
   },
@@ -201,22 +176,21 @@ export const links = {
 
 export const move = {
   settings: {
-    aliases: ['move', 'movemessage'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS | permissions.MANAGE_MESSAGES,
-    userPermissions: hasActiveMemberRole,
-  },
-  details: {
     name: 'Déplacer un message',
-    content: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
+    aliases: ['move', 'move-message'],
+    description: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
     permissions: 'Membre Actif',
+    preconditions: [...basePreconditions, activeMemberRolePrecondition],
   },
   messages: {
     startChannelPrompt: "Tu n'as pas spécifié de salon ! Entre son ID ou mentionne-le.",
-    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons.",
-    startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
-    retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
+    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons. Ré-entre son ID ou mentionne le :",
+
+    startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID ou le lien :",
+    retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon. Ré-enrte son ID ou le lien :',
+
     successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
     moveTitle: 'Message de {member.displayName}',
     moveInfo: stripIndent`
@@ -229,15 +203,12 @@ export const move = {
 
 export const ping = {
   settings: {
-    aliases: ['ping', 'ms'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Ping',
-    content: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
+    aliases: ['ping', 'ms'],
+    description: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -251,13 +222,9 @@ export const ping = {
 
 export const rule = {
   settings: {
-    aliases: ['rule', 'regle', 'règle'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Règles',
-    content: 'Affiche une règle prédéfinie.',
+    aliases: ['rule', 'regle', 'règle'],
+    description: 'Affiche une règle prédéfinie.',
     usage: 'regle <règle>',
     examples: ['regle mentions', 'regle 2'],
   },
@@ -270,15 +237,12 @@ export const rule = {
 
 export const statistics = {
   settings: {
-    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Statistiques',
-    content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
+    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'bot-info', 'swan'],
+    description: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
     usage: 'stats',
     examples: ['stats'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

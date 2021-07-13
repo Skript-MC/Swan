@@ -1,22 +1,19 @@
 import { stripIndent } from 'common-tags';
+import { Rules } from '@/app/types';
 import { ActivityTypes } from '@/app/types/discord.js';
-import { noPermissions, permissions } from '@/conf/configUtils';
+import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonInfo = {
   settings: {
-    aliases: ['addoninfo'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Informations sur un add-on',
-    content: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
+    aliases: ['addon-info'],
+    description: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
     usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
   },
   messages: {
-    startPrompt: "Entre le nom de l'addon que tu souhaites chercher.",
-    retryPrompt: "Nom invalide, ré-envoie le nom de l'addon que tu souhaites chercher.",
+    startPrompt: "Entre le nom de l'addon que tu souhaites chercher :",
+    retryPrompt: "Nom invalide, ré-envoie le nom de l'addon que tu souhaites chercher :",
     unknownAddon: "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
     searchResults: "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
     more: '\n...et {amount} de plus...',
@@ -40,13 +37,9 @@ export const addonInfo = {
 
 export const documentation = {
   settings: {
-    aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntaxinfo'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Documentation',
-    content: stripIndent`
+    aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntax-info'],
+    description: stripIndent`
       Permet de chercher une syntaxe de Skript ou d'un addon dans la [documentation de Skript-MC](https://skript-mc.fr/documentation/skript/).
 
       Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
@@ -56,13 +49,12 @@ export const documentation = {
         • Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
 
         • Utilise \`-c=ta_categorie\` (ou \`--categorie=ta_categorie\`) pour rechercher seulement les syntaxes d'une certaine catégorie (effet, évènement, condition...).`,
-
     usage: 'documentation <syntaxe> [--addon=un_addon] [--categorie=une_categorie]',
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
-    startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher.',
-    retryPrompt: 'Mots clés sont invalides, ré-envoie des mots-clés afin de trouver la syntaxe que tu souhaites chercher.',
+    startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher :',
+    retryPrompt: 'Mots clés invalides, ré-envoie des mots-clés afin de trouver la syntaxe que tu souhaites chercher :',
     unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
@@ -95,13 +87,9 @@ export const documentation = {
 
 export const serverInfo = {
   settings: {
-    aliases: ['server', 'serveur', 'serverinfo', 'serveurinfo'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Informations sur un serveur',
-    content: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
+    aliases: ['server', 'serveur', 'server-info', 'serveur-info'],
+    description: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
     usage: 'serverinfo <nom de domaine>',
     examples: ['skriptinfo hypixel.net'],
   },
@@ -128,13 +116,9 @@ export const serverInfo = {
 
 export const skriptInfo = {
   settings: {
-    aliases: ['skript', 'skriptinfo'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Informations sur Skript',
-    content: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
+    aliases: ['skript', 'skript-info'],
+    description: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
     usage: 'skriptinfo',
     examples: ['skriptinfo'],
   },
@@ -166,15 +150,12 @@ export const skriptInfo = {
 
 export const userInfo = {
   settings: {
-    aliases: ['userinfo'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Informations sur un utilisateur (discord)',
-    content: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
+    aliases: ['user-info'],
+    description: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
     usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

@@ -1,12 +1,12 @@
 import { promises as fs } from 'fs';
 import path from 'path';
+import { Store } from '@sapphire/pieces';
 import { stripIndent } from 'common-tags';
 import type { GuildChannel, GuildMember, NewsChannel } from 'discord.js';
 import { Permissions, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
-import Logger from '@/app/structures/Logger';
 import type { BanChannelMessage } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { nullop, prunePseudo } from '@/app/utils';
@@ -42,11 +42,11 @@ export default {
         },
       );
     } catch (unknownError: unknown) {
-      Logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
-      Logger.detail(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
-      Logger.detail(`Stripped name: "${pseudo}"`);
-      Logger.detail(`Create channel permissions: ${data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
-      Logger.error((unknownError as Error).stack);
+      Store.injectedContext.logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
+      Store.injectedContext.logger.info(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
+      Store.injectedContext.logger.info(`Stripped name: "${pseudo}"`);
+      Store.injectedContext.logger.info(`Create channel permissions: ${data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
+      Store.injectedContext.logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }
   },

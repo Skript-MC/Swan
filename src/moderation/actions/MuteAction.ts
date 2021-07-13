@@ -10,11 +10,11 @@ import { SanctionsUpdates } from '@/app/types';
 import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
-class MuteAction extends ModerationAction {
+export default class MuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     if (!this.data.duration)
       throw new TypeError('Unexpected missing property: data.duration is not set.');
 
@@ -100,5 +100,3 @@ class MuteAction extends ModerationAction {
     }
   }
 }
-
-export default MuteAction;
