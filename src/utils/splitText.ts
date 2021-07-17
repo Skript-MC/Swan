@@ -4,7 +4,7 @@
  * @param {number} n - The size of each array. Defaults to 2000
  * @returns string[]
  */
-function splitText(text: string, n = 2000): string[] {
+export default function splitText(text: string, n = 2000): string[] {
   const blocks: string[] = [];
   const lines = text.split(/\n/g);
   let index = 0;
@@ -23,5 +23,3 @@ function splitText(text: string, n = 2000): string[] {
 
   return blocks;
 }
-
-export default splitText;

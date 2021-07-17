@@ -1,30 +1,20 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import { Rules } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { PingCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { ping as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class PingCommand extends Command {
-  constructor() {
-    super('ping', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-    this.rules = Rules.OnlyBotChannel;
-  }
-
-  public async exec(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class PingCommand extends SwanCommand {
+  public async run(message: GuildMessage, _args: Args): Promise<void> {
     const sent = await message.channel.send(config.messages.firstMessage);
     const swanPing = (sent.editedAt ?? sent.createdAt).getTime() - (message.editedAt ?? message.createdAt).getTime();
-    const discordPing = Math.round(this.client.ws.ping);
+    const discordPing = Math.round(this.context.client.ws.ping);
 
     const description = pupa(config.messages.secondMessage, {
       swanPing,
@@ -53,5 +43,3 @@ class PingCommand extends Command {
     return ':green_circle:';
   }
 }
-
-export default PingCommand;

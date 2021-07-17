@@ -11,7 +11,7 @@ const units = [
  * @param {number} size - The size to convert.
  * @returns string
  */
-function convertFileSize(size: number): string {
+export default function convertFileSize(size: number): string {
   size = Math.abs(size);
 
   for (let i = 1; i < units.length; i++) {
@@ -20,5 +20,3 @@ function convertFileSize(size: number): string {
   }
   return 'Plusieurs pétaoctets';
 }
-
-export default convertFileSize;

@@ -1,67 +1,52 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import SwanModule from '@/app/models/swanModule';
-import type { GuildMessage } from '@/app/types';
-import type { ModuleCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class ModuleCommand extends Command {
-  constructor() {
-    super('module', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-      args: [
-        {
-          id: 'moduleName',
-          type: 'string',
-        },
-        {
-          id: 'enabled',
-          type: 'string',
-        },
-      ],
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class ModuleCommand extends SwanCommand {
+  // [{
+  //   id: 'moduleName',
+  //   type: 'string',
+  // }, {
+  //   id: 'enabled',
+  //   type: 'string',
+  // }],
 
-  public async exec(message: GuildMessage, args: ModuleCommandArguments): Promise<void> {
+  public async run(message: GuildMessage, args: Args): Promise<void> {
     const modules = await SwanModule.find();
+    const moduleName = await args.pickResult('string');
 
-    if (!args.moduleName) {
+    if (moduleName.error) {
       const embed = new MessageEmbed()
         .setTitle(config.embed.title)
         .setURL(config.embed.link)
         .setColor(settings.colors.default)
         .setDescription(config.embed.content)
         .setFooter(pupa(messages.global.executedBy, { member: message.member }));
-      void message.channel.send(embed).catch(noop);
+      await message.channel.send(embed).catch(noop);
       return;
     }
 
-    const module = modules.find(m => m.name === args.moduleName);
-    if (!module) {
-      void message.channel.send(config.messages.noModuleFound).catch(noop);
-      return;
-    }
+    const module = modules.find(m => m.name === moduleName.value);
+    if (!module)
+      return void await message.channel.send(config.messages.noModuleFound).catch(noop);
 
-    if (!args.enabled) {
-      void message.channel.send(pupa(config.messages.noStatus, { module })).catch(noop);
-      return;
-    }
+    const enabled = await args.pickResult('string');
+    if (enabled.error || !['on', 'off'].includes(enabled.value))
+      return void await message.channel.send(config.messages.invalidStatus).catch(noop);
+    const isEnabled = enabled.value === 'on';
 
-    const enabled = args.enabled === 'on';
+    await toggleModule(module, isEnabled);
+    await SwanModule.findOneAndUpdate({ name: module.name }, { enabled: isEnabled });
 
-    toggleModule(this.client, module, enabled);
-    await SwanModule.findOneAndUpdate({ name: module.name }, { enabled });
-
-    void message.channel.send(pupa(config.messages.success, { status: enabled ? 'activé' : 'désactivé' })).catch(noop);
+    await message.channel.send(pupa(config.messages.success, { status: isEnabled ? 'activé' : 'désactivé' })).catch(noop);
   }
 }
-
-export default ModuleCommand;

@@ -5,11 +5,11 @@ import ModerationError from '@/app/moderation/ModerationError';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import ModerationAction from './ModerationAction';
 
-class RemoveWarnAction extends ModerationAction {
+export default class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     await this._removeWarn();
   }
 
@@ -53,5 +53,3 @@ class RemoveWarnAction extends ModerationAction {
     }
   }
 }
-
-export default RemoveWarnAction;

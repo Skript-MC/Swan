@@ -1,32 +1,25 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
-import type { LinksCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { links as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
 
-class LinksCommand extends Command {
-  constructor() {
-    super('links', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'page',
-        type: Argument.range('integer', 0, maxPage),
-        default: 0,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class LinksCommand extends SwanCommand {
+  // [{
+  //   id: 'page',
+  //   type: Argument.range('integer', 0, maxPage),
+  //   default: 0,
+  // }],
 
-  public async exec(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
-    let { page } = args;
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    let page = (await args.pickResult('integer', { minimum: 0, maximum: maxPage }))?.value ?? 0;
     const msg = await message.channel.send(this._getEmbedForPage(page));
 
     const collector = msg
@@ -66,7 +59,7 @@ class LinksCommand extends Command {
       });
 
     for (const reaction of reactions)
-      void await msg.react(reaction);
+      await msg.react(reaction);
   }
 
   private _getEmbedForPage(page: number): MessageEmbed {
@@ -82,5 +75,3 @@ class LinksCommand extends Command {
     return embed;
   }
 }
-
-export default LinksCommand;

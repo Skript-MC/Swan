@@ -1,35 +1,32 @@
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import axios from 'axios';
-import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import type { GuildMessage, ServerStatResponse } from '@/app/types';
-import type { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, ServerStatResponse, SwanCommandOptions } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-class ServerInfoCommand extends Command {
-  constructor() {
-    super('serverInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'server',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class ServerInfoCommand extends SwanCommand {
+  // [{
+  //   id: 'server',
+  //   type: 'string',
+  //   match: 'content',
+  //   prompt: {
+  //     start: config.messages.startPrompt,
+  //     retry: config.messages.retryPrompt,
+  //   },
+  // }],
 
-  public async exec(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {
-    const server: ServerStatResponse = await axios(settings.apis.server + args.server)
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const serverQuery = await args.restResult('string');
+    if (serverQuery.error)
+      return void await message.channel.send(config.messages.retryPrompt);
+
+    const server: ServerStatResponse = await axios(settings.apis.server + serverQuery.value)
       .then(response => (response.status >= 300 ? null : response.data))
       .catch(nullop);
 
@@ -41,7 +38,7 @@ class ServerInfoCommand extends Command {
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedMessages.title, { query: args.server }))
+      .setAuthor(pupa(embedMessages.title, { query: serverQuery.value }))
       .setFooter(pupa(embedMessages.footer, { member: message.member }))
       .setTimestamp();
 
@@ -65,5 +62,3 @@ class ServerInfoCommand extends Command {
     await message.channel.send(embed);
   }
 }
-
-export default ServerInfoCommand;

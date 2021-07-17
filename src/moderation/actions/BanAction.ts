@@ -11,18 +11,18 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
-class BanAction extends ModerationAction {
+export default class BanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyBanning.add(this.data.victim.id);
+    this.context.client.currentlyBanning.add(this.data.victim.id);
   }
 
   protected after(): void {
-    this.client.currentlyBanning.delete(this.data.victim.id);
-    this.client.cache.convictedUsers
-      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
+    this.context.client.currentlyBanning.delete(this.data.victim.id);
+    this.context.client.cache.convictedUsers
+      .splice(this.context.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     if (!this.data.duration)
       throw new TypeError('Unexpected missing property: data.duration is not set.');
 
@@ -196,5 +196,3 @@ class BanAction extends ModerationAction {
     }
   }
 }
-
-export default BanAction;

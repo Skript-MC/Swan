@@ -7,7 +7,7 @@ import type { MessageDocument } from '@/app/types';
  * @param {string} wanted - The query string to search for.
  * @returns MessageDocument | null
  */
-function searchMessageSimilarity(entries: MessageDocument[], wanted: string): MessageDocument | null {
+export default function searchMessageSimilarity(entries: MessageDocument[], wanted: string): MessageDocument | null {
   const search: Array<[message: MessageDocument, similarity: number]> = [];
   for (const entry of entries) {
     // Avoid useless double loop after.
@@ -24,5 +24,3 @@ function searchMessageSimilarity(entries: MessageDocument[], wanted: string): Me
     return null;
   return search[0][0];
 }
-
-export default searchMessageSimilarity;

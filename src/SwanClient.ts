@@ -1,41 +1,37 @@
-import path from 'path';
+import { LogLevel, SapphireClient } from '@sapphire/framework';
 import axios from 'axios';
-import {
-  AkairoClient,
-  CommandHandler,
-  InhibitorHandler,
-  ListenerHandler,
-} from 'discord-akairo';
-import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import { Intents } from 'discord.js';
 import type { PermissionString } from 'discord.js';
-import mongoose from 'mongoose';
 import type { Query } from 'mongoose';
 import SharedConfig from '@/app/models/sharedConfig';
-import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
 import Poll from './models/poll';
 import ReactionRole from './models/reactionRole';
-import SwanModule from './models/swanModule';
-import * as resolvers from './resolvers';
-import Logger from './structures/Logger';
 import SwanCacheManager from './structures/SwanCacheManager';
-import TaskHandler from './structures/TaskHandler';
+import type SwanCommandStore from './structures/commands/SwanCommandStore';
+import TaskStore from './structures/tasks/TaskStore';
 import type {
   CommandStatDocument,
   SharedConfigDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
-  SwanModuleDocument,
 } from './types';
 import { SharedConfigName } from './types';
-import { nullop, uncapitalize } from './utils';
+import { nullop } from './utils';
 
-class SwanClient extends AkairoClient {
+export default class SwanClient extends SapphireClient {
   constructor() {
-    super({}, {
+    super({
+      caseInsensitiveCommands: true,
+      caseInsensitivePrefixes: true,
+      defaultPrefix: settings.bot.prefix,
+      logger: {
+        level: LogLevel.Trace,
+      },
+      loadDefaultErrorEvents: true,
+
       // FIXME: Will break with discord.js v13
       disableMentions: 'everyone',
       ws: {
@@ -52,6 +48,8 @@ class SwanClient extends AkairoClient {
 
     this.isLoading = true;
 
+    this.stores.register(new TaskStore());
+
     // Cache used internally to prevent unnecessary DB call when possible.
     this.cache = new SwanCacheManager();
 
@@ -59,117 +57,55 @@ class SwanClient extends AkairoClient {
     this.currentlyUnbanning = new Set();
     this.currentlyModerating = new Set();
 
-    Logger.info('Creating Command handler...');
-    this.commandHandler = new CommandHandler(this, {
-      directory: path.join(__dirname, 'commands/'),
-      prefix: settings.bot.prefix,
-      aliasReplacement: /-/g,
-      automateCategories: true,
-      fetchMembers: true,
-      commandUtil: true,
-      storeMessages: true,
-      argumentDefaults: {
-        prompt: {
-          retries: 3,
-          time: 60_000,
-          cancelWord: messages.prompt.cancelWord,
-          stopWord: messages.prompt.stopWord,
-          modifyStart: (_, text: string): string => text + messages.prompt.footer,
-          modifyRetry: (_, text: string): string => text + messages.prompt.footer,
-          timeout: messages.prompt.timeout,
-          ended: messages.prompt.ended,
-          cancel: messages.prompt.canceled,
-        },
-      },
-    });
-
-    Logger.info('Creating Inhibitor handler...');
-    this.inhibitorHandler = new InhibitorHandler(this, {
-      directory: path.join(__dirname, 'inhibitors/'),
-      automateCategories: true,
-    });
-
-    Logger.info('Creating Task handler...');
-    this.taskHandler = new TaskHandler(this, {
-      directory: path.join(__dirname, 'tasks/'),
-      automateCategories: true,
-    });
-
-    Logger.info('Creating Listener handler...');
-    this.listenerHandler = new ListenerHandler(this, {
-      directory: path.join(__dirname, 'listeners/'),
-      automateCategories: true,
-    });
-
-    this.commandHandler.useInhibitorHandler(this.inhibitorHandler);
-    this.commandHandler.useListenerHandler(this.listenerHandler);
-
-    this.listenerHandler.setEmitters({
-      commandHandler: this.commandHandler,
-      inhibitorHandler: this.inhibitorHandler,
-      taskHandler: this.taskHandler,
-      listenerHandler: this.listenerHandler,
-      mongodb: mongoose.connection,
-      process,
-    });
-
     // We start by loading all modules.
-    this.commandHandler.loadAll();
-    this.inhibitorHandler.loadAll();
-    this.listenerHandler.loadAll();
-
-    this.cache.modules = [
-      ...this.commandHandler.modules.array(),
-      ...this.inhibitorHandler.modules.array(),
-      ...this.listenerHandler.modules.array(),
-    ];
+    // this.cache.modules = [
+    //   ...this.commandHandler.modules.array(),
+    //   ...this.inhibitorHandler.modules.array(),
+    //   ...this.listenerHandler.modules.array(),
+    // ];
 
     // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
-    this.on('ready', () => {
-      this.taskHandler.loadAll();
-      this.cache.modules = [...this.cache.modules, ...this.taskHandler.modules.array()];
+    // this.on('ready', () => {
+    //   this.taskHandler.loadAll();
+    //   this.cache.modules = [...this.cache.modules, ...this.taskHandler.modules.array()];
 
-      SwanModule.find()
-        .then((modules: SwanModuleDocument[]): void => {
-          const unloadModules = (handler: AkairoHandler): void => {
-            for (const id of handler.modules.keys()) {
-              const module = modules.find(mod => mod.name === id);
-              if (module && !module.enabled) {
-                handler.remove(id);
-                Logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
-              } else if (!module) {
-                void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
-              }
-            }
-          };
+    //   SwanModule.find()
+    //     .then((modules: SwanModuleDocument[]): void => {
+    //       const unloadModules = (handler: AkairoHandler): void => {
+    //         for (const id of handler.modules.keys()) {
+    //           const module = modules.find(mod => mod.name === id);
+    //           if (module && !module.enabled) {
+    //             handler.remove(id);
+    //             this.logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
+    //           } else if (!module) {
+    //             void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
+    //           }
+    //         }
+    //       };
 
-          unloadModules(this.commandHandler);
-          unloadModules(this.inhibitorHandler);
-          unloadModules(this.listenerHandler);
-          unloadModules(this.taskHandler);
-        })
-        .catch((error: Error) => {
-          Logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
-          Logger.error(error.message);
-        });
-    });
+    //       unloadModules(this.commandHandler);
+    //       unloadModules(this.inhibitorHandler);
+    //       unloadModules(this.listenerHandler);
+    //       unloadModules(this.taskHandler);
+    //     })
+    //     .catch((error: Error) => {
+    //       this.logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
+    //       this.logger.error(error.message);
+    //     });
+    // });
 
-    // We add all needed resolvers to the type resolver.
-    for (const [name, resolver] of Object.entries(resolvers))
-      this.commandHandler.resolver.addType(name, resolver);
-
-    Logger.info('Loading & caching databases...');
+    this.logger.info('Loading & caching databases...');
     void this._loadPolls();
     void this._loadCommandStats();
     void this._loadReactionRoles();
     void this._loadSharedConfigs();
 
-    Logger.info('Loading addons from SkriptTools...');
+    this.logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
-    Logger.info('Loading syntaxes from Skript-MC...');
+    this.logger.info('Loading syntaxes from Skript-MC...');
     void this._loadSkriptMcSyntaxes();
 
-    Logger.info('Client initialization finished!');
+    this.logger.info('Client initialization finished!');
   }
 
   public checkValidity(): void {
@@ -178,7 +114,7 @@ class SwanClient extends AkairoClient {
 
     // Check tokens.
     if (!process.env.SENTRY_TOKEN)
-      Logger.info('Disabling Sentry as the DSN was not set in the environment variables (SENTRY_TOKEN).');
+      this.logger.info('Disabling Sentry as the DSN was not set in the environment variables (SENTRY_TOKEN).');
 
     // Check channels IDs.
     const channels = this.guild.channels.cache;
@@ -196,9 +132,9 @@ class SwanClient extends AkairoClient {
       }
     }
     if (invalidChannels.length > 0) {
-      Logger.error('Configured channels are invalid:');
+      this.logger.error('Configured channels are invalid:');
       for (const error of invalidChannels)
-        Logger.detail(error);
+        this.logger.info(error);
       if (process.env.NODE_ENV === 'production')
         throw new Error('Please fill correctly the configuration to start the bot.');
     }
@@ -206,9 +142,9 @@ class SwanClient extends AkairoClient {
     // Check roles IDs.
     for (const [key, value] of Object.entries(settings.roles)) {
       if (!value)
-        Logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
+        this.logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
       else if (!this.guild.roles.cache.has(value))
-        Logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
+        this.logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
     }
 
     // TODO: Also check for emojis IDs.
@@ -223,7 +159,7 @@ class SwanClient extends AkairoClient {
       'READ_MESSAGE_HISTORY',
     ];
     if (!this.guild.me?.hasPermission(permissions))
-      Logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
+      this.logger.error(`Swan is missing Guild-Level permissions. Its cumulated roles' permissions does not contain one of the following: ${permissions.join(', ')}.`);
 
     // Check client's channels permissions.
     for (const channel of channels.array()) {
@@ -232,7 +168,7 @@ class SwanClient extends AkairoClient {
 
       const channelPermissions = channel.permissionsFor(this.guild.me)?.toArray();
       if (channelPermissions && !permissions.every(perm => channelPermissions.includes(perm)))
-        Logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
+        this.logger.warn(`Swan is missing permission(s) ${permissions.filter(perm => !channelPermissions.includes(perm)).join(', ')} in channel "#${channel.name}".`);
     }
   }
 
@@ -245,10 +181,9 @@ class SwanClient extends AkairoClient {
 
   private async _loadCommandStats(): Promise<void> {
     // Add all needed commands not present in the DB, to DB.
-    const commandIds: string[] = this.commandHandler.categories
+    const commandIds = (this.stores.get('commands') as SwanCommandStore)
       .array()
-      .flatMap((category: Category<string, Command>) => category.array())
-      .map((cmd: Command) => cmd.id);
+      .map(cmd => cmd.name);
 
     // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
     const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
@@ -258,8 +193,8 @@ class SwanClient extends AkairoClient {
     try {
       await Promise.all(documents);
     } catch (unknownError: unknown) {
-      Logger.error('Could not load some documents:');
-      Logger.error((unknownError as Error).stack);
+      this.logger.error('Could not load some documents:');
+      this.logger.error((unknownError as Error).stack);
     }
   }
 
@@ -295,8 +230,8 @@ class SwanClient extends AkairoClient {
           this.cache.addonsVersions.push(versions[versions.length - 1]);
       }
     } catch (unknownError: unknown) {
-      Logger.error("Could not load SkriptTool's addons:");
-      Logger.error((unknownError as Error).stack);
+      this.logger.error("Could not load SkriptTool's addons:");
+      this.logger.error((unknownError as Error).stack);
     }
   }
 
@@ -334,10 +269,8 @@ class SwanClient extends AkairoClient {
         this.cache.skriptMcSyntaxes.push(syntaxWithAddon);
       }
     } catch (unknownError: unknown) {
-      Logger.error("Could not fetch Skript-MC's addons/syntaxes:");
-      Logger.error((unknownError as Error).stack);
+      this.logger.error("Could not fetch Skript-MC's addons/syntaxes:");
+      this.logger.error((unknownError as Error).stack);
     }
   }
 }
-
-export default SwanClient;

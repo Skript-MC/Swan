@@ -1,28 +1,23 @@
 import { Octokit } from '@octokit/rest';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
-import Logger from '@/app/structures/Logger';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import { skriptReleases as config } from '@/conf/tasks';
 
-class SkriptReleasesTask extends Task {
-  constructor() {
-    super('skriptReleases', {
-      // Every 10 minutes
-      cron: '*/10 * * * *',
-    });
-  }
-
-  public async exec(): Promise<void> {
+@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
+export default class SkriptReleasesTask extends Task {
+  public async run(): Promise<void> {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
     const octokit = new Octokit();
     const githubReleases = await octokit.repos.listReleases({ owner: 'SkriptLang', repo: 'Skript' })
       .catch((err: Error) => {
-        Logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
-        Logger.detail(err.message);
+        this.context.logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
+        this.context.logger.info(err.message);
       });
     if (!githubReleases || !githubReleases.data)
       return;
@@ -31,7 +26,7 @@ class SkriptReleasesTask extends Task {
     if (!lastRelease)
       return;
     // We updated the cache of the releases with the one we just fetched.
-    this.client.cache.github = {
+    this.context.client.cache.github = {
       lastPrerelease: githubReleases.data.find((release): release is GithubPrerelease => release.prerelease),
       lastStableRelease: githubReleases.data.find((release): release is GithubStableRelease => !release.prerelease),
     };
@@ -44,7 +39,7 @@ class SkriptReleasesTask extends Task {
     if ((Date.now() - new Date(lastRelease.published_at).getTime()) > config.timeDifference)
       return;
 
-    const channel = this.client.channels.cache.get(settings.channels.skriptTalk);
+    const channel = this.context.client.channels.cache.get(settings.channels.skriptTalk);
     if (!channel?.isText())
       return;
 
@@ -60,5 +55,3 @@ class SkriptReleasesTask extends Task {
     await channel.send(config.releaseAnnouncement, embed).catch(noop);
   }
 }
-
-export default SkriptReleasesTask;

@@ -1,15 +1,15 @@
-import type { AkairoClient } from 'discord-akairo';
 import type { Message, User } from 'discord.js';
+import type SwanClient from '@/app/SwanClient';
 import DiscordUser from '@/app/models/discordUser';
 import MessageLog from '@/app/models/messageLog';
 import type { DiscordUserDocument } from '@/app/types';
 
 export default {
-  shouldSaveMessage(client: AkairoClient, message: Message): boolean {
+  shouldSaveMessage(client: SwanClient, message: Message): boolean {
     return client.cache.savedChannelsIds?.includes(message.channel.id) || false;
   },
 
-  async getDiscordUser(client: AkairoClient, author: User): Promise<DiscordUserDocument | null> {
+  async getDiscordUser(client: SwanClient, author: User): Promise<DiscordUserDocument | null> {
     const cachedUser = client.cache.discordUsers.find(elt => elt.userId === author.id);
     if (cachedUser)
       return cachedUser;
@@ -24,7 +24,7 @@ export default {
     return user;
   },
 
-  async saveMessageEdit(client: AkairoClient, oldMessage: Message, newMessage: Message): Promise<void> {
+  async saveMessageEdit(client: SwanClient, oldMessage: Message, newMessage: Message): Promise<void> {
     // We check that the content of the message has changed, since it may not have changed
     if (!this.shouldSaveMessage(client, oldMessage) || oldMessage.content === newMessage.content)
       return;
@@ -47,7 +47,7 @@ export default {
     }
   },
 
-  async saveMessageDelete(client: AkairoClient, oldMessage: Message): Promise<void> {
+  async saveMessageDelete(client: SwanClient, oldMessage: Message): Promise<void> {
     if (!this.shouldSaveMessage(client, oldMessage))
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);

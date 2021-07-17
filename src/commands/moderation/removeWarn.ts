@@ -1,43 +1,41 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
-import Logger from '@/app/structures/Logger';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { RemoveWarnCommandArgument } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { removeWarn as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
-class RemoveWarnCommand extends Command {
-  constructor() {
-    super('removeWarn', {
-      aliases: config.settings.aliases,
-      details: config.details,
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class RemoveWarnCommand extends SwanCommand {
+  // [{
+  //   id: 'warnId',
+  //   type: 'string',
+  //   prompt: {
+  //     start: config.messages.promptStartWarnId,
+  //     retry: config.messages.promptRetryWarnId,
+  //   },
+  // }, {
+  //   id: 'reason',
+  //   type: 'string',
+  //   match: 'rest',
+  //   default: messages.global.noReason,
+  // }],
 
-      args: [{
-        id: 'warnId',
-        type: 'string',
-        prompt: {
-          start: config.messages.promptStartWarnId,
-          retry: config.messages.promptRetryWarnId,
-        },
-      }, {
-        id: 'reason',
-        type: 'string',
-        match: 'rest',
-        default: messages.global.noReason,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const warnId = await args.pickResult('string');
+    if (warnId.error)
+      return void await message.channel.send(config.messages.promptRetryWarnId);
 
-  public async exec(message: GuildMessage, args: RemoveWarnCommandArgument): Promise<void> {
-    const warn = await Sanction.findOne({ sanctionId: args.warnId, revoked: false }).catch(nullop);
+    const reason = (await args.restResult('string'))?.value ?? messages.global.noReason;
+
+    const warn = await Sanction.findOne({ sanctionId: warnId.value, revoked: false }).catch(nullop);
     if (!warn) {
       await message.channel.send(config.messages.invalidWarnId).catch(noop);
       return;
@@ -50,14 +48,14 @@ class RemoveWarnCommand extends Command {
       return;
     }
 
-    if (this.client.currentlyModerating.has(member.id)) {
+    if (this.context.client.currentlyModerating.has(member.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.add(member.id);
+    this.context.client.currentlyModerating.add(member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.delete(member.id);
+      this.context.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
     try {
@@ -69,7 +67,7 @@ class RemoveWarnCommand extends Command {
 
       const data = new ModerationData(message)
         .setVictim(member)
-        .setReason(args.reason)
+        .setReason(reason)
         .setType(SanctionTypes.RemoveWarn)
         .setOriginalWarnId(warn.sanctionId);
 
@@ -77,13 +75,11 @@ class RemoveWarnCommand extends Command {
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occurred while removing a warn from member!');
-      Logger.detail(`Parsed member: ${member}`);
-      Logger.detail(`Message: ${message.url}`);
-      Logger.detail((unknownError as Error).stack, true);
+      this.context.logger.error('An unexpected error occurred while removing a warn from member!');
+      this.context.logger.info(`Parsed member: ${member}`);
+      this.context.logger.info(`Message: ${message.url}`);
+      this.context.logger.info((unknownError as Error).stack, true);
       await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }
-
-export default RemoveWarnCommand;

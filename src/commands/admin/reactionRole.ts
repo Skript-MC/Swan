@@ -1,65 +1,53 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
-import type { Role, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ReactionRole from '@/app/models/reactionRole';
-import type { GuildMessage } from '@/app/types';
-import type { ReactionRoleCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class ReactionRoleCommand extends Command {
-  constructor() {
-    super('reactionrole', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-      args: [{
-        id: 'givenRole',
-        type: Argument.validate('role',
-          (message: GuildMessage, _phrase: string, value: Role) => typeof message.guild.roles.cache.get(value?.id) !== 'undefined'),
-        prompt: {
-          start: config.messages.promptStart,
-          retry: config.messages.promptRetry,
-        },
-        unordered: true,
-      },
-      {
-        id: 'reaction',
-        type: 'emote',
-        default: settings.emojis.yes,
-        unordered: true,
-      },
-      {
-        id: 'destinationChannel',
-        type: 'textChannel',
-        default: (message: GuildMessage): TextChannel => message.channel as TextChannel,
-        unordered: true,
-      }],
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class ReactionRoleCommand extends SwanCommand {
+  // [{
+  //   id: 'givenRole',
+  //   type: Argument.validate('role',
+  //     (message: GuildMessage, _phrase: string, value: Role) =>
+  //        typeof message.guild.roles.cache.get(value?.id) !== 'undefined'),
+  //   prompt: {
+  //     start: config.messages.promptStart,
+  //     retry: config.messages.promptRetry,
+  //   },
+  //   unordered: true,
+  // },
+  // {
+  //   id: 'reaction',
+  //   type: 'emote',
+  //   default: settings.emojis.yes,
+  //   unordered: true,
+  // },
+  // {
+  //   id: 'destinationChannel',
+  //   type: 'textChannel',
+  //   default: (message: GuildMessage): TextChannel => message.channel as TextChannel,
+  //   unordered: true,
+  // }],
 
-  public async exec(message: GuildMessage, args: ReactionRoleCommandArguments): Promise<void> {
-    const { givenRole } = args;
-    const { reaction, destinationChannel } = args;
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const givenRole = await args.pickResult('role');
+    if (givenRole.error)
+      return void await message.channel.send(config.messages.promptRetry);
 
-    const botMember = this.client.guild.me;
+    const emoji = (await args.pickResult('emoji'))?.value ?? message.guild.emojis.resolve(settings.emojis.yes);
+    const destinationChannel = (await args.pickResult('guildTextBasedChannel'))?.value ?? message.channel;
 
-    if (!botMember || botMember.roles.highest.position <= givenRole.position) {
+    const botMember = message.guild.me;
+
+    if (!botMember || botMember.roles.highest.position <= givenRole.value.position) {
       await message.channel.send(config.messages.notEnoughPermissions).catch(noop);
-      return;
-    }
-
-    const regex = /^\d+$/; // Regex to check for numbers
-    const emoji = regex.test(reaction)
-      ? message.guild.emojis.cache.get(reaction)?.toString()
-      : reaction;
-    if (!emoji) {
-      await message.channel.send(config.messages.invalidEmoji).catch(noop);
       return;
     }
 
@@ -80,13 +68,11 @@ class ReactionRoleCommand extends Command {
     const document = {
       messageId: sendMessage.id,
       channelId: sendMessage.channel.id,
-      givenRoleId: givenRole.id,
-      reaction: emoji,
+      givenRoleId: givenRole.value.id,
+      reaction: emoji.toString(),
     };
 
-    this.client.cache.reactionRolesIds.add(document.messageId);
+    this.context.client.cache.reactionRolesIds.add(document.messageId);
     await ReactionRole.create(document).catch(noop);
   }
 }
-
-export default ReactionRoleCommand;

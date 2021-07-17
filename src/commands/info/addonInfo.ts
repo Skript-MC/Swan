@@ -1,47 +1,48 @@
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import axios from 'axios';
-import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Message, MessageReaction, User } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
-import Logger from '@/app/structures/Logger';
-import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '@/app/types';
-import type { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type {
+ GuildMessage,
+ MatchingAddon,
+ SkriptToolsAddonResponse,
+ SwanCommandOptions,
+} from '@/app/types';
 import { convertFileSize, noop, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class AddonInfoCommand extends Command {
-  constructor() {
-    super('addonInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'addon',
-        type: 'string',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class AddonInfoCommand extends SwanCommand {
+  // [{
+  //   id: 'addon',
+  //   type: 'string',
+  //   prompt: {
+  //     start: config.messages.startPrompt,
+  //     retry: config.messages.retryPrompt,
+  //   },
+  // }],
 
-  public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
+  public async run(message: GuildMessage, args: Args): Promise<void> {
+    const addon = await args.pickResult('string');
+    if (addon.error)
+      return void await message.channel.send(config.messages.retryPrompt);
+
     // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
     // We keep only the first 10 matching addons.
-    const matchingAddons: MatchingAddon[] = this.client.cache.addonsVersions
-      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, addon, { caseSensitive: false }) >= 0.7)
+    const matchingAddons: MatchingAddon[] = this.context.client.cache.addonsVersions
+      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, addon.value, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift()! }))
       .slice(0, 10);
 
     // If we found no match.
     if (matchingAddons.length === 0) {
-      await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
+      await message.channel.send(pupa(config.messages.unknownAddon, { addon: addon.value }));
       return;
     }
     // If we found one match, show it directly.
@@ -51,7 +52,7 @@ class AddonInfoCommand extends Command {
     }
 
     // If we found multiple matches, present them nicely and ask the user which to choose.
-    const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
+    const possibleMatch = matchingAddons.find(match => addon.value.toLowerCase() === match.name.toLowerCase());
     if (possibleMatch) {
       await this._sendDetail(message, possibleMatch.file);
       return;
@@ -88,7 +89,7 @@ class AddonInfoCommand extends Command {
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
     const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
-      .catch((err: Error) => { Logger.error(err.message); });
+      .catch((err: Error) => { this.context.logger.error(err.message); });
 
     if (!addon) {
       await message.channel.send(messages.global.oops);
@@ -127,5 +128,3 @@ class AddonInfoCommand extends Command {
     await message.channel.send(embed);
   }
 }
-
-export default AddonInfoCommand;

@@ -1,8 +1,11 @@
-import type { AkairoClient } from 'discord-akairo';
+import type { PieceContextExtras } from '@sapphire/pieces';
+import { Store } from '@sapphire/pieces';
 import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
+import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
 import type { Awaited } from '@/app/types';
@@ -10,12 +13,10 @@ import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ActionUpdateInformations from '../ActionUpdateInformations';
-import ErrorState from '../ErrorState';
 
-abstract class ModerationAction {
+export default abstract class ModerationAction {
   data: ModerationData;
-  client: AkairoClient;
+  context: PieceContextExtras;
   logChannel: TextChannel;
 
   errorState: ErrorState;
@@ -23,10 +24,10 @@ abstract class ModerationAction {
 
   constructor(data: ModerationData) {
     this.data = data;
-    this.client = this.data.client;
-    this.logChannel = this.client.cache.channels.log as TextChannel;
+    this.context = Store.injectedContext;
+    this.logChannel = this.context.client.cache.channels.log as TextChannel;
 
-    this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
+    this.errorState = new ErrorState(this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);
   }
 
@@ -36,7 +37,7 @@ abstract class ModerationAction {
     try {
       await this.before?.();
       await this.notify();
-      await this.exec();
+      await this.run();
       await this.log();
       await this.after?.();
     } catch (unknownError: unknown) {
@@ -69,7 +70,6 @@ abstract class ModerationAction {
       newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
     });
   }
-
 
   protected get nameString(): string {
     return this.data.victim?.user?.toString() ?? messages.global.unknownName;
@@ -190,9 +190,7 @@ abstract class ModerationAction {
 
   protected abstract before?(): Awaited<void>;
 
-  protected abstract exec(): Awaited<void>;
+  protected abstract run(): Awaited<void>;
 
   protected abstract after?(): Awaited<void>;
 }
-
-export default ModerationAction;

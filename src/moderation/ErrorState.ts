@@ -1,17 +1,14 @@
-import type { AkairoClient } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { Store } from '@sapphire/pieces';
 import type { GuildTextBasedChannel } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import ModerationError from './ModerationError';
 
-class ErrorState {
-  client: AkairoClient;
+export default class ErrorState {
   channel: GuildTextBasedChannel;
   errors: ModerationError[];
 
-  constructor(client: AkairoClient, channel: GuildTextBasedChannel) {
-    this.client = client;
+  constructor(channel: GuildTextBasedChannel) {
     this.channel = channel;
     this.errors = [];
   }
@@ -30,14 +27,12 @@ class ErrorState {
 
     void this.channel.send(messages.global.oops).catch(noop);
     for (const error of this.errors) {
-      Logger.error(error.message);
+      Store.injectedContext.logger.error(error.message);
       if (error instanceof ModerationError) {
         for (const [detail, value] of error.details.entries())
-          Logger.detail(`${detail}: ${value}`);
+        Store.injectedContext.logger.info(`${detail}: ${value}`);
       }
-      Logger.detail(error.stack, true);
+      Store.injectedContext.logger.info(error.stack, true);
     }
   }
 }
-
-export default ErrorState;

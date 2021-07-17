@@ -4,11 +4,11 @@ import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from './ModerationAction';
 
-class KickAction extends ModerationAction {
+export default class KickAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async exec(): Promise<void> {
+  protected async run(): Promise<void> {
     await this._kick();
   }
 
@@ -47,5 +47,3 @@ class KickAction extends ModerationAction {
     }
   }
 }
-
-export default KickAction;
