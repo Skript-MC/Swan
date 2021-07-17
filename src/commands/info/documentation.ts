@@ -116,7 +116,7 @@ export default class DocumentationCommand extends SwanCommand {
       return;
     }
 
-    let content = pupa(config.messages.searchResults, { matchingSyntaxes, syntax: query });
+    let content = pupa(config.messages.searchResults, { matchingSyntaxes, syntax: query.value });
 
     for (const [i, match] of matchingSyntaxes.entries())
       content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;
