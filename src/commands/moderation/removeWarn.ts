@@ -1,12 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import Arguments from '@/app/decorators/Arguments';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage, SanctionTypes } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { RemoveWarnCommandArgument } from '@/app/types/CommandArguments';
 import { noop, nullop } from '@/app/utils';
 import { removeWarn as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
@@ -14,28 +15,21 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class RemoveWarnCommand extends SwanCommand {
-  // [{
-  //   id: 'warnId',
-  //   type: 'string',
-  //   prompt: {
-  //     start: config.messages.promptStartWarnId,
-  //     retry: config.messages.promptRetryWarnId,
-  //   },
-  // }, {
-  //   id: 'reason',
-  //   type: 'string',
-  //   match: 'rest',
-  //   default: messages.global.noReason,
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const warnId = await args.pickResult('string');
-    if (warnId.error)
-      return void await message.channel.send(config.messages.promptRetryWarnId);
-
-    const reason = (await args.restResult('string'))?.value ?? messages.global.noReason;
-
-    const warn = await Sanction.findOne({ sanctionId: warnId.value, revoked: false }).catch(nullop);
+  @Arguments({
+    name: 'warnId',
+    match: 'pick',
+    type: 'string',
+    required: true,
+    message: config.messages.promptRetryWarnId,
+  }, {
+    name: 'reason',
+    match: 'rest',
+    type: 'string',
+    default: messages.global.noReason,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: RemoveWarnCommandArgument): Promise<void> {
+    const warn = await Sanction.findOne({ sanctionId: args.warnId, revoked: false }).catch(nullop);
     if (!warn) {
       await message.channel.send(config.messages.invalidWarnId).catch(noop);
       return;
@@ -67,7 +61,7 @@ export default class RemoveWarnCommand extends SwanCommand {
 
       const data = new ModerationData(message)
         .setVictim(member)
-        .setReason(reason)
+        .setReason(args.reason)
         .setType(SanctionTypes.RemoveWarn)
         .setOriginalWarnId(warn.sanctionId);
 
@@ -76,6 +70,7 @@ export default class RemoveWarnCommand extends SwanCommand {
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.context.logger.error('An unexpected error occurred while removing a warn from member!');
+      this.context.logger.info(`Given warn ID: ${args.warnId}`);
       this.context.logger.info(`Parsed member: ${member}`);
       this.context.logger.info(`Message: ${message.url}`);
       this.context.logger.info((unknownError as Error).stack, true);

@@ -1,9 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { LinksCommandArguments } from '@/app/types/CommandArguments';
 import { links as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
@@ -12,15 +14,15 @@ const maxPage = 5;
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class LinksCommand extends SwanCommand {
-  // [{
-  //   id: 'page',
-  //   type: Argument.range('integer', 0, maxPage),
-  //   default: 0,
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    let page = (await args.pickResult('integer', { minimum: 0, maximum: maxPage }))?.value ?? 0;
-    const msg = await message.channel.send(this._getEmbedForPage(page));
+  @Arguments({
+    name: 'page',
+    type: 'integer',
+    match: 'pick',
+    default: 0,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
+    const msg = await message.channel.send(this._getEmbedForPage(args.page));
 
     const collector = msg
       .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
@@ -34,28 +36,28 @@ export default class LinksCommand extends SwanCommand {
           return;
         }
 
-        const oldPage = page;
+        const oldPage = args.page;
         switch (reaction.emoji.name) {
           case '⏮': {
-            page = 0;
+            args.page = 0;
             break;
           }
           case '◀': {
-            page = page === 0 ? 0 : page - 1;
+            args.page = args.page === 0 ? 0 : args.page - 1;
             break;
           }
           case '▶': {
-            page = page === maxPage ? maxPage : page + 1;
+            args.page = args.page === maxPage ? maxPage : args.page + 1;
             break;
           }
           case '⏭': {
-            page = maxPage;
+            args.page = maxPage;
             break;
           }
         }
 
-        if (oldPage !== page)
-          await msg.edit(this._getEmbedForPage(page));
+        if (oldPage !== args.page)
+          await msg.edit(this._getEmbedForPage(args.page));
       });
 
     for (const reaction of reactions)

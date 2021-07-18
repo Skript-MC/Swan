@@ -1,17 +1,17 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import type { TextChannel } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import type { IdeaCommandArguments } from '@/app/types/CommandArguments';
 import { idea as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class IdeaCommand extends SwanCommand {
-  public override async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: IdeaCommandArguments): Promise<void> {
     const channel = this.context.client.cache.channels.idea as TextChannel;
 
     const ideas = await channel.messages.fetch().catch(console.error);

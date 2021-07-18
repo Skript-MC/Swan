@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import type { PingCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { ping as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -11,7 +11,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class PingCommand extends SwanCommand {
-  public override async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
     const sent = await message.channel.send(config.messages.firstMessage);
     const swanPing = (sent.editedAt ?? sent.createdAt).getTime() - (message.editedAt ?? message.createdAt).getTime();
     const discordPing = Math.round(this.context.client.ws.ping);

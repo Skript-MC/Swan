@@ -1,12 +1,12 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import type { StatisticsCommandArguments } from '@/app/types/CommandArguments';
 import { statistics as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -14,7 +14,7 @@ import pkg from '@/root/package.json';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class StatisticsCommand extends SwanCommand {
-  public override async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: StatisticsCommandArguments): Promise<void> {
     const totalCommands = this.context.stores.get('commands').size;
     const embedMessages = config.messages.embed;
     const commitHash = await this._getGitRev();
