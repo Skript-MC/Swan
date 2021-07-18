@@ -1,10 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed, Permissions } from 'discord.js';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { GuildTextBasedChannel, SwanCommandOptions } from '@/app/types';
+import { MoveCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -12,88 +14,68 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class MoveCommand extends SwanCommand {
-  // [{
-  //   id: 'channel',
-  //   type: Argument.validate(
-  //     'textChannel',
-  //     (message, _phrase, value: GuildTextBasedChannel) => settings.channels.help.includes(message.channel.id)
-  //       && settings.channels.help.includes(value.id)
-  //       && message.channel.id !== value.id,
-  //   ),
-  //   unordered: true,
-  //   prompt: {
-  //     start: config.messages.startChannelPrompt,
-  //     retry: config.messages.retryChannelPrompt,
-  //   },
-  // }, {
-  //   id: 'message',
-  //   type: 'channelMessage',
-  //   unordered: true,
-  //   prompt: {
-  //     start: config.messages.startMessagePrompt,
-  //     retry: config.messages.retryMessagePrompt,
-  //   },
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const targetedChannel = await args.pickResult('guildTextBasedChannel');
-    if (targetedChannel.error)
-      return void await message.channel.send(config.messages.retryChannelPrompt);
-
-    const isProtectedChannel = !targetedChannel.value
-      .permissionsFor(targetedChannel.value.guild.roles.everyone)
-      .has(Permissions.FLAGS.SEND_MESSAGES);
-    if (isProtectedChannel)
-      return void await message.channel.send(config.messages.retryChannelPrompt);
-
-    const targetedMessage = await args.pickResult('message');
-    if (targetedMessage.error)
-      return void await message.channel.send(config.messages.retryMessagePrompt);
-
-    if (targetedMessage.value.member.roles.highest.position >= message.member.roles.highest.position) {
+  @Arguments({
+    name: 'channel',
+    type: 'guildTextBasedChannel',
+    match: 'pick',
+    validate: (message, resolved: GuildTextBasedChannel) => {
+      const isPublicChannel = resolved
+        .permissionsFor(resolved.guild.roles.everyone)
+        .has(Permissions.FLAGS.SEND_MESSAGES);
+      return isPublicChannel && message.channel.id !== resolved.id;
+    },
+    required: true,
+    message: config.messages.retryChannelPrompt,
+  }, {
+    name: 'message',
+    type: 'message',
+    match: 'pick',
+    required: true,
+    message: config.messages.retryMessagePrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: MoveCommandArguments): Promise<void> {
+    if (args.targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) {
       await message.channel.send(messages.global.memberTooPowerful);
       return;
     }
 
     const successMessage = pupa(config.messages.successfullyMoved, {
-      targetDisplayName: targetedMessage.value.member.displayName,
-      targetChannel: targetedChannel.value,
+      targetDisplayName: args.targetedMessage.member.displayName,
+      targetChannel: args.targetedChannel,
       memberDisplayName: message.member.displayName,
     });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(
-        pupa(config.messages.moveTitle, { member: targetedMessage.value.member }),
-        targetedMessage.value.author.avatarURL() ?? '',
+        pupa(config.messages.moveTitle, { member: args.targetedMessage.member }),
+        args.targetedMessage.author.displayAvatarURL(),
       )
       .setDescription(
         pupa(config.messages.moveInfo, {
           memberDisplayName: message.member,
-          targetDisplayName: targetedMessage.value.member,
-          sourceChannel: targetedMessage.value.channel,
-          targetChannel: targetedChannel.value,
+          targetDisplayName: args.targetedMessage.member,
+          sourceChannel: args.targetedMessage.channel,
+          targetChannel: args.targetedChannel,
           emoji: message.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
         }),
       );
 
     try {
       // Remove all messages from prompts, as well as messages from the user.
-      // message.util.messages.set(message.id, message);
-      // message.util.messages.set(targetedMessage.id, targetedMessage);
-      // await message.channel.bulkDelete(message.util.messages, true);
       await message.delete();
-      await targetedMessage.value.delete();
+      await args.targetedMessage.delete();
 
       await message.channel.send(successMessage);
-      const informationEmbed = await targetedChannel.value.send(embed);
-      const repostMessage = await targetedChannel.value.send(targetedMessage.value.content);
+      const informationEmbed = await args.targetedChannel.send(embed);
+      const repostMessage = await args.targetedChannel.send(args.targetedMessage.content);
       await informationEmbed.react(settings.emojis.remove).catch(noop);
 
       const collector = informationEmbed
         .createReactionCollector(
           (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
-            && (user.id === message.author.id || user.id === targetedMessage.value.author.id)
+            && (user.id === message.author.id || user.id === args.targetedMessage.author.id)
             && !user.bot,
           )
         .on('collect', async () => {
@@ -106,8 +88,8 @@ export default class MoveCommand extends SwanCommand {
           }
         });
     } catch (unknownError: unknown) {
-      await targetedMessage.value.member.send(config.messages.emergency).catch(noop);
-      await targetedMessage.value.member.send(message.content).catch(noop);
+      await args.targetedMessage.member.send(config.messages.emergency).catch(noop);
+      await args.targetedMessage.member.send(message.content).catch(noop);
       throw (unknownError as Error);
     }
   }

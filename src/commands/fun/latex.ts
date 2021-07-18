@@ -1,8 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { LatexCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
@@ -10,22 +12,16 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class LatexCommand extends SwanCommand {
-  // [{
-  //   id: 'equation',
-  //   type: 'string',
-  //   match: 'content',
-  //   prompt: {
-  //     start: config.messages.startPrompt,
-  //     retry: config.messages.retryPrompt,
-  //   },
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const equation = await args.restResult('string');
-    if (equation.error)
-      return void await message.channel.send(config.messages.retryPrompt);
-
-    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(equation.value));
+  @Arguments({
+    name: 'jokeName',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: LatexCommandArguments): Promise<void> {
+    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(args.equation));
     await sendMessage.react(settings.emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id

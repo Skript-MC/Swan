@@ -1,37 +1,30 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Arguments';
 import Sanction from '@/app/models/sanction';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import { getUsername, nullop, toHumanDuration } from '@/app/utils';
+import { GuildMessage, SanctionsUpdates, SanctionTypes } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { HistoryCommandArgument } from '@/app/types/CommandArguments';
+import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class HistoryCommand extends SwanCommand {
-  // [{
-  //   id: 'member',
-  //   type: Argument.union('member', 'user', 'string'),
-  //   prompt: {
-  //     start: config.messages.promptStartUser,
-  //     retry: config.messages.promptStartUser,
-  //   },
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.pick('member')
-      .catch(async () => await args.pick('user'))
-      .catch(async () => await args.pick('string'))
-      .catch(nullop);
-    if (!member)
-      return void await message.channel.send(config.messages.promptRetryUser);
-
-    const memberId = typeof member === 'string' ? member : member.id;
+  @Arguments({
+    name: 'member',
+    match: 'pick',
+    type: ['member', 'user', 'string'],
+    required: true,
+    message: config.messages.promptRetryUser,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
+    const memberId = typeof args.member === 'string' ? args.member : args.member.id;
 
     const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
@@ -51,7 +44,7 @@ export default class HistoryCommand extends SwanCommand {
 
     const sanctionUrl = settings.moderation.dashboardSanctionLink + memberId;
     const embed = new MessageEmbed()
-      .setTitle(pupa(config.messages.title, { name: getUsername(member), sanctions }))
+      .setTitle(pupa(config.messages.title, { name: getUsername(args.member), sanctions }))
       .setURL(sanctionUrl)
       .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
       .setColor(settings.colors.default)

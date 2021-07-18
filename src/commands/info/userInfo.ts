@@ -1,28 +1,30 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { UserInfoCommandArguments } from '@/app/types/CommandArguments';
 import { userInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class UserInfoCommand extends SwanCommand {
-  // [{
-  //   id: 'member',
-  //   type: 'member',
-  //   default: (message: GuildMessage): GuildMember => message.member,
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const member = (await args.pickResult('member'))?.value ?? message.member;
+  @Arguments({
+    name: 'addon',
+    type: 'member',
+    match: 'rest',
+    default: message => message.member,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: UserInfoCommandArguments): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
-    const activity = member.presence.activities[0];
+    const activity = args.member.presence.activities[0];
     if (activity) {
       presenceDetails = pupa(embedConfig.presence.types[activity.type], { activity });
 
@@ -38,32 +40,32 @@ export default class UserInfoCommand extends SwanCommand {
       }
     }
 
-    const roles = member.roles.cache.array().filter(role => role.name !== '@everyone');
+    const roles = args.member.roles.cache.array().filter(role => role.name !== '@everyone');
 
     const presenceContent = pupa(embedConfig.presence.content, {
-      status: embedConfig.presence.status[member.presence.status],
+      status: embedConfig.presence.status[args.member.presence.status],
       presenceDetails,
     });
-    const namesContent = pupa(embedConfig.names.content, { member });
+    const namesContent = pupa(embedConfig.names.content, { member: args.member });
     const createdContent = pupa(embedConfig.created.content, {
-      creation: moment(member.user.createdAt).format(settings.miscellaneous.durationFormat),
+      creation: moment(args.member.user.createdAt).format(settings.miscellaneous.durationFormat),
     });
     const joinedContent = pupa(embedConfig.joined.content,
-      member.joinedTimestamp
-        ? { joined: moment(new Date(member.joinedTimestamp)).format(settings.miscellaneous.durationFormat) }
+      args.member.joinedTimestamp
+        ? { joined: moment(new Date(args.member.joinedTimestamp)).format(settings.miscellaneous.durationFormat) }
         : { joined: messages.global.unknown(true) });
-    const rolesContent = member.roles.cache.size - 1 === 0
+    const rolesContent = args.member.roles.cache.size - 1 === 0
       ? embedConfig.roles.noRole
       : pupa(embedConfig.roles.content, {
-        amount: member.roles.cache.size - 1,
+        amount: args.member.roles.cache.size - 1,
         roles: roles.join(', '),
       });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedConfig.title, { member }))
+      .setAuthor(pupa(embedConfig.title, { member: args.member }))
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))
-      .setThumbnail(member.user.displayAvatarURL() ?? '')
+      .setThumbnail(args.member.user.displayAvatarURL() ?? '')
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)
       .addField(embedConfig.created.title, createdContent, true)

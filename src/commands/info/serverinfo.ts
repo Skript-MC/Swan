@@ -1,32 +1,28 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, ServerStatResponse, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { ServerStatResponse, SwanCommandOptions } from '@/app/types';
+import { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class ServerInfoCommand extends SwanCommand {
-  // [{
-  //   id: 'server',
-  //   type: 'string',
-  //   match: 'content',
-  //   prompt: {
-  //     start: config.messages.startPrompt,
-  //     retry: config.messages.retryPrompt,
-  //   },
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const serverQuery = await args.restResult('string');
-    if (serverQuery.error)
-      return void await message.channel.send(config.messages.retryPrompt);
-
-    const server: ServerStatResponse = await axios(settings.apis.server + serverQuery.value)
+  @Arguments({
+    name: 'server',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {
+    const server: ServerStatResponse = await axios(settings.apis.server + args.server)
       .then(response => (response.status >= 300 ? null : response.data))
       .catch(nullop);
 
@@ -38,7 +34,7 @@ export default class ServerInfoCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedMessages.title, { query: serverQuery.value }))
+      .setAuthor(pupa(embedMessages.title, { query: args.server }))
       .setFooter(pupa(embedMessages.footer, { member: message.member }))
       .setTimestamp();
 

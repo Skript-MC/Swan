@@ -1,11 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import uniq from 'lodash.uniq';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type SwanCommandStore from '@/app/structures/commands/SwanCommandStore';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { HelpCommandArguments } from '@/app/types/CommandArguments';
 import { capitalize } from '@/app/utils';
 import { help as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -13,29 +15,29 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class HelpCommand extends SwanCommand {
-  // [{
-  //   id: 'command',
-  //   type: 'commandAlias',
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const command = await args.pickResult('command');
+  @Arguments({
+    name: 'command',
+    type: 'command',
+    match: 'pick',
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: HelpCommandArguments): Promise<void> {
     const { prefix } = settings.bot;
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default);
 
-    if (command.success) {
+    if (args.command) {
       const information = config.messages.commandInfo;
-      embed.setTitle(pupa(information.title, { command: command.value }))
-        .addField(information.usage, `\`${prefix}${command.value.usage}\``)
-        .addField(information.description, command.value.description)
-        .addField(information.usableBy, command.value?.permission ?? messages.global.everyone);
+      embed.setTitle(pupa(information.title, { command: args.command }))
+        .addField(information.usage, `\`${prefix}${args.command.usage}\``)
+        .addField(information.description, args.command.description)
+        .addField(information.usableBy, args.command?.permission ?? messages.global.everyone);
 
-      if (command.value.aliases.length > 1)
-        embed.addField(information.aliases, `\`${command.value.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
-      if (command.value?.examples?.length)
-        embed.addField(information.examples, `\`${prefix}${command.value.examples.join(`\`${messages.miscellaneous.separator}\`${prefix}`)}\``);
+      if (args.command.aliases.length > 1)
+        embed.addField(information.aliases, `\`${args.command.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
+      if (args.command?.examples?.length)
+        embed.addField(information.examples, `\`${prefix}${args.command.examples.join(`\`${messages.miscellaneous.separator}\`${prefix}`)}\``);
     } else {
       const information = config.messages.commandsList;
       const commands = (this.context.stores.get('commands') as SwanCommandStore).array();

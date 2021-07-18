@@ -1,4 +1,9 @@
-import type { Guild, GuildEmoji, GuildMember } from 'discord.js';
+import type {
+  Guild,
+  GuildEmoji,
+  GuildMember,
+  User,
+} from 'discord.js';
 import type SwanCacheManager from '@/app/structures/SwanCacheManager';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildTextBasedChannel } from '@/app/types';
@@ -22,6 +27,7 @@ declare module '@sapphire/framework' {
   }
 
   interface ArgType {
+    bannedMember: GuildMember | User;
     command: SwanCommand;
     duration: number;
     emoji: GuildEmoji;

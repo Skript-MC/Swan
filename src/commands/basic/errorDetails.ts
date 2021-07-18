@@ -1,32 +1,27 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import Arguments from '@/app/decorators/Arguments';
 import Message from '@/app/models/message';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import { MessageName } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, MessageName } from '@/app/types';
+import { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { errorDetails as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class ErrorDetailsCommand extends SwanCommand {
-  // [{
-  //   id: 'error',
-  //   type: 'string',
-  //   match: 'content',
-  //   prompt: {
-  //     start: config.messages.startPrompt,
-  //     retry: config.messages.retryPrompt,
-  //   },
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const query = await args.restResult('string');
-    if (query.error)
-      return void await message.channel.send(config.messages.retryPrompt);
-
+  @Arguments({
+    name: 'query',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.ErrorDetail });
-    const search = searchMessageSimilarity(messages, query.value);
+    const search = searchMessageSimilarity(messages, args.query);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;

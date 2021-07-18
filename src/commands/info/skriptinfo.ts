@@ -1,27 +1,27 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
+import Arguments from '@/app/decorators/Arguments';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class SkriptInfoCommand extends SwanCommand {
-  // [{
-  //   id: 'display',
-  //   type: Argument.validate('string', (_message, phrase) =>
-  //     ['all', 'dl', 'download', 'link', 'links'].includes(phrase)),
-  //   default: 'all',
-  // }],
-
-  public override async run(message: GuildMessage, args: Args): Promise<void> {
-    const displayQuery = (await args.pickResult('string'))?.value ?? 'all';
-    const display = ['all', 'dl', 'download', 'link', 'links'].includes(displayQuery) ? displayQuery : 'all';
-
-    if (['dl', 'download', 'all'].includes(display)) {
+  @Arguments({
+    name: 'display',
+    type: 'string',
+    match: 'rest',
+    validate: (message, resolved: string) => ['all', 'dl', 'download', 'link', 'links'].includes(resolved),
+    default: 'all',
+  })
+  // @ts-expect-error ts(2416)
+  public override async run(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
+    if (['dl', 'download', 'all'].includes(args.display)) {
       const { lastPrerelease, lastStableRelease } = this.context.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
@@ -50,7 +50,7 @@ export default class SkriptInfoCommand extends SwanCommand {
       await message.channel.send(downloadEmbed);
     }
 
-    if (['link', 'links', 'all'].includes(display)) {
+    if (['link', 'links', 'all'].includes(args.display)) {
       const informationEmbed = new MessageEmbed()
         .setColor(settings.colors.default)
         .setTitle(config.messages.embed.informationsTitle)
