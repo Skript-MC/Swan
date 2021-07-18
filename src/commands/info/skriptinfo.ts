@@ -17,7 +17,7 @@ export default class SkriptInfoCommand extends SwanCommand {
   //   default: 'all',
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const displayQuery = (await args.pickResult('string'))?.value ?? 'all';
     const display = ['all', 'dl', 'download', 'link', 'links'].includes(displayQuery) ? displayQuery : 'all';
 

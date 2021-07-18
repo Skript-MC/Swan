@@ -14,7 +14,7 @@ export default class MuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async run(): Promise<void> {
+  protected override async run(): Promise<void> {
     if (!this.data.duration)
       throw new TypeError('Unexpected missing property: data.duration is not set.');
 

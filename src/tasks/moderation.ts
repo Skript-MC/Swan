@@ -13,7 +13,7 @@ import messages from '@/conf/messages';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export default class ModerationTask extends Task {
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     // Fetch all the sanctions that are not revoked but are expired.
     const sanctions = await Sanction.find({
       revoked: false,

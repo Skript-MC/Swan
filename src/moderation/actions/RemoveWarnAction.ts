@@ -9,7 +9,7 @@ export default class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
-  protected async run(): Promise<void> {
+  protected override async run(): Promise<void> {
     await this._removeWarn();
   }
 

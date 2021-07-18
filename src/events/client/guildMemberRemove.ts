@@ -10,7 +10,7 @@ import { SanctionTypes } from '@/app/types';
 import messages from '@/conf/messages';
 
 export default class GuildMemberRemoveEvent extends Event {
-  public async run(member: GuildMember): Promise<void> {
+  public override async run(member: GuildMember): Promise<void> {
     const isBanned = await ModerationHelper.isBanned(member.id, false);
     if (isBanned && this.context.client.currentlyBanning.has(member.id))
       return;

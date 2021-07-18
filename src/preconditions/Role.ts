@@ -9,7 +9,11 @@ export interface RolePreconditionContext extends PreconditionContext {
 }
 
 export default class RolePrecondition extends Precondition {
-  public async run(message: Message, _command: SwanCommand, context: RolePreconditionContext): AsyncPreconditionResult {
+  public override async run(
+    message: Message,
+    _command: SwanCommand,
+    context: RolePreconditionContext,
+  ): AsyncPreconditionResult {
     if (message.member?.roles.cache.has(context.role))
       return this.ok();
 

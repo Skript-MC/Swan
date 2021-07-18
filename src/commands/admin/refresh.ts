@@ -11,7 +11,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class RefreshCommand extends SwanCommand {
-  public async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: Args): Promise<void> {
     // Refresh modules
     const modules = await SwanModule.find();
     for (const module of modules)

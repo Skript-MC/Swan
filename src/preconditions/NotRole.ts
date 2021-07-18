@@ -8,7 +8,7 @@ export interface NotRoleContext extends PreconditionContext {
 }
 
 export default class NotRolePrecondition extends Precondition {
-  public async run(message: Message, _command: SwanCommand, context: NotRoleContext): AsyncPreconditionResult {
+  public override async run(message: Message, _command: SwanCommand, context: NotRoleContext): AsyncPreconditionResult {
     if (!message.member?.roles.cache.has(context.role))
       return this.ok();
 

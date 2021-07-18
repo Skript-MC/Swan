@@ -4,7 +4,7 @@ import CommandStat from '@/app/models/commandStat';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export default class CommandRunEvent extends Event {
-  public async run(message: Message, command: SwanCommand): Promise<void> {
+  public override async run(message: Message, command: SwanCommand): Promise<void> {
     try {
       await CommandStat.findOneAndUpdate({ commandId: command.name }, { $inc: { uses: 1 } });
     } catch (unknownError: unknown) {

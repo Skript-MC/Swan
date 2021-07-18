@@ -20,7 +20,7 @@ export default class ModuleCommand extends SwanCommand {
   //   type: 'string',
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const modules = await SwanModule.find();
     const moduleName = await args.pickResult('string');
 

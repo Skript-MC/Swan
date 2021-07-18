@@ -8,7 +8,7 @@ import Task from '@/app/structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export default class PollTask extends Task {
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     // Fetch all the poll that are expired.
     const polls = await Poll.find({
       finish: { $lte: Date.now(), $ne: -1 },

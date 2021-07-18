@@ -5,7 +5,7 @@ import BanAction from '@/app/moderation/actions/BanAction';
 import { SanctionTypes } from '@/app/types';
 
 export default class GuildBanAddEvent extends Event {
-  public async run(guild: Guild, user: User): Promise<void> {
+  public override async run(guild: Guild, user: User): Promise<void> {
     if (this.context.client.currentlyBanning.has(user.id))
       return;
 

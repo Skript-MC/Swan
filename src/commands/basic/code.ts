@@ -42,7 +42,7 @@ export default class CodeCommand extends SwanCommand {
   //   flag: ['--lang=', '--language=', '--langage='],
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const displayLines = args.getFlags(...['line', 'lines', 'l']);
     const startAtLine = await this._getStartLine(message, args);
     const language = args.getOption('lang', 'language') ?? 'applescript';

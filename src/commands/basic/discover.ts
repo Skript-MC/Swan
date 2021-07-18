@@ -11,7 +11,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class DiscoverCommand extends SwanCommand {
-  public async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: Args): Promise<void> {
     const { prefix } = settings.bot;
 
     const commands = (this.context.stores.get('commands') as SwanCommandStore).array();

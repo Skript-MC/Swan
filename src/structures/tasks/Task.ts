@@ -20,7 +20,7 @@ import cron from 'node-cron';
  * // or a cron
  * @ApplyOptions<TaskOptions>({ cron: '* * * * *' })
  * export default class MyTask extends Task {
- *   public run(): void {
+ *   public override run(): void {
  *     this.context.logger.info('Task ran!');
  *   }
  * }

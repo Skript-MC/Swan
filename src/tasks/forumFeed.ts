@@ -23,7 +23,7 @@ const turndownService = new Turndown()
 
 @ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
 export default class ForumFeedTask extends Task {
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     await this._checkTopics();
     await this._checkFiles();
   }

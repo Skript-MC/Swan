@@ -18,7 +18,7 @@ export default class JokeCommand extends SwanCommand {
   //   match: 'content',
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const jokeName = await args.pickResult('string');
     let joke;
     if (jokeName.success) {

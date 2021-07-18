@@ -17,7 +17,7 @@ export default class UserInfoCommand extends SwanCommand {
   //   default: (message: GuildMessage): GuildMember => message.member,
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const member = (await args.pickResult('member'))?.value ?? message.member;
     const embedConfig = config.messages.embed;
 

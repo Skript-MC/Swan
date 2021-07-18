@@ -13,7 +13,9 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class UnknownCommandEvent extends Event {
-  public async run({ message: globalMessage, commandPrefix, commandName }: UnknownCommandPayload): Promise<void> {
+  public override async run(
+    { message: globalMessage, commandPrefix, commandName }: UnknownCommandPayload,
+  ): Promise<void> {
     if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
       return;
 

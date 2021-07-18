@@ -7,7 +7,7 @@ import { SanctionTypes } from '@/app/types';
 import messages from '@/conf/messages';
 
 export default class GuildBanRemoveEvent extends Event {
-  public async run(_guild: Guild, user: User): Promise<void> {
+  public override async run(_guild: Guild, user: User): Promise<void> {
     if (this.context.client.currentlyUnbanning.has(user.id))
       return;
 

@@ -10,7 +10,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class MessageUpdateEvent extends Event {
-  public async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
+  public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
     await MessageLogManager.saveMessageEdit(this.context.client as SwanClient, oldMessage, newMessage);
 
     // Prevent active members from posting another documentation than Skript-MC's.

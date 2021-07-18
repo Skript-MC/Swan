@@ -34,7 +34,7 @@ export default class PurgeCommand extends SwanCommand {
   //   flag: ['--force', '-f'],
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const amount = await args.pickResult('integer', { minimum: 0, maximum: settings.moderation.purgeLimit + 1 });
     if (amount.error)
       return void await message.channel.send(config.messages.retryPrompt);

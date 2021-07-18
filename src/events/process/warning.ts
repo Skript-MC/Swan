@@ -4,7 +4,7 @@ import { Event } from '@sapphire/framework';
 
 @ApplyOptions<EventOptions>({ emitter: process })
 export default class WarningEvent extends Event {
-  public run(warning: { name: string; message: string; stack: string }): void {
+  public override run(warning: { name: string; message: string; stack: string }): void {
     this.context.logger.warn(`Node.js Warning: ${warning.message}`);
   }
 }

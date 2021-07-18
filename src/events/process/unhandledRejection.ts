@@ -4,7 +4,7 @@ import { Event } from '@sapphire/framework';
 
 @ApplyOptions<EventOptions>({ emitter: process })
 export default class UnhandledRejectionEvent extends Event {
-  public run(error: Error): void {
+  public override run(error: Error): void {
     this.context.logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
     if (process.env.NODE_ENV === 'production')
       throw new Error(error.stack);

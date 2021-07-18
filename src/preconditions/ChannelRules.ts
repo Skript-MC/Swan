@@ -10,7 +10,11 @@ export interface ChannelRulesPreconditionContext extends PreconditionContext {
 }
 
 export default class ChannelRulesPrecondition extends Precondition {
-  public run(message: Message, _command: SwanCommand, context: ChannelRulesPreconditionContext): PreconditionResult {
+  public override run(
+    message: Message,
+    _command: SwanCommand,
+    context: ChannelRulesPreconditionContext,
+  ): PreconditionResult {
     const identifier = 'preconditionRules';
 
     // If the command is forbidden in help channels.

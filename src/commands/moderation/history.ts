@@ -23,7 +23,7 @@ export default class HistoryCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const member = await args.pick('member')
       .catch(async () => await args.pick('user'))
       .catch(async () => await args.pick('string'))

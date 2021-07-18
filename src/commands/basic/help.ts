@@ -18,7 +18,7 @@ export default class HelpCommand extends SwanCommand {
   //   type: 'commandAlias',
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const command = await args.pickResult('command');
     const { prefix } = settings.bot;
 
