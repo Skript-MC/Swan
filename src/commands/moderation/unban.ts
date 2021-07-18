@@ -53,7 +53,7 @@ export default class UnbanCommand extends SwanCommand {
   //   default: messages.global.noReason,
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const member = await this._getMember(message, args);
     if (member.error)
       return void await message.channel.send(config.messages.promptRetryMember);

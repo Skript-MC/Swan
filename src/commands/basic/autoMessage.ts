@@ -20,7 +20,7 @@ export default class AutoMessageCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const autoMessage = await args.restResult('string');
     if (autoMessage.error)
       return void await message.channel.send(config.messages.retryPrompt);

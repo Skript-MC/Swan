@@ -55,7 +55,7 @@ export default class PollCommand extends SwanCommand {
   //   flag: ['--multiple', '--mult', '-m'],
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const duration = await this._getDuration(args);
     if (duration.error)
       return void await message.channel.send(config.messages.promptRetryDuration);

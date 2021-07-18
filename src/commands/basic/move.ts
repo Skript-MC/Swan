@@ -35,7 +35,7 @@ export default class MoveCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const targetedChannel = await args.pickResult('guildTextBasedChannel');
     if (targetedChannel.error)
       return void await message.channel.send(config.messages.retryChannelPrompt);

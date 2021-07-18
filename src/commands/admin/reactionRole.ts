@@ -36,7 +36,7 @@ export default class ReactionRoleCommand extends SwanCommand {
   //   unordered: true,
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const givenRole = await args.pickResult('role');
     if (givenRole.error)
       return void await message.channel.send(config.messages.promptRetry);

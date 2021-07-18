@@ -22,7 +22,7 @@ export default class BanAction extends ModerationAction {
       .splice(this.context.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
-  protected async run(): Promise<void> {
+  protected override async run(): Promise<void> {
     if (!this.data.duration)
       throw new TypeError('Unexpected missing property: data.duration is not set.');
 

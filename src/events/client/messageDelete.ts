@@ -10,7 +10,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class MessageDeleteEvent extends Event {
-  public async run(globalMessage: Message): Promise<void> {
+  public override async run(globalMessage: Message): Promise<void> {
     if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
       return;
 

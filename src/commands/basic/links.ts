@@ -18,7 +18,7 @@ export default class LinksCommand extends SwanCommand {
   //   default: 0,
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     let page = (await args.pickResult('integer', { minimum: 0, maximum: maxPage }))?.value ?? 0;
     const msg = await message.channel.send(this._getEmbedForPage(page));
 

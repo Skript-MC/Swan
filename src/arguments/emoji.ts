@@ -3,7 +3,7 @@ import { Argument } from '@sapphire/framework';
 import type { GuildEmoji } from 'discord.js';
 
 export default class EmojiArgument extends Argument<GuildEmoji> {
-  public run(parameter: string, context: ArgumentContext<GuildEmoji>): ArgumentResult<GuildEmoji> {
+  public override run(parameter: string, context: ArgumentContext<GuildEmoji>): ArgumentResult<GuildEmoji> {
     const emojis = context.args.message.guild.emojis.cache;
     const emoji = emojis.get(parameter) || emojis.find(emoj => this._checkEmoji(parameter, emoj));
 

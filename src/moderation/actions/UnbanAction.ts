@@ -19,7 +19,7 @@ export default class UnbanAction extends ModerationAction {
       .splice(this.context.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
-  protected async run(): Promise<void> {
+  protected override async run(): Promise<void> {
     await this._unban();
   }
 

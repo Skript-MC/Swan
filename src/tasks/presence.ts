@@ -15,7 +15,7 @@ export default class PresenceTask extends Task {
     this.activities = this._getActivity();
   }
 
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     await this.context.client.user.setPresence(this.activities.next().value);
   }
 

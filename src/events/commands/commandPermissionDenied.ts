@@ -5,7 +5,7 @@ import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import messages from '@/conf/messages';
 
 export default class CommandPermissionDeniedEvent extends Event {
-  public async run(message: Message, command: SwanCommand, type: string, missing: string[]): Promise<void> {
+  public override async run(message: Message, command: SwanCommand, type: string, missing: string[]): Promise<void> {
     if (type === 'client') {
       if (missing.includes('SEND_MESSAGES')) {
         this.context.logger.error(`Swan does not have the permission(s) ${missing.join(', ')}, which are needed for the ${command.name} command.`);

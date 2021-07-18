@@ -8,7 +8,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class GuildMemberAddEvent extends Event {
-  public async run(member: GuildMember): Promise<void> {
+  public override async run(member: GuildMember): Promise<void> {
     await this._greet(member);
     await this._remute(member);
     await this._rename(member);

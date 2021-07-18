@@ -9,7 +9,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class MessageEvent extends Event {
-  public async run(message: Message): Promise<void> {
+  public override async run(message: Message): Promise<void> {
     if (message.content.startsWith(settings.bot.prefix)
       || message.content.startsWith(message.guild?.me.toString())
       || message.author.bot

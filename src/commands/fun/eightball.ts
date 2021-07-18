@@ -17,7 +17,7 @@ export default class EightBallCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const question = await args.restResult('string');
     if (question.error)
       return void await message.channel.send(config.messages.promptRetry);

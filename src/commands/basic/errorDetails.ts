@@ -20,7 +20,7 @@ export default class ErrorDetailsCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const query = await args.restResult('string');
     if (query.error)
       return void await message.channel.send(config.messages.retryPrompt);

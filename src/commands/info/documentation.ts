@@ -39,7 +39,7 @@ export default class DocumentationCommand extends SwanCommand {
   //   flag: ['--category=', '--categorie=', '--catégorie=', '--cat=', '-c=', '--type=', '-t='],
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const addon = args.getOption('addon');
     const category = args.getOption('category');
     const query = await args.restResult('string');

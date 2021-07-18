@@ -21,7 +21,7 @@ export default class ServerInfoCommand extends SwanCommand {
   //   },
   // }],
 
-  public async run(message: GuildMessage, args: Args): Promise<void> {
+  public override async run(message: GuildMessage, args: Args): Promise<void> {
     const serverQuery = await args.restResult('string');
     if (serverQuery.error)
       return void await message.channel.send(config.messages.retryPrompt);

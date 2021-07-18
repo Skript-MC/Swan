@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 @ApplyOptions<EventOptions>({ emitter: mongoose.connection })
 export default class MongodbErrorEvent extends Event {
-  public run(error: Error): void {
+  public override run(error: Error): void {
     this.context.logger.error('Oops, something went wrong with MongoDB!');
     this.context.logger.info('Please make sure MongoDB is running.');
     if (process.env.NODE_ENV === 'production')

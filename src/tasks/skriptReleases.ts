@@ -11,7 +11,7 @@ import { skriptReleases as config } from '@/conf/tasks';
 
 @ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
 export default class SkriptReleasesTask extends Task {
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
     const octokit = new Octokit();
     const githubReleases = await octokit.repos.listReleases({ owner: 'SkriptLang', repo: 'Skript' })

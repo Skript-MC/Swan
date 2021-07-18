@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 @ApplyOptions<EventOptions>({ emitter: mongoose.connection })
 export default class MongodbConnectedEvent extends Event {
-  public run(): void {
+  public override run(): void {
     this.context.logger.info('MongoDB is connected!');
   }
 }

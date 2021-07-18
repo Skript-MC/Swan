@@ -11,7 +11,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class PingCommand extends SwanCommand {
-  public async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: Args): Promise<void> {
     const sent = await message.channel.send(config.messages.firstMessage);
     const swanPing = (sent.editedAt ?? sent.createdAt).getTime() - (message.editedAt ?? message.createdAt).getTime();
     const discordPing = Math.round(this.context.client.ws.ping);

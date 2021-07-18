@@ -13,7 +13,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default class MessageReactionAddEvent extends Event {
-  public async run(reaction: MessageReaction, user: User): Promise<void> {
+  public override async run(reaction: MessageReaction, user: User): Promise<void> {
     if (user.bot || reaction.message.channel.type === 'dm')
       return;
 

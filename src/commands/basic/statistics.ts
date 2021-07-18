@@ -14,7 +14,7 @@ import pkg from '@/root/package.json';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class StatisticsCommand extends SwanCommand {
-  public async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: Args): Promise<void> {
     const totalCommands = this.context.stores.get('commands').size;
     const embedMessages = config.messages.embed;
     const commitHash = await this._getGitRev();

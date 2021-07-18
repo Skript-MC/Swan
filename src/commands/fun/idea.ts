@@ -11,7 +11,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class IdeaCommand extends SwanCommand {
-  public async run(message: GuildMessage, _args: Args): Promise<void> {
+  public override async run(message: GuildMessage, _args: Args): Promise<void> {
     const channel = this.context.client.cache.channels.idea as TextChannel;
 
     const ideas = await channel.messages.fetch().catch(console.error);

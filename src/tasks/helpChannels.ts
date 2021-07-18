@@ -12,7 +12,7 @@ export default class HelpChannels extends Task {
   private _basicHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
   private _extraHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
 
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     // Refresh channels data.
     await this._initChannels();
 

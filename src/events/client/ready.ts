@@ -15,7 +15,7 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<EventOptions>({ once: true })
 export default class ReadyEvent extends Event {
-  public async run(): Promise<void> {
+  public override async run(): Promise<void> {
     this.context.client.guild = this.context.client.guilds.resolve(settings.bot.guild)!;
 
     if (!this.context.client.guild)
