@@ -18,7 +18,6 @@ import type {
   Model,
   Types,
 } from 'mongoose';
-import type cron from 'node-cron';
 import type settings from '@/conf/settings';
 
 /* ****************** */
