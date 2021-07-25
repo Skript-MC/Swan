@@ -65,7 +65,6 @@ class TaskHandler extends AkairoHandler {
     } else {
       throw new AkairoError('INVALID_TYPE', 'cron or interval', `cron schedule or a number (${id})`);
     }
-    void taskFunction();
 
     return task;
   }
