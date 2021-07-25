@@ -4,7 +4,7 @@ import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import type { GuildMessage, ServerStatResponse } from '@/app/types';
 import type { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
-import { noop } from '@/app/utils';
+import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
@@ -29,14 +29,9 @@ class ServerInfoCommand extends Command {
   }
 
   public async exec(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {
-    let server: ServerStatResponse;
-    try {
-      server = await axios(settings.apis.server + args.server)
-        .then(response => (response.status >= 300 ? null : response.data));
-    } catch {
-      message.channel.send(config.messages.requestFailed).catch(noop);
-      return;
-    }
+    const server: ServerStatResponse = await axios(settings.apis.server + args.server)
+      .then(response => (response.status >= 300 ? null : response.data))
+      .catch(nullop);
 
     if (!server) {
       message.channel.send(config.messages.requestFailed).catch(noop);

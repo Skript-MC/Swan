@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/node';
 import { Listener } from 'discord-akairo';
 import Logger from '@/app/structures/Logger';
 
@@ -11,10 +12,12 @@ class UnhandledRejectionListener extends Listener {
 
   public exec(error: Error): void {
     Logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
-    if (process.env.NODE_ENV === 'production')
+    if (process.env.NODE_ENV === 'production') {
+      captureException(error);
       throw new Error(error.stack);
-    else
+    } else {
       Logger.error(error.stack);
+    }
   }
 }
 

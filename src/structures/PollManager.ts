@@ -12,7 +12,7 @@ import settings from '@/conf/settings';
 export default {
   async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
     // Remove the poll from the database and the cache.
-    const poll: PollDocument = await Poll.findByIdAndRemove(pollId).catch(nullop);
+    const poll: PollDocument | null = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)
       return;
 

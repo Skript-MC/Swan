@@ -89,14 +89,14 @@ class ForumFeedTask extends Task {
         const markdown = turndownService.turndown(resource.changelog || resource.description);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(resource.author.name, resource.author.photoUrlIsDefault ? null : 'https:' + resource.author.photoUrl)
+          .setAuthor(resource.author.name, resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}`)
           .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
           .setURL(resource.url)
           .setDescription(trimText(markdown, 150))
           .addField(config.embed.categoryTitle, resource.category.name, true)
           .addField(config.embed.versionTitle, resource.version, true)
           .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, true)
-          .setThumbnail(resource.primaryScreenshotThumb ? ('https:' + resource.primaryScreenshotThumb.url) : null)
+          .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
           .setFooter(config.dataProvider)
           .setTimestamp(new Date(resource.date));
         void channel.send(embed).catch(noop);

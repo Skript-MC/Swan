@@ -24,7 +24,7 @@ DiscordUserSchema.statics.findOneOrCreate = async function (
   doc: DiscordUserBase,
 ): Promise<DiscordUserDocument> {
   const result = await this.findOne(condition);
-  return result || this.create(doc);
+  return result ?? this.create(doc);
 };
 
 export default model<DiscordUserDocument, DiscordUserModel>('DiscordUser', DiscordUserSchema);
