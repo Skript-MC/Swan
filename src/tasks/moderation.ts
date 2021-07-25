@@ -25,7 +25,9 @@ class ModerationTask extends Task {
     });
 
     for (const sanction of sanctions) {
-      const { memberId, type, informations } = sanction;
+      const {
+        memberId, type, informations, sanctionId,
+      } = sanction;
 
       const member = this.client.guild.members.cache.get(memberId)
         ?? (await this.client.guild.members.fetch(memberId).catch(noop));
@@ -62,7 +64,8 @@ class ModerationTask extends Task {
         }
 
         case SanctionTypes.Warn: {
-          data.setType(SanctionTypes.RemoveWarn);
+          data.setType(SanctionTypes.RemoveWarn)
+            .setOriginalWarnId(sanctionId);
           await new RemoveWarnAction(data).commit();
           break;
         }

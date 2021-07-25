@@ -78,6 +78,11 @@ export interface LinksCommandArguments {
   page: number;
 }
 
+export interface ModuleCommandArguments {
+  moduleName: string;
+  enabled: string;
+}
+
 export interface MoveCommandArguments {
   channel: TextChannel;
   message: Message;
