@@ -3,7 +3,6 @@ import 'source-map-support/register';
 import 'module-alias/register';
 import 'dotenv/config';
 
-import * as Integrations from '@sentry/integrations';
 import * as Sentry from '@sentry/node';
 import moment from 'moment';
 import mongoose from 'mongoose';
@@ -47,19 +46,5 @@ if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
   Sentry.init({
     dsn: process.env.SENTRY_TOKEN,
     release: `${process.env.npm_package_name}@${process.env.npm_package_version}`,
-    beforeBreadcrumb(breadcrumb: Sentry.Breadcrumb): Sentry.Breadcrumb {
-      // Strip color codes off
-      if (breadcrumb.category === 'console' && breadcrumb.message) {
-        // eslint-disable-next-line no-control-regex
-        breadcrumb.message = breadcrumb.message.replace(/\u001B[();?[]{0,2}(?:;?\d)*./g, '');
-      }
-      return breadcrumb;
-    },
-    integrations: [
-      // Debug is used to send details about handled errors.
-      new Integrations.CaptureConsole({ levels: ['debug', 'warn', 'error'] }),
-      new Sentry.Integrations.OnUncaughtException({ onFatalError: (err: Error): void => { throw err; } }),
-      new Sentry.Integrations.OnUnhandledRejection({ mode: 'strict' }),
-    ],
   });
 }

@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/node';
 import { Listener } from 'discord-akairo';
 import type { Command } from 'discord-akairo';
 import type { Message } from 'discord.js';
@@ -19,10 +20,12 @@ class CommandHandlerErrorListener extends Listener {
     Logger.detail(`Command: ${command}`);
     Logger.detail(`Message: ${message.url}`);
 
-    if (process.env.NODE_ENV === 'production')
+    if (process.env.NODE_ENV === 'production') {
+      captureException(error);
       throw new Error(error.stack);
-    else
+    } else {
       Logger.error(error.stack);
+    }
   }
 }
 
