@@ -1,3 +1,4 @@
+import { captureException, captureMessage, Severity } from '@sentry/node';
 import chalk from 'chalk';
 import { padNumber } from '@/app/utils';
 
@@ -13,6 +14,7 @@ export default {
    * @returns void
    */
   info(message: string): void {
+    captureMessage(message, Severity.Debug);
     console.log(
       chalk.cyan('Swan:'),
       chalk.bold.blue('LOG    '),
@@ -27,6 +29,7 @@ export default {
    * @returns void
    */
   success(message: string): void {
+    captureMessage(message, Severity.Debug);
     console.log(
       chalk.cyan('Swan:'),
       chalk.bold.blue('SUCCESS'),
@@ -41,6 +44,7 @@ export default {
    * @returns void
    */
   warn(message: string): void {
+    captureMessage(message, Severity.Warning);
     console.warn(
       chalk.cyan('Swan:'),
       chalk.bold.blue('WARN   '),
@@ -56,6 +60,7 @@ export default {
    */
   error(message?: string): void {
     if (message) {
+      captureException(message);
       console.error(
         chalk.cyan('Swan:'),
         chalk.bold.blue('ERROR  '),
@@ -72,6 +77,7 @@ export default {
    * @returns void
    */
   detail(message = '', neutral = false): void {
+    captureMessage(message, Severity.Debug);
     const messages = message.split('\n');
     console.group();
     for (const msg of messages)
