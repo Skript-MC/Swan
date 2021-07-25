@@ -27,6 +27,8 @@ import type settings from '@/conf/settings';
 
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
+export type Awaited<T> = PromiseLike<T> | T;
+
 /* ****************** */
 /*  API Result Types  */
 /* ****************** */
@@ -333,7 +335,6 @@ export interface InvisionTopic {
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
-  /* eslint-disable @typescript-eslint/prefer-literal-enum-member */
   OnlyBotChannel = 1,
   NoHelpChannel = 1 << 1,
   OnlyHelpChannel = 1 << 2,
@@ -385,8 +386,8 @@ export interface BanChannelMessage {
   authorName: string;
   authorId: string;
   sentAt: number;
-  edited?: number;
-  attachments?: Array<{ name: string; url: string }>;
+  edited?: number | null;
+  attachments: Array<{ name: string; url: string }>;
 }
 
 /** Represent a Kick entry in the guild audit logs */
@@ -607,9 +608,9 @@ export type MessageModel = Model<MessageDocument>;
 /** Interface for the "ConvictedUser"'s mongoose schema */
 export interface ConvictedUserBase {
   memberId: string;
-  currentBanId?: string;
-  currentMuteId?: string;
-  currentWarnCount?: number;
+  currentBanId?: string | null;
+  currentMuteId?: string | null;
+  currentWarnCount?: number | null;
 }
 
 /** Interface for the "ConvictedUser"'s mongoose document */
@@ -716,7 +717,7 @@ export type ReactionRoleModel = Model<ReactionRoleDocument>;
 export interface DiscordUserBase {
   userId: string;
   username: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
 }
 
 /** Interface for the "DiscordUser"'s mongoose document */
@@ -777,7 +778,7 @@ export interface MessageLogBase {
   channelId: string;
   oldContent: string;
   editions: string[];
-  newContent?: string;
+  newContent?: string | null;
 }
 
 /** Interface for the "MessageLog"'s mongoose document */

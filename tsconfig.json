@@ -14,11 +14,11 @@
       "@/conf/*": ["./config/*"],
       "@/root/*": ["./*"]
     },
-    "pretty": false,
+    "pretty": true,
     "removeComments": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
     "skipLibCheck": true,
+    "sourceMap": true,
     "target": "es2019",
     "typeRoots": ["./typings", "./node_modules/@types"]
   },

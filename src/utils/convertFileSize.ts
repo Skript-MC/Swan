@@ -1,10 +1,10 @@
-const units: Array<[size: number, suffix: string]> = [
+const units = [
   [1024 ** 0, 'octets'],
   [1024 ** 1, 'Ko'],
   [1024 ** 2, 'Mo'],
   [1024 ** 3, 'Go'],
   [1024 ** 4, 'To'],
-];
+] as const;
 
 /**
  * Convert a number to a file size in octets.

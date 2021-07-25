@@ -33,8 +33,8 @@ class IdeaCommand extends Command {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(
-        pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName || messages.global.unknownName }),
-        randomIdea.author.avatarURL(),
+        pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
+        randomIdea.author.avatarURL() ?? '',
       )
       .setDescription(randomIdea.content)
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))

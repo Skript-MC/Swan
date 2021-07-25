@@ -42,7 +42,7 @@ class GuildMemberAddListener extends Listener {
       } catch (unknownError: unknown) {
         Logger.error('Could not add the mute role to a member.');
         Logger.detail(`MuteObject: "${JSON.stringify(isMuted)}"`);
-        Logger.detail(`Manager roles permission: ${member.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
+        Logger.detail(`Manager roles permission: ${member.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
         Logger.error((unknownError as Error).stack);
       }
     }
@@ -68,7 +68,7 @@ class GuildMemberAddListener extends Listener {
       Logger.detail(`Member's name: "${name}"`);
       Logger.detail(`Stripped name: "${strippedName}"`);
       Logger.detail(`New name: "${newName}"`);
-      Logger.detail(`Change nicknames permission: ${member.guild.me.hasPermission(Permissions.FLAGS.MANAGE_NICKNAMES)}`);
+      Logger.detail(`Change nicknames permission: ${member.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_NICKNAMES)}`);
       Logger.error((unknownError as Error).stack);
     }
 

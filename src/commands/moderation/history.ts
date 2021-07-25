@@ -4,7 +4,7 @@ import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage, SanctionDocument } from '@/app/types';
+import type { GuildMessage } from '@/app/types';
 import type { HistoryCommandArgument } from '@/app/types/CommandArguments';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
@@ -33,7 +33,7 @@ class HistoryCommand extends Command {
   public async exec(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
     const memberId = typeof args.member === 'string' ? args.member : args.member.id;
 
-    const sanctions: SanctionDocument[] = await Sanction.find({ memberId });
+    const sanctions = await Sanction.find({ memberId });
     if (sanctions.length === 0) {
       await message.channel.send(config.messages.notFound);
       return;

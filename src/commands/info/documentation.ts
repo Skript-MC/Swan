@@ -84,7 +84,7 @@ class DocumentationCommand extends Command {
     }
 
     // Formatting the data to return an array containing only 10 results.
-    const matchingSyntaxes: SkriptMcDocumentationSyntaxAndAddon[] = similarity
+    const matchingSyntaxes = similarity
       .filter(elt => elt[1] > 0.5)
       .map(elt => elt[0])
       .slice(0, 10);

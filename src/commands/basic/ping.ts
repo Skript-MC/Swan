@@ -23,7 +23,7 @@ class PingCommand extends Command {
 
   public async exec(message: GuildMessage, _args: PingCommandArguments): Promise<void> {
     const sent = await message.channel.send(config.messages.firstMessage);
-    const swanPing = (sent.editedAt || sent.createdAt).getTime() - (message.editedAt || message.createdAt).getTime();
+    const swanPing = (sent.editedAt ?? sent.createdAt).getTime() - (message.editedAt ?? message.createdAt).getTime();
     const discordPing = Math.round(this.client.ws.ping);
 
     const description = pupa(config.messages.secondMessage, {

@@ -65,7 +65,6 @@ class TaskHandler extends AkairoHandler {
     } else {
       throw new AkairoError('INVALID_TYPE', 'cron or interval', `cron schedule or a number (${id})`);
     }
-    void taskFunction();
 
     return task;
   }
@@ -79,7 +78,7 @@ class TaskHandler extends AkairoHandler {
     if (taskInfos?.interval)
       clearInterval(taskInfos.interval);
     else if (taskInfos?.schedule)
-      taskInfos.schedule.stop().destroy();
+      taskInfos.schedule.stop();
 
     this.tasks.delete(task.id);
     return task;

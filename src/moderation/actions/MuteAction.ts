@@ -11,9 +11,8 @@ import settings from '@/conf/settings';
 import ModerationAction from './ModerationAction';
 
 class MuteAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     if (!this.data.duration)
@@ -96,7 +95,7 @@ class MuteAction extends ModerationAction {
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Role: ID', settings.roles.mute)
-          .addDetail('Add Role Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Add Role Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }

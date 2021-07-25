@@ -5,9 +5,8 @@ import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from './ModerationAction';
 
 class KickAction extends ModerationAction {
-  protected before(): void { /* */ }
-
-  protected after(): void { /* */ }
+  protected before: undefined;
+  protected after: undefined;
 
   protected async exec(): Promise<void> {
     await this._kick();
@@ -43,7 +42,7 @@ class KickAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Kick Member Permission', this.data.guild.me.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
+          .addDetail('Kick Member Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
       );
     }
   }

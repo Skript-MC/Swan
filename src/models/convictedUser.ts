@@ -30,7 +30,7 @@ ConvictedUserSchema.statics.findOneOrCreate = async function (
   doc: ConvictedUserBase,
 ): Promise<ConvictedUserDocument> {
   const result = await this.findOne(condition);
-  return result || this.create(doc);
+  return result ?? this.create(doc);
 };
 
 export default model<ConvictedUserDocument, ConvictedUserModel>('ConvictedUser', ConvictedUserSchema);

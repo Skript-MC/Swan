@@ -2,7 +2,7 @@ import type { AkairoClient } from 'discord-akairo';
 import type { Message, User } from 'discord.js';
 import DiscordUser from '@/app/models/discordUser';
 import MessageLog from '@/app/models/messageLog';
-import type { DiscordUserDocument, MessageLogDocument } from '@/app/types';
+import type { DiscordUserDocument } from '@/app/types';
 
 export default {
   shouldSaveMessage(client: AkairoClient, message: Message): boolean {
@@ -10,10 +10,10 @@ export default {
   },
 
   async getDiscordUser(client: AkairoClient, author: User): Promise<DiscordUserDocument | null> {
-    const cachedUser: DiscordUserDocument = client.cache.discordUsers.find(elt => elt.userId === author.id);
+    const cachedUser = client.cache.discordUsers.find(elt => elt.userId === author.id);
     if (cachedUser)
       return cachedUser;
-    const user: DiscordUserDocument = await DiscordUser.findOneOrCreate({
+    const user = await DiscordUser.findOneOrCreate({
       userId: author.id,
     }, {
       userId: author.id,
@@ -29,7 +29,7 @@ export default {
     if (!this.shouldSaveMessage(client, oldMessage) || oldMessage.content === newMessage.content)
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
-    const messageDoc: MessageLogDocument = await MessageLog.findOne({ messageId: oldMessage.id });
+    const messageDoc = await MessageLog.findOne({ messageId: oldMessage.id });
     if (messageDoc) {
       const oldNewContent = messageDoc.newContent;
       if (oldNewContent)
@@ -51,7 +51,7 @@ export default {
     if (!this.shouldSaveMessage(client, oldMessage))
       return;
     const userDoc: DiscordUserDocument = await this.getDiscordUser(client, oldMessage.author);
-    const messageDoc: MessageLogDocument = await MessageLog.findOne({ messageId: oldMessage.id });
+    const messageDoc = await MessageLog.findOne({ messageId: oldMessage.id });
     if (messageDoc) {
       messageDoc.editions.push(messageDoc.newContent);
       messageDoc.newContent = null;

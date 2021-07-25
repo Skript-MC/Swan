@@ -27,7 +27,7 @@ class UnbanCommand extends Command {
           (_message, value) => this.client.util.resolveUser(value, this.client.users.cache),
           // Try parsing the first part of the message to an ID
           async (message: GuildMessage, value: string) => {
-            let resolvedMember: GuildMember | User;
+            let resolvedMember: GuildMember | User | undefined;
             const id = /<@!?(?<id>\d{17,19})>/.exec(value)?.groups?.id
               || /(?<id>\d{17,19})/.exec(value)?.groups?.id;
             // If we found a valid ID, try resolving the User from cache
