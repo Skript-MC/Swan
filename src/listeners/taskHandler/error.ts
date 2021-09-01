@@ -12,15 +12,11 @@ class TaskHandlerErrorListener extends Listener {
   }
 
   public exec(error: Error, task: Task): void {
+    captureException(error);
     Logger.error('Oops, something went wrong with a task!');
     Logger.detail(`Task: ${task}`);
     Logger.detail(`Cron: ${task.cron}`);
-    if (process.env.NODE_ENV === 'production') {
-      captureException(error);
-      throw new Error(error.stack);
-    } else {
-      Logger.error(error.stack);
-    }
+    Logger.error(error.stack);
   }
 }
 

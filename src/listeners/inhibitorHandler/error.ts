@@ -12,14 +12,10 @@ class InhibitorHandlerErrorListener extends Listener {
   }
 
   public exec(error: Error, inhibitor: Inhibitor): void {
+    captureException(error);
     Logger.error('Oops, something went wrong with an inhibitor!');
     Logger.detail(`Inhibitor: ${inhibitor.id}`);
-    if (process.env.NODE_ENV === 'production') {
-      captureException(error);
-      throw new Error(error.stack);
-    } else {
-      Logger.error(error.stack);
-    }
+    Logger.error(error.stack);
   }
 }
 
