@@ -11,13 +11,9 @@ class ClientErrorListener extends Listener {
   }
 
   public exec(error: Error): void {
+    captureException(error);
     Logger.error('Oops, something went wrong with the Swan Client!');
-    if (process.env.NODE_ENV === 'production') {
-      captureException(error);
-      throw new Error(error.stack);
-    } else {
-      Logger.error(error.stack);
-    }
+    Logger.error(error.stack);
   }
 }
 

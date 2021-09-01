@@ -30,6 +30,11 @@ class IdeaCommand extends Command {
 
     const randomIdea = ideas.random(1)[0];
 
+    if (!randomIdea) {
+      await message.channel.send(config.messages.noIdeaFound);
+      return;
+    }
+
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(

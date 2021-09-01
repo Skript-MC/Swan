@@ -11,14 +11,10 @@ class MongodbErrorListener extends Listener {
   }
 
   public exec(error: Error): void {
+    captureException(error);
     Logger.error('Oops, something went wrong with MongoDB!');
     Logger.detail('Please make sure MongoDB is running.');
-    if (process.env.NODE_ENV === 'production') {
-      captureException(error);
-      throw new Error(error.stack);
-    } else {
-      Logger.error(error.stack);
-    }
+    Logger.error(error.stack);
   }
 }
 

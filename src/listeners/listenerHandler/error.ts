@@ -11,14 +11,10 @@ class ListenerHandlerErrorListener extends Listener {
   }
 
   public exec(error: Error, listener: Listener): void {
+    captureException(error);
     Logger.error('Oops, something went wrong with a listener!');
     Logger.detail(`Listener: ${listener.id}`);
-    if (process.env.NODE_ENV === 'production') {
-      captureException(error);
-      throw new Error(error.stack);
-    } else {
-      Logger.error(error.stack);
-    }
+    Logger.error(error.stack);
   }
 }
 
