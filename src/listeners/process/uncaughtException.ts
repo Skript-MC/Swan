@@ -11,9 +11,9 @@ class UncaughtExceptionListener extends Listener {
   }
 
   public async exec(error: Error): Promise<void> {
+    captureException(error);
     Logger.error('Oops, something went wrong with Swan! (uncaughtException)');
     if (process.env.NODE_ENV === 'production') {
-      captureException(error);
       await flush(5000);
       // eslint-disable-next-line node/no-process-exit
       process.exit(1);
