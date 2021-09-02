@@ -17,7 +17,7 @@ class MessageListener extends Listener {
   }
 
   public async exec(message: Message): Promise<void> {
-    const isCommand = Boolean(this.client.commandHandler.parseWithPrefix(message, '=').command);
+    const isCommand = Boolean(this.client.commandHandler.parseWithPrefix(message, settings.bot.prefix).command);
     if (isCommand || message.author.bot || message.system || message.channel instanceof DMChannel)
       return;
 
@@ -48,8 +48,6 @@ class MessageListener extends Listener {
         ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
         : message.content;
       await message.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
-
-      return true;
     }
     return false;
   }
