@@ -6,6 +6,8 @@ import type { DiscordUserDocument } from '@/app/types';
 
 export default {
   shouldSaveMessage(client: AkairoClient, message: Message): boolean {
+    if (!Array.isArray(client.cache.savedChannelsIds))
+      return false;
     return client.cache.savedChannelsIds?.includes(message.channel.id) || false;
   },
 
