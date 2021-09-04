@@ -1,17 +1,13 @@
 import path from 'path';
 import axios from 'axios';
-import {
-  AkairoClient,
-  CommandHandler,
-  InhibitorHandler,
-  ListenerHandler,
-} from 'discord-akairo';
 import type { AkairoHandler, Category, Command } from 'discord-akairo';
-import { Intents } from 'discord.js';
+import {
+ AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler,
+} from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
-import mongoose from 'mongoose';
+import { Intents } from 'discord.js';
 import type { Query } from 'mongoose';
-import SharedConfig from '@/app/models/sharedConfig';
+import mongoose from 'mongoose';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import CommandStat from './models/commandStat';
@@ -24,13 +20,11 @@ import SwanCacheManager from './structures/SwanCacheManager';
 import TaskHandler from './structures/TaskHandler';
 import type {
   CommandStatDocument,
-  SharedConfigDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
 } from './types';
-import { SharedConfigName } from './types';
 import { nullop, uncapitalize } from './utils';
 
 class SwanClient extends AkairoClient {
@@ -162,7 +156,6 @@ class SwanClient extends AkairoClient {
     void this._loadPolls();
     void this._loadCommandStats();
     void this._loadReactionRoles();
-    void this._loadSharedConfigs();
 
     Logger.info('Loading addons from SkriptTools...');
     void this._loadSkriptToolsAddons();
@@ -268,17 +261,6 @@ class SwanClient extends AkairoClient {
     const reactionRoles = await ReactionRole.find().catch(nullop);
     if (reactionRoles)
       this.cache.reactionRolesIds.addAll(...reactionRoles.map(document => document.messageId));
-  }
-
-  private async _loadSharedConfigs(): Promise<void> {
-    // Load logged channels
-    const configDocument: SharedConfigDocument | null = await SharedConfig.findOneOrCreate({
-      name: SharedConfigName.LoggedChannels,
-    }, {
-      name: SharedConfigName.LoggedChannels,
-      value: [],
-    }).catch(nullop);
-    this.cache.savedChannelsIds = configDocument?.value as string[];
   }
 
   private async _loadSkriptToolsAddons(): Promise<void> {
