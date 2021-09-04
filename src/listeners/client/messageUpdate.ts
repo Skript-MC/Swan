@@ -17,7 +17,7 @@ class MessageUpdateListener extends Listener {
   }
 
   public async exec(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
-    await MessageLogManager.saveMessageEdit(this.client, oldMessage, newMessage);
+    await MessageLogManager.saveMessageEdit(this.client.cache, oldMessage, newMessage);
 
     // Prevent active members from posting another documentation than Skript-MC's.
     if (newMessage.member.roles.cache.has(settings.roles.activeMember)
