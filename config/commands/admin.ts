@@ -1,5 +1,25 @@
 import { hasActiveMemberRole, hasStaffRole, permissions } from '@/conf/configUtils';
 
+export const logs = {
+  settings: {
+    aliases: ['logs'],
+    clientPermissions: permissions.SEND_MESSAGES,
+    userPermissions: hasStaffRole,
+  },
+  details: {
+    name: 'Gérer les sauvegardes de messages',
+    content: "Permet d'activer ou de désactiver la sauvegarde des messages de certains salons.",
+    usage: 'logs <#salon> <on|off>',
+    examples: ['logs #bot on'],
+  },
+  messages: {
+    noChannelFound: ":x: Aucun salon n'a été trouvé. Vérifiez que vous l'avez correctement mentionné et essayez de rafraîchir le cache.",
+    noStatus: ":x: Vous n'avez pas spécifié le statut à définir. Utilisez plutôt : `.logs {swanChannel.channelId} <on|off>`.",
+    success: ':white_check_mark: La sauvegarde des messages de ce salon a bien été {status}.',
+  },
+};
+
+
 export const module = {
   settings: {
     aliases: ['module'],
@@ -9,7 +29,7 @@ export const module = {
   details: {
     name: 'Modifier les modules',
     content: "Permet d'activer ou de désactiver certains modules de Swan.",
-    usage: 'module',
+    usage: 'module <nom module> <on|off>',
     examples: ['module skriptReleases off'],
   },
   embed: {
