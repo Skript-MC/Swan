@@ -734,32 +734,29 @@ export interface DiscordUserModel extends Model<DiscordUserDocument> {
 // #endregion
 
 /* ****************************** */
-/*   SharedConfig Database Types   */
+/*   Channel Database Types   */
 /* ****************************** */
 
-// #region SharedConfig Database Types (VS Code)
-// region SharedConfig Database Types (JetBrains)
+// #region Channel Database Types (VS Code)
+// region Channel Database Types (JetBrains)
 
-/** Enum for the "SharedConfig"'s mongoose schema */
-export enum SharedConfigName {
-  LoggedChannels = 'logged-channels',
+/** Interface for the "Channel"'s mongoose schema */
+export interface SwanChannelBase {
+  channelId: string;
+  categoryId: string;
+  name: string;
+  logged: boolean;
 }
 
-/** Interface for the "SharedConfig"'s mongoose schema */
-export interface SharedConfigBase {
-  name: SharedConfigName;
-  value: unknown;
-}
+/** Interface for the "Channel"'s mongoose document */
+export interface SwanChannelDocument extends SwanChannelBase, Document {}
 
-/** Interface for the "SharedConfig"'s mongoose document */
-export interface SharedConfigDocument extends SharedConfigBase, Document {}
-
-/** Interface for the "SharedConfig"'s mongoose model */
-export interface SharedConfigModel extends Model<SharedConfigDocument> {
+/** Interface for the "Channel"'s mongoose model */
+export interface SwanChannelModel extends Model<SwanChannelDocument> {
   findOneOrCreate(
-    condition: FilterQuery<SharedConfigDocument>,
-    doc: SharedConfigBase,
-  ): Promise<SharedConfigDocument>;
+    condition: FilterQuery<SwanChannelDocument>,
+    doc: SwanChannelBase,
+  ): Promise<SwanChannelDocument>;
 }
 
 // #endregion

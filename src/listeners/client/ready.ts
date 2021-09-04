@@ -4,6 +4,7 @@ import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
+import SwanChannel from '@/app/models/swanChannel';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
 import Logger from '@/app/structures/Logger';
@@ -38,11 +39,32 @@ class ReadyListener extends Listener {
     Logger.info('Fetching missed bans...');
     await this._fetchMissingBans();
 
+    Logger.info('Syncing database channels...');
+    await this._syncDatabaseChannels();
+
     this.client.checkValidity();
 
     Logger.success('Swan is ready to listen for messages.');
 
     this.client.isLoading = false;
+  }
+
+  private async _syncDatabaseChannels(): Promise<void> {
+    this.client.cache.swanChannels = new Set();
+    for (const channel of this.client.guild.channels.cache.array()) {
+      if (!channel.isText())
+        continue;
+      const guildChannel = channel as GuildChannel;
+      const swanChannel = await SwanChannel.findOneOrCreate({
+        channelId: guildChannel.id,
+      }, {
+        channelId: guildChannel.id,
+        categoryId: guildChannel.parentID,
+        name: guildChannel.name,
+        logged: false,
+      });
+      this.client.cache.swanChannels.add(swanChannel);
+    }
   }
 
   private _cacheChannels(): void {
