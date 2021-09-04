@@ -21,7 +21,7 @@ class MessageDeleteListener extends Listener {
       return;
 
     const message = globalMessage as GuildMessage;
-    await MessageLogManager.saveMessageDelete(this.client, message);
+    await MessageLogManager.saveMessageDelete(this.client.cache, message);
 
     if (message.author.bot
       || message.system
