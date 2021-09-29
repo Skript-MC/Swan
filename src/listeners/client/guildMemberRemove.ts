@@ -43,7 +43,7 @@ class GuildMemberRemoveListener extends Listener {
     // Check if they're leaving while being banned
     if (isBanned) {
       const data = new ModerationData(this.client)
-        .setVictim(member)
+        .setVictim(member, false)
         .setDuration(-1, false)
         .setReason(messages.moderation.reasons.leaveBan)
         .setType(SanctionTypes.Hardban);
