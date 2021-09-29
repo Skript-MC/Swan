@@ -80,7 +80,22 @@ class BanAction extends ModerationAction {
       );
     }
 
-    // 2. Ban the member
+    // 2. If it is an update, save the messages
+    if (this.updateInfos.isUpdate()) {
+      const channelId = this.updateInfos.sanctionDocument?.informations?.banChannelId;
+      if (channelId) {
+        const channel = this.data.guild.channels.resolve(channelId);
+        if (channel?.isText()) {
+          const allMessages = await ModerationHelper.getAllChannelMessages(channel);
+          const fileInfo = await ModerationHelper.getMessageFile(this.data, allMessages);
+          this.data.setFile(fileInfo);
+
+          await channel.delete();
+        }
+      }
+    }
+
+    // 3. Ban the member
     try {
       await this.data.victim.member?.ban({ days: this.data.shouldPurge ? 7 : 0, reason: this.data.reason });
     } catch (unknownError: unknown) {
