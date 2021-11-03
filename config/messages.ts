@@ -63,6 +63,11 @@ export default {
       '{member} vient de se glisser dans le serveur...',
       'Content de te voir, {member} :)',
       "{member} vient juste d'atterrir...",
+      "Bienvenue le monde de SkriptMC {member} ! Un monde remplie de calcul",
+      "Accueillez {member} ! Il vous demandera un jour de l'aide ou vous aidera !",
+      "Dites bonjour à {member}, j'espère qu'il vient avec de bonne intentions...",
+      "Acclamez {member}, je sais pas pourquoi, mais acclamez le !",
+      "Suis-je sencer dire bonjour à {member} ? après tout je ne suis qu'un bot...",
     ],
   },
   prompt: {
