@@ -63,6 +63,8 @@ export default {
       '{member} vient de se glisser dans le serveur...',
       'Content de te voir, {member} :)',
       "{member} vient juste d'atterrir...",
+      "Acclamez {member} ! Je ne sais pas pourquoi, mais acclamez-le !",
+      "Suis-je censé dire bonjour à {member} ? Après tout je ne suis qu'un bot...",
     ],
   },
   prompt: {
