@@ -10,7 +10,7 @@ import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 import settings from '@/conf/settings';
 
-class MuteAction extends ModerationAction {
+export default class MuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
@@ -95,10 +95,8 @@ class MuteAction extends ModerationAction {
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Role: ID', settings.roles.mute)
-          .addDetail('Add Role Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Add Role Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }
 }
-
-export default MuteAction;

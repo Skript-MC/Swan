@@ -2,7 +2,7 @@
   "name": "swan",
   "version": "2.1.6",
   "description": "Bot discord de Skript-MC.",
-  "main": "./src/main.ts",
+  "main": "./build/src/main.js",
   "scripts": {
     "build": "rm -rf ./build && tsc",
     "build:win": "rd /s /q \"build\" && tsc",
@@ -14,9 +14,7 @@
     "tools:update-databases": "npm run build && node ./build/tools/update-databases.js",
     "tools:update-databases:win": "npm run build:win && node ./build/tools/update-databases.js",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "patch": "npx patch-package",
-    "postinstall": "npm run patch"
+    "lint:fix": "eslint . --fix"
   },
   "authors": [
     "noftaly (noftaly#0359)",
@@ -44,13 +42,20 @@
   "dependencies": {
     "@octokit/rest": "^18.12.0",
     "@octokit/types": "^6.34.0",
+    "@sapphire/decorators": "^3.1.4",
+    "@sapphire/discord-utilities": "^2.2.3",
+    "@sapphire/discord.js-utilities": "^4.1.1",
+    "@sapphire/framework": "^2.1.4",
+    "@sapphire/pieces": "^3.1.1",
+    "@sapphire/plugin-logger": "^2.0.2",
+    "@sapphire/plugin-subcommands": "^2.0.2",
+    "@sapphire/utilities": "^3.0.7",
     "@sentry/node": "^6.14.3",
     "axios": "^0.21.2",
     "chalk": "^4.1.2",
     "common-tags": "^1.8.1",
     "core-js": "^3.19.1",
-    "discord-akairo": "^8.1.0",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
     "he": "^1.2.0",
     "jaro-winkler": "^0.2.8",
@@ -61,8 +66,8 @@
     "nanoid": "^3.1.30",
     "node-cron": "^3.0.0",
     "node-emoji": "^1.11.0",
-    "patch-package": "^6.4.7",
     "pupa": "^2.1.1",
+    "reflect-metadata": "^0.1.13",
     "semver": "^7.3.5",
     "source-map-support": "^0.5.20",
     "turndown": "^7.1.1"

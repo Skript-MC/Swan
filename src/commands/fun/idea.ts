@@ -1,26 +1,18 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import type { TextChannel } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import type { IdeaCommandArguments } from '@/app/types/CommandArguments';
 import { idea as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class IdeaCommand extends Command {
-  constructor() {
-    super('idea', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, _args: IdeaCommandArguments): Promise<void> {
-    const channel = this.client.cache.channels.idea as TextChannel;
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class IdeaCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, _args: IdeaCommandArguments): Promise<void> {
+    const channel = this.container.client.cache.channels.idea as TextChannel;
 
     const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) {
@@ -29,7 +21,6 @@ class IdeaCommand extends Command {
     }
 
     const randomIdea = ideas.random(1)[0];
-
     if (!randomIdea) {
       await message.channel.send(config.messages.noIdeaFound);
       return;
@@ -45,8 +36,6 @@ class IdeaCommand extends Command {
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))
       .setTimestamp(randomIdea.createdAt);
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default IdeaCommand;

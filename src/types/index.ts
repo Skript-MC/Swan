@@ -1,4 +1,6 @@
 import type { Endpoints } from '@octokit/types';
+import type { CommandOptions } from '@sapphire/framework';
+import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
   Collection,
   Guild,
@@ -17,9 +19,7 @@ import type {
   Model,
   Types,
 } from 'mongoose';
-import type cron from 'node-cron';
 import type settings from '@/conf/settings';
-
 
 /* ****************** */
 /*     Util Types     */
@@ -333,6 +333,13 @@ export interface InvisionTopic {
 // #region Miscellaneous types used at specific places (VS Code)
 // region Miscellaneous types used at specific places (JetBrains)
 
+/** Options for the SwanCommand class */
+export interface SwanCommandOptions extends CommandOptions {
+  usage: string;
+  examples: string[];
+  permissions?: string[];
+}
+
 /** Types of rules for where a command can be executed */
 export enum Rules {
   OnlyBotChannel = 1,
@@ -340,23 +347,20 @@ export enum Rules {
   OnlyHelpChannel = 1 << 2,
 }
 
-/** Informations associated to a task in the TaskHandler */
-export interface TaskInformations {
-  interval?: NodeJS.Timeout;
-  schedule?: cron.ScheduledTask;
+/** Activity types, with the string as a value */
+export enum ActivityType {
+  PLAYING = 'PLAYING',
+  STREAMING = 'STREAMING',
+  LISTENING = 'LISTENING',
+  WATCHING = 'WATCHING',
+  CUSTOM = 'CUSTOM',
+  COMPETING = 'COMPETING',
 }
-
 
 /** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
 export interface MatchingAddon {
   file: string;
   name: string;
-}
-
-/** The types of objects that is returned by the `tokenize()` function in `getDuration()` */
-export interface DurationPart {
-  number: string;
-  unit: string;
 }
 
 /** A TextChannel which is in a guild */
@@ -431,6 +435,7 @@ export interface PersonInformations {
 export interface SanctionInformations {
   shouldAutobanIfNoMessages?: boolean;
   banChannelId?: string;
+  hasSentMessages?: boolean;
 }
 
 /** The object returned by ModerationData#toSchema */
@@ -518,7 +523,7 @@ export type CommandStatModel = Model<CommandStatDocument>;
 /** Interface for the "Module"'s mongoose schema */
 export interface SwanModuleBase {
   name: string;
-  handler: 'commandHandler' | 'inhibitorHandler' | 'listenerHandler' | 'taskHandler';
+  store: keyof StoreRegistryEntries;
   enabled: boolean;
 }
 

@@ -1,5 +1,5 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import type { TextChannel } from 'discord.js';
+import type { GuildChannel, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
@@ -11,7 +11,7 @@ import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class BanAction extends ModerationAction {
+export default class BanAction extends ModerationAction {
   protected before(): void {
     this.client.currentlyBanning.add(this.data.victim.id);
   }
@@ -42,6 +42,7 @@ class BanAction extends ModerationAction {
     // 1. Add/Update the database
     try {
       if (this.updateInfos.isUpdate()) {
+        this.client.cache.channelBannedSilentUsers.delete(this.data.victim.id);
         await Sanction.findOneAndUpdate(
           { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentBanId },
           {
@@ -84,7 +85,7 @@ class BanAction extends ModerationAction {
     if (this.updateInfos.isUpdate()) {
       const channelId = this.updateInfos.sanctionDocument?.informations?.banChannelId;
       if (channelId) {
-        const channel = this.data.guild.channels.resolve(channelId);
+        const channel = this.data.guild.channels.resolve(channelId) as GuildChannel;
         if (channel?.isText()) {
           const allMessages = await ModerationHelper.getAllChannelMessages(channel);
           const fileInfo = await ModerationHelper.getMessageFile(this.data, allMessages);
@@ -106,7 +107,7 @@ class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Ban Member Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.BAN_MEMBERS)),
+          .addDetail('Ban Member Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)),
       );
     }
   }
@@ -164,18 +165,26 @@ class BanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
-          .addDetail('Manage Channel Permissions', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permissions', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
 
     // 2. Add to the database
     try {
+      this.client.cache.channelBannedSilentUsers.add(this.data.victim.id);
       const user = await ConvictedUser.findOneAndUpdate(
         { memberId: this.data.victim.id },
         { currentBanId: this.data.sanctionId },
         { upsert: true, new: true },
       );
-      await Sanction.create({ ...this.data.toSchema(), user: user._id });
+      await Sanction.create({
+        ...this.data.toSchema(),
+        informations: {
+          ...this.data.informations,
+          hasSentMessages: false,
+        },
+        user: user._id,
+      });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
@@ -206,10 +215,8 @@ class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Role Permissions', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Manage Role Permissions', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }
 }
-
-export default BanAction;

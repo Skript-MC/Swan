@@ -1,34 +1,27 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import Arguments from '@/app/decorators/Argument';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
-import { MessageName } from '@/app/types';
-import type { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, MessageName } from '@/app/types';
+import { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { errorDetails as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
-class ErrorDetailsCommand extends Command {
-  constructor() {
-    super('errorDetails', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'error',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class ErrorDetailsCommand extends SwanCommand {
+  @Arguments({
+    name: 'error',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.ErrorDetail });
-    const search = searchMessageSimilarity(messages, args.error);
+    const search = searchMessageSimilarity(messages, args.query);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -36,5 +29,3 @@ class ErrorDetailsCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default ErrorDetailsCommand;

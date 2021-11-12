@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { Command } from 'discord-akairo';
 import type {
   GuildMember,
+  GuildTextBasedChannel,
   Role,
   TextChannel,
   User,
 } from 'discord.js';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage } from '@/app/types';
-
 
 export interface AddonInfoCommandArguments {
   addon: string;
@@ -31,9 +31,9 @@ export interface BanCommandArgument {
 
 export interface CodeCommandArguments {
   code: string;
-  displayLines?: boolean;
-  startLinesAt?: string;
-  language?: string;
+  displayLines: boolean;
+  startLinesAt: number;
+  language: string;
 }
 
 export interface EightBallCommandArguments {
@@ -41,7 +41,7 @@ export interface EightBallCommandArguments {
 }
 
 export interface ErrorDetailsCommandArguments {
-  error: string;
+  query: string;
 }
 
 export interface DiscoverCommandArguments {}
@@ -53,7 +53,7 @@ export interface DocumentationCommandArguments {
 }
 
 export interface HelpCommandArguments {
-  command: Command;
+  command: SwanCommand;
 }
 
 export interface HistoryCommandArgument {
@@ -80,17 +80,17 @@ export interface LinksCommandArguments {
 
 export interface LogsCommandArguments {
   channel: TextChannel;
-  logged: string;
+  logged: boolean;
 }
 
 export interface ModuleCommandArguments {
   moduleName: string;
-  enabled: string;
+  enabled: boolean;
 }
 
 export interface MoveCommandArguments {
-  channel: TextChannel;
-  message: GuildMessage;
+  targetedChannel: GuildTextBasedChannel;
+  targetedMessage: GuildMessage;
 }
 
 export interface MuteCommandArgument {
@@ -114,7 +114,7 @@ export interface PurgeCommandArgument {
 export interface ReactionRoleCommandArguments {
   givenRole: Role;
   reaction: string;
-  destinationChannel: TextChannel;
+  destinationChannel: GuildTextBasedChannel;
 }
 
 export interface RefreshCommandArgument {}
@@ -125,7 +125,7 @@ export interface RemoveWarnCommandArgument {
 }
 
 export interface RuleCommandArguments {
-  rule: string;
+  query: string;
 }
 
 export interface ServerInfoCommandArguments {

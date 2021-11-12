@@ -1,36 +1,29 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Argument';
 import Sanction from '@/app/models/sanction';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { HistoryCommandArgument } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage, SanctionsUpdates, SanctionTypes } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { HistoryCommandArgument } from '@/app/types/CommandArguments';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class HistoryCommand extends Command {
-  constructor() {
-    super('history', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'member',
-        type: Argument.union('member', 'user', 'string'),
-        prompt: {
-          start: config.messages.promptStartUser,
-          retry: config.messages.promptStartUser,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class HistoryCommand extends SwanCommand {
+  @Arguments({
+    name: 'member',
+    type: ['member', 'user', 'string'],
+    match: 'pick',
+    required: true,
+    message: config.messages.promptStartUser,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {
     const memberId = typeof args.member === 'string' ? args.member : args.member.id;
 
     const sanctions = await Sanction.find({ memberId });
@@ -113,8 +106,6 @@ class HistoryCommand extends Command {
       );
     }
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default HistoryCommand;

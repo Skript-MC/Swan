@@ -1,21 +1,18 @@
 import { stripIndent } from 'common-tags';
-import { noPermissions, permissions } from '@/conf/configUtils';
+import { Rules } from '@/app/types';
+import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const eightBall = {
   settings: {
-    aliases: ['8ball', 'eightball'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: '8 Ball',
-    content: "__Répond à toutes vos questions__, même les plus compliquées ! La légende raconte même qu'il y a déjà eu des bonnes réponses... :shushing_face:",
+    aliases: ['8ball', 'eightball'],
+    description: "__Répond à toutes vos questions__, même les plus compliquées ! La légende raconte même qu'il y a déjà eu des bonnes réponses... :shushing_face:",
     usage: '8ball <votre question>',
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
     promptStart: 'Je suis un bon devin, mais je ne peux pas deviner ta question. :confused: Entre-la en envoyant un message contenant seulement la question :',
-    promptRetry: "Cette quetsion n'est pas valide. Entre-la en envoyant un message contenant seulement la question :",
+    promptRetry: "Cette question n'est pas valide. Entre-la en envoyant un message contenant seulement la question :",
     affirmative: [
       'Oui.',
       'Oui ! 🥳',
@@ -67,15 +64,12 @@ export const eightBall = {
 
 export const idea = {
   settings: {
-    aliases: ['idea', 'idée', 'idee'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Idée',
-    content: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
+    aliases: ['idea', 'idée', 'idee'],
+    description: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
     usage: 'idée',
     examples: ['idea', 'idée'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
@@ -85,15 +79,12 @@ export const idea = {
 
 export const joke = {
   settings: {
-    aliases: ['joke', 'blague'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Blague',
-    content: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
+    aliases: ['joke', 'blague'],
+    description: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
     usage: 'joke',
     examples: ['joke', 'blague'],
+    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",
@@ -102,13 +93,9 @@ export const joke = {
 
 export const latex = {
   settings: {
-    aliases: ['latex'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Latex',
-    content: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
+    aliases: ['latex'],
+    description: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
     usage: 'latex <equation>',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
@@ -120,13 +107,9 @@ export const latex = {
 
 export const poll = {
   settings: {
-    aliases: ['poll', 'sondage'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Sondage',
-    content: 'Permet de __lancer un sondage__ temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajoute le drapeau `-a` pour indique que le sondage sera anonyme, ~~ou le drapeau `-m` pour autoriser les réponses multiples~~ *(soon)*.',
+    aliases: ['poll', 'sondage'],
+    description: 'Permet de __lancer un sondage__ temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajoute le drapeau `-a` pour indique que le sondage sera anonyme, ~~ou le drapeau `-m` pour autoriser les réponses multiples~~ *(soon)*.',
     usage: 'poll <durée> [-a] [-m] "<sondage>" ["réponse 1"] ["réponse 2"] [...]',
     examples: ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'vote 10m Votre sondage ou on peut répondre uniquement par Oui et Non', 'sondage 10m "votre sondage" -a -m "réponse 1" "réponse 2"'],
   },

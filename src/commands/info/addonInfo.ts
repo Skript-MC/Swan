@@ -1,47 +1,40 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
-import { Command } from 'discord-akairo';
 import { MessageEmbed } from 'discord.js';
 import type { Message, MessageReaction, User } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
-import Logger from '@/app/structures/Logger';
-import type { GuildMessage, MatchingAddon, SkriptToolsAddonResponse } from '@/app/types';
-import type { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
+import Arguments from '@/app/decorators/Argument';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage } from '@/app/types';
+import type { MatchingAddon, SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
+import { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
 import { convertFileSize, noop, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class AddonInfoCommand extends Command {
-  constructor() {
-    super('addonInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'addon',
-        type: 'string',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, { addon }: AddonInfoCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class AddonInfoCommand extends SwanCommand {
+  @Arguments({
+    name: 'addon',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: AddonInfoCommandArguments): Promise<void> {
     // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
     // We keep only the first 10 matching addons.
-    const matchingAddons: MatchingAddon[] = this.client.cache.addonsVersions
-      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, addon, { caseSensitive: false }) >= 0.7)
+    const matchingAddons: MatchingAddon[] = this.container.client.cache.addonsVersions
+      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, args.addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift()! }))
       .slice(0, 10);
 
     // If we found no match.
     if (matchingAddons.length === 0) {
-      await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
+      await message.channel.send(pupa(config.messages.unknownAddon, args));
       return;
     }
     // If we found one match, show it directly.
@@ -51,13 +44,13 @@ class AddonInfoCommand extends Command {
     }
 
     // If we found multiple matches, present them nicely and ask the user which to choose.
-    const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
+    const possibleMatch = matchingAddons.find(match => args.addon.toLowerCase() === match.name.toLowerCase());
     if (possibleMatch) {
       await this._sendDetail(message, possibleMatch.file);
       return;
     }
 
-    let content = pupa(config.messages.searchResults, { matchingAddons, addon });
+    let content = pupa(config.messages.searchResults, { matchingAddons, addon: args.addon });
 
     for (const [i, match] of matchingAddons.entries())
       content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;
@@ -68,10 +61,11 @@ class AddonInfoCommand extends Command {
     const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
-      .createReactionCollector((reaction: MessageReaction, user: User) => !user.bot
-        && user.id === message.author.id
-        && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
-      .once('collect', async (reaction) => {
+      .createReactionCollector({
+        filter: (reaction: MessageReaction, user: User) => !user.bot
+          && user.id === message.author.id
+          && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name),
+      }).once('collect', async (reaction) => {
         await selectorMessage.delete();
         const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
         await this._sendDetail(message, matchingAddons[index].file);
@@ -88,7 +82,7 @@ class AddonInfoCommand extends Command {
   private async _sendDetail(message: Message, addonFile: string): Promise<void> {
     const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
-      .catch((err: Error) => { Logger.error(err.message); });
+      .catch((err: Error) => { this.container.logger.error(err.message); });
 
     if (!addon) {
       await message.channel.send(messages.global.oops);
@@ -107,7 +101,7 @@ class AddonInfoCommand extends Command {
     if (addon.unmaintained)
       embed.addField(embedMessages.unmaintained, embedMessages.unmaintainedDescription, true);
     if (addon.author)
-      embed.addField(embedMessages.author, addon.author, true);
+      embed.addField(embedMessages.author, addon.author.join(', '), true);
     if (addon.version)
       embed.addField(embedMessages.version, addon.version, true);
     if (addon.download) {
@@ -124,8 +118,6 @@ class AddonInfoCommand extends Command {
     if (addon.depend?.softdepend)
       embed.addField(embedMessages.softdepend, addon.depend.softdepend.join(', '), true);
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default AddonInfoCommand;

@@ -1,34 +1,27 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import Arguments from '@/app/decorators/Argument';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
-import { MessageName } from '@/app/types';
-import type { RuleCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, MessageName } from '@/app/types';
+import { RuleCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { rule as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
-class RuleCommand extends Command {
-  constructor() {
-    super('rule', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'rule',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: RuleCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class RuleCommand extends SwanCommand {
+  @Arguments({
+    name: 'rule',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: RuleCommandArguments): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.Rule });
-    const search = searchMessageSimilarity(messages, args.rule);
+    const search = searchMessageSimilarity(messages, args.query);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -36,5 +29,3 @@ class RuleCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default RuleCommand;

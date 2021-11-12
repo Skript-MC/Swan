@@ -1,3 +1,11 @@
+import type { HexColorString } from 'discord.js';
+import { basePreconditions } from './configUtils';
+import type { SwanCommandOptions } from '@/app/types';
+
+const skriptHelp = [...process.env.SKRIPT_HELP_CHANNELS.split(',')];
+const skriptExtraHelp = [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')];
+const otherHelp = [...process.env.OTHER_HELP_CHANNELS.split(',')];
+
 export default {
   bot: {
     prefix: process.env.BOT_PREFIX || '.',
@@ -22,6 +30,10 @@ export default {
       'docs.skunity.com',
     ],
   },
+  globalCommandsOptions: {
+    generateDashLessAliases: true,
+    preconditions: basePreconditions,
+  } as Partial<SwanCommandOptions>,
   moderation: {
     purgeLimit: 50,
     warnDuration: 60 * 60 * 24 * 30, // 1 month in seconds
@@ -32,19 +44,19 @@ export default {
     banChannelTopic: "Salon du bannissement de {member.displayName}. Regardez les messages épinglés pour plus d'informations.",
     dashboardSanctionLink: 'https://swan.skript-mc.fr/sanctions?memberId=',
     colors: {
-      warn: '#ffe200',
-      kick: '#ff6b61',
-      mute: '#8100eb',
-      ban: '#cc3300',
-      hardban: '#000000',
-      unban: '#1fc622',
-      unmute: '#1fc622',
-      removeWarn: '#1fc622',
+      warn: '#ffe200' as HexColorString,
+      kick: '#ff6b61' as HexColorString,
+      mute: '#8100eb' as HexColorString,
+      ban: '#cc3300' as HexColorString,
+      hardban: '#000000' as HexColorString,
+      unban: '#1fc622' as HexColorString,
+      unmute: '#1fc622' as HexColorString,
+      removeWarn: '#1fc622' as HexColorString,
     },
   },
   colors: {
-    default: '#4286f4',
-    success: '#1fc622',
+    default: '#4286f4' as HexColorString,
+    success: '#1fc622' as HexColorString,
   },
   apis: {
     hastebin: 'https://hastebin.com/documents',
@@ -68,10 +80,10 @@ export default {
     bot: process.env.BOT_CHANNEL,
     main: process.env.MAIN_CHANNEL,
     snippets: process.env.SNIPPETS_CHANNEL,
-    skriptHelp: [...process.env.SKRIPT_HELP_CHANNELS.split(',')],
-    skriptExtraHelp: [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')],
-    otherHelp: [...process.env.OTHER_HELP_CHANNELS.split(',')],
-    help: [...process.env.SKRIPT_HELP_CHANNELS.split(','), ...process.env.OTHER_HELP_CHANNELS.split(',')],
+    skriptHelp,
+    skriptExtraHelp,
+    otherHelp,
+    help: [skriptHelp, skriptExtraHelp, otherHelp].flat(),
     skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
     creations: process.env.SKRIPT_CREATIONS_CHANNEL,
     log: process.env.LOG_CHANNEL,
@@ -83,5 +95,4 @@ export default {
     no: process.env.NO_EMOJI || '❌',
     remove: process.env.REMOVE_EMOJI || '🗑️',
   },
-
 };

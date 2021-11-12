@@ -1,38 +1,35 @@
-import { Argument, Command } from 'discord-akairo';
-import type { MessageReaction, User } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { MessageOptions, MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
-import type { LinksCommandArguments } from '@/app/types/CommandArguments';
+import Arguments from '@/app/decorators/Argument';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { LinksCommandArguments } from '@/app/types/CommandArguments';
 import { links as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
 const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
 const maxPage = 5;
 
-class LinksCommand extends Command {
-  constructor() {
-    super('links', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'page',
-        type: Argument.range('integer', 0, maxPage),
-        default: 0,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
-    let { page } = args;
-    const msg = await message.channel.send(this._getEmbedForPage(page));
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class LinksCommand extends SwanCommand {
+  @Arguments({
+    name: 'page',
+    type: 'integer',
+    match: 'pick',
+    default: 0,
+    validate: (_message, value) => value >= 0 && value < maxPage,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
+    const msg = await message.channel.send(this._getEmbedForPage(args.page));
 
     const collector = msg
-      .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
-        && reactions.includes(reaction.emoji.name))
-      .on('collect', async (reaction) => {
+      .createReactionCollector({
+        filter: (reaction: MessageReaction, user: User) => user.id === message.author.id
+          && reactions.includes(reaction.emoji.name),
+      }).on('collect', async (reaction) => {
         await reaction.users.remove(message.author);
         if (reaction.emoji.name === '🇽') {
           collector.stop();
@@ -41,35 +38,35 @@ class LinksCommand extends Command {
           return;
         }
 
-        const oldPage = page;
+        const oldPage = args.page;
         switch (reaction.emoji.name) {
           case '⏮': {
-            page = 0;
+            args.page = 0;
             break;
           }
           case '◀': {
-            page = page === 0 ? 0 : page - 1;
+            args.page = args.page === 0 ? 0 : args.page - 1;
             break;
           }
           case '▶': {
-            page = page === maxPage ? maxPage : page + 1;
+            args.page = args.page === maxPage ? maxPage : args.page + 1;
             break;
           }
           case '⏭': {
-            page = maxPage;
+            args.page = maxPage;
             break;
           }
         }
 
-        if (oldPage !== page)
-          await msg.edit(this._getEmbedForPage(page));
+        if (oldPage !== args.page)
+          await msg.edit(this._getEmbedForPage(args.page));
       });
 
     for (const reaction of reactions)
-      void await msg.react(reaction);
+      await msg.react(reaction);
   }
 
-  private _getEmbedForPage(page: number): MessageEmbed {
+  private _getEmbedForPage(page: number): Pick<MessageOptions, 'embeds'> {
     const embed = new MessageEmbed().setColor(settings.colors.default);
 
     if (page === 0) {
@@ -79,8 +76,6 @@ class LinksCommand extends Command {
       embed.addField(content[0].title, content[0].description);
       embed.addField(content[1].title, content[1].description);
     }
-    return embed;
+    return { embeds: [embed] };
   }
 }
-
-export default LinksCommand;

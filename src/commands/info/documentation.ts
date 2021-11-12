@@ -1,46 +1,42 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import type { GuildMessage, SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import type { DocumentationCommandArguments } from '@/app/types/CommandArguments';
+import Arguments from '@/app/decorators/Argument';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage } from '@/app/types';
+import type { SkriptMcDocumentationSyntaxAndAddon, SwanCommandOptions } from '@/app/types';
+import { DocumentationCommandArguments } from '@/app/types/CommandArguments';
 import { noop, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
 const turndownService = new Turndown();
 
-class DocumentationCommand extends Command {
-  constructor() {
-    super('documentation', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'query',
-        type: 'string',
-        match: 'rest',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }, {
-        id: 'addon',
-        match: 'option',
-        flag: ['--addon=', '-a='],
-      }, {
-        id: 'category',
-        match: 'option',
-        flag: ['--category=', '--categorie=', '--catégorie=', '--cat=', '-c=', '--type=', '-t='],
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+const addonFlag = ['--addon=', '-a='];
+const categoryFlag = ['--category=', '--categorie=', '--catégorie=', '--cat=', '-c=', '--type=', '-t='];
 
-  public async exec(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class DocumentationCommand extends SwanCommand {
+ @Arguments({
+    name: 'query',
+    type: 'string',
+    match: 'rest',
+    required: true,
+    message: config.messages.retryPrompt,
+  }, {
+    name: 'addon',
+    match: 'option',
+    flags: addonFlag,
+  }, {
+    name: 'category',
+    match: 'option',
+    flags: categoryFlag,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
     // Get all the matching syntaxes thanks to this very accurate and complex algorithm.
     // Each syntax is given a score between 0 and 1 symbolising the similarity with the user's query:
     // - 1 if the query matches the syntax's ID
@@ -55,9 +51,9 @@ class DocumentationCommand extends Command {
     // order of similarity. This algorithm is subject to change depending on its production effectiveness.
 
     const similarity: Array<[article: SkriptMcDocumentationSyntaxAndAddon, similarity: number]> = [];
-    this.client.cache.skriptMcSyntaxes
+    this.container.client.cache.skriptMcSyntaxes
       .forEach((article) => {
-        if (args.query === article.id.toString())
+        if (args.query.toLowerCase() === article.id.toString().toLowerCase())
           return similarity.push([article, 1]);
         if (args.category && jaroWinklerDistance(article.category, args.category, { caseSensitive: false }) < 0.9)
           return similarity.push([article, 0]);
@@ -122,10 +118,11 @@ class DocumentationCommand extends Command {
     const selectorMessage = await message.channel.send(content);
 
     const collector = selectorMessage
-      .createReactionCollector((reaction: MessageReaction, user: User) => !user.bot
-        && user.id === message.author.id
-        && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name))
-      .once('collect', async (reaction) => {
+      .createReactionCollector({
+        filter: (reaction: MessageReaction, user: User) => !user.bot
+          && user.id === message.author.id
+          && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name),
+      }).once('collect', async (reaction) => {
         await selectorMessage.delete();
         const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
         await this._sendDetail(message, matchingSyntaxes[index]);
@@ -169,15 +166,13 @@ class DocumentationCommand extends Command {
     }
 
     const dependency = syntax.addon.dependency ? ` (requiert ${syntax.addon.dependency})` : '';
-    const addon = `[${syntax.addon.name}](${syntax.addon.documentationUrl})` + dependency;
+    const addon = `[${syntax.addon.name}](${syntax.addon.documentationUrl})${dependency}`;
 
     embed.addField(embedMessages.version, syntax.version, true);
     embed.addField(embedMessages.addon, addon, true);
     embed.addField(embedMessages.pattern, pupa(embedMessages.patternContent, { pattern: stripTags(syntax.pattern) }));
     embed.addField(embedMessages.example, pupa(embedMessages.exampleContent, { example: stripTags(syntax.example) }));
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default DocumentationCommand;

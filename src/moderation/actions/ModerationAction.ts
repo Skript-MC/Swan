@@ -1,8 +1,9 @@
-import type { AkairoClient } from 'discord-akairo';
+import { container } from '@sapphire/pieces';
 import { MessageEmbed } from 'discord.js';
-import type { TextChannel } from 'discord.js';
+import type { HexColorString, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import type SwanClient from '@/app/SwanClient';
 import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
 import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
@@ -13,9 +14,9 @@ import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-abstract class ModerationAction {
+export default abstract class ModerationAction {
   data: ModerationData;
-  client: AkairoClient;
+  client: SwanClient;
   logChannel: TextChannel;
 
   errorState: ErrorState;
@@ -23,10 +24,10 @@ abstract class ModerationAction {
 
   constructor(data: ModerationData) {
     this.data = data;
-    this.client = this.data.client;
+    this.client = container.client as SwanClient;
     this.logChannel = this.client.cache.channels.log as TextChannel;
 
-    this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
+    this.errorState = new ErrorState(this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);
   }
 
@@ -69,7 +70,6 @@ abstract class ModerationAction {
       newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
     });
   }
-
 
   protected get nameString(): string {
     return this.data.victim?.user?.toString() ?? messages.global.unknownName;
@@ -127,7 +127,7 @@ abstract class ModerationAction {
     }
   }
 
-  protected get color(): string {
+  protected get color(): HexColorString {
     return settings.moderation.colors[this.data.type];
   }
 
@@ -176,7 +176,7 @@ abstract class ModerationAction {
     else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument?.duration !== -1)
       embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogUnavailableDescription, true);
 
-    await this.logChannel.send(embed);
+    await this.logChannel.send({ embeds: [embed] });
 
     if (this.data.file) {
       await this.logChannel.send({
@@ -194,5 +194,3 @@ abstract class ModerationAction {
 
   protected abstract after?(): Awaited<void>;
 }
-
-export default ModerationAction;

@@ -1,13 +1,12 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { stripIndent } from 'common-tags';
-import type { GuildChannel, GuildMember, NewsChannel } from 'discord.js';
+import type { Channel, GuildMember, NewsChannel } from 'discord.js';
 import { Permissions, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import type ModerationData from '@/app/moderation/ModerationData';
-import Logger from '@/app/structures/Logger';
 import type { BanChannelMessage } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { nullop, prunePseudo } from '@/app/utils';
@@ -18,15 +17,15 @@ export default {
     const pseudo = prunePseudo(data.victim.member, data.victim.user, data.victim.id);
     const channelName = settings.moderation.banChannelPrefix + pseudo;
 
-    const filter = (chan: GuildChannel): boolean => chan instanceof TextChannel && chan?.topic?.split(' ')[0] === data.victim.id;
+    const filter = (chan: Channel): boolean => chan instanceof TextChannel && chan?.topic?.split(' ')[0] === data.victim.id;
     if (data.guild.channels.cache.some(chan => filter(chan)))
-      return data.guild.channels.cache.find((chan): chan is TextChannel => filter(chan)) as TextChannel;
+      return data.guild.channels.cache.find((chan): chan is TextChannel => filter(chan));
 
     try {
       return await data.guild.channels.create(
         channelName,
         {
-          type: 'text',
+          type: 'GUILD_TEXT',
           topic: `${data.victim.id} - ${pupa(settings.moderation.banChannelTopic, { member: data.victim.member })}`,
           parent: settings.channels.privateChannelsCategory,
           permissionOverwrites: [{
@@ -42,11 +41,11 @@ export default {
         },
       );
     } catch (unknownError: unknown) {
-      Logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
-      Logger.detail(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
-      Logger.detail(`Stripped name: "${pseudo}"`);
-      Logger.detail(`Create channel permissions: ${data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
-      Logger.error((unknownError as Error).stack);
+      this.container.logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
+      this.container.logger.info(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
+      this.container.logger.info(`Stripped name: "${pseudo}"`);
+      this.container.logger.info(`Create channel permissions: ${data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
+      this.container.logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }
   },
@@ -56,12 +55,12 @@ export default {
     let beforeId: string;
 
     while (true) {
-      const messages = await channel.messages.fetch({ limit: 100, before: beforeId }, false, false);
+      const messages = await channel.messages.fetch({ limit: 100, before: beforeId }, { cache: false, force: false });
       if (messages.size === 0)
         break;
 
       beforeId = messages.last()!.id;
-      const parsedMessages: BanChannelMessage[] = messages.array()
+      const parsedMessages: BanChannelMessage[] = [...messages.values()]
         .map(msg => ({
           id: msg.id,
           content: msg.content,
@@ -69,7 +68,8 @@ export default {
           authorId: msg.author.id,
           sentAt: msg.createdTimestamp,
           edited: msg.editedTimestamp,
-          attachments: msg.attachments?.array().map((atc, i) => ({ name: atc.name ?? `Attachment n${i}`, url: atc.url })) ?? [],
+          attachments: [...(msg.attachments?.values() ?? [])]
+            .map((atc, i) => ({ name: atc.name ?? `Attachment n${i}`, url: atc.url })) ?? [],
         }));
       allMessages.push(...parsedMessages);
 

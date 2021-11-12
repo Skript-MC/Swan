@@ -1,17 +1,11 @@
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { ListenerOptions } from '@sapphire/framework';
+import { Listener } from '@sapphire/framework';
+import mongoose from 'mongoose';
 
-class MongodbConnectedListener extends Listener {
-  constructor() {
-    super('connected', {
-      event: 'connected',
-      emitter: 'mongodb',
-    });
-  }
-
-  public exec(): void {
-    Logger.success('MongoDB is connected!');
+@ApplyOptions<ListenerOptions>({ emitter: mongoose.connection })
+export default class MongodbConnectedListener extends Listener {
+  public override run(): void {
+    this.container.logger.info('MongoDB is connected!');
   }
 }
-
-export default MongodbConnectedListener;

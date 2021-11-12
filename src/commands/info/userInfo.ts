@@ -1,31 +1,26 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
-import type { GuildMember } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
-import type { UserInfoCommandArguments } from '@/app/types/CommandArguments';
+import Arguments from '@/app/decorators/Argument';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { UserInfoCommandArguments } from '@/app/types/CommandArguments';
 import { userInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class UserInfoCommand extends Command {
-  constructor() {
-    super('userInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'member',
-        type: 'member',
-        default: (message: GuildMessage): GuildMember => message.member,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: UserInfoCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class UserInfoCommand extends SwanCommand {
+  @Arguments({
+    name: 'member',
+    type: 'member',
+    match: 'rest',
+    default: message => message.member,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: UserInfoCommandArguments): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
@@ -45,7 +40,8 @@ class UserInfoCommand extends Command {
       }
     }
 
-    const roles = args.member.roles.cache.array().filter(role => role.name !== '@everyone');
+    const roles = [...args.member.roles.cache.values()]
+      .filter(role => role.name !== '@everyone');
 
     const presenceContent = pupa(embedConfig.presence.content, {
       status: embedConfig.presence.status[args.member.presence.status],
@@ -70,7 +66,7 @@ class UserInfoCommand extends Command {
       .setColor(settings.colors.default)
       .setAuthor(pupa(embedConfig.title, { member: args.member }))
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))
-      .setThumbnail(args.member.user.avatarURL() ?? '')
+      .setThumbnail(args.member.user.displayAvatarURL())
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)
       .addField(embedConfig.created.title, createdContent, true)
@@ -78,8 +74,6 @@ class UserInfoCommand extends Command {
       .addField(embedConfig.roles.title, rolesContent, false)
       .addField(embedConfig.presence.title, presenceContent, true);
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default UserInfoCommand;

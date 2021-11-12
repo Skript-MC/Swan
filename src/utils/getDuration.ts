@@ -1,6 +1,9 @@
-import type { DurationPart } from '@/app/types';
+export interface DurationPart {
+  number: string;
+  unit: string;
+}
 
-const REGEX = /^(?<number>\d+) ?(?<unit>\w+)$/i;
+const REGEX = /^(?<number>\d+) ?(?<unit>[a-z]+)?$/i;
 
 enum Durations {
   /* eslint-disable no-multi-spaces, @typescript-eslint/prefer-literal-enum-member */
@@ -39,84 +42,50 @@ function tokenize(str: string): string[] {
   return units;
 }
 
-// eslint-disable-next-line complexity
+const durations: Array<[values: string[], multiplier: Durations]> = [
+  [['years', 'year', 'y', 'annees', 'années', 'annee', 'année', 'ans', 'an', 'a'], Durations.Year],
+  [['months', 'month', 'mois', 'mo'], Durations.Month],
+  [['weeks', 'week', 'w', 'semaines', 'semaine', 'sem'], Durations.Week],
+  [['days', 'day', 'd', 'jours', 'jour', 'j'], Durations.Day],
+  [['hours', 'hour', 'heures', 'heure', 'hrs', 'hr', 'h'], Durations.Hour],
+  [['minutes', 'minute', 'mins', 'min', 'm'], Durations.Minute],
+  [['seconds', 'second', 'secondes', 'seconde', 'secs', 'sec', 's'], Durations.Second],
+];
+
 function convert(num: number, type: string): number {
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'y':
-    case 'annees':
-    case 'années':
-    case 'annee':
-    case 'année':
-    case 'ans':
-    case 'an':
-    case 'a':
-      return num * Durations.Year;
-    case 'months':
-    case 'month':
-    case 'mois':
-    case 'mo':
-      return num * Durations.Month;
-    case 'weeks':
-    case 'week':
-    case 'w':
-    case 'semaines':
-    case 'semaine':
-    case 'sem':
-      return num * Durations.Week;
-    case 'days':
-    case 'day':
-    case 'd':
-    case 'jours':
-    case 'jour':
-    case 'j':
-      return num * Durations.Day;
-    case 'hours':
-    case 'hour':
-    case 'heures':
-    case 'heure':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return num * Durations.Hour;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return num * Durations.Minute;
-    case 'seconds':
-    case 'second':
-    case 'secondes':
-    case 'seconde':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return num * Durations.Second;
-    default:
-      throw new TypeError(`Invalid duration unit: ${type}`);
-  }
+  const multiplier = durations.find(([values]) => values.includes(type))?.[1];
+  if (multiplier)
+    return num * multiplier;
+
+  throw new TypeError(`Invalid duration unit: ${type}`);
 }
 
 /**
  * Parses a human duration to a timestamp in seconds.
- * @param {string} val - The value to parse as a duration.
- * @returns number
- * @throws {TypeError} - If the given duration is invalid, it will throw a TypeError
+ * @param val The value to parse as a duration
+ * @returns The duration in milliseconds
+ * @throws {TypeError} If the given duration is invalid, it will throw a TypeError
  */
-function getDuration(val: string): number {
+export default function getDuration(val: string): number {
   let abs: number;
   let total = 0;
   if (val.length > 0 && val.length < 101) {
-    const parts = tokenize(val.toLowerCase())
-      .map((part: string): DurationPart => {
-        const groups = REGEX.exec(part)?.groups;
-        if (!groups || !groups.number || !groups.unit)
-          throw new TypeError(`Value is an invalid duration (${JSON.stringify(val)})`);
+    const parts: DurationPart[] = [];
+    const tokens = tokenize(val.toLowerCase());
 
-        return { number: groups.number, unit: groups.unit };
-      });
+    for (const [i, token] of tokens.entries()) {
+      const groups = REGEX.exec(token)?.groups;
+
+      const previousUnit = parts[i - 1]?.unit;
+      const nextUnit = durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
+      const newUnit = durations[nextUnit]?.[0][0];
+
+      if (!groups || !groups.number || (!groups.unit && nextUnit === 0))
+        throw new TypeError('Value is an invalid duration');
+
+      parts.push({ number: groups.number, unit: groups.unit ?? newUnit });
+    }
+
     if (parts.length > 0) {
       for (const { number, unit } of parts) {
         if (number && unit) {
@@ -127,7 +96,5 @@ function getDuration(val: string): number {
     }
     return total;
   }
-  throw new TypeError(`Value is an empty string, an invalid number, or too long (>100). Value=${JSON.stringify(val)}`);
+  throw new RangeError('Invalid string size');
 }
-
-export default getDuration;

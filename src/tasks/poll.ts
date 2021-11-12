@@ -1,25 +1,19 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ObjectId } from 'mongoose';
 import Poll from '@/app/models/poll';
 import PollManager from '@/app/structures/PollManager';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 
-class PollTask extends Task {
-  constructor() {
-    super('poll', {
-      // Every 10 seconds
-      interval: 10_000,
-    });
-  }
-
-  public async exec(): Promise<void> {
+@ApplyOptions<TaskOptions>({ interval: 10_000 })
+export default class PollTask extends Task {
+  public override async run(): Promise<void> {
     // Fetch all the poll that are expired.
     const polls = await Poll.find({
       finish: { $lte: Date.now(), $ne: -1 },
     });
 
     for (const poll of polls)
-      await PollManager.end(this.client, poll._id as ObjectId);
+      await PollManager.end(poll._id as ObjectId);
   }
 }
-
-export default PollTask;

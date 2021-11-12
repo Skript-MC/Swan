@@ -1,23 +1,19 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
 import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 
-class ModerationTask extends Task {
-  constructor() {
-    super('moderation', {
-      // Every 10 seconds
-      interval: 10_000,
-    });
-  }
-
-  public async exec(): Promise<void> {
+@ApplyOptions<TaskOptions>({ interval: 10_000 })
+export default class ModerationTask extends Task {
+  public override async run(): Promise<void> {
     // Fetch all the sanctions that are not revoked but are expired.
     const sanctions = await Sanction.find({
       revoked: false,
@@ -29,24 +25,24 @@ class ModerationTask extends Task {
         memberId, type, informations, sanctionId,
       } = sanction;
 
-      const member = this.client.guild.members.cache.get(memberId)
-        ?? (await this.client.guild.members.fetch(memberId).catch(noop));
+      const member = this.container.client.guild.members.cache.get(memberId)
+        ?? (await this.container.client.guild.members.fetch(memberId).catch(noop));
       if (!member)
         continue;
 
-      const user = member?.user
-        ?? this.client.users.resolve(memberId)
-        ?? (await this.client.users.fetch(memberId).catch(noop));
+      const user = member.user
+        ?? this.container.client.users.resolve(memberId)
+        ?? (await this.container.client.users.fetch(memberId).catch(noop));
       if (!user)
         continue;
 
-      const data = new ModerationData(this.client)
+      const data = new ModerationData()
         .setVictim(member ?? user, false)
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (type) {
         case SanctionTypes.Ban: {
-          if (informations?.shouldAutobanIfNoMessages && member.lastMessageChannelID !== informations?.banChannelId) {
+          if (informations?.shouldAutobanIfNoMessages && !sanction.informations.hasSentMessages) {
             data.setReason(messages.moderation.reasons.autoBanInactivity)
               .setType(SanctionTypes.Hardban);
             await new BanAction(data).commit();
@@ -76,5 +72,3 @@ class ModerationTask extends Task {
     }
   }
 }
-
-export default ModerationTask;

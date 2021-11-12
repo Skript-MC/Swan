@@ -1,60 +1,51 @@
-import { Argument, Command } from 'discord-akairo';
-import { MessageEmbed, Permissions } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Argument';
 import Poll from '@/app/models/poll';
-import type { GuildMessage } from '@/app/types';
-import { QuestionType, Rules } from '@/app/types';
-import type { PollCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, QuestionType } from '@/app/types';
+import { PollCommandArguments } from '@/app/types/CommandArguments';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import settings from '@/conf/settings';
 
-class PollCommand extends Command {
-  constructor() {
-    super('poll', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'duration',
-        type: Argument.validate(
-          'finiteDuration',
-          (_message: GuildMessage, _phrase: string, value: number) => Date.now() + value > Date.now()
-            && value < settings.miscellaneous.maxPollDuration,
-        ),
-        prompt: {
-          start: config.messages.promptStartDuration,
-          retry: config.messages.promptRetryDuration,
-        },
-      }, {
-        id: 'answers',
-        type: Argument.validate(
-          'quotedText',
-          (_message: GuildMessage, phrase: string) => phrase.length > 0 && (phrase.match(/"/gi)?.length ?? 0) % 2 === 0,
-        ),
-        match: 'rest',
-        prompt: {
-          start: config.messages.promptStartContent,
-          retry: config.messages.promptRetryContent,
-        },
-      }, {
-        id: 'anonymous',
-        match: 'flag',
-        flag: ['--anonymous', '--anon', '-a'],
-      }, {
-        id: 'multiple',
-        match: 'flag',
-        flag: ['--multiple', '--mult', '-m'],
-      }],
-      clientPermissions: Permissions.FLAGS.SEND_MESSAGES,
-      userPermissions: Permissions.FLAGS.SEND_MESSAGES,
-      channel: 'guild',
-    });
+const anonymousFlags = ['a', 'anon', 'anonymous'];
+const multipleFlags = ['m', 'mult', 'multiple'];
 
-    this.rules = Rules.NoHelpChannel;
-  }
-
-  public async exec(message: GuildMessage, args: PollCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({
+  ...settings.globalCommandsOptions,
+  ...config.settings,
+  flags: [anonymousFlags, multipleFlags].flat(),
+})
+export default class PollCommand extends SwanCommand {
+  @Arguments({
+    name: 'anonymous',
+    match: 'flag',
+    flags: anonymousFlags,
+  }, {
+    name: 'multiple',
+    match: 'flag',
+    flags: multipleFlags,
+  }, {
+    name: 'duration',
+    type: 'duration',
+    match: 'pick',
+    required: true,
+    validate: (_message, resolved: number) => resolved >= 1000 && resolved < settings.miscellaneous.maxPollDuration,
+    message: config.messages.promptRetryDuration,
+  }, {
+    name: 'answers',
+    type: 'string',
+    match: 'repeat',
+    required: true,
+    validate: (_message, resolved: string[]) => resolved[0].replace(/\s+/, '').length > 0,
+    message: config.messages.promptRetryContent,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: PollCommandArguments): Promise<void> {
     // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
     // the whole string given, and args.answers will be empty.
     const question = args.answers.shift()!;
@@ -108,7 +99,7 @@ class PollCommand extends Command {
     if (details.length > 0)
       embed.setDescription(details.join('\n'));
 
-    const pollMessage = await message.channel.send(embed);
+    const pollMessage = await message.channel.send({ embeds: [embed] });
 
     // Add the reactions, depending on if there are choices, or if it is a Yes/No question.
     const possibleReactions: string[] = [];
@@ -128,14 +119,14 @@ class PollCommand extends Command {
       await pollMessage.react(reac);
 
     embed.setColor(settings.colors.default);
-    await pollMessage.edit(embed);
+    await pollMessage.edit({ embeds: [embed] });
 
     // Create the objects with the votes, that has the reaction as a key, and the list of user IDs as a value.
     const votes: Record<string, string[]> = {};
     for (let i = 0; i < possibleReactions.length; i++)
       votes[possibleReactions[i]] = [];
 
-    this.client.cache.pollMessagesIds.add(pollMessage.id);
+    this.container.client.cache.pollMessagesIds.add(pollMessage.id);
 
     await Poll.create({
       messageId: pollMessage.id,
@@ -152,5 +143,3 @@ class PollCommand extends Command {
     });
   }
 }
-
-export default PollCommand;

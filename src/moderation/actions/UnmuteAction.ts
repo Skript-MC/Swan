@@ -6,7 +6,7 @@ import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 import settings from '@/conf/settings';
 
-class UnmuteAction extends ModerationAction {
+export default class UnmuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
@@ -62,10 +62,8 @@ class UnmuteAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Roles Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Manage Roles Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }
 }
-
-export default UnmuteAction;

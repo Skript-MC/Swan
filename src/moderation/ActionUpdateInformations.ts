@@ -9,15 +9,13 @@ import type {
 } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 
-
 const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {
   [SanctionTypes.Ban]: 'currentBanId',
   [SanctionTypes.Hardban]: 'currentBanId',
   [SanctionTypes.Mute]: 'currentMuteId',
 };
 
-
-class ActionUpdateInformations {
+export default class ActionUpdateInformations {
   data: ModerationData;
   userDocument: ConvictedUserDocument | null;
   sanctionDocument: SanctionDocument | null;
@@ -52,5 +50,3 @@ class ActionUpdateInformations {
     return Boolean(this.sanctionDocument);
   }
 }
-
-export default ActionUpdateInformations;

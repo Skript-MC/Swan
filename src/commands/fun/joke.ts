@@ -1,31 +1,25 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import Arguments from '@/app/decorators/Argument';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
-import { MessageName } from '@/app/types';
-import type { JokeCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, MessageName } from '@/app/types';
+import { JokeCommandArguments } from '@/app/types/CommandArguments';
 import { joke as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class JokeCommand extends Command {
-  constructor() {
-    super('joke', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'jokeName',
-        type: 'string',
-        match: 'content',
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: JokeCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class JokeCommand extends SwanCommand {
+  @Arguments({
+    name: 'jokeName',
+    type: 'string',
+    match: 'rest',
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: JokeCommandArguments): Promise<void> {
     let joke;
     if (args.jokeName) {
       joke = await Message.findOne({ aliases: args.jokeName, messageType: MessageName.Joke });
@@ -46,8 +40,6 @@ class JokeCommand extends Command {
       .setFooter(pupa(messages.global.executedBy, { member: message.member }))
       .setTimestamp();
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default JokeCommand;

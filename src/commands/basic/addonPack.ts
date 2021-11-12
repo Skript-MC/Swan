@@ -1,31 +1,25 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import Arguments from '@/app/decorators/Argument';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
-import { MessageName } from '@/app/types';
-import type { AddonPackCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommandOptions } from '@/app/types';
+import { GuildMessage, MessageName } from '@/app/types';
+import { AddonPackCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { addonPack as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
-class AddonPackCommand extends Command {
-  constructor() {
-    super('addonPack', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'version',
-        type: 'string',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
-
-  public async exec(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class AddonPackCommand extends SwanCommand {
+  @Arguments({
+    name: 'version',
+    type: 'string',
+    match: 'pick',
+    required: true,
+    message: config.messages.retryPrompt,
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.AddonPack });
     const search = searchMessageSimilarity(messages, args.version);
     if (!search) {
@@ -35,5 +29,3 @@ class AddonPackCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default AddonPackCommand;

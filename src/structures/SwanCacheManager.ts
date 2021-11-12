@@ -1,4 +1,3 @@
-import type { AkairoModule } from 'discord-akairo';
 import type {
   CachedChannels, ConvictedUserDocument,
   DiscordUserDocument,
@@ -14,18 +13,19 @@ interface GithubCache {
   lastStableRelease?: GithubStableRelease;
 }
 
-class SwanCacheManager {
+export default class SwanCacheManager {
   addonsVersions: string[];
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: Set<string>;
   reactionRolesIds: Set<string>;
   channels: Nullable<CachedChannels>;
-  modules: AkairoModule[];
+  // Modules: AkairoModule[];
   github: GithubCache;
   gitCommit: string;
   discordUsers: DiscordUserDocument[];
   swanChannels: Set<SwanChannelDocument>;
   convictedUsers: ConvictedUserDocument[];
+  channelBannedSilentUsers: Set<string>;
 
   constructor() {
     this.channels = {
@@ -49,12 +49,11 @@ class SwanCacheManager {
     this.github = {};
     this.pollMessagesIds = new Set();
     this.reactionRolesIds = new Set();
-    this.modules = [];
+    // This.modules = [];
     this.gitCommit = '';
     this.discordUsers = [];
     this.swanChannels = new Set();
     this.convictedUsers = [];
+    this.channelBannedSilentUsers = new Set();
   }
 }
-
-export default SwanCacheManager;

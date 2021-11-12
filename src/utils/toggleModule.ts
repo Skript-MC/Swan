@@ -1,18 +1,16 @@
-import type { AkairoClient } from 'discord-akairo';
+import { container } from '@sapphire/pieces';
 import type { SwanModuleDocument } from '@/app/types';
 
-export default function toggleModule(client: AkairoClient, module: SwanModuleDocument, isEnabled: boolean): void {
-  const handler = client[module.handler];
-  const cachedModule = client.cache.modules.find(mod => mod.id === module.name);
-  if (!cachedModule)
-    return;
-  // See if the module is present in handler.modules (= if it is loaded).
-  const currentState = Boolean(handler.modules.findKey((_, key) => key === cachedModule.id));
+export default async function toggleModule(module: SwanModuleDocument, shouldEnabled: boolean): Promise<void> {
+  const store = container.stores.get(module.store);
+  const isEnabled = store.resolve(module.name).enabled;
 
-  if (handler && isEnabled !== currentState) {
-    if (isEnabled)
-      handler.load(cachedModule.filepath);
-    else
-      handler.remove(module.name);
+  if (store && shouldEnabled !== isEnabled) {
+    if (shouldEnabled) {
+      const { root, relative } = store.resolve(module.name).location;
+      await store.load(root, relative);
+    } else {
+      await store.unload(module.name);
+    }
   }
 }

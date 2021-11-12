@@ -1,31 +1,30 @@
-import { Argument, Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import type { GuildMessage } from '@/app/types';
-import type { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
+import Arguments from '@/app/decorators/Argument';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { GuildMessage } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
+import { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-class SkriptInfoCommand extends Command {
-  constructor() {
-    super('skriptInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'display',
-        type: Argument.validate('string', (_message, phrase) => ['all', 'dl', 'download', 'link', 'links'].includes(phrase)),
-        default: 'all',
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class SkriptInfoCommand extends SwanCommand {
+  @Arguments({
+    name: 'display',
+    type: 'string',
+    match: 'pick',
+    default: 'all',
+    validate: (_message, value: string) => ['all', 'dl', 'download', 'link', 'links'].includes(value),
+  })
+  // @ts-expect-error ts(2416)
+  public override async messageRun(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
+    const embeds: MessageEmbed[] = [];
 
-  public async exec(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
     if (['dl', 'download', 'all'].includes(args.display)) {
-      const { lastPrerelease, lastStableRelease } = this.client.cache.github;
+      const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
       const isPrereleaseImportant = lastPrerelease
@@ -43,27 +42,27 @@ class SkriptInfoCommand extends Command {
         latestStable: lastStableRelease,
       });
 
-      const downloadEmbed = new MessageEmbed()
-        .setColor(settings.colors.default)
-        .setTitle(config.messages.embed.downloadTitle)
-        .setTimestamp()
-        .setDescription(downloadDescription)
-        .setFooter(pupa(config.messages.embed.footer, { member: message.member }));
-
-      await message.channel.send(downloadEmbed);
+      embeds.push(
+        new MessageEmbed()
+          .setColor(settings.colors.default)
+          .setTitle(config.messages.embed.downloadTitle)
+          .setTimestamp()
+          .setDescription(downloadDescription)
+          .setFooter(pupa(config.messages.embed.footer, { member: message.member })),
+      );
     }
 
     if (['link', 'links', 'all'].includes(args.display)) {
-      const informationEmbed = new MessageEmbed()
-        .setColor(settings.colors.default)
-        .setTitle(config.messages.embed.informationsTitle)
-        .setTimestamp()
-        .setDescription(config.messages.embed.information)
-        .setFooter(pupa(config.messages.embed.footer, { member: message.member }));
-
-      await message.channel.send(informationEmbed);
+      embeds.push(
+        new MessageEmbed()
+          .setColor(settings.colors.default)
+          .setTitle(config.messages.embed.informationsTitle)
+          .setTimestamp()
+          .setDescription(config.messages.embed.information)
+          .setFooter(pupa(config.messages.embed.footer, { member: message.member })),
+      );
     }
+
+    await message.channel.send({ embeds });
   }
 }
-
-export default SkriptInfoCommand;
