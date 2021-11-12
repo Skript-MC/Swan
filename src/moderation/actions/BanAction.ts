@@ -5,11 +5,11 @@ import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ModerationAction from './ModerationAction';
 
 class BanAction extends ModerationAction {
   protected before(): void {
