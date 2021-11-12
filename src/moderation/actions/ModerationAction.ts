@@ -3,6 +3,8 @@ import { MessageEmbed } from 'discord.js';
 import type { TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
+import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
+import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
 import type { Awaited } from '@/app/types';
@@ -10,8 +12,6 @@ import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ActionUpdateInformations from '../ActionUpdateInformations';
-import ErrorState from '../ErrorState';
 
 abstract class ModerationAction {
   data: ModerationData;

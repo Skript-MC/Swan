@@ -6,9 +6,9 @@ import 'dotenv/config';
 import * as Sentry from '@sentry/node';
 import moment from 'moment';
 import mongoose from 'mongoose';
+import SwanClient from '@/app/SwanClient';
+import Logger from '@/app/structures/Logger';
 import settings from '@/conf/settings';
-import SwanClient from './SwanClient';
-import Logger from './structures/Logger';
 
 // We configure momentjs to be stricter on date rounding.
 moment.locale('fr');

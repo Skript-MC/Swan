@@ -1,31 +1,34 @@
-import path from 'path';
+import path from 'node:path';
 import axios from 'axios';
 import type { AkairoHandler, Category, Command } from 'discord-akairo';
 import {
- AkairoClient, CommandHandler, InhibitorHandler, ListenerHandler,
+  AkairoClient,
+  CommandHandler,
+  InhibitorHandler,
+  ListenerHandler,
 } from 'discord-akairo';
 import type { PermissionString } from 'discord.js';
 import { Intents } from 'discord.js';
 import type { Query } from 'mongoose';
 import mongoose from 'mongoose';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
-import CommandStat from './models/commandStat';
-import Poll from './models/poll';
-import ReactionRole from './models/reactionRole';
-import SwanModule from './models/swanModule';
-import * as resolvers from './resolvers';
-import Logger from './structures/Logger';
-import SwanCacheManager from './structures/SwanCacheManager';
-import TaskHandler from './structures/TaskHandler';
+import CommandStat from '@/app/models/commandStat';
+import Poll from '@/app/models/poll';
+import ReactionRole from '@/app/models/reactionRole';
+import SwanModule from '@/app/models/swanModule';
+import * as resolvers from '@/app/resolvers';
+import Logger from '@/app/structures/Logger';
+import SwanCacheManager from '@/app/structures/SwanCacheManager';
+import TaskHandler from '@/app/structures/TaskHandler';
 import type {
   CommandStatDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
   SwanModuleDocument,
-} from './types';
-import { nullop, uncapitalize } from './utils';
+} from '@/app/types';
+import { nullop, uncapitalize } from '@/app/utils';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 class SwanClient extends AkairoClient {
   constructor() {

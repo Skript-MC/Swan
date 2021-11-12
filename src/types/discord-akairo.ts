@@ -6,7 +6,7 @@ import type {
 import type { Guild } from 'discord.js';
 import type SwanCacheManager from '@/app/structures/SwanCacheManager';
 import type TaskHandler from '@/app/structures/TaskHandler';
-import type { GuildMessage } from './index';
+import type { GuildMessage } from '@/app/types';
 
 
 declare module 'discord-akairo' {

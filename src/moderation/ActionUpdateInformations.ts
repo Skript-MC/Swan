@@ -1,5 +1,6 @@
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
+import type ModerationData from '@/app/moderation/ModerationData';
 import type {
   ConvictedUserDocument,
   SanctionDocument,
@@ -7,7 +8,6 @@ import type {
   TrackedSanctionTypes,
 } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
-import type ModerationData from './ModerationData';
 
 
 const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {

@@ -21,7 +21,7 @@ class MissingPermissionsListener extends Listener {
         await message.channel.send(
           pupa(messages.global.insufficientClientPermissions, {
             command,
-            permissions: missing.map(perm => perm.replace(/_/g, ' ').toLowerCase()).join(', '),
+            permissions: missing.map(perm => perm.replaceAll('_', ' ').toLowerCase()).join(', '),
           }),
         );
       }

@@ -204,7 +204,7 @@ export interface InvisionMember {
 /** Represent a post object from the Skript-MC's Invision forums API. */
 export interface InvisionPost {
   id: number;
-  // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   item_id: number;
   author: InvisionMember;
   date: string;
@@ -259,7 +259,7 @@ export interface InvisionResource {
 /** Represent a resource comment object from the Skript-MC's Invision forums API. */
 export interface InvisionResourceComment {
   id: number;
-  // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   item_id: number;
   author: InvisionMember;
   date: string;

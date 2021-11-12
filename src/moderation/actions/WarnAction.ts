@@ -3,13 +3,13 @@ import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
+import BanAction from '@/app/moderation/actions/BanAction';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import Logger from '@/app/structures/Logger';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import BanAction from './BanAction';
-import ModerationAction from './ModerationAction';
 
 class WarnAction extends ModerationAction {
   protected before: undefined;

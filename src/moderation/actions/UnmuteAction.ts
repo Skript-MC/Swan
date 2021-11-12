@@ -2,9 +2,9 @@ import { GuildMember, Permissions, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 import settings from '@/conf/settings';
-import ModerationAction from './ModerationAction';
 
 class UnmuteAction extends ModerationAction {
   protected before: undefined;
