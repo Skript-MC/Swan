@@ -1,17 +1,17 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
 import { stripIndent } from 'common-tags';
 import type { GuildChannel, GuildMember, NewsChannel } from 'discord.js';
 import { Permissions, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
+import type ModerationData from '@/app/moderation/ModerationData';
 import Logger from '@/app/structures/Logger';
 import type { BanChannelMessage } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { nullop, prunePseudo } from '@/app/utils';
 import settings from '@/conf/settings';
-import type ModerationData from './ModerationData';
 
 export default {
   async getOrCreateChannel(data: ModerationData): Promise<TextChannel | never> {

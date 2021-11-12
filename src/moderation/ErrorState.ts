@@ -1,9 +1,9 @@
 import type { AkairoClient } from 'discord-akairo';
+import ModerationError from '@/app/moderation/ModerationError';
 import Logger from '@/app/structures/Logger';
 import type { GuildTextBasedChannel } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
-import ModerationError from './ModerationError';
 
 class ErrorState {
   client: AkairoClient;

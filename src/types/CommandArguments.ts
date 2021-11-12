@@ -6,7 +6,7 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import type { GuildMessage } from './index';
+import type { GuildMessage } from '@/app/types';
 
 
 export interface AddonInfoCommandArguments {

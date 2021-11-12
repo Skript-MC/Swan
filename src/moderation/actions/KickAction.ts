@@ -2,7 +2,7 @@ import { GuildMember, Permissions, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
-import ModerationAction from './ModerationAction';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 
 class KickAction extends ModerationAction {
   protected before: undefined;

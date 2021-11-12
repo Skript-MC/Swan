@@ -2,8 +2,8 @@ import 'source-map-support/register';
 import 'module-alias/register';
 import 'dotenv/config';
 
-import { promises as fs } from 'fs';
-import path from 'path';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
 import mongoose from 'mongoose';
 import CommandStat from '../src/models/commandStat';
 import ConvictedUser from '../src/models/convictedUser';
