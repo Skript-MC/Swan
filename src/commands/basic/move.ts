@@ -35,13 +35,17 @@ export default class MoveCommand extends SwanCommand {
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: MoveCommandArguments): Promise<void> {
-    if (args.targetedMessage.member.roles.highest.position >= message.member.roles.highest.position) {
+    const hasRole = args.targetedMessage.member
+      ? args.targetedMessage.member.roles.highest.position >= message.member.roles.highest.position
+      : false;
+    if (hasRole) {
       await message.channel.send(messages.global.memberTooPowerful);
       return;
     }
 
+    const targetName = args.targetedMessage.member?.displayName ?? args.targetedMessage.author.username ?? 'Inconnu';
     const successMessage = pupa(config.messages.successfullyMoved, {
-      targetDisplayName: args.targetedMessage.member.displayName,
+      targetName,
       targetChannel: args.targetedChannel,
       memberDisplayName: message.member.displayName,
     });
@@ -49,13 +53,13 @@ export default class MoveCommand extends SwanCommand {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(
-        pupa(config.messages.moveTitle, { member: args.targetedMessage.member }),
+        pupa(config.messages.moveTitle, { targetName }),
         args.targetedMessage.author.displayAvatarURL(),
       )
       .setDescription(
         pupa(config.messages.moveInfo, {
           memberDisplayName: message.member,
-          targetDisplayName: args.targetedMessage.member,
+          targetName,
           sourceChannel: args.targetedMessage.channel,
           targetChannel: args.targetedChannel,
           emoji: message.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
@@ -69,13 +73,14 @@ export default class MoveCommand extends SwanCommand {
 
       await message.channel.send(successMessage);
       const informationEmbed = await args.targetedChannel.send({ embeds: [embed] });
-      const repostMessage = await args.targetedChannel.send(args.targetedMessage.content);
       await informationEmbed.react(settings.emojis.remove).catch(noop);
+
+      const repostMessage = await args.targetedChannel.send(args.targetedMessage.content);
 
       const collector = informationEmbed
         .createReactionCollector({
           filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
-            && (user.id === message.author.id || user.id === args.targetedMessage.author.id)
+            && (user.id === message.author.id || user.id === args.targetedMessage.author?.id)
             && !user.bot,
         }).on('collect', async () => {
           try {
@@ -87,8 +92,8 @@ export default class MoveCommand extends SwanCommand {
           }
         });
     } catch (unknownError: unknown) {
-      await args.targetedMessage.member.send(config.messages.emergency).catch(noop);
-      await args.targetedMessage.member.send(message.content).catch(noop);
+      await args.targetedMessage.member?.send(config.messages.emergency).catch(noop);
+      await args.targetedMessage.member?.send(message.content).catch(noop);
       throw (unknownError as Error);
     }
   }

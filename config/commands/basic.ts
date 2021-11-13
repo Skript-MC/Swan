@@ -177,10 +177,10 @@ export const move = {
     permissions: ['Membre Actif'],
   },
   messages: {
-    successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
-    moveTitle: 'Message de {member.displayName}',
+    successfullyMoved: ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
+    moveTitle: 'Message de {targetName}',
     moveInfo: stripIndent`
-      {memberDisplayName} à déplacé un message de {targetDisplayName}, depuis {sourceChannel} vers {targetChannel}.
+      {memberDisplayName} à déplacé un message de {targetName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",

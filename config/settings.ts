@@ -13,7 +13,7 @@ export default {
     guild: process.env.GUILD_ID,
   },
   miscellaneous: {
-    maxPollDuration: 60 * 60 * 24 * 7, // 7 days in seconds
+    maxPollDuration: 60 * 60 * 24 * 7 * 1000, // 7 days in seconds
     reactionNumbers: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'],
     pollReactions: {
       yesno: ['✅', '❌'],

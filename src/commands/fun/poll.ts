@@ -8,7 +8,7 @@ import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SwanCommandOptions } from '@/app/types';
 import { GuildMessage, QuestionType } from '@/app/types';
 import { PollCommandArguments } from '@/app/types/CommandArguments';
-import { trimText } from '@/app/utils';
+import { extractQuotedText, trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -20,6 +20,7 @@ const multipleFlags = ['m', 'mult', 'multiple'];
   ...settings.globalCommandsOptions,
   ...config.settings,
   flags: [anonymousFlags, multipleFlags].flat(),
+  quotes: [],
 })
 export default class PollCommand extends SwanCommand {
   @Arguments({
@@ -39,10 +40,10 @@ export default class PollCommand extends SwanCommand {
     message: messages.prompt.duration,
   }, {
     name: 'answers',
-    type: 'string',
-    match: 'repeat',
+    type: 'quotedText',
+    match: 'rest',
     required: true,
-    validate: (_message, resolved: string[]) => resolved[0].replace(/\s+/, '').length > 0,
+    validate: (_message, resolved: string[]) => resolved[0].trimStart().length > 0,
     message: messages.prompt.pollAnswers,
   })
   // @ts-expect-error ts(2416)
@@ -53,10 +54,9 @@ export default class PollCommand extends SwanCommand {
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
     const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
 
-    const duration = args.duration * 1000;
-    const finishDate = new Date(Date.now() + duration);
+    const finishDate = new Date(Date.now() + args.duration);
     const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
-    const formattedDuration = moment.duration(duration).humanize();
+    const formattedDuration = moment.duration(args.duration).humanize();
 
     if (args.answers.length === 1) {
       await message.channel.send(config.messages.notEnoughAnswers);
@@ -134,7 +134,7 @@ export default class PollCommand extends SwanCommand {
       memberId: message.author.id,
       channelId: message.channel.id,
       finish: finishDate.getTime(),
-      duration,
+      duration: args.duration,
       questionType,
       votes,
       question,
