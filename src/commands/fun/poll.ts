@@ -43,7 +43,7 @@ export default class PollCommand extends SwanCommand {
     type: 'quotedText',
     match: 'rest',
     required: true,
-    validate: (_message, resolved: string[]) => resolved[0].trimStart().length > 0,
+    validate: (_message, resolved: string[]) => resolved.every(answer => answer.length > 0),
     message: messages.prompt.pollAnswers,
   })
   // @ts-expect-error ts(2416)
