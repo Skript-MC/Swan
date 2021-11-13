@@ -72,5 +72,6 @@ declare module '@sapphire/framework' {
     emoji: GuildEmoji;
     guildTextBasedChannel: GuildTextBasedChannel;
     sanctionnableMember: GuildMember;
+    quotedText: string[];
   }
 }
