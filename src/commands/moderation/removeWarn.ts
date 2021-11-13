@@ -20,12 +20,12 @@ export default class RemoveWarnCommand extends SwanCommand {
     type: 'string',
     match: 'pick',
     required: true,
-    message: config.messages.promptRetryWarnId,
+    message: messages.prompt.warnId,
   }, {
     name: 'reason',
     type: 'string',
     match: 'rest',
-    default: messages.global.noReason,
+    default: messages.prompt.reason,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: RemoveWarnCommandArgument): Promise<void> {

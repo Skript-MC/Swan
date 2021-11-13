@@ -1,5 +1,5 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import type { GuildChannel, TextChannel } from 'discord.js';
+import type { TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
@@ -85,7 +85,7 @@ export default class BanAction extends ModerationAction {
     if (this.updateInfos.isUpdate()) {
       const channelId = this.updateInfos.sanctionDocument?.informations?.banChannelId;
       if (channelId) {
-        const channel = this.data.guild.channels.resolve(channelId) as GuildChannel;
+        const channel = this.data.guild.channels.resolve(channelId);
         if (channel?.isText()) {
           const allMessages = await ModerationHelper.getAllChannelMessages(channel);
           const fileInfo = await ModerationHelper.getMessageFile(this.data, allMessages);

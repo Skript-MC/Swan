@@ -5,6 +5,7 @@ import { GuildMessage } from '@/app/types';
 import type { SwanCommandOptions } from '@/app/types';
 import { EightBallCommandArguments } from '@/app/types/CommandArguments';
 import { eightBall as config } from '@/conf/commands/fun';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
@@ -14,7 +15,7 @@ export default class EightBallCommand extends SwanCommand {
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.promptRetry,
+    message: messages.prompt.question,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, _args: EightBallCommandArguments): Promise<void> {

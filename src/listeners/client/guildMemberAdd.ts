@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import { Permissions } from 'discord.js';
-import type { GuildMember, TextChannel } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import pupa from 'pupa';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import { noop, toValidName } from '@/app/utils';
@@ -18,7 +18,7 @@ export default class GuildMemberAddListener extends Listener {
     const { greetings } = messages.miscellaneous;
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
-    const channel = this.container.client.cache.channels.main as TextChannel;
+    const channel = this.container.client.cache.channels.main;
 
     const content = pupa(randomMessage, { member });
     await channel.send(content).catch(noop);

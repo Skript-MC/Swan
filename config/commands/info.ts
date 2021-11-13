@@ -11,8 +11,6 @@ export const addonInfo = {
     examples: ['addoninfo mongosk'],
   },
   messages: {
-    startPrompt: "Entre le nom de l'addon que tu souhaites chercher :",
-    retryPrompt: "Nom invalide, ré-envoie le nom de l'addon que tu souhaites chercher :",
     unknownAddon: "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
     searchResults: "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
     more: '\n...et {amount} de plus...',
@@ -49,8 +47,6 @@ export const documentation = {
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
-    startPrompt: 'Entre des mots clés afin de trouver la syntaxe que tu souhaites chercher :',
-    retryPrompt: 'Mots clés sont invalides, ré-envoie des mots-clés afin de trouver la syntaxe que tu souhaites chercher :',
     unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
@@ -104,8 +100,6 @@ export const serverInfo = {
       mods: ':toolbox: Mods',
       footer: 'Exécuté par {member.displayName} | Données fournies par https://api.mcsrcstat.us',
     },
-    startPrompt: "Entre l'adresse du serveur que tu souhaites chercher.",
-    retryPrompt: 'Adresse invalide, renvoie-la :',
     requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
   },
 };

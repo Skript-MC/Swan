@@ -4,15 +4,6 @@ import { basePreconditions, staffRolePrecondition } from '@/conf/configUtils';
 const see = (where: string): string => `Voir la documentation disponible sur <https://github.com/Skript-MC/Swan/wiki/Modération#${where}> pour plus d'informations.`;
 
 const commonMessages = {
-  promptStartMember: 'Il faut ajouter un membre qui doit être présent sur le Discord. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :',
-  promptRetryMember: "Ce membre n'est pas valide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement le membre :",
-
-  promptStartDuration: `Il faut ajouter une durée (en anglais ou en francais). Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en envoyant un message contenant seulement la durée :`,
-  promptRetryDuration: `Cette durée n'est pas valide. Tu peux par exemple entrer \`1s\` pour 1 seconde, \`1min\` pour 1 minute et \`1j\` pour 1 jour. Tu peux également combiner ces durées ensemble : \`10j15min300s\` est par exemple une durée valide. ${see('durée')} Entre-la en envoyant un message contenant seulement la durée :`,
-
-  promptStartReason: 'Il faut ajouter une raison à la sanction. Entre-la en envoyant un message contenant seulement la raison :',
-  promptRetryReason: "Cette raison n'est pas valide. Entre-la en envoyant un message contenant seulement la raison :",
-
   creationNotification: (showDuration: boolean): string => stripIndent`
     Bonjour {action.nameString}, tu viens de recevoir une sanction ({action.action}) sur le serveur Skript-MC.
     **Raison :** {action.data.reason}.
@@ -44,12 +35,6 @@ export const ban = {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre banni avec succès !',
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
-    promptStartDuration: commonMessages.promptStartDuration,
-    promptRetryDuration: commonMessages.promptRetryDuration,
-    promptStartReason: commonMessages.promptStartReason,
-    promptRetryReason: commonMessages.promptRetryReason,
   },
 };
 
@@ -66,8 +51,6 @@ export const history = {
   },
   messages: {
     sentInDm: "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
-    promptStartUser: "Il faut ajouter un utilisateur. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
-    promptRetryUser: "Cet utilisateur n'est pas valide, il se peut que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo. Entre-le en envoyant un message contenant seulement l'utilisateur :",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
     title: "**__Sanctions de l'utilisateur {name}__** ({sanctions.length})",
     overflowTitle: '...et {overflowed} de plus...',
@@ -127,10 +110,6 @@ export const kick = {
   messages: {
     notification: commonMessages.creationNotification(false),
     success: 'Membre expulsé avec succès !',
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
-    promptStartReason: commonMessages.promptStartReason,
-    promptRetryReason: commonMessages.promptRetryReason,
   },
 };
 
@@ -148,12 +127,6 @@ export const mute = {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre rendu muet avec succès !',
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
-    promptStartDuration: commonMessages.promptStartDuration,
-    promptRetryDuration: commonMessages.promptRetryDuration,
-    promptStartReason: commonMessages.promptStartReason,
-    promptRetryReason: commonMessages.promptRetryReason,
   },
 };
 
@@ -168,8 +141,6 @@ export const purge = {
     permissions: ['Staff'],
   },
   messages: {
-    startPrompt: 'Entre un nombre de message à supprimer.',
-    retryPrompt: "Ce montant n'est pas valide. Entre-le en envoyant un message contenant seulement un nombre :",
     success: "J'ai bien supprimé {deletedMessages.size} messages.",
   },
 };
@@ -189,8 +160,6 @@ export const removeWarn = {
     success: 'Avertissement révoqué avec succès !',
     memberNotFound: "Je n'ai pas réussi à trouver ce membre...",
     notWarned: "Ce membre n'a aucun avertissement en cours.",
-    promptStartWarnId: "Entre l'identifiant d'un avertissement à supprimer.",
-    promptRetryWarnId: "Cet identifiant n'est pas valide. Entre-le en envoyant un message contenant un ID de warn :",
     invalidWarnId: "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
   },
 };
@@ -209,8 +178,6 @@ export const unban = {
     notification: commonMessages.revocationNotification,
     notBanned: "Cet utilisateur n'est pas banni.",
     success: 'Utilisateur débanni avec succès !',
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
   },
 };
 
@@ -228,8 +195,6 @@ export const unmute = {
     notification: commonMessages.revocationNotification,
     notMuted: "Cet utilisateur n'est pas muet.",
     success: 'Utilisateur dé-mute avec succès !',
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
   },
 };
 
@@ -248,9 +213,5 @@ export const warn = {
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre averti avec succès !',
     banSuccess: "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
-    promptStartMember: commonMessages.promptStartMember,
-    promptRetryMember: commonMessages.promptRetryMember,
-    promptStartReason: commonMessages.promptStartReason,
-    promptRetryReason: commonMessages.promptRetryReason,
   },
 };

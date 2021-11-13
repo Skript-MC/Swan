@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { MessageReaction, User } from 'discord.js';
+import type { GuildTextBasedChannel, MessageReaction, User } from 'discord.js';
 import { MessageEmbed, Permissions } from 'discord.js';
 import pupa from 'pupa';
 import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { GuildMessage } from '@/app/types';
-import type { GuildTextBasedChannel, SwanCommandOptions } from '@/app/types';
+import type { SwanCommandOptions } from '@/app/types';
 import { MoveCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
@@ -25,13 +25,13 @@ export default class MoveCommand extends SwanCommand {
       return isPublicChannel && message.channel.id !== resolved.id;
     },
     required: true,
-    message: config.messages.retryChannelPrompt,
+    message: messages.prompt.differentHelpChannel,
   }, {
     name: 'targetedMessage',
     type: 'message',
     match: 'pick',
     required: true,
-    message: config.messages.retryMessagePrompt,
+    message: messages.prompt.message,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: MoveCommandArguments): Promise<void> {

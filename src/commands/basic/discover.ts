@@ -15,7 +15,7 @@ export default class DiscoverCommand extends SwanCommand {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setTitle(pupa(config.messages.title, { randomCommand }))
+      .setTitle(pupa(config.messages.title, randomCommand))
       .addField(config.messages.usage, `\`${settings.bot.prefix}${randomCommand.usage}\``)
       .addField(config.messages.description, randomCommand.description)
       .addField(config.messages.usableBy, randomCommand.permissions.length > 0 ? randomCommand.permissions.join(', ') : messages.global.everyone);

@@ -17,7 +17,7 @@ export default class LatexCommand extends SwanCommand {
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.retryPrompt,
+    message: messages.prompt.equation,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: LatexCommandArguments): Promise<void> {

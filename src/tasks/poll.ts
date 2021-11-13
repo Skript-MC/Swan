@@ -1,5 +1,4 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { ObjectId } from 'mongoose';
 import Poll from '@/app/models/poll';
 import PollManager from '@/app/structures/PollManager';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
@@ -14,6 +13,6 @@ export default class PollTask extends Task {
     });
 
     for (const poll of polls)
-      await PollManager.end(poll._id as ObjectId);
+      await PollManager.end(poll.id as string);
   }
 }

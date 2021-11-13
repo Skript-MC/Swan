@@ -11,8 +11,6 @@ export const addonPack = {
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
   messages: {
-    startPrompt: 'Ajoute la version Minecraft dont tu souhaites connaître les versions recommandées :',
-    retryPrompt: 'Version Minecraft invalide. Ré-entre ta version :',
     notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
 };
@@ -26,8 +24,6 @@ export const autoMessage = {
     examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
-    startPrompt: 'Ajoute une le nom du message rapide que tu souhaites envoyer :',
-    retryPrompt: 'Nom de message invalide. Ré-entre son nom :',
     notFound: "Aucun message n'existe avec ce nom. Réessaye avec un autre nom !",
   },
 };
@@ -43,8 +39,6 @@ export const code = {
   messages: {
     title: '**Code de {message.author.username} :**',
     emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
-    startPrompt: 'Ajoute un code à formatter :',
-    retryPrompt: 'Code invalide. Ré-entre ton code :',
   },
 };
 
@@ -58,7 +52,7 @@ export const discover = {
     basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
-    title: ':star: Commande "{randomCommand.details.name}"',
+    title: ':star: Commande "{name}"',
     description: '❯ Description',
     usage: '❯ Utilisation',
     usableBy: '❯ Utilisable par',
@@ -76,8 +70,6 @@ export const errorDetails = {
     examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
-    startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
-    retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 };
@@ -185,10 +177,6 @@ export const move = {
     permissions: ['Membre Actif'],
   },
   messages: {
-    startChannelPrompt: "Tu n'as pas spécifié de salon ! Entre son ID ou mentionne-le.",
-    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons.",
-    startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
-    retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
     successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
     moveTitle: 'Message de {member.displayName}',
     moveInfo: stripIndent`
@@ -227,8 +215,6 @@ export const rule = {
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
-    startPrompt: 'Ajoute le nom de la règle que tu souhaites envoyer :',
-    retryPrompt: 'Nom de règle invalide. Ré-entre son nom :',
     notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
   },
 };

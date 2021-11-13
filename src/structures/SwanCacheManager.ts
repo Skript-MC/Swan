@@ -3,7 +3,6 @@ import type {
   DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
-  Nullable,
   SkriptMcDocumentationSyntaxAndAddon,
   SwanChannelDocument,
 } from '@/app/types';
@@ -18,7 +17,7 @@ export default class SwanCacheManager {
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: Set<string>;
   reactionRolesIds: Set<string>;
-  channels: Nullable<CachedChannels>;
+  channels: CachedChannels;
   // Modules: AkairoModule[];
   github: GithubCache;
   gitCommit: string;

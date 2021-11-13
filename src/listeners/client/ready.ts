@@ -1,13 +1,13 @@
 import { Listener } from '@sapphire/framework';
-import { GuildAuditLogs, TextChannel } from 'discord.js';
-import type { GuildChannel } from 'discord.js';
+import { GuildAuditLogs } from 'discord.js';
+import type { GuildTextBasedChannel } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
 import SwanChannel from '@/app/models/swanChannel';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
-import type { ChannelSlug, GuildBanAuditLogs } from '@/app/types';
+import type { ChannelArraySlugs, ChannelSingleSlug, GuildBanAuditLogs } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -59,25 +59,16 @@ export default class ReadyListener extends Listener {
   }
 
   private _cacheChannels(): void {
-    const resolveChannel = (chan: string): GuildChannel =>
-      this.container.client.guild.channels.resolve(chan) as GuildChannel;
-    const isText = (chan: GuildChannel): chan is TextChannel => chan instanceof TextChannel;
-
-    type ChannelEntry = [channelSlug: ChannelSlug, resolvedChannel: GuildChannel | GuildChannel[]];
-
-    // Resolve all channels entered in the config, to put them in client.cache.channels.<channel_name>.
-    const entries: ChannelEntry[] = Object.entries(settings.channels)
-      .map(([slug, ids]) => (Array.isArray(ids)
-        ? [slug as ChannelSlug, ids.map(resolveChannel)]
-        : [slug as ChannelSlug, resolveChannel(ids)]
-      ));
-
-    for (const [slug, channel] of entries) {
-      if (Array.isArray(channel)) {
-        if (channel.some(isText))
-          this.container.client.cache.channels[slug] = channel.filter(isText);
-      } else if (isText(channel)) {
-        this.container.client.cache.channels[slug] = channel;
+    for (const [slug, channelIdOrIds] of Object.entries(settings.channels)) {
+      if (Array.isArray(channelIdOrIds)) {
+        const channels = channelIdOrIds
+          .map(id => this.container.client.guild.channels.cache.get(id))
+          .filter(Boolean)
+          .filter(channel => channel.isText()) as GuildTextBasedChannel[];
+        this.container.client.cache.channels[slug as ChannelArraySlugs] = channels;
+      } else {
+        const channel = this.container.client.guild.channels.cache.get(channelIdOrIds);
+        this.container.client.cache.channels[slug as ChannelSingleSlug] = channel.isText() ? channel : null;
       }
     }
   }
@@ -112,8 +103,9 @@ export default class ReadyListener extends Listener {
     const reactionRoles = await ReactionRole.find();
     for (const element of reactionRoles) {
       const channel = this.container.client.guild.channels.cache.get(element.channelId);
-      const textChannel = channel as TextChannel;
-      textChannel.messages.fetch(element.messageId)
+      if (!channel || !channel.isText())
+        continue;
+      channel.messages.fetch(element.messageId)
         .then((message) => {
           this.container.client.cache.reactionRolesIds.add(message.id);
         })

@@ -43,7 +43,7 @@ export default class CodeCommand extends SwanCommand {
     match: 'rest',
     type: 'string',
     required: true,
-    message: config.messages.retryPrompt,
+    message: messages.prompt.code,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: CodeCommandArguments): Promise<void> {

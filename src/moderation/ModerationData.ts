@@ -52,7 +52,7 @@ export default class ModerationData {
       this.channel = argument.channel;
       this.moderator = argument.member;
     } else {
-      this.channel = this.client.cache.channels.log as TextChannel;
+      this.channel = this.client.cache.channels.log;
       this.moderator = this.client.guild.me!;
     }
     this.guild = this.channel.guild;

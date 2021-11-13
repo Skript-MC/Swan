@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
+import type { GuildTextBasedChannel } from 'discord.js';
 import ModerationError from '@/app/moderation/ModerationError';
-import type { GuildTextBasedChannel } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 

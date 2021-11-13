@@ -9,6 +9,7 @@ import type { ServerStatResponse, SwanCommandOptions } from '@/app/types';
 import { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
@@ -18,7 +19,7 @@ export default class ServerInfoCommand extends SwanCommand {
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.retryPrompt,
+    message: messages.prompt.serverAdress,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {

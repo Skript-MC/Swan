@@ -11,6 +11,7 @@ import type { SkriptMcDocumentationSyntaxAndAddon, SwanCommandOptions } from '@/
 import { DocumentationCommandArguments } from '@/app/types/CommandArguments';
 import { noop, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 const turndownService = new Turndown();
@@ -25,7 +26,7 @@ export default class DocumentationCommand extends SwanCommand {
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.retryPrompt,
+    message: messages.prompt.keywords,
   }, {
     name: 'addon',
     match: 'option',

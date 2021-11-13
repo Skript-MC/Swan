@@ -7,6 +7,7 @@ import { GuildMessage, MessageName } from '@/app/types';
 import { AutoMessageCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { autoMessage as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
@@ -16,12 +17,12 @@ export default class AutoMessageCommand extends SwanCommand {
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.retryPrompt,
+    message: messages.prompt.messageName,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: AutoMessageCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.AutoMessage });
-    const search = searchMessageSimilarity(messages, args.message);
+    const msgs = await Message.find({ messageType: MessageName.AutoMessage });
+    const search = searchMessageSimilarity(msgs, args.message);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;

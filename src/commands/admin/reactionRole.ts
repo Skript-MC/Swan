@@ -19,7 +19,7 @@ export default class ReactionRoleCommand extends SwanCommand {
     type: 'role',
     match: 'pick',
     required: true,
-    message: config.messages.promptRetry,
+    message: messages.prompt.role,
   }, {
     name: 'reaction',
     type: 'emoji',

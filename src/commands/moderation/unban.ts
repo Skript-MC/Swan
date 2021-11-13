@@ -19,7 +19,7 @@ export default class UnbanCommand extends SwanCommand {
     type: 'bannedMember',
     match: 'pick',
     required: true,
-    message: config.messages.promptRetryMember,
+    message: messages.prompt.member,
   }, {
     name: 'reason',
     type: 'string',

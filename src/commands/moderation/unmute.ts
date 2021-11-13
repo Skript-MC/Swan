@@ -19,7 +19,7 @@ export default class UnmuteCommand extends SwanCommand {
     type: 'member',
     match: 'pick',
     required: true,
-    message: config.messages.promptRetryMember,
+    message: messages.prompt.member,
   }, {
     name: 'reason',
     type: 'string',

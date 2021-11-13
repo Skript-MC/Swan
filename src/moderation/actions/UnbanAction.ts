@@ -1,11 +1,10 @@
-import type { GuildChannel } from 'discord.js';
 import { GuildMember, Permissions, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
-import type { GuildTextBasedChannel, SanctionDocument } from '@/app/types';
+import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 
@@ -69,11 +68,11 @@ export default class UnbanAction extends ModerationAction {
         const channelId = ban?.informations?.banChannelId;
         if (!channelId)
           return;
-        const channel = this.data.guild.channels.resolve(channelId) as GuildChannel;
+        const channel = this.data.guild.channels.resolve(channelId);
         if (!channel || !channel.isText())
           return;
 
-        const messages = await ModerationHelper.getAllChannelMessages(channel as GuildTextBasedChannel);
+        const messages = await ModerationHelper.getAllChannelMessages(channel);
         const fileInfo = await ModerationHelper.getMessageFile(this.data, messages);
         this.data.setFile(fileInfo);
 

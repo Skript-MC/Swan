@@ -3,14 +3,14 @@ import type { CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
   Collection,
+  DMChannel,
   Guild,
   GuildAuditLogs,
   GuildAuditLogsEntry,
   GuildMember,
   Message,
-  NewsChannel,
+  PartialDMChannel,
   Snowflake,
-  TextChannel,
   User,
 } from 'discord.js';
 import type {
@@ -364,7 +364,7 @@ export interface MatchingAddon {
 }
 
 /** A TextChannel which is in a guild */
-export type GuildTextBasedChannel = NewsChannel | TextChannel;
+export type GuildTextBasedChannel = Exclude<Message['channel'], DMChannel | PartialDMChannel>;
 
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
@@ -372,8 +372,16 @@ export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: G
 /** Union type of all the channel we cache */
 export type ChannelSlug = keyof typeof settings.channels;
 
+/** All properties containing a array of channels */
+export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptExtraHelp' | 'skriptHelp';
+
+/** All properties containing a single channel */
+export type ChannelSingleSlug = Exclude<ChannelSlug, ChannelArraySlugs>;
+
 /** Record of all the channel we cache internally */
-export type CachedChannels = Record<ChannelSlug, TextChannel | TextChannel[]>;
+export type CachedChannels =
+  & Record<ChannelArraySlugs, GuildTextBasedChannel[]>
+  & Record<ChannelSingleSlug, GuildTextBasedChannel>;
 
 // #endregion
 

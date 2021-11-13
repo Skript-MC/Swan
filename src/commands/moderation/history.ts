@@ -20,7 +20,7 @@ export default class HistoryCommand extends SwanCommand {
     type: ['member', 'user', 'string'],
     match: 'pick',
     required: true,
-    message: config.messages.promptStartUser,
+    message: messages.prompt.user,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: HistoryCommandArgument): Promise<void> {

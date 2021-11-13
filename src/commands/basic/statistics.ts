@@ -1,5 +1,4 @@
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
@@ -17,7 +16,7 @@ export default class StatisticsCommand extends SwanCommand {
   public override async messageRun(message: GuildMessage, _args: StatisticsCommandArguments): Promise<void> {
     const totalCommands = this.container.stores.get('commands').size;
     const embedMessages = config.messages.embed;
-    const commitHash = await this._getGitRev();
+    const commitHash = this._getGitRev();
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor(config.messages.embed.title, settings.bot.avatar)
@@ -42,17 +41,11 @@ export default class StatisticsCommand extends SwanCommand {
     await message.channel.send({ embeds: [embed] });
   }
 
-  private async _getGitRev(): Promise<string> {
+  private _getGitRev(): string {
     if (this.container.client.cache.gitCommit)
       return this.container.client.cache.gitCommit;
 
-    let rev = (await fs.readFile(path.join(process.cwd(), '.git', 'HEAD'))).toString();
-    if (!rev.includes(':')) {
-      this.container.client.cache.gitCommit = rev;
-      return rev;
-    }
-
-    rev = (await fs.readFile(path.join(process.cwd(), '.git', rev.slice(5).trim()))).toString();
+    const rev = execSync('git rev-parse HEAD').toString().trim();
     this.container.client.cache.gitCommit = rev;
     return rev;
   }

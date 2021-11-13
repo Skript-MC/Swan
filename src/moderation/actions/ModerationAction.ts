@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
 import { MessageEmbed } from 'discord.js';
-import type { HexColorString, TextChannel } from 'discord.js';
+import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import type SwanClient from '@/app/SwanClient';
@@ -17,7 +17,7 @@ import settings from '@/conf/settings';
 export default abstract class ModerationAction {
   data: ModerationData;
   client: SwanClient;
-  logChannel: TextChannel;
+  logChannel: GuildTextBasedChannel;
 
   errorState: ErrorState;
   updateInfos: ActionUpdateInformations;
@@ -25,7 +25,7 @@ export default abstract class ModerationAction {
   constructor(data: ModerationData) {
     this.data = data;
     this.client = container.client as SwanClient;
-    this.logChannel = this.client.cache.channels.log as TextChannel;
+    this.logChannel = this.client.cache.channels.log;
 
     this.errorState = new ErrorState(this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);

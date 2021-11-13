@@ -19,13 +19,13 @@ export default class WarnCommand extends SwanCommand {
     type: 'member',
     match: 'pick',
     required: true,
-    message: config.messages.promptRetryMember,
+    message: messages.prompt.member,
   }, {
     name: 'reason',
     type: 'string',
     match: 'rest',
     required: true,
-    message: config.messages.promptRetryReason,
+    message: messages.prompt.reason,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: WarnCommandArgument): Promise<void> {

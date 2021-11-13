@@ -10,6 +10,7 @@ import { GuildMessage, QuestionType } from '@/app/types';
 import { PollCommandArguments } from '@/app/types/CommandArguments';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 const anonymousFlags = ['a', 'anon', 'anonymous'];
@@ -35,14 +36,14 @@ export default class PollCommand extends SwanCommand {
     match: 'pick',
     required: true,
     validate: (_message, resolved: number) => resolved >= 1000 && resolved < settings.miscellaneous.maxPollDuration,
-    message: config.messages.promptRetryDuration,
+    message: messages.prompt.duration,
   }, {
     name: 'answers',
     type: 'string',
     match: 'repeat',
     required: true,
     validate: (_message, resolved: string[]) => resolved[0].replace(/\s+/, '').length > 0,
-    message: config.messages.promptRetryContent,
+    message: messages.prompt.pollAnswers,
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: PollCommandArguments): Promise<void> {

@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { stripIndent } from 'common-tags';
-import type { Channel, GuildMember, NewsChannel } from 'discord.js';
+import type { Channel, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { Permissions, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
@@ -50,7 +50,7 @@ export default {
     }
   },
 
-  async getAllChannelMessages(channel: NewsChannel | TextChannel): Promise<BanChannelMessage[]> {
+  async getAllChannelMessages(channel: GuildTextBasedChannel): Promise<BanChannelMessage[]> {
     const allMessages: BanChannelMessage[] = [];
     let beforeId: string;
 
