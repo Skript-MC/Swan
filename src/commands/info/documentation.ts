@@ -16,8 +16,8 @@ import settings from '@/conf/settings';
 
 const turndownService = new Turndown();
 
-const addonFlag = ['--addon=', '-a='];
-const categoryFlag = ['--category=', '--categorie=', '--catégorie=', '--cat=', '-c=', '--type=', '-t='];
+const addonFlag = ['addon', 'a'];
+const categoryFlag = ['category', 'categorie', 'catégorie', 'cat', 'c', 'type', 't'];
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class DocumentationCommand extends SwanCommand {

@@ -11,8 +11,8 @@ import { ban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-const autobanFlags = ['--autoban', '--auto-ban', '-a'];
-const purgeFlags = ['--purge', '-p'];
+const autobanFlags = ['autoban', 'auto-ban', 'a'];
+const purgeFlags = ['purge', 'p'];
 
 @ApplyOptions<SwanCommandOptions>({
   ...settings.globalCommandsOptions,

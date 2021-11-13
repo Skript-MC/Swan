@@ -10,9 +10,13 @@ import { purge as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-const forceFlag = ['--force', '-f'];
+const forceFlag = ['force', 'f'];
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplyOptions<SwanCommandOptions>({
+  ...settings.globalCommandsOptions,
+  ...config.settings,
+  flags: forceFlag,
+})
 export default class PurgeCommand extends SwanCommand {
   @Arguments({
     name: 'force',

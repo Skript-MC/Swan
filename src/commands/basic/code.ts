@@ -12,9 +12,9 @@ import { code as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-const displayLinesFlag = ['-l', '--line', '--lines', '--ligne', '--lignes'];
-const startLinesAtOption = ['-s=', '--start='];
-const languageOption = ['-l=', '--language=', '--langage='];
+const displayLinesFlag = ['l', 'line', 'lines', 'ligne', 'lignes'];
+const startLinesAtOption = ['s', 'start'];
+const languageOption = ['lang', 'language', 'langage'];
 
 @ApplyOptions<SwanCommandOptions>({
   ...settings.globalCommandsOptions,
