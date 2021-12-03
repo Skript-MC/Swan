@@ -8,7 +8,7 @@ import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SwanCommandOptions } from '@/app/types';
 import { GuildMessage, QuestionType } from '@/app/types';
 import { PollCommandArguments } from '@/app/types/CommandArguments';
-import { extractQuotedText, trimText } from '@/app/utils';
+import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
