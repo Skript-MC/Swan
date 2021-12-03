@@ -6,7 +6,8 @@ import type {
 } from '@sapphire/framework';
 import { err, ok } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
-import type { Awaited, GuildMessage } from '@/app/types';
+import type { Awaitable } from '@sapphire/utilities';
+import type { GuildMessage } from '@/app/types';
 
 type MatchType = 'flag' | 'option' | 'peek' | 'pick' | 'repeat' | 'rest';
 
@@ -15,7 +16,7 @@ interface BaseArgumentOption {
   match: MatchType;
   type?: Array<keyof ArgType> | keyof ArgType;
   flags?: string[];
-  validate?: (message: GuildMessage, resolved: unknown) => Awaited<boolean>;
+  validate?: (message: GuildMessage, resolved: unknown) => Awaitable<boolean>;
   default?: unknown | ((message: GuildMessage) => unknown);
   required?: boolean;
   message?: string;
@@ -121,7 +122,7 @@ export default function Arguments(...options: ArgumentOption[]): MethodDecorator
           continue;
         }
 
-        const method: `${TextArgumentOption['match']}Result` = `${option.match}Result`;
+        const method = `${option.match}Result` as const;
         const resolver = args[method].bind(args) as ResolverCallback;
 
         const result = await resolveArgument(option, message, resolver);

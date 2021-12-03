@@ -1,14 +1,14 @@
+import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
+import type { Awaitable } from '@sapphire/utilities';
 import { MessageEmbed } from 'discord.js';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import type SwanClient from '@/app/SwanClient';
 import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
 import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
-import type { Awaited } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
@@ -16,7 +16,7 @@ import settings from '@/conf/settings';
 
 export default abstract class ModerationAction {
   data: ModerationData;
-  client: SwanClient;
+  client: SapphireClient;
   logChannel: GuildTextBasedChannel;
 
   errorState: ErrorState;
@@ -24,7 +24,7 @@ export default abstract class ModerationAction {
 
   constructor(data: ModerationData) {
     this.data = data;
-    this.client = container.client as SwanClient;
+    this.client = container.client;
     this.logChannel = this.client.cache.channels.log;
 
     this.errorState = new ErrorState(this.data.channel || this.logChannel);
@@ -188,9 +188,9 @@ export default abstract class ModerationAction {
     }
   }
 
-  protected abstract before?(): Awaited<void>;
+  protected abstract before?(): Awaitable<void>;
 
-  protected abstract exec(): Awaited<void>;
+  protected abstract exec(): Awaitable<void>;
 
-  protected abstract after?(): Awaited<void>;
+  protected abstract after?(): Awaitable<void>;
 }

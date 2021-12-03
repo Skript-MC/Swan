@@ -1,7 +1,6 @@
 import { container } from '@sapphire/pieces';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import type { PollDocument } from '@/app/types';
 import { QuestionType } from '@/app/types';
 import { nullop } from '@/app/utils';
 import messages from '@/conf/messages';
@@ -10,7 +9,7 @@ import settings from '@/conf/settings';
 export default {
   async end(pollId: string, stopped = false): Promise<void> {
     // Remove the poll from the database and the cache.
-    const poll: PollDocument | null = await Poll.findByIdAndRemove(pollId).catch(nullop);
+    const poll = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)
       return;
 

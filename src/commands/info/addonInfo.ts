@@ -7,7 +7,7 @@ import pupa from 'pupa';
 import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { GuildMessage } from '@/app/types';
-import type { MatchingAddon, SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
+import type { SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
 import { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
 import { convertFileSize, noop, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
@@ -27,7 +27,7 @@ export default class AddonInfoCommand extends SwanCommand {
   public override async messageRun(message: GuildMessage, args: AddonInfoCommandArguments): Promise<void> {
     // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
     // We keep only the first 10 matching addons.
-    const matchingAddons: MatchingAddon[] = this.container.client.cache.addonsVersions
+    const matchingAddons = this.container.client.cache.addonsVersions
       .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, args.addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift()! }))
       .slice(0, 10);

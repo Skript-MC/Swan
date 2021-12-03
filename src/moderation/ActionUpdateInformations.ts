@@ -1,19 +1,14 @@
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import type ModerationData from '@/app/moderation/ModerationData';
-import type {
-  ConvictedUserDocument,
-  SanctionDocument,
-  TrackedFieldNames,
-  TrackedSanctionTypes,
-} from '@/app/types';
+import type { ConvictedUserDocument, SanctionDocument, TrackedSanctionTypes } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 
-const lastSanctionField: Record<TrackedSanctionTypes, TrackedFieldNames> = {
+const lastSanctionField = {
   [SanctionTypes.Ban]: 'currentBanId',
   [SanctionTypes.Hardban]: 'currentBanId',
   [SanctionTypes.Mute]: 'currentMuteId',
-};
+} as const;
 
 export default class ActionUpdateInformations {
   data: ModerationData;

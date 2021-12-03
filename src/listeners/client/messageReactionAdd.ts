@@ -55,7 +55,7 @@ export default class MessageReactionAddListener extends Listener {
       // Find the reaction they chose before (undefined if they never answered).
       type PollAnswer = [reactionName: string, votersIds: string[]];
 
-      const previousUserVote: string | undefined = Object.entries(poll.votes)
+      const previousUserVote = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.
         .find((entry: PollAnswer) => (entry[1].includes(user.id) ? entry : null))
         // We take the reactionName if it exists.

@@ -1,11 +1,10 @@
+import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import { GuildMember, Message, TextChannel } from 'discord.js';
-import type { Guild, User } from 'discord.js';
+import type { Guild, GuildTextBasedChannel, User } from 'discord.js';
 import { nanoid } from 'nanoid';
-import type SwanClient from '@/app/SwanClient';
 import type {
   GuildMessage,
-  GuildTextBasedChannel,
   ModerationDataResult,
   PersonInformations,
   SanctionInformations,
@@ -18,7 +17,7 @@ import messages from '@/conf/messages';
 export default class ModerationData {
   moderator: GuildMember;
   guild: Guild;
-  client: SwanClient;
+  client: SapphireClient;
   channel: GuildTextBasedChannel;
   type?: SanctionTypes;
   config?: Record<string, string>;
@@ -47,7 +46,7 @@ export default class ModerationData {
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
   constructor(argument?: GuildMessage) {
-    this.client = container.client as SwanClient;
+    this.client = container.client;
     if (argument instanceof Message) {
       this.channel = argument.channel;
       this.moderator = argument.member;
@@ -75,7 +74,7 @@ export default class ModerationData {
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
-    this.victim = getPersonFromCache(personResolvable, this.client, resolveMemberAndUser);
+    this.victim = getPersonFromCache(personResolvable, resolveMemberAndUser);
     return this;
   }
 

@@ -3,13 +3,12 @@ import type { CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
   Collection,
-  DMChannel,
   Guild,
   GuildAuditLogs,
   GuildAuditLogsEntry,
   GuildMember,
+  GuildTextBasedChannel,
   Message,
-  PartialDMChannel,
   Snowflake,
   User,
 } from 'discord.js';
@@ -20,14 +19,6 @@ import type {
   Types,
 } from 'mongoose';
 import type settings from '@/conf/settings';
-
-/* ****************** */
-/*     Util Types     */
-/* ****************** */
-
-export type Nullable<T> = { [P in keyof T]: T[P] | null };
-
-export type Awaited<T> = PromiseLike<T> | T;
 
 /* ****************** */
 /*  API Result Types  */
@@ -362,9 +353,6 @@ export interface MatchingAddon {
   file: string;
   name: string;
 }
-
-/** A TextChannel which is in a guild */
-export type GuildTextBasedChannel = Exclude<Message['channel'], DMChannel | PartialDMChannel>;
 
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };

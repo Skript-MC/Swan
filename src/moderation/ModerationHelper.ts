@@ -60,8 +60,8 @@ export default {
         break;
 
       beforeId = messages.last()!.id;
-      const parsedMessages: BanChannelMessage[] = [...messages.values()]
-        .map(msg => ({
+      const parsedMessages = [...messages.values()]
+        .map<BanChannelMessage>(msg => ({
           id: msg.id,
           content: msg.content,
           authorName: msg.author.username,

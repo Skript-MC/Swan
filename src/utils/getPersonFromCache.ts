@@ -1,7 +1,6 @@
 import type { GuildMember, User } from 'discord.js';
 import resolveMember from './resolveMember';
 import resolveUser from './resolveUser';
-import type SwanClient from '@/app/SwanClient';
 import type { PersonInformations } from '@/app/types';
 
 /**
@@ -14,7 +13,6 @@ import type { PersonInformations } from '@/app/types';
  */
 export default function getPersonFromCache(
   personResolvable: GuildMember | User | string,
-  client: SwanClient,
   resolveMemberAndUser = true,
 ): PersonInformations {
   const member = resolveMember(personResolvable.toString());
