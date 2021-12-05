@@ -1,13 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import RefreshCommand from '@/app/commands/admin/refresh';
 import Arguments from '@/app/decorators/Argument';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { GuildMessage } from '@/app/types';
 import type { SwanCommandOptions } from '@/app/types';
 import { ModuleCommandArguments } from '@/app/types/CommandArguments';
-import { noop, toggleModule } from '@/app/utils';
+import { noop, nullop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -25,8 +27,6 @@ export default class ModuleCommand extends SwanCommand {
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: ModuleCommandArguments): Promise<void> {
-    const modules = await SwanModule.find();
-
     if (!args.moduleName) {
       const embed = new MessageEmbed()
         .setTitle(config.messages.embed.title)
@@ -38,10 +38,26 @@ export default class ModuleCommand extends SwanCommand {
       return;
     }
 
+    const modules = await SwanModule.find();
     const module = modules.find(m => m.name === args.moduleName);
     if (!module) {
       await message.channel.send(config.messages.noModuleFound).catch(noop);
       return;
+    }
+
+    if (!args.enabled && module.name === RefreshCommand.name) {
+      await message.channel.send(config.messages.cannotBeDisabled).catch(noop);
+      return;
+    }
+    if (!args.enabled && module.name === this.name) {
+      const handler = new MessagePrompter(config.messages.confirmationPrompt, 'confirm', {
+        confirmEmoji: settings.emojis.yes,
+        cancelEmoji: settings.emojis.no,
+        timeout: 2 * 60 * 1000,
+      });
+      const confirmed = await handler.run(message.channel, message.author).catch(nullop);
+      if (!confirmed)
+        return;
     }
 
     await toggleModule(module, args.enabled);

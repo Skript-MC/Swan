@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import axios from 'axios';
 import { Intents, Permissions } from 'discord.js';
@@ -6,12 +7,14 @@ import TaskStore from './structures/tasks/TaskStore';
 import CommandStat from '@/app/models/commandStat';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
+import SwanModule from '@/app/models/swanModule';
 import SwanCacheManager from '@/app/structures/SwanCacheManager';
 import type {
   CommandStatDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxResponse,
   SkriptToolsAddonListResponse,
+  SwanModuleDocument,
 } from '@/app/types';
 import { nullop } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -60,34 +63,31 @@ export default class SwanClient extends SapphireClient {
     // ];
 
     // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
-    // this.on('ready', () => {
-    //   this.taskHandler.loadAll();
-    //   this.cache.modules = [...this.cache.modules, ...this.taskHandler.modules.array()];
+    this.once('ready', async () => {
+      const modules: SwanModuleDocument[] = await SwanModule.find();
 
-    //   SwanModule.find()
-    //     .then((modules: SwanModuleDocument[]): void => {
-    //       const unloadModules = (handler: AkairoHandler): void => {
-    //         for (const id of handler.modules.keys()) {
-    //           const module = modules.find(mod => mod.name === id);
-    //           if (module && !module.enabled) {
-    //             handler.remove(id);
-    //             this.logger.info(`Disabling module "${id}" (from ${handler.constructor.name})`);
-    //           } else if (!module) {
-    //             void SwanModule.create({ name: id, handler: uncapitalize(handler.constructor.name), enabled: true });
-    //           }
-    //         }
-    //       };
-
-    //       unloadModules(this.commandHandler);
-    //       unloadModules(this.inhibitorHandler);
-    //       unloadModules(this.listenerHandler);
-    //       unloadModules(this.taskHandler);
-    //     })
-    //     .catch((error: Error) => {
-    //       this.logger.error("Unable to load modules from Database. Synchronisation with the panel won't work.");
-    //       this.logger.error(error.message);
-    //     });
-    // });
+      for (const [storeName, store] of this.stores) {
+        if (storeName === 'arguments')
+          continue;
+        for (const piece of store.values()) {
+          const module = modules.find(mod => mod.name === piece.name && mod.store === storeName);
+          if (module && !module.enabled) {
+            await store.unload(piece.name);
+            this.logger.info(`Disabling module "${piece.name}" (from ${storeName})`);
+          } else if (!module) {
+            await SwanModule.create({
+              name: piece.name,
+              store: storeName,
+              location: {
+                root: piece.location.root,
+                relative: path.relative(piece.location.root, piece.location.full),
+              },
+              enabled: true,
+            });
+          }
+        }
+      }
+    });
 
     this.logger.info('Loading & caching databases...');
     void this._loadPolls();

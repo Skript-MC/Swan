@@ -6,11 +6,21 @@ const SwanModuleSchema = new Schema({
     type: String,
     required: true,
   },
-  handler: {
+  store: {
     type: String,
-    enum: ['commandHandler', 'inhibitorHandler', 'listenerHandler', 'taskHandler'],
+    enum: ['commands', 'preconditions', 'tasks', 'listeners'],
     required: true,
   },
+  location: new Schema({
+    relative: {
+      type: String,
+      required: true,
+    },
+    root: {
+      type: String,
+      required: true,
+    },
+  }),
   enabled: {
     type: Boolean,
     default: true,

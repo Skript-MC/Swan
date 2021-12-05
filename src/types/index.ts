@@ -520,6 +520,10 @@ export type CommandStatModel = Model<CommandStatDocument>;
 export interface SwanModuleBase {
   name: string;
   store: keyof StoreRegistryEntries;
+  location: {
+    relative: string;
+    root: string;
+  };
   enabled: boolean;
 }
 
