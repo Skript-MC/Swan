@@ -13,7 +13,8 @@ import type {
   CommandStatDocument,
   SkriptMcDocumentationFullAddonResponse,
   SkriptMcDocumentationSyntaxResponse,
-  SkriptToolsAddonListResponse, SwanModuleDocument,
+  SkriptToolsAddonListResponse,
+  SwanModuleDocument,
 } from '@/app/types';
 import { nullop } from '@/app/utils';
 import settings from '@/conf/settings';
