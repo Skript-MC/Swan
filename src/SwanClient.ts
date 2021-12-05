@@ -63,7 +63,7 @@ export default class SwanClient extends SapphireClient {
     // ];
 
     // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
-    this.on('ready', async () => {
+    this.once('ready', async () => {
       const modules: SwanModuleDocument[] = await SwanModule.find();
 
       for (const [storeName, store] of this.stores) {
