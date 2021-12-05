@@ -2,6 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import RefreshCommand from '@/app/commands/admin/refresh';
 import Arguments from '@/app/decorators/Argument';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
@@ -44,12 +45,12 @@ export default class ModuleCommand extends SwanCommand {
       return;
     }
 
-    if (module.name === 'rafraîchir le cache') {
+    if (!args.enabled && module.name === RefreshCommand.name) {
       await message.channel.send(config.messages.cannotBeDisabled).catch(noop);
       return;
     }
-    if (!args.enabled && module.name === 'modifier les modules') {
-      const handler = new MessagePrompter('Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.', 'confirm', {
+    if (!args.enabled && module.name === this.name) {
+      const handler = new MessagePrompter(config.messages.confirmationPrompt, 'confirm', {
         confirmEmoji: settings.emojis.yes,
         cancelEmoji: settings.emojis.no,
         timeout: 2 * 60 * 1000,

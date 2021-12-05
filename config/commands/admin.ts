@@ -38,6 +38,7 @@ export const module = {
     noModuleFound: ":x: Aucun module avec ce nom n'a été trouvé. Rendez-vous sur https://swan.skript-mc.fr/modules pour consulter la liste des modules.",
     cannotBeDisabled: ':x: Ce module ne peut pas être désactivé.',
     success: ':white_check_mark: Le module a bien été {status}.',
+    confirmationPrompt: 'Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.',
   },
 };
 
