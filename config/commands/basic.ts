@@ -49,7 +49,7 @@ export const discover = {
     description: 'Permet de __découvrir une commande__ présente dans Swan.',
     usage: 'découvrir',
     examples: ['decouvrir'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     title: ':star: Commande "{name}"',
@@ -81,12 +81,11 @@ export const help = {
     description: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     commandInfo: {
       title: ':star: Commande "{name}"',
-      description: '❯ Description',
       usage: '❯ Utilisation',
       usableBy: '❯ Utilisable par',
       aliases: '❯ Aliases',
@@ -166,7 +165,7 @@ export const move = {
     description: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
-    basePreconditions: [...basePreconditions, activeMemberRolePrecondition],
+    preconditions: [...basePreconditions, activeMemberRolePrecondition],
     permissions: ['Membre Actif'],
   },
   messages: {
@@ -187,7 +186,7 @@ export const ping = {
     description: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -219,7 +218,7 @@ export const statistics = {
     description: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
     usage: 'stats',
     examples: ['stats'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

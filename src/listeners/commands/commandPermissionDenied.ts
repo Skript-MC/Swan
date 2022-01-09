@@ -18,7 +18,7 @@ export default class CommandPermissionDeniedListener extends Listener {
         );
       }
     } else {
-      await message.channel.send(messages.global.notAllowed);
+      await message.channel.send(messages.errors.precondition.preconditionRole);
     }
   }
 }

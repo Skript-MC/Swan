@@ -65,6 +65,13 @@ declare module '@sapphire/framework' {
     checkValidity(): void;
   }
 
+  const enum Identifiers {
+    PreconditionChannelRules = 'preconditionChannelRules',
+    PreconditionNotLoading = 'preconditionNotLoading',
+    PreconditionNotRole = 'preconditionNotRole',
+    PreconditionRole = 'preconditionRole',
+  }
+
   interface ArgType {
     bannedMember: GuildMember | User;
     command: SwanCommand;

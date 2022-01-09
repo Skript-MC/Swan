@@ -9,5 +9,5 @@ export default function resolveCommand(parameter: string): Result<SwanCommand, '
 
   if (isNullish(command))
     return err('commandError');
-  ok(command);
+  return ok(command as SwanCommand);
 }

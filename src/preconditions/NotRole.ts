@@ -1,5 +1,5 @@
 import type { AsyncPreconditionResult, PreconditionContext } from '@sapphire/framework';
-import { Precondition } from '@sapphire/framework';
+import { Identifiers, Precondition } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 
@@ -13,7 +13,7 @@ export default class NotRolePrecondition extends Precondition {
       return this.ok();
 
     return this.error({
-      identifier: 'preconditionNotRole',
+      identifier: Identifiers.PreconditionNotRole,
       message: `User has forbidden role: ${context.role}`,
       context: { role: context.role },
     });

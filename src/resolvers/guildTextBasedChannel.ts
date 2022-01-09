@@ -9,7 +9,7 @@ export default function resolveGuildTextBasedChannel(
 ): Result<GuildTextBasedChannel, 'guildTextBasedChannelError'> {
   const resolved = Resolvers.resolveChannel(parameter, message);
 
-  return isTextBasedChannel(resolved.value) && isGuildBasedChannel(resolved.value)
-    ? ok(resolved.value)
-    : err('guildTextBasedChannelError');
+  if (isTextBasedChannel(resolved.value) && isGuildBasedChannel(resolved.value))
+    return ok(resolved.value);
+  return err('guildTextBasedChannelError');
 }

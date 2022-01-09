@@ -145,7 +145,7 @@ export const userInfo = {
     description: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
     usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

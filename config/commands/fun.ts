@@ -67,7 +67,7 @@ export const idea = {
     description: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
     usage: 'idée',
     examples: ['idea', 'idée'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
@@ -82,7 +82,7 @@ export const joke = {
     description: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
     usage: 'joke',
     examples: ['joke', 'blague'],
-    basePreconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",

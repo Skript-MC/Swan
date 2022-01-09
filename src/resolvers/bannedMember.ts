@@ -37,5 +37,5 @@ export default async function resolveBannedMember(
       || (await guild.bans.fetch(id).catch(nullop))?.user
       || null;
   }
-  ok(resolvedPerson);
+  return ok(resolvedPerson);
 }

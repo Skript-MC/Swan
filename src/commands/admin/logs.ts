@@ -8,6 +8,7 @@ import { GuildMessage } from '@/app/types';
 import { LogsCommandArguments } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { logs as config } from '@/conf/commands/admin';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
@@ -16,6 +17,8 @@ export default class LogsCommand extends SwanCommand {
     name: 'channel',
     type: 'guildTextBasedChannel',
     match: 'pick',
+    required: true,
+    message: messages.prompt.channel,
   }, {
     name: 'logged',
     type: 'boolean',

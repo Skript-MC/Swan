@@ -4,6 +4,8 @@ export { default as extractQuotedText } from './extractQuotedText';
 export { default as getDuration } from './getDuration';
 export { default as getPersonFromCache } from './getPersonFromCache';
 export { default as getUsername } from './getUsername';
+export { default as inlineCodeList } from './inlineCodeList';
+export { default as isGuildMessage } from './isGuildMessage';
 export { noop, nullop } from './noop';
 export { default as padNumber } from './padNumber';
 export { default as prunePseudo } from './prunePseudo';

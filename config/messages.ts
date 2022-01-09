@@ -1,3 +1,4 @@
+import { Identifiers } from '@sapphire/framework';
 import { stripIndent } from 'common-tags';
 
 export default {
@@ -7,7 +8,6 @@ export default {
         :warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.
         > (Cc: <@188341077902753794>, <@191495299884122112>)`
       : ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.",
-    notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
     insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {command.details.name}. (Permissions manquantes : {permissions})",
     memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
     dmAreClosed: "{member}, je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
@@ -17,6 +17,17 @@ export default {
     noReason: 'Aucune raison spécifiée.',
     impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
     executedBy: 'Exécuté par {member.displayName}',
+  },
+  errors: {
+    precondition: {
+      [Identifiers.PreconditionRole]: ":x: Aïe, tu n'as pas la permission de faire cela :confused:",
+      [Identifiers.PreconditionNotRole]: ":x: Aïe, tu n'as pas le droit d'exécuter cette commande :confused:",
+      [Identifiers.PreconditionNotLoading]: 'Attends un peu, le temps que je finisse de me réveiller...',
+      [Identifiers.PreconditionChannelRules]: ':x: Aïe, cette commande est désactivée dans ce salon :confused:',
+      [Identifiers.PreconditionGuildOnly]: ':x: Aïe, cette commande ne peut être utilisée que dans un serveur :confused:',
+      [Identifiers.PreconditionCooldown]: 'Pas si vite ! Cette commande est sous cooldown, attendez un peu avant de la réutiliser.',
+      unknownError: "Une pré-condition de commande inconnue t'empêche d'effectuer cette action.",
+    },
   },
   miscellaneous: {
     noDescription: 'Aucune description disponible.',
@@ -77,6 +88,7 @@ export default {
     stopWord: 'stop',
 
     addon: "Le nom d'addon donné est invalide.",
+    channel: 'Le salon donné est invalide.',
     code: 'Le code donné est invalide.',
     differentHelpChannel: "Le salon donné est invalide. Le salon d'origine ou de destination n'est pas un salon d'aide, ou c'est le même salon.",
     duration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.',
