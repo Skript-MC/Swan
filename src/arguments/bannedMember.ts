@@ -34,6 +34,7 @@ export default class BannedMemberArgument extends Argument<GuildMember | User> {
         // If it is not found in the cache, try fetching it
         || await this.container.client.users.fetch(id).catch(nullop)
         // If we failed to fetch it, look in the Discord's bans
+        // eslint-disable-next-line unicorn/no-await-expression-member
         || (await context.message.guild.bans.fetch(id).catch(nullop))?.user
         || null;
     }

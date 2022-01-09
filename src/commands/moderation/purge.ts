@@ -39,7 +39,8 @@ export default class PurgeCommand extends SwanCommand {
     await message.delete();
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
-    const msgs = (await message.channel.messages.fetch({ limit: args.amount }))
+    const allMessages = await message.channel.messages.fetch({ limit: args.amount });
+    const msgs = allMessages
       .filter(msg => (args.member ? msg.author.id === args.member.id : true))
       .filter(msg => (args.force || !msg.member?.roles.cache.has(settings.roles.staff)));
     const deletedMessages = await message.channel.bulkDelete(msgs, true);

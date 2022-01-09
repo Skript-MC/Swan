@@ -11,7 +11,7 @@ export default function toValidName(str: string): string {
       valid.push(char);
       continue;
     }
-    const charCode = str.charCodeAt(i);
+    const charCode = str.codePointAt(i);
     if (charCode < 0x80)
       valid.push(char);
   }
