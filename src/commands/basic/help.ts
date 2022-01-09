@@ -1,15 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { isDMChannel } from '@sapphire/discord.js-utilities';
+import type { Args } from '@sapphire/framework';
 import { ok } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import groupBy from 'lodash.groupby';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { HelpCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { capitalize, inlineCodeList } from '@/app/utils';
 import { help as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -17,16 +15,15 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class HelpCommand extends SwanCommand {
-  @Arguments({
-    name: 'command',
-    type: 'command',
-    match: 'pick',
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: HelpCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const command = await args.pickResult('command');
+
+    await this._exec(message, command.value);
+  }
+
+  private async _exec(message: GuildMessage, command: SwanCommand | null): Promise<void> {
     const embed = new MessageEmbed().setColor(settings.colors.default);
 
-    const { command } = args;
     if (command) {
       const information = config.messages.commandInfo;
       embed.setTitle(pupa(information.title, { name: capitalize(command.name) }))

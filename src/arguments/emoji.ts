@@ -1,10 +1,9 @@
 import type { ArgumentContext, ArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
-import type { GuildEmoji } from 'discord.js';
 import CustomResolvers from '@/app/resolvers';
 
-export default class EmojiArgument extends Argument<GuildEmoji> {
-  public override run(parameter: string, context: ArgumentContext<GuildEmoji>): ArgumentResult<GuildEmoji> {
+export default class EmojiArgument extends Argument<string> {
+  public override run(parameter: string, context: ArgumentContext<string>): ArgumentResult<string> {
     const resolved = CustomResolvers.resolveEmoji(parameter, context.message.guild);
 
     if (resolved.success)

@@ -1,10 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { LatexCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
@@ -12,16 +10,18 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class LatexCommand extends SwanCommand {
-  @Arguments({
-    name: 'equation',
-    type: 'string',
-    match: 'rest',
-    required: true,
-    message: messages.prompt.equation,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: LatexCommandArguments): Promise<void> {
-    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(args.equation));
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const equation = await args.restResult('string');
+    if (!equation.success) {
+      await message.channel.send(messages.prompt.equation);
+      return;
+    }
+
+    await this._exec(message, equation.value);
+  }
+
+  private async _exec(message: GuildMessage, equation: string): Promise<void> {
+    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(equation));
     await sendMessage.react(settings.emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector({

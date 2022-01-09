@@ -1,15 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
+import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SkriptMcDocumentationSyntaxAndAddon, SwanCommandOptions } from '@/app/types';
-import { DocumentationCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SkriptMcDocumentationSyntaxAndAddon, SwanCommandOptions } from '@/app/types';
 import { noop, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
@@ -20,25 +18,32 @@ const turndownService = new Turndown();
 const addonFlag = ['addon', 'a'];
 const categoryFlag = ['category', 'categorie', 'catégorie', 'cat', 'c', 'type', 't'];
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplyOptions<SwanCommandOptions>({
+  ...settings.globalCommandsOptions,
+  ...config.settings,
+  options: [...addonFlag, ...categoryFlag],
+})
 export default class DocumentationCommand extends SwanCommand {
- @Arguments({
-    name: 'query',
-    type: 'string',
-    match: 'rest',
-    required: true,
-    message: messages.prompt.keywords,
-  }, {
-    name: 'addon',
-    match: 'option',
-    flags: addonFlag,
-  }, {
-    name: 'category',
-    match: 'option',
-    flags: categoryFlag,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: DocumentationCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const query = await args.restResult('string');
+    if (!query.success) {
+      await message.channel.send(messages.prompt.keywords);
+      return;
+    }
+
+    const addon = args.getOption(...addonFlag);
+
+    const category = args.getOption(...categoryFlag);
+
+    await this._exec(message, query.value, addon, category);
+  }
+
+  private async _exec(
+    message: GuildMessage,
+    query: string,
+    addon: string | null,
+    category: string | null,
+  ): Promise<void> {
     // Get all the matching syntaxes thanks to this very accurate and complex algorithm.
     // Each syntax is given a score between 0 and 1 symbolising the similarity with the user's query:
     // - 1 if the query matches the syntax's ID
@@ -51,24 +56,25 @@ export default class DocumentationCommand extends SwanCommand {
     // If a syntax has a similarity higher than 0.9, then we deduce that it is the best and most accurate syntax,
     // so we send it directly. Otherwise, we propose to the user to choose which syntax he wants to display in the
     // order of similarity. This algorithm is subject to change depending on its production effectiveness.
-
     const similarity: Array<[article: SkriptMcDocumentationSyntaxAndAddon, similarity: number]> = [];
     this.container.client.cache.skriptMcSyntaxes
       .forEach((article) => {
-        if (args.query.toLowerCase() === article.id.toString().toLowerCase())
+        if (category && jaroWinklerDistance(article.category, category, { caseSensitive: false }) < 0.9)
+          return;
+        if (addon && article.addon.name.toLowerCase() !== addon.toLowerCase())
+          return;
+        if (query.toLowerCase() === article.id.toString().toLowerCase())
           return similarity.push([article, 1]);
-        if (args.category && jaroWinklerDistance(article.category, args.category, { caseSensitive: false }) < 0.9)
-          return similarity.push([article, 0]);
-        if (args.addon && article.addon.name.toLowerCase() !== args.addon.toLowerCase())
-          return similarity.push([article, 0]);
-        for (const property of [article.englishName, article.frenchName, article.name, article.content]) {
-          if (property) {
-            const distance = jaroWinklerDistance(property, args.query, { caseSensitive: false });
-            if (distance >= 0.7)
-              return similarity.push([article, distance]);
-          }
+
+        const scores: number[] = [];
+        const fields = [article.englishName, article.frenchName, article.name, article.content].filter(Boolean);
+        for (const property of fields) {
+          const distance = jaroWinklerDistance(property, query, { caseSensitive: false });
+          if (distance >= 0.7)
+            scores.push(distance);
         }
-        return similarity.push([article, 0]);
+        if (scores.length > 0)
+          similarity.push([article, Math.max(...scores)]);
       });
 
     // Sorting in descending order.
@@ -91,7 +97,7 @@ export default class DocumentationCommand extends SwanCommand {
     if (matchingSyntaxes.length === 0) {
       await message.channel.send(
         pupa(config.messages.unknownSyntax, {
-          query: `${args.query}${args.addon ? ` pour l'addon "${args.addon}"` : ''}${args.category ? ` dans la catégorie "${args.category}"` : ''}`,
+          query: `${query}${addon ? ` pour l'addon "${addon}"` : ''}${category ? ` dans la catégorie "${category}"` : ''}`,
         }),
       );
       return;
@@ -104,7 +110,7 @@ export default class DocumentationCommand extends SwanCommand {
 
     // If we found multiple matches, present them nicely and ask the user which to choose.
     // TODO(interactions): Add a SelectMenu to choose the syntax.
-    let content = pupa(config.messages.searchResults, { matchingSyntaxes, syntax: args.query });
+    let content = pupa(config.messages.searchResults, { matchingSyntaxes, syntax: query });
 
     for (const [i, match] of matchingSyntaxes.entries())
       content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;

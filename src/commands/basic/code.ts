@@ -1,12 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import type { Message, MessageReaction, User } from 'discord.js';
 import { Formatters } from 'discord.js';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { SwanCommandOptions } from '@/app/types';
-import { GuildMessage } from '@/app/types';
-import { CodeCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop, splitText } from '@/app/utils';
 import { code as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -24,46 +22,45 @@ const languageOption = ['lang', 'language', 'langage'];
   options: [startLinesAtOption, languageOption].flat(),
 })
 export default class CodeCommand extends SwanCommand {
-  @Arguments({
-    name: 'displayLines',
-    match: 'flag',
-    flags: displayLinesFlag,
-  }, {
-    name: 'startLinesAt',
-    match: 'option',
-    flags: startLinesAtOption,
-    type: 'integer',
-    default: 0,
-  }, {
-    name: 'language',
-    match: 'option',
-    flags: languageOption,
-    default: 'applescript',
-  }, {
-    name: 'code',
-    match: 'rest',
-    type: 'string',
-    required: true,
-    message: messages.prompt.code,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: CodeCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const displayLines = args.getFlags(...displayLinesFlag);
+
+    const rawStartLinesAt = args.getOption(...startLinesAtOption);
+    const startLinesAt = Number(rawStartLinesAt) || 0;
+
+    const language = args.getOption(...languageOption) || 'applescript';
+
+    const code = await args.restResult('string');
+    if (!code.success) {
+      await message.channel.send(messages.prompt.code);
+      return;
+    }
+
+    await this._exec(message, displayLines, startLinesAt, language, code.value);
+  }
+
+  private async _exec(
+    message: GuildMessage,
+    displayLines: boolean | null,
+    startLinesAt: number,
+    language: string,
+    code: string,
+  ): Promise<void> {
     try {
       await message.delete();
 
       // Add the lines at the beginning, if needed.
-      let { code } = args;
-      if (args.displayLines) {
+      if (displayLines) {
         const lines = code.split('\n');
         code = '';
         // Compute the last line to know its length.
-        const finalLine = (args.startLinesAt + lines.length).toString();
+        const finalLine = (startLinesAt + lines.length).toString();
         for (const [i, line] of lines.entries()) {
           // Compute current line index.
-          const currentLine = (args.startLinesAt + i + 1).toString();
+          const currentLine = (startLinesAt + i + 1).toString();
           // Compute the space needed between the last number and the separator ('|').
           const space = finalLine.length - currentLine.length;
-          code += `\n${args.startLinesAt + i + 1}${' '.repeat(space)} | ${line}`;
+          code += `\n${startLinesAt + i + 1}${' '.repeat(space)} | ${line}`;
         }
       }
 
@@ -74,7 +71,7 @@ export default class CodeCommand extends SwanCommand {
       const codeBlocks: Message[] = [];
 
       for (let i = 0; i < splitCode.length; i++)
-        codeBlocks.push(await message.channel.send(Formatters.codeBlock(args.language, splitCode[i])));
+        codeBlocks.push(await message.channel.send(Formatters.codeBlock(language, splitCode[i])));
 
       const lastMessage = codeBlocks[codeBlocks.length - 1];
       await lastMessage?.react(settings.emojis.remove).catch(noop);

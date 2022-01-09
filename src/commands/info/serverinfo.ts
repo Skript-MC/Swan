@@ -1,12 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { ServerStatResponse, SwanCommandOptions } from '@/app/types';
-import { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, ServerStatResponse, SwanCommandOptions } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
@@ -14,17 +12,19 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class ServerInfoCommand extends SwanCommand {
-  @Arguments({
-    name: 'server',
-    type: 'string',
-    match: 'rest',
-    required: true,
-    message: messages.prompt.serverAdress,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {
-    const server: ServerStatResponse = await axios(settings.apis.server + args.server)
-      .then(response => (response.status >= 300 ? null : response.data))
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const query = await args.restResult('string');
+    if (!query.success) {
+      await message.channel.send(messages.prompt.serverAdress);
+      return;
+    }
+
+    await this._exec(message, query.value);
+  }
+
+  private async _exec(message: GuildMessage, query: string): Promise<void> {
+    const server: ServerStatResponse = await axios(settings.apis.server + query)
+      .then(res => (res.status >= 300 ? null : res.data))
       .catch(nullop);
 
     if (!server) {
@@ -35,7 +35,7 @@ export default class ServerInfoCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor({ name: pupa(embedMessages.title, { query: args.server }) })
+      .setAuthor({ name: pupa(embedMessages.title, { query }) })
       .setFooter({ text: pupa(embedMessages.footer, { member: message.member }) })
       .setTimestamp();
 

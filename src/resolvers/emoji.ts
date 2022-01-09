@@ -1,24 +1,18 @@
+import { EmojiRegex } from '@sapphire/discord-utilities';
 import type { Result } from '@sapphire/framework';
 import { err, ok } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
-import type { Guild, GuildEmoji } from 'discord.js';
+import type { Guild } from 'discord.js';
+import nodeEmoji from 'node-emoji';
 
-function checkEmoji(parameter: string, emoji: GuildEmoji): boolean {
-  if (emoji.id === parameter)
-    return true;
+export default function resolveEmoji(parameter: string, guild: Guild): Result<string, 'emojiError'> {
+  if (!parameter)
+    return err('emojiError');
 
-  const pattern = /<a?:\w+:\d{17,19}>/;
-  const match = pattern.exec(parameter);
-  if (match && emoji.id === match[1])
-    return true;
-
-  return emoji.name === parameter || emoji.name === parameter.replace(/:/, '');
-}
-
-export default function resolveEmoji(parameter: string, guild: Guild): Result<GuildEmoji, 'emojiError'> {
-  const emojis = guild.emojis.cache;
-  const emoji = emojis.get(parameter) || emojis.find(emoj => checkEmoji(parameter, emoj));
-
+  const regex = /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}\u{1F1E6}-\u{1F1FF}]/gu;
+  const emoji = nodeEmoji.find(parameter)?.emoji
+    || guild.emojis.cache.get(EmojiRegex.exec(parameter)?.[3])?.toString()
+    || parameter.match(regex)?.[0];
   if (isNullish(emoji))
     return err('emojiError');
   return ok(emoji);

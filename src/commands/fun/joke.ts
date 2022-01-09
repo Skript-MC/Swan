@@ -1,29 +1,28 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import Message from '@/app/models/message';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { SwanCommandOptions } from '@/app/types';
-import { GuildMessage, MessageName } from '@/app/types';
-import { JokeCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { MessageName } from '@/app/types';
 import { joke as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class JokeCommand extends SwanCommand {
-  @Arguments({
-    name: 'jokeName',
-    type: 'string',
-    match: 'rest',
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: JokeCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const jokeName = await args.restResult('string');
+
+    await this._exec(message, jokeName.value);
+  }
+
+  private async _exec(message: GuildMessage, jokeName: string | null): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     let joke;
-    if (args.jokeName) {
-      joke = await Message.findOne({ aliases: args.jokeName, messageType: MessageName.Joke });
+    if (jokeName) {
+      joke = await Message.findOne({ aliases: jokeName, messageType: MessageName.Joke });
     } else {
       const jokeCount = await Message.countDocuments({ messageType: MessageName.Joke });
       const random = Math.floor(Math.random() * jokeCount);

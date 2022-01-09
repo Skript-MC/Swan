@@ -1,13 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import Poll from '@/app/models/poll';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { SwanCommandOptions } from '@/app/types';
-import { GuildMessage, QuestionType } from '@/app/types';
-import { PollCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { QuestionType } from '@/app/types';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
@@ -23,47 +22,49 @@ const multipleFlags = ['m', 'mult', 'multiple'];
   quotes: [],
 })
 export default class PollCommand extends SwanCommand {
-  @Arguments({
-    name: 'anonymous',
-    match: 'flag',
-    flags: anonymousFlags,
-  }, {
-    name: 'multiple',
-    match: 'flag',
-    flags: multipleFlags,
-  }, {
-    name: 'duration',
-    type: 'duration',
-    match: 'pick',
-    required: true,
-    validate: (_message, resolved: number) => resolved >= 1000 && resolved < settings.miscellaneous.maxPollDuration,
-    message: messages.prompt.duration,
-  }, {
-    name: 'answers',
-    type: 'quotedText',
-    match: 'rest',
-    required: true,
-    validate: (_message, resolved: string[]) => resolved.every(answer => answer.length > 0),
-    message: messages.prompt.pollAnswers,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: PollCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const anonymous = args.getFlags(...anonymousFlags);
+
+    const multiple = args.getFlags(...multipleFlags);
+
+    const duration = await args.pickResult('duration').then(result => result.value);
+    if (!duration || duration < 1000 || duration > settings.miscellaneous.maxPollDuration) {
+      await message.channel.send(messages.prompt.pollDuration);
+      return;
+    }
+
+    const answers = await args.restResult('quotedText').then(result => result.value);
+    if (!answers || answers.some(answer => answer.length === 0)) {
+      await message.channel.send(messages.prompt.pollAnswers);
+      return;
+    }
+
+    await this._exec(message, anonymous, multiple, duration, answers);
+  }
+
+  private async _exec(
+    message: GuildMessage,
+    anonymous: boolean,
+    multiple: boolean,
+    duration: number,
+    answers: string[],
+  ): Promise<void> {
     // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
-    // the whole string given, and args.answers will be empty.
-    const question = args.answers.shift()!;
+    // the whole string given, and `answers` will be empty.
+    const question = answers.shift()!;
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
-    const questionType = args.answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
+    const questionType = answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
 
-    const finishDate = new Date(Date.now() + args.duration);
+    const finishDate = new Date(Date.now() + duration);
     const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
-    const formattedDuration = moment.duration(args.duration).humanize();
+    const formattedDuration = moment.duration(duration).humanize();
 
-    if (args.answers.length === 1) {
+    if (answers.length === 1) {
       await message.channel.send(config.messages.notEnoughAnswers);
       return;
     }
 
-    if (args.answers.length > 18) {
+    if (answers.length > 18) {
       await message.channel.send(config.messages.tooManyAnswers);
       return;
     }
@@ -74,7 +75,7 @@ export default class PollCommand extends SwanCommand {
     if (questionType === QuestionType.Yesno) {
       possibleAnswers = config.messages.answersDisplayYesno;
     } else {
-      for (const [i, answer] of args.answers.entries()) {
+      for (const [i, answer] of answers.entries()) {
         possibleAnswers += pupa(config.messages.answersDisplayCustom, {
           reaction: settings.miscellaneous.pollReactions.multiple[i],
           answer,
@@ -83,9 +84,9 @@ export default class PollCommand extends SwanCommand {
     }
 
     const details: string[] = [];
-    if (args.anonymous)
+    if (anonymous)
       details.push(config.messages.informationAnonymous);
-    if (args.multiple)
+    if (multiple)
       details.push(config.messages.informationMultiple);
 
     const embedMessages = config.messages.embed;
@@ -111,7 +112,7 @@ export default class PollCommand extends SwanCommand {
         possibleReactions.push(r);
       }
     } else {
-      for (let i = 0; i < args.answers.length; i++) {
+      for (let i = 0; i < answers.length; i++) {
         await pollMessage.react(settings.miscellaneous.pollReactions.multiple[i]);
         possibleReactions.push(settings.miscellaneous.pollReactions.multiple[i]);
       }
@@ -135,13 +136,13 @@ export default class PollCommand extends SwanCommand {
       memberId: message.author.id,
       channelId: message.channel.id,
       finish: finishDate.getTime(),
-      duration: args.duration,
+      duration,
       questionType,
       votes,
       question,
-      customAnswers: args.answers.length === 0 ? null : args.answers,
-      anonymous: args.anonymous,
-      multiple: args.multiple,
+      customAnswers: answers.length === 0 ? null : answers,
+      anonymous,
+      multiple,
     });
   }
 }

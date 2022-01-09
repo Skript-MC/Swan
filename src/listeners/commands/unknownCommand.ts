@@ -39,6 +39,7 @@ export default class UnknownCommandListener extends Listener {
       }),
     );
 
+    // TODO(interactions): Add buttons or a SelectMenu to choose the command.
     const reactions = settings.miscellaneous.reactionNumbers;
     if (possibleCommands.length === 1) {
       await botMessage.react('✅');

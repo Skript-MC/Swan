@@ -208,7 +208,7 @@ export const rule = {
   },
   messages: {
     notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
-    noRules: "Aucune règle n'a été rentrée.",
+    noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },
 };

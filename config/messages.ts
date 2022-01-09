@@ -100,6 +100,7 @@ export default {
     minecraftVersion: 'La version de Minecraft donnée est invalide.',
     number: 'Le nombre donné est invalide.',
     pollAnswers: 'Le sondage et/ou les réponses données sont invalides.',
+    pollDuration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.\n:warning: La durée ne peut pas excéder 7 jours !',
     question: 'La question donnée est invalide.',
     reason: 'La raison donnée est invalide.',
     role: 'Le rôle donné est invalide.',

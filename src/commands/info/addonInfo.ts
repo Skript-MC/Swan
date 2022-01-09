@@ -1,15 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
+import type { Args } from '@sapphire/framework';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import type { Message, MessageReaction, User } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
-import { AddonInfoCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
 import { convertFileSize, noop, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
@@ -17,25 +15,27 @@ import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class AddonInfoCommand extends SwanCommand {
-  @Arguments({
-    name: 'addon',
-    type: 'string',
-    match: 'rest',
-    required: true,
-    message: messages.prompt.addon,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: AddonInfoCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const addon = await args.restResult('string');
+    if (!addon.success) {
+      await message.channel.send(messages.prompt.addon);
+      return;
+    }
+
+    await this._exec(message, addon.value);
+  }
+
+  private async _exec(message: GuildMessage, addon: string): Promise<void> {
     // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
     // We keep only the first 10 matching addons.
     const matchingAddons = this.container.client.cache.addonsVersions
-      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, args.addon, { caseSensitive: false }) >= 0.7)
+      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, addon, { caseSensitive: false }) >= 0.7)
       .map(elt => ({ file: elt, name: elt.split(' ').shift()! }))
       .slice(0, 10);
 
     // If we found no match.
     if (matchingAddons.length === 0) {
-      await message.channel.send(pupa(config.messages.unknownAddon, args));
+      await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
       return;
     }
     // If we found one match, show it directly.
@@ -45,14 +45,14 @@ export default class AddonInfoCommand extends SwanCommand {
     }
 
     // If we found multiple matches, present them nicely and ask the user which to choose.
-    const possibleMatch = matchingAddons.find(match => args.addon.toLowerCase() === match.name.toLowerCase());
+    const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
     if (possibleMatch) {
       await this._sendDetail(message, possibleMatch.file);
       return;
     }
 
     // TODO(interactions): Add a SelectMenu to choose the addon.
-    let content = pupa(config.messages.searchResults, { matchingAddons, addon: args.addon });
+    let content = pupa(config.messages.searchResults, { matchingAddons, addon });
 
     for (const [i, match] of matchingAddons.entries())
       content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;

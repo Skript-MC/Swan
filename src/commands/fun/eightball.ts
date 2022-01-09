@@ -1,24 +1,23 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import Arguments from '@/app/decorators/Argument';
+import type { Args } from '@sapphire/framework';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { EightBallCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { eightBall as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class EightBallCommand extends SwanCommand {
-  @Arguments({
-    name: 'question',
-    type: 'string',
-    match: 'rest',
-    required: true,
-    message: messages.prompt.question,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, _args: EightBallCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    if (args.finished) {
+      await message.channel.send(messages.prompt.question);
+      return;
+    }
+
+    await this._exec(message);
+  }
+
+  private async _exec(message: GuildMessage): Promise<void> {
     const isAffirmative = Math.random() > 0.5;
     const pool = config.messages[isAffirmative ? 'affirmative' : 'negative'];
     const answer = pool[Math.floor(Math.random() * pool.length)];

@@ -38,8 +38,11 @@ export const module = {
       content: "Vous pouvez consulter la liste des modules et modifier leurs états simplement depuis Swan Dashboard. Vous pouvez aussi directement utiliser Swan pour modifier l'état d'un de ces modules, via la commande `.module <nom> <on|off>`.",
     },
     noModuleFound: ":x: Aucun module avec ce nom n'a été trouvé. Rendez-vous sur https://swan.skript-mc.fr/modules pour consulter la liste des modules.",
+    status: 'Actuellement, le module "{name}" est {status}.',
+    on: 'activé :white_check_mark:',
+    off: 'désactivé :x:',
     cannotBeDisabled: ':x: Ce module ne peut pas être désactivé.',
-    success: ':white_check_mark: Le module a bien été {status}.',
+    success: 'Le module a bien été {status}.',
     confirmationPrompt: 'Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.',
   },
 };
@@ -66,14 +69,13 @@ export const reactionRole = {
     description: stripIndent`
       Permet de créer un nouvel espace de **ReactionRole**.
       Les membres pourront s'auto-attribuer un rôle, en ajoutant une réaction à un message de Swan.
-      L'ordre des arguments n'importe pas : il faut simplement que le rôle soit toujours spécifié.
       Pour supprimer un Reaction Role, il suffit de supprimer le message correspondant !
     `,
-    usage: 'reactionrole <@rôle | nom | ID> [émoji | --default] [#salon | ID salon | --here]',
+    usage: 'reactionrole <@rôle | nom | ID> <émoji | "default"> [#salon | ID salon]',
     examples: [
       'reactionrole 818086544593518593 :tada: #annonces',
-      'reactionrole @Events --default 818126792257830932',
-      'reactionrole 818086544593518593 :oui: --here',
+      'reactionrole @Events default 818126792257830932',
+      'reactionrole 818086544593518593 :oui:',
     ],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],

@@ -8,7 +8,6 @@ import type {
 } from '@sapphire/framework';
 import type {
   Guild,
-  GuildEmoji,
   GuildMember,
   GuildTextBasedChannel,
   User,
@@ -76,9 +75,9 @@ declare module '@sapphire/framework' {
     bannedMember: GuildMember | User;
     command: SwanCommand;
     duration: number;
-    emoji: GuildEmoji;
+    emoji: string;
     guildTextBasedChannel: GuildTextBasedChannel;
-    sanctionnableMember: GuildMember;
     quotedText: string[];
+    sanctionnableMember: GuildMember;
   }
 }

@@ -1,10 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
+import type { GuildMember, User } from 'discord.js';
 import pupa from 'pupa';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { PurgeCommandArgument } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { purge as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
@@ -18,31 +17,34 @@ const forceFlag = ['force', 'f'];
   flags: forceFlag,
 })
 export default class PurgeCommand extends SwanCommand {
-  @Arguments({
-    name: 'force',
-    match: 'flag',
-    flags: forceFlag,
-  }, {
-    name: 'member',
-    type: ['member', 'user'],
-    match: 'pick',
-  }, {
-    name: 'amount',
-    type: 'integer',
-    match: 'pick',
-    validate: (_messaege, value: number) => value >= 0 && value <= settings.moderation.purgeLimit + 1,
-    required: true,
-    message: messages.prompt.number,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: PurgeCommandArgument): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const force = args.getFlags(...forceFlag);
+
+    const member = await args.pick('member')
+      .catch(async () => args.pick('user'));
+
+    const amount = await args.pickResult('integer').then(result => result.value);
+    if (!amount || amount < 0 || amount > settings.moderation.purgeLimit) {
+      await message.channel.send(messages.prompt.number);
+      return;
+    }
+
+    await this._exec(message, force, member, amount);
+  }
+
+  private async _exec(
+    message: GuildMessage,
+    force: boolean,
+    member: GuildMember | User,
+    amount: number,
+  ): Promise<void> {
     await message.delete();
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
-    const allMessages = await message.channel.messages.fetch({ limit: args.amount });
+    const allMessages = await message.channel.messages.fetch({ limit: amount });
     const msgs = allMessages
-      .filter(msg => (args.member ? msg.author.id === args.member.id : true))
-      .filter(msg => (args.force || !msg.member?.roles.cache.has(settings.roles.staff)));
+      .filter(msg => (member ? msg.author.id === member.id : true))
+      .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
     const deletedMessages = await message.channel.bulkDelete(msgs, true);
 
     const msg = await message.channel.send(pupa(config.messages.success, { deletedMessages }));

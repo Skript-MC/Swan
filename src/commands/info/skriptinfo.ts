@@ -1,30 +1,29 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import Arguments from '@/app/decorators/Argument';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
+const enumValues = ['all', 'dl', 'download', 'link', 'links'] as const;
+
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class SkriptInfoCommand extends SwanCommand {
-  @Arguments({
-    name: 'display',
-    type: 'string',
-    match: 'pick',
-    default: 'all',
-    validate: (_message, value: string) => ['all', 'dl', 'download', 'link', 'links'].includes(value),
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const display = await args.pick('enum', { enum: enumValues, caseSensitive: false })
+      .catch(() => 'all') as (typeof enumValues)[number];
+
+    await this._exec(message, display);
+  }
+
+  private async _exec(message: GuildMessage, display: (typeof enumValues)[number]): Promise<void> {
     const embeds: MessageEmbed[] = [];
 
     // TODO: Refactor this command's usage as it's not very intuitive.
-    if (['dl', 'download', 'all'].includes(args.display)) {
+    if (['dl', 'download', 'all'].includes(display)) {
       const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
@@ -53,7 +52,7 @@ export default class SkriptInfoCommand extends SwanCommand {
       );
     }
 
-    if (['link', 'links', 'all'].includes(args.display)) {
+    if (['link', 'links', 'all'].includes(display)) {
       embeds.push(
         new MessageEmbed()
           .setColor(settings.colors.default)

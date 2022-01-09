@@ -1,16 +1,20 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import SwanChannel from '@/app/models/swanChannel';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import type { RefreshCommandArgument } from '@/app/types/CommandArguments';
 import { toggleModule } from '@/app/utils';
 import { refresh as config } from '@/conf/commands/admin';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class RefreshCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: RefreshCommandArgument): Promise<void> {
+  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
+    await this._exec(message);
+  }
+
+  private async _exec(message: GuildMessage): Promise<void> {
     // Refresh modules
     const modules = await SwanModule.find();
     for (const module of modules)

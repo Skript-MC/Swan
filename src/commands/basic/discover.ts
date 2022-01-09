@@ -1,16 +1,20 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import type { DiscoverCommandArguments } from '@/app/types/CommandArguments';
 import { discover as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class DiscoverCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: DiscoverCommandArguments): Promise<void> {
+  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
+    await this._exec(message);
+  }
+
+  private async _exec(message: GuildMessage): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     const randomCommand = this.container.stores.get('commands').random() as SwanCommand;
 
