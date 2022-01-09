@@ -2,14 +2,10 @@ import type { Endpoints } from '@octokit/types';
 import type { CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
-  Collection,
   Guild,
-  GuildAuditLogs,
-  GuildAuditLogsEntry,
   GuildMember,
   GuildTextBasedChannel,
   Message,
-  Snowflake,
   User,
 } from 'discord.js';
 import type {
@@ -388,30 +384,6 @@ export interface BanChannelMessage {
   sentAt: number;
   edited?: number | null;
   attachments: Array<{ name: string; url: string }>;
-}
-
-/** Represent a Kick entry in the guild audit logs */
-export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
-  action: 'MEMBER_KICK';
-  target: User;
-  targetType: 'USER';
-}
-
-/** Represent a Ban entry in the guild audit logs */
-export interface GuildBanAuditLogsEntry extends GuildAuditLogsEntry {
-  action: 'MEMBER_BAN_ADD';
-  target: User;
-  targetType: 'USER';
-}
-
-/** Represent an audit log where all entries are Kick entries */
-export interface GuildKickAuditLogs extends GuildAuditLogs {
-  entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
-}
-
-/** Represent an audit log where all entries are Ban entries */
-export interface GuildBanAuditLogs extends GuildAuditLogs {
-  entries: Collection<Snowflake, GuildBanAuditLogsEntry>;
 }
 
 /** The sanctions types that we track in the ConvictedUser database */

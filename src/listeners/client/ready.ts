@@ -7,7 +7,7 @@ import ReactionRole from '@/app/models/reactionRole';
 import SwanChannel from '@/app/models/swanChannel';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
-import type { ChannelArraySlugs, ChannelSingleSlug, GuildBanAuditLogs } from '@/app/types';
+import type { ChannelArraySlugs, ChannelSingleSlug } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -122,7 +122,7 @@ export default class ReadyListener extends Listener {
       if (!convictedUsers.some(usr => usr.memberId === ban.user.id)) {
         const logs = await this.container.client.guild.fetchAuditLogs({
           type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
-        }) as GuildBanAuditLogs;
+        });
 
         const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
         if (!discordBan)

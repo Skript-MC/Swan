@@ -5,7 +5,6 @@ import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import BanAction from '@/app/moderation/actions/BanAction';
 import KickAction from '@/app/moderation/actions/KickAction';
-import type { GuildKickAuditLogs } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import messages from '@/conf/messages';
 
@@ -17,7 +16,7 @@ export default class GuildMemberRemoveListener extends Listener {
 
     const kicks = await member.guild.fetchAuditLogs({
       type: GuildAuditLogs.Actions.MEMBER_KICK,
-    }) as GuildKickAuditLogs;
+    });
 
     const lastKick = kicks.entries.first();
 

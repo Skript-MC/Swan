@@ -1,18 +1,23 @@
 import type { ArgumentContext, AsyncArgumentResult } from '@sapphire/framework';
-import { Argument, Resolvers } from '@sapphire/framework';
+import { Argument } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
+import CustomResolvers from '../resolvers';
 
 export default class SanctionnableMemberArgument extends Argument<GuildMember> {
   public async run(parameter: string, context: ArgumentContext<GuildMember>): AsyncArgumentResult<GuildMember> {
-    const member = await Resolvers.resolveMember(parameter, this.container.client.guild);
-    const moderator = context.args.message.member;
+    const resolved = await CustomResolvers.resolveSanctionnableMember(
+      parameter,
+      context.message.guild,
+      context.message.member,
+    );
 
-    return member.value.id !== moderator.id && member.value.roles.highest.position < moderator.roles.highest.position
-      ? this.ok(member.value)
-      : this.error({
-          parameter,
-          message: 'The argument did not resolve to a sanctionnable member.',
-          context,
-        });
+    if (resolved.success)
+      return this.ok(resolved.value);
+    return this.error({
+      parameter,
+      identifier: resolved.error,
+      message: 'The argument did not resolve to a sanctionnable member.',
+      context,
+    });
   }
 }

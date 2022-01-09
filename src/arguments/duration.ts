@@ -1,14 +1,18 @@
 import type { ArgumentContext, ArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
-import { getDuration } from '@/app/utils';
+import CustomResolvers from '../resolvers';
 
 export default class DurationArgument extends Argument<number> {
-  public override run(parameter: string, _context: ArgumentContext<number>): ArgumentResult<number> {
-    try {
-      const duration = getDuration(parameter);
-      return this.ok(duration < 0 ? duration : duration * 1000);
-    } catch {
-      return this.error({ parameter });
-    }
+  public override run(parameter: string, context: ArgumentContext<number>): ArgumentResult<number> {
+    const resolved = CustomResolvers.resolveDuration(parameter);
+
+    if (resolved.success)
+      return this.ok(resolved.value);
+    return this.error({
+      parameter,
+      identifier: resolved.error,
+      message: 'The argument did not resolve to a duration.',
+      context,
+    });
   }
 }
