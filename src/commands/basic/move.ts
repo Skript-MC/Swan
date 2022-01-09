@@ -52,10 +52,10 @@ export default class MoveCommand extends SwanCommand {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(
-        pupa(config.messages.moveTitle, { targetName }),
-        args.targetedMessage.author.displayAvatarURL(),
-      )
+      .setAuthor({
+        name: pupa(config.messages.moveTitle, { targetName }),
+        iconURL: args.targetedMessage.author.displayAvatarURL(),
+      })
       .setDescription(
         pupa(config.messages.moveInfo, {
           memberDisplayName: message.member,

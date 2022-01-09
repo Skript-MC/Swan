@@ -26,7 +26,7 @@ export default class PingCommand extends SwanCommand {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setDescription(description)
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
       .setTimestamp();
 
     await sent.delete().catch(noop);

@@ -64,8 +64,8 @@ export default class UserInfoCommand extends SwanCommand {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedConfig.title, { member: args.member }))
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
+      .setAuthor({ name: pupa(embedConfig.title, { member: args.member }) })
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
       .setThumbnail(args.member.user.displayAvatarURL())
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)

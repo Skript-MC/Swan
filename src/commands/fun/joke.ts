@@ -38,7 +38,7 @@ export default class JokeCommand extends SwanCommand {
     const embed = new MessageEmbed()
       .setDescription(joke.content)
       .setColor(settings.colors.default)
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
       .setTimestamp();
 
     await message.channel.send({ embeds: [embed] });

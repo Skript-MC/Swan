@@ -49,7 +49,7 @@ export default class SkriptInfoCommand extends SwanCommand {
           .setTitle(config.messages.embed.downloadTitle)
           .setTimestamp()
           .setDescription(downloadDescription)
-          .setFooter(pupa(config.messages.embed.footer, { member: message.member })),
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: message.member }) }),
       );
     }
 
@@ -60,7 +60,7 @@ export default class SkriptInfoCommand extends SwanCommand {
           .setTitle(config.messages.embed.informationsTitle)
           .setTimestamp()
           .setDescription(config.messages.embed.information)
-          .setFooter(pupa(config.messages.embed.footer, { member: message.member })),
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: message.member }) }),
       );
     }
 

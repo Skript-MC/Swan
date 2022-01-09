@@ -46,13 +46,13 @@ export default class SkriptReleasesTask extends Task {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(lastRelease.author?.login ?? 'SkriptLang', lastRelease.author?.avatar_url)
+      .setAuthor({ name: lastRelease.author?.login ?? 'SkriptLang', iconURL: lastRelease.author?.avatar_url })
       .setTitle(`${lastRelease.name} (${lastRelease.tag_name})`)
       .setURL(lastRelease.html_url)
       .setDescription(
         trimText(lastRelease.body || messages.miscellaneous.noDescription, EmbedLimits.MaximumDescriptionLength),
       )
-      .setFooter(`${config.dataProvider} (#${lastRelease.id})`)
+      .setFooter({ text: `${config.dataProvider} (#${lastRelease.id})` })
       .setTimestamp(new Date(lastRelease.published_at));
 
     await channel.send({ content: config.releaseAnnouncement, embeds: [embed] }).catch(noop);

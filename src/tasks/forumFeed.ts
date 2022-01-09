@@ -51,11 +51,11 @@ export default class ForumFeedTask extends Task {
         const markdown = turndownService.turndown(topic.firstPost.content);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(topic.firstPost.author.name, 'https:' + topic.firstPost.author.photoUrl)
+          .setAuthor({ name: topic.firstPost.author.name, iconURL: 'https:' + topic.firstPost.author.photoUrl })
           .setTitle(pupa(config.embed.title, { topic }))
           .setURL(topic.url)
           .setDescription(trimText(markdown, 500))
-          .setFooter(config.dataProvider)
+          .setFooter({ text: config.dataProvider })
           .setTimestamp(new Date(topic.firstPost.date));
         void channel.send({ embeds: [embed] }).catch(noop);
       });
@@ -84,7 +84,7 @@ export default class ForumFeedTask extends Task {
         const markdown = turndownService.turndown(resource.changelog || resource.description);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(resource.author.name, resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}`)
+          .setAuthor({ name: resource.author.name, iconURL: resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}` })
           .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
           .setURL(resource.url)
           .setDescription(trimText(markdown, 150))
@@ -92,7 +92,7 @@ export default class ForumFeedTask extends Task {
           .addField(config.embed.versionTitle, resource.version, true)
           .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, true)
           .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
-          .setFooter(config.dataProvider)
+          .setFooter({ text: config.dataProvider })
           .setTimestamp(new Date(resource.date));
         void channel.send({ embeds: [embed] }).catch(noop);
       });

@@ -95,7 +95,7 @@ export default class MessageCreateListener extends Listener {
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
           .setTimestamp()
-          .setAuthor(`Suggestion de ${message.member.displayName}`, message.author.avatarURL() ?? '')
+          .setAuthor({ name: `Suggestion de ${message.member.displayName}`, iconURL: message.author.avatarURL() ?? '' })
           .setDescription(message.content);
         const suggestionMessage = await message.channel.send({ embeds: [embed] });
         await suggestionMessage.react(settings.emojis.yes);
@@ -141,9 +141,12 @@ export default class MessageCreateListener extends Listener {
 
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL() ?? '')
+        .setAuthor({
+          name: `Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`,
+          iconURL: targetedMessage.author.avatarURL() ?? '',
+        })
         .setDescription(`${trimText(targetedMessage.content, MessageLimits.MaximumLength - 100)}\n[(lien)](${targetedMessage.url})`)
-        .setFooter(`Message cité par ${message.member.displayName}.`);
+        .setFooter({ text: `Message cité par ${message.member.displayName}.` });
 
       // We add all attachments if needed.
       if (targetedMessage.attachments.size > 0) {

@@ -35,8 +35,8 @@ export default class ServerInfoCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedMessages.title, { query: args.server }))
-      .setFooter(pupa(embedMessages.footer, { member: message.member }))
+      .setAuthor({ name: pupa(embedMessages.title, { query: args.server }) })
+      .setFooter({ text: pupa(embedMessages.footer, { member: message.member }) })
       .setTimestamp();
 
     if (typeof server.online !== 'undefined')

@@ -1,7 +1,7 @@
-import { execSync } from 'node:child_process';
 import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
+import { execSync } from 'node:child_process';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';
@@ -19,7 +19,7 @@ export default class StatisticsCommand extends SwanCommand {
     const commitHash = this._getGitRev();
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(config.messages.embed.title, settings.bot.avatar)
+      .setAuthor({ name: config.messages.embed.title, iconURL: settings.bot.avatar })
       .setDescription(pupa(config.messages.embed.description, { prefix: settings.bot.prefix }))
       .addField(
         embedMessages.version,
@@ -35,7 +35,7 @@ export default class StatisticsCommand extends SwanCommand {
       .addField(embedMessages.developers, embedMessages.developersContent, true)
       .addField(embedMessages.thanks, embedMessages.thanksContent, true)
       .addField(embedMessages.bugs, pupa(embedMessages.bugsContent, { url: pkg.bugs?.url || pkg.homepage }), true)
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
       .setTimestamp();
 
     await message.channel.send({ embeds: [embed] });

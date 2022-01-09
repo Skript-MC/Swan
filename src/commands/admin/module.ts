@@ -33,7 +33,7 @@ export default class ModuleCommand extends SwanCommand {
         .setURL(config.messages.embed.link)
         .setColor(settings.colors.default)
         .setDescription(config.messages.embed.content)
-        .setFooter(pupa(messages.global.executedBy, { member: message.member }));
+        .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) });
       await message.channel.send({ embeds: [embed] }).catch(noop);
       return;
     }

@@ -43,7 +43,7 @@ export default class ReactionRoleCommand extends SwanCommand {
       .setTitle(pupa(config.messages.embed.title, { givenRole: args.givenRole }))
       .setDescription(pupa(config.messages.embed.content, args))
       .setColor(settings.colors.default)
-      .setFooter(config.messages.embed.footer.text, config.messages.embed.footer.icon);
+      .setFooter({ text: config.messages.embed.footer.text, iconURL: config.messages.embed.footer.icon });
 
     const sendMessage = await args.destinationChannel.send({ embeds: [embed] });
     try {

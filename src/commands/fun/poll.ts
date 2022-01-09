@@ -92,7 +92,7 @@ export default class PollCommand extends SwanCommand {
     const durationContent = pupa(embedMessages.durationContent, { formattedDuration, formattedEnd });
 
     const embed = new MessageEmbed()
-      .setAuthor(pupa(embedMessages.author, { message }), message.author.avatarURL() ?? '')
+      .setAuthor({ name: pupa(embedMessages.author, { message }), iconURL: message.author.avatarURL() ?? '' })
       .addField(embedMessages.question, trimText(question, 1000))
       .addField(embedMessages.answers, trimText(possibleAnswers, 1000))
       .addField(embedMessages.duration, durationContent)
