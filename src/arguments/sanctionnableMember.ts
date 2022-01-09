@@ -1,7 +1,7 @@
 import type { ArgumentContext, AsyncArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import CustomResolvers from '../resolvers';
+import CustomResolvers from '@/app/resolvers';
 
 export default class SanctionnableMemberArgument extends Argument<GuildMember> {
   public async run(parameter: string, context: ArgumentContext<GuildMember>): AsyncArgumentResult<GuildMember> {

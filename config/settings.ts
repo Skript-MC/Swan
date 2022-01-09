@@ -1,6 +1,6 @@
 import type { HexColorString } from 'discord.js';
-import { basePreconditions } from './configUtils';
 import type { SwanCommandOptions } from '@/app/types';
+import { basePreconditions } from '@/conf/configUtils';
 
 const skriptHelp = [...process.env.SKRIPT_HELP_CHANNELS.split(',')];
 const skriptExtraHelp = [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')];

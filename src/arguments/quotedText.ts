@@ -1,6 +1,6 @@
 import type { ArgumentContext, ArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
-import CustomResolvers from '../resolvers';
+import CustomResolvers from '@/app/resolvers';
 
 export default class QuotedTextArgument extends Argument<string[]> {
   public override run(parameter: string, context: ArgumentContext<string[]>): ArgumentResult<string[]> {

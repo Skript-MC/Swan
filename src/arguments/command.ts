@@ -1,6 +1,6 @@
 import type { ArgumentContext, ArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
-import CustomResolvers from '../resolvers';
+import CustomResolvers from '@/app/resolvers';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export default class CommandArgument extends Argument<SwanCommand> {

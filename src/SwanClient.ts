@@ -3,12 +3,12 @@ import { LogLevel, SapphireClient } from '@sapphire/framework';
 import axios from 'axios';
 import { Intents, Permissions } from 'discord.js';
 import type { Query } from 'mongoose';
-import TaskStore from './structures/tasks/TaskStore';
 import CommandStat from '@/app/models/commandStat';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
 import SwanModule from '@/app/models/swanModule';
 import SwanCacheManager from '@/app/structures/SwanCacheManager';
+import TaskStore from '@/app/structures/tasks/TaskStore';
 import type {
   CommandStatDocument,
   SkriptMcDocumentationFullAddonResponse,

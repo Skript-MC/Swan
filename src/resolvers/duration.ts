@@ -1,6 +1,6 @@
 import type { Result } from '@sapphire/framework';
 import { err, ok } from '@sapphire/framework';
-import { getDuration } from '../utils';
+import { getDuration } from '@/app/utils';
 
 export default function resolveDuration(parameter: string): Result<number, 'durationError'> {
   try {

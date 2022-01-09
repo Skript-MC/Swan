@@ -1,7 +1,7 @@
 import type { ArgumentContext, AsyncArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
 import type { GuildMember, User } from 'discord.js';
-import CustomResolvers from '../resolvers';
+import CustomResolvers from '@/app/resolvers';
 
 export default class BannedMemberArgument extends Argument<GuildMember | User> {
   public override async run(

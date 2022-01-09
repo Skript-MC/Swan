@@ -2,7 +2,7 @@ import { SnowflakeRegex, UserOrMemberMentionRegex } from '@sapphire/discord-util
 import type { Result } from '@sapphire/framework';
 import { ok, Resolvers } from '@sapphire/framework';
 import type { Guild, GuildMember, User } from 'discord.js';
-import { nullop, resolveUser } from '../utils';
+import { nullop, resolveUser } from '@/app/utils';
 
 export default async function resolveBannedMember(
   parameter: string,

@@ -1,7 +1,7 @@
 import type { ArgumentContext, ArgumentResult } from '@sapphire/framework';
 import { Argument } from '@sapphire/framework';
 import type { GuildTextBasedChannel } from 'discord.js';
-import CustomResolvers from '../resolvers';
+import CustomResolvers from '@/app/resolvers';
 
 export default class GuildTextBasedChannelArgument extends Argument<GuildTextBasedChannel> {
   public override run(
