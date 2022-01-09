@@ -105,62 +105,55 @@ export const links = {
     name: 'Liens',
     aliases: ['links', 'link', 'liens', 'lien'],
     description: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
-    usage: 'links [page]',
-    examples: ['links', 'liens 4'],
+    usage: 'links',
+    examples: ['links'],
   },
   messages: {
+    selectMenuItemDescription: 'Page {pageIndex}',
     embed: {
-      summary: `
-        Voici la liste des liens importants relatifs à Skript. Sommaire :
-        :zero: Sommaire.
-        :one: Liens sur les documentations de Skript.
-        :two: Liens sur les documentations des addons de Skript.
-        :three: Liens de téléchargement de Skript et de ses addons.
-        :four: Liens vers quelques Discord importants.
-        :five: Divers liens importants.
-      `,
+      summary: [
+        'Documentations de Skript.',
+        'Documentations des addons de Skript.',
+        'Téléchargement de Skript et de ses addons.',
+        'Quelques Discord importants.',
+        'Autres liens importants.',
+      ],
       fields: [
-        [
-          {
-            title: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
-            description: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
-          }, {
-            title: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
-            description: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
-          },
-        ], [
-          {
-            title: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
-            description: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
-          }, {
-            title: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
-            description: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
-          },
-        ], [
-          {
-            title: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
-            description: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
-          }, {
-            title: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-            description: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
-          },
-        ], [
-          {
-            title: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
-            description: 'Lien officiel de ce Discord.',
-          }, {
-            title: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
-            description: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
-          },
-        ], [
-          {
-            title: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
-            description: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
-          }, {
-            title: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
-            description: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
-          },
-        ],
+        {
+          name: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
+          value: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
+        }, {
+          name: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
+          value: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
+        },
+        {
+          name: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
+          value: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
+        }, {
+          name: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
+          value: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
+        },
+        {
+          name: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
+          value: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
+        }, {
+          name: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
+          value: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
+        },
+        {
+          name: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
+          value: 'Lien officiel de ce Discord.',
+        }, {
+          name: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
+          value: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+        },
+        {
+          name: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
+          value: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
+        }, {
+          name: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
+          value: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
+        },
       ],
     },
   },

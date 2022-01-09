@@ -20,6 +20,7 @@ export default class JokeCommand extends SwanCommand {
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: JokeCommandArguments): Promise<void> {
+    // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     let joke;
     if (args.jokeName) {
       joke = await Message.findOne({ aliases: args.jokeName, messageType: MessageName.Joke });

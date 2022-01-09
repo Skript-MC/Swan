@@ -21,6 +21,7 @@ export default class AddonPackCommand extends SwanCommand {
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
+    // TODO: Remove this command's logic, send a hardcoded message telling packs should not be used.
     const msgs = await Message.find({ messageType: MessageName.AddonPack });
     const search = searchMessageSimilarity(msgs, args.version);
     if (!search) {

@@ -1,4 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
@@ -102,12 +103,7 @@ export default class DocumentationCommand extends SwanCommand {
     }
 
     // If we found multiple matches, present them nicely and ask the user which to choose.
-    const possibleMatch = matchingSyntaxes.find(match => args.query.toLowerCase() === match.name.toLowerCase());
-    if (possibleMatch) {
-      await this._sendDetail(message, possibleMatch);
-      return;
-    }
-
+    // TODO(interactions): Add a SelectMenu to choose the syntax.
     let content = pupa(config.messages.searchResults, { matchingSyntaxes, syntax: args.query });
 
     for (const [i, match] of matchingSyntaxes.entries())
@@ -154,7 +150,7 @@ export default class DocumentationCommand extends SwanCommand {
                 content: syntax.content || embedMessages.noDescription,
               },
             }),
-          ), 2000,
+          ), EmbedLimits.MaximumDescriptionLength / 2,
         ),
       )
       .setFooter(pupa(embedMessages.footer, { member: message.member }));

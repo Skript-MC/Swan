@@ -1,4 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import { EmbedLimits } from '@sapphire/discord-utilities';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import type { Message, MessageReaction, User } from 'discord.js';
@@ -50,6 +51,7 @@ export default class AddonInfoCommand extends SwanCommand {
       return;
     }
 
+    // TODO(interactions): Add a SelectMenu to choose the addon.
     let content = pupa(config.messages.searchResults, { matchingAddons, addon: args.addon });
 
     for (const [i, match] of matchingAddons.entries())
@@ -95,7 +97,7 @@ export default class AddonInfoCommand extends SwanCommand {
       .setColor(settings.colors.default)
       .setAuthor(pupa(embedMessages.title, { addon }))
       .setTimestamp()
-      .setDescription(trimText(addon.description || embedMessages.noDescription, 2000))
+      .setDescription(trimText(addon.description || embedMessages.noDescription, EmbedLimits.MaximumDescriptionLength))
       .setFooter(pupa(embedMessages.footer, { member: message.member }));
 
     if (addon.unmaintained)

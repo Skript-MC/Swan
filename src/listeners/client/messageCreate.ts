@@ -1,3 +1,4 @@
+import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
@@ -58,8 +59,8 @@ export default class MessageCreateListener extends Listener {
     if (message.member.roles.cache.has(settings.roles.activeMember)
       && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
       await message.delete();
-      const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= 2000
-        ? trimText(message.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
+      const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= MessageLimits.MaximumLength
+        ? trimText(message.content, MessageLimits.MaximumLength - messages.miscellaneous.noDocLink.length - 3)
         : message.content;
       await message.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
 
@@ -141,7 +142,7 @@ export default class MessageCreateListener extends Listener {
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
         .setAuthor(`Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`, targetedMessage.author.avatarURL() ?? '')
-        .setDescription(`${trimText(targetedMessage.content, 1900)}\n[(lien)](${targetedMessage.url})`)
+        .setDescription(`${trimText(targetedMessage.content, MessageLimits.MaximumLength - 100)}\n[(lien)](${targetedMessage.url})`)
         .setFooter(`Message cité par ${message.member.displayName}.`);
 
       // We add all attachments if needed.

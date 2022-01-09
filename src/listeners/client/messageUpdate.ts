@@ -1,3 +1,4 @@
+import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import { User } from 'discord.js';
 import type { MessageReaction } from 'discord.js';
@@ -12,12 +13,18 @@ export default class MessageUpdateListener extends Listener {
   public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
     await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 
+    if (newMessage.author.bot
+      || newMessage.system
+      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
+      return;
+
     // Prevent active members from posting another documentation than Skript-MC's.
     if (newMessage.member.roles.cache.has(settings.roles.activeMember)
       && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
       await newMessage.delete();
-      const content = (oldMessage.content.length + messages.miscellaneous.noDocLink.length) >= 2000
-        ? trimText(oldMessage.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
+      const finalLength = (oldMessage.content.length + messages.miscellaneous.noDocLink.length);
+      const content = finalLength >= MessageLimits.MaximumLength
+        ? trimText(oldMessage.content, MessageLimits.MaximumLength - messages.miscellaneous.noDocLink.length - 3)
         : oldMessage.content;
       await newMessage.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
 
@@ -25,11 +32,6 @@ export default class MessageUpdateListener extends Listener {
     }
 
     // Check for ghostpings.
-    if (newMessage.author.bot
-      || newMessage.system
-      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
-      return;
-
     // List of all users that were mentionned in the old message.
     const oldUserMentions = [...oldMessage.mentions.users.values()]
       .filter(usr => !usr.bot && usr.id !== newMessage.author.id);

@@ -1,3 +1,4 @@
+import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
@@ -160,7 +161,11 @@ export default abstract class ModerationAction {
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
       .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)
       .addField(messages.moderation.log.actionTitle, this.action.toString(), true)
-      .addField(messages.moderation.log.reasonTitle, trimText(this.data.reason.toString(), 1000), true);
+      .addField(
+        messages.moderation.log.reasonTitle,
+        trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
+        true,
+      );
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);

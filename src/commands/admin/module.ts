@@ -45,6 +45,8 @@ export default class ModuleCommand extends SwanCommand {
       return;
     }
 
+    // TODO(interactions): Always show the current state for the given module, and add a toggle to
+    // enable/disable it (unless it's the RefreshCommand).
     if (!args.enabled && module.name === RefreshCommand.name) {
       await message.channel.send(config.messages.cannotBeDisabled).catch(noop);
       return;

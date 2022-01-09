@@ -23,6 +23,7 @@ export default class SkriptInfoCommand extends SwanCommand {
   public override async messageRun(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
     const embeds: MessageEmbed[] = [];
 
+    // TODO: Refactor this command's usage as it's not very intuitive.
     if (['dl', 'download', 'all'].includes(args.display)) {
       const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
 

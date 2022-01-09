@@ -11,6 +11,7 @@ import settings from '@/conf/settings';
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class DiscoverCommand extends SwanCommand {
   public override async messageRun(message: GuildMessage, _args: DiscoverCommandArguments): Promise<void> {
+    // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     const randomCommand = this.container.stores.get('commands').random() as SwanCommand;
 
     const embed = new MessageEmbed()

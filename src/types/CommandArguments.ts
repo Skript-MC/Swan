@@ -74,9 +74,7 @@ export interface LatexCommandArguments {
   equation: string;
 }
 
-export interface LinksCommandArguments {
-  page: number;
-}
+export interface LinksCommandArguments {}
 
 export interface LogsCommandArguments {
   channel: TextChannel;

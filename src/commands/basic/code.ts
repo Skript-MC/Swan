@@ -67,6 +67,7 @@ export default class CodeCommand extends SwanCommand {
       }
 
       // Send the message by splitting the code into blocks that are 2000 characters long max.
+      // FIXME: Better handling for too long messages. An easy fix would be to apply code-blocks before, then split.
       const titleMessage = await message.channel.send(pupa(config.messages.title, { message }));
       const splitCode = splitText(code, 1980);
       const codeBlocks: Message[] = [];

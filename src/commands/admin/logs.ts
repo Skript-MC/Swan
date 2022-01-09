@@ -23,6 +23,8 @@ export default class LogsCommand extends SwanCommand {
   })
   // @ts-expect-error ts(2416)
   public override async messageRun(message: GuildMessage, args: LogsCommandArguments): Promise<void> {
+    // TODO(interactions): remove second argument, always show the current state for the given channel, and
+    // add a toggle to enable/disable logging for the channel.
     const swanChannel = await SwanChannel.findOne({ channelId: args.channel.id });
     if (!swanChannel) {
       void message.channel.send(config.messages.noChannelFound).catch(noop);

@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { ApplyOptions } from '@sapphire/decorators';
+import { EmbedLimits } from '@sapphire/discord-utilities';
 import { MessageEmbed } from 'discord.js';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
@@ -48,7 +49,9 @@ export default class SkriptReleasesTask extends Task {
       .setAuthor(lastRelease.author?.login ?? 'SkriptLang', lastRelease.author?.avatar_url)
       .setTitle(`${lastRelease.name} (${lastRelease.tag_name})`)
       .setURL(lastRelease.html_url)
-      .setDescription(trimText(lastRelease.body || messages.miscellaneous.noDescription, 1900))
+      .setDescription(
+        trimText(lastRelease.body || messages.miscellaneous.noDescription, EmbedLimits.MaximumDescriptionLength),
+      )
       .setFooter(`${config.dataProvider} (#${lastRelease.id})`)
       .setTimestamp(new Date(lastRelease.published_at));
 

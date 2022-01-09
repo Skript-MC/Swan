@@ -68,6 +68,7 @@ export default class PollCommand extends SwanCommand {
       return;
     }
 
+    // TODO(interactions): Add a Yes/No button for Yes/No polls, or a select-menu for multiple choices polls.
     // Show the possible answers.
     let possibleAnswers = '';
     if (questionType === QuestionType.Yesno) {

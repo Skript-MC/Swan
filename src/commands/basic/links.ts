@@ -1,81 +1,25 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { MessageOptions, MessageReaction, User } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import Arguments from '@/app/decorators/Argument';
+import pupa from 'pupa';
+import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { GuildMessage } from '@/app/types';
-import type { SwanCommandOptions } from '@/app/types';
-import { LinksCommandArguments } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import type { LinksCommandArguments } from '@/app/types/CommandArguments';
 import { links as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
-const reactions = ['⏮', '◀', '🇽', '▶', '⏭'];
-const maxPage = 5;
-
 @ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
 export default class LinksCommand extends SwanCommand {
-  @Arguments({
-    name: 'page',
-    type: 'integer',
-    match: 'pick',
-    default: 0,
-    validate: (_message, value) => value >= 0 && value < maxPage,
-  })
-  // @ts-expect-error ts(2416)
-  public override async messageRun(message: GuildMessage, args: LinksCommandArguments): Promise<void> {
-    const msg = await message.channel.send(this._getEmbedForPage(args.page));
-
-    const collector = msg
-      .createReactionCollector({
-        filter: (reaction: MessageReaction, user: User) => user.id === message.author.id
-          && reactions.includes(reaction.emoji.name),
-      }).on('collect', async (reaction) => {
-        await reaction.users.remove(message.author);
-        if (reaction.emoji.name === '🇽') {
-          collector.stop();
-          await message.delete();
-          await msg.delete();
-          return;
-        }
-
-        const oldPage = args.page;
-        switch (reaction.emoji.name) {
-          case '⏮': {
-            args.page = 0;
-            break;
-          }
-          case '◀': {
-            args.page = args.page === 0 ? 0 : args.page - 1;
-            break;
-          }
-          case '▶': {
-            args.page = args.page === maxPage ? maxPage : args.page + 1;
-            break;
-          }
-          case '⏭': {
-            args.page = maxPage;
-            break;
-          }
-        }
-
-        if (oldPage !== args.page)
-          await msg.edit(this._getEmbedForPage(args.page));
-      });
-
-    for (const reaction of reactions)
-      await msg.react(reaction);
-  }
-
-  private _getEmbedForPage(page: number): Pick<MessageOptions, 'embeds'> {
-    const embed = new MessageEmbed().setColor(settings.colors.default);
-
-    if (page === 0) {
-      embed.setDescription(config.messages.embed.summary);
-    } else {
-      const content = config.messages.embed.fields[page - 1];
-      embed.addField(content[0].title, content[0].description);
-      embed.addField(content[1].title, content[1].description);
-    }
-    return { embeds: [embed] };
+  public override async messageRun(message: GuildMessage, _args: LinksCommandArguments): Promise<void> {
+    await new PaginatedMessageEmbedFields()
+      .setTemplate(new MessageEmbed().setColor(settings.colors.default))
+      .setItems(config.messages.embed.fields)
+      .setItemsPerPage(2)
+      .setSelectMenuOptions(pageIndex => ({
+        label: config.messages.embed.summary[pageIndex - 1],
+        description: pupa(config.messages.selectMenuItemDescription, { pageIndex }),
+      }))
+      .make()
+      .run(message, message.author);
   }
 }
