@@ -34,7 +34,7 @@ export const code = {
     aliases: ['code', 'balise', 'balises'],
     description: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
     usage: 'code <code>',
-    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=JAVA System.out.println("Le JAVA est cool aussi");'],
+    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=java System.out.println("Le Java est cool aussi");'],
   },
   messages: {
     title: '**Code de {message.author.username} :**',
@@ -201,13 +201,15 @@ export const ping = {
 export const rule = {
   settings: {
     name: 'Règles',
-    aliases: ['rule', 'regle', 'règle'],
+    aliases: ['rule', 'rules', 'regle', 'règle', 'regles', 'règles'],
     description: 'Affiche une règle prédéfinie.',
     usage: 'regle <règle>',
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
     notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
+    noRules: "Aucune règle n'a été rentrée.",
+    list: 'Liste des règles :\n{list}',
   },
 };
 

@@ -1,7 +1,7 @@
+import { execSync } from 'node:child_process';
 import { ApplyOptions } from '@sapphire/decorators';
 import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
-import { execSync } from 'node:child_process';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { GuildMessage, SwanCommandOptions } from '@/app/types';

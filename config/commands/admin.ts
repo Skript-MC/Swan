@@ -14,8 +14,10 @@ export const logs = {
   },
   messages: {
     noChannelFound: ":x: Aucun salon n'a été trouvé. Vérifiez que vous l'avez correctement mentionné et essayez de rafraîchir le cache.",
-    noStatus: ":x: Vous n'avez pas spécifié le statut à définir. Utilisez plutôt : `.logs {swanChannel.channelId} <on|off>`.",
-    success: ':white_check_mark: La sauvegarde des messages de ce salon a bien été {status}.',
+    loggingStatus: 'Actuellement, la sauvegarde des messages dans ce salon est {status}.',
+    success: 'La sauvegarde des messages de ce salon a bien été {status}.',
+    on: 'activée :white_check_mark:',
+    off: 'désactivée :x:',
   },
 };
 

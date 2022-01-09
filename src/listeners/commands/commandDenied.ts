@@ -12,10 +12,8 @@ export default class CommandDeniedListener extends Listener<typeof Events.Comman
       const errorKey = Object.keys(messages.errors.precondition).includes(error.identifier)
         ? error.identifier as keyof typeof messages.errors.precondition
         : 'unknownError';
-      console.log('DEBUG ~ file: commandDenied.ts ~ line 14 ~ run ~ errorKey', errorKey);
 
       const content = messages.errors.precondition[errorKey];
-      console.log('DEBUG ~ file: commandDenied.ts ~ line 18 ~ run ~ content', content);
       if (typeof content === 'string')
         await payload.message.channel.send(content);
     }

@@ -10,7 +10,11 @@ import { errorDetails as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplyOptions<SwanCommandOptions>({
+  ...settings.globalCommandsOptions,
+  ...config.settings,
+  quotes: [],
+})
 export default class ErrorDetailsCommand extends SwanCommand {
   @Arguments({
     name: 'error',

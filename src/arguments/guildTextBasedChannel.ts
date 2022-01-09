@@ -8,7 +8,7 @@ export default class GuildTextBasedChannelArgument extends Argument<GuildTextBas
     parameter: string,
     context: ArgumentContext<GuildTextBasedChannel>,
   ): ArgumentResult<GuildTextBasedChannel> {
-    const resolved = CustomResolvers.resolveGuildTextBasedChannel(parameter, context.message);
+    const resolved = CustomResolvers.resolveGuildTextBasedChannel(parameter, context.message.guild);
 
     if (resolved.success)
       return this.ok(resolved.value);

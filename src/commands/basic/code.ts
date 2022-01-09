@@ -19,6 +19,7 @@ const languageOption = ['lang', 'language', 'langage'];
 @ApplyOptions<SwanCommandOptions>({
   ...settings.globalCommandsOptions,
   ...config.settings,
+  quotes: [],
   flags: displayLinesFlag,
   options: [startLinesAtOption, languageOption].flat(),
 })

@@ -29,6 +29,8 @@ export default {
       'skripthub.net/docs',
       'docs.skunity.com',
     ],
+    booleanTruths: ['oui', 'o', 'yes', 'y', 'vrai', 'v', 'true', 't', 'on'],
+    booleanFalses: ['non', 'no', 'n', 'faux', 'f', 'false', 'off'],
   },
   globalCommandsOptions: {
     generateDashLessAliases: true,

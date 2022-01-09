@@ -1,4 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import { isNullish } from '@sapphire/utilities';
 import pupa from 'pupa';
 import Arguments from '@/app/decorators/Argument';
 import SwanChannel from '@/app/models/swanChannel';
@@ -34,12 +35,24 @@ export default class LogsCommand extends SwanCommand {
       return;
     }
 
+    if (isNullish(args.logged)) {
+      const result = await SwanChannel.findOne({ channelId: args.channel.id });
+      void message.channel.send(
+        pupa(config.messages.loggingStatus, { status: this._getStatus(result.logged) }),
+      ).catch(noop);
+      return;
+    }
+
     await SwanChannel.findOneAndUpdate({ channelId: args.channel.id }, { logged: args.logged });
     if (swanChannel.logged && !args.logged)
       this.container.client.cache.swanChannels.delete(swanChannel);
     else
       this.container.client.cache.swanChannels.add(swanChannel);
 
-    void message.channel.send(pupa(config.messages.success, { status: args.logged ? 'activée' : 'désactivée' })).catch(noop);
+    void message.channel.send(pupa(config.messages.success, { status: this._getStatus(args.logged) })).catch(noop);
+  }
+
+  private _getStatus(status: boolean): string {
+    return status ? config.messages.on : config.messages.off;
   }
 }
