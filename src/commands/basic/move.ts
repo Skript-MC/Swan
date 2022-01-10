@@ -78,11 +78,8 @@ export default class MoveCommand extends SwanCommand {
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(settings.emojis.remove).catch(noop);
 
-      const repostMessage = await targetedChannel.send({
-        content: targetedMessage.content,
-        embeds: targetedMessage.embeds,
-        attachments: targetedMessage.attachments?.size ? [...targetedMessage.attachments.values()] : [],
-      });
+      // TODO: Support moving embeds & attachments
+      const repostMessage = await targetedChannel.send({ content: targetedMessage.content });
 
       await message.delete();
       await targetedMessage.delete();
