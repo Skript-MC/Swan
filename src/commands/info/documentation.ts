@@ -97,7 +97,7 @@ export default class DocumentationCommand extends SwanCommand {
     if (matchingSyntaxes.length === 0) {
       await message.channel.send(
         pupa(config.messages.unknownSyntax, {
-          query: `${query}${addon ? ` pour l'addon "${addon}"` : ''}${category ? ` dans la catégorie "${category}"` : ''}`,
+          query: `\`${query}\`${addon ? ` pour l'addon "${addon}"` : ''}${category ? ` dans la catégorie "${category}"` : ''}`,
         }),
       );
       return;

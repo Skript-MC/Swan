@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
-import { MessageEmbed } from 'discord.js';
+import { Formatters, MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
@@ -55,10 +55,6 @@ export default class PollCommand extends SwanCommand {
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
     const questionType = answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
 
-    const finishDate = new Date(Date.now() + duration);
-    const formattedEnd = moment(finishDate).format(settings.miscellaneous.durationFormat);
-    const formattedDuration = moment.duration(duration).humanize();
-
     if (answers.length === 1) {
       await message.channel.send(config.messages.notEnoughAnswers);
       return;
@@ -89,8 +85,13 @@ export default class PollCommand extends SwanCommand {
     if (multiple)
       details.push(config.messages.informationMultiple);
 
+    const finishDate = new Date(Date.now() + duration);
+
     const embedMessages = config.messages.embed;
-    const durationContent = pupa(embedMessages.durationContent, { formattedDuration, formattedEnd });
+    const durationContent = pupa(embedMessages.durationContent, {
+      formattedDuration: moment.duration(duration).humanize(),
+      formattedEnd: Formatters.time(finishDate, Formatters.TimestampStyles.LongDateTime),
+    });
 
     const embed = new MessageEmbed()
       .setAuthor({ name: pupa(embedMessages.author, { message }), iconURL: message.author.avatarURL() ?? '' })

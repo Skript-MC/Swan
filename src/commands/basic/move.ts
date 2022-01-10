@@ -50,11 +50,6 @@ export default class MoveCommand extends SwanCommand {
     }
 
     const targetName = targetedMessage.member?.displayName ?? targetedMessage.author.username ?? 'Inconnu';
-    const successMessage = pupa(config.messages.successfullyMoved, {
-      targetName,
-      targetChannel: targetedChannel,
-      memberDisplayName: message.member.displayName,
-    });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
@@ -73,15 +68,24 @@ export default class MoveCommand extends SwanCommand {
       );
 
     try {
-      // Remove all messages from prompts, as well as messages from the user.
-      await message.delete();
-      await targetedMessage.delete();
-
-      await message.channel.send(successMessage);
+      await message.channel.send(
+        pupa(config.messages.successfullyMoved, {
+          targetName,
+          targetChannel: targetedChannel,
+          memberDisplayName: message.member.displayName,
+        }),
+      );
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(settings.emojis.remove).catch(noop);
 
-      const repostMessage = await targetedChannel.send(targetedMessage.content);
+      const repostMessage = await targetedChannel.send({
+        content: targetedMessage.content,
+        embeds: targetedMessage.embeds,
+        attachments: targetedMessage.attachments?.size ? [...targetedMessage.attachments.values()] : [],
+      });
+
+      await message.delete();
+      await targetedMessage.delete();
 
       const collector = informationEmbed
         .createReactionCollector({

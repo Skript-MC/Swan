@@ -47,7 +47,7 @@ export const documentation = {
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
-    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
+    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe {query}... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
@@ -160,11 +160,11 @@ export const userInfo = {
       },
       created: {
         title: '❯ A créé son compte',
-        content: '{creation}',
+        content: 'le {creation}',
       },
       joined: {
         title: '❯ A rejoint le serveur',
-        content: '{joined}',
+        content: 'le {joined}',
       },
       roles: {
         title: '❯ Rôles',
@@ -186,7 +186,7 @@ export const userInfo = {
         },
         details: '↳ {activity.details}\n',
         state: '↳ {activity.state}\n',
-        timestamps: '↳ A commencé {timestamp}',
+        timestamps: '↳ A commencé {time}',
         status: {
           online: 'En ligne',
           idle: 'AFK',

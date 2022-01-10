@@ -77,7 +77,7 @@ export default class BanCommand extends SwanCommand {
       data.setDuration(duration, false)
         .setType(SanctionTypes.Hardban);
     } else {
-      data.setDuration(duration * 1000, true)
+      data.setDuration(duration, true)
         .setInformations({ shouldAutobanIfNoMessages: autoban })
         .setType(SanctionTypes.Ban);
     }
@@ -88,7 +88,7 @@ export default class BanCommand extends SwanCommand {
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while banning a member!');
-      this.container.logger.info(`Duration: ${duration === -1 ? duration : duration * 1000}`);
+      this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info(`Autoban: ${autoban}`);
       this.container.logger.info(`Message: ${message.url}`);

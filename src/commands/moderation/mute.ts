@@ -59,7 +59,7 @@ export default class MuteCommand extends SwanCommand {
       const data = new ModerationData(message)
         .setVictim(member)
         .setReason(reason)
-        .setDuration(duration * 1000, true)
+        .setDuration(duration, true)
         .setType(SanctionTypes.Mute);
 
       const success = await new MuteAction(data).commit();
@@ -67,7 +67,7 @@ export default class MuteCommand extends SwanCommand {
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while muting a member!');
-      this.container.logger.info(`Duration: ${duration === -1 ? duration : duration * 1000}`);
+      this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info(`Message: ${message.url}`);
       this.container.logger.info((unknownError as Error).stack, true);

@@ -10,7 +10,7 @@ import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import { skriptReleases as config } from '@/conf/tasks';
 
-@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
+@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *', immediate: true })
 export default class SkriptReleasesTask extends Task {
   public override async run(): Promise<void> {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
