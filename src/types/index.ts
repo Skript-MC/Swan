@@ -1,5 +1,5 @@
 import type { Endpoints } from '@octokit/types';
-import type { CommandOptions } from '@sapphire/framework';
+import type { Command, CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
   Guild,
@@ -14,6 +14,7 @@ import type {
   Model,
   Types,
 } from 'mongoose';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
 
 /* ****************** */
@@ -326,6 +327,8 @@ export interface SwanCommandOptions extends CommandOptions {
   examples: string[];
   permissions?: string[];
 }
+
+export type SwanInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
