@@ -1,39 +1,35 @@
-import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel } from 'discord.js';
 import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanChannel from '@/app/models/swanChannel';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { logs as config } from '@/conf/commands/admin';
-import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class LogsCommand extends SwanCommand {
-  public getOptions(): ApplicationCommandOptionData[] {
-    return [
-      {
-        type: ApplicationCommandOptionTypes.CHANNEL,
-        name: 'salon',
-        description: 'Salon à modifier le statut de sauvegarde',
-        required: true,
-        channelTypes: [ChannelTypes.GUILD_TEXT],
-      },
-      {
-        type: ApplicationCommandOptionTypes.BOOLEAN,
-        name: 'sauvegarde',
-        description: 'Faut-il sauvegarder les messages de ce salon ?',
-        required: true,
-      },
-    ];
-  }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.CHANNEL,
+      name: 'salon',
+      description: 'Salon à modifier le statut de sauvegarde',
+      required: true,
+      channelTypes: [ChannelTypes.GUILD_TEXT],
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'sauvegarde',
+      description: 'Faut-il sauvegarder les messages de ce salon ?',
+      required: true,
+    },
+  ];
 
   public override async chatInputRun(
     interaction: CommandInteraction,
-    _context: ChatInputCommand.RunContext
+    _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const channel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
     const logged = interaction.options.getBoolean('sauvegarde');

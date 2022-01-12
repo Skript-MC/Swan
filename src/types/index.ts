@@ -2,6 +2,7 @@ import type { Endpoints } from '@octokit/types';
 import type { Command, CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
+  ApplicationCommandOptionData,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
@@ -326,6 +327,7 @@ export interface SwanCommandOptions extends CommandOptions {
   usage: string;
   examples: string[];
   permissions?: string[];
+  commandOptions: ApplicationCommandOptionData[];
 }
 
 export type SwanInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;

@@ -1,6 +1,5 @@
 import type { ApplicationCommandRegistry, PieceContext } from '@sapphire/framework';
 import { Command, RegisterBehavior } from '@sapphire/framework';
-import type { Awaitable } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import type { SwanCommandOptions } from '@/app/types';
@@ -10,6 +9,7 @@ export default abstract class SwanCommand extends Command {
   description = '';
   examples: string[] = [];
   permissions: string[] = [];
+  commandOptions: ApplicationCommandOptionData[];
 
   constructor(context: PieceContext, options: SwanCommandOptions) {
     super(context, { ...options, chatInputCommand: { register: true } });
@@ -24,19 +24,20 @@ export default abstract class SwanCommand extends Command {
 
     if (options.permissions?.length > 0)
       this.permissions = options.permissions;
+
+    if (options.commandOptions)
+      this.commandOptions = options.commandOptions;
   }
 
-  public override async registerApplicationCommands(registry: ApplicationCommandRegistry): Promise<void> {
+  public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
     registry.registerChatInputCommand({
       name: this.aliases[0],
       description: this.description,
       type: ApplicationCommandTypes.CHAT_INPUT,
-      options: await this.getOptions(),
+      options: this.commandOptions,
     }, {
       guildIds: [process.env.GUILD_ID],
       behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
     });
   }
-
-  public abstract getOptions?(): Awaitable<ApplicationCommandOptionData[]>;
 }

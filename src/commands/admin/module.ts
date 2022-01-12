@@ -1,36 +1,32 @@
-import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import RefreshCommand from '@/app/commands/admin/refresh';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { SwanCommandOptions } from '@/app/types';
 import { noop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
-import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class ModuleCommand extends SwanCommand {
-  public getOptions(): ApplicationCommandOptionData[] {
-    return [
-      {
-        type: ApplicationCommandOptionTypes.STRING,
-        choices: [],
-        name: 'module',
-        description: 'Module à modifier son statut',
-        required: true,
-        autocomplete: false,
-      },
-      {
-        type: ApplicationCommandOptionTypes.BOOLEAN,
-        name: 'statut',
-        description: 'Faut-il activer ce module ?',
-        required: true,
-      },
-    ];
-  }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [],
+      name: 'module',
+      description: 'Module à modifier son statut',
+      required: true,
+      autocomplete: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'statut',
+      description: 'Faut-il activer ce module ?',
+      required: true,
+    },
+  ];
 
   public override async chatInputRun(
     interaction: CommandInteraction,
@@ -53,17 +49,6 @@ export default class ModuleCommand extends SwanCommand {
     if (!enabled && module.name === RefreshCommand.name) {
       await interaction.reply(config.messages.cannotBeDisabled).catch(noop);
       return;
-    }
-    if (!enabled && module.name === this.name) {
-      // TODO
-      // const handler = new MessagePrompter(config.messages.confirmationPrompt, 'confirm', {
-      //   confirmEmoji: settings.emojis.yes,
-      //   cancelEmoji: settings.emojis.no,
-      //   timeout: 2 * 60 * 1000,
-      // });
-      // const confirmed = await handler.run(interaction.channel, interaction.member.user).catch(nullop);
-      // if (!confirmed)
-      //   return;
     }
 
     await toggleModule(module, enabled);

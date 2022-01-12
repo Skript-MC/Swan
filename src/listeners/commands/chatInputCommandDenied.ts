@@ -15,7 +15,7 @@ export default class CommandDeniedListener extends Listener<typeof Events.ChatIn
 
       const content = messages.errors.precondition[errorKey];
       if (typeof content === 'string')
-        await payload.interaction.channel.send(content);
+        await payload.interaction.reply(content);
     }
   }
 }

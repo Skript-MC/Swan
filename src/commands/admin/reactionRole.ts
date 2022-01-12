@@ -1,43 +1,78 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { GuildTextBasedChannel, Role } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel, Role, } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ReactionRole from '@/app/models/reactionRole';
+import resolveEmoji from '@/app/resolvers/emoji';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class ReactionRoleCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const givenRole = await args.pickResult('role');
-    if (!givenRole.success) {
-      await message.channel.send(messages.prompt.role);
-      return;
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.ROLE,
+      name: 'rôle',
+      description: 'Rôle à distribuer via la réaction',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'émoji',
+      description: 'Émoji à utiliser',
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.CHANNEL,
+      name: 'salon',
+      description: 'Salon dans lequel envoyer le message',
+      required: false,
+      channelTypes: [ChannelTypes.GUILD_TEXT],
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const role = interaction.options.getRole('rôle');
+    const givenRole = await interaction.guild.roles.fetch(role.id);
+
+    let reaction = interaction.guild.emojis.resolve(settings.emojis.yes).toString();
+    const argumentEmoji = interaction.options.getString('émoji');
+    if (argumentEmoji) {
+      const resolvedEmoji = resolveEmoji(interaction.options.getString('émoji'), interaction.guild);
+      if (resolvedEmoji.error) {
+        await interaction.reply(config.messages.invalidEmoji);
+        return;
+      }
+      reaction = resolvedEmoji.value;
     }
 
-    const defaultEmoji = message.guild.emojis.resolve(settings.emojis.yes).toString();
-    const reaction = await args.pick('enum', { enum: ['default'] }).then(() => defaultEmoji)
-      .catch(async () => args.pick('emoji').catch(() => defaultEmoji));
+    const destinationChannel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
 
-    const destinationChannel = await args.pickResult('guildTextBasedChannel');
-
-    await this._exec(message, givenRole.value, reaction, destinationChannel.value ?? message.channel);
+    await this._exec(
+      interaction,
+      givenRole,
+      reaction,
+      destinationChannel ?? interaction.channel as GuildTextBasedChannel,
+    );
   }
 
   private async _exec(
-    message: GuildMessage,
+    interaction: CommandInteraction,
     givenRole: Role,
     reaction: string,
     channel: GuildTextBasedChannel,
   ): Promise<void> {
     const botMember = this.container.client.guild.me;
     if (!botMember || botMember.roles.highest.position <= givenRole.position) {
-      await message.channel.send(config.messages.notEnoughPermissions).catch(noop);
+      await interaction.reply(config.messages.notEnoughPermissions).catch(noop);
       return;
     }
 
@@ -51,7 +86,7 @@ export default class ReactionRoleCommand extends SwanCommand {
     try {
       await sendMessage.react(reaction);
     } catch {
-      message.channel.send(messages.global.oops).catch(noop);
+      interaction.reply(messages.global.oops).catch(noop);
       return;
     }
 

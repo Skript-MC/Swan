@@ -66,11 +66,7 @@ export const reactionRole = {
   settings: {
     name: 'Reaction Roles',
     aliases: ['reactionrole', 'rr'],
-    description: stripIndent`
-      Permet de créer un nouvel espace de **ReactionRole**.
-      Les membres pourront s'auto-attribuer un rôle, en ajoutant une réaction à un message de Swan.
-      Pour supprimer un Reaction Role, il suffit de supprimer le message correspondant !
-    `,
+    description: 'Permet de créer un nouvel espace de reaction role.',
     usage: 'reactionrole <@rôle | nom | ID> <émoji | "default"> [#salon | ID salon]',
     examples: [
       'reactionrole 818086544593518593 :tada: #annonces',
