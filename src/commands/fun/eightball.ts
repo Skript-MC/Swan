@@ -1,26 +1,32 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { ChatInputCommand } from '@sapphire/framework';
 import { eightBall as config } from '@/conf/commands/fun';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class EightBallCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    if (args.finished) {
-      await message.channel.send(messages.prompt.question);
-      return;
-    }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'question',
+      description: 'Question que vous souhaitez poser à Swan.',
+      required: true,
+    },
+  ];
 
-    await this._exec(message);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction);
   }
 
-  private async _exec(message: GuildMessage): Promise<void> {
+  private async _exec(interaction: CommandInteraction): Promise<void> {
     const isAffirmative = Math.random() > 0.5;
     const pool = config.messages[isAffirmative ? 'affirmative' : 'negative'];
     const answer = pool[Math.floor(Math.random() * pool.length)];
-    await message.channel.send(answer);
+    await interaction.reply(answer);
   }
 }

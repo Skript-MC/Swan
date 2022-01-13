@@ -6,7 +6,7 @@ export const eightBall = {
   settings: {
     name: '8 Ball',
     aliases: ['8ball', 'eightball'],
-    description: "__Répond à toutes vos questions__, même les plus compliquées ! La légende raconte même qu'il y a déjà eu des bonnes réponses... :shushing_face:",
+    description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
     usage: '8ball <votre question>',
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
@@ -93,7 +93,7 @@ export const latex = {
   settings: {
     name: 'Latex',
     aliases: ['latex'],
-    description: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
+    description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
     usage: 'latex <equation>',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },

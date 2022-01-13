@@ -1,31 +1,43 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import { ChatInputCommand } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { ApplicationCommandOptionData, CommandInteraction, Message } from 'discord.js';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class LatexCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const equation = await args.restResult('string');
-    if (!equation.success) {
-      await message.channel.send(messages.prompt.equation);
-      return;
-    }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'équation',
+      description: 'Équation à mettre en forme en utilisant LaTeX',
+      required: true,
+    },
+  ];
 
-    await this._exec(message, equation.value);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('équation'));
   }
 
-  private async _exec(message: GuildMessage, equation: string): Promise<void> {
-    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(equation));
+  private async _exec(interaction: CommandInteraction, equation: string): Promise<void> {
+    const sendMessage = await interaction.reply({
+      content: settings.apis.latex + encodeURIComponent(equation),
+      fetchReply: true,
+    });
+    if (!(sendMessage instanceof Message))
+      return;
     await sendMessage.react(settings.emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector({
-        filter: (reaction: MessageReaction, user: User) => user.id === message.author.id
+        filter: (reaction: MessageReaction, user: User) => user.id === interaction.member.user.id
           && !user.bot
           && (reaction.emoji.id ?? reaction.emoji.name) === settings.emojis.remove,
       }).on('collect', async () => {
@@ -33,7 +45,7 @@ export default class LatexCommand extends SwanCommand {
           collector.stop();
           await sendMessage.delete();
         } catch {
-          await message.channel.send(messages.global.oops).catch(noop);
+          await interaction.reply(messages.global.oops).catch(noop);
         }
       });
   }

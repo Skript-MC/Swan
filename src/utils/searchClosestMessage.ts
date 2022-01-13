@@ -18,14 +18,12 @@ export default function searchClosestMessage(entries: MessageDocument[], wanted:
         matchedName: '⭐ ' + capitalize(entry.name),
         baseName: entry.name,
         similarity: 1,
-        content: entry.content,
       }];
     }
     matches.push({
       matchedName: capitalize(entry.name),
       baseName: entry.name,
       similarity: jaroWinklerDistance(entry.name, wanted, { caseSensitive: false }),
-      content: entry.content,
     });
   }
   if (matches.length <= 0)
