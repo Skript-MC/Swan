@@ -5,7 +5,7 @@ import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
-import { searchMessageSimilarity } from '@/app/utils';
+import { searchClosestEntry } from '@/app/utils';
 import { autoMessage as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
@@ -29,7 +29,7 @@ export default class AutoMessageCommand extends SwanCommand {
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.AutoMessage });
-    const search = searchMessageSimilarity(messages, interaction.options.getString('message'));
+    const search = searchClosestEntry(messages, interaction.options.getString('message'));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -41,7 +41,7 @@ export default class AutoMessageCommand extends SwanCommand {
   }
 
   private async _exec(interaction: CommandInteraction, messageName: string): Promise<void> {
-    const message = await Message.findOne({ name: messageName });
+    const message = await Message.findOne({ messageType: MessageName.AutoMessage, name: messageName });
     if (!message) {
       await interaction.reply(config.messages.notFound);
       return;

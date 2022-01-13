@@ -1,23 +1,25 @@
 import { execSync } from 'node:child_process';
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import { MessageEmbed } from 'discord.js';
+import { ChatInputCommand } from '@sapphire/framework';
+import { CommandInteraction, MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { statistics as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import pkg from '@/root/package.json';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class StatisticsCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
-    await this._exec(message);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction);
   }
 
-  private async _exec(message: GuildMessage): Promise<void> {
+  private async _exec(interaction: CommandInteraction): Promise<void> {
     const totalCommands = this.container.stores.get('commands').size;
     const embedMessages = config.messages.embed;
     const commitHash = this._getGitRev();
@@ -39,10 +41,10 @@ export default class StatisticsCommand extends SwanCommand {
       .addField(embedMessages.developers, embedMessages.developersContent, true)
       .addField(embedMessages.thanks, embedMessages.thanksContent, true)
       .addField(embedMessages.bugs, pupa(embedMessages.bugsContent, { url: pkg.bugs?.url || pkg.homepage }), true)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
+      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 
-    await message.channel.send({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 
   private _getGitRev(): string {

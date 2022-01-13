@@ -565,7 +565,7 @@ export enum MessageName {
 }
 
 /** Interface for the "Message"'s mongoose schema */
-export interface MessageBase {
+export interface MessageBase extends Matchable {
   messageType: MessageName;
   name: string;
   aliases: string[];
@@ -780,6 +780,12 @@ export interface SimilarityMatch {
   matchedName: string;
   baseName: string;
   similarity: number;
+  content?: string;
+}
+
+export interface Matchable {
+  name: string;
+  aliases: string[];
 }
 
 // #endregion

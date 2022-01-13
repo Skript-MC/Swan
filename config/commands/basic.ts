@@ -78,7 +78,7 @@ export const help = {
   settings: {
     name: 'Aide',
     aliases: ['help', 'aide'],
-    description: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
+    description: 'Affiche la liste des commandes disponibles ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
@@ -96,6 +96,7 @@ export const help = {
       description: "Faites `{helpCommand}` pour avoir plus d'informations sur une commande.",
       category: '❯ {categoryName}',
     },
+    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
 };
 
@@ -103,7 +104,7 @@ export const links = {
   settings: {
     name: 'Liens',
     aliases: ['links', 'link', 'liens', 'lien'],
-    description: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
+    description: "Affiche la liste des liens utiles concernant Skript.",
     usage: 'links',
     examples: ['links'],
   },
@@ -183,7 +184,7 @@ export const ping = {
   settings: {
     name: 'Ping',
     aliases: ['ping', 'ms'],
-    description: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
+    description: "Permet de connaître la latence de Swan et de l'API Discord.",
     usage: 'ping',
     examples: ['ping'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
@@ -207,7 +208,7 @@ export const rule = {
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
-    notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
+    notFound: "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
     noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },
@@ -217,7 +218,7 @@ export const statistics = {
   settings: {
     name: 'Statistiques',
     aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
-    description: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
+    description: 'Affiche des statistiques et diverses informations sur Swan.',
     usage: 'stats',
     examples: ['stats'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],

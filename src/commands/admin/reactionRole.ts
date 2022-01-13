@@ -21,6 +21,7 @@ export default class ReactionRoleCommand extends SwanCommand {
       description: 'Rôle à distribuer via la réaction',
       required: true,
     },
+    // TODO: Use the emoji type when Sapphire will release it
     {
       type: ApplicationCommandOptionTypes.STRING,
       name: 'émoji',
