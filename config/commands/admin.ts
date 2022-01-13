@@ -77,6 +77,7 @@ export const reactionRole = {
     permissions: ['Staff'],
   },
   messages: {
+    success: "L'espace de RoleReaction a bien été créé. :white_check_mark:",
     embed: {
       title: 'Obtenir le rôle {givenRole.name}',
       content: 'Cliquez sur la réaction {reaction} pour obtenir le rôle {givenRole}',

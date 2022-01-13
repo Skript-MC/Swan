@@ -99,5 +99,7 @@ export default class ReactionRoleCommand extends SwanCommand {
 
     this.container.client.cache.reactionRolesIds.add(document.messageId);
     await ReactionRole.create(document).catch(noop);
+
+    await interaction.reply(config.messages.success);
   }
 }

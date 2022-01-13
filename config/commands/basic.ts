@@ -24,7 +24,7 @@ export const autoMessage = {
     examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
-    notFound: "Aucun message n'existe avec ce nom. Réessaye avec un autre nom !",
+    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
 };
 

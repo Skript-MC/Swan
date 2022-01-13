@@ -767,3 +767,19 @@ export interface MessageLogDocument extends MessageLogBase, Document {}
 export type MessageLogModel = Model<MessageLogDocument>;
 
 // #endregion
+
+/* ****************************** */
+/*         Utilities Types        */
+/* ****************************** */
+
+// #region Utilities Types (VS Code)
+// region Utilities Types (JetBrains)
+
+/** Interface for the "SimilarityMatch"'s utility type */
+export interface SimilarityMatch {
+  matchedName: string;
+  baseName: string;
+  similarity: number;
+}
+
+// #endregion

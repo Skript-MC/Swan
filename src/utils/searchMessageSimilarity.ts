@@ -1,5 +1,5 @@
 import jaroWinklerDistance from 'jaro-winkler';
-import type { MessageDocument } from '@/app/types';
+import type { MessageDocument, SimilarityMatch } from '@/app/types';
 
 /**
  * Find the most similar MessageDocument given an array of MessageDocument and a query string.
@@ -7,20 +7,24 @@ import type { MessageDocument } from '@/app/types';
  * @param {string} wanted - The query string to search for.
  * @returns MessageDocument | null
  */
-export default function searchMessageSimilarity(entries: MessageDocument[], wanted: string): MessageDocument | null {
-  const search: Array<[message: MessageDocument, similarity: number]> = [];
+export default function searchMessageSimilarity(entries: MessageDocument[], wanted: string): SimilarityMatch[] | null {
+  const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.
-    if (entry.aliases.includes(wanted) || entry.name === wanted)
-      return entry;
-    for (const alias of entry.aliases) {
-      const distance = jaroWinklerDistance(alias, wanted, { caseSensitive: false });
-      if (distance >= 0.7)
-        search.push([entry, distance]);
+    if (entry.name === wanted) {
+      return [{
+        matchedName: '⭐ ' + entry.name,
+        baseName: entry.name,
+        similarity: 1,
+      }];
     }
+    matches.push({
+      matchedName: entry.name,
+      baseName: entry.name,
+      similarity: jaroWinklerDistance(entry.name, wanted, { caseSensitive: false }),
+    });
   }
-  search.sort((a, b) => b[1] - a[1]);
-  if (search.length === 0)
-    return null;
-  return search[0][0];
+  matches.sort((a, b) => b.similarity - a.similarity);
+  matches[0].matchedName = '⭐ ' + matches[0].matchedName;
+  return matches;
 }
