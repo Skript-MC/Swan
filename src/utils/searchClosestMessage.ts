@@ -1,6 +1,6 @@
 import jaroWinklerDistance from 'jaro-winkler';
 import type { MessageDocument, SimilarityMatch } from '@/app/types';
-import { capitalize } from '@/app/utils/index';
+import capitalize from '@/app/utils/capitalize';
 
 /**
  * Find the closest MessageDocument given an array of MessageDocument and a query string.

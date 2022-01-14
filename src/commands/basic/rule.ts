@@ -5,7 +5,7 @@ import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
-import { searchClosestEntry } from '@/app/utils';
+import { searchClosestMessage } from '@/app/utils';
 import { rule as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
@@ -29,7 +29,7 @@ export default class Rule extends SwanCommand {
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.Rule });
-    const search = searchClosestEntry(messages, interaction.options.getString('règle'));
+    const search = searchClosestMessage(messages, interaction.options.getString('règle'));
     await interaction.respond(
       search
         .slice(0, 20)

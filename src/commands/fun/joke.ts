@@ -9,7 +9,7 @@ import settings from '@/conf/settings';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { searchClosestEntry } from '@/app/utils';
+import { searchClosestMessage } from '@/app/utils';
 
 @ApplySwanOptions(config)
 export default class JokeCommand extends SwanCommand {
@@ -32,7 +32,7 @@ export default class JokeCommand extends SwanCommand {
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
     const jokes = await Message.find({ messageType: MessageName.Joke });
-    const search = searchClosestEntry(jokes, interaction.options.getString('blague'));
+    const search = searchClosestMessage(jokes, interaction.options.getString('blague'));
     await interaction.respond(
       search
         .slice(0, 20)

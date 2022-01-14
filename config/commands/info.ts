@@ -6,7 +6,7 @@ export const addonInfo = {
   settings: {
     name: 'Informations sur un add-on',
     aliases: ['addon-info'],
-    description: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
+    description: "Permet d'afficher diverses informations sur un addon choisi.",
     usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
   },
@@ -81,7 +81,7 @@ export const serverInfo = {
   settings: {
     name: 'Informations sur un serveur',
     aliases: ['server', 'serveur', 'server-info', 'serveur-info'],
-    description: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
+    description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
     usage: 'serverinfo <nom de domaine>',
     examples: ['skriptinfo hypixel.net'],
   },
@@ -108,7 +108,7 @@ export const skriptInfo = {
   settings: {
     name: 'Informations sur Skript',
     aliases: ['skript', 'skriptinfo'],
-    description: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
+    description: "Permet d'afficher diverses informations sur Skript.",
     usage: 'skriptinfo',
     examples: ['skriptinfo'],
   },
@@ -142,12 +142,13 @@ export const userInfo = {
   settings: {
     name: 'Informations sur un utilisateur (discord)',
     aliases: ['userinfo'],
-    description: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
+    description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
     usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
+    notFound: "Aucun membre n'a été trouvé.",
     embed: {
       title: 'Informations sur {member.user.username}',
       names: {

@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionData, CommandInteraction, MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
@@ -9,16 +9,35 @@ import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { userInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ChatInputCommand } from '@sapphire/framework';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class UserInfoCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.rest('member').catch(() => message.member);
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Membre dont vous souhaitez avoir des informations',
+      required: true,
+    },
+  ];
 
-    await this._exec(message, member);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const user = interaction.options.getUser('membre');
+    const member = await this.container.client.guild.members.fetch(user.id);
+    if (!member) {
+      await interaction.reply(config.messages.notFound);
+      return;
+    }
+    await this._exec(interaction, member);
   }
 
-  private async _exec(message: GuildMessage, member: GuildMember): Promise<void> {
+  private async _exec(interaction: CommandInteraction, member: GuildMember): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
@@ -63,7 +82,7 @@ export default class UserInfoCommand extends SwanCommand {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setAuthor({ name: pupa(embedConfig.title, { member }) })
-      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
+      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setThumbnail(member.user.displayAvatarURL())
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)
@@ -72,6 +91,6 @@ export default class UserInfoCommand extends SwanCommand {
       .addField(embedConfig.roles.title, rolesContent, false)
       .addField(embedConfig.presence.title, presenceContent, true);
 
-    await message.channel.send({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 }
