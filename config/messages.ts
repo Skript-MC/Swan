@@ -117,12 +117,12 @@ export default {
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à lui en informer !",
     newCase: 'Nouveau cas ({action.data.sanctionId})',
     banExplanation: stripIndent`
-      Bonjour {action.nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
+      Bonjour {nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
       Si tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.
 
-      **Raison :** {action.data.reason}.
+      **Raison :** {data.reason}.
       **Durée :** {duration}.
-      **Expire :** {action.expiration}.`,
+      **Expire :** {expiration}.`,
     durationChange: 'Durée passée de {oldDuration} à {newDuration}',
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un bannissement (automatique)",
@@ -137,7 +137,7 @@ export default {
       actionTitle: ':tools: Action',
       reasonTitle: ':label: Raison',
       durationTitle: ':stopwatch: Durée',
-      durationDescription: '\nExpire {action.expiration}',
+      durationDescription: '\nExpire {expiration}',
       privateChannelTitle: ':speech_left: Salon privé',
       banlogTitle: ':scroll: Historique des messages',
       banlogAvailableDescription: 'Disponible ci-dessous',

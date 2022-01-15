@@ -2,8 +2,8 @@ import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
+import { Formatters, MessageEmbed } from 'discord.js';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
@@ -132,12 +132,6 @@ export default abstract class ModerationAction {
     return settings.moderation.colors[this.data.type];
   }
 
-  protected get expiration(): string {
-    return this.data.duration === -1
-      ? messages.moderation.never
-      : moment(this.data.finish).format(settings.miscellaneous.durationFormat);
-  }
-
   protected async notify(): Promise<void> {
     const message = this.updateInfos.isUpdate()
       ? pupa(this.data.config.notificationUpdate, { action: this, change: this.getFormattedChange() })
@@ -169,8 +163,11 @@ export default abstract class ModerationAction {
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);
-      if (this.data?.finish !== -1)
-        content += pupa(messages.moderation.log.durationDescription, { action: this });
+      if (this.data?.finish !== -1) {
+        content += pupa(messages.moderation.log.durationDescription, {
+          expiration: Formatters.time(Math.round(this.data.finish / 1000), Formatters.TimestampStyles.LongDateTime),
+        });
+      }
       embed.addField(messages.moderation.log.durationTitle, content, true);
     }
     if (this.data.privateChannel)

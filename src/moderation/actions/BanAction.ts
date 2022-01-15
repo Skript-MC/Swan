@@ -154,8 +154,9 @@ export default class BanAction extends ModerationAction {
       this.data.setInformations({ banChannelId: channel.id });
 
       const explanation = pupa(messages.moderation.banExplanation, {
-        action: this,
+        ...this,
         duration: this.formatDuration(this.data.duration),
+        expiration: Formatters.time(Math.round(this.data.finish / 1000), Formatters.TimestampStyles.LongDateTime),
       });
       const message = await channel.send(explanation).catch(noop);
       if (message)

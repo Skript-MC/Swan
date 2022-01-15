@@ -29,6 +29,7 @@ import { Events } from '@/app/types/sapphire';
 export default abstract class Task extends Piece {
   public readonly interval?: number;
   public readonly cron?: string;
+  public readonly immediate: boolean;
 
   private _scheduleInterval: NodeJS.Timeout;
   private _scheduleCron: cron.ScheduledTask;
@@ -39,6 +40,7 @@ export default abstract class Task extends Piece {
 
     this.interval = options.interval;
     this.cron = options.cron;
+    this.immediate = options.immediate ?? false;
     this._callback = this._run.bind(this);
   }
 
@@ -47,6 +49,9 @@ export default abstract class Task extends Piece {
       this._scheduleInterval = setInterval(this._callback, this.interval);
     else if (this.cron)
       this._scheduleCron = cron.schedule(this.cron, this._callback);
+
+    if (this.immediate)
+      void this._callback();
   }
 
   public onUnload(): void {
@@ -75,9 +80,13 @@ export default abstract class Task extends Piece {
   public abstract run(): unknown;
 }
 
+interface BaseTaskOptions extends PieceOptions {
+  immediate?: boolean;
+}
+
 export type TaskOptions =
-  | PieceOptions & { cron: string } & { interval?: never }
-  | PieceOptions & { cron?: never } & { interval: number };
+  | BaseTaskOptions & { cron: string } & { interval?: never }
+  | BaseTaskOptions & { cron?: never } & { interval: number };
 
 export interface TaskErrorPayload extends IPieceError {
   piece: Task;

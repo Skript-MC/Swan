@@ -150,11 +150,11 @@ export const userInfo = {
       },
       created: {
         title: '❯ A créé son compte',
-        content: '{creation}',
+        content: 'le {creation}',
       },
       joined: {
         title: '❯ A rejoint le serveur',
-        content: '{joined}',
+        content: 'le {joined}',
       },
       roles: {
         title: '❯ Rôles',
@@ -176,7 +176,7 @@ export const userInfo = {
         },
         details: '↳ {activity.details}\n',
         state: '↳ {activity.state}\n',
-        timestamps: '↳ A commencé {timestamp}',
+        timestamps: '↳ A commencé {time}',
         status: {
           online: 'En ligne',
           idle: 'AFK',
