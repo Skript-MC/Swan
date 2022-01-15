@@ -1,12 +1,7 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { GuildMember } from 'discord.js';
-import { Formatters, MessageEmbed } from 'discord.js';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import { Formatters, MessageEmbed } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
-import moment from 'moment';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';

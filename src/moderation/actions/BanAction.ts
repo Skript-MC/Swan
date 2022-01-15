@@ -1,5 +1,7 @@
 import type { TextChannel } from 'discord.js';
-import { GuildMember, Permissions, User } from 'discord.js';
+import {
+ Formatters, GuildMember, Permissions, User,
+} from 'discord.js';
 import pupa from 'pupa';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';

@@ -1,19 +1,16 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { EmbedField, GuildMember, User } from 'discord.js';
-import { Formatters, MessageEmbed } from 'discord.js';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
+import type {
+ ApplicationCommandOptionData, CommandInteraction, EmbedField, User,
+} from 'discord.js';
+import { Formatters, Message, MessageEmbed } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
-import moment from 'moment';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Sanction from '@/app/models/sanction';
 import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage, SanctionDocument, SwanCommandOptions } from '@/app/types';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
@@ -65,14 +62,17 @@ export default class HistoryCommand extends SwanCommand {
       .setTimestamp();
 
 
+    const defer = await interaction.deferReply({ fetchReply: true });
+    if (!(defer instanceof Message))
+      return;
+    const allowedUser = await this.container.client.users.fetch(interaction.member.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(embed)
       .setItems(fields)
       .setItemsPerPage(3)
       .make()
-      .run(message);
-
-    // Await message.channel.send({ embeds: [embed] });
+      .run(defer, allowedUser);
+    await interaction.followUp({});
   }
 
   private _getSanctionContent(sanction: SanctionDocument): Omit<EmbedField, 'inline'> {
