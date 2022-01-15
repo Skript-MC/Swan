@@ -9,11 +9,9 @@ import type {
   Message,
   User,
 } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import type {
-  Document,
-  FilterQuery,
-  Model,
-  Types,
+ Document, FilterQuery, Model, Types,
 } from 'mongoose';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
@@ -324,10 +322,11 @@ export interface InvisionTopic {
 
 /** Options for the SwanCommand class */
 export interface SwanCommandOptions extends CommandOptions {
-  usage: string;
+  command: string;
   examples: string[];
   permissions?: string[];
   commandOptions: ApplicationCommandOptionData[];
+  commandType: ApplicationCommandTypes;
 }
 
 export type SwanInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;

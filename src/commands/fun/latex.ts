@@ -1,16 +1,20 @@
-import { ChatInputCommand } from '@sapphire/framework';
-import type { MessageReaction, User } from 'discord.js';
-import { ApplicationCommandOptionData, CommandInteraction, Message } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type {
+ ApplicationCommandOptionData, CommandInteraction, MessageReaction, User,
+} from 'discord.js';
+import { Message } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 @ApplySwanOptions(config)
 export default class LatexCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

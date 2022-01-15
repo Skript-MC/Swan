@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
-import { GuildAuditLogs } from 'discord.js';
 import type { GuildTextBasedChannel } from 'discord.js';
+import { GuildAuditLogs } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';

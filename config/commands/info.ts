@@ -5,9 +5,8 @@ import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils'
 export const addonInfo = {
   settings: {
     name: 'Informations sur un add-on',
-    aliases: ['addon-info'],
+    command: 'addonInfo',
     description: "Permet d'afficher diverses informations sur un addon choisi.",
-    usage: 'addoninfo <addon>',
     examples: ['addoninfo mongosk'],
   },
   messages: {
@@ -35,9 +34,8 @@ export const addonInfo = {
 export const documentation = {
   settings: {
     name: 'Documentation',
-    aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntax-info'],
+    command: 'doc',
     description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
-    usage: 'documentation <syntaxe> [--addon=un_addon] [--categorie=une_categorie]',
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
@@ -74,9 +72,8 @@ export const documentation = {
 export const serverInfo = {
   settings: {
     name: 'Informations sur un serveur',
-    aliases: ['server', 'serveur', 'server-info', 'serveur-info'],
+    command: 'server',
     description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
-    usage: 'serverinfo <nom de domaine>',
     examples: ['skriptinfo hypixel.net'],
   },
   messages: {
@@ -101,9 +98,8 @@ export const serverInfo = {
 export const skriptInfo = {
   settings: {
     name: 'Informations sur Skript',
-    aliases: ['skript', 'skriptinfo'],
+    command: 'skript',
     description: "Permet d'afficher diverses informations sur Skript.",
-    usage: 'skriptinfo',
     examples: ['skriptinfo'],
   },
   messages: {
@@ -135,9 +131,8 @@ export const skriptInfo = {
 export const userInfo = {
   settings: {
     name: 'Informations sur un utilisateur (discord)',
-    aliases: ['userinfo'],
+    command: 'userInfo',
     description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
-    usage: 'userinfo <@mention | pseudo | ID>',
     examples: ['userinfo Romitou'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },

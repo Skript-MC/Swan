@@ -1,17 +1,21 @@
 import { execSync } from 'node:child_process';
-import { ChatInputCommand } from '@sapphire/framework';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { CommandInteraction } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import moment from 'moment';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { statistics as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 import pkg from '@/root/package.json';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 @ApplySwanOptions(config)
 export default class StatisticsCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
+
   public override async chatInputRun(
     interaction: CommandInteraction,
     _context: ChatInputCommand.RunContext,

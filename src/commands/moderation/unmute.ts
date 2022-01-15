@@ -1,18 +1,35 @@
-import { ChatInputCommand } from '@sapphire/framework';
-import type { User } from 'discord.js';
-import { CommandInteraction } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ConvictedUser from '@/app/models/convictedUser';
 import ModerationData from '@/app/moderation/ModerationData';
 import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { unmute as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 @ApplySwanOptions(config)
 export default class UnmuteCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Membre à appliquer le bannissement',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'raison',
+      description: "Raison de l'avertissement (sera affiché au membre)",
+      required: true,
+    },
+  ];
+
   public override async chatInputRun(
     interaction: CommandInteraction,
     _context: ChatInputCommand.RunContext,

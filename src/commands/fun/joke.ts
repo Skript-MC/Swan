@@ -1,18 +1,21 @@
-import { ChatInputCommand } from '@sapphire/framework';
-import { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
+import { searchClosestMessage } from '@/app/utils';
 import { joke as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { searchClosestMessage } from '@/app/utils';
 
 @ApplySwanOptions(config)
 export default class JokeCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

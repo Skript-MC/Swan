@@ -1,5 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanChannel from '@/app/models/swanChannel';
 import SwanModule from '@/app/models/swanModule';
@@ -9,6 +10,7 @@ import { refresh as config } from '@/conf/commands/admin';
 
 @ApplySwanOptions(config)
 export default class RefreshCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async chatInputRun(

@@ -1,6 +1,7 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, User, } from 'discord.js';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
 import { TextChannel } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
@@ -11,6 +12,7 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class PurgeCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.NUMBER,

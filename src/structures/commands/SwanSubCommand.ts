@@ -9,7 +9,6 @@ export default abstract class SwanSubCommand extends SubCommandPluginCommand {
   constructor(context: PieceContext, options: SwanCommandOptions) {
     super(context, options);
 
-    this.usage = options?.usage || '';
     this.examples = options?.examples || [];
   }
 }

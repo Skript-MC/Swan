@@ -5,9 +5,8 @@ import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils'
 export const eightBall = {
   settings: {
     name: '8 Ball',
-    aliases: ['8ball', 'eightball'],
+    command: '8ball',
     description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
-    usage: '8ball <votre question>',
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
@@ -63,9 +62,8 @@ export const eightBall = {
 export const idea = {
   settings: {
     name: 'Idée',
-    aliases: ['idea', 'idée', 'idee'],
+    command: 'idea',
     description: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
-    usage: 'idée',
     examples: ['idea', 'idée'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -78,9 +76,8 @@ export const idea = {
 export const joke = {
   settings: {
     name: 'Blague',
-    aliases: ['joke', 'blague'],
+    command: 'joke',
     description: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
-    usage: 'joke',
     examples: ['joke', 'blague'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -92,9 +89,8 @@ export const joke = {
 export const latex = {
   settings: {
     name: 'Latex',
-    aliases: ['latex'],
+    command: 'latex',
     description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
-    usage: 'latex <equation>',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
   messages: {},
@@ -103,9 +99,8 @@ export const latex = {
 export const poll = {
   settings: {
     name: 'Sondage',
-    aliases: ['poll', 'sondage'],
+    command: 'poll',
     description: 'Permet de __lancer un sondage__ temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajoute le drapeau `-a` pour indique que le sondage sera anonyme, ~~ou le drapeau `-m` pour autoriser les réponses multiples~~ *(soon)*.',
-    usage: 'poll <durée> [-a] [-m] "<sondage>" ["réponse 1"] ["réponse 2"] [...]',
     examples: ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'vote 10m Votre sondage ou on peut répondre uniquement par Oui et Non', 'sondage 10m "votre sondage" -a -m "réponse 1" "réponse 2"'],
   },
   messages: {

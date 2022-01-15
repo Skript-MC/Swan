@@ -1,19 +1,20 @@
-import type { User } from 'discord.js';
-import { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { ChatInputCommand } from '@sapphire/framework';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
 @ApplySwanOptions(config)
 export default class UnbanCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.USER,

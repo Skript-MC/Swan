@@ -5,9 +5,8 @@ import { activeMemberRolePrecondition, basePreconditions, channelRulesPreconditi
 export const addonPack = {
   settings: {
     name: "Pack d'add-ons",
-    aliases: ['addon-pack'],
+    command: 'addonPack',
     description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
-    usage: 'addonPack <version>',
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
   messages: {
@@ -18,9 +17,8 @@ export const addonPack = {
 export const autoMessage = {
   settings: {
     name: 'Message rapide',
-    aliases: ['auto', 'auto-msg', 'auto-message', 'automatic-message'],
+    command: 'auto',
     description: "Permet d'envoyer rapidement un message prédéfini.",
-    usage: 'auto <message>',
     examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
@@ -31,9 +29,8 @@ export const autoMessage = {
 export const code = {
   settings: {
     name: 'Code',
-    aliases: ['code', 'balise', 'balises'],
+    command: 'code',
     description: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
-    usage: 'code <code>',
     examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=java System.out.println("Le Java est cool aussi");'],
   },
   messages: {
@@ -42,31 +39,11 @@ export const code = {
   },
 };
 
-export const discover = {
-  settings: {
-    name: 'Découvrir',
-    aliases: ['discover', 'découvrir', 'decouvrir'],
-    description: 'Permet de __découvrir une commande__ présente dans Swan.',
-    usage: 'découvrir',
-    examples: ['decouvrir'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
-  },
-  messages: {
-    title: ':star: Commande "{name}"',
-    description: '❯ Description',
-    usage: '❯ Utilisation',
-    usableBy: '❯ Utilisable par',
-    aliases: '❯ Aliases',
-    examples: '❯ Exemples',
-  },
-};
-
 export const errorDetails = {
   settings: {
     name: "Détails d'erreur",
-    aliases: ['error', 'error-details'],
+    command: 'error',
     description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
-    usage: 'error <erreur>',
     examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
@@ -77,9 +54,8 @@ export const errorDetails = {
 export const help = {
   settings: {
     name: 'Aide',
-    aliases: ['help', 'aide'],
+    command: 'help',
     description: 'Affiche la liste des commandes disponibles ou des informations précises sur une commande spécifique.',
-    usage: 'help [commande]',
     examples: ['help', 'aide ping'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -103,9 +79,8 @@ export const help = {
 export const links = {
   settings: {
     name: 'Liens',
-    aliases: ['links', 'link', 'liens', 'lien'],
-    description: "Affiche la liste des liens utiles concernant Skript.",
-    usage: 'links',
+    command: 'links',
+    description: 'Affiche la liste des liens utiles concernant Skript.',
     examples: ['links'],
   },
   messages: {
@@ -162,9 +137,8 @@ export const links = {
 export const move = {
   settings: {
     name: 'Déplacer un message',
-    aliases: ['move', 'movemessage'],
+    command: 'move',
     description: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
-    usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
     preconditions: [...basePreconditions, activeMemberRolePrecondition],
     permissions: ['Membre Actif'],
@@ -183,9 +157,8 @@ export const move = {
 export const ping = {
   settings: {
     name: 'Ping',
-    aliases: ['ping', 'ms'],
+    command: 'ping',
     description: "Permet de connaître la latence de Swan et de l'API Discord.",
-    usage: 'ping',
     examples: ['ping'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -202,9 +175,8 @@ export const ping = {
 export const rule = {
   settings: {
     name: 'Règles',
-    aliases: ['rule', 'rules', 'regle', 'règle', 'regles', 'règles'],
+    command: 'rule',
     description: 'Affiche une règle prédéfinie.',
-    usage: 'regle <règle>',
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
@@ -217,9 +189,8 @@ export const rule = {
 export const statistics = {
   settings: {
     name: 'Statistiques',
-    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
+    command: 'statistics',
     description: 'Affiche des statistiques et diverses informations sur Swan.',
-    usage: 'stats',
     examples: ['stats'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },

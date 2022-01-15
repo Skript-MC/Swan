@@ -1,20 +1,23 @@
 import { EmbedLimits } from '@sapphire/discord-utilities';
-import { ChatInputCommand } from '@sapphire/framework';
-import { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import Turndown from 'turndown';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
 import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
 const turndownService = new Turndown();
 
 @ApplySwanOptions(config)
 export default class DocumentationCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

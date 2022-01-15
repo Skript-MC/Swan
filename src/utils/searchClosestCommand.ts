@@ -1,6 +1,6 @@
 import jaroWinklerDistance from 'jaro-winkler';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SimilarityMatch } from '@/app/types';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 import capitalize from '@/app/utils/capitalize';
 
 /**

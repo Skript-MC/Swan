@@ -1,5 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import RefreshCommand from '@/app/commands/admin/refresh';
@@ -11,6 +12,7 @@ import { module as config } from '@/conf/commands/admin';
 
 @ApplySwanOptions(config)
 export default class ModuleCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

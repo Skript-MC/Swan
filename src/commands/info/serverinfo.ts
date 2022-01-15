@@ -1,17 +1,20 @@
-import { ChatInputCommand } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
-import { ApplicationCommandOptionData, CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { ServerStatResponse } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
 @ApplySwanOptions(config)
 export default class ServerInfoCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

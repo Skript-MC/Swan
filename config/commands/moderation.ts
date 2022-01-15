@@ -25,9 +25,8 @@ const commonMessages = {
 export const ban = {
   settings: {
     name: 'Ban',
-    aliases: ['ban', 'sdb'],
+    command: 'ban',
     description: 'Appliquer une restriction du Discord à un membre (= salon des bannis), ou le bannir définitivement.',
-    usage: 'ban <@mention | pseudo | ID> <durée> <raison> [--autoban] [--purge]',
     examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
     preconditions: [...basePreconditions, staffRolePrecondition],
   },
@@ -43,9 +42,8 @@ export const hardban = ban;
 export const history = {
   settings: {
     name: 'Historique',
-    aliases: ['history', 'historique'],
+    command: 'history',
     description: "Permet de voir l'historique des sanctions d'un utilisateur.",
-    usage: 'history <@mention | pseudo | ID>',
     examples: ['history carlodrift'],
     preconditions: [...basePreconditions, staffRolePrecondition],
   },
@@ -100,9 +98,8 @@ export const history = {
 export const kick = {
   settings: {
     name: 'Expulsion',
-    aliases: ['kick'],
+    command: 'kick',
     description: "Permet d'expulser un membre du serveur.",
-    usage: 'kick <@mention | pseudo | ID> <raison>',
     examples: ['kick tutur Vade retro !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
@@ -116,7 +113,7 @@ export const kick = {
 export const mute = {
   settings: {
     name: 'Mute',
-    aliases: ['mute'],
+    command: 'mute',
     description: 'Appliquer une restriction de la parole à un membre (= timeout).',
     usage: 'mute <@mention | pseudo | ID> <durée> <raison>',
     examples: ['mute @Xamez chuuuut'],
@@ -133,9 +130,8 @@ export const mute = {
 export const purge = {
   settings: {
     name: 'Purge',
-    aliases: ['purge'],
+    command: 'purge',
     description: "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
-    usage: 'purge <nombre> [<@mention | pseudo | ID>] [--force | -f]',
     examples: ['purge 10 -f', 'purge @membre 40'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
@@ -148,9 +144,8 @@ export const purge = {
 export const removeWarn = {
   settings: {
     name: "Suppression d'avertissement",
-    aliases: ['remove-warn', 'unwarn', 'dewarn'],
+    command: 'removeWarn',
     description: "Permet de révoquer le dernier avertissement d'un membre.",
-    usage: 'removewarn <@mention | pseudo | ID> [raison]',
     examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
@@ -167,9 +162,8 @@ export const removeWarn = {
 export const unban = {
   settings: {
     name: 'Unban',
-    aliases: ['unban', 'deban'],
+    command: 'unban',
     description: "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
-    usage: 'unban <@mention | pseudo | ID> [raison]',
     examples: ['unban @WeeskyBDW', 'unban @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
@@ -184,9 +178,8 @@ export const unban = {
 export const unmute = {
   settings: {
     name: 'Unmute',
-    aliases: ['unmute', 'demute'],
-    description: `Permet de retirer un mute d'un membre du Discord.`,
-    usage: 'unmute <@mention | pseudo | ID> [raison]',
+    command: 'unmute',
+    description: "Permet de retirer un mute d'un membre du Discord.",
     examples: ['unmute @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
@@ -201,9 +194,8 @@ export const unmute = {
 export const warn = {
   settings: {
     name: 'Avertissement',
-    aliases: ['warn'],
+    command: 'warn',
     description: "Permet d'avertir un membre pour une raison donnée.",
-    usage: 'warn <@mention | pseudo | ID> <raison>',
     examples: ["warn @Rémi Il faut penser à respecter le modèle d'aide !"],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],

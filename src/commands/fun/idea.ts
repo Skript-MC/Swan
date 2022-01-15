@@ -1,14 +1,18 @@
-import { ChatInputCommand } from '@sapphire/framework';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { CommandInteraction } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { idea as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 @ApplySwanOptions(config)
 export default class IdeaCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
+
   public override async chatInputRun(
     interaction: CommandInteraction,
     _context: ChatInputCommand.RunContext,

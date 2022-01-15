@@ -1,20 +1,22 @@
-import { ChatInputCommand } from '@sapphire/framework';
-import type { User } from 'discord.js';
-import { ApplicationCommandOptionData, CommandInteraction, MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import moment from 'moment';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Sanction from '@/app/models/sanction';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 
 @ApplySwanOptions(config)
 export default class HistoryCommand extends SwanCommand {
+  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.USER,

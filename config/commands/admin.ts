@@ -5,9 +5,8 @@ import { basePreconditions, channelRulesPrecondition, staffRolePrecondition } fr
 export const logs = {
   settings: {
     name: 'Gérer les sauvegardes de messages',
-    aliases: ['logs'],
+    command: 'logs',
     description: "Permet d'activer ou de désactiver la sauvegarde des messages de certains salons.",
-    usage: 'logs <#salon> <on|off>',
     examples: ['logs #bot on'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
@@ -24,9 +23,8 @@ export const logs = {
 export const module = {
   settings: {
     name: 'Modifier les modules',
-    aliases: ['module'],
+    command: 'module',
     description: "Permet d'activer ou de désactiver certains modules de Swan.",
-    usage: 'module <nom module> <on|off>',
     examples: ['module skriptReleases off'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
@@ -50,9 +48,8 @@ export const module = {
 export const refresh = {
   settings: {
     name: 'Rafraîchir le cache',
-    aliases: ['refresh'],
+    command: 'refresh',
     description: 'Permet de rafraîchir le cache de Swan en re-fetchant les bases de données.',
-    usage: 'refresh',
     examples: ['refresh'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
@@ -65,9 +62,8 @@ export const refresh = {
 export const reactionRole = {
   settings: {
     name: 'Reaction Roles',
-    aliases: ['reactionrole', 'rr'],
+    command: 'reactionRole',
     description: 'Permet de créer un nouvel espace de reaction role.',
-    usage: 'reactionrole <@rôle | nom | ID> <émoji | "default"> [#salon | ID salon]',
     examples: [
       'reactionrole 818086544593518593 :tada: #annonces',
       'reactionrole @Events default 818126792257830932',
