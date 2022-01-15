@@ -1,14 +1,25 @@
-import { ContextMenuCommand } from '@sapphire/framework';
-import { ContextMenuInteraction, Message, MessageEmbed, MessageReaction, Permissions, User } from 'discord.js';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
-import { move as config } from '@/conf/commands/basic';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import { IMessagePrompterExplicitMessageReturn, MessagePrompter } from '@sapphire/discord.js-utilities';
-import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
-import messages from '@/conf/messages';
+import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
+import { MessagePrompter } from '@sapphire/discord.js-utilities';
+import type { ContextMenuCommand } from '@sapphire/framework';
+import type {
+  ContextMenuInteraction,
+  MessageReaction,
+  TextChannel,
+  User,
+} from 'discord.js';
+import {
+  Message,
+  MessageEmbed,
+  Permissions,
+} from 'discord.js';
 import pupa from 'pupa';
-import settings from '@/conf/settings';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
+import { move as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class MoveCommand extends SwanCommand {
@@ -27,6 +38,16 @@ export default class MoveCommand extends SwanCommand {
     targetedMessage: Message,
   ): Promise<void> {
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+
+    const originalChannel = targetedMessage.channel as TextChannel;
+    const canMemberWrite = originalChannel
+      ?.permissionsFor(member)
+      .has(Permissions.FLAGS.SEND_MESSAGES);
+
+    if (!canMemberWrite) {
+      await interaction.reply({ content: messages.prompt.channel, ephemeral: true });
+      return;
+    }
 
     const hasRole = targetedMessage.member
       ? targetedMessage.member.roles.highest.position >= member.roles.highest.position

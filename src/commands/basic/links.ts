@@ -10,7 +10,6 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class LinksCommand extends SwanCommand {
-
   public override async chatInputRun(
     interaction: CommandInteraction,
     _context: ChatInputCommand.RunContext,

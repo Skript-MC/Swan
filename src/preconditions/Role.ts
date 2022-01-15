@@ -1,9 +1,9 @@
 import type { AsyncPreconditionResult, PreconditionContext } from '@sapphire/framework';
 import { Identifiers, Precondition } from '@sapphire/framework';
-import type { CommandInteraction } from 'discord.js';
-import { ContextMenuInteraction, Interaction } from 'discord.js';
+import type { CommandInteraction, ContextMenuInteraction, Interaction } from 'discord.js';
+import { GuildMemberRoleManager } from 'discord.js';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SwanChatInputCommand, SwanContextMenuCommand } from '@/app/types';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export interface RolePreconditionContext extends PreconditionContext {
   role: string;
@@ -28,11 +28,13 @@ export default class RolePrecondition extends Precondition {
 
   private async _check(
     interaction: Interaction,
-    command: SwanCommand,
+    _command: SwanCommand,
     context: RolePreconditionContext,
   ): AsyncPreconditionResult {
-    // TODO
-    if (interaction.member)
+    const { roles } = interaction.member;
+    if (roles instanceof GuildMemberRoleManager && roles.cache.has(context.role))
+      return this.ok();
+    else if (Array.isArray(roles) && roles.includes(context.role))
       return this.ok();
 
     return this.error({

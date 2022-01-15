@@ -29,7 +29,6 @@ export default class SwanClient extends SapphireClient {
         level: LogLevel.Debug,
       },
       loadDefaultErrorListeners: true,
-      loadMessageCommandListeners: true,
 
       intents: [
         Intents.FLAGS.GUILDS, // Get access to channels, create some, pin messages etc.

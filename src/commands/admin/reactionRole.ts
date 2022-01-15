@@ -1,5 +1,7 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel, Role, } from 'discord.js';
+import type {
+ ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel, Role,
+} from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';

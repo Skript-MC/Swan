@@ -1,5 +1,7 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, MessageReaction, User, } from 'discord.js';
+import type {
+ ApplicationCommandOptionData, CommandInteraction, MessageReaction, User,
+} from 'discord.js';
 import { Message } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';

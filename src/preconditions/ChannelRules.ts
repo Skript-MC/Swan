@@ -1,11 +1,10 @@
 import type { PreconditionContext, PreconditionResult } from '@sapphire/framework';
-import { Command, Identifiers, Precondition } from '@sapphire/framework';
-import type { CommandInteraction } from 'discord.js';
-import { ContextMenuInteraction, Interaction } from 'discord.js';
-import type { SwanChatInputCommand } from '@/app/types';
-import { Rules, SwanContextMenuCommand } from '@/app/types';
+import { Identifiers, Precondition } from '@sapphire/framework';
+import type { CommandInteraction, ContextMenuInteraction, Interaction } from 'discord.js';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanChatInputCommand, SwanContextMenuCommand } from '@/app/types';
+import { Rules } from '@/app/types';
 import settings from '@/conf/settings';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export interface ChannelRulesPreconditionContext extends PreconditionContext {
   rules: number;

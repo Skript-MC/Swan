@@ -6,7 +6,9 @@ import type {
   RepeatArgOptions,
   Result,
 } from '@sapphire/framework';
-import type { Guild, GuildMember, GuildTextBasedChannel, User, } from 'discord.js';
+import type {
+ Guild, GuildMember, GuildTextBasedChannel, User,
+} from 'discord.js';
 import type SwanCacheManager from '@/app/structures/SwanCacheManager';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type TaskStore from '@/app/structures/tasks/TaskStore';

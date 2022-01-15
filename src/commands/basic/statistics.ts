@@ -13,7 +13,6 @@ import pkg from '@/root/package.json';
 
 @ApplySwanOptions(config)
 export default class StatisticsCommand extends SwanCommand {
-
   public override async chatInputRun(
     interaction: CommandInteraction,
     _context: ChatInputCommand.RunContext,
