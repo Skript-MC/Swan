@@ -1,10 +1,9 @@
-import { GuildMember, Permissions, User } from 'discord.js';
+import { User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
-import settings from '@/conf/settings';
 
 export default class UnmuteAction extends ModerationAction {
   protected before: undefined;
@@ -28,7 +27,7 @@ export default class UnmuteAction extends ModerationAction {
           $push: {
             updates: {
               date: this.data.start,
-              moderator: this.data.moderator?.id,
+              moderator: this.data.moderatorId,
               type: SanctionsUpdates.Revoked,
               reason: this.data.reason,
             },
@@ -44,25 +43,6 @@ export default class UnmuteAction extends ModerationAction {
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)
           .addDetail('Unmute Reason', this.data.reason),
-      );
-    }
-
-    // 2. Unmute (remove roles)
-    try {
-      const role = this.data.guild.roles.resolve(settings.roles.mute);
-      if (role)
-        await this.data.victim.member?.roles.remove(role, this.data.reason);
-      else
-        throw new TypeError('Unable to resolve the mute role.');
-    } catch (unknownError: unknown) {
-      this.errorState.addError(
-        new ModerationError()
-          .from(unknownError as Error)
-          .setMessage('An error occurred while fetching unmute a member (removing roles)')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Roles Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)),
       );
     }
   }

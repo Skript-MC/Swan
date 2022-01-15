@@ -77,7 +77,7 @@ export default abstract class ModerationAction {
   }
 
   protected get moderatorString(): string {
-    return this.data.moderator.toString() || messages.global.unknownName;
+    return this.data.moderatorId ? ('<@' + this.data.moderatorId + '>') : messages.global.unknownName;
   }
 
   protected get action(): string {
@@ -159,7 +159,7 @@ export default abstract class ModerationAction {
       .setTitle(pupa(messages.moderation.newCase, { action: this }))
       .setTimestamp()
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
-      .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)
+      .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderatorId}`, true)
       .addField(messages.moderation.log.actionTitle, this.action.toString(), true)
       .addField(
         messages.moderation.log.reasonTitle,

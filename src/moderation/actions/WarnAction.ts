@@ -44,7 +44,7 @@ export default class WarnAction extends ModerationAction {
             $push: {
               updates: {
                 date: this.data.start,
-                moderator: this.data.moderator?.id,
+                moderator: this.data.moderatorId,
                 type: SanctionsUpdates.Revoked,
                 reason: messages.moderation.reasons.revokeWarnsLimitExceeded,
               },

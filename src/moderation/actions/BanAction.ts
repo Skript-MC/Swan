@@ -53,7 +53,7 @@ export default class BanAction extends ModerationAction {
             $push: {
               updates: {
                 date: this.data.start,
-                moderator: this.data.moderator?.id,
+                moderator: this.data.moderatorId,
                 type: SanctionsUpdates.Duration,
                 valueBefore: this.updateInfos.sanctionDocument.duration,
                 valueAfter: this.data.duration,
@@ -125,7 +125,7 @@ export default class BanAction extends ModerationAction {
           $push: {
             updates: {
               date: this.data.start,
-              moderator: this.data.moderator?.id,
+              moderator: this.data.moderatorId,
               type: SanctionsUpdates.Duration,
               valueBefore: this.updateInfos.sanctionDocument.duration,
               valueAfter: this.data.duration,

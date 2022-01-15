@@ -38,7 +38,7 @@ export default class UnbanAction extends ModerationAction {
           $push: {
             updates: {
               date: this.data.start,
-              moderator: this.data.moderator?.id,
+              moderator: this.data.moderatorId,
               type: SanctionsUpdates.Revoked,
               reason: this.data.reason,
             },

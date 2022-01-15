@@ -26,7 +26,7 @@ export const ban = {
   settings: {
     name: 'Ban',
     aliases: ['ban', 'sdb'],
-    description: `Appliquer une restriction du Discord à un membre (= salon des bannis (SDB)), ou le bannir définitivement. Entre une durée pour un SDB, ou \`def\` pour un bannissement permanent. Utilise le drapeau \`--autoban\` (\`-a\`) pour automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message. Utilisez le drapeau \`--purge\` (\`-p\`) pour supprimer les messages postés par le membre dans les 7 derniers jours. ${see('bannissement')}`,
+    description: 'Appliquer une restriction du Discord à un membre (= salon des bannis), ou le bannir définitivement.',
     usage: 'ban <@mention | pseudo | ID> <durée> <raison> [--autoban] [--purge]',
     examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -44,7 +44,7 @@ export const history = {
   settings: {
     name: 'Historique',
     aliases: ['history', 'historique'],
-    description: "Permet de voir l'__historique des sanctions__ d'un utilisateur.",
+    description: "Permet de voir l'historique des sanctions d'un utilisateur.",
     usage: 'history <@mention | pseudo | ID>',
     examples: ['history carlodrift'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -101,7 +101,7 @@ export const kick = {
   settings: {
     name: 'Expulsion',
     aliases: ['kick'],
-    description: `Permet d'__expulser un membre__ du serveur. ${see('kick')}`,
+    description: "Permet d'expulser un membre du serveur.",
     usage: 'kick <@mention | pseudo | ID> <raison>',
     examples: ['kick tutur Vade retro !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -117,7 +117,7 @@ export const mute = {
   settings: {
     name: 'Mute',
     aliases: ['mute'],
-    description: `Appliquer une __restriction de la parole__ à un membre (= interdiction de parler dans les salons d'aide). ${see('mute')}`,
+    description: 'Appliquer une restriction de la parole à un membre (= timeout).',
     usage: 'mute <@mention | pseudo | ID> <durée> <raison>',
     examples: ['mute @Xamez chuuuut'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -134,7 +134,7 @@ export const purge = {
   settings: {
     name: 'Purge',
     aliases: ['purge'],
-    description: "Permet de __supprimer plusieurs messages__ à la fois dans un salon, avec la possibilité de spécifier un membre en particulier. Il n'est possible que de supprimer des messages ayant été envoyés il y a __moins de 15 jours__ : c'est une limitation de Discord. Par défaut, les messages des membres du staff ne seront pas inclus. Si tu veux aussi supprimer les messages du staff, ajoute le drapeau `--force` (ou `-f`).",
+    description: "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
     usage: 'purge <nombre> [<@mention | pseudo | ID>] [--force | -f]',
     examples: ['purge 10 -f', 'purge @membre 40'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -149,7 +149,7 @@ export const removeWarn = {
   settings: {
     name: "Suppression d'avertissement",
     aliases: ['remove-warn', 'unwarn', 'dewarn'],
-    description: `Permet de __révoquer le dernier avertissement__ d'un membre. ${see('mise-à-jour-annulation')}`,
+    description: "Permet de révoquer le dernier avertissement d'un membre.",
     usage: 'removewarn <@mention | pseudo | ID> [raison]',
     examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -168,7 +168,7 @@ export const unban = {
   settings: {
     name: 'Unban',
     aliases: ['unban', 'deban'],
-    description: `Permet de __retirer une restriction du Discord__ à un membre, ou le débannir s'il est banni définitivement. ${see('annulation')}`,
+    description: "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
     usage: 'unban <@mention | pseudo | ID> [raison]',
     examples: ['unban @WeeskyBDW', 'unban @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -185,7 +185,7 @@ export const unmute = {
   settings: {
     name: 'Unmute',
     aliases: ['unmute', 'demute'],
-    description: `Permet de __retirer un mute__ à un membre du Discord. ${see('annulation-1')}`,
+    description: `Permet de retirer un mute d'un membre du Discord.`,
     usage: 'unmute <@mention | pseudo | ID> [raison]',
     examples: ['unmute @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
@@ -202,13 +202,14 @@ export const warn = {
   settings: {
     name: 'Avertissement',
     aliases: ['warn'],
-    description: `Permet d'__avertir un membre__ pour une raison donnée. Au bout de 2 avertissements, le membre sera banni pendant 4 jours. Les avertissements expirent au bout d'un mois. ${see('warn')}`,
+    description: "Permet d'avertir un membre pour une raison donnée.",
     usage: 'warn <@mention | pseudo | ID> <raison>',
     examples: ["warn @Rémi Il faut penser à respecter le modèle d'aide !"],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
   },
   messages: {
+    notFound: "Aucun membre n'a été trouvé.",
     notification: commonMessages.creationNotification(false),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre averti avec succès !',

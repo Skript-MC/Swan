@@ -1,37 +1,53 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import { ChatInputCommand } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
+import { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import ModerationData from '@/app/moderation/ModerationData';
 import KickAction from '@/app/moderation/actions/KickAction';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { kick as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class KickCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.pickResult('sanctionnableMember');
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Expulser le membre',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'raison',
+      description: "Raison de l'expulsion",
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const { client } = this.container;
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const moderator = await client.guild.members.fetch(interaction.member.user.id);
+    const member = resolveSanctionnableMember(victim, moderator);
     if (!member.success) {
-      await message.channel.send(messages.prompt.member);
+      await interaction.reply(messages.prompt.member);
       return;
     }
 
-    const reason = await args.restResult('string');
-    if (!reason.success) {
-      await message.channel.send(messages.prompt.reason);
-      return;
-    }
-
-    await this._exec(message, member.value, reason.value);
+    await this._exec(interaction, victim, interaction.options.getString('raison'));
   }
 
-  private async _exec(message: GuildMessage, member: GuildMember, reason: string): Promise<void> {
+  private async _exec(interaction: CommandInteraction, member: GuildMember, reason: string): Promise<void> {
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
@@ -41,20 +57,19 @@ export default class KickCommand extends SwanCommand {
     }, 10_000);
 
     try {
-      const data = new ModerationData(message)
+      const data = new ModerationData(interaction)
         .setVictim(member)
         .setReason(reason)
         .setType(SanctionTypes.Kick);
 
       const success = await new KickAction(data).commit();
       if (success)
-        await message.channel.send(config.messages.success).catch(noop);
+        await interaction.reply(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while kicking a member!');
       this.container.logger.info(`Parsed member: ${member}`);
-      this.container.logger.info(`Message: ${message.url}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await message.channel.send(messages.global.oops).catch(noop);
+      await interaction.reply(messages.global.oops).catch(noop);
     }
   }
 }

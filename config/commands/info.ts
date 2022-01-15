@@ -36,25 +36,19 @@ export const documentation = {
   settings: {
     name: 'Documentation',
     aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntax-info'],
-    description: stripIndent`
-      Permet de chercher une syntaxe de Skript ou d'un addon dans la [documentation de Skript-MC](https://skript-mc.fr/documentation/skript/).
-      Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
-      Tu peux affiner tes recherches grâce à deux options (que tu peux combiner) :
-        • Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
-        • Utilise \`-c=ta_categorie\` (ou \`--categorie=ta_categorie\`) pour rechercher seulement les syntaxes d'une certaine catégorie (effet, évènement, condition...).
-    `,
+    description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
     usage: 'documentation <syntaxe> [--addon=un_addon] [--categorie=une_categorie]',
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
-    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{query}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
+    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{articleId}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
-      title: '{syntax.name} ({syntax.category} — #{syntax.id})',
-      description: '{syntax.content}',
+      title: '{article.name} ({article.category} — #{article.id})',
+      description: '{article.content}',
       deprecated: ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
-      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({syntax.deprecationLink}) pour la remplacer.',
+      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({article.deprecationLink}) pour la remplacer.',
       noReplacement: 'Pas de remplacement disponible.',
       noDescription: 'Aucune description disponible.',
       version: ':bookmark: À partir de la version',

@@ -136,7 +136,7 @@ export default class ReadyListener extends Listener {
         const data = new ModerationData()
           .setVictim(ban.user, false)
           .setReason(ban.reason)
-          .setModerator(moderator)
+          .setModeratorId(moderator.id)
           .setDuration(-1, false)
           .setType(SanctionTypes.Hardban);
         try {
