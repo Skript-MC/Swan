@@ -1,7 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
@@ -11,7 +10,6 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class IdeaCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
 
   public override async chatInputRun(
     interaction: CommandInteraction,

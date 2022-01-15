@@ -1,18 +1,36 @@
 import type { PreconditionContext, PreconditionResult } from '@sapphire/framework';
-import { Identifiers, Precondition } from '@sapphire/framework';
+import { Command, Identifiers, Precondition } from '@sapphire/framework';
 import type { CommandInteraction } from 'discord.js';
-import type { SwanInputCommand } from '@/app/types';
-import { Rules } from '@/app/types';
+import { ContextMenuInteraction, Interaction } from 'discord.js';
+import type { SwanChatInputCommand } from '@/app/types';
+import { Rules, SwanContextMenuCommand } from '@/app/types';
 import settings from '@/conf/settings';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export interface ChannelRulesPreconditionContext extends PreconditionContext {
   rules: number;
 }
 
 export default class ChannelRulesPrecondition extends Precondition {
+  public override contextMenuRun(
+    interaction: ContextMenuInteraction,
+    command: SwanContextMenuCommand,
+    context: ChannelRulesPreconditionContext,
+  ): PreconditionResult {
+    return this._check(interaction, command, context);
+  }
+
   public override chatInputRun(
     interaction: CommandInteraction,
-    _command: SwanInputCommand,
+    command: SwanChatInputCommand,
+    context: ChannelRulesPreconditionContext,
+  ): PreconditionResult {
+    return this._check(interaction, command, context);
+  }
+
+  private _check(
+    interaction: Interaction,
+    _command: SwanCommand,
     context: ChannelRulesPreconditionContext,
   ): PreconditionResult {
     // If the command is forbidden in help channels.

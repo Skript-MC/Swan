@@ -1,8 +1,6 @@
 import { stripIndent } from 'common-tags';
 import { basePreconditions, staffRolePrecondition } from '@/conf/configUtils';
 
-const see = (where: string): string => `Voir la documentation disponible sur <https://github.com/Skript-MC/Swan/wiki/Modération#${where}> pour plus d'informations.`;
-
 const commonMessages = {
   creationNotification: (showDuration: boolean): string => stripIndent`
     Bonjour {action.nameString}, tu viens de recevoir une sanction ({action.action}) sur le serveur Skript-MC.
@@ -144,7 +142,7 @@ export const purge = {
 export const removeWarn = {
   settings: {
     name: "Suppression d'avertissement",
-    command: 'removeWarn',
+    command: 'removewarn',
     description: "Permet de révoquer le dernier avertissement d'un membre.",
     examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
     preconditions: [...basePreconditions, staffRolePrecondition],

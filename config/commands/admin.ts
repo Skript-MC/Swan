@@ -1,4 +1,3 @@
-import { stripIndent } from 'common-tags';
 import { Rules } from '@/app/types';
 import { basePreconditions, channelRulesPrecondition, staffRolePrecondition } from '@/conf/configUtils';
 
@@ -62,7 +61,7 @@ export const refresh = {
 export const reactionRole = {
   settings: {
     name: 'Reaction Roles',
-    command: 'reactionRole',
+    command: 'reactionrole',
     description: 'Permet de créer un nouvel espace de reaction role.',
     examples: [
       'reactionrole 818086544593518593 :tada: #annonces',

@@ -26,7 +26,10 @@ function getCategoryColor(category: string): string {
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default function searchClosestArticle(entries: SkriptMcDocumentationSyntaxAndAddon[], wanted: string): SimilarityMatch[] {
+export default function searchClosestArticle(
+  entries: SkriptMcDocumentationSyntaxAndAddon[],
+  wanted: string,
+): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.

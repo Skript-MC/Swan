@@ -1,7 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
@@ -12,7 +11,6 @@ import { logs as config } from '@/conf/commands/admin';
 
 @ApplySwanOptions(config)
 export default class LogsCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.CHANNEL,

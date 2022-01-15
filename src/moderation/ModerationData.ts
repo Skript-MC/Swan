@@ -1,13 +1,9 @@
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
-import type {
- Guild, GuildMember, GuildTextBasedChannel, User,
-} from 'discord.js';
+import type { Guild, GuildMember, GuildTextBasedChannel, User, } from 'discord.js';
 import { CommandInteraction, Message, TextChannel } from 'discord.js';
 import { nanoid } from 'nanoid';
-import type {
- GuildMessage, ModerationDataResult, PersonInformations, SanctionInformations,
-} from '@/app/types';
+import type { GuildMessage, ModerationDataResult, PersonInformations, SanctionInformations, } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';

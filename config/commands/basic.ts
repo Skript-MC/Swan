@@ -137,7 +137,7 @@ export const links = {
 export const move = {
   settings: {
     name: 'Déplacer un message',
-    command: 'move',
+    command: 'Déplacer un message',
     description: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     examples: ['move #skript-2 756858183229636640'],
     preconditions: [...basePreconditions, activeMemberRolePrecondition],
@@ -150,6 +150,7 @@ export const move = {
       {memberDisplayName} à déplacé un message de {targetName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
+    question: 'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
 };

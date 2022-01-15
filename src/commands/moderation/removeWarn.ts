@@ -1,6 +1,5 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ConvictedUser from '@/app/models/convictedUser';
@@ -15,7 +14,6 @@ import messages from '@/conf/messages';
 
 @ApplySwanOptions(config)
 export default class RemoveWarnCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.USER,

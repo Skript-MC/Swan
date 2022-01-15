@@ -8,7 +8,7 @@ const otherHelp = [...process.env.OTHER_HELP_CHANNELS.split(',')];
 
 export default {
   bot: {
-    prefix: process.env.BOT_PREFIX || '.',
+    prefix: process.env.BOT_PREFIX || '/',
     avatar: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
     guild: process.env.GUILD_ID,
   },

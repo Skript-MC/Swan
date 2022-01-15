@@ -5,7 +5,7 @@ import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils'
 export const addonInfo = {
   settings: {
     name: 'Informations sur un add-on',
-    command: 'addonInfo',
+    command: 'addoninfo',
     description: "Permet d'afficher diverses informations sur un addon choisi.",
     examples: ['addoninfo mongosk'],
   },
@@ -131,7 +131,7 @@ export const skriptInfo = {
 export const userInfo = {
   settings: {
     name: 'Informations sur un utilisateur (discord)',
-    command: 'userInfo',
+    command: 'userinfo',
     description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
     examples: ['userinfo Romitou'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],

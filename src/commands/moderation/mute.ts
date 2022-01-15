@@ -1,6 +1,5 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
@@ -17,7 +16,6 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class MuteCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.USER,

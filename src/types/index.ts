@@ -10,9 +10,7 @@ import type {
   User,
 } from 'discord.js';
 import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
-import type {
- Document, FilterQuery, Model, Types,
-} from 'mongoose';
+import type { Document, FilterQuery, Model, Types, } from 'mongoose';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
 
@@ -326,10 +324,10 @@ export interface SwanCommandOptions extends CommandOptions {
   examples: string[];
   permissions?: string[];
   commandOptions: ApplicationCommandOptionData[];
-  commandType: ApplicationCommandTypes;
 }
 
-export type SwanInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
+export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
+export type SwanContextMenuCommand = Required<Pick<Command, 'contextMenuRun'>> & SwanCommand;
 
 /** Types of rules for where a command can be executed */
 export enum Rules {

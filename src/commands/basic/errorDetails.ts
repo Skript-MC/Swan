@@ -1,6 +1,5 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
@@ -11,7 +10,6 @@ import { errorDetails as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
 export default class ErrorDetailsCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.STRING,

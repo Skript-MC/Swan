@@ -1,7 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { CommandInteraction, User } from 'discord.js';
+import type { CommandInteraction } from 'discord.js';
 import { Message, MessageEmbed } from 'discord.js';
-import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
@@ -11,7 +10,6 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class LinksCommand extends SwanCommand {
-  public static commandType: ApplicationCommandTypes.CHAT_INPUT;
 
   public override async chatInputRun(
     interaction: CommandInteraction,
