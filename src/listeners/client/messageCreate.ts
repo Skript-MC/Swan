@@ -1,7 +1,7 @@
 import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
-import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import type { Message } from 'discord.js';
+import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import type { GuildMessage } from '@/app/types';

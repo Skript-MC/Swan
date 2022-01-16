@@ -1,35 +1,46 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { EmbedField, GuildMember, User } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type {
+  ApplicationCommandOptionData,
+  CommandInteraction,
+  EmbedField,
+  User,
+} from 'discord.js';
 import { Formatters, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Sanction from '@/app/models/sanction';
 import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import type { GuildMessage, SanctionDocument, SwanCommandOptions } from '@/app/types';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class HistoryCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.pick('member')
-      .catch(async () => args.pick('user')
-        .catch(async () => args.pick('string')
-          .catch(() => message.member)));
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: "Consulter l'historique de ce membre",
+      required: true,
+    },
+  ];
 
-    await this._exec(message, member);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getUser('membre'));
   }
 
-  private async _exec(message: GuildMessage, member: GuildMember | User | string): Promise<void> {
-    const memberId = typeof member === 'string' ? member : member.id;
-
-    const sanctions = await Sanction.find({ memberId });
+  private async _exec(interaction: CommandInteraction, user: User): Promise<void> {
+    const sanctions = await Sanction.find({ memberId: user.id });
     if (sanctions.length === 0) {
-      await message.channel.send(config.messages.notFound);
+      await interaction.reply(config.messages.notFound);
       return;
     }
 
@@ -45,23 +56,21 @@ export default class HistoryCommand extends SwanCommand {
       warns: sanctions.filter(s => s.type === SanctionTypes.Warn).length,
     };
 
-    const sanctionUrl = settings.moderation.dashboardSanctionLink + memberId;
+    const sanctionUrl = settings.moderation.dashboardSanctionLink + user.id;
     const embed = new MessageEmbed()
-      .setTitle(pupa(config.messages.title, { name: getUsername(member), sanctions }))
+      .setTitle(pupa(config.messages.title, { name: getUsername(user), sanctions }))
       .setURL(sanctionUrl)
       .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
       .setColor(settings.colors.default)
       .setTimestamp();
 
-
+    const allowedUser = await this.container.client.users.fetch(interaction.member.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(embed)
       .setItems(fields)
       .setItemsPerPage(3)
       .make()
-      .run(message);
-
-    // Await message.channel.send({ embeds: [embed] });
+      .run(interaction, allowedUser);
   }
 
   private _getSanctionContent(sanction: SanctionDocument): Omit<EmbedField, 'inline'> {

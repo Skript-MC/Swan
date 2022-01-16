@@ -5,7 +5,7 @@ import type SwanCommand from '@/app/structures/commands/SwanCommand';
 
 export default function resolveCommand(parameter: string): Result<SwanCommand, 'commandError'> {
   const command = container.stores.get('commands')
-    .find(cmd => cmd.aliases.includes(parameter));
+    .find(cmd => cmd.name === parameter);
 
   if (isNullish(command))
     return err('commandError');

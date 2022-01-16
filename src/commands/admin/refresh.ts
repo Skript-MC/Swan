@@ -1,20 +1,24 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanChannel from '@/app/models/swanChannel';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { toggleModule } from '@/app/utils';
 import { refresh as config } from '@/conf/commands/admin';
-import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class RefreshCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
-    await this._exec(message);
+  public static commandOptions: ApplicationCommandOptionData[] = [];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction);
   }
 
-  private async _exec(message: GuildMessage): Promise<void> {
+  private async _exec(interaction: CommandInteraction): Promise<void> {
     // Refresh modules
     const modules = await SwanModule.find();
     for (const module of modules)
@@ -36,6 +40,6 @@ export default class RefreshCommand extends SwanCommand {
         this.container.client.cache.swanChannels.add(swanChannel);
     }
 
-    await message.channel.send(config.messages.success);
+    await interaction.reply(config.messages.success);
   }
 }

@@ -1,67 +1,100 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { Formatters, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import moment from 'moment';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Poll from '@/app/models/poll';
+import resolveDuration from '@/app/resolvers/duration';
+import resolveQuotedText from '@/app/resolvers/quotedText';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { QuestionType } from '@/app/types';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-const anonymousFlags = ['a', 'anon', 'anonymous'];
-const multipleFlags = ['m', 'mult', 'multiple'];
-
-@ApplyOptions<SwanCommandOptions>({
-  ...settings.globalCommandsOptions,
-  ...config.settings,
-  flags: [anonymousFlags, multipleFlags].flat(),
-  quotes: [],
-})
+@ApplySwanOptions(config)
 export default class PollCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const anonymous = args.getFlags(...anonymousFlags);
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'question',
+      description: 'Question du sondage',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'réponses',
+      description: 'Exemple: "réponse 1" "réponse 2" "réponse 3"',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'durée',
+      description: 'Durée du sondage',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'multiple',
+      description: 'Peut-on répondre à plusieurs propositions ?',
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'anonyme',
+      description: 'Le sondage doit-il être anonyme ?',
+      required: false,
+    },
+  ];
 
-    const multiple = args.getFlags(...multipleFlags);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const anonymous = interaction.options.getBoolean('anonyme');
 
-    const duration = await args.pickResult('duration').then(result => result.value);
-    if (!duration || duration < 1000 || duration > settings.miscellaneous.maxPollDuration) {
-      await message.channel.send(messages.prompt.pollDuration);
+    const multiple = interaction.options.getBoolean('multiple');
+
+
+    const duration = resolveDuration(interaction.options.getString('durée'));
+    if (duration.error) {
+      await interaction.reply(messages.prompt.duration);
       return;
     }
 
-    const answers = await args.restResult('quotedText').then(result => result.value);
-    if (!answers || answers.some(answer => answer.length === 0)) {
-      await message.channel.send(messages.prompt.pollAnswers);
+    const question = interaction.options.getString('question');
+
+    const quotedAnswers = interaction.options.getString('réponses');
+    const answers = resolveQuotedText(quotedAnswers);
+    if (answers.error || answers.value.some(answer => answer.length === 0)) {
+      await interaction.reply(messages.prompt.pollAnswers);
       return;
     }
 
-    await this._exec(message, anonymous, multiple, duration, answers);
+    await this._exec(interaction, anonymous, multiple, question, duration.value, answers.value);
   }
 
   private async _exec(
-    message: GuildMessage,
+    interaction: CommandInteraction,
     anonymous: boolean,
     multiple: boolean,
+    question: string,
     duration: number,
     answers: string[],
   ): Promise<void> {
-    // We get the question (the first quoted part amongs the answers). If there are no quotes, it will return
-    // the whole string given, and `answers` will be empty.
-    const question = answers.shift()!;
     // If there are no arguments given, then it is a Yes/No question, otherwise there are choices.
     const questionType = answers.length === 0 ? QuestionType.Yesno : QuestionType.Choice;
 
     if (answers.length === 1) {
-      await message.channel.send(config.messages.notEnoughAnswers);
+      await interaction.reply(config.messages.notEnoughAnswers);
       return;
     }
 
     if (answers.length > 18) {
-      await message.channel.send(config.messages.tooManyAnswers);
+      await interaction.reply(config.messages.tooManyAnswers);
       return;
     }
 
@@ -93,8 +126,10 @@ export default class PollCommand extends SwanCommand {
       formattedEnd: Formatters.time(finishDate, Formatters.TimestampStyles.LongDateTime),
     });
 
+    const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+
     const embed = new MessageEmbed()
-      .setAuthor({ name: pupa(embedMessages.author, { message }), iconURL: message.author.avatarURL() ?? '' })
+      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member.avatarURL() ?? '' })
       .addField(embedMessages.question, trimText(question, 1000))
       .addField(embedMessages.answers, trimText(possibleAnswers, 1000))
       .addField(embedMessages.duration, durationContent)
@@ -103,7 +138,9 @@ export default class PollCommand extends SwanCommand {
     if (details.length > 0)
       embed.setDescription(details.join('\n'));
 
-    const pollMessage = await message.channel.send({ embeds: [embed] });
+    const pollMessage = await interaction.channel.send({ embeds: [embed] });
+
+    await interaction.reply({ content: config.messages.success, ephemeral: true });
 
     // Add the reactions, depending on if there are choices, or if it is a Yes/No question.
     const possibleReactions: string[] = [];
@@ -134,8 +171,8 @@ export default class PollCommand extends SwanCommand {
 
     await Poll.create({
       messageId: pollMessage.id,
-      memberId: message.author.id,
-      channelId: message.channel.id,
+      memberId: member.id,
+      channelId: interaction.channel.id,
       finish: finishDate.getTime(),
       duration,
       questionType,

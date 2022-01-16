@@ -1,93 +1,66 @@
-import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
+import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
-import type { Message, MessageReaction, User } from 'discord.js';
-import jaroWinklerDistance from 'jaro-winkler';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SkriptToolsAddonResponse, SwanCommandOptions } from '@/app/types';
-import { convertFileSize, noop, trimText } from '@/app/utils';
+import type { SkriptToolsAddonResponse } from '@/app/types';
+import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class AddonInfoCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const addon = await args.restResult('string');
-    if (!addon.success) {
-      await message.channel.send(messages.prompt.addon);
-      return;
-    }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'addon',
+      description: 'Addon dont vous souhaitez avoir des informations',
+      required: true,
+      autocomplete: true,
+    },
+  ];
 
-    await this._exec(message, addon.value);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('addon'));
   }
 
-  private async _exec(message: GuildMessage, addon: string): Promise<void> {
-    // Get all matching addons, by looking if the similarity between the query and the addon is >= 70%.
-    // We keep only the first 10 matching addons.
-    const matchingAddons = this.container.client.cache.addonsVersions
-      .filter(elt => jaroWinklerDistance(elt.split(' ').shift()!, addon, { caseSensitive: false }) >= 0.7)
-      .map(elt => ({ file: elt, name: elt.split(' ').shift()! }))
-      .slice(0, 10);
-
-    // If we found no match.
-    if (matchingAddons.length === 0) {
-      await message.channel.send(pupa(config.messages.unknownAddon, { addon }));
-      return;
-    }
-    // If we found one match, show it directly.
-    if (matchingAddons.length === 1) {
-      await this._sendDetail(message, matchingAddons[0].file);
-      return;
-    }
-
-    // If we found multiple matches, present them nicely and ask the user which to choose.
-    const possibleMatch = matchingAddons.find(match => addon.toLowerCase() === match.name.toLowerCase());
-    if (possibleMatch) {
-      await this._sendDetail(message, possibleMatch.file);
-      return;
-    }
-
-    // TODO(interactions): Add a SelectMenu to choose the addon.
-    let content = pupa(config.messages.searchResults, { matchingAddons, addon });
-
-    for (const [i, match] of matchingAddons.entries())
-      content += `\n${settings.miscellaneous.reactionNumbers[i]} ${match.name}`;
-
-    if (matchingAddons.length - 10 > 0)
-      content += pupa(config.messages.more, { amount: matchingAddons.length - 10 });
-
-    const selectorMessage = await message.channel.send(content);
-
-    const collector = selectorMessage
-      .createReactionCollector({
-        filter: (reaction: MessageReaction, user: User) => !user.bot
-          && user.id === message.author.id
-          && settings.miscellaneous.reactionNumbers.includes(reaction.emoji.name),
-      }).once('collect', async (reaction) => {
-        await selectorMessage.delete();
-        const index = settings.miscellaneous.reactionNumbers.indexOf(reaction.emoji.name);
-        await this._sendDetail(message, matchingAddons[index].file);
-        collector.stop();
-      });
-
-    for (const [i] of matchingAddons.entries()) {
-      if (collector.ended)
-        break;
-      await selectorMessage.react(settings.miscellaneous.reactionNumbers[i]).catch(noop);
-    }
+  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+    const search = searchClosestAddon(this.container.client.cache.addonsVersions, interaction.options.getString('addon'));
+    await interaction.respond(
+      search
+        .slice(0, 20)
+        .map(entry => ({
+          name: entry.matchedName,
+          value: entry.baseName,
+        })),
+    );
   }
 
-  private async _sendDetail(message: Message, addonFile: string): Promise<void> {
+  private async _exec(interaction: CommandInteraction, addon: string): Promise<void> {
+    const matchingAddon = this.container.client.cache.addonsVersions.find(elt => elt === addon);
+    if (!matchingAddon) {
+      await interaction.reply(pupa(config.messages.unknownAddon, { addon }));
+      return;
+    }
+
+    await this._sendDetail(interaction, matchingAddon);
+  }
+
+  private async _sendDetail(interaction: CommandInteraction, addonFile: string): Promise<void> {
     const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
       .then(res => res?.data?.data)
       .catch((err: Error) => { this.container.logger.error(err.message); });
 
     if (!addon) {
-      await message.channel.send(messages.global.oops);
+      await interaction.reply(messages.global.oops);
       return;
     }
 
@@ -98,7 +71,7 @@ export default class AddonInfoCommand extends SwanCommand {
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
       .setDescription(trimText(addon.description || embedMessages.noDescription, EmbedLimits.MaximumDescriptionLength))
-      .setFooter({ text: pupa(embedMessages.footer, { member: message.member }) });
+      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
 
     if (addon.unmaintained)
       embed.addField(embedMessages.unmaintained, embedMessages.unmaintainedDescription, true);
@@ -120,6 +93,6 @@ export default class AddonInfoCommand extends SwanCommand {
     if (addon.depend?.softdepend)
       embed.addField(embedMessages.softdepend, addon.depend.softdepend.join(', '), true);
 
-    await message.channel.send({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 }

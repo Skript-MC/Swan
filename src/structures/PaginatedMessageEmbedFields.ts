@@ -5,15 +5,15 @@
  * SPDX-License-Identifier: MIT
  */
 
- import type { PaginatedMessageOptions } from '@sapphire/discord.js-utilities';
+import type { PaginatedMessageOptions } from '@sapphire/discord.js-utilities';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
- import type { EmbedField, MessageEmbedOptions } from 'discord.js';
- import { MessageEmbed } from 'discord.js';
+import type { EmbedField, MessageEmbedOptions } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import messages from '@/conf/messages';
- import settings from '@/conf/settings';
+import settings from '@/conf/settings';
 
- type EmbedFields = Array<Omit<EmbedField, 'inline'>>;
+type EmbedFields = Array<Omit<EmbedField, 'inline'>>;
 
  export default class PaginatedMessageEmbedFields extends PaginatedMessage {
    private _embedTemplate: MessageEmbed = new MessageEmbed();

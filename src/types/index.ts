@@ -1,7 +1,8 @@
 import type { Endpoints } from '@octokit/types';
-import type { CommandOptions } from '@sapphire/framework';
+import type { Command, CommandOptions } from '@sapphire/framework';
 import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
+  ApplicationCommandOptionData,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
@@ -14,6 +15,7 @@ import type {
   Model,
   Types,
 } from 'mongoose';
+import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
 
 /* ****************** */
@@ -322,10 +324,14 @@ export interface InvisionTopic {
 
 /** Options for the SwanCommand class */
 export interface SwanCommandOptions extends CommandOptions {
-  usage: string;
+  command: string;
   examples: string[];
   permissions?: string[];
+  commandOptions: ApplicationCommandOptionData[];
 }
+
+export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
+export type SwanContextMenuCommand = Required<Pick<Command, 'contextMenuRun'>> & SwanCommand;
 
 /** Types of rules for where a command can be executed */
 export enum Rules {
@@ -760,5 +766,21 @@ export interface MessageLogDocument extends MessageLogBase, Document {}
 
 /** Interface for the "MessageLog"'s mongoose model */
 export type MessageLogModel = Model<MessageLogDocument>;
+
+// #endregion
+
+/* ****************************** */
+/*         Utilities Types        */
+/* ****************************** */
+
+// #region Utilities Types (VS Code)
+// region Utilities Types (JetBrains)
+
+/** Interface for the "SimilarityMatch"'s utility type */
+export interface SimilarityMatch {
+  matchedName: string;
+  baseName: string;
+  similarity: number;
+}
 
 // #endregion

@@ -1,13 +1,12 @@
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
-import { GuildMember, Message, TextChannel } from 'discord.js';
-import type { Guild, GuildTextBasedChannel, User } from 'discord.js';
+import type {
+ Guild, GuildMember, GuildTextBasedChannel, User,
+} from 'discord.js';
+import { CommandInteraction, Message, TextChannel } from 'discord.js';
 import { nanoid } from 'nanoid';
 import type {
-  GuildMessage,
-  ModerationDataResult,
-  PersonInformations,
-  SanctionInformations,
+ GuildMessage, ModerationDataResult, PersonInformations, SanctionInformations,
 } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
@@ -15,7 +14,7 @@ import * as configs from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 
 export default class ModerationData {
-  moderator: GuildMember;
+  moderatorId: string;
   guild: Guild;
   client: SapphireClient;
   channel: GuildTextBasedChannel;
@@ -45,14 +44,18 @@ export default class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument?: GuildMessage) {
+  constructor(argument?: CommandInteraction | GuildMessage) {
     this.client = container.client;
     if (argument instanceof Message) {
       this.channel = argument.channel;
-      this.moderator = argument.member;
+      this.moderatorId = argument.member.id;
+    } else if (argument instanceof CommandInteraction) {
+      if (argument.channel instanceof TextChannel)
+        this.channel = argument.channel;
+      this.moderatorId = argument.member.user.id;
     } else {
       this.channel = this.client.cache.channels.log;
-      this.moderator = this.client.guild.me!;
+      this.moderatorId = this.client.guild.me.id;
     }
     this.guild = this.channel.guild;
     this.type = null;            // The sanction type (one of the SanctionTypes enum).
@@ -86,9 +89,8 @@ export default class ModerationData {
     return this;
   }
 
-  public setModerator(member: GuildMember | never): this {
-    if (member instanceof GuildMember)
-      this.moderator = member;
+  public setModeratorId(member: never | string): this {
+    this.moderatorId = member;
     return this;
   }
 
@@ -105,7 +107,7 @@ export default class ModerationData {
     return this;
   }
 
-  public setPrivateChannel(channel: TextChannel): this {
+  public setChannel(channel: TextChannel): this {
     if (channel instanceof TextChannel)
       this.channel = channel;
     return this;
@@ -135,7 +137,7 @@ export default class ModerationData {
     return {
       memberId: this.victim.id,
       type: this.type,
-      moderator: this.moderator.id,
+      moderator: this.moderatorId,
       start: this.start,
       finish: this.finish,
       duration: this.duration,

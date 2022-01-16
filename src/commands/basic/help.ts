@@ -1,40 +1,70 @@
-import { ApplyOptions } from '@sapphire/decorators';
 import { isDMChannel } from '@sapphire/discord.js-utilities';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
 import { ok } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import type {
+  ApplicationCommandOptionData,
+  AutocompleteInteraction,
+  BaseApplicationCommandOptionsData,
+  CommandInteraction,
+} from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import groupBy from 'lodash.groupby';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import resolveCommand from '@/app/resolvers/command';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import { capitalize, inlineCodeList } from '@/app/utils';
+import { capitalize, inlineCodeList, searchClosestCommand } from '@/app/utils';
 import { help as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class HelpCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const command = await args.pickResult('command');
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'commande',
+      description: 'Commande dont vous cherchez des informations',
+      required: false,
+      autocomplete: true,
+    },
+  ];
 
-    await this._exec(message, command.value);
+  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+    const commands = [...this.container.stores.get('commands').values()];
+    const search = searchClosestCommand(commands as SwanCommand[], interaction, interaction.options.getString('commande'));
+    await interaction.respond(
+      search
+        .slice(0, 20)
+        .map(entry => ({
+          name: entry.matchedName,
+          value: entry.baseName,
+        })),
+    );
   }
 
-  private async _exec(message: GuildMessage, command: SwanCommand | null): Promise<void> {
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const command = resolveCommand(interaction.options.getString('commande'));
+
+    await this._exec(interaction, command.value);
+  }
+
+  private async _exec(interaction: CommandInteraction, command: SwanCommand | null): Promise<void> {
     const embed = new MessageEmbed().setColor(settings.colors.default);
 
     if (command) {
       const information = config.messages.commandInfo;
       embed.setTitle(pupa(information.title, { name: capitalize(command.name) }))
         .setDescription(pupa(command.description, { prefix: settings.bot.prefix }))
-        .addField(information.usage, `\`${settings.bot.prefix}${command.usage}\``)
+        .addField(information.usage, `\`${settings.bot.prefix}${this._buildCommandUsage(command)}\``)
         .addField(information.usableBy, command.permissions.length > 0
           ? command.permissions.join(', ')
           : messages.global.everyone);
 
-      if (command.aliases.length > 1)
-        embed.addField(information.aliases, inlineCodeList(command.aliases));
       if (command.examples.length > 0)
         embed.addField(information.examples, inlineCodeList(command.examples, '\n'));
     } else {
@@ -44,29 +74,38 @@ export default class HelpCommand extends SwanCommand {
       embed.setTitle(pupa(information.title, { amount }))
         .setDescription(pupa(information.description, { helpCommand: `${settings.bot.prefix}help <commande>` }));
 
-      const categories = await this._getPossibleCategories(message);
+      const categories = await this._getPossibleCategories(interaction);
 
       for (const [category, commands] of Object.entries(categories)) {
         embed.addField(
           pupa(information.category, { categoryName: capitalize(category) }),
-          inlineCodeList(commands.map(cmd => cmd.aliases[0])),
+          inlineCodeList(commands.filter(cmd => cmd.command).map(cmd => cmd.command)),
         );
       }
     }
 
-    await message.channel.send({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 
-  private async _getPossibleCategories(message: Message): Promise<Record<string, SwanCommand[]>> {
-    const originalCommands = this.container.stores.get('commands');
+  private async _getPossibleCategories(interaction: CommandInteraction): Promise<Record<string, SwanCommand[]>> {
+    const originalCommands = [...this.container.stores.get('commands').values()];
     const commands: SwanCommand[] = [];
 
-    for (const command of originalCommands.values()) {
-      const result = isDMChannel(message.channel) ? ok() : await command.preconditions.run(message, command);
+    for (const command of originalCommands as SwanCommand[]) {
+      const result = isDMChannel(interaction.channel)
+        ? ok()
+        : await command.preconditions.chatInputRun(interaction, command as ChatInputCommand);
       if (result.success)
-        commands.push(command as SwanCommand);
+        commands.push(command);
     }
 
     return groupBy(commands, command => command.location.directories.shift());
+  }
+
+  private _buildCommandUsage(command: SwanCommand): string {
+    let usage = command.command;
+    for (const option of command.commandOptions)
+      usage += (option as BaseApplicationCommandOptionsData).required ? ` <${option.name}>` : ` [${option.name}]`;
+    return usage;
   }
 }

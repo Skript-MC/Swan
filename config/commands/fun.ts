@@ -5,9 +5,8 @@ import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils'
 export const eightBall = {
   settings: {
     name: '8 Ball',
-    aliases: ['8ball', 'eightball'],
-    description: "__Répond à toutes vos questions__, même les plus compliquées ! La légende raconte même qu'il y a déjà eu des bonnes réponses... :shushing_face:",
-    usage: '8ball <votre question>',
+    command: '8ball',
+    description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
@@ -63,9 +62,8 @@ export const eightBall = {
 export const idea = {
   settings: {
     name: 'Idée',
-    aliases: ['idea', 'idée', 'idee'],
-    description: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
-    usage: 'idée',
+    command: 'idea',
+    description: "Permet d'envoyer une idée de script aléatoire à réaliser parmi celles dans le salon des idées.",
     examples: ['idea', 'idée'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -78,9 +76,8 @@ export const idea = {
 export const joke = {
   settings: {
     name: 'Blague',
-    aliases: ['joke', 'blague'],
-    description: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
-    usage: 'joke',
+    command: 'joke',
+    description: 'Envoie une blague aléatoirement, généralement drôle mais pas forcément.',
     examples: ['joke', 'blague'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
@@ -92,9 +89,8 @@ export const joke = {
 export const latex = {
   settings: {
     name: 'Latex',
-    aliases: ['latex'],
-    description: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
-    usage: 'latex <equation>',
+    command: 'latex',
+    description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
   messages: {},
@@ -103,12 +99,12 @@ export const latex = {
 export const poll = {
   settings: {
     name: 'Sondage',
-    aliases: ['poll', 'sondage'],
-    description: 'Permet de __lancer un sondage__ temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajoute le drapeau `-a` pour indique que le sondage sera anonyme, ~~ou le drapeau `-m` pour autoriser les réponses multiples~~ *(soon)*.',
-    usage: 'poll <durée> [-a] [-m] "<sondage>" ["réponse 1"] ["réponse 2"] [...]',
+    command: 'poll',
+    description: 'Permet de lancer un sondage par lequel on peut répondre par une réponse personnalisée.',
     examples: ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'vote 10m Votre sondage ou on peut répondre uniquement par Oui et Non', 'sondage 10m "votre sondage" -a -m "réponse 1" "réponse 2"'],
   },
   messages: {
+    success: 'Le sondage a été créé avec succès.',
     notEnoughAnswers: "Tu n'as entré qu'une seule réponse. Ré-exécute la commande avec plusieurs réponses !",
     tooManyAnswers: 'Tu as entré trop de réponses. Ré-exécute la commande avec au maximum 18 réponses.',
     answersDisplayYesno: stripIndent`
@@ -119,7 +115,7 @@ export const poll = {
     informationAnonymous: 'Ce sondage est anonyme.',
     informationMultiple: 'Plusieurs réponses sont possibles.',
     embed: {
-      author: 'Vote de {message.member.displayName}',
+      author: 'Vote de {member.displayName}',
       question: 'Question',
       answers: 'Réponses possibles',
       duration: 'Durée',

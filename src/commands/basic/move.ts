@@ -1,55 +1,97 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
+import { MessagePrompter } from '@sapphire/discord.js-utilities';
+import type { ContextMenuCommand } from '@sapphire/framework';
 import type {
-  GuildTextBasedChannel,
-  Message,
+  ContextMenuInteraction,
   MessageReaction,
+  TextChannel,
   User,
 } from 'discord.js';
-import { MessageEmbed, Permissions } from 'discord.js';
+import {
+  Message,
+  MessageEmbed,
+  Permissions,
+} from 'discord.js';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class MoveCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const targetedChannel = await args.pickResult('guildTextBasedChannel').then(result => result.value);
-    const isPublicChannel = targetedChannel
-      ?.permissionsFor(targetedChannel.guild.roles.everyone)
-      .has(Permissions.FLAGS.SEND_MESSAGES);
-    if (!targetedChannel || !isPublicChannel || message.channel.id === targetedChannel.id) {
-      await message.channel.send(messages.prompt.channel);
+  public override async contextMenuRun(
+    interaction: ContextMenuInteraction,
+    _context: ContextMenuCommand.RunContext,
+  ): Promise<void> {
+    const message = interaction.options.getMessage('message', true);
+    if (!(message instanceof Message))
       return;
-    }
-
-    const targetedMessage = await args.pickResult('message');
-    if (!targetedMessage.success) {
-      await message.channel.send(messages.prompt.message);
-      return;
-    }
-
-    await this._exec(message, targetedChannel, targetedMessage.value);
+    await this._exec(interaction, message);
   }
 
   private async _exec(
-    message: GuildMessage,
-    targetedChannel: GuildTextBasedChannel,
+    interaction: ContextMenuInteraction,
     targetedMessage: Message,
   ): Promise<void> {
+    const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+
+    const originalChannel = targetedMessage.channel as TextChannel;
+    const canMemberWrite = originalChannel
+      ?.permissionsFor(member)
+      .has(Permissions.FLAGS.SEND_MESSAGES);
+
+    if (!canMemberWrite) {
+      await interaction.reply({ content: messages.prompt.channel, ephemeral: true });
+      return;
+    }
+
     const hasRole = targetedMessage.member
-      ? targetedMessage.member.roles.highest.position >= message.member.roles.highest.position
+      ? targetedMessage.member.roles.highest.position >= member.roles.highest.position
       : false;
     if (hasRole) {
-      await message.channel.send(messages.global.memberTooPowerful);
+      await interaction.reply({ content: messages.global.memberTooPowerful, ephemeral: true });
+      return;
+    }
+
+    await interaction.deferReply({});
+
+    const handler = new MessagePrompter(
+      config.messages.question,
+      'message',
+      { explicitReturn: true },
+    );
+    const result = await handler.run(
+      interaction.channel,
+      interaction.member.user as User,
+    ) as IMessagePrompterExplicitMessageReturn;
+    await result.appliedMessage.delete();
+
+    const resolvedChannel = resolveGuildTextBasedChannel(result.response.content, interaction.guild);
+    if (resolvedChannel.error)
+      return;
+    const targetedChannel = resolvedChannel.value;
+
+    const canEveryoneWrite = targetedChannel
+      ?.permissionsFor(targetedChannel.guild.roles.everyone)
+      .has(Permissions.FLAGS.SEND_MESSAGES);
+    const canEveryoneRead = targetedChannel
+      ?.permissionsFor(targetedChannel.guild.roles.everyone)
+      .has(Permissions.FLAGS.VIEW_CHANNEL);
+    if (!canEveryoneWrite || !canEveryoneRead || interaction.channel.id === targetedChannel.id) {
+      await interaction.followUp(messages.prompt.channel);
       return;
     }
 
     const targetName = targetedMessage.member?.displayName ?? targetedMessage.author.username ?? 'Inconnu';
+    const successMessage = pupa(config.messages.successfullyMoved, {
+      targetName,
+      targetChannel: targetedChannel,
+      memberDisplayName: interaction.member.user.username,
+    });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
@@ -59,35 +101,29 @@ export default class MoveCommand extends SwanCommand {
       })
       .setDescription(
         pupa(config.messages.moveInfo, {
-          memberDisplayName: message.member,
+          memberDisplayName: interaction.member,
           targetName,
           sourceChannel: targetedMessage.channel,
           targetChannel: targetedChannel,
-          emoji: message.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
+          emoji: interaction.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
         }),
       );
 
     try {
-      await message.channel.send(
-        pupa(config.messages.successfullyMoved, {
-          targetName,
-          targetChannel: targetedChannel,
-          memberDisplayName: message.member.displayName,
-        }),
-      );
+      // Remove all messages from prompts, as well as messages from the user.
+      await targetedMessage.delete();
+      await result.response.delete();
+      await interaction.followUp(successMessage);
+
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(settings.emojis.remove).catch(noop);
 
-      // TODO: Support moving embeds & attachments
-      const repostMessage = await targetedChannel.send({ content: targetedMessage.content });
-
-      await message.delete();
-      await targetedMessage.delete();
+      const repostMessage = await targetedChannel.send(targetedMessage.content);
 
       const collector = informationEmbed
         .createReactionCollector({
           filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
-            && (user.id === message.author.id || user.id === targetedMessage.author?.id)
+            && (user.id === interaction.user.id || user.id === targetedMessage.author?.id)
             && !user.bot,
         }).on('collect', async () => {
           try {
@@ -95,12 +131,11 @@ export default class MoveCommand extends SwanCommand {
             await informationEmbed.delete();
             await repostMessage.delete();
           } catch {
-            await message.channel.send(messages.global.oops).catch(noop);
+            await interaction.followUp(messages.global.oops).catch(noop);
           }
         });
     } catch (unknownError: unknown) {
       await targetedMessage.member?.send(config.messages.emergency).catch(noop);
-      await targetedMessage.member?.send(message.content).catch(noop);
       throw (unknownError as Error);
     }
   }

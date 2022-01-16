@@ -1,5 +1,6 @@
 import type {
-  CachedChannels, ConvictedUserDocument,
+  CachedChannels,
+  ConvictedUserDocument,
   DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
