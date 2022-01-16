@@ -1,17 +1,12 @@
 import type { Result } from '@sapphire/framework';
-import { err, ok, Resolvers } from '@sapphire/framework';
-import type { Guild, GuildMember } from 'discord.js';
+import { err, ok } from '@sapphire/framework';
+import type { GuildMember } from 'discord.js';
 
-export default async function resolveSanctionnableMember(
-  parameter: string,
-  guild: Guild,
+export default function resolveSanctionnableMember(
+  member: GuildMember,
   moderator: GuildMember,
-): Promise<Result<GuildMember, 'sanctionnableMemberError'>> {
-  const member = await Resolvers.resolveMember(parameter, guild);
-  if (!member.success)
-    return err('sanctionnableMemberError');
-
-  if (member.value.id !== moderator.id && member.value.roles.highest.position < moderator.roles.highest.position)
-    return ok(member.value);
+): Result<GuildMember, 'sanctionnableMemberError'> {
+  if (member.id !== moderator.id && member.roles.highest.position < moderator.roles.highest.position)
+    return ok(member);
   return err('sanctionnableMemberError');
 }

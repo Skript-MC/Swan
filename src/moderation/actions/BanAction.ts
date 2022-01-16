@@ -1,7 +1,7 @@
+import type { TextChannel } from 'discord.js';
 import {
  Formatters, GuildMember, Permissions, User,
 } from 'discord.js';
-import type { TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
@@ -55,7 +55,7 @@ export default class BanAction extends ModerationAction {
             $push: {
               updates: {
                 date: this.data.start,
-                moderator: this.data.moderator?.id,
+                moderator: this.data.moderatorId,
                 type: SanctionsUpdates.Duration,
                 valueBefore: this.updateInfos.sanctionDocument.duration,
                 valueAfter: this.data.duration,
@@ -127,7 +127,7 @@ export default class BanAction extends ModerationAction {
           $push: {
             updates: {
               date: this.data.start,
-              moderator: this.data.moderator?.id,
+              moderator: this.data.moderatorId,
               type: SanctionsUpdates.Duration,
               valueBefore: this.updateInfos.sanctionDocument.duration,
               valueAfter: this.data.duration,

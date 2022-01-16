@@ -1,20 +1,24 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { links as config } from '@/conf/commands/basic';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class LinksCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
-    await this._exec(message);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction);
   }
 
-  private async _exec(message: GuildMessage): Promise<void> {
+  private async _exec(interaction: CommandInteraction): Promise<void> {
+    const user = await this.container.client.users.fetch(interaction.member.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(new MessageEmbed().setColor(settings.colors.default))
       .setItems(config.messages.embed.fields)
@@ -24,6 +28,6 @@ export default class LinksCommand extends SwanCommand {
         description: pupa(config.messages.selectMenuItemDescription, { pageIndex }),
       }))
       .make()
-      .run(message, message.author);
+      .run(interaction, user);
   }
 }

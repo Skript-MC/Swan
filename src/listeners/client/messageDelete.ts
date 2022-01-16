@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
-import { DMChannel, User } from 'discord.js';
 import type { Message, MessageReaction } from 'discord.js';
+import { DMChannel, User } from 'discord.js';
 import pupa from 'pupa';
 import MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';

@@ -1,23 +1,27 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import { MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { CommandInteraction } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import { noop } from '@/app/utils';
 import { ping as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class PingCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
-    await this._exec(message);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction);
   }
 
-  private async _exec(message: GuildMessage): Promise<void> {
-    const sent = await message.channel.send(config.messages.firstMessage);
-    const swanPing = (sent.editedAt ?? sent.createdAt).getTime() - (message.editedAt ?? message.createdAt).getTime();
+  private async _exec(interaction: CommandInteraction): Promise<void> {
+    const defer = await interaction.deferReply({ fetchReply: true });
+    if (!(defer instanceof Message))
+      return;
+    const swanPing = (defer.editedAt ?? defer.createdAt).getTime() - (interaction.createdAt).getTime();
     const discordPing = Math.round(this.container.client.ws.ping);
 
     const description = pupa(config.messages.secondMessage, {
@@ -30,11 +34,10 @@ export default class PingCommand extends SwanCommand {
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
       .setDescription(description)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
+      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 
-    await sent.delete().catch(noop);
-    await message.channel.send({ embeds: [embed] });
+    await interaction.followUp({ embeds: [embed] });
   }
 
   private _getColorFromPing(ping: number): string {

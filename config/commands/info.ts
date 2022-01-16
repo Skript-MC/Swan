@@ -5,9 +5,8 @@ import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils'
 export const addonInfo = {
   settings: {
     name: 'Informations sur un add-on',
-    aliases: ['addon-info'],
-    description: "Permet d'afficher diverses __informations sur un addon__ choisi, à partir du moment où il est sur skripttools.net.",
-    usage: 'addoninfo <addon>',
+    command: 'addoninfo',
+    description: "Permet d'afficher diverses informations sur un addon choisi.",
     examples: ['addoninfo mongosk'],
   },
   messages: {
@@ -35,26 +34,19 @@ export const addonInfo = {
 export const documentation = {
   settings: {
     name: 'Documentation',
-    aliases: ['doc', 'docs', 'documentation', 'documentations', 'syntax', 'syntax-info'],
-    description: stripIndent`
-      Permet de chercher une syntaxe de Skript ou d'un addon dans la [documentation de Skript-MC](https://skript-mc.fr/documentation/skript/).
-      Cela va retourner diverses informations sur la syntaxe, comme une description détaillée, des exemples, le pattern, les addons ou la version requise...
-      Tu peux affiner tes recherches grâce à deux options (que tu peux combiner) :
-        • Utilise \`-a=ton_addon\` (ou \`--addon=ton_addon\`) pour chercher parmi les syntaxes d'un addon en particulier.
-        • Utilise \`-c=ta_categorie\` (ou \`--categorie=ta_categorie\`) pour rechercher seulement les syntaxes d'une certaine catégorie (effet, évènement, condition...).
-    `,
-    usage: 'documentation <syntaxe> [--addon=un_addon] [--categorie=une_categorie]',
+    command: 'doc',
+    description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
-    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe {query}... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
+    unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{articleId}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
-      title: '{syntax.name} ({syntax.category} — #{syntax.id})',
-      description: '{syntax.content}',
+      title: '{article.name} ({article.category} — #{article.id})',
+      description: '{article.content}',
       deprecated: ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
-      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({syntax.deprecationLink}) pour la remplacer.',
+      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({article.deprecationLink}) pour la remplacer.',
       noReplacement: 'Pas de remplacement disponible.',
       noDescription: 'Aucune description disponible.',
       version: ':bookmark: À partir de la version',
@@ -80,9 +72,8 @@ export const documentation = {
 export const serverInfo = {
   settings: {
     name: 'Informations sur un serveur',
-    aliases: ['server', 'serveur', 'server-info', 'serveur-info'],
-    description: "Permet d'afficher diverses __informations sur un serveur__ minecraft, selon son nom de domaine.",
-    usage: 'serverinfo <nom de domaine>',
+    command: 'server',
+    description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
     examples: ['skriptinfo hypixel.net'],
   },
   messages: {
@@ -107,9 +98,8 @@ export const serverInfo = {
 export const skriptInfo = {
   settings: {
     name: 'Informations sur Skript',
-    aliases: ['skript', 'skriptinfo'],
-    description: "Permet d'afficher la __dernière version de Skript__ ainsi que diverses informations sur son installation.",
-    usage: 'skriptinfo',
+    command: 'skript',
+    description: "Permet d'afficher diverses informations sur Skript.",
     examples: ['skriptinfo'],
   },
   messages: {
@@ -141,13 +131,13 @@ export const skriptInfo = {
 export const userInfo = {
   settings: {
     name: 'Informations sur un utilisateur (discord)',
-    aliases: ['userinfo'],
-    description: "Permet d'afficher diverses __informations sur un membre__ en particulier du Discord.",
-    usage: 'userinfo <@mention | pseudo | ID>',
+    command: 'userinfo',
+    description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
     examples: ['userinfo Romitou'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
+    notFound: "Aucun membre n'a été trouvé.",
     embed: {
       title: 'Informations sur {member.user.username}',
       names: {

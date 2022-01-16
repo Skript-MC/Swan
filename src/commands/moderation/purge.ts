@@ -1,56 +1,72 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { GuildMember, User } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import { TextChannel } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
-import { noop } from '@/app/utils';
 import { purge as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-const forceFlag = ['force', 'f'];
-
-@ApplyOptions<SwanCommandOptions>({
-  ...settings.globalCommandsOptions,
-  ...config.settings,
-  flags: forceFlag,
-})
+@ApplySwanOptions(config)
 export default class PurgeCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const force = args.getFlags(...forceFlag);
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.NUMBER,
+      name: 'nombre',
+      description: 'Nombre de messages à supprimer',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Supprimer les messages du membre en question',
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'force',
+      description: 'Forcer la suppression des messages',
+      required: false,
+    },
+  ];
 
-    const member = await args.pick('member')
-      .catch(async () => args.pick('user'));
-
-    const amount = await args.pickResult('integer').then(result => result.value);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const amount = interaction.options.getNumber('nombre');
     if (!amount || amount < 0 || amount > settings.moderation.purgeLimit) {
-      await message.channel.send(messages.prompt.number);
+      await interaction.reply(messages.prompt.number);
       return;
     }
 
-    await this._exec(message, force, member, amount);
+    await this._exec(
+      interaction,
+      interaction.options.getBoolean('force'),
+      interaction.options.getUser('membre'),
+      amount,
+    );
   }
 
   private async _exec(
-    message: GuildMessage,
+    interaction: CommandInteraction,
     force: boolean,
-    member: GuildMember | User,
+    member: User,
     amount: number,
   ): Promise<void> {
-    await message.delete();
+    const channel = await this.container.client.channels.fetch(interaction.channel.id);
+    if (!(channel instanceof TextChannel))
+      return;
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
-    const allMessages = await message.channel.messages.fetch({ limit: amount });
+    const allMessages = await interaction.channel.messages.fetch({ limit: amount });
     const msgs = allMessages
       .filter(msg => (member ? msg.author.id === member.id : true))
       .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
-    const deletedMessages = await message.channel.bulkDelete(msgs, true);
+    const deletedMessages = await channel.bulkDelete(msgs, true);
 
-    const msg = await message.channel.send(pupa(config.messages.success, { deletedMessages }));
-    setTimeout(async () => {
-      if (msg.deletable)
-        await msg.delete().catch(noop);
-    }, 5000);
+    await interaction.reply(pupa(config.messages.success, { deletedMessages }));
   }
 }

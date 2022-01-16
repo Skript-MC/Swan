@@ -8,7 +8,7 @@ const otherHelp = [...process.env.OTHER_HELP_CHANNELS.split(',')];
 
 export default {
   bot: {
-    prefix: process.env.BOT_PREFIX || '.',
+    prefix: process.env.BOT_PREFIX || '/',
     avatar: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
     guild: process.env.GUILD_ID,
   },
@@ -66,7 +66,7 @@ export default {
     skriptmc: 'https://skript-mc.fr/api/',
     forum: 'https://skript-mc.fr/forum/api/',
     server: 'https://api.mcsrvstat.us/2/',
-    latex: 'https://chart.apis.google.com/chart?cht=tx&chf=bg,s,FFFFFF00&chco=FFFFFF&chl=',
+    latex: 'https://latex.codecogs.com/png.image?',
   },
   roles: {
     staff: process.env.STAFF_ROLE,
