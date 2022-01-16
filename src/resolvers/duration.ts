@@ -8,7 +8,7 @@ export default function resolveDuration(parameter: string, allowPermanent = fals
     return ok(-1);
 
   try {
-    return ok(getDuration(parameter) * 1000);
+    return ok(getDuration(parameter));
   } catch {
     return err('durationError');
   }

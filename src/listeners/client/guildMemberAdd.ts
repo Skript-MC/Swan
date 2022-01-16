@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
-import { Permissions } from 'discord.js';
 import type { GuildMember } from 'discord.js';
+import { Permissions } from 'discord.js';
 import pupa from 'pupa';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import { noop, toValidName } from '@/app/utils';

@@ -1,34 +1,51 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { GuildMember, User } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
-import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class UnbanCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.pickResult('bannedMember');
-    if (!member.success) {
-      await message.channel.send(messages.prompt.member);
-      return;
-    }
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Membre à appliquer le bannissement',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'raison',
+      description: "Raison de l'avertissement (sera affiché au membre)",
+      required: true,
+    },
+  ];
 
-    const reason = await args.restResult('string');
-
-    await this._exec(message, member.value, reason.value ?? messages.global.noReason);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(
+      interaction,
+      interaction.options.getUser('membre'),
+      interaction.options.getString('raison') ?? messages.global.noReason,
+    );
   }
 
-  private async _exec(message: GuildMessage, member: GuildMember | User, reason: string): Promise<void> {
+  private async _exec(
+    interaction: CommandInteraction,
+    member: User,
+    reason: string,
+  ): Promise<void> {
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
@@ -40,24 +57,23 @@ export default class UnbanCommand extends SwanCommand {
     try {
       const isBanned = await ModerationHelper.isBanned(member.id, true);
       if (!isBanned) {
-        await message.channel.send(config.messages.notBanned);
+        await interaction.reply(config.messages.notBanned);
         return;
       }
 
-      const data = new ModerationData(message)
+      const data = new ModerationData(interaction)
         .setVictim(member, false)
         .setReason(reason)
         .setType(SanctionTypes.Unban);
 
       const success = await new UnbanAction(data).commit();
       if (success)
-        await message.channel.send(config.messages.success).catch(noop);
+        await interaction.reply(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while unbanning a member!');
       this.container.logger.info(`Parsed member: ${member}`);
-      this.container.logger.info(`Message: ${message.url}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await message.channel.send(messages.global.oops).catch(noop);
+      await interaction.reply(messages.global.oops).catch(noop);
     }
   }
 }

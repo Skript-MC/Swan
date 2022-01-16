@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
-import { GuildAuditLogs } from 'discord.js';
 import type { GuildMember } from 'discord.js';
+import { GuildAuditLogs } from 'discord.js';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import BanAction from '@/app/moderation/actions/BanAction';

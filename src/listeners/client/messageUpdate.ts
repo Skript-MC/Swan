@@ -1,7 +1,7 @@
 import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
-import { User } from 'discord.js';
 import type { MessageReaction } from 'discord.js';
+import { User } from 'discord.js';
 import pupa from 'pupa';
 import MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';

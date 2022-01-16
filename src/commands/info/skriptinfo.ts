@@ -1,29 +1,46 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import semver from 'semver';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-const enumValues = ['all', 'dl', 'download', 'link', 'links'] as const;
-
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class SkriptInfoCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const display = await args.pick('enum', { enum: enumValues, caseSensitive: false })
-      .catch(() => 'all') as (typeof enumValues)[number];
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [
+        {
+          name: 'Téléchargements',
+          value: 'téléchargements',
+        },
+        {
+          name: 'Liens utiles',
+          value: 'liens utiles',
+        },
+      ],
+      name: 'catégorie',
+      description: 'Catégorie pertinente à envoyer',
+      required: false,
+    },
+  ];
 
-    await this._exec(message, display);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('catégorie'));
   }
 
-  private async _exec(message: GuildMessage, display: (typeof enumValues)[number]): Promise<void> {
+  private async _exec(interaction: CommandInteraction, display: string): Promise<void> {
     const embeds: MessageEmbed[] = [];
-
     // TODO: Refactor this command's usage as it's not very intuitive.
-    if (['dl', 'download', 'all'].includes(display)) {
+    if (!display || display === 'téléchargements') {
       const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
@@ -48,21 +65,21 @@ export default class SkriptInfoCommand extends SwanCommand {
           .setTitle(config.messages.embed.downloadTitle)
           .setTimestamp()
           .setDescription(downloadDescription)
-          .setFooter({ text: pupa(config.messages.embed.footer, { member: message.member }) }),
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
       );
     }
 
-    if (['link', 'links', 'all'].includes(display)) {
+    if (!display || display === 'liens utiles') {
       embeds.push(
         new MessageEmbed()
           .setColor(settings.colors.default)
           .setTitle(config.messages.embed.informationsTitle)
           .setTimestamp()
           .setDescription(config.messages.embed.information)
-          .setFooter({ text: pupa(config.messages.embed.footer, { member: message.member }) }),
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
       );
     }
 
-    await message.channel.send({ embeds });
+    await interaction.reply({ embeds });
   }
 }

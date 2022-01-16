@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
-import { GuildAuditLogs } from 'discord.js';
 import type { GuildTextBasedChannel } from 'discord.js';
+import { GuildAuditLogs } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
@@ -136,7 +136,7 @@ export default class ReadyListener extends Listener {
         const data = new ModerationData()
           .setVictim(ban.user, false)
           .setReason(ban.reason)
-          .setModerator(moderator)
+          .setModeratorId(moderator.id)
           .setDuration(-1, false)
           .setType(SanctionTypes.Hardban);
         try {

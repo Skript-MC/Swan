@@ -1,37 +1,54 @@
-import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
-import type { GuildMember, User } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import WarnAction from '@/app/moderation/actions/WarnAction';
+import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { warn as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+@ApplySwanOptions(config)
 export default class WarnCommand extends SwanCommand {
-  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
-    const member = await args.pickResult('bannedMember');
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: "Membre à appliquer l'avertissement",
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'raison',
+      description: "Raison de l'avertissement (sera affiché au membre)",
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const { client } = this.container;
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const moderator = await client.guild.members.fetch(interaction.member.user.id);
+    const member = resolveSanctionnableMember(victim, moderator);
     if (!member.success) {
-      await message.channel.send(messages.prompt.member);
-      return;
-    }
-    const reason = await args.restResult('string');
-    if (!reason.success) {
-      await message.channel.send(messages.prompt.reason);
+      await interaction.reply(messages.prompt.member);
       return;
     }
 
-    await this._exec(message, member.value, reason.value);
+    await this._exec(interaction, victim, interaction.options.getString('raison'));
   }
 
-  private async _exec(message: GuildMessage, member: GuildMember | User, reason: string): Promise<void> {
+  private async _exec(interaction: CommandInteraction, member: GuildMember, reason: string): Promise<void> {
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
@@ -42,12 +59,12 @@ export default class WarnCommand extends SwanCommand {
 
     const isBanned = await ModerationHelper.isBanned(member.id);
     if (isBanned) {
-      await message.channel.send(messages.global.impossibleBecauseBanned).catch(noop);
+      await interaction.reply(messages.global.impossibleBecauseBanned).catch(noop);
       return;
     }
 
     try {
-      const data = new ModerationData(message)
+      const data = new ModerationData(interaction)
         .setVictim(member)
         .setReason(reason)
         .setDuration(settings.moderation.warnDuration * 1000, true)
@@ -55,13 +72,12 @@ export default class WarnCommand extends SwanCommand {
 
       const success = await new WarnAction(data).commit();
       if (success)
-        await message.channel.send(config.messages.success).catch(noop);
+        await interaction.reply(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while warning a member!');
       this.container.logger.info(`Parsed member: ${member}`);
-      this.container.logger.info(`Message: ${message.url}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await message.channel.send(messages.global.oops).catch(noop);
+      await interaction.reply(messages.global.oops).catch(noop);
     }
   }
 }
