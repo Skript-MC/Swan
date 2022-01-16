@@ -1,32 +1,34 @@
-import type { AkairoClient } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
-import type { TextChannel } from 'discord.js';
+import { EmbedLimits } from '@sapphire/discord-utilities';
+import type { SapphireClient } from '@sapphire/framework';
+import { container } from '@sapphire/pieces';
+import type { Awaitable } from '@sapphire/utilities';
+import { Formatters, MessageEmbed } from 'discord.js';
+import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
 import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
-import type { Awaited } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-abstract class ModerationAction {
+export default abstract class ModerationAction {
   data: ModerationData;
-  client: AkairoClient;
-  logChannel: TextChannel;
+  client: SapphireClient;
+  logChannel: GuildTextBasedChannel;
 
   errorState: ErrorState;
   updateInfos: ActionUpdateInformations;
 
   constructor(data: ModerationData) {
     this.data = data;
-    this.client = this.data.client;
-    this.logChannel = this.client.cache.channels.log as TextChannel;
+    this.client = container.client;
+    this.logChannel = this.client.cache.channels.log;
 
-    this.errorState = new ErrorState(this.client, this.data.channel || this.logChannel);
+    this.errorState = new ErrorState(this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);
   }
 
@@ -69,7 +71,6 @@ abstract class ModerationAction {
       newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
     });
   }
-
 
   protected get nameString(): string {
     return this.data.victim?.user?.toString() ?? messages.global.unknownName;
@@ -127,14 +128,8 @@ abstract class ModerationAction {
     }
   }
 
-  protected get color(): string {
+  protected get color(): HexColorString {
     return settings.moderation.colors[this.data.type];
-  }
-
-  protected get expiration(): string {
-    return this.data.duration === -1
-      ? messages.moderation.never
-      : moment(this.data.finish).format(settings.miscellaneous.durationFormat);
   }
 
   protected async notify(): Promise<void> {
@@ -160,12 +155,19 @@ abstract class ModerationAction {
       .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
       .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderator.id}`, true)
       .addField(messages.moderation.log.actionTitle, this.action.toString(), true)
-      .addField(messages.moderation.log.reasonTitle, trimText(this.data.reason.toString(), 1000), true);
+      .addField(
+        messages.moderation.log.reasonTitle,
+        trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
+        true,
+      );
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);
-      if (this.data?.finish !== -1)
-        content += pupa(messages.moderation.log.durationDescription, { action: this });
+      if (this.data?.finish !== -1) {
+        content += pupa(messages.moderation.log.durationDescription, {
+          expiration: Formatters.time(Math.round(this.data.finish / 1000), Formatters.TimestampStyles.LongDateTime),
+        });
+      }
       embed.addField(messages.moderation.log.durationTitle, content, true);
     }
     if (this.data.privateChannel)
@@ -176,7 +178,7 @@ abstract class ModerationAction {
     else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument?.duration !== -1)
       embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogUnavailableDescription, true);
 
-    await this.logChannel.send(embed);
+    await this.logChannel.send({ embeds: [embed] });
 
     if (this.data.file) {
       await this.logChannel.send({
@@ -188,11 +190,9 @@ abstract class ModerationAction {
     }
   }
 
-  protected abstract before?(): Awaited<void>;
+  protected abstract before?(): Awaitable<void>;
 
-  protected abstract exec(): Awaited<void>;
+  protected abstract exec(): Awaitable<void>;
 
-  protected abstract after?(): Awaited<void>;
+  protected abstract after?(): Awaitable<void>;
 }
-
-export default ModerationAction;

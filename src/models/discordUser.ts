@@ -27,4 +27,5 @@ DiscordUserSchema.statics.findOneOrCreate = async function (
   return result ?? this.create(doc);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 export default model<DiscordUserDocument, DiscordUserModel>('DiscordUser', DiscordUserSchema);

@@ -1,33 +1,30 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { MessageName } from '@/app/types';
-import type { AddonPackCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { addonPack as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
-class AddonPackCommand extends Command {
-  constructor() {
-    super('addonPack', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'version',
-        type: 'string',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class AddonPackCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const version = await args.pickResult('string');
+    if (!version.success) {
+      await message.channel.send(messages.prompt.minecraftVersion);
+      return;
+    }
+
+    await this._exec(message, version.value);
   }
 
-  public async exec(message: GuildMessage, args: AddonPackCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.AddonPack });
-    const search = searchMessageSimilarity(messages, args.version);
+  private async _exec(message: GuildMessage, version: string): Promise<void> {
+    // TODO: Remove this command's logic, send a hardcoded message telling packs should not be used.
+    const msgs = await Message.find({ messageType: MessageName.AddonPack });
+    const search = searchMessageSimilarity(msgs, version);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -35,5 +32,3 @@ class AddonPackCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default AddonPackCommand;

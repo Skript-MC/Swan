@@ -1,27 +1,16 @@
-import { captureException, flush } from '@sentry/node';
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { ListenerOptions } from '@sapphire/framework';
+import { Listener } from '@sapphire/framework';
 
-class UncaughtExceptionListener extends Listener {
-  constructor() {
-    super('uncaughtException', {
-      event: 'uncaughtException',
-      emitter: 'process',
-    });
-  }
-
-  public async exec(error: Error): Promise<void> {
-    captureException(error);
-    Logger.error('Oops, something went wrong with Swan! (uncaughtException)');
+@ApplyOptions<ListenerOptions>({ emitter: process })
+export default class UncaughtExceptionListener extends Listener {
+  public override run(error: Error): void {
+    this.container.logger.error('Oops, something went wrong with Swan! (uncaughtException)');
     if (process.env.NODE_ENV === 'production') {
-      await flush(5000);
-      // eslint-disable-next-line node/no-process-exit
-      process.exit(1);
+      throw new Error(error.stack);
     } else {
-      Logger.error(error.stack);
-      Logger.warn('An uncaughtException just occurred. Swan is now in an undefined state. Continuing using it might lead to unforeseen and unpredictable issues.');
+      this.container.logger.error(error.stack);
+      this.container.logger.warn('An uncaughtException just occurred. Swan is now in an undefined state. Continuing using it might lead to unforeseen and unpredictable issues.');
     }
   }
 }
-
-export default UncaughtExceptionListener;

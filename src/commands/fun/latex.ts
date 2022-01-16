@@ -1,40 +1,34 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
-import type { LatexCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class LatexCommand extends Command {
-  constructor() {
-    super('latex', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-      args: [{
-        id: 'equation',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class LatexCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const equation = await args.restResult('string');
+    if (!equation.success) {
+      await message.channel.send(messages.prompt.equation);
+      return;
+    }
+
+    await this._exec(message, equation.value);
   }
 
-  public async exec(message: GuildMessage, args: LatexCommandArguments): Promise<void> {
-    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(args.equation));
+  private async _exec(message: GuildMessage, equation: string): Promise<void> {
+    const sendMessage = await message.channel.send(settings.apis.latex + encodeURIComponent(equation));
     await sendMessage.react(settings.emojis.remove).catch(noop);
     const collector = sendMessage
-      .createReactionCollector((reaction: MessageReaction, user: User) => user.id === message.author.id
-        && !user.bot
-        && (reaction.emoji.id ?? reaction.emoji.name) === settings.emojis.remove)
-      .on('collect', async () => {
+      .createReactionCollector({
+        filter: (reaction: MessageReaction, user: User) => user.id === message.author.id
+          && !user.bot
+          && (reaction.emoji.id ?? reaction.emoji.name) === settings.emojis.remove,
+      }).on('collect', async () => {
         try {
           collector.stop();
           await sendMessage.delete();
@@ -44,5 +38,3 @@ class LatexCommand extends Command {
       });
   }
 }
-
-export default LatexCommand;

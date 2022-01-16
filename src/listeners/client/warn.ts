@@ -1,17 +1,7 @@
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { Listener } from '@sapphire/framework';
 
-class WarnListener extends Listener {
-  constructor() {
-    super('warn', {
-      event: 'warn',
-      emitter: 'client',
-    });
-  }
-
-  public exec(info: string): void {
-    Logger.warn(`Discord.js emitted a warning: ${info}`);
+export default class WarnListener extends Listener {
+  public override run(info: string): void {
+    this.container.logger.warn(`Discord.js emitted a warning: ${info}`);
   }
 }
-
-export default WarnListener;

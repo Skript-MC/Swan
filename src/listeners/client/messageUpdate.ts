@@ -1,4 +1,5 @@
-import { Listener } from 'discord-akairo';
+import { MessageLimits } from '@sapphire/discord-utilities';
+import { Listener } from '@sapphire/framework';
 import { User } from 'discord.js';
 import type { MessageReaction } from 'discord.js';
 import pupa from 'pupa';
@@ -8,23 +9,22 @@ import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class MessageUpdateListener extends Listener {
-  constructor() {
-    super('messageUpdate', {
-      event: 'messageUpdate',
-      emitter: 'client',
-    });
-  }
+export default class MessageUpdateListener extends Listener {
+  public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
+    await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 
-  public async exec(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
-    await MessageLogManager.saveMessageEdit(this.client.cache, oldMessage, newMessage);
+    if (newMessage.author.bot
+      || newMessage.system
+      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
+      return;
 
     // Prevent active members from posting another documentation than Skript-MC's.
     if (newMessage.member.roles.cache.has(settings.roles.activeMember)
       && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
       await newMessage.delete();
-      const content = (oldMessage.content.length + messages.miscellaneous.noDocLink.length) >= 2000
-        ? trimText(oldMessage.content, 2000 - messages.miscellaneous.noDocLink.length - 3)
+      const finalLength = (oldMessage.content.length + messages.miscellaneous.noDocLink.length);
+      const content = finalLength >= MessageLimits.MaximumLength
+        ? trimText(oldMessage.content, MessageLimits.MaximumLength - messages.miscellaneous.noDocLink.length - 3)
         : oldMessage.content;
       await newMessage.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
 
@@ -32,26 +32,19 @@ class MessageUpdateListener extends Listener {
     }
 
     // Check for ghostpings.
-    if (newMessage.author.bot
-      || newMessage.system
-      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
-      return;
-
     // List of all users that were mentionned in the old message.
-    const oldUserMentions = oldMessage.mentions.users
-      .array()
+    const oldUserMentions = [...oldMessage.mentions.users.values()]
       .filter(usr => !usr.bot && usr.id !== newMessage.author.id);
       // List of all roles that were mentionned in the old message.
-    const oldRoleMentions = oldMessage.mentions.roles.array();
+    const oldRoleMentions = [...oldMessage.mentions.roles.values()];
     // List of usernames / roles name's that were mentionned in the old message.
     const oldMentions = [...oldUserMentions, ...oldRoleMentions];
 
     // List of all users that are mentionned in the new message.
-    const newUserMentions = newMessage.mentions.users
-      .array()
+    const newUserMentions = [...newMessage.mentions.users.values()]
       .filter(usr => !usr.bot && usr.id !== newMessage.author.id);
     // List of all roles that are mentionned in the new message.
-    const newRoleMentions = newMessage.mentions.roles.array();
+    const newRoleMentions = [...newMessage.mentions.roles.values()];
     // List of usernames / roles name's that are mentionned in the new message.
     const newMentions = [...newUserMentions, ...newRoleMentions];
 
@@ -90,16 +83,13 @@ class MessageUpdateListener extends Listener {
 
     await botNotificationMessage.react(settings.emojis.remove).catch(noop);
     const collector = botNotificationMessage
-      .createReactionCollector(
-        (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
+      .createReactionCollector({
+        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
           && (user.id === deletedMentions[0].id)
           && !user.bot,
-        )
-      .on('collect', async () => {
+      }).on('collect', async () => {
         collector.stop();
         await botNotificationMessage.delete().catch(noop);
       });
   }
 }
-
-export default MessageUpdateListener;

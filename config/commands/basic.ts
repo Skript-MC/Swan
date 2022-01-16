@@ -1,78 +1,58 @@
 import { stripIndent } from 'common-tags';
-import { hasActiveMemberRole, noPermissions, permissions } from '@/conf/configUtils';
+import { Rules } from '@/app/types';
+import { activeMemberRolePrecondition, basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
-    aliases: ['addonPack'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: "Pack d'add-ons",
-    content: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    aliases: ['addon-pack'],
+    description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
     usage: 'addonPack <version>',
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
   messages: {
-    startPrompt: 'Ajoute la version Minecraft dont tu souhaites connaître les versions recommandées :',
-    retryPrompt: 'Version Minecraft invalide. Ré-entre ta version :',
     notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
 };
 
 export const autoMessage = {
   settings: {
-    aliases: ['auto', 'autoMsg', 'autoMessage', 'automaticMessage'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Message rapide',
-    content: "Permet d'envoyer rapidement un message prédéfini.",
+    aliases: ['auto', 'auto-msg', 'auto-message', 'automatic-message'],
+    description: "Permet d'envoyer rapidement un message prédéfini.",
     usage: 'auto <message>',
-    examples: ['auto skript-gui', 'autoMsg 1.8'],
+    examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
-    startPrompt: 'Ajoute une le nom du message rapide que tu souhaites envoyer :',
-    retryPrompt: 'Nom de message invalide. Ré-entre son nom :',
     notFound: "Aucun message n'existe avec ce nom. Réessaye avec un autre nom !",
   },
 };
 
 export const code = {
   settings: {
-    aliases: ['code', 'balise', 'balises'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Code',
-    content: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
+    aliases: ['code', 'balise', 'balises'],
+    description: "Permet d'__afficher du code__ bien présenté, avec des balises de code et une coloration syntaxique. Vous pouvez ajouter le drapeau `-l` (ou `--lignes`/`--lines`) pour afficher le numéro des lignes. Vous pouvez, en plus, ajouter l'option `-s=<nombre>` (ou `--start=<nombre>`) pour spécifier à quel nombre commencer le compte des lignes. Vous pouvez également préciser le langage utilisé par discord pour afficher le code avec l'option `--language=<langage>` ou `--lang=<langage>`.",
     usage: 'code <code>',
-    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=JAVA System.out.println("Le JAVA est cool aussi");'],
+    examples: ['code broadcast "Yeah!"', 'code -l --start=30 broadcast "Trop cool!"', 'code --language=java System.out.println("Le Java est cool aussi");'],
   },
   messages: {
     title: '**Code de {message.author.username} :**',
     emergency: "Une erreur s'est produite lors de la création de ton bloc de code. Il se peut que ton code ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
-    startPrompt: 'Ajoute un code à formatter :',
-    retryPrompt: 'Code invalide. Ré-entre ton code :',
   },
 };
 
 export const discover = {
   settings: {
-    aliases: ['discover', 'découvrir', 'decouvrir'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Découvrir',
-    content: 'Permet de __découvrir une commande__ présente dans Swan.',
+    aliases: ['discover', 'découvrir', 'decouvrir'],
+    description: 'Permet de __découvrir une commande__ présente dans Swan.',
     usage: 'découvrir',
     examples: ['decouvrir'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
-    title: ':star: Commande "{randomCommand.details.name}"',
+    title: ':star: Commande "{name}"',
     description: '❯ Description',
     usage: '❯ Utilisation',
     usableBy: '❯ Utilisable par',
@@ -83,39 +63,29 @@ export const discover = {
 
 export const errorDetails = {
   settings: {
-    aliases: ['error', 'errorDetails'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: "Détails d'erreur",
-    content: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    aliases: ['error', 'error-details'],
+    description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
     usage: 'error <erreur>',
     examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
-    startPrompt: "Ajoute une erreur dont tu souhaites avoir plus d'informations :",
-    retryPrompt: 'Erreur invalide. Ré-entre ton erreur :',
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 };
 
 export const help = {
   settings: {
-    aliases: ['help', 'aide'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Aide',
-    content: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
+    aliases: ['help', 'aide'],
+    description: 'Affiche la __liste des commandes__ disponibles ou des informations précises sur une commande spécifique.',
     usage: 'help [commande]',
     examples: ['help', 'aide ping'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     commandInfo: {
-      title: ':star: Commande "{command.details.name}"',
-      description: '❯ Description',
+      title: ':star: Commande "{name}"',
       usage: '❯ Utilisation',
       usableBy: '❯ Utilisable par',
       aliases: '❯ Aliases',
@@ -131,69 +101,58 @@ export const help = {
 
 export const links = {
   settings: {
-    aliases: ['links', 'link', 'liens', 'lien'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Liens',
-    content: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
-    usage: 'links [page]',
-    examples: ['links', 'liens 4'],
+    aliases: ['links', 'link', 'liens', 'lien'],
+    description: "Affiche la liste des __liens utiles concernant Skript__, comme les serveurs Discord, les documentations, les plateformes de téléchargement d'addons...",
+    usage: 'links',
+    examples: ['links'],
   },
   messages: {
+    selectMenuItemDescription: 'Page {pageIndex}',
     embed: {
-      summary: `
-        Voici la liste des liens importants relatifs à Skript. Sommaire :
-        :zero: Sommaire.
-        :one: Liens sur les documentations de Skript.
-        :two: Liens sur les documentations des addons de Skript.
-        :three: Liens de téléchargement de Skript et de ses addons.
-        :four: Liens vers quelques Discord importants.
-        :five: Divers liens importants.
-      `,
+      summary: [
+        'Documentations de Skript.',
+        'Documentations des addons de Skript.',
+        'Téléchargement de Skript et de ses addons.',
+        'Quelques Discord importants.',
+        'Autres liens importants.',
+      ],
       fields: [
-        [
-          {
-            title: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
-            description: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
-          }, {
-            title: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
-            description: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
-          },
-        ], [
-          {
-            title: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
-            description: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
-          }, {
-            title: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
-            description: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
-          },
-        ], [
-          {
-            title: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
-            description: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
-          }, {
-            title: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-            description: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
-          },
-        ], [
-          {
-            title: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
-            description: 'Lien officiel de ce Discord.',
-          }, {
-            title: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
-            description: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
-          },
-        ], [
-          {
-            title: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
-            description: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
-          }, {
-            title: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
-            description: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
-          },
-        ],
+        {
+          name: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
+          value: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
+        }, {
+          name: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
+          value: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
+        },
+        {
+          name: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
+          value: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
+        }, {
+          name: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
+          value: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
+        },
+        {
+          name: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
+          value: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
+        }, {
+          name: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
+          value: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
+        },
+        {
+          name: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
+          value: 'Lien officiel de ce Discord.',
+        }, {
+          name: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
+          value: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+        },
+        {
+          name: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
+          value: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
+        }, {
+          name: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
+          value: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
+        },
       ],
     },
   },
@@ -201,26 +160,19 @@ export const links = {
 
 export const move = {
   settings: {
-    aliases: ['move', 'movemessage'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.ADD_REACTIONS | permissions.MANAGE_MESSAGES,
-    userPermissions: hasActiveMemberRole,
-  },
-  details: {
     name: 'Déplacer un message',
-    content: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
+    aliases: ['move', 'movemessage'],
+    description: "Permet de __déplacer un message__ d'un salon d'aide à un autre, si le salon d'aide est déjà occupé ou n'est pas adapté à la demande par exemple.",
     usage: 'move <#salon> <ID message>',
     examples: ['move #skript-2 756858183229636640'],
-    permissions: 'Membre Actif',
+    preconditions: [...basePreconditions, activeMemberRolePrecondition],
+    permissions: ['Membre Actif'],
   },
   messages: {
-    startChannelPrompt: "Tu n'as pas spécifié de salon ! Entre son ID ou mentionne-le.",
-    retryChannelPrompt: "Identifiant du salon invalide. Le salon d'origine/d'arrivée n'est pas un salon d'aide, ou ce sont les mêmes salons.",
-    startMessagePrompt: "Tu n'as pas spécifié de message à déplacer. Entre son ID.",
-    retryMessagePrompt: 'Identifiant du message invalide. Vérifie que le message spécifié est bien dans ce salon.',
-    successfullyMoved: ':twisted_rightwards_arrows: {targetDisplayName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
-    moveTitle: 'Message de {member.displayName}',
+    successfullyMoved: ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
+    moveTitle: 'Message de {targetName}',
     moveInfo: stripIndent`
-      {memberDisplayName} à déplacé un message de {targetDisplayName}, depuis {sourceChannel} vers {targetChannel}.
+      {memberDisplayName} à déplacé un message de {targetName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
@@ -229,15 +181,12 @@ export const move = {
 
 export const ping = {
   settings: {
-    aliases: ['ping', 'ms'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Ping',
-    content: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
+    aliases: ['ping', 'ms'],
+    description: "Permet de connaître la __latence de Swan__ et de __l'API Discord__.",
     usage: 'ping',
     examples: ['ping'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -251,34 +200,27 @@ export const ping = {
 
 export const rule = {
   settings: {
-    aliases: ['rule', 'regle', 'règle'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Règles',
-    content: 'Affiche une règle prédéfinie.',
+    aliases: ['rule', 'rules', 'regle', 'règle', 'regles', 'règles'],
+    description: 'Affiche une règle prédéfinie.',
     usage: 'regle <règle>',
     examples: ['regle mentions', 'regle 2'],
   },
   messages: {
-    startPrompt: 'Ajoute le nom de la règle que tu souhaites envoyer :',
-    retryPrompt: 'Nom de règle invalide. Ré-entre son nom :',
     notFound: "Aucune règle n'existe avec ce nom. Réessaye avec un autre nom !",
+    noRules: "Aucune règle n'a été rentrée dans la base de données.",
+    list: 'Liste des règles :\n{list}',
   },
 };
 
 export const statistics = {
   settings: {
-    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Statistiques',
-    content: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
+    aliases: ['statistics', 'stats', 'stat', 'statistique', 'statistiques', 'botinfo', 'swan'],
+    description: 'Affiche des __statistiques et diverses informations__ sur Swan, comme son temps de fonctionnement, sa version etc.',
     usage: 'stats',
     examples: ['stats'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

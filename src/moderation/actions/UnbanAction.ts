@@ -8,7 +8,7 @@ import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 
-class UnbanAction extends ModerationAction {
+export default class UnbanAction extends ModerationAction {
   protected before(): void {
     this.client.currentlyUnbanning.add(this.data.victim.id);
   }
@@ -59,7 +59,7 @@ class UnbanAction extends ModerationAction {
     // 2. Unban (hard-unban or remove roles)
     try {
       if (ban?.type === SanctionTypes.Hardban || !this.data.victim.member) {
-        const isHardbanned = await this.data.guild.fetchBan(this.data.victim.id).catch(noop);
+        const isHardbanned = await this.data.guild.bans.fetch(this.data.victim.id).catch(noop);
         if (isHardbanned)
           await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
       } else {
@@ -86,10 +86,8 @@ class UnbanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Channel Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)),
       );
     }
   }
 }
-
-export default UnbanAction;

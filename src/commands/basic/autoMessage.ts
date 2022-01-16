@@ -1,34 +1,29 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { MessageName } from '@/app/types';
-import type { AutoMessageCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { autoMessage as config } from '@/conf/commands/basic';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
-class AutoMessageCommand extends Command {
-  constructor() {
-    super('autoMessage', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'message',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class AutoMessageCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const query = await args.restResult('string');
+    if (!query.success) {
+      await message.channel.send(messages.prompt.messageName);
+      return;
+    }
+
+    await this._exec(message, query.value);
   }
 
-  public async exec(message: GuildMessage, args: AutoMessageCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.AutoMessage });
-    const search = searchMessageSimilarity(messages, args.message);
+  private async _exec(message: GuildMessage, query: string): Promise<void> {
+    const msgs = await Message.find({ messageType: MessageName.AutoMessage });
+    const search = searchMessageSimilarity(msgs, query);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -36,5 +31,3 @@ class AutoMessageCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default AutoMessageCommand;

@@ -1,3 +1,4 @@
+import { Identifiers } from '@sapphire/framework';
 import { stripIndent } from 'common-tags';
 
 export default {
@@ -7,7 +8,6 @@ export default {
         :warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.
         > (Cc: <@188341077902753794>, <@191495299884122112>)`
       : ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.",
-    notAllowed: "Tu n'as pas la permission de faire cela :frowning:",
     insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {command.details.name}. (Permissions manquantes : {permissions})",
     memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
     dmAreClosed: "{member}, je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
@@ -17,6 +17,17 @@ export default {
     noReason: 'Aucune raison spécifiée.',
     impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
     executedBy: 'Exécuté par {member.displayName}',
+  },
+  errors: {
+    precondition: {
+      [Identifiers.PreconditionRole]: ":x: Aïe, tu n'as pas la permission de faire cela :confused:",
+      [Identifiers.PreconditionNotRole]: ":x: Aïe, tu n'as pas le droit d'exécuter cette commande :confused:",
+      [Identifiers.PreconditionNotLoading]: 'Attends un peu, le temps que je finisse de me réveiller...',
+      [Identifiers.PreconditionChannelRules]: ':x: Aïe, cette commande est désactivée dans ce salon :confused:',
+      [Identifiers.PreconditionGuildOnly]: ':x: Aïe, cette commande ne peut être utilisée que dans un serveur :confused:',
+      [Identifiers.PreconditionCooldown]: 'Pas si vite ! Cette commande est sous cooldown, attendez un peu avant de la réutiliser.',
+      unknownError: "Une pré-condition de commande inconnue t'empêche d'effectuer cette action.",
+    },
   },
   miscellaneous: {
     noDescription: 'Aucune description disponible.',
@@ -29,7 +40,8 @@ export default {
     `,
     noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
     invalidMessage: 'Ton message ne respecte pas le règlement du salon {message.channel}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
-    commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {command.alias}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
+    wrongUserInteractionReply: 'Tu ne peux pas cliquer sur ces boutons, ils sont réservés à {user}.',
+    commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {commandName}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
     ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {user.username}. :innocent:',
     ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {user.username}. :innocent:',
     separator: ' • ',
@@ -74,6 +86,29 @@ export default {
     canceled: 'Commande annulée !',
     cancelWord: 'retour',
     stopWord: 'stop',
+
+    addon: "Le nom d'addon donné est invalide.",
+    channel: 'Le salon donné est invalide.',
+    code: 'Le code donné est invalide.',
+    differentHelpChannel: "Le salon donné est invalide. Le salon d'origine ou de destination n'est pas un salon d'aide, ou c'est le même salon.",
+    duration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.',
+    equation: "L'équation donnée est invalide.",
+    keywords: 'Les mots clé donnés sont invalides.',
+    member: "Le membre donné est invalide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo, avec ou sans le discriminant (#XXXX).",
+    message: 'Le message donné est invalide.',
+    messageName: 'Le nom de message donné est invalide.',
+    minecraftVersion: 'La version de Minecraft donnée est invalide.',
+    number: 'Le nombre donné est invalide.',
+    pollAnswers: 'Le sondage et/ou les réponses données sont invalides.',
+    pollDuration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.\n:warning: La durée ne peut pas excéder 7 jours !',
+    question: 'La question donnée est invalide.',
+    reason: 'La raison donnée est invalide.',
+    role: 'Le rôle donné est invalide.',
+    ruleName: 'Le nom de règle donné est invalide.',
+    serverAdress: "L'adresse de serveur donnée est invalide.",
+    skriptError: "L'erreur donnée est invalide.",
+    user: "L'utilisateur donné est invalide. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo, avec ou sans le discriminant (#XXXX).",
+    warnId: "L'identifiant de warn donné est invalide.",
   },
   moderation: {
     permanent: 'Définitif',
@@ -82,12 +117,12 @@ export default {
     memberHasClosedDm: "Je ne peux pas envoyer de message privé à ce membre, il n'a donc pas été prévenu de sa sanction. Je vous invite à lui en informer !",
     newCase: 'Nouveau cas ({action.data.sanctionId})',
     banExplanation: stripIndent`
-      Bonjour {action.nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
+      Bonjour {nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
       Si tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.
 
-      **Raison :** {action.data.reason}.
+      **Raison :** {data.reason}.
       **Durée :** {duration}.
-      **Expire :** {action.expiration}.`,
+      **Expire :** {expiration}.`,
     durationChange: 'Durée passée de {oldDuration} à {newDuration}',
     reasons: {
       leaveBan: "Déconnexion du Discord lors d'un bannissement (automatique)",
@@ -102,7 +137,7 @@ export default {
       actionTitle: ':tools: Action',
       reasonTitle: ':label: Raison',
       durationTitle: ':stopwatch: Durée',
-      durationDescription: '\nExpire {action.expiration}',
+      durationDescription: '\nExpire {expiration}',
       privateChannelTitle: ':speech_left: Salon privé',
       banlogTitle: ':scroll: Historique des messages',
       banlogAvailableDescription: 'Disponible ci-dessous',

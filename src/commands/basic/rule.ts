@@ -1,34 +1,34 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
+import pupa from 'pupa';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { MessageName } from '@/app/types';
-import type { RuleCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { rule as config } from '@/conf/commands/basic';
+import settings from '@/conf/settings';
 
-class RuleCommand extends Command {
-  constructor() {
-    super('rule', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'rule',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class RuleCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const query = await args.restResult('string');
+
+    await this._exec(message, query.value);
   }
 
-  public async exec(message: GuildMessage, args: RuleCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.Rule });
-    const search = searchMessageSimilarity(messages, args.rule);
+  private async _exec(message: GuildMessage, query: string | null): Promise<void> {
+    const msgs = await Message.find({ messageType: MessageName.Rule });
+
+    if (!query) {
+      const content = msgs.length === 0
+        ? config.messages.noRules
+        : pupa(config.messages.list, { list: `- ${msgs.map(msg => msg.content).join('\n- ')}` });
+      await message.channel.send(content);
+      return;
+    }
+
+    const search = searchMessageSimilarity(msgs, query);
     if (!search) {
       await message.channel.send(config.messages.notFound);
       return;
@@ -36,5 +36,3 @@ class RuleCommand extends Command {
     await message.channel.send(search.content);
   }
 }
-
-export default RuleCommand;

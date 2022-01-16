@@ -1,91 +1,74 @@
-import { Listener } from 'discord-akairo';
-import { GuildAuditLogs, TextChannel } from 'discord.js';
-import type { GuildChannel, GuildChannelResolvable } from 'discord.js';
+import { Listener } from '@sapphire/framework';
+import { GuildAuditLogs } from 'discord.js';
+import type { GuildTextBasedChannel } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
 import SwanChannel from '@/app/models/swanChannel';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
-import Logger from '@/app/structures/Logger';
-import type { ChannelSlug, GuildBanAuditLogs } from '@/app/types';
+import type { ChannelArraySlugs, ChannelSingleSlug } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
 
-class ReadyListener extends Listener {
-  constructor() {
-    super('ready', {
-      event: 'ready',
-      emitter: 'client',
-    });
-  }
+export default class ReadyListener extends Listener {
+  public override async run(): Promise<void> {
+    this.container.client.guild = this.container.client.guilds.resolve(settings.bot.guild)!;
 
-  public async exec(): Promise<void> {
-    this.client.guild = this.client.guilds.resolve(settings.bot.guild)!;
-
-    if (!this.client.guild)
+    if (!this.container.client.guild)
       throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
 
-    Logger.info('Caching channels...');
+    this.container.logger.info('Caching channels...');
     this._cacheChannels();
 
-    Logger.info('Caching polls...');
+    this.container.logger.info('Caching polls...');
     await this._cachePolls();
 
-    Logger.info('Caching reactions roles...');
+    this.container.logger.info('Caching reactions roles...');
     await this._cacheReactionRoles();
 
-    Logger.info('Fetching missed bans...');
+    this.container.logger.info('Fetching missed bans...');
     await this._fetchMissingBans();
 
-    Logger.info('Syncing database channels...');
+    this.container.logger.info('Syncing database channels...');
     await this._syncDatabaseChannels();
 
-    this.client.checkValidity();
+    this.container.client.checkValidity();
 
-    Logger.success('Swan is ready to listen for messages.');
+    this.container.logger.info('Swan is ready to listen for messages.');
 
-    this.client.isLoading = false;
+    this.container.client.isLoading = false;
   }
 
   private async _syncDatabaseChannels(): Promise<void> {
-    this.client.cache.swanChannels = new Set();
-    for (const channel of this.client.guild.channels.cache.array()) {
+    this.container.client.cache.swanChannels = new Set();
+    for (const channel of this.container.client.guild.channels.cache.values()) {
       if (!channel.isText())
         continue;
-      const guildChannel = channel as GuildChannel;
       const swanChannel = await SwanChannel.findOneOrCreate({
-        channelId: guildChannel.id,
+        channelId: channel.id,
       }, {
-        channelId: guildChannel.id,
-        categoryId: guildChannel.parentID,
-        name: guildChannel.name,
+        channelId: channel.id,
+        categoryId: channel.parentId,
+        name: channel.name,
         logged: false,
       });
-      this.client.cache.swanChannels.add(swanChannel);
+      this.container.client.cache.swanChannels.add(swanChannel);
     }
   }
 
   private _cacheChannels(): void {
-    const resolveChannel = (chan: GuildChannelResolvable): GuildChannel => this.client.guild.channels.resolve(chan)!;
-    const isText = (chan: GuildChannel): chan is TextChannel => chan instanceof TextChannel;
-
-    type ChannelEntry = [channelSlug: ChannelSlug, resolvedChannel: GuildChannel | GuildChannel[]];
-
-    // Resolve all channels entered in the config, to put them in client.cache.channels.<channel_name>.
-    const entries: ChannelEntry[] = Object.entries(settings.channels)
-      .map(([slug, ids]) => (Array.isArray(ids)
-        ? [slug as ChannelSlug, ids.map(resolveChannel)]
-        : [slug as ChannelSlug, resolveChannel(ids)]
-      ));
-
-    for (const [slug, channel] of entries) {
-      if (Array.isArray(channel)) {
-        if (channel.some(isText))
-          this.client.cache.channels[slug] = channel.filter(isText);
-      } else if (isText(channel)) {
-        this.client.cache.channels[slug] = channel;
+    for (const [slug, channelIdOrIds] of Object.entries(settings.channels)) {
+      if (Array.isArray(channelIdOrIds)) {
+        const channels = channelIdOrIds
+          .map(id => this.container.client.guild.channels.cache.get(id))
+          .filter(Boolean)
+          .filter(channel => channel.isText()) as GuildTextBasedChannel[];
+        this.container.client.cache.channels[slug as ChannelArraySlugs] = channels;
+      } else {
+        const channel = this.container.client.guild.channels.cache.get(channelIdOrIds);
+        this.container.client.cache.channels[slug as ChannelSingleSlug] = channel.isText() ? channel : null;
       }
     }
   }
@@ -98,18 +81,18 @@ class ReadyListener extends Listener {
     ]);
 
     for (const poll of polls) {
-      const channel = this.client.channels.resolve(poll.channelId);
+      const channel = this.container.client.channels.resolve(poll.channelId);
       if (!channel || !channel.isText()) {
         await Poll.findByIdAndRemove(poll._id);
         continue;
       }
 
-      const message = await channel.messages.fetch(poll.messageId, true, true).catch(nullop);
+      const message = await channel.messages.fetch(poll.messageId, { cache: true, force: true }).catch(nullop);
       if (!message) {
         await Poll.findByIdAndRemove(poll._id);
         continue;
       }
-      for (const reaction of message.reactions.cache.array()) {
+      for (const reaction of message.reactions.cache.values()) {
         if (cacheReactions.has(reaction.emoji.name))
           await reaction.users.fetch().catch(noop);
       }
@@ -119,11 +102,12 @@ class ReadyListener extends Listener {
   private async _cacheReactionRoles(): Promise<void> {
     const reactionRoles = await ReactionRole.find();
     for (const element of reactionRoles) {
-      const channel = this.client.guild.channels.cache.get(element.channelId);
-      const textChannel = channel as TextChannel;
-      textChannel.messages.fetch(element.messageId)
+      const channel = this.container.client.guild.channels.cache.get(element.channelId);
+      if (!channel || !channel.isText())
+        continue;
+      channel.messages.fetch(element.messageId)
         .then((message) => {
-          this.client.cache.reactionRolesIds.add(message.id);
+          this.container.client.cache.reactionRolesIds.add(message.id);
         })
         .catch(async () => {
           await ReactionRole.findByIdAndDelete(element._id);
@@ -132,24 +116,24 @@ class ReadyListener extends Listener {
   }
 
   private async _fetchMissingBans(): Promise<void> {
-    const bans = await this.client.guild.fetchBans();
+    const bans = await this.container.client.guild.bans.fetch();
     const convictedUsers = await ConvictedUser.find();
     for (const ban of bans.values()) {
       if (!convictedUsers.some(usr => usr.memberId === ban.user.id)) {
-        const logs = await this.client.guild.fetchAuditLogs({
+        const logs = await this.container.client.guild.fetchAuditLogs({
           type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
-        }) as GuildBanAuditLogs;
+        });
 
         const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
         if (!discordBan)
           continue;
 
-        const moderator = this.client.guild.members.resolve(discordBan.executor)
-          ?? await this.client.guild.members.fetch(discordBan.executor).catch(nullop);
+        const moderator = this.container.client.guild.members.resolve(discordBan.executor)
+          ?? await this.container.client.guild.members.fetch(discordBan.executor).catch(nullop);
         if (!moderator)
           continue;
 
-        const data = new ModerationData(this.client)
+        const data = new ModerationData()
           .setVictim(ban.user, false)
           .setReason(ban.reason)
           .setModerator(moderator)
@@ -158,14 +142,12 @@ class ReadyListener extends Listener {
         try {
           await new BanAction(data).commit();
         } catch (unknownError: unknown) {
-          Logger.error('An unexpected error occurred while banning a member!');
-          Logger.detail(`Member ID: ${ban.user.id}`);
-          Logger.detail(`Discord Ban Found: ${Boolean(discordBan)}`);
-          Logger.detail((unknownError as Error).stack, true);
+          this.container.logger.error('An unexpected error occurred while banning a member!');
+          this.container.logger.info(`Member ID: ${ban.user.id}`);
+          this.container.logger.info(`Discord Ban Found: ${Boolean(discordBan)}`);
+          this.container.logger.info((unknownError as Error).stack, true);
         }
       }
     }
   }
 }
-
-export default ReadyListener;

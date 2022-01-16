@@ -1,34 +1,26 @@
-import { Command } from 'discord-akairo';
-import type { GuildMessage } from '@/app/types';
-import type { EightBallCommandArguments } from '@/app/types/CommandArguments';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { eightBall as config } from '@/conf/commands/fun';
+import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
-class EightBallCommand extends Command {
-  constructor() {
-    super('eightBall', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'question',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.promptStart,
-          retry: config.messages.promptRetry,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class EightBallCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    if (args.finished) {
+      await message.channel.send(messages.prompt.question);
+      return;
+    }
+
+    await this._exec(message);
   }
 
-  public async exec(message: GuildMessage, _args: EightBallCommandArguments): Promise<void> {
+  private async _exec(message: GuildMessage): Promise<void> {
     const isAffirmative = Math.random() > 0.5;
     const pool = config.messages[isAffirmative ? 'affirmative' : 'negative'];
     const answer = pool[Math.floor(Math.random() * pool.length)];
     await message.channel.send(answer);
   }
 }
-
-export default EightBallCommand;

@@ -1,14 +1,11 @@
 import type { Endpoints } from '@octokit/types';
+import type { CommandOptions } from '@sapphire/framework';
+import type { StoreRegistryEntries } from '@sapphire/pieces';
 import type {
-  Collection,
   Guild,
-  GuildAuditLogs,
-  GuildAuditLogsEntry,
   GuildMember,
+  GuildTextBasedChannel,
   Message,
-  NewsChannel,
-  Snowflake,
-  TextChannel,
   User,
 } from 'discord.js';
 import type {
@@ -17,17 +14,7 @@ import type {
   Model,
   Types,
 } from 'mongoose';
-import type cron from 'node-cron';
 import type settings from '@/conf/settings';
-
-
-/* ****************** */
-/*     Util Types     */
-/* ****************** */
-
-export type Nullable<T> = { [P in keyof T]: T[P] | null };
-
-export type Awaited<T> = PromiseLike<T> | T;
 
 /* ****************** */
 /*  API Result Types  */
@@ -333,6 +320,13 @@ export interface InvisionTopic {
 // #region Miscellaneous types used at specific places (VS Code)
 // region Miscellaneous types used at specific places (JetBrains)
 
+/** Options for the SwanCommand class */
+export interface SwanCommandOptions extends CommandOptions {
+  usage: string;
+  examples: string[];
+  permissions?: string[];
+}
+
 /** Types of rules for where a command can be executed */
 export enum Rules {
   OnlyBotChannel = 1,
@@ -340,12 +334,15 @@ export enum Rules {
   OnlyHelpChannel = 1 << 2,
 }
 
-/** Informations associated to a task in the TaskHandler */
-export interface TaskInformations {
-  interval?: NodeJS.Timeout;
-  schedule?: cron.ScheduledTask;
+/** Activity types, with the string as a value */
+export enum ActivityType {
+  PLAYING = 'PLAYING',
+  STREAMING = 'STREAMING',
+  LISTENING = 'LISTENING',
+  WATCHING = 'WATCHING',
+  CUSTOM = 'CUSTOM',
+  COMPETING = 'COMPETING',
 }
-
 
 /** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
 export interface MatchingAddon {
@@ -353,23 +350,22 @@ export interface MatchingAddon {
   name: string;
 }
 
-/** The types of objects that is returned by the `tokenize()` function in `getDuration()` */
-export interface DurationPart {
-  number: string;
-  unit: string;
-}
-
-/** A TextChannel which is in a guild */
-export type GuildTextBasedChannel = NewsChannel | TextChannel;
-
 /** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
 
 /** Union type of all the channel we cache */
 export type ChannelSlug = keyof typeof settings.channels;
 
+/** All properties containing a array of channels */
+export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptExtraHelp' | 'skriptHelp';
+
+/** All properties containing a single channel */
+export type ChannelSingleSlug = Exclude<ChannelSlug, ChannelArraySlugs>;
+
 /** Record of all the channel we cache internally */
-export type CachedChannels = Record<ChannelSlug, TextChannel | TextChannel[]>;
+export type CachedChannels =
+  & Record<ChannelArraySlugs, GuildTextBasedChannel[]>
+  & Record<ChannelSingleSlug, GuildTextBasedChannel>;
 
 // #endregion
 
@@ -390,30 +386,6 @@ export interface BanChannelMessage {
   attachments: Array<{ name: string; url: string }>;
 }
 
-/** Represent a Kick entry in the guild audit logs */
-export interface GuildKickAuditLogsEntry extends GuildAuditLogsEntry {
-  action: 'MEMBER_KICK';
-  target: User;
-  targetType: 'USER';
-}
-
-/** Represent a Ban entry in the guild audit logs */
-export interface GuildBanAuditLogsEntry extends GuildAuditLogsEntry {
-  action: 'MEMBER_BAN_ADD';
-  target: User;
-  targetType: 'USER';
-}
-
-/** Represent an audit log where all entries are Kick entries */
-export interface GuildKickAuditLogs extends GuildAuditLogs {
-  entries: Collection<Snowflake, GuildKickAuditLogsEntry>;
-}
-
-/** Represent an audit log where all entries are Ban entries */
-export interface GuildBanAuditLogs extends GuildAuditLogs {
-  entries: Collection<Snowflake, GuildBanAuditLogsEntry>;
-}
-
 /** The sanctions types that we track in the ConvictedUser database */
 export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
 
@@ -431,6 +403,7 @@ export interface PersonInformations {
 export interface SanctionInformations {
   shouldAutobanIfNoMessages?: boolean;
   banChannelId?: string;
+  hasSentMessages?: boolean;
 }
 
 /** The object returned by ModerationData#toSchema */
@@ -518,7 +491,11 @@ export type CommandStatModel = Model<CommandStatDocument>;
 /** Interface for the "Module"'s mongoose schema */
 export interface SwanModuleBase {
   name: string;
-  handler: 'commandHandler' | 'inhibitorHandler' | 'listenerHandler' | 'taskHandler';
+  store: keyof StoreRegistryEntries;
+  location: {
+    relative: string;
+    root: string;
+  };
   enabled: boolean;
 }
 
