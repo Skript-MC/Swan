@@ -1,9 +1,10 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import Logger from '@/app/structures/Logger';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 import type { InvisionFullResource, InvisionFullTopic } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -20,15 +21,9 @@ const turndownService = new Turndown()
     },
   });
 
-class ForumFeedTask extends Task {
-  constructor() {
-    super('forumFeed', {
-      // Every 10 minutes
-      cron: '*/10 * * * *',
-    });
-  }
-
-  public async exec(): Promise<void> {
+@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
+export default class ForumFeedTask extends Task {
+  public override async run(): Promise<void> {
     await this._checkTopics();
     await this._checkFiles();
   }
@@ -40,11 +35,11 @@ class ForumFeedTask extends Task {
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        Logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
-        Logger.detail(err.message);
+        this.container.logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
+        this.container.logger.info(err.message);
       });
 
-    const channel = this.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
 
     if (!topics?.results || !channel?.isText())
       return;
@@ -56,13 +51,13 @@ class ForumFeedTask extends Task {
         const markdown = turndownService.turndown(topic.firstPost.content);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(topic.firstPost.author.name, 'https:' + topic.firstPost.author.photoUrl)
+          .setAuthor({ name: topic.firstPost.author.name, iconURL: 'https:' + topic.firstPost.author.photoUrl })
           .setTitle(pupa(config.embed.title, { topic }))
           .setURL(topic.url)
           .setDescription(trimText(markdown, 500))
-          .setFooter(config.dataProvider)
+          .setFooter({ text: config.dataProvider })
           .setTimestamp(new Date(topic.firstPost.date));
-        void channel.send(embed).catch(noop);
+        void channel.send({ embeds: [embed] }).catch(noop);
       });
   }
 
@@ -73,11 +68,11 @@ class ForumFeedTask extends Task {
       config.baseAxiosParams,
     ).then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        Logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
-        Logger.detail(err.message);
+        this.container.logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
+        this.container.logger.info(err.message);
       });
 
-    const channel = this.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
 
     if (!resources?.results || !channel?.isText())
       return;
@@ -89,7 +84,7 @@ class ForumFeedTask extends Task {
         const markdown = turndownService.turndown(resource.changelog || resource.description);
         const embed = new MessageEmbed()
           .setColor(settings.colors.default)
-          .setAuthor(resource.author.name, resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}`)
+          .setAuthor({ name: resource.author.name, iconURL: resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}` })
           .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
           .setURL(resource.url)
           .setDescription(trimText(markdown, 150))
@@ -97,11 +92,9 @@ class ForumFeedTask extends Task {
           .addField(config.embed.versionTitle, resource.version, true)
           .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, true)
           .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
-          .setFooter(config.dataProvider)
+          .setFooter({ text: config.dataProvider })
           .setTimestamp(new Date(resource.date));
-        void channel.send(embed).catch(noop);
+        void channel.send({ embeds: [embed] }).catch(noop);
       });
   }
 }
-
-export default ForumFeedTask;

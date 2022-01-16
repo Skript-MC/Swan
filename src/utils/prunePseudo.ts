@@ -8,12 +8,10 @@ import messages from '@/conf/messages';
  * @param {string} id - The id of the user.
  * @returns string - The string will always be lowercase.
  */
-function prunePseudo(member: GuildMember, user: User, id: string): string {
+export default function prunePseudo(member: GuildMember, user: User, id: string): string {
   return (member?.nickname?.replace(/[^a-zA-Z0-9]/gimu, '')
     || user?.username.replace(/[^a-zA-Z0-9]/gimu, '')
     || id
     || messages.global.unknownName)
     .toLowerCase();
 }
-
-export default prunePseudo;

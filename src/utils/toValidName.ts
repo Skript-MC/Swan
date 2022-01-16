@@ -3,7 +3,7 @@
  * @param {string} str - The string to strip.
  * @returns string
  */
-function toValidName(str: string): string {
+export default function toValidName(str: string): string {
   const valid: string[] = [];
   for (let i = 0; i < str.length; i++) {
     const char = str[i];
@@ -11,11 +11,9 @@ function toValidName(str: string): string {
       valid.push(char);
       continue;
     }
-    const charCode = str.charCodeAt(i);
+    const charCode = str.codePointAt(i);
     if (charCode < 0x80)
       valid.push(char);
   }
   return valid.join('');
 }
-
-export default toValidName;

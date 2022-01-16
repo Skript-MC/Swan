@@ -1,79 +1,63 @@
-import { Argument, Command } from 'discord-akairo';
-import type { GuildMember } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
+import type { GuildMember, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import ModerationData from '@/app/moderation/ModerationData';
 import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
-import Logger from '@/app/structures/Logger';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { UnmuteCommandArgument } from '@/app/types/CommandArguments';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { noop } from '@/app/utils';
 import { unmute as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
+import settings from '@/conf/settings';
 
-class UnmuteCommand extends Command {
-  constructor() {
-    super('unmute', {
-      aliases: config.settings.aliases,
-      details: config.details,
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class UnmuteCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const member = await args.pickResult('bannedMember');
+    if (!member.success) {
+      await message.channel.send(messages.prompt.member);
+      return;
+    }
 
-      args: [{
-        id: 'member',
-        type: Argument.validate(
-          'member',
-          (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
-            && value.roles.highest.position < message.member.roles.highest.position,
-        ),
-        prompt: {
-          start: config.messages.promptStartMember,
-          retry: config.messages.promptRetryMember,
-        },
-      }, {
-        id: 'reason',
-        type: 'string',
-        match: 'rest',
-        default: messages.global.noReason,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+    const reason = await args.restResult('string');
+
+    await this._exec(message, member.value, reason.value ?? messages.global.noReason);
   }
 
-  public async exec(message: GuildMessage, args: UnmuteCommandArgument): Promise<void> {
-    if (this.client.currentlyModerating.has(args.member.id)) {
+  private async _exec(message: GuildMessage, member: GuildMember | User, reason: string): Promise<void> {
+    if (this.container.client.currentlyModerating.has(member.id)) {
       await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
-    this.client.currentlyModerating.add(args.member.id);
+    this.container.client.currentlyModerating.add(member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.delete(args.member.id);
+      this.container.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
     try {
-      const convictedUser = await ConvictedUser.findOne({ memberId: args.member.id });
+      const convictedUser = await ConvictedUser.findOne({ memberId: member.id });
       if (!convictedUser?.currentMuteId) {
         await message.channel.send(config.messages.notMuted);
         return;
       }
 
       const data = new ModerationData(message)
-        .setVictim(args.member)
-        .setReason(args.reason)
+        .setVictim(member)
+        .setReason(reason)
         .setType(SanctionTypes.Unmute);
 
       const success = await new UnmuteAction(data).commit();
       if (success)
         await message.channel.send(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occurred while unmuting a member!');
-      Logger.detail(`Parsed member: ${args.member}`);
-      Logger.detail(`Message: ${message.url}`);
-      Logger.detail((unknownError as Error).stack, true);
+      this.container.logger.error('An unexpected error occurred while unmuting a member!');
+      this.container.logger.info(`Parsed member: ${member}`);
+      this.container.logger.info(`Message: ${message.url}`);
+      this.container.logger.info((unknownError as Error).stack, true);
       await message.channel.send(messages.global.oops).catch(noop);
     }
   }
 }
-
-export default UnmuteCommand;

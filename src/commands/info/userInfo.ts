@@ -1,35 +1,27 @@
-import { Command } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import moment from 'moment';
+import { Formatters, MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
-import type { UserInfoCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { userInfo as config } from '@/conf/commands/info';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class UserInfoCommand extends Command {
-  constructor() {
-    super('userInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'member',
-        type: 'member',
-        default: (message: GuildMessage): GuildMember => message.member,
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class UserInfoCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const member = await args.rest('member').catch(() => message.member);
+
+    await this._exec(message, member);
   }
 
-  public async exec(message: GuildMessage, args: UserInfoCommandArguments): Promise<void> {
+  private async _exec(message: GuildMessage, member: GuildMember): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
-    const activity = args.member.presence.activities[0];
+    const activity = member.presence?.activities[0];
     if (activity) {
       presenceDetails = pupa(embedConfig.presence.types[activity.type], { activity });
 
@@ -40,37 +32,38 @@ class UserInfoCommand extends Command {
         presenceDetails += pupa(embedConfig.presence.state, { activity });
 
       if (activity.timestamps) {
-        const timestamp = moment(activity.timestamps.start).format(settings.miscellaneous.durationFormat);
-        presenceDetails += pupa(embedConfig.presence.timestamps, { timestamp });
+        const time = Formatters.time(activity.timestamps.start, Formatters.TimestampStyles.RelativeTime);
+        presenceDetails += pupa(embedConfig.presence.timestamps, { time });
       }
     }
 
-    const roles = args.member.roles.cache.array().filter(role => role.name !== '@everyone');
+    const roles = [...member.roles.cache.values()]
+      .filter(role => role.name !== '@everyone');
 
     const presenceContent = pupa(embedConfig.presence.content, {
-      status: embedConfig.presence.status[args.member.presence.status],
+      status: embedConfig.presence.status[member.presence?.status ?? 'offline'],
       presenceDetails,
     });
-    const namesContent = pupa(embedConfig.names.content, { member: args.member });
+    const namesContent = pupa(embedConfig.names.content, { member });
     const createdContent = pupa(embedConfig.created.content, {
-      creation: moment(args.member.user.createdAt).format(settings.miscellaneous.durationFormat),
+      creation: Formatters.time(member.user.createdAt, Formatters.TimestampStyles.LongDateTime),
     });
     const joinedContent = pupa(embedConfig.joined.content,
-      args.member.joinedTimestamp
-        ? { joined: moment(new Date(args.member.joinedTimestamp)).format(settings.miscellaneous.durationFormat) }
+      member.joinedTimestamp
+        ? { joined: Formatters.time(new Date(member.joinedTimestamp), Formatters.TimestampStyles.LongDateTime) }
         : { joined: messages.global.unknown(true) });
-    const rolesContent = args.member.roles.cache.size - 1 === 0
+    const rolesContent = member.roles.cache.size - 1 === 0
       ? embedConfig.roles.noRole
       : pupa(embedConfig.roles.content, {
-        amount: args.member.roles.cache.size - 1,
+        amount: member.roles.cache.size - 1,
         roles: roles.join(', '),
       });
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedConfig.title, { member: args.member }))
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
-      .setThumbnail(args.member.user.avatarURL() ?? '')
+      .setAuthor({ name: pupa(embedConfig.title, { member }) })
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
+      .setThumbnail(member.user.displayAvatarURL())
       .setTimestamp()
       .addField(embedConfig.names.title, namesContent, false)
       .addField(embedConfig.created.title, createdContent, true)
@@ -78,8 +71,6 @@ class UserInfoCommand extends Command {
       .addField(embedConfig.roles.title, rolesContent, false)
       .addField(embedConfig.presence.title, presenceContent, true);
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default UserInfoCommand;

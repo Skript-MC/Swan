@@ -1,26 +1,23 @@
-import type { AkairoClient } from 'discord-akairo';
-import type { NewsChannel, TextChannel } from 'discord.js';
-import type { ObjectId } from 'mongoose';
+import { container } from '@sapphire/pieces';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
-import type { PollDocument } from '@/app/types';
 import { QuestionType } from '@/app/types';
 import { nullop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 export default {
-  async end(client: AkairoClient, pollId: ObjectId, stopped = false): Promise<void> {
+  async end(pollId: string, stopped = false): Promise<void> {
     // Remove the poll from the database and the cache.
-    const poll: PollDocument | null = await Poll.findByIdAndRemove(pollId).catch(nullop);
+    const poll = await Poll.findByIdAndRemove(pollId).catch(nullop);
     if (!poll)
       return;
 
-    client.cache.pollMessagesIds.delete(poll.messageId);
+    container.client.cache.pollMessagesIds.delete(poll.messageId);
 
     // Validate the channel and the message ID.
-    const channel = client.guild.channels.resolve(poll.channelId) as NewsChannel | TextChannel;
-    if (!channel)
+    const channel = container.client.guild.channels.resolve(poll.channelId);
+    if (!channel || !channel.isText())
       return;
 
     const message = channel?.messages?.resolve(poll.messageId)
@@ -60,6 +57,6 @@ export default {
       .addField(messages.poll.results, results);
 
     await message.reactions.removeAll();
-    await message.edit(embed);
+    await message.edit({ embeds: [embed] });
   },
 };

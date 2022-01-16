@@ -58,6 +58,9 @@ const SanctionSchema = new Schema({
     banChannelId: {
       type: String,
     },
+    hasSentMessages: {
+      type: Boolean,
+    },
   },
   updates: [{
     date: {

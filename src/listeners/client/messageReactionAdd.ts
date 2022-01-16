@@ -1,10 +1,8 @@
-import { Listener } from 'discord-akairo';
+import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import type { ObjectId } from 'mongoose';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
-import Logger from '@/app/structures/Logger';
 import PollManager from '@/app/structures/PollManager';
 import { QuestionType } from '@/app/types';
 import type { GuildMessage } from '@/app/types';
@@ -12,25 +10,18 @@ import { noop, nullop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class MessageReactionAddListener extends Listener {
-  constructor() {
-    super('messageReactionAdd', {
-      event: 'messageReactionAdd',
-      emitter: 'client',
-    });
-  }
-
-  public async exec(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.type === 'dm')
+export default class MessageReactionAddListener extends Listener {
+  public override async run(reaction: MessageReaction, user: User): Promise<void> {
+    if (user.bot || reaction.message.channel.type === 'DM')
       return;
 
     const message = reaction.message as GuildMessage;
 
-    if (this.client.cache.pollMessagesIds.has(message.id))
+    if (this.container.client.cache.pollMessagesIds.has(message.id))
       await this._handlePoll(reaction, message, user);
     else if (settings.channels.suggestions === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
-    else if (this.client.cache.reactionRolesIds.has(message.id))
+    else if (this.container.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
   }
 
@@ -64,7 +55,7 @@ class MessageReactionAddListener extends Listener {
       // Find the reaction they chose before (undefined if they never answered).
       type PollAnswer = [reactionName: string, votersIds: string[]];
 
-      const previousUserVote: string | undefined = Object.entries(poll.votes)
+      const previousUserVote = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.
         .find((entry: PollAnswer) => (entry[1].includes(user.id) ? entry : null))
         // We take the reactionName if it exists.
@@ -99,7 +90,7 @@ class MessageReactionAddListener extends Listener {
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
       // If the poll's creator clicked the "Stop" button
-      await PollManager.end(this.client, poll._id as ObjectId, true);
+      await PollManager.end(poll.id as string, true);
     } else if (pollReactions.specials[0] === emoji.name) {
       // If someone clicked the "Info" button
       await users.remove(user);
@@ -127,7 +118,7 @@ class MessageReactionAddListener extends Listener {
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
     const document = await ReactionRole.findOne({ messageId: message.id });
     if (!document) {
-      this.client.cache.reactionRolesIds.delete(message.id);
+      this.container.client.cache.reactionRolesIds.delete(message.id);
       return;
     }
     const emoji = document.reaction;
@@ -137,17 +128,15 @@ class MessageReactionAddListener extends Listener {
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
     if (!givenRole) {
-      Logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
+      this.container.logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
       return;
     }
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
-      Logger.warn(`An error has occured while trying to get member with id ${user.id}`);
+      this.container.logger.warn(`An error has occured while trying to get member with id ${user.id}`);
       return;
     }
     if (!member.roles.cache.get(givenRole.id))
       member.roles.add(givenRole).catch(noop);
   }
 }
-
-export default MessageReactionAddListener;

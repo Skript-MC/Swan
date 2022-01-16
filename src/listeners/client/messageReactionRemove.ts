@@ -1,24 +1,16 @@
-import { Listener } from 'discord-akairo';
+import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import ReactionRole from '@/app/models/reactionRole';
-import Logger from '@/app/structures/Logger';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 
-class MessageReactionRemove extends Listener {
-  constructor() {
-    super('messageReactionRemove', {
-      event: 'messageReactionRemove',
-      emitter: 'client',
-    });
-  }
-
-  public async exec(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.type === 'dm')
+export default class MessageReactionRemove extends Listener {
+  public override async run(reaction: MessageReaction, user: User): Promise<void> {
+    if (user.bot || reaction.message.channel.type === 'DM')
       return;
 
     const message = reaction.message as GuildMessage;
-    if (this.client.cache.reactionRolesIds.has(message.id))
+    if (this.container.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
   }
 
@@ -33,17 +25,15 @@ class MessageReactionRemove extends Listener {
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
     if (!givenRole) {
-      Logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
+      this.container.logger.warn(`The role with id ${document.givenRoleId} does not exists !`);
       return;
     }
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
-      Logger.warn(`An error has occured while trying to get member with id ${user.id}`);
+      this.container.logger.warn(`An error has occured while trying to get member with id ${user.id}`);
       return;
     }
     if (member.roles.cache.get(givenRole.id))
       member.roles.remove(givenRole).catch(noop);
   }
 }
-
-export default MessageReactionRemove;
