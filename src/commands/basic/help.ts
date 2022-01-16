@@ -1,95 +1,72 @@
-import { Command } from 'discord-akairo';
+import { ApplyOptions } from '@sapphire/decorators';
+import { isDMChannel } from '@sapphire/discord.js-utilities';
+import type { Args } from '@sapphire/framework';
+import { ok } from '@sapphire/framework';
+import type { Message } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import groupBy from 'lodash.groupby';
 import pupa from 'pupa';
-import { Rules } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { HelpCommandArguments } from '@/app/types/CommandArguments';
-import { capitalize } from '@/app/utils';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
+import { capitalize, inlineCodeList } from '@/app/utils';
 import { help as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class HelpCommand extends Command {
-  constructor() {
-    super('help', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'command',
-        type: 'commandAlias',
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-    this.rules = Rules.OnlyBotChannel;
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class HelpCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, args: Args): Promise<void> {
+    const command = await args.pickResult('command');
+
+    await this._exec(message, command.value);
   }
 
-  public async exec(message: GuildMessage, args: HelpCommandArguments): Promise<void> {
-    const { command } = args;
-    const { prefix, categories } = this.handler;
-
-    const embed = new MessageEmbed()
-      .setColor(settings.colors.default);
+  private async _exec(message: GuildMessage, command: SwanCommand | null): Promise<void> {
+    const embed = new MessageEmbed().setColor(settings.colors.default);
 
     if (command) {
       const information = config.messages.commandInfo;
-      embed.setTitle(pupa(information.title, { command }))
-        .addField(information.usage, `\`${prefix}${command.details.usage}\``)
-        .addField(information.description, command.details.content)
-        .addField(information.usableBy, command.details?.permissions ?? messages.global.everyone);
+      embed.setTitle(pupa(information.title, { name: capitalize(command.name) }))
+        .setDescription(pupa(command.description, { prefix: settings.bot.prefix }))
+        .addField(information.usage, `\`${settings.bot.prefix}${command.usage}\``)
+        .addField(information.usableBy, command.permissions.length > 0
+          ? command.permissions.join(', ')
+          : messages.global.everyone);
 
       if (command.aliases.length > 1)
-        embed.addField(information.aliases, `\`${command.aliases.join(`\`${messages.miscellaneous.separator}\``)}\``);
-      if (command.details?.examples?.length)
-        embed.addField(information.examples, `\`${prefix}${command.details.examples.join(`\`${messages.miscellaneous.separator}\`${prefix}`)}\``);
+        embed.addField(information.aliases, inlineCodeList(command.aliases));
+      if (command.examples.length > 0)
+        embed.addField(information.examples, inlineCodeList(command.examples, '\n'));
     } else {
       const information = config.messages.commandsList;
-      const amount = categories
-        .array()
-        .flatMap(category => category.array())
-        .length;
+      const amount = this.container.stores.get('commands').size;
 
       embed.setTitle(pupa(information.title, { amount }))
-        .setDescription(pupa(information.description, { helpCommand: `${prefix}${this.details.usage}` }));
+        .setDescription(pupa(information.description, { helpCommand: `${settings.bot.prefix}help <commande>` }));
 
-      for (const category of categories.array()) {
+      const categories = await this._getPossibleCategories(message);
+
+      for (const [category, commands] of Object.entries(categories)) {
         embed.addField(
-          pupa(information.category, { categoryName: capitalize(category.id) }),
-          category
-            .map(cmd => (this._isAllowed(cmd, message) ? `\`${cmd.aliases[0]}\`` : `~~\`${cmd.aliases[0]}\`~~`))
-            .join(messages.miscellaneous.separator),
+          pupa(information.category, { categoryName: capitalize(category) }),
+          inlineCodeList(commands.map(cmd => cmd.aliases[0])),
         );
       }
     }
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 
-  // Permission-check borrowed from https://github.com/discord-akairo/discord-akairo/blob/23bb3c1765d58059e43e587a1dd602d4394d3f54/src/struct/commands/CommandHandler.js#L669
-  private _isAllowed(cmd: Command, message: GuildMessage): boolean {
-    if (cmd.userPermissions) {
-      const ignorer = cmd.ignorePermissions ?? this.ignorePermissions;
-      const isIgnored = Array.isArray(ignorer)
-        ? ignorer.includes(message.author.id)
-        : typeof ignorer === 'function'
-          ? ignorer(message, cmd)
-          : message.author.id === ignorer;
+  private async _getPossibleCategories(message: Message): Promise<Record<string, SwanCommand[]>> {
+    const originalCommands = this.container.stores.get('commands');
+    const commands: SwanCommand[] = [];
 
-      if (!isIgnored) {
-        if (typeof cmd.userPermissions === 'function') {
-          // TODO: Support async `userPermissions` functions?
-          if (cmd.userPermissions(message) !== null)
-            return false;
-        } else if (message.guild) {
-          const missing = message.channel.permissionsFor(message.author)?.missing(cmd.userPermissions);
-          if (missing && missing.length > 0)
-            return false;
-        }
-      }
+    for (const command of originalCommands.values()) {
+      const result = isDMChannel(message.channel) ? ok() : await command.preconditions.run(message, command);
+      if (result.success)
+        commands.push(command as SwanCommand);
     }
-    return true;
+
+    return groupBy(commands, command => command.location.directories.shift());
   }
 }
-
-export default HelpCommand;

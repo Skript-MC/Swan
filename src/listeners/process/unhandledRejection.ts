@@ -1,20 +1,14 @@
-import { captureException } from '@sentry/node';
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { ListenerOptions } from '@sapphire/framework';
+import { Listener } from '@sapphire/framework';
 
-class UnhandledRejectionListener extends Listener {
-  constructor() {
-    super('unhandledRejection', {
-      event: 'unhandledRejection',
-      emitter: 'process',
-    });
-  }
-
-  public exec(error: Error): void {
-    captureException(error);
-    Logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
-    Logger.error(error.stack);
+@ApplyOptions<ListenerOptions>({ emitter: process })
+export default class UnhandledRejectionListener extends Listener {
+  public override run(error: Error): void {
+    this.container.logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
+    if (process.env.NODE_ENV === 'production')
+      throw new Error(error.stack);
+    else
+      this.container.logger.error(error.stack);
   }
 }
-
-export default UnhandledRejectionListener;

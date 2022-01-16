@@ -5,7 +5,7 @@ import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 
-class RemoveWarnAction extends ModerationAction {
+export default class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
@@ -53,5 +53,3 @@ class RemoveWarnAction extends ModerationAction {
     }
   }
 }
-
-export default RemoveWarnAction;

@@ -1,17 +1,10 @@
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { ListenerOptions } from '@sapphire/framework';
+import { Listener } from '@sapphire/framework';
 
-class WarningListener extends Listener {
-  constructor() {
-    super('warning', {
-      event: 'warning',
-      emitter: 'process',
-    });
-  }
-
-  public exec(warning: { name: string; message: string; stack: string }): void {
-    Logger.warn(`Node.js Warning: ${warning.message}`);
+@ApplyOptions<ListenerOptions>({ emitter: process })
+export default class WarningListener extends Listener {
+  public override run(warning: { name: string; message: string; stack: string }): void {
+    this.container.logger.warn(`Node.js Warning: ${warning.message}`);
   }
 }
-
-export default WarningListener;

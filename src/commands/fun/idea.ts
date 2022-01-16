@@ -1,26 +1,22 @@
-import { Command } from 'discord-akairo';
-import type { TextChannel } from 'discord.js';
+import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { MessageEmbed } from 'discord.js';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
-import type { IdeaCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { GuildMessage, SwanCommandOptions } from '@/app/types';
 import { idea as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class IdeaCommand extends Command {
-  constructor() {
-    super('idea', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplyOptions<SwanCommandOptions>({ ...settings.globalCommandsOptions, ...config.settings })
+export default class IdeaCommand extends SwanCommand {
+  public override async messageRun(message: GuildMessage, _args: Args): Promise<void> {
+    await this._exec(message);
   }
 
-  public async exec(message: GuildMessage, _args: IdeaCommandArguments): Promise<void> {
-    const channel = this.client.cache.channels.idea as TextChannel;
+  private async _exec(message: GuildMessage): Promise<void> {
+    // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
+    const channel = this.container.client.cache.channels.idea;
 
     const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) {
@@ -29,7 +25,6 @@ class IdeaCommand extends Command {
     }
 
     const randomIdea = ideas.random(1)[0];
-
     if (!randomIdea) {
       await message.channel.send(config.messages.noIdeaFound);
       return;
@@ -37,16 +32,14 @@ class IdeaCommand extends Command {
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(
-        pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
-        randomIdea.author.avatarURL() ?? '',
-      )
+      .setAuthor({
+        name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
+        iconURL: randomIdea.author.avatarURL() ?? '',
+      })
       .setDescription(randomIdea.content)
-      .setFooter(pupa(messages.global.executedBy, { member: message.member }))
+      .setFooter({ text: pupa(messages.global.executedBy, { member: message.member }) })
       .setTimestamp(randomIdea.createdAt);
 
-    await message.channel.send(embed);
+    await message.channel.send({ embeds: [embed] });
   }
 }
-
-export default IdeaCommand;

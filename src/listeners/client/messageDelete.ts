@@ -1,4 +1,4 @@
-import { Listener } from 'discord-akairo';
+import { Listener } from '@sapphire/framework';
 import { DMChannel, User } from 'discord.js';
 import type { Message, MessageReaction } from 'discord.js';
 import pupa from 'pupa';
@@ -8,20 +8,13 @@ import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class MessageDeleteListener extends Listener {
-  constructor() {
-    super('messageDelete', {
-      event: 'messageDelete',
-      emitter: 'client',
-    });
-  }
-
-  public async exec(globalMessage: Message): Promise<void> {
+export default class MessageDeleteListener extends Listener {
+  public override async run(globalMessage: Message): Promise<void> {
     if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
       return;
 
     const message = globalMessage as GuildMessage;
-    await MessageLogManager.saveMessageDelete(this.client.cache, message);
+    await MessageLogManager.saveMessageDelete(this.container.client.cache, message);
 
     if (message.author.bot
       || message.system
@@ -29,11 +22,10 @@ class MessageDeleteListener extends Listener {
       return;
 
     // List of all the usernames that were mentionned in the deleted message.
-    const userMentions = message.mentions.users
-      .array()
+    const userMentions = [...message.mentions.users.values()]
       .filter(usr => !usr.bot && usr.id !== message.author.id);
     // List of all the roles name's that were mentionned in the deleted message.
-    const roleMentions = message.mentions.roles.array();
+    const roleMentions = [...message.mentions.roles.values()];
     // List of usernames / roles name's that were mentionned.
     const mentions = [...userMentions, ...roleMentions];
 
@@ -64,16 +56,13 @@ class MessageDeleteListener extends Listener {
 
     await botNotificationMessage.react(settings.emojis.remove).catch(noop);
     const collector = botNotificationMessage
-      .createReactionCollector(
-        (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
+      .createReactionCollector({
+        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
           && (user.id === message.mentions.users.first()!.id)
           && !user.bot,
-        )
-      .on('collect', async () => {
+      }).on('collect', async () => {
         collector.stop();
         await botNotificationMessage.delete().catch(noop);
       });
   }
 }
-
-export default MessageDeleteListener;

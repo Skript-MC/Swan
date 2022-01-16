@@ -1,10 +1,10 @@
-import { AkairoClient } from 'discord-akairo';
+import type { SapphireClient } from '@sapphire/framework';
+import { container } from '@sapphire/pieces';
 import { GuildMember, Message, TextChannel } from 'discord.js';
-import type { Guild, User } from 'discord.js';
+import type { Guild, GuildTextBasedChannel, User } from 'discord.js';
 import { nanoid } from 'nanoid';
 import type {
   GuildMessage,
-  GuildTextBasedChannel,
   ModerationDataResult,
   PersonInformations,
   SanctionInformations,
@@ -14,11 +14,10 @@ import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 
-
-class ModerationData {
+export default class ModerationData {
   moderator: GuildMember;
   guild: Guild;
-  client: AkairoClient;
+  client: SapphireClient;
   channel: GuildTextBasedChannel;
   type?: SanctionTypes;
   config?: Record<string, string>;
@@ -46,23 +45,16 @@ class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument: AkairoClient | GuildMessage | GuildTextBasedChannel) {
+  constructor(argument?: GuildMessage) {
+    this.client = container.client;
     if (argument instanceof Message) {
-      this.moderator = argument.member;
-      this.guild = argument.guild;
-      this.client = argument.client as AkairoClient;
       this.channel = argument.channel;
-    } else if (argument instanceof AkairoClient) {
-      this.client = argument;
-      this.channel = this.client.cache.channels.log as TextChannel;
-      this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
+      this.moderator = argument.member;
     } else {
-      this.channel = argument;
-      this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
-      this.client = this.guild.client as AkairoClient;
+      this.channel = this.client.cache.channels.log;
+      this.moderator = this.client.guild.me!;
     }
+    this.guild = this.channel.guild;
     this.type = null;            // The sanction type (one of the SanctionTypes enum).
     this.config = null;          // The configuration of the action (all the messages).
     this.victim = {              // The victim of the case. It contains an ID, a User and a GuildMember.
@@ -82,7 +74,7 @@ class ModerationData {
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
-    this.victim = getPersonFromCache(personResolvable, this.client, resolveMemberAndUser);
+    this.victim = getPersonFromCache(personResolvable, resolveMemberAndUser);
     return this;
   }
 
@@ -154,5 +146,3 @@ class ModerationData {
     };
   }
 }
-
-export default ModerationData;

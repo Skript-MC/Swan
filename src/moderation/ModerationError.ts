@@ -1,4 +1,4 @@
-class ModerationError extends Error {
+export default class ModerationError extends Error {
   details: Map<string, string>;
 
   constructor() {
@@ -32,5 +32,3 @@ class ModerationError extends Error {
     return this;
   }
 }
-
-export default ModerationError;

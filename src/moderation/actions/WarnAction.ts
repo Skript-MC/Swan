@@ -1,3 +1,4 @@
+import { container } from '@sapphire/pieces';
 import { GuildMember, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
@@ -5,13 +6,12 @@ import ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
 import BanAction from '@/app/moderation/actions/BanAction';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
-import Logger from '@/app/structures/Logger';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class WarnAction extends ModerationAction {
+export default class WarnAction extends ModerationAction {
   protected before: undefined;
 
   protected async after(): Promise<void> {
@@ -20,10 +20,10 @@ class WarnAction extends ModerationAction {
       const user = await ConvictedUser.findOne({ memberId: this.data.victim.id });
 
       if (!user) {
-        Logger.warn('An unexpected situation happened: Could not find a convicted user after a warn.');
-        Logger.detail(`Victim: GuildMember: ${this.data.victim.member instanceof GuildMember}`);
-        Logger.detail(`Victim: User: ${this.data.victim.user instanceof User}`);
-        Logger.detail(`Victim: ID: ${this.data.victim.id}`);
+        container.logger.warn('An unexpected situation happened: Could not find a convicted user after a warn.');
+        container.logger.info(`Victim: GuildMember: ${this.data.victim.member instanceof GuildMember}`);
+        container.logger.info(`Victim: User: ${this.data.victim.user instanceof User}`);
+        container.logger.info(`Victim: ID: ${this.data.victim.id}`);
         return;
       }
 
@@ -53,7 +53,7 @@ class WarnAction extends ModerationAction {
         );
 
         // 3. Ban the member
-        const data = new ModerationData(this.client)
+        const data = new ModerationData()
           .setVictim(this.data.victim.member ?? this.data.victim.user, false)
           .setReason(messages.moderation.reasons.autoBanWarnLimitExceeded)
           .setDuration(settings.moderation.warnLimitBanDuration * 1000, true)
@@ -102,5 +102,3 @@ class WarnAction extends ModerationAction {
     }
   }
 }
-
-export default WarnAction;
