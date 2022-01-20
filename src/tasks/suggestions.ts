@@ -31,6 +31,11 @@ export default class SuggestionsTask extends Task {
       } else {
         // Send the message and store it
         message = await channel.send({ embeds: [embed], components: [actions] });
+        const thread = await message.startThread({
+          name: `Suggestion ${suggestion.id} de ${suggestion.user.username}`,
+        });
+        if (suggestion.user.discordId)
+          await thread.members.add(suggestion.user.discordId);
       }
 
       // Acknowledge the suggestion update

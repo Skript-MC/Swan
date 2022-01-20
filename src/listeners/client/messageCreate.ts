@@ -106,6 +106,11 @@ export default class MessageCreateListener extends Listener {
           embeds: [suggestionEmbed],
           components: [suggestionActions],
         });
+        const thread = await suggestionMessage.startThread({
+          name: `Suggestion ${response.suggestion.id} de ${response.suggestion.user.username}`,
+        });
+        if (response.suggestion.user.discordId)
+          await thread.members.add(response.suggestion.user.discordId);
         await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
         const embed = new MessageEmbed()
           .setColor(settings.colors.success)
