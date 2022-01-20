@@ -9,7 +9,6 @@ import {
   Permissions,
 } from 'discord.js';
 import pupa from 'pupa';
-import type SwanClient from '@/app/SwanClient';
 import Sanction from '@/app/models/sanction';
 import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
@@ -101,9 +100,8 @@ export default class MessageCreateListener extends Listener {
       await message.delete();
       const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
       if (response.status === 'PUBLISHED') {
-        const { client } = this.container;
-        const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(client as SwanClient, response.suggestion);
-        const suggestionActions = SuggestionManager.getSuggestionActions(client as SwanClient, response.suggestion);
+        const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
+        const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);
         const suggestionMessage = await message.channel.send({
           embeds: [suggestionEmbed],
           components: [suggestionActions],
@@ -111,25 +109,33 @@ export default class MessageCreateListener extends Listener {
         await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
         const embed = new MessageEmbed()
           .setColor(settings.colors.success)
-          .setTitle('Suggestion publiée')
-          .setDescription("Merci pour votre suggestion ! Elle a été publiée sur toutes les plateformes de Skript-MC et la communauté va voter votre suggestion. Elle sera prochainement traitée avec la communauté et l'équipe, et peut-être appliquée (qui sait 👀).")
-          .setFooter({ text: 'Suggestions Skript-MC', iconURL: settings.bot.avatar });
+          .setTitle(messages.suggestions.published.title)
+          .setDescription(messages.suggestions.published.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
         await message.author.send({ embeds: [embed] });
         return false;
+      } else if (response.status === 'UNLINKED') {
+        const embed = new MessageEmbed()
+          .setColor(settings.colors.error)
+          .setTitle(messages.suggestions.unlinked.title)
+          .setDescription(messages.suggestions.unlinked.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+        const actions = new MessageActionRow()
+          .addComponents(
+            new MessageButton()
+              .setLabel(messages.suggestions.loginButton)
+              .setURL(response.loginUrl)
+              .setStyle('LINK'),
+          );
+        await message.author.send({ embeds: [embed], components: [actions] });
+      } else {
+        const embed = new MessageEmbed()
+          .setColor(settings.colors.error)
+          .setTitle(messages.suggestions.error.title)
+          .setDescription(messages.suggestions.error.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+        await message.author.send({ embeds: [embed] });
       }
-      const embed = new MessageEmbed()
-        .setColor(settings.colors.error)
-        .setTitle('🔗 Liaison requise')
-        .setDescription("Oups, un problème est survenu lors de la publication de votre suggestion : il semblerait que votre compte Discord ne corresponde à aucun compte Skript-MC. Pour pouvoir bénéficier des intégrations sur notre serveur Discord, il est nécessaire de lier votre compte Discord à votre compte Skript-MC.\n\nNos lutins vous ont préparé un lien magique : il ne vous suffit plus qu'à vous connecter à votre compte Skript-MC, et vous bénéficierez des intégrations sur notre serveur Discord.")
-        .setFooter({ text: 'Suggestions Skript-MC', iconURL: settings.bot.avatar });
-      const actions = new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setLabel('Connexion à Skript-MC')
-            .setURL(response.loginUrl)
-            .setStyle('LINK'),
-        );
-      await message.author.send({ embeds: [embed], components: [actions] });
     }
     return false;
   }

@@ -187,4 +187,28 @@ export default {
     stopped: '*(arrêté)*',
     results: 'Résultats',
   },
+  suggestions: {
+    brand: 'Suggestions Skript-MC',
+    loginButton: 'Connexion à Skript-MC',
+    registeredVote: {
+      title: 'Vote enregistré',
+      content: 'Votre vote a bien été comptabilisé pour cette suggestion : celle-ci sera prochainement traitée et débattue avec la communauté en tenant compte votre vote.',
+    },
+    unlinked: {
+      title: '🔗 Liaison requise',
+      content: 'Il semblerait que votre compte Discord ne corresponde à aucun compte Skript-MC. Pour pouvoir bénéficier des intégrations sur notre serveur Discord, il est nécessaire de lier votre compte Discord à votre compte Skript-MC.\n\nNos lutins vous ont préparé un lien magique : il ne vous suffit plus qu\'à vous connecter à votre compte Skript-MC, et vous bénéficierez des intégrations sur notre serveur Discord.',
+    },
+    alreadyVoted: {
+      title: 'Vote déjà comptabilisé',
+      content: "Votre vote a déjà été pris en compte pour cette proposition. Il vous est cependant possible de modifier votre vote en cliquant sur l'autre proposition.",
+    },
+    error: {
+      title: '🤖 Une erreur est survenue',
+      content: 'On dirait bien que quelque chose ne fonctionne pas comme il devrait. Réessayez dans quelques instants ou consultez les suggestions directement sur [les suggestions de Skript-MC](https://skript-mc.fr/suggestions).',
+    },
+    published: {
+      title: 'Suggestion publiée',
+      content: "Merci pour votre suggestion ! Elle a été publiée sur toutes les plateformes de Skript-MC et la communauté va voter votre suggestion. Elle sera prochainement traitée avec la communauté et l'équipe, et peut-être appliquée (qui sait 👀).",
+    },
+  },
 };

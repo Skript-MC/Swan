@@ -1,5 +1,4 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type SwanClient from '@/app/SwanClient';
 import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
@@ -20,11 +19,9 @@ export default class SuggestionsTask extends Task {
       return;
 
     for (const suggestion of suggestions) {
-      const { client } = this.container;
-
       // Get embed and actions for this suggestion
-      const embed = await SuggestionManager.getSuggestionEmbed(client as SwanClient, suggestion);
-      const actions = SuggestionManager.getSuggestionActions(client as SwanClient, suggestion);
+      const embed = await SuggestionManager.getSuggestionEmbed(suggestion);
+      const actions = SuggestionManager.getSuggestionActions(suggestion);
 
       let message;
       if (suggestion.discordId) {

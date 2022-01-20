@@ -1,7 +1,7 @@
+import { container } from '@sapphire/framework';
 import axios from 'axios';
 import type { Message } from 'discord.js';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import type SwanClient from '@/app/SwanClient';
 import type { PublishResponse, Suggestion, VoteResponse } from '@/app/types';
 import settings from '@/conf/settings';
 
@@ -55,7 +55,8 @@ export default {
     }
   },
 
-  async getSuggestionEmbed(client: SwanClient, suggestion: Suggestion): Promise<MessageEmbed> {
+  async getSuggestionEmbed(suggestion: Suggestion): Promise<MessageEmbed> {
+    const { client } = container;
     const embed = new MessageEmbed()
       .setColor(suggestion.status === 1
         ? settings.colors.default
@@ -84,7 +85,7 @@ export default {
     return embed;
   },
 
-  getSuggestionActions(client: SwanClient, suggestion: Suggestion): MessageActionRow {
+  getSuggestionActions(suggestion: Suggestion): MessageActionRow {
     return new MessageActionRow()
       .addComponents(
         new MessageButton()
