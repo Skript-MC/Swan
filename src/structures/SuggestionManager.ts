@@ -4,32 +4,37 @@ import type { Message } from 'discord.js';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import type { PublishResponse, Suggestion, VoteResponse } from '@/app/types';
 import settings from '@/conf/settings';
+import { nullop } from '@/app/utils';
 
 const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
 
 export default {
   async getPendingSuggestions(): Promise<Suggestion[]> {
     return await axios.get(`${settings.apis.skriptmc}suggestions/pending?${token}`)
-      .then(response => (response.status >= 300 ? null : response.data));
+      .then(response => (response.status >= 300 ? null : response.data))
+      .catch(nullop);
   },
 
   async getSuggestion(messageId: string): Promise<Suggestion> {
     return await axios.get(`${settings.apis.skriptmc}suggestions/${messageId}?${token}`)
-      .then(response => (response.status >= 300 ? null : response.data));
+      .then(response => (response.status >= 300 ? null : response.data))
+      .catch(nullop);
   },
 
   async suggestionCallback(suggestion: Suggestion, message: Message): Promise<void> {
     await axios.post(`${settings.apis.skriptmc}suggestions/callback?${token}`, {
       suggestionId: suggestion.id,
       messageId: message.id,
-    });
+    }).catch(nullop);
   },
 
   async publishSuggestion(description: string, discordId: string): Promise<PublishResponse> {
     const { data } = await axios.post(`${settings.apis.skriptmc}suggestions/publish?${token}`, {
       description,
       discordId,
-    }, { validateStatus: status => status < 500 });
+    }, {
+      validateStatus: status => status < 500,
+    }).catch(nullop);
     return data;
   },
 
@@ -38,7 +43,9 @@ export default {
       messageId,
       upVote,
       discordId,
-    }, { validateStatus: status => status < 500 });
+    }, {
+      validateStatus: status => status < 500,
+    }).catch(nullop);
     return data;
   },
 
