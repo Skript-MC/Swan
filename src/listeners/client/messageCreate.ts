@@ -1,9 +1,17 @@
 import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
+import {
+  DMChannel,
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
+  Permissions,
+} from 'discord.js';
 import pupa from 'pupa';
+import type SwanClient from '@/app/SwanClient';
 import Sanction from '@/app/models/sanction';
+import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop, trimText } from '@/app/utils';
@@ -31,7 +39,7 @@ export default class MessageCreateListener extends Listener {
     yield await this._updateMemberIfBanned(message);
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInIdeaChannel(message);
-    yield await this._formatMessageInSuggestionChannel(message);
+    yield await this._handleSuggestion(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
@@ -87,27 +95,41 @@ export default class MessageCreateListener extends Listener {
     return false;
   }
 
-  private async _formatMessageInSuggestionChannel(message: GuildMessage): Promise<boolean> {
+  private async _handleSuggestion(message: GuildMessage): Promise<boolean> {
     // Send embed and add reactions in the Suggestion channel.
     if (message.channel.id === settings.channels.suggestions) {
-      try {
-        await message.delete();
+      await message.delete();
+      const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
+      if (response.status === 'PUBLISHED') {
+        const { client } = this.container;
+        const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(client as SwanClient, response.suggestion);
+        const suggestionActions = SuggestionManager.getSuggestionActions(client as SwanClient, response.suggestion);
+        const suggestionMessage = await message.channel.send({
+          embeds: [suggestionEmbed],
+          components: [suggestionActions],
+        });
+        await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
         const embed = new MessageEmbed()
-          .setColor(settings.colors.default)
-          .setTimestamp()
-          .setAuthor({ name: `Suggestion de ${message.member.displayName}`, iconURL: message.author.avatarURL() ?? '' })
-          .setDescription(message.content);
-        const suggestionMessage = await message.channel.send({ embeds: [embed] });
-        await suggestionMessage.react(settings.emojis.yes);
-        await suggestionMessage.react(settings.emojis.no);
-      } catch (unknownError: unknown) {
-        this.container.logger.error('Unable to add emojis to the idea channel.');
-        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.me?.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
-        this.container.logger.info(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
-        this.container.logger.info(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
-        this.container.logger.info(`Message: ${message.url}`);
-        this.container.logger.error((unknownError as Error).stack);
+          .setColor(settings.colors.success)
+          .setTitle('Suggestion publiée')
+          .setDescription("Merci pour votre suggestion ! Elle a été publiée sur toutes les plateformes de Skript-MC et la communauté va voter votre suggestion. Elle sera prochainement traitée avec la communauté et l'équipe, et peut-être appliquée (qui sait 👀).")
+          .setFooter({ text: 'Suggestions Skript-MC', iconURL: settings.bot.avatar });
+        await message.author.send({ embeds: [embed] });
+        return false;
       }
+      const embed = new MessageEmbed()
+        .setColor(settings.colors.error)
+        .setTitle('🔗 Liaison requise')
+        .setDescription("Oups, un problème est survenu lors de la publication de votre suggestion : il semblerait que votre compte Discord ne corresponde à aucun compte Skript-MC. Pour pouvoir bénéficier des intégrations sur notre serveur Discord, il est nécessaire de lier votre compte Discord à votre compte Skript-MC.\n\nNos lutins vous ont préparé un lien magique : il ne vous suffit plus qu'à vous connecter à votre compte Skript-MC, et vous bénéficierez des intégrations sur notre serveur Discord.")
+        .setFooter({ text: 'Suggestions Skript-MC', iconURL: settings.bot.avatar });
+      const actions = new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+            .setLabel('Connexion à Skript-MC')
+            .setURL(response.loginUrl)
+            .setStyle('LINK'),
+        );
+      await message.author.send({ embeds: [embed], components: [actions] });
     }
     return false;
   }
