@@ -3,8 +3,8 @@ import axios from 'axios';
 import type { Message } from 'discord.js';
 import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import type { PublishResponse, Suggestion, VoteResponse } from '@/app/types';
-import settings from '@/conf/settings';
 import { nullop } from '@/app/utils';
+import settings from '@/conf/settings';
 
 const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
 
