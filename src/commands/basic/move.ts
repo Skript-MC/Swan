@@ -118,7 +118,10 @@ export default class MoveCommand extends SwanCommand {
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(settings.emojis.remove).catch(noop);
 
-      const repostMessage = await targetedChannel.send(targetedMessage.content);
+      const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
+      if (targetedMessage.content.length > 2000)
+        await targetedChannel.send(targetedMessage.content.slice(2000, 4000));
+      targetedMessage.attachments.forEach(async attachment => targetedChannel.send(attachment.url));
 
       const collector = informationEmbed
         .createReactionCollector({
@@ -136,6 +139,9 @@ export default class MoveCommand extends SwanCommand {
         });
     } catch (unknownError: unknown) {
       await targetedMessage.member?.send(config.messages.emergency).catch(noop);
+      await targetedMessage.member?.send(`\`${targetedMessage.content.slice(0, 2000)}\``);
+      if (targetedMessage.content.length > 2000)
+        await targetedMessage.member?.send(`\`${targetedMessage.content.slice(2000, 4000)}\``);
       throw (unknownError as Error);
     }
   }
