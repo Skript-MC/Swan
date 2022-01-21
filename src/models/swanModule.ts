@@ -8,7 +8,7 @@ const SwanModuleSchema = new Schema({
   },
   store: {
     type: String,
-    enum: ['commands', 'preconditions', 'tasks', 'listeners'],
+    enum: ['commands', 'preconditions', 'tasks', 'listeners', 'interaction-handlers'],
     required: true,
   },
   location: new Schema({

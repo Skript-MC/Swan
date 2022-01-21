@@ -1,9 +1,16 @@
 import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { DMChannel, MessageEmbed, Permissions } from 'discord.js';
+import {
+  DMChannel,
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
+  Permissions,
+} from 'discord.js';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
+import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop, trimText } from '@/app/utils';
@@ -31,7 +38,7 @@ export default class MessageCreateListener extends Listener {
     yield await this._updateMemberIfBanned(message);
     yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInIdeaChannel(message);
-    yield await this._formatMessageInSuggestionChannel(message);
+    yield await this._handleSuggestion(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
@@ -85,26 +92,52 @@ export default class MessageCreateListener extends Listener {
     return false;
   }
 
-  private async _formatMessageInSuggestionChannel(message: GuildMessage): Promise<boolean> {
+  private async _handleSuggestion(message: GuildMessage): Promise<boolean> {
     // Send embed and add reactions in the Suggestion channel.
     if (message.channel.id === settings.channels.suggestions) {
-      try {
-        await message.delete();
+      await message.delete();
+      const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
+      if (response?.status === 'PUBLISHED') {
+        const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
+        const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);
+        const suggestionMessage = await message.channel.send({
+          embeds: [suggestionEmbed],
+          components: [suggestionActions],
+        });
+        const thread = await suggestionMessage.startThread({
+          name: `Suggestion ${response.suggestion.id} de ${response.suggestion.user.username}`,
+        });
+        if (response.suggestion.user.discordId)
+          await thread.members.add(response.suggestion.user.discordId);
+        await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
         const embed = new MessageEmbed()
-          .setColor(settings.colors.default)
-          .setTimestamp()
-          .setAuthor({ name: `Suggestion de ${message.member.displayName}`, iconURL: message.author.avatarURL() ?? '' })
-          .setDescription(message.content);
-        const suggestionMessage = await message.channel.send({ embeds: [embed] });
-        await suggestionMessage.react(settings.emojis.yes);
-        await suggestionMessage.react(settings.emojis.no);
-      } catch (unknownError: unknown) {
-        this.container.logger.error('Unable to add emojis to the idea channel.');
-        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.me?.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
-        this.container.logger.info(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
-        this.container.logger.info(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
-        this.container.logger.info(`Message: ${message.url}`);
-        this.container.logger.error((unknownError as Error).stack);
+          .setColor(settings.colors.success)
+          .setTitle(messages.suggestions.published.title)
+          .setDescription(messages.suggestions.published.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+        await message.author.send({ embeds: [embed] });
+        return false;
+      } else if (response?.status === 'UNLINKED') {
+        const embed = new MessageEmbed()
+          .setColor(settings.colors.error)
+          .setTitle(messages.suggestions.unlinked.title)
+          .setDescription(messages.suggestions.unlinked.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+        const actions = new MessageActionRow()
+          .addComponents(
+            new MessageButton()
+              .setLabel(messages.suggestions.loginButton)
+              .setURL(response.loginUrl)
+              .setStyle('LINK'),
+          );
+        await message.author.send({ embeds: [embed], components: [actions] });
+      } else {
+        const embed = new MessageEmbed()
+          .setColor(settings.colors.error)
+          .setTitle(messages.suggestions.error.title)
+          .setDescription(messages.suggestions.error.content)
+          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+        await message.author.send({ embeds: [embed] });
       }
     }
     return false;

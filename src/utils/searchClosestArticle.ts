@@ -34,7 +34,7 @@ export default function searchClosestArticle(
   for (const entry of entries) {
     // Avoid useless double loop after.
     matches.push({
-      matchedName: capitalize(getCategoryColor(entry.category) + ' ' + entry.addon.name + ' — ' + entry.frenchName),
+      matchedName: capitalize(getCategoryColor(entry.category) + ' ' + entry.addon.name + ' — ' + (entry.englishName ?? entry.name)),
       baseName: entry.id.toString(),
       similarity: jaroWinklerDistance(entry.englishName ?? entry.name, wanted, { caseSensitive: false }),
     });
