@@ -59,6 +59,8 @@ export default {
   colors: {
     default: '#4286f4' as HexColorString,
     success: '#1fc622' as HexColorString,
+    error: '#ff6b61' as HexColorString,
+    light: '#a2d2ff' as HexColorString,
   },
   apis: {
     hastebin: 'https://hastebin.com/documents',

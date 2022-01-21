@@ -313,6 +313,39 @@ export interface InvisionTopic {
   rating: number;
 }
 
+export interface SuggestionUser {
+  username: string;
+  discordId: string | null;
+}
+
+export interface Suggestion {
+  upVotes: number;
+  downVotes: number;
+  user: SuggestionUser;
+  id: number;
+  type: number;
+  status: number;
+  description: string;
+  response: string | null;
+  discordSync: boolean;
+  discordId: string | null;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  created_at: string;
+}
+
+export interface SuggestionResponse {
+  loginUrl: string | null;
+  suggestion: Suggestion | null;
+}
+
+export interface VoteResponse extends SuggestionResponse {
+  status: 'ALREADY_VOTED' | 'NO_SELFVOTE' | 'OK' | 'UNLINKED';
+}
+
+export interface PublishResponse extends SuggestionResponse {
+  status: 'PUBLISHED' | 'UNLINKED';
+}
+
 // #endregion
 
 /* ********************************************* */

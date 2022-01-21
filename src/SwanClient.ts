@@ -220,9 +220,9 @@ export default class SwanClient extends SapphireClient {
       // TODO: Handle rate-limits. Currently set at 200 requests/hour, but with thoses 2 endpoints,
       // we consume 11 requests. See https://skript-mc.fr/api#quotas
       const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
-      const allSyntaxes: SkriptMcDocumentationSyntaxResponse[] = await axios(`${settings.apis.skriptmc}syntaxes?${token}`)
+      const allSyntaxes: SkriptMcDocumentationSyntaxResponse[] = await axios(`${settings.apis.skriptmc}/documentation/syntaxes?${token}`)
         .then(res => res?.data);
-      const allAddons: SkriptMcDocumentationFullAddonResponse[] = await axios(`${settings.apis.skriptmc}addons?${token}`)
+      const allAddons: SkriptMcDocumentationFullAddonResponse[] = await axios(`${settings.apis.skriptmc}/documentation/addons?${token}`)
         .then(res => res?.data);
 
       for (const syntax of allSyntaxes) {
