@@ -47,7 +47,12 @@ export default class AddonInfoCommand extends SwanCommand {
   private async _exec(interaction: CommandInteraction, addon: string): Promise<void> {
     const matchingAddon = this.container.client.cache.addonsVersions.find(elt => elt === addon);
     if (!matchingAddon) {
-      await interaction.reply(pupa(config.messages.unknownAddon, { addon }));
+      await interaction.reply({
+        content: pupa(config.messages.unknownAddon, { addon: trimText(addon, 100) }),
+        allowedMentions: {
+          parse: [],
+        },
+      });
       return;
     }
 
