@@ -10,6 +10,7 @@ export const eightBall = {
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
+    footer: 'Exécuté par {member.displayName}',
     affirmative: [
       'Oui.',
       'Oui ! 🥳',
