@@ -1,6 +1,7 @@
 import type { PreconditionContext, PreconditionResult } from '@sapphire/framework';
 import { Identifiers, Precondition } from '@sapphire/framework';
 import type { CommandInteraction, ContextMenuInteraction, Interaction } from 'discord.js';
+import { GuildMemberRoleManager } from 'discord.js';
 import type SwanCommand from '@/app/structures/commands/SwanCommand';
 import type { SwanChatInputCommand, SwanContextMenuCommand } from '@/app/types';
 import { Rules } from '@/app/types';
@@ -32,6 +33,12 @@ export default class ChannelRulesPrecondition extends Precondition {
     _command: SwanCommand,
     context: ChannelRulesPreconditionContext,
   ): PreconditionResult {
+    const { roles } = interaction.member;
+    if (roles instanceof GuildMemberRoleManager && roles.cache.has(process.env.STAFF_ROLE))
+      return this.ok();
+    else if (Array.isArray(roles) && roles.includes(process.env.STAFF_ROLE))
+      return this.ok();
+
     // If the command is forbidden in help channels.
     if (context.rules & Rules.NoHelpChannel && settings.channels.help.includes(interaction.channel.id))
       return this.error({ identifier: Identifiers.PreconditionChannelRules, message: 'Command is forbidden in help channels' });
