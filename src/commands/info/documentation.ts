@@ -51,7 +51,12 @@ export default class DocumentationCommand extends SwanCommand {
   ): Promise<void> {
     const matchingArticle = this.container.client.cache.skriptMcSyntaxes.find(elt => elt.id.toString() === articleId);
     if (!matchingArticle) {
-      await interaction.reply(pupa(config.messages.unknownSyntax, { articleId }));
+      await interaction.reply({
+        content: pupa(config.messages.unknownSyntax, { articleId: trimText(articleId, 100) }),
+        allowedMentions: {
+          parse: [],
+        },
+      });
       return;
     }
 
