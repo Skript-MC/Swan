@@ -12,7 +12,8 @@ export const forumFeed = {
   },
   baseAxiosParams: {
     params: {
-      page: 1, // Fetch the 25 first objects, more is useless
+      page: 1, // Fetch the first page
+      perPage: 5, // Fetch the 5 first objects, more is useless
       hidden: 0, // Don't show hidden objects
       sortBy: 'updated', // Sort by updates, also including new contents
       sortDir: 'desc', // Get most recent updates or new contents

@@ -156,6 +156,13 @@ export interface InvisionForum {
   parentId?: number;
 }
 
+/** Represent the resource history response object that is returned by the Skript-MC's Invision forums API. */
+export interface InvisionUpdate {
+  version: string;
+  changelog: string;
+  date: string;
+}
+
 /** Represent the resource response object that is returned by the Skript-MC's Invision forums API. */
 export interface InvisionFullResource extends InvisionResponse {
   results: InvisionResource[];
