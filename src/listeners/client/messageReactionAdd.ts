@@ -19,7 +19,7 @@ export default class MessageReactionAddListener extends Listener {
 
     if (this.container.client.cache.pollMessagesIds.has(message.id))
       await this._handlePoll(reaction, message, user);
-    else if (settings.channels.suggestions === message.channel.id)
+    else if (settings.channels.idea === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
     else if (this.container.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
