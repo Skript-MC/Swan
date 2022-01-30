@@ -1,20 +1,10 @@
+import { Listener } from '@sapphire/framework';
 import { captureException } from '@sentry/node';
-import { Listener } from 'discord-akairo';
-import Logger from '@/app/structures/Logger';
 
-class ClientErrorListener extends Listener {
-  constructor() {
-    super('clientError', {
-      event: 'error',
-      emitter: 'client',
-    });
-  }
-
-  public exec(error: Error): void {
+export default class ClientErrorListener extends Listener {
+  public override run(error: Error): void {
     captureException(error);
-    Logger.error('Oops, something went wrong with the Swan Client!');
-    Logger.error(error.stack);
+    this.container.logger.error('Oops, something went wrong with the Swan Client!');
+    this.container.logger.error(error.stack);
   }
 }
-
-export default ClientErrorListener;

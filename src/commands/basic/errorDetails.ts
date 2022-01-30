@@ -1,40 +1,38 @@
-import { Command } from 'discord-akairo';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
-import type { GuildMessage } from '@/app/types';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
-import type { ErrorDetailsCommandArguments } from '@/app/types/CommandArguments';
 import { searchMessageSimilarity } from '@/app/utils';
 import { errorDetails as config } from '@/conf/commands/basic';
 
-class ErrorDetailsCommand extends Command {
-  constructor() {
-    super('errorDetails', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'error',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplySwanOptions(config)
+export default class ErrorDetailsCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'erreur',
+      description: "Erreur dont vous souhaitez avoir plus d'informations",
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('erreur'));
   }
 
-  public async exec(message: GuildMessage, args: ErrorDetailsCommandArguments): Promise<void> {
-    const messages = await Message.find({ messageType: MessageName.ErrorDetail });
-    const search = searchMessageSimilarity(messages, args.error);
+  private async _exec(interaction: CommandInteraction, error: string): Promise<void> {
+    const errors = await Message.find({ messageType: MessageName.ErrorDetail });
+    const search = searchMessageSimilarity(errors, error);
     if (!search) {
-      await message.channel.send(config.messages.notFound);
+      await interaction.reply(config.messages.notFound);
       return;
     }
-    await message.channel.send(search.content);
+    await interaction.reply(search.content);
   }
 }
-
-export default ErrorDetailsCommand;

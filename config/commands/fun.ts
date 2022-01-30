@@ -1,21 +1,16 @@
 import { stripIndent } from 'common-tags';
-import { noPermissions, permissions } from '@/conf/configUtils';
+import { Rules } from '@/app/types';
+import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const eightBall = {
   settings: {
-    aliases: ['8ball', 'eightball'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: '8 Ball',
-    content: "__Répond à toutes vos questions__, même les plus compliquées ! La légende raconte même qu'il y a déjà eu des bonnes réponses... :shushing_face:",
-    usage: '8ball <votre question>',
+    command: '8ball',
+    description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
     examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
-    promptStart: 'Je suis un bon devin, mais je ne peux pas deviner ta question. :confused: Entre-la en envoyant un message contenant seulement la question :',
-    promptRetry: "Cette quetsion n'est pas valide. Entre-la en envoyant un message contenant seulement la question :",
+    footer: 'Exécuté par {member.displayName}',
     affirmative: [
       'Oui.',
       'Oui ! 🥳',
@@ -67,15 +62,11 @@ export const eightBall = {
 
 export const idea = {
   settings: {
-    aliases: ['idea', 'idée', 'idee'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Idée',
-    content: "Permet d'envoyer une __idée de script__ aléatoire à réaliser parmi celles dans le salon des idées.",
-    usage: 'idée',
+    command: 'idea',
+    description: "Permet d'envoyer une idée de script aléatoire à réaliser parmi celles dans le salon des idées.",
     examples: ['idea', 'idée'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
@@ -85,15 +76,11 @@ export const idea = {
 
 export const joke = {
   settings: {
-    aliases: ['joke', 'blague'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Blague',
-    content: '__Envoie une blague__ aléatoirement, généralement drôle mais pas forcément.',
-    usage: 'joke',
+    command: 'joke',
+    description: 'Envoie une blague aléatoirement, généralement drôle mais pas forcément.',
     examples: ['joke', 'blague'],
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",
@@ -102,39 +89,23 @@ export const joke = {
 
 export const latex = {
   settings: {
-    aliases: ['latex'],
-    clientPermissions: permissions.SEND_MESSAGES,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Latex',
-    content: 'Permet de transformer une série de symboles pas belle du tout en une __merveilleuse équation__ toute jolie, grâce au moteur mathématique LaTeX.',
-    usage: 'latex <equation>',
+    command: 'latex',
+    description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
     examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
-  messages: {
-    startPrompt: 'Ajoute une équation à formater :',
-    retryPrompt: 'Équation invalide. Ré-entre-la :',
-  },
+  messages: {},
 };
 
 export const poll = {
   settings: {
-    aliases: ['poll', 'sondage'],
-    clientPermissions: permissions.SEND_MESSAGES | permissions.MANAGE_MESSAGES | permissions.ADD_REACTIONS,
-    userPermissions: noPermissions,
-  },
-  details: {
     name: 'Sondage',
-    content: 'Permet de __lancer un sondage__ temporaire par lequel on peut répondre par Oui / Non ou par une réponse personnalisée. Ajoute le drapeau `-a` pour indique que le sondage sera anonyme, ~~ou le drapeau `-m` pour autoriser les réponses multiples~~ *(soon)*.',
-    usage: 'poll <durée> [-a] [-m] "<sondage>" ["réponse 1"] ["réponse 2"] [...]',
+    command: 'poll',
+    description: 'Permet de lancer un sondage par lequel on peut répondre par une réponse personnalisée.',
     examples: ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'vote 10m Votre sondage ou on peut répondre uniquement par Oui et Non', 'sondage 10m "votre sondage" -a -m "réponse 1" "réponse 2"'],
   },
   messages: {
-    promptStartDuration: 'Il faut ajouter une durée (en anglais ou en francais). Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` est par exemple une durée valide. Entre-la en envoyant un message contenant seulement la durée :',
-    promptRetryDuration: "Cette durée n'est pas valide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` est par exemple une durée valide. Entre-la en envoyant un message contenant seulement la durée :",
-    promptStartContent: "Ajoute un sondage à effectuer ! Si tu souhaites qu'on ne puisse répondre que par oui ou non, alors tu peux simplement marquer ta question. Sinon, écrit ta question entre guillements (`\"`), puis écrit les réponses possibles entre guillement également (`\"`). Par exemple, tu peux faire `.poll 10min \"Voici ma question\" \"Réponse 1\" \"Réponse 2\" \"Réponse 3\"`.",
-    promptRetryContent: "Ce sondage n'est pas valide. Entre-le en envoyant un message contenant seulement ta question (et tes réponses si c'est un sondage à réponse multiples) :",
+    success: 'Le sondage a été créé avec succès.',
     notEnoughAnswers: "Tu n'as entré qu'une seule réponse. Ré-exécute la commande avec plusieurs réponses !",
     tooManyAnswers: 'Tu as entré trop de réponses. Ré-exécute la commande avec au maximum 18 réponses.',
     answersDisplayYesno: stripIndent`
@@ -145,7 +116,7 @@ export const poll = {
     informationAnonymous: 'Ce sondage est anonyme.',
     informationMultiple: 'Plusieurs réponses sont possibles.',
     embed: {
-      author: 'Vote de {message.member.displayName}',
+      author: 'Vote de {member.displayName}',
       question: 'Question',
       answers: 'Réponses possibles',
       duration: 'Durée',

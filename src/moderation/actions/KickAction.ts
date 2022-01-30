@@ -2,9 +2,9 @@ import { GuildMember, Permissions, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
-import ModerationAction from './ModerationAction';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 
-class KickAction extends ModerationAction {
+export default class KickAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
@@ -42,10 +42,8 @@ class KickAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Kick Member Permission', this.data.guild.me?.hasPermission(Permissions.FLAGS.KICK_MEMBERS)),
+          .addDetail('Kick Member Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.KICK_MEMBERS)),
       );
     }
   }
 }
-
-export default KickAction;

@@ -1,7 +1,9 @@
-import type { Message } from 'discord.js';
+import type { Result } from '@sapphire/framework';
+import { ok } from '@sapphire/framework';
 import { extractQuotedText } from '@/app/utils';
 
-export default function quotedText(_message: Message, phrase: string): string[] | null {
-  const parsedText = extractQuotedText(phrase);
-  return parsedText.length === 0 ? [phrase] : parsedText;
+export default function resolveQuotedText(parameter: string): Result<string[], 'quotedTextError'> {
+  const parsed = extractQuotedText(parameter);
+  const result = parsed.length === 0 ? [parameter] : parsed;
+  return ok(result.map(str => str.trim()));
 }

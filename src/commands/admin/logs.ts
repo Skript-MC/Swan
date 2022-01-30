@@ -1,60 +1,68 @@
-import { Command } from 'discord-akairo';
+import type { ChatInputCommand } from '@sapphire/framework';
+import { isNullish } from '@sapphire/utilities';
+import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel } from 'discord.js';
+import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanChannel from '@/app/models/swanChannel';
-import type { GuildMessage } from '@/app/types';
-import type { LogsCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { logs as config } from '@/conf/commands/admin';
 
-class LogsCommand extends Command {
-  constructor() {
-    super('logs', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-      args: [
-        {
-          id: 'channel',
-          type: 'textChannel',
-        },
-        {
-          id: 'logged',
-          type: 'string',
-        },
-      ],
-    });
+@ApplySwanOptions(config)
+export default class LogsCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.CHANNEL,
+      name: 'salon',
+      description: 'Salon à modifier le statut de sauvegarde',
+      required: true,
+      channelTypes: [ChannelTypes.GUILD_TEXT],
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'sauvegarde',
+      description: 'Faut-il sauvegarder les messages de ce salon ?',
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const channel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
+    const logged = interaction.options.getBoolean('sauvegarde');
+    await this._exec(interaction, channel, logged);
   }
 
-  public async exec(message: GuildMessage, args: LogsCommandArguments): Promise<void> {
-    if (!args.channel) {
-      void message.channel.send(config.messages.noChannelFound).catch(noop);
-      return;
-    }
-
-    const swanChannel = await SwanChannel.findOne({ channelId: args.channel.id });
+  private async _exec(interaction: CommandInteraction, channel: GuildTextBasedChannel, logged: boolean): Promise<void> {
+    // TODO(interactions): remove second argument, always show the current state for the given channel, and
+    // add a toggle to enable/disable logging for the channel.
+    const swanChannel = await SwanChannel.findOne({ channelId: channel.id });
     if (!swanChannel) {
-      void message.channel.send(config.messages.noChannelFound).catch(noop);
+      void interaction.reply(config.messages.noChannelFound).catch(noop);
       return;
     }
 
-    if (!args.logged) {
-      void message.channel.send(pupa(config.messages.noStatus, { swanChannel })).catch(noop);
+    if (isNullish(logged)) {
+      const result = await SwanChannel.findOne({ channelId: channel.id });
+      void interaction.reply(
+        pupa(config.messages.loggingStatus, { status: this._getStatus(result.logged) }),
+      );
       return;
     }
 
-    const logged = args.logged === 'on';
-
-    await SwanChannel.findOneAndUpdate({ channelId: args.channel.id }, { logged });
+    await SwanChannel.findOneAndUpdate({ channelId: channel.id }, { logged });
     if (swanChannel.logged && !logged)
-      this.client.cache.swanChannels.delete(swanChannel);
+      this.container.client.cache.swanChannels.delete(swanChannel);
     else
-      this.client.cache.swanChannels.add(swanChannel);
+      this.container.client.cache.swanChannels.add(swanChannel);
 
+    void interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) })).catch(noop);
+  }
 
-    void message.channel.send(pupa(config.messages.success, { status: logged ? 'activée' : 'désactivée' })).catch(noop);
+  private _getStatus(status: boolean): string {
+    return status ? config.messages.on : config.messages.off;
   }
 }
-
-export default LogsCommand;

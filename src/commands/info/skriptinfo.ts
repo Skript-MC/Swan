@@ -1,31 +1,47 @@
-import { Argument, Command } from 'discord-akairo';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import semver from 'semver';
-import type { GuildMessage } from '@/app/types';
-import type { SkriptInfoCommandArguments } from '@/app/types/CommandArguments';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-class SkriptInfoCommand extends Command {
-  constructor() {
-    super('skriptInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'display',
-        type: Argument.validate('string', (_message, phrase) => ['all', 'dl', 'download', 'link', 'links'].includes(phrase)),
-        default: 'all',
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplySwanOptions(config)
+export default class SkriptInfoCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [
+        {
+          name: 'Téléchargements',
+          value: 'téléchargements',
+        },
+        {
+          name: 'Liens utiles',
+          value: 'liens utiles',
+        },
+      ],
+      name: 'catégorie',
+      description: 'Catégorie pertinente à envoyer',
+      required: false,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('catégorie'));
   }
 
-  public async exec(message: GuildMessage, args: SkriptInfoCommandArguments): Promise<void> {
-    if (['dl', 'download', 'all'].includes(args.display)) {
-      const { lastPrerelease, lastStableRelease } = this.client.cache.github;
+  private async _exec(interaction: CommandInteraction, display: string): Promise<void> {
+    const embeds: MessageEmbed[] = [];
+    // TODO: Refactor this command's usage as it's not very intuitive.
+    if (!display || display === 'téléchargements') {
+      const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
 
       // Check if a prerelease is greater than the last stable release.
       const isPrereleaseImportant = lastPrerelease
@@ -43,27 +59,27 @@ class SkriptInfoCommand extends Command {
         latestStable: lastStableRelease,
       });
 
-      const downloadEmbed = new MessageEmbed()
-        .setColor(settings.colors.default)
-        .setTitle(config.messages.embed.downloadTitle)
-        .setTimestamp()
-        .setDescription(downloadDescription)
-        .setFooter(pupa(config.messages.embed.footer, { member: message.member }));
-
-      await message.channel.send(downloadEmbed);
+      embeds.push(
+        new MessageEmbed()
+          .setColor(settings.colors.default)
+          .setTitle(config.messages.embed.downloadTitle)
+          .setTimestamp()
+          .setDescription(downloadDescription)
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
+      );
     }
 
-    if (['link', 'links', 'all'].includes(args.display)) {
-      const informationEmbed = new MessageEmbed()
-        .setColor(settings.colors.default)
-        .setTitle(config.messages.embed.informationsTitle)
-        .setTimestamp()
-        .setDescription(config.messages.embed.information)
-        .setFooter(pupa(config.messages.embed.footer, { member: message.member }));
-
-      await message.channel.send(informationEmbed);
+    if (!display || display === 'liens utiles') {
+      embeds.push(
+        new MessageEmbed()
+          .setColor(settings.colors.default)
+          .setTitle(config.messages.embed.informationsTitle)
+          .setTimestamp()
+          .setDescription(config.messages.embed.information)
+          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
+      );
     }
+
+    await interaction.reply({ embeds });
   }
 }
-
-export default SkriptInfoCommand;

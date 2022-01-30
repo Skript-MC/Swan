@@ -1,67 +1,63 @@
-import { Command } from 'discord-akairo';
-import { MessageEmbed } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
+import RefreshCommand from '@/app/commands/admin/refresh';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanModule from '@/app/models/swanModule';
-import type { GuildMessage } from '@/app/types';
-import type { ModuleCommandArguments } from '@/app/types/CommandArguments';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { noop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
 
-class ModuleCommand extends Command {
-  constructor() {
-    super('module', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-      args: [
-        {
-          id: 'moduleName',
-          type: 'string',
-        },
-        {
-          id: 'enabled',
-          type: 'string',
-        },
-      ],
-    });
+@ApplySwanOptions(config)
+export default class ModuleCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      choices: [],
+      name: 'module',
+      description: 'Module à modifier son statut',
+      required: true,
+      autocomplete: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'statut',
+      description: 'Faut-il activer ce module ?',
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const moduleName = interaction.options.getString('module');
+    const status = interaction.options.getBoolean('statut');
+    await this._exec(interaction, moduleName, status);
   }
 
-  public async exec(message: GuildMessage, args: ModuleCommandArguments): Promise<void> {
-    const modules = await SwanModule.find();
-
-    if (!args.moduleName) {
-      const embed = new MessageEmbed()
-        .setTitle(config.embed.title)
-        .setURL(config.embed.link)
-        .setColor(settings.colors.default)
-        .setDescription(config.embed.content)
-        .setFooter(pupa(messages.global.executedBy, { member: message.member }));
-      void message.channel.send(embed).catch(noop);
-      return;
-    }
-
-    const module = modules.find(m => m.name === args.moduleName);
+  private async _exec(interaction: CommandInteraction, moduleName: string, enabled: boolean): Promise<void> {
+    const module = await SwanModule.findOne({ name: moduleName });
     if (!module) {
-      void message.channel.send(config.messages.noModuleFound).catch(noop);
+      await interaction.reply(config.messages.noModuleFound).catch(noop);
       return;
     }
 
-    if (!args.enabled) {
-      void message.channel.send(pupa(config.messages.noStatus, { module })).catch(noop);
+    // TODO(interactions): Always show the current state for the given module, and add a toggle to
+    // enable/disable it (unless it's the RefreshCommand).
+    if (!enabled && module.name === RefreshCommand.name) {
+      await interaction.reply(config.messages.cannotBeDisabled).catch(noop);
       return;
     }
 
-    const enabled = args.enabled === 'on';
-
-    toggleModule(this.client, module, enabled);
+    await toggleModule(module, enabled);
     await SwanModule.findOneAndUpdate({ name: module.name }, { enabled });
 
-    void message.channel.send(pupa(config.messages.success, { status: enabled ? 'activé' : 'désactivé' })).catch(noop);
+    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) })).catch(noop);
+  }
+
+  private _getStatus(status: boolean): string {
+    return status ? config.messages.on : config.messages.off;
   }
 }
-
-export default ModuleCommand;

@@ -1,22 +1,14 @@
-import { Listener } from 'discord-akairo';
+import { Listener } from '@sapphire/framework';
+import type { GuildMember } from 'discord.js';
 import { Permissions } from 'discord.js';
-import type { GuildMember, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
-import Logger from '@/app/structures/Logger';
 import { noop, toValidName } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class GuildMemberAddListener extends Listener {
-  constructor() {
-    super('guildMemberAdd', {
-      event: 'guildMemberAdd',
-      emitter: 'client',
-    });
-  }
-
-  public async exec(member: GuildMember): Promise<void> {
+export default class GuildMemberAddListener extends Listener {
+  public override async run(member: GuildMember): Promise<void> {
     await this._greet(member);
     await this._remute(member);
     await this._rename(member);
@@ -26,7 +18,7 @@ class GuildMemberAddListener extends Listener {
     const { greetings } = messages.miscellaneous;
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
-    const channel = this.client.cache.channels.main as TextChannel;
+    const channel = this.container.client.cache.channels.main;
 
     const content = pupa(randomMessage, { member });
     await channel.send(content).catch(noop);
@@ -40,10 +32,10 @@ class GuildMemberAddListener extends Listener {
         if (muteRole)
           await member.roles.add(muteRole);
       } catch (unknownError: unknown) {
-        Logger.error('Could not add the mute role to a member.');
-        Logger.detail(`MuteObject: "${JSON.stringify(isMuted)}"`);
-        Logger.detail(`Manager roles permission: ${member.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_ROLES)}`);
-        Logger.error((unknownError as Error).stack);
+        this.container.logger.error('Could not add the mute role to a member.');
+        this.container.logger.info(`MuteObject: "${JSON.stringify(isMuted)}"`);
+        this.container.logger.info(`Manager roles permission: ${member.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)}`);
+        this.container.logger.error((unknownError as Error).stack);
       }
     }
   }
@@ -64,16 +56,14 @@ class GuildMemberAddListener extends Listener {
     try {
       await member.setNickname(newName);
     } catch (unknownError: unknown) {
-      Logger.error('Could not rename a member with an invalid name.');
-      Logger.detail(`Member's name: "${name}"`);
-      Logger.detail(`Stripped name: "${strippedName}"`);
-      Logger.detail(`New name: "${newName}"`);
-      Logger.detail(`Change nicknames permission: ${member.guild.me?.hasPermission(Permissions.FLAGS.MANAGE_NICKNAMES)}`);
-      Logger.error((unknownError as Error).stack);
+      this.container.logger.error('Could not rename a member with an invalid name.');
+      this.container.logger.info(`Member's name: "${name}"`);
+      this.container.logger.info(`Stripped name: "${strippedName}"`);
+      this.container.logger.info(`New name: "${newName}"`);
+      this.container.logger.info(`Change nicknames permission: ${member.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES)}`);
+      this.container.logger.error((unknownError as Error).stack);
     }
 
     await member.send(messages.miscellaneous.renamed).catch(noop);
   }
 }
-
-export default GuildMemberAddListener;

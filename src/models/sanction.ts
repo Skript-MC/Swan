@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { nanoid } from 'nanoid';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import type { SanctionDocument, SanctionModel } from '@/app/types';
+import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 
 const SanctionSchema = new Schema({
   memberId: {
@@ -57,6 +57,9 @@ const SanctionSchema = new Schema({
     },
     banChannelId: {
       type: String,
+    },
+    hasSentMessages: {
+      type: Boolean,
     },
   },
   updates: [{

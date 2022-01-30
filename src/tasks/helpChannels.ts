@@ -1,22 +1,18 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { Message } from 'discord.js';
 import { Permissions, TextChannel } from 'discord.js';
 import pupa from 'pupa';
-import Task from '@/app/structures/Task';
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+import Task from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
 import { helpChannels as config } from '@/conf/tasks';
 
-class HelpChannels extends Task {
+@ApplyOptions<TaskOptions>({ cron: '*/5 * * * *' })
+export default class HelpChannels extends Task {
   private _basicHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
   private _extraHelpChannels: Array<[channel: TextChannel, lastMessages: Message[]]> = [];
 
-  constructor() {
-    super('helpChannels', {
-      // Every 5 minutes
-      cron: '*/5 * * * *',
-    });
-  }
-
-  public async exec(): Promise<void> {
+  public override async run(): Promise<void> {
     // Refresh channels data.
     await this._initChannels();
 
@@ -37,11 +33,11 @@ class HelpChannels extends Task {
   }
 
   private async _fetchLastMessages(channel: TextChannel, limit: number): Promise<Message[]> {
-    const lastMessages = await channel.messages.fetch({ limit }, false).catch(console.error);
+    const lastMessages = await channel.messages.fetch({ limit }, { cache: false }).catch(console.error);
     if (!lastMessages)
       return [];
     // Get the first message of the group of the last N messages (where N = this.inactivityMessages)
-    return lastMessages.array().sort((a, b) => b.createdTimestamp - a.createdTimestamp);
+    return [...lastMessages.values()].sort((a, b) => b.createdTimestamp - a.createdTimestamp);
   }
 
   private _isMessageRecent(message: Message, time: number): boolean {
@@ -64,18 +60,15 @@ class HelpChannels extends Task {
     const { everyone } = settings.roles;
     // Check if @everyone can't write in the channel
     return Boolean(channel.permissionOverwrites
-      .get(everyone)
+      .cache.get(everyone)
       ?.deny.has(Permissions.FLAGS.SEND_MESSAGES));
   }
 
   private async _lockChannel(channel: TextChannel): Promise<void> {
-    await channel.overwritePermissions([{
-      id: settings.roles.everyone,
-      deny: [Permissions.FLAGS.SEND_MESSAGES],
-    }, {
-      id: settings.roles.staff,
-      allow: [Permissions.FLAGS.SEND_MESSAGES],
-    }]);
+    await channel.permissionOverwrites.set([
+      { id: settings.roles.everyone, deny: [Permissions.FLAGS.SEND_MESSAGES] },
+      { id: settings.roles.staff, allow: [Permissions.FLAGS.SEND_MESSAGES] },
+    ]);
     await channel.send(pupa(config.lockMessage, { channels: this._basicHelpChannels.map(chan => chan[0]).join(', ') }));
   }
 
@@ -85,14 +78,14 @@ class HelpChannels extends Task {
     this._extraHelpChannels = [];
 
     for (const channelId of settings.channels.skriptHelp) {
-      const chan = await this.client.channels.fetch(channelId);
+      const chan = await this.container.client.channels.fetch(channelId);
       if (!(chan instanceof TextChannel))
         continue;
       const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
       this._basicHelpChannels.push([chan, lastMessages]);
     }
     for (const channelId of settings.channels.skriptExtraHelp) {
-      const chan = await this.client.channels.fetch(channelId);
+      const chan = await this.container.client.channels.fetch(channelId);
       if (!(chan instanceof TextChannel))
         continue;
       const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
@@ -100,5 +93,3 @@ class HelpChannels extends Task {
     }
   }
 }
-
-export default HelpChannels;

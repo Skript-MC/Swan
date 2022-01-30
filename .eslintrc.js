@@ -42,4 +42,8 @@ module.exports = {
       },
     },
   },
+  globals: {
+    Generator: true,
+    AsyncGenerator: true,
+  },
 };

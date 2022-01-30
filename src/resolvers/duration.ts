@@ -1,17 +1,15 @@
-import type { Message } from 'discord.js';
+import type { Result } from '@sapphire/framework';
+import { err, ok } from '@sapphire/framework';
 import { getDuration } from '@/app/utils';
 import settings from '@/conf/settings';
 
-export default function duration(_message: Message, phrase: string): number | null {
-  if (!phrase)
-    return null;
-
-  if (settings.miscellaneous.permanentKeywords.includes(phrase))
-    return -1;
+export default function resolveDuration(parameter: string, allowPermanent = false): Result<number, 'durationError'> {
+  if (allowPermanent && settings.miscellaneous.permanentKeywords.includes(parameter))
+    return ok(-1);
 
   try {
-    return getDuration(phrase);
-   } catch {
-    return null;
-   }
+    return ok(getDuration(parameter) * 1000);
+  } catch {
+    return err('durationError');
+  }
 }

@@ -2,10 +2,10 @@ import { User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
+import ModerationAction from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import ModerationAction from './ModerationAction';
 
-class RemoveWarnAction extends ModerationAction {
+export default class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 
@@ -32,7 +32,7 @@ class RemoveWarnAction extends ModerationAction {
           $push: {
             updates: {
               date: this.data.start,
-              moderator: this.data.moderator?.id,
+              moderator: this.data.moderatorId,
               type: SanctionsUpdates.Revoked,
               reason: this.data.reason,
             },
@@ -53,5 +53,3 @@ class RemoveWarnAction extends ModerationAction {
     }
   }
 }
-
-export default RemoveWarnAction;

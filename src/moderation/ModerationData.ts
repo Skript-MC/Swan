@@ -1,24 +1,22 @@
-import { AkairoClient } from 'discord-akairo';
-import { GuildMember, Message, TextChannel } from 'discord.js';
-import type { Guild, User } from 'discord.js';
+import type { SapphireClient } from '@sapphire/framework';
+import { container } from '@sapphire/pieces';
+import type {
+ Guild, GuildMember, GuildTextBasedChannel, User,
+} from 'discord.js';
+import { CommandInteraction, Message, TextChannel } from 'discord.js';
 import { nanoid } from 'nanoid';
 import type {
-  GuildMessage,
-  GuildTextBasedChannel,
-  ModerationDataResult,
-  PersonInformations,
-  SanctionInformations,
+ GuildMessage, ModerationDataResult, PersonInformations, SanctionInformations,
 } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 
-
-class ModerationData {
-  moderator: GuildMember;
+export default class ModerationData {
+  moderatorId: string;
   guild: Guild;
-  client: AkairoClient;
+  client: SapphireClient;
   channel: GuildTextBasedChannel;
   type?: SanctionTypes;
   config?: Record<string, string>;
@@ -46,23 +44,20 @@ class ModerationData {
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument: AkairoClient | GuildMessage | GuildTextBasedChannel) {
+  constructor(argument?: CommandInteraction | GuildMessage) {
+    this.client = container.client;
     if (argument instanceof Message) {
-      this.moderator = argument.member;
-      this.guild = argument.guild;
-      this.client = argument.client as AkairoClient;
       this.channel = argument.channel;
-    } else if (argument instanceof AkairoClient) {
-      this.client = argument;
-      this.channel = this.client.cache.channels.log as TextChannel;
-      this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
+      this.moderatorId = argument.member.id;
+    } else if (argument instanceof CommandInteraction) {
+      if (argument.channel instanceof TextChannel)
+        this.channel = argument.channel;
+      this.moderatorId = argument.member.user.id;
     } else {
-      this.channel = argument;
-      this.guild = this.channel.guild;
-      this.moderator = this.guild.me!;
-      this.client = this.guild.client as AkairoClient;
+      this.channel = this.client.cache.channels.log;
+      this.moderatorId = this.client.guild.me.id;
     }
+    this.guild = this.channel.guild;
     this.type = null;            // The sanction type (one of the SanctionTypes enum).
     this.config = null;          // The configuration of the action (all the messages).
     this.victim = {              // The victim of the case. It contains an ID, a User and a GuildMember.
@@ -82,7 +77,7 @@ class ModerationData {
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
-    this.victim = getPersonFromCache(personResolvable, this.client, resolveMemberAndUser);
+    this.victim = getPersonFromCache(personResolvable, resolveMemberAndUser);
     return this;
   }
 
@@ -94,9 +89,8 @@ class ModerationData {
     return this;
   }
 
-  public setModerator(member: GuildMember | never): this {
-    if (member instanceof GuildMember)
-      this.moderator = member;
+  public setModeratorId(member: never | string): this {
+    this.moderatorId = member;
     return this;
   }
 
@@ -113,7 +107,7 @@ class ModerationData {
     return this;
   }
 
-  public setPrivateChannel(channel: TextChannel): this {
+  public setChannel(channel: TextChannel): this {
     if (channel instanceof TextChannel)
       this.channel = channel;
     return this;
@@ -143,7 +137,7 @@ class ModerationData {
     return {
       memberId: this.victim.id,
       type: this.type,
-      moderator: this.moderator.id,
+      moderator: this.moderatorId,
       start: this.start,
       finish: this.finish,
       duration: this.duration,
@@ -154,5 +148,3 @@ class ModerationData {
     };
   }
 }
-
-export default ModerationData;

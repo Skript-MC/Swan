@@ -1,48 +1,49 @@
+import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
-import { Command } from 'discord-akairo';
+import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
-import type { GuildMessage, ServerStatResponse } from '@/app/types';
-import type { ServerInfoCommandArguments } from '@/app/types/CommandArguments';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { ServerStatResponse } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
-class ServerInfoCommand extends Command {
-  constructor() {
-    super('serverInfo', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'server',
-        type: 'string',
-        match: 'content',
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplySwanOptions(config)
+export default class ServerInfoCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'adresse',
+      description: 'Adresse du serveur dont vous souhaitez avoir des informations',
+      required: true,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    await this._exec(interaction, interaction.options.getString('adresse'));
   }
 
-  public async exec(message: GuildMessage, args: ServerInfoCommandArguments): Promise<void> {
-    const server: ServerStatResponse = await axios(settings.apis.server + args.server)
-      .then(response => (response.status >= 300 ? null : response.data))
+  private async _exec(interaction: CommandInteraction, query: string): Promise<void> {
+    const server: ServerStatResponse = await axios(settings.apis.server + query)
+      .then(res => (res.status >= 300 ? null : res.data))
       .catch(nullop);
 
     if (!server) {
-      message.channel.send(config.messages.requestFailed).catch(noop);
+      interaction.reply(config.messages.requestFailed).catch(noop);
       return;
     }
 
     const embedMessages = config.messages.embed;
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)
-      .setAuthor(pupa(embedMessages.title, { query: args.server }))
-      .setFooter(pupa(embedMessages.footer, { member: message.member }))
+      .setAuthor({ name: pupa(embedMessages.title, { query }) })
+      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
       .setTimestamp();
 
     if (typeof server.online !== 'undefined')
@@ -58,12 +59,10 @@ class ServerInfoCommand extends Command {
     if (server.software)
       embed.addField(embedMessages.software, server.software, true);
     if (server.plugins)
-      embed.addField(embedMessages.plugins, server.plugins.raw.length, true);
+      embed.addField(embedMessages.plugins, server.plugins.raw.length.toString(), true);
     if (server.mods)
-      embed.addField(embedMessages.mods, server.mods.raw.length, true);
+      embed.addField(embedMessages.mods, server.mods.raw.length.toString(), true);
 
-    await message.channel.send(embed);
+    await interaction.reply({ embeds: [embed] });
   }
 }
-
-export default ServerInfoCommand;

@@ -1,8 +1,25 @@
-import type { PermissionResolvable } from 'discord.js';
-import { Permissions } from 'discord.js';
-import type { GuildMessage } from '@/app/types';
+import type { PreconditionEntryResolvable } from '@sapphire/framework';
 
-export const permissions = Permissions.FLAGS;
-export const noPermissions = [] as PermissionResolvable[];
-export const hasActiveMemberRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.ACTIVE_MEMBER_ROLE) ? null : 'No active member role');
-export const hasStaffRole = (message: GuildMessage): string | null => (message.member.roles.cache.has(process.env.STAFF_ROLE) ? null : 'No staff role');
+export const basePreconditions: PreconditionEntryResolvable[] = [
+  'GuildOnly',
+  {
+    name: 'NotRole',
+    context: { role: process.env.BAN_ROLE },
+  },
+  'NotLoading',
+];
+
+export const staffRolePrecondition: PreconditionEntryResolvable = {
+  name: 'Role',
+  context: { role: process.env.STAFF_ROLE },
+};
+
+export const activeMemberRolePrecondition: PreconditionEntryResolvable = {
+  name: 'Role',
+  context: { role: process.env.ACTIVE_MEMBER_ROLE },
+};
+
+export const channelRulesPrecondition = (rules: number): PreconditionEntryResolvable => ({
+  name: 'ChannelRules',
+  context: { rules },
+});

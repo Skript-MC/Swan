@@ -1,58 +1,72 @@
-import { Argument, Command } from 'discord-akairo';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
+import { TextChannel } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
-import type { GuildMessage } from '@/app/types';
-import type { PurgeCommandArgument } from '@/app/types/CommandArguments';
-import { noop } from '@/app/utils';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { purge as config } from '@/conf/commands/moderation';
+import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class PurgeCommand extends Command {
-  constructor() {
-    super('purge', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'amount',
-        type: Argument.range('integer', 0, settings.moderation.purgeLimit + 1),
-        unordered: true,
-        prompt: {
-          start: config.messages.startPrompt,
-          retry: config.messages.retryPrompt,
-        },
-      }, {
-        id: 'member',
-        type: Argument.union('member', 'user'),
-        unordered: true,
-      }, {
-        id: 'force',
-        match: 'flag',
-        flag: ['--force', '-f'],
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
+@ApplySwanOptions(config)
+export default class PurgeCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.NUMBER,
+      name: 'nombre',
+      description: 'Nombre de messages à supprimer',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Supprimer les messages du membre en question',
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'force',
+      description: 'Forcer la suppression des messages',
+      required: false,
+    },
+  ];
+
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const amount = interaction.options.getNumber('nombre');
+    if (!amount || amount < 0 || amount > settings.moderation.purgeLimit) {
+      await interaction.reply(messages.prompt.number);
+      return;
+    }
+
+    await this._exec(
+      interaction,
+      interaction.options.getBoolean('force'),
+      interaction.options.getUser('membre'),
+      amount,
+    );
   }
 
-  public async exec(message: GuildMessage, args: PurgeCommandArgument): Promise<void> {
-    const { amount, member, force } = args;
-
-    // Add the message to the current-command-messages' store, to then bulk-delete them all.
-    message.util.messages.set(message.id, message);
-    await message.channel.bulkDelete(message.util.messages, true).catch(noop);
+  private async _exec(
+    interaction: CommandInteraction,
+    force: boolean,
+    member: User,
+    amount: number,
+  ): Promise<void> {
+    const channel = await this.container.client.channels.fetch(interaction.channel.id);
+    if (!(channel instanceof TextChannel))
+      return;
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
-    const messages = (await message.channel.messages.fetch({ limit: amount }))
+    const allMessages = await interaction.channel.messages.fetch({ limit: amount });
+    const msgs = allMessages
       .filter(msg => (member ? msg.author.id === member.id : true))
       .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
-    const deletedMessages = await message.channel.bulkDelete(messages, true);
+    const deletedMessages = await channel.bulkDelete(msgs, true);
 
-    const msg = await message.channel.send(pupa(config.messages.success, { deletedMessages }));
-    setTimeout(async () => {
-      if (msg.deletable)
-        await msg.delete().catch(noop);
-    }, 5000);
+    await interaction.reply(pupa(config.messages.success, { deletedMessages }));
   }
 }
-
-export default PurgeCommand;

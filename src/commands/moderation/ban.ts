@@ -1,108 +1,134 @@
-import { Argument, Command } from 'discord-akairo';
-import type { GuildMember } from 'discord.js';
+import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
-import Logger from '@/app/structures/Logger';
+import resolveDuration from '@/app/resolvers/duration';
+import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import type { GuildMessage } from '@/app/types';
-import type { BanCommandArgument } from '@/app/types/CommandArguments';
 import { noop } from '@/app/utils';
 import { ban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
-class BanCommand extends Command {
-  constructor() {
-    super('ban', {
-      aliases: config.settings.aliases,
-      details: config.details,
-      args: [{
-        id: 'member',
-        type: Argument.validate(
-          'member',
-          (message: GuildMessage, _phrase: string, value: GuildMember) => value.id !== message.author.id
-            && value.roles.highest.position < message.member.roles.highest.position,
-        ),
-        prompt: {
-          start: config.messages.promptStartMember,
-          retry: config.messages.promptRetryMember,
-        },
-      }, {
-        id: 'duration',
-        type: Argument.validate(
-          'duration',
-          (message: GuildMessage, _phrase: string, value: number) => (
-            message.member.roles.highest.id === settings.roles.forumModerator
-            ? (value > 0 && value < settings.moderation.maximumDurationForumModerator)
-            : true),
-        ),
-        prompt: {
-          start: config.messages.promptStartDuration,
-          retry: config.messages.promptRetryDuration,
-        },
-      }, {
-        id: 'reason',
-        type: 'string',
-        match: 'rest',
-        prompt: {
-          start: config.messages.promptStartReason,
-          retry: config.messages.promptRetryReason,
-        },
-      }, {
-        id: 'autoban',
-        match: 'flag',
-        flag: ['--autoban', '--auto-ban', '-a'],
-      }, {
-        id: 'purge',
-        match: 'flag',
-        flag: ['--purge', '-p'],
-      }],
-      clientPermissions: config.settings.clientPermissions,
-      userPermissions: config.settings.userPermissions,
-      channel: 'guild',
-    });
-  }
+@ApplySwanOptions(config)
+export default class BanCommand extends SwanCommand {
+  public static commandOptions: ApplicationCommandOptionData[] = [
+    {
+      type: ApplicationCommandOptionTypes.USER,
+      name: 'membre',
+      description: 'Membre à appliquer le bannissement',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'durée',
+      description: 'Durée du bannissement',
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.STRING,
+      name: 'raison',
+      description: "Raison de l'avertissement (sera affiché au membre)",
+      required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'autoban',
+      description: "Automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message ?",
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'purge',
+      description: 'Supprimer les messages postés par le membre dans les 7 derniers jours ?',
+      required: false,
+    },
+  ];
 
-  public async exec(message: GuildMessage, args: BanCommandArgument): Promise<void> {
-    if (this.client.currentlyModerating.has(args.member.id)) {
-      await message.channel.send(messages.moderation.alreadyModerated).catch(noop);
+  public override async chatInputRun(
+    interaction: CommandInteraction,
+    _context: ChatInputCommand.RunContext,
+  ): Promise<void> {
+    const { client } = this.container;
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const moderator = await client.guild.members.fetch(interaction.member.user.id);
+    const member = resolveSanctionnableMember(victim, moderator);
+    if (member.error) {
+      await interaction.reply(messages.prompt.member);
       return;
     }
 
-    this.client.currentlyModerating.add(args.member.id);
+    const duration = resolveDuration(interaction.options.getString('durée'));
+    if (duration.error) {
+      await interaction.reply(messages.prompt.duration);
+      return;
+    }
+
+    const isValid = moderator.roles.highest.id === settings.roles.forumModerator
+      ? (duration.value > 0 && duration.value < settings.moderation.maximumDurationForumModerator)
+      : true;
+    if (!duration || !isValid) {
+      await interaction.reply(messages.prompt.duration);
+      return;
+    }
+
+    await this._exec(
+      interaction,
+      interaction.options.getBoolean('autoban'),
+      interaction.options.getBoolean('purge'),
+      member.value,
+      duration.value,
+      interaction.options.getString('raison'),
+    );
+  }
+
+  // eslint-disable-next-line max-params
+  private async _exec(
+    interaction: CommandInteraction,
+    autoban: boolean,
+    purge: boolean,
+    member: GuildMember,
+    duration: number,
+    reason: string,
+  ): Promise<void> {
+    if (this.container.client.currentlyModerating.has(member.id)) {
+      await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
+      return;
+    }
+
+    this.container.client.currentlyModerating.add(member.id);
     setTimeout(() => {
-      this.client.currentlyModerating.delete(args.member.id);
+      this.container.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
-    const data = new ModerationData(message)
-      .setVictim(args.member)
-      .setReason(args.reason)
-      .setShouldPurge(args.purge);
+    const data = new ModerationData(interaction)
+      .setVictim(member)
+      .setReason(reason)
+      .setShouldPurge(purge);
 
-    if (args.duration === -1) {
-      data.setDuration(args.duration, false)
+    if (duration === -1) {
+      data.setDuration(duration, false)
         .setType(SanctionTypes.Hardban);
     } else {
-      args.duration *= 1000;
-      data.setDuration(args.duration, true)
-        .setInformations({ shouldAutobanIfNoMessages: args.autoban })
+      data.setDuration(duration, true)
+        .setInformations({ shouldAutobanIfNoMessages: autoban })
         .setType(SanctionTypes.Ban);
     }
 
     try {
       const success = await new BanAction(data).commit();
       if (success)
-        await message.channel.send(config.messages.success).catch(noop);
+        await interaction.reply(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      Logger.error('An unexpected error occurred while banning a member!');
-      Logger.detail(`Duration: ${args.duration}`);
-      Logger.detail(`Parsed member: ${args.member}`);
-      Logger.detail(`Autoban: ${args.autoban}`);
-      Logger.detail(`Message: ${message.url}`);
-      Logger.detail((unknownError as Error).stack, true);
-      await message.channel.send(messages.global.oops).catch(noop);
+      this.container.logger.error('An unexpected error occurred while banning a member!');
+      this.container.logger.info(`Duration: ${duration}`);
+      this.container.logger.info(`Parsed member: ${member}`);
+      this.container.logger.info(`Autoban: ${autoban}`);
+      this.container.logger.info((unknownError as Error).stack, true);
+      await interaction.reply(messages.global.oops).catch(noop);
     }
   }
 }
-
-export default BanCommand;
