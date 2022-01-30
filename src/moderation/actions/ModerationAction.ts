@@ -73,7 +73,7 @@ export default abstract class ModerationAction {
   }
 
   protected get nameString(): string {
-    return this.data.victim?.user?.toString() ?? messages.global.unknownName;
+    return this.data.victim?.user ? ('<@' + this.data.victim.user.id + '>') : messages.global.unknownName;
   }
 
   protected get moderatorString(): string {

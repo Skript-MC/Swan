@@ -120,7 +120,7 @@ export default {
       Bonjour {nameString}. Tu as été banni(e) par les modérateurs. Tu peux essayer de t'expliquer avec eux.
       Si tu quittes ce discord, tu seras banni(e) automatiquement, à vie. Cette conversation est sauvegardée.
 
-      **Raison :** {data.reason}.
+      **Raison :** {reason}.
       **Durée :** {duration}.
       **Expire :** {expiration}.`,
     durationChange: 'Durée passée de {oldDuration} à {newDuration}',
