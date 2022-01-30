@@ -38,11 +38,12 @@ export default class HistoryCommand extends SwanCommand {
   }
 
   private async _exec(interaction: CommandInteraction, user: User): Promise<void> {
-    const sanctions = await Sanction.find({ memberId: user.id });
-    if (sanctions.length === 0) {
+    const rawSanctions = await Sanction.find({ memberId: user.id });
+    if (rawSanctions.length === 0) {
       await interaction.reply(config.messages.notFound);
       return;
     }
+    const sanctions = rawSanctions.reverse();
 
     const fields: EmbedField[] = sanctions.map(sanc => ({ ...this._getSanctionContent(sanc), inline: false }));
 
