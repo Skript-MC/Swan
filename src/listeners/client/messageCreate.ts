@@ -42,6 +42,7 @@ export default class MessageCreateListener extends Listener {
     yield await this._quoteLinkedMessage(message);
     yield await this._antispamSnippetsChannel(message);
     yield await this._checkCreationsChannelRules(message);
+    yield await this._checkMediaDiscordapp(message);
     return false;
   }
 
@@ -89,6 +90,14 @@ export default class MessageCreateListener extends Listener {
         this.container.logger.error((unknownError as Error).stack);
       }
     }
+    return false;
+  }
+
+  private async _checkMediaDiscordapp(message: GuildMessage): Promise<boolean> {
+    if (!/media\.discordapp\.net+/.test(message.content))
+      return false;
+    await message.channel.send(message.content.replace(/media\.discordapp\.net+/, 'cdn.discordapp.com'));
+    await message.delete();
     return false;
   }
 
