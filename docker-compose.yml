@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  swan:
+    image: ghcr.io/skript-mc/swan
+    restart: unless-stopped
+    env_file: .env
+    labels:
+      - 'com.centurylinklabs.watchtower.enable=true'
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

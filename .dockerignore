@@ -1,0 +1,8 @@
+node_modules/
+build/
+banlogs/
+.git/
+.idea/
+.vscode/
+.env
+.DS_Store
