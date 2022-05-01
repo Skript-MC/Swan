@@ -8,6 +8,7 @@ import Poll from '@/app/models/poll';
 import ReactionRole from '@/app/models/reactionRole';
 import SwanModule from '@/app/models/swanModule';
 import SwanCacheManager from '@/app/structures/SwanCacheManager';
+import SwanLogger from '@/app/structures/SwanLogger';
 import TaskStore from '@/app/structures/tasks/TaskStore';
 import type {
   CommandStatDocument,
@@ -27,6 +28,7 @@ export default class SwanClient extends SapphireClient {
       defaultPrefix: settings.bot.prefix,
       logger: {
         level: LogLevel.Debug,
+        instance: new SwanLogger(LogLevel.Debug),
       },
       loadDefaultErrorListeners: true,
 
@@ -84,9 +86,9 @@ export default class SwanClient extends SapphireClient {
     void this._loadReactionRoles();
 
     this.logger.info('Loading addons from SkriptTools...');
-    void this._loadSkriptToolsAddons();
+    void this.loadSkriptToolsAddons();
     this.logger.info('Loading syntaxes from Skript-MC...');
-    void this._loadSkriptMcSyntaxes();
+    void this.loadSkriptMcSyntaxes();
 
     this.logger.info('Client initialization finished!');
   }
@@ -163,39 +165,8 @@ export default class SwanClient extends SapphireClient {
     }
   }
 
-  private async _loadPolls(): Promise<void> {
-    // Cache all polls' messages' ids.
-    const polls = await Poll.find().catch(nullop);
-    if (polls)
-      this.cache.pollMessagesIds.addAll(...polls.map(poll => poll.messageId));
-  }
 
-  private async _loadCommandStats(): Promise<void> {
-    // Add all needed commands not present in the DB, to DB.
-    const commandIds = [...this.stores.get('commands').values()]
-      .map(cmd => cmd.name);
-
-    // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
-    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
-    for (const commandId of commandIds)
-      documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
-
-    try {
-      await Promise.all(documents);
-    } catch (unknownError: unknown) {
-      this.logger.error('Could not load some documents:');
-      this.logger.error((unknownError as Error).stack);
-    }
-  }
-
-  private async _loadReactionRoles(): Promise<void> {
-    // Cache all reaction roles' messages' ids.
-    const reactionRoles = await ReactionRole.find().catch(nullop);
-    if (reactionRoles)
-      this.cache.reactionRolesIds.addAll(...reactionRoles.map(document => document.messageId));
-  }
-
-  private async _loadSkriptToolsAddons(): Promise<void> {
+  public async loadSkriptToolsAddons(): Promise<void> {
     // Fetch all addons' versions from their APIs, and add them to the array, to make it easier to fetch
     // them later (becase we need their versions in the URL to fetch them.)
     try {
@@ -214,7 +185,7 @@ export default class SwanClient extends SapphireClient {
     }
   }
 
-  private async _loadSkriptMcSyntaxes(): Promise<void> {
+  public async loadSkriptMcSyntaxes(): Promise<void> {
     // Load all syntaxes from Skript-MC's API.
     try {
       // TODO: Handle rate-limits. Currently set at 200 requests/hour, but with thoses 2 endpoints,
@@ -251,5 +222,37 @@ export default class SwanClient extends SapphireClient {
       this.logger.error("Could not fetch Skript-MC's addons/syntaxes:");
       this.logger.error((unknownError as Error).stack);
     }
+  }
+
+  private async _loadPolls(): Promise<void> {
+    // Cache all polls' messages' ids.
+    const polls = await Poll.find().catch(nullop);
+    if (polls)
+      this.cache.pollMessagesIds.addAll(...polls.map(poll => poll.messageId));
+  }
+
+  private async _loadCommandStats(): Promise<void> {
+    // Add all needed commands not present in the DB, to DB.
+    const commandIds = [...this.stores.get('commands').values()]
+      .map(cmd => cmd.name);
+
+    // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
+    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
+    for (const commandId of commandIds)
+      documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
+
+    try {
+      await Promise.all(documents);
+    } catch (unknownError: unknown) {
+      this.logger.error('Could not load some documents:');
+      this.logger.error((unknownError as Error).stack);
+    }
+  }
+
+  private async _loadReactionRoles(): Promise<void> {
+    // Cache all reaction roles' messages' ids.
+    const reactionRoles = await ReactionRole.find().catch(nullop);
+    if (reactionRoles)
+      this.cache.reactionRolesIds.addAll(...reactionRoles.map(document => document.messageId));
   }
 }
