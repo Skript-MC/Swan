@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
+import { container } from '@sapphire/pieces';
 import axios from 'axios';
 import { Intents, Permissions } from 'discord.js';
 import type { Query } from 'mongoose';
@@ -27,8 +28,8 @@ export default class SwanClient extends SapphireClient {
       caseInsensitivePrefixes: true,
       defaultPrefix: settings.bot.prefix,
       logger: {
-        level: LogLevel.Debug,
-        instance: new SwanLogger(LogLevel.Debug),
+        level: LogLevel.Info,
+        instance: new SwanLogger(),
       },
       loadDefaultErrorListeners: true,
 
@@ -43,6 +44,9 @@ export default class SwanClient extends SapphireClient {
     });
 
     this.isLoading = true;
+
+    this.logger = new SwanLogger();
+    container.logger = this.logger;
 
     this.stores.register(new TaskStore());
 
