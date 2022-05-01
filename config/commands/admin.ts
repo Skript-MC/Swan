@@ -54,7 +54,7 @@ export const refresh = {
     permissions: ['Staff'],
   },
   messages: {
-    success: ':white_check_mark: Le cache a été rafraîchi avec succès !',
+    success: ':white_check_mark: Opération effectuée avec succès !',
   },
 };
 
