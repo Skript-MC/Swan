@@ -25,15 +25,15 @@ export const forumFeed = {
   },
   endpoints: {
     files: {
-      files: 'downloads/files',
-      categories: 'downloads/categories',
-      comments: 'downloads/comments',
-      reviews: 'downloads/reviews',
+      files: '/downloads/files',
+      categories: '/downloads/categories',
+      comments: '/downloads/comments',
+      reviews: '/downloads/reviews',
     },
     forums: {
-      forums: 'forums/forums',
-      posts: 'forums/posts',
-      topics: 'forums/topics',
+      forums: '/forums/forums',
+      posts: '/forums/posts',
+      topics: '/forums/topics',
     },
   },
 };
