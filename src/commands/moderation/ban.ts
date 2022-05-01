@@ -61,17 +61,19 @@ export default class BanCommand extends SwanCommand {
       return;
     }
 
-    const duration = resolveDuration(interaction.options.getString('durée'));
-    if (duration.error) {
+    const isForumMod = moderator.roles.highest.id === settings.roles.forumModerator;
+
+    const duration = resolveDuration(interaction.options.getString('durée'), !isForumMod);
+    if (duration.error || !duration) {
       await interaction.reply(messages.prompt.duration);
       return;
     }
 
-    const isValid = moderator.roles.highest.id === settings.roles.forumModerator
+    const isValid = isForumMod
       ? (duration.value > 0 && duration.value < settings.moderation.maximumDurationForumModerator)
       : true;
-    if (!duration || !isValid) {
-      await interaction.reply(messages.prompt.duration);
+    if (!isValid) {
+      await interaction.reply(messages.prompt.forumModRestriction);
       return;
     }
 
