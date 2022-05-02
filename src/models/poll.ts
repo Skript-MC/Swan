@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import type { PollDocument, PollModel } from '@/app/types';
 
-const PollSchema = new Schema({
+const PollSchema = new Schema<PollDocument, PollModel>({
   messageId: {
     type: String,
     required: true,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-invalid-void-type, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export {};
 
