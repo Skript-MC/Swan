@@ -60,7 +60,7 @@ export default class AddonInfoCommand extends SwanCommand {
   }
 
   private async _sendDetail(interaction: CommandInteraction, addonFile: string): Promise<void> {
-    const addon: SkriptToolsAddonResponse = await axios(settings.apis.addons + addonFile)
+    const addon: SkriptToolsAddonResponse = await axios(`${settings.apis.addons}/${addonFile}`)
       .then(res => res?.data?.data)
       .catch((err: Error) => { this.container.logger.error(err.message); });
 

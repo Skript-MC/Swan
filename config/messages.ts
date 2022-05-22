@@ -92,6 +92,7 @@ export default {
     code: 'Le code donné est invalide.',
     differentHelpChannel: "Le salon donné est invalide. Le salon d'origine ou de destination n'est pas un salon d'aide, ou c'est le même salon.",
     duration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.',
+    forumModRestriction: 'Vous ne pouvez pas appliquer une sanction dont la durée est supérieure à 2 jours.',
     equation: "L'équation donnée est invalide.",
     keywords: 'Les mots clé donnés sont invalides.',
     member: "Le membre donné est invalide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo, avec ou sans le discriminant (#XXXX).",

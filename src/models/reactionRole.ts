@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import type { ReactionRoleDocument, ReactionRoleModel } from '@/app/types';
 
-const ReactionRoleSchema = new Schema({
+const ReactionRoleSchema = new Schema<ReactionRoleDocument, ReactionRoleModel>({
   messageId: {
     type: String,
     required: true,

@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import type { SanctionDocument, SanctionModel } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 
-const SanctionSchema = new Schema({
+const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
   memberId: {
     type: String,
     required: true,

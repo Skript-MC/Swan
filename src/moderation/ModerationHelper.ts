@@ -13,7 +13,7 @@ import { nullop, prunePseudo } from '@/app/utils';
 import settings from '@/conf/settings';
 
 export default {
-  async getOrCreateChannel(data: ModerationData): Promise<TextChannel | never> {
+  async getOrCreateChannel(data: ModerationData): Promise<TextChannel> {
     const pseudo = prunePseudo(data.victim.member, data.victim.user, data.victim.id);
     const channelName = settings.moderation.banChannelPrefix + pseudo;
 

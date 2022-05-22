@@ -10,26 +10,26 @@ const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
 
 export default {
   async getPendingSuggestions(): Promise<Suggestion[]> {
-    return await axios.get(`${settings.apis.skriptmc}suggestions/pending?${token}`)
+    return await axios.get(`${settings.apis.skriptmc}/suggestions/pending?${token}`)
       .then(response => (response.status >= 300 ? null : response.data))
       .catch(nullop);
   },
 
   async getSuggestion(messageId: string): Promise<Suggestion> {
-    return await axios.get(`${settings.apis.skriptmc}suggestions/${messageId}?${token}`)
+    return await axios.get(`${settings.apis.skriptmc}/suggestions/${messageId}?${token}`)
       .then(response => (response.status >= 300 ? null : response.data))
       .catch(nullop);
   },
 
   async suggestionCallback(suggestion: Suggestion, message: Message): Promise<void> {
-    await axios.post(`${settings.apis.skriptmc}suggestions/callback?${token}`, {
+    await axios.post(`${settings.apis.skriptmc}/suggestions/callback?${token}`, {
       suggestionId: suggestion.id,
       messageId: message.id,
     }).catch(nullop);
   },
 
   async publishSuggestion(description: string, discordId: string): Promise<PublishResponse> {
-    const response = await axios.post(`${settings.apis.skriptmc}suggestions/publish?${token}`, {
+    const response = await axios.post(`${settings.apis.skriptmc}/suggestions/publish?${token}`, {
       description,
       discordId,
     }, {
@@ -39,7 +39,7 @@ export default {
   },
 
   async suggestionVote(messageId: string, upVote: boolean, discordId: string): Promise<VoteResponse> {
-    const response = await axios.post(`${settings.apis.skriptmc}suggestions/vote?${token}`, {
+    const response = await axios.post(`${settings.apis.skriptmc}/suggestions/vote?${token}`, {
       messageId,
       upVote,
       discordId,

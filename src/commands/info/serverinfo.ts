@@ -30,7 +30,7 @@ export default class ServerInfoCommand extends SwanCommand {
   }
 
   private async _exec(interaction: CommandInteraction, query: string): Promise<void> {
-    const server: ServerStatResponse = await axios(settings.apis.server + query)
+    const server: ServerStatResponse = await axios(`${settings.apis.server}/${query}`)
       .then(res => (res.status >= 300 ? null : res.data))
       .catch(nullop);
 

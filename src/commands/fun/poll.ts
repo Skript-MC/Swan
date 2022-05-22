@@ -59,7 +59,7 @@ export default class PollCommand extends SwanCommand {
     const multiple = interaction.options.getBoolean('multiple');
 
 
-    const duration = resolveDuration(interaction.options.getString('durée'));
+    const duration = resolveDuration(interaction.options.getString('durée'), false);
     if (duration.error) {
       await interaction.reply(messages.prompt.duration);
       return;

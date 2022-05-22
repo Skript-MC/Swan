@@ -26,10 +26,7 @@ if (!process.env.DISCORD_TOKEN) {
 }
 
 async function bootstrap(): Promise<void> {
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await mongoose.connect(process.env.MONGO_URI);
 
   const client = new SwanClient();
   try {

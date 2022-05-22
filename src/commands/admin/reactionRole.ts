@@ -63,7 +63,7 @@ export default class ReactionRoleCommand extends SwanCommand {
       interaction,
       givenRole,
       reaction,
-      destinationChannel ?? interaction.channel as GuildTextBasedChannel,
+      destinationChannel ?? interaction.channel,
     );
   }
 

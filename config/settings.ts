@@ -63,11 +63,10 @@ export default {
     light: '#a2d2ff' as HexColorString,
   },
   apis: {
-    hastebin: 'https://hastebin.com/documents',
-    addons: 'https://api.skripttools.net/v4/addons/',
-    skriptmc: 'https://skript-mc.fr/api/',
-    forum: 'https://skript-mc.fr/forum/api/',
-    server: 'https://api.mcsrvstat.us/2/',
+    addons: 'https://api.skripttools.net/v4/addons',
+    skriptmc: 'https://skript-mc.fr/api',
+    forum: 'https://skript-mc.fr/forum/api',
+    server: 'https://api.mcsrvstat.us/2',
     latex: 'https://latex.codecogs.com/png.image?',
   },
   roles: {

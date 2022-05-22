@@ -2,7 +2,7 @@ import type { FilterQuery } from 'mongoose';
 import { model, Schema } from 'mongoose';
 import type { SwanChannelBase, SwanChannelDocument, SwanChannelModel } from '@/app/types';
 
-const ChannelSchema = new Schema({
+const ChannelSchema = new Schema<SwanChannelDocument, SwanChannelModel>({
   channelId: {
     type: String,
     required: true,

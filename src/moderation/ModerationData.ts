@@ -89,7 +89,7 @@ export default class ModerationData {
     return this;
   }
 
-  public setModeratorId(member: never | string): this {
+  public setModeratorId(member: string): this {
     this.moderatorId = member;
     return this;
   }

@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import type { SwanModuleDocument, SwanModuleModel } from '@/app/types';
 
-const SwanModuleSchema = new Schema({
+const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   name: {
     type: String,
     required: true,
