@@ -41,7 +41,6 @@ export default class MessageCreateListener extends Listener {
     yield await this._handleSuggestion(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._antispamSnippetsChannel(message);
-    yield await this._checkCreationsChannelRules(message);
     return false;
   }
 
@@ -218,21 +217,6 @@ export default class MessageCreateListener extends Listener {
           await message.member.send(message.content);
         }
       } catch { /* Ignored */ }
-    }
-    return false;
-  }
-
-  private async _checkCreationsChannelRules(message: GuildMessage): Promise<boolean> {
-    // We oblige people to post a skript-mc's link of their resource in the Creation channel.
-    if (message.channel.id === settings.channels.creations
-        && !message.member.roles.cache.has(settings.roles.staff)
-        && message.content
-          .match(/(?:https?:\/\/\S+)/g)
-          ?.some(link => !/(?:https?:\/\/skript-mc\.fr\S+)/g.test(link))
-    ) {
-      await message.delete();
-      await message.member.send(pupa(messages.miscellaneous.invalidMessage, { message }));
-      await message.member.send(message.content);
     }
     return false;
   }
