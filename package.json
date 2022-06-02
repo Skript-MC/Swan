@@ -5,14 +5,14 @@
   "main": "./build/src/main.js",
   "scripts": {
     "build": "rm -rf build && tsc",
-    "build:win": "rd /s /q \"build\" && tsc",
+    "build:win": "rd /s /q \"build\"&& tsc",
     "exec": "node --no-warnings ./build/src/main.js",
     "start": "npm run build && NODE_ENV=production npm run exec",
-    "start:win": "npm run build:win && set NODE_ENV=production && npm run exec",
+    "start:win": "npm run build:win&& set NODE_ENV=production&& npm run exec",
     "dev": "npm run build && NODE_ENV=development npm run exec",
-    "dev:win": "npm run build:win && set NODE_ENV=development && npm run exec",
+    "dev:win": "npm run build:win&& set NODE_ENV=development&& npm run exec",
     "tools:update-databases": "npm run build && node ./build/tools/update-databases.js",
-    "tools:update-databases:win": "npm run build:win && node ./build/tools/update-databases.js",
+    "tools:update-databases:win": "npm run build:win&& node ./build/tools/update-databases.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
