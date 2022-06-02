@@ -1,14 +1,13 @@
 import { Listener } from '@sapphire/framework';
+import { captureException } from '@sentry/node';
 import type { TaskErrorPayload } from '@/app/structures/tasks/Task';
 
 export default class TaskErrorListener extends Listener {
   public override run(error: Error, { piece: task }: TaskErrorPayload): void {
+    captureException(error);
     this.container.logger.error('Oops, something went wrong with a task!');
     this.container.logger.info(`Task: ${task.name}`);
     this.container.logger.info(`Cron or interval: ${task.cron ?? task.interval}`);
-    if (process.env.NODE_ENV === 'production')
-      throw new Error(error.stack);
-    else
-      this.container.logger.error(error.stack);
+    this.container.logger.error(error.stack);
   }
 }
