@@ -30,6 +30,7 @@ export default abstract class Task extends Piece {
   public readonly interval?: number;
   public readonly cron?: string;
   public readonly immediate: boolean;
+  public readonly startupOrder?: number;
 
   private _scheduleInterval: NodeJS.Timeout;
   private _scheduleCron: cron.ScheduledTask;
@@ -41,6 +42,7 @@ export default abstract class Task extends Piece {
     this.interval = options.interval;
     this.cron = options.cron;
     this.immediate = options.immediate ?? false;
+    this.startupOrder = options.startupOrder;
     this._callback = this._run.bind(this);
   }
 
@@ -85,9 +87,9 @@ interface BaseTaskOptions extends PieceOptions {
 }
 
 export type TaskOptions =
-  | BaseTaskOptions & { cron: string } & { interval?: never }
-  | BaseTaskOptions & { cron?: never } & { interval: number };
-
+  | BaseTaskOptions & { cron: string } & { interval?: never } & { startupOrder?: never }
+  | BaseTaskOptions & { cron?: never } & { interval: number } & { startupOrder?: never }
+  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder: number };
 export interface TaskErrorPayload extends IPieceError {
   piece: Task;
 }

@@ -44,16 +44,18 @@ export const module = {
   },
 };
 
-export const refresh = {
+export const runTask = {
   settings: {
-    name: 'Rafraîchir le cache',
-    command: 'refresh',
-    description: 'Permet de rafraîchir le cache de Swan en re-fetchant les bases de données.',
-    examples: ['refresh'],
+    name: 'Exécuter une tâche',
+    command: 'run-task',
+    description: "Permet d'exécuter immédiatement une tâche de Swan.",
+    examples: ['run-task loadSkriptMcSyntaxes', 'run-task syncDatabaseChannels'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
   },
   messages: {
+    unknownTask: ':x: Je ne connais pas cette tâche.',
+    taskError: ":x: Une erreur est survenue lors de l'exécution de la tâche.",
     success: ':white_check_mark: Opération effectuée avec succès !',
   },
 };

@@ -9,7 +9,10 @@ export default class PollTask extends Task {
   public override async run(): Promise<void> {
     // Fetch all the poll that are expired.
     const polls = await Poll.find({
-      finish: { $lte: Date.now(), $ne: -1 },
+      finish: {
+        $lte: Date.now(),
+        $ne: -1,
+      },
     });
 
     for (const poll of polls)

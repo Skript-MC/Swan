@@ -2,7 +2,7 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
-import RefreshCommand from '@/app/commands/admin/refresh';
+import RefreshCommand from '@/app/commands/admin/runTask';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanModule from '@/app/models/swanModule';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
