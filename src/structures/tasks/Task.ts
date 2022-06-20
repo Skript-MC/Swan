@@ -89,7 +89,8 @@ interface BaseTaskOptions extends PieceOptions {
 export type TaskOptions =
   | BaseTaskOptions & { cron: string } & { interval?: never } & { startupOrder?: never }
   | BaseTaskOptions & { cron?: never } & { interval: number } & { startupOrder?: never }
-  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder: number };
+  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder: number }
+  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder?: never };
 export interface TaskErrorPayload extends IPieceError {
   piece: Task;
 }
