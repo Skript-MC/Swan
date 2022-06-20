@@ -9,7 +9,7 @@ import { SanctionTypes } from '@/app/types';
 import { nullop } from '@/app/utils';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 9 })
-export default class CacheReactionRolesTask extends Task {
+export default class FetchMissingBansTask extends Task {
   public override async run(): Promise<void> {
     const bans = await this.container.client.guild.bans.fetch();
     const convictedUsers = await ConvictedUser.find();

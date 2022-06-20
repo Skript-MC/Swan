@@ -5,7 +5,7 @@ import Task from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 11 })
-export default class LoadSkriptMcSyntaxesTask extends Task {
+export default class CheckValidityTask extends Task {
   public override run(): void {
     const { guild } = this.container.client;
     if (!guild)

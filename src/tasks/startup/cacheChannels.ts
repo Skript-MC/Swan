@@ -6,7 +6,7 @@ import type { ChannelArraySlugs, ChannelSingleSlug } from '@/app/types';
 import settings from '@/conf/settings';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 6 })
-export default class LoadSkriptMcSyntaxesTask extends Task {
+export default class CacheChannelsTask extends Task {
   public override run(): void {
     for (const [slug, channelIdOrIds] of Object.entries(settings.channels)) {
       if (Array.isArray(channelIdOrIds)) {
