@@ -29,11 +29,9 @@ export default class SkriptReleasesTask extends Task {
     if (!githubReleases || !githubReleases.data)
       return;
 
-
     const lastRelease = githubReleases.data[0];
     if (!lastRelease)
       return;
-
 
     // We updated the cache of the releases with the one we just fetched.
     this.container.client.cache.github = {
@@ -45,16 +43,13 @@ export default class SkriptReleasesTask extends Task {
     if (!lastRelease.published_at)
       return;
 
-
     // If the release was not posted within the time window (refresh-rate), stop.
     if ((Date.now() - new Date(lastRelease.published_at).getTime()) > config.timeDifference)
       return;
 
-
     const channel = this.container.client.channels.cache.get(settings.channels.skriptTalk);
     if (!channel?.isText())
       return;
-
 
     const embed = new MessageEmbed()
       .setColor(settings.colors.default)

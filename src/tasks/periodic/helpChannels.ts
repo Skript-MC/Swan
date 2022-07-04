@@ -22,7 +22,6 @@ export default class HelpChannels extends Task {
       for (const chan of this._extraHelpChannels)
         await this._unlockChannel(chan[0]);
 
-
       return;
     }
 
@@ -40,7 +39,6 @@ export default class HelpChannels extends Task {
     if (!lastMessages)
       return [];
 
-
     // Get the first message of the group of the last N messages (where N = this.inactivityMessages)
     return [...lastMessages.values()].sort((a, b) => b.createdTimestamp - a.createdTimestamp);
   }
@@ -53,7 +51,6 @@ export default class HelpChannels extends Task {
     const lastMessage = lastMessages[lastMessages.length - 1];
     if (!lastMessage)
       return false;
-
 
     return this._isMessageRecent(lastMessage, time);
   }
@@ -99,7 +96,6 @@ export default class HelpChannels extends Task {
       if (!(chan instanceof TextChannel))
         continue;
 
-
       const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
       this._basicHelpChannels.push([chan, lastMessages]);
     }
@@ -107,7 +103,6 @@ export default class HelpChannels extends Task {
       const chan = await this.container.client.channels.fetch(channelId);
       if (!(chan instanceof TextChannel))
         continue;
-
 
       const lastMessages = await this._fetchLastMessages(chan, config.extra.limitMessages);
       this._extraHelpChannels.push([chan, lastMessages]);

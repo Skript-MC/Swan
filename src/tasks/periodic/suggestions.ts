@@ -18,7 +18,6 @@ export default class SuggestionsTask extends Task {
     if (!suggestions || !channel?.isText())
       return;
 
-
     for (const suggestion of suggestions) {
       // Get embed and actions for this suggestion
       const embed = await SuggestionManager.getSuggestionEmbed(suggestion);

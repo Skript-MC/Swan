@@ -37,14 +37,12 @@ export default class ModerationTask extends Task {
       if (!member)
         continue;
 
-
       const user = member.user
         ?? this.container.client.users.resolve(memberId)
         ?? (await this.container.client.users.fetch(memberId)
           .catch(noop));
       if (!user)
         continue;
-
 
       const data = new ModerationData()
         .setVictim(member ?? user, false)

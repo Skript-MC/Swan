@@ -45,15 +45,12 @@ export default class ForumFeedTask extends Task {
     if (!topics?.results || !channel?.isText())
       return;
 
-
     for (const topic of topics.results) {
       if ((Date.now() - new Date(topic.firstPost.date).getTime()) > config.timeDifference)
         continue;
 
-
       if (![56, 35, 19, 45, 9, 58, 46, 22, 14, 8, 2, 99, 57, 47, 21, 7, 62, 20, 6, 88, 52, 4].includes(topic.forum.id))
         continue;
-
 
       const markdown = turndownService.turndown(topic.firstPost.content);
       const embed = new MessageEmbed()
@@ -96,7 +93,6 @@ export default class ForumFeedTask extends Task {
     if (!resources?.results || !channel?.isText())
       return;
 
-
     for (const resource of resources.results) {
       const updates: InvisionUpdate[] = await axios.get(
         `${settings.apis.forum}${config.endpoints.files.files}/${resource.id}/history`,
@@ -106,10 +102,8 @@ export default class ForumFeedTask extends Task {
       if (!updates || updates.length <= 0)
         continue;
 
-
       if ((Date.now() - new Date(updates[0].date).getTime()) > config.timeDifference)
         continue;
-
 
       const markdown = turndownService.turndown(resource.changelog || resource.description);
       const embed = new MessageEmbed()

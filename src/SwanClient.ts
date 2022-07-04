@@ -43,19 +43,6 @@ export default class SwanClient extends SapphireClient {
     this.currentlyBanning = new Set();
     this.currentlyUnbanning = new Set();
     this.currentlyModerating = new Set();
-
-    // This.logger.info('Loading & caching databases...');
-    // void this._loadPolls();
-    // void this._loadCommandStats();
-    // void this._loadReactionRoles();
-    //
-    // this.logger.info('Loading addons from SkriptTools...');
-    // void this.loadSkriptToolsAddons();
-    // this.logger.info('Loading syntaxes from Skript-MC...');
-    // void this.loadSkriptMcSyntaxes();
-    //
-    // this.logger.info('Client initialization finished!');
-    // When the bot is ready, fetch the database and unload modules that needs to be unloaded (disabled via the panel).
   }
 
   public async refreshPieces(): Promise<void> {
