@@ -6,6 +6,6 @@ import Task from '@/app/structures/tasks/Task';
 export default class StopTask extends Task {
   public override run(): void {
     // eslint-disable-next-line node/no-process-exit
-    process.exit(1);
+    process.exit(0);
   }
 }
