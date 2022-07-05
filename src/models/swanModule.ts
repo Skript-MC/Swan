@@ -13,6 +13,16 @@ const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
     enum: allowedStores,
     required: true,
   },
+  location: new Schema({
+    full: {
+      type: String,
+      required: true,
+    },
+    root: {
+      type: String,
+      required: true,
+    },
+  }),
   enabled: {
     type: Boolean,
     default: true,

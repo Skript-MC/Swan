@@ -45,8 +45,12 @@ export default class SwanClient extends SapphireClient {
     this.currentlyModerating = new Set();
   }
 
-  public async refreshPieces(): Promise<void> {
-    const modules: SwanModuleDocument[] = await SwanModule.find();
+  public async refreshPieces(force = false): Promise<void> {
+    let modules: SwanModuleDocument[] = [];
+    if (force)
+      await SwanModule.deleteMany({});
+    else
+      modules = await SwanModule.find({});
 
     for (const [storeName, store] of this.stores) {
       if (!allowedStores.includes(storeName))
@@ -60,6 +64,7 @@ export default class SwanClient extends SapphireClient {
           await SwanModule.create({
             name: piece.name,
             store: storeName,
+            location: piece.location,
             enabled: true,
           });
         }

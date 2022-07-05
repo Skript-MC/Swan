@@ -1,6 +1,6 @@
 import type { Endpoints } from '@octokit/types';
 import type { Command, CommandOptions } from '@sapphire/framework';
-import type { StoreRegistryEntries } from '@sapphire/pieces';
+import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
 import type {
   ApplicationCommandOptionData,
   Guild,
@@ -538,10 +538,7 @@ export type CommandStatModel = Model<CommandStatDocument>;
 export interface SwanModuleBase {
   name: string;
   store: keyof StoreRegistryEntries;
-  location: {
-    relative: string;
-    root: string;
-  };
+  location: PieceLocation;
   enabled: boolean;
 }
 
