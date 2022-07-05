@@ -1,5 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type SwanClient from '@/app/SwanClient';
+import { Events } from '@/app/types/sapphire';
 import settings from '@/conf/settings';
 
 export default class ReadyListener extends Listener {
@@ -21,7 +22,11 @@ export default class ReadyListener extends Listener {
       .sort((a, b) => a.startupOrder - b.startupOrder);
     for (const [taskName, task] of tasks) {
       this.container.logger.info(`Run startup task ${taskName}...`);
-      await task.run();
+      try {
+        await task.run();
+      } catch (error: unknown) {
+        this.container.client.emit(Events.TaskError, error as Error, { piece: this });
+      }
     }
 
     this.container.logger.info('Swan is ready to listen for messages.');
