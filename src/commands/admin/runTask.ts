@@ -46,6 +46,7 @@ export default class RunTaskCommand extends SwanCommand {
       await interaction.reply(config.messages.unknownTask);
       return;
     }
+    await interaction.deferReply({ ephemeral: true });
     try {
       await task.run();
     } catch (error: unknown) {
@@ -53,6 +54,6 @@ export default class RunTaskCommand extends SwanCommand {
       await interaction.reply(config.messages.taskError);
       return;
     }
-    await interaction.reply(config.messages.success);
+    await interaction.followUp({ content: config.messages.success, ephemeral: true });
   }
 }
