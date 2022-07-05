@@ -13,7 +13,7 @@ export default abstract class SwanCommand extends Command {
   commandOptions: ApplicationCommandOptionData[];
 
   constructor(context: PieceContext, options: SwanCommandOptions) {
-    super(context, { ...options, name: context.name, chatInputCommand: { register: true } });
+    super(context, { ...options, name: context.name });
 
     if (options.command)
       this.command = options.command;

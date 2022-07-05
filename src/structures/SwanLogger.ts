@@ -1,6 +1,7 @@
 import { LogLevel } from '@sapphire/framework';
 import { Logger } from '@sapphire/plugin-logger';
-import { captureMessage, Severity } from '@sentry/node';
+import type { SeverityLevel } from '@sentry/node';
+import { captureMessage } from '@sentry/node';
 
 export default class SwanLogger extends Logger {
   public trace(...values: readonly unknown[]): void {
@@ -14,26 +15,26 @@ export default class SwanLogger extends Logger {
   }
 
   public info(...values: readonly unknown[]): void {
-    this.sendLogToSentry(Severity.Info, values);
+    this.sendLogToSentry('info', values);
     this.write(LogLevel.Info, ...values);
   }
 
   public warn(...values: readonly unknown[]): void {
-    this.sendLogToSentry(Severity.Warning, values);
+    this.sendLogToSentry('warning', values);
     this.write(LogLevel.Warn, ...values);
   }
 
   public error(...values: readonly unknown[]): void {
-    this.sendLogToSentry(Severity.Error, values);
+    this.sendLogToSentry('error', values);
     this.write(LogLevel.Error, ...values);
   }
 
   public fatal(...values: readonly unknown[]): void {
-    this.sendLogToSentry(Severity.Critical, values);
+    this.sendLogToSentry('fatal', values);
     this.write(LogLevel.Fatal, ...values);
   }
 
-  public sendLogToSentry(level: Severity, ...values: readonly unknown[]): void {
+  public sendLogToSentry(level: SeverityLevel, ...values: readonly unknown[]): void {
     captureMessage(values.join('\n'), level);
   }
 }
