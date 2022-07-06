@@ -4,9 +4,9 @@ import type { PresenceData } from 'discord.js';
 import pupa from 'pupa';
 import Task, { TaskOptions } from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
-import { presence as config } from '@/conf/tasks';
+import { presence as config } from '@/conf/tasks/periodic';
 
-@ApplyOptions<TaskOptions>({ cron: '* * * * *' })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class PresenceTask extends Task {
   activities: Generator<PresenceData, never>;
 

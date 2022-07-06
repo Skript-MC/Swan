@@ -3,8 +3,9 @@ import { Permissions } from 'discord.js';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
+import { checkValidity as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 11 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class CheckValidityTask extends Task {
   public override run(): void {
     const { guild } = this.container.client;

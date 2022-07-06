@@ -8,6 +8,12 @@ const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
+  category: {
+    type: String,
+  },
   store: {
     type: String,
     enum: allowedStores,

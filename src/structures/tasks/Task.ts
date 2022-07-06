@@ -27,6 +27,8 @@ import { Events } from '@/app/types/sapphire';
  * ```
  */
 export default abstract class Task extends Piece {
+  public readonly category: string;
+  public readonly description?: string;
   public readonly interval?: number;
   public readonly cron?: string;
   public readonly immediate: boolean;
@@ -39,6 +41,8 @@ export default abstract class Task extends Piece {
   constructor(context: PieceContext, options: TaskOptions) {
     super(context, options);
 
+    this.category = options.category;
+    this.description = options.description;
     this.interval = options.interval;
     this.cron = options.cron;
     this.immediate = options.immediate ?? false;
@@ -82,15 +86,16 @@ export default abstract class Task extends Piece {
   public abstract run(): unknown;
 }
 
-interface BaseTaskOptions extends PieceOptions {
+export interface TaskOptions extends PieceOptions {
   immediate?: boolean;
+  category?: string;
+  description?: string;
+  cron?: string;
+  interval?: number;
+  startupOrder?: number;
+  listener?: string;
 }
 
-export type TaskOptions =
-  | BaseTaskOptions & { cron: string } & { interval?: never } & { startupOrder?: never }
-  | BaseTaskOptions & { cron?: never } & { interval: number } & { startupOrder?: never }
-  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder: number }
-  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder?: never };
 export interface TaskErrorPayload extends IPieceError {
   piece: Task;
 }

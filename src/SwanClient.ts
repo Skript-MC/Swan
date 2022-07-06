@@ -4,6 +4,8 @@ import { Intents } from 'discord.js';
 import SwanModule, { allowedStores } from '@/app/models/swanModule';
 import SwanCacheManager from '@/app/structures/SwanCacheManager';
 import SwanLogger from '@/app/structures/SwanLogger';
+import SwanCommand from '@/app/structures/commands/SwanCommand';
+import Task from '@/app/structures/tasks/Task';
 import TaskStore from '@/app/structures/tasks/TaskStore';
 import type { SwanModuleDocument } from '@/app/types';
 import settings from '@/conf/settings';
@@ -61,8 +63,16 @@ export default class SwanClient extends SapphireClient {
           await store.unload(piece.name);
           this.logger.info(`Disabling module "${piece.name}" (from ${storeName})`);
         } else if (!module) {
+          let description;
+          let category;
+          if (piece instanceof SwanCommand || piece instanceof Task) {
+            description = piece.description;
+            category = piece.category;
+          }
           await SwanModule.create({
             name: piece.name,
+            description,
+            category,
             store: storeName,
             location: piece.location,
             enabled: true,

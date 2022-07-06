@@ -2,8 +2,9 @@ import { ApplyOptions } from '@sapphire/decorators';
 import SwanChannel from '@/app/models/swanChannel';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
+import { syncDatabaseChannels as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 10 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class SyncDatabaseChannelsTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.swanChannels = new Set();
@@ -15,8 +16,6 @@ export default class SyncDatabaseChannelsTask extends Task {
         channelId: channel.id,
       }, {
         channelId: channel.id,
-        categoryId: channel.parentId,
-        name: channel.name,
         logged: false,
       });
       this.container.client.cache.swanChannels.add(swanChannel);

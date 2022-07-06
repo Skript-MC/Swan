@@ -1,4 +1,5 @@
 import { stripIndent } from 'common-tags';
+import type { SwanCommandOptions } from '@/app/types';
 import { basePreconditions, staffRolePrecondition } from '@/conf/configUtils';
 
 const commonMessages = {
@@ -11,7 +12,6 @@ const commonMessages = {
   revocationNotification: stripIndent`
     Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été révoquée.
     **Raison :** {action.data.reason}.
-    Nous t'invitons à revoir ton comportement pour éviter que cela se reproduise.
     `,
   notificationUpdate: stripIndent`
     Bonjour {action.nameString}, ta sanction ({action.originalAction}) sur le serveur Skript-MC a été modifiée.
@@ -23,11 +23,12 @@ const commonMessages = {
 export const ban = {
   settings: {
     name: 'Ban',
+    category: 'moderation',
     command: 'ban',
     description: 'Appliquer une restriction du Discord à un membre (= salon des bannis), ou le bannir définitivement.',
     examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
     preconditions: [...basePreconditions, staffRolePrecondition],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
@@ -40,11 +41,12 @@ export const hardban = ban;
 export const history = {
   settings: {
     name: 'Historique',
+    category: 'moderation',
     command: 'history',
     description: "Permet de voir l'historique des sanctions d'un utilisateur.",
     examples: ['history carlodrift'],
     preconditions: [...basePreconditions, staffRolePrecondition],
-  },
+  } as SwanCommandOptions,
   messages: {
     sentInDm: "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
     notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
@@ -96,12 +98,13 @@ export const history = {
 export const kick = {
   settings: {
     name: 'Expulsion',
+    category: 'moderation',
     command: 'kick',
     description: "Permet d'expulser un membre du serveur.",
     examples: ['kick tutur Vade retro !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.creationNotification(false),
     success: 'Membre expulsé avec succès !',
@@ -111,13 +114,14 @@ export const kick = {
 export const mute = {
   settings: {
     name: 'Mute',
+    category: 'moderation',
     command: 'mute',
     description: 'Appliquer une restriction de la parole à un membre (= timeout).',
     usage: 'mute <@mention | pseudo | ID> <durée> <raison>',
     examples: ['mute @Xamez chuuuut'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
@@ -128,12 +132,13 @@ export const mute = {
 export const purge = {
   settings: {
     name: 'Purge',
+    category: 'moderation',
     command: 'purge',
     description: "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
     examples: ['purge 10 -f', 'purge @membre 40'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     success: "J'ai bien supprimé {deletedMessages.size} messages.",
   },
@@ -142,12 +147,13 @@ export const purge = {
 export const removeWarn = {
   settings: {
     name: "Suppression d'avertissement",
+    category: 'moderation',
     command: 'removewarn',
     description: "Permet de révoquer le dernier avertissement d'un membre.",
     examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.revocationNotification,
     success: 'Avertissement révoqué avec succès !',
@@ -160,12 +166,13 @@ export const removeWarn = {
 export const unban = {
   settings: {
     name: 'Unban',
+    category: 'moderation',
     command: 'unban',
     description: "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
     examples: ['unban @WeeskyBDW', 'unban @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.revocationNotification,
     notBanned: "Cet utilisateur n'est pas banni.",
@@ -176,12 +183,13 @@ export const unban = {
 export const unmute = {
   settings: {
     name: 'Unmute',
+    category: 'moderation',
     command: 'unmute',
     description: "Permet de retirer un mute d'un membre du Discord.",
     examples: ['unmute @Vengelis désolé !'],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notification: commonMessages.revocationNotification,
     notMuted: "Cet utilisateur n'est pas muet.",
@@ -192,12 +200,13 @@ export const unmute = {
 export const warn = {
   settings: {
     name: 'Avertissement',
+    category: 'moderation',
     command: 'warn',
     description: "Permet d'avertir un membre pour une raison donnée.",
     examples: ["warn @Rémi Il faut penser à respecter le modèle d'aide !"],
     preconditions: [...basePreconditions, staffRolePrecondition],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     notFound: "Aucun membre n'a été trouvé.",
     notification: commonMessages.creationNotification(false),

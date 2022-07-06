@@ -9,14 +9,6 @@ const ChannelSchema = new Schema<SwanChannelDocument, SwanChannelModel>({
     unique: true,
     index: true,
   },
-  categoryId: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
   logged: {
     type: Boolean,
     required: true,

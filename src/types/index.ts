@@ -366,8 +366,9 @@ export interface PublishResponse extends SuggestionResponse {
 export interface SwanCommandOptions extends CommandOptions {
   command: string;
   examples: string[];
+  category: string;
   permissions?: string[];
-  commandOptions: ApplicationCommandOptionData[];
+  commandOptions?: ApplicationCommandOptionData[];
 }
 
 export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
@@ -537,6 +538,8 @@ export type CommandStatModel = Model<CommandStatDocument>;
 /** Interface for the "Module"'s mongoose schema */
 export interface SwanModuleBase {
   name: string;
+  description?: string;
+  category?: string;
   store: keyof StoreRegistryEntries;
   location: PieceLocation;
   enabled: boolean;
@@ -763,8 +766,6 @@ export interface DiscordUserModel extends Model<DiscordUserDocument> {
 /** Interface for the "Channel"'s mongoose schema */
 export interface SwanChannelBase {
   channelId: string;
-  categoryId: string;
-  name: string;
   logged: boolean;
 }
 

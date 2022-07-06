@@ -3,14 +3,11 @@ import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
+import { suggestions as config } from '@/conf/tasks/periodic';
 
-@ApplyOptions<TaskOptions>({ cron: '*/20 * * * *' })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class SuggestionsTask extends Task {
   public override async run(): Promise<void> {
-    await this._syncSuggestions();
-  }
-
-  private async _syncSuggestions(): Promise<void> {
     // Get all the suggestions waiting to be sent/updated
     const suggestions = await SuggestionManager.getPendingSuggestions();
 

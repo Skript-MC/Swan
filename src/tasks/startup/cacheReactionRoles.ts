@@ -2,8 +2,9 @@ import { ApplyOptions } from '@sapphire/decorators';
 import ReactionRole from '@/app/models/reactionRole';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
+import { cacheReactionRoles as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 8 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class CacheReactionRolesTask extends Task {
   public override async run(): Promise<void> {
     const reactionRoles = await ReactionRole.find();

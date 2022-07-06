@@ -11,6 +11,7 @@ export default abstract class SwanCommand extends Command {
   examples: string[] = [];
   permissions: string[] = [];
   commandOptions: ApplicationCommandOptionData[];
+  private _category = '';
 
   constructor(context: PieceContext, options: SwanCommandOptions) {
     super(context, { ...options, name: context.name });
@@ -20,6 +21,9 @@ export default abstract class SwanCommand extends Command {
 
     if (options.description)
       this.description = options.description;
+
+    if (options.category)
+      this.category = options.category;
 
     if (options.examples.length > 0)
       this.examples = options.examples;
@@ -51,5 +55,13 @@ export default abstract class SwanCommand extends Command {
         behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
       });
     }
+  }
+
+  public get category(): string {
+    return this._category;
+  }
+
+  public set category(value: string) {
+    this._category = value;
   }
 }

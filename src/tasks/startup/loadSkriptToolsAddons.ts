@@ -4,8 +4,9 @@ import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import type { SkriptToolsAddonListResponse } from '@/app/types';
 import settings from '@/conf/settings';
+import { loadSkriptToolsAddons as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 4 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class LoadSkriptMcSyntaxesTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.addonsVersions = [];

@@ -8,7 +8,7 @@ import Task from '@/app/structures/tasks/Task';
 import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import settings from '@/conf/settings';
-import { forumFeed as config } from '@/conf/tasks';
+import { forumFeed as config } from '@/conf/tasks/periodic';
 
 const turndownService = new Turndown()
   .addRule('code', {
@@ -21,7 +21,7 @@ const turndownService = new Turndown()
     },
   });
 
-@ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class ForumFeedTask extends Task {
   public override async run(): Promise<void> {
     await this._checkTopics();
@@ -36,7 +36,7 @@ export default class ForumFeedTask extends Task {
     )
       .then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        this.container.logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
+        this.container.logger.warn('Could not fetch Skript-MC forums (for the forum\'s feed). Is either the website or the bot down/offline?');
         this.container.logger.info(err.message);
       });
 
@@ -84,7 +84,7 @@ export default class ForumFeedTask extends Task {
     )
       .then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
-        this.container.logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
+        this.container.logger.warn('Could not fetch Skript-MC files endpoint (for the forum\'s feed). Is either the website or the bot down/offline?');
         this.container.logger.info(err.message);
       });
 

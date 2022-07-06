@@ -1,15 +1,17 @@
+import type { SwanCommandOptions } from '@/app/types';
 import { Rules } from '@/app/types';
 import { basePreconditions, channelRulesPrecondition, staffRolePrecondition } from '@/conf/configUtils';
 
 export const logs = {
   settings: {
     name: 'Gérer les sauvegardes de messages',
+    category: 'admin',
     command: 'logs',
     description: "Permet d'activer ou de désactiver la sauvegarde des messages de certains salons.",
     examples: ['logs #bot on'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     noChannelFound: ":x: Aucun salon n'a été trouvé. Vérifiez que vous l'avez correctement mentionné et essayez de rafraîchir le cache.",
     loggingStatus: 'Actuellement, la sauvegarde des messages dans ce salon est {status}.',
@@ -22,12 +24,13 @@ export const logs = {
 export const module = {
   settings: {
     name: 'Modifier les modules',
+    category: 'admin',
     command: 'module',
     description: "Permet d'activer ou de désactiver certains modules de Swan.",
     examples: ['module skriptReleases off'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     embed: {
       title: 'Consultez la liste des modules sur Swan Dashboard',
@@ -47,12 +50,13 @@ export const module = {
 export const runTask = {
   settings: {
     name: 'Exécuter une tâche',
+    category: 'admin',
     command: 'run-task',
     description: "Permet d'exécuter immédiatement une tâche de Swan.",
     examples: ['run-task loadSkriptMcSyntaxes', 'run-task syncDatabaseChannels'],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     unknownTask: ':x: Je ne connais pas cette tâche.',
     taskError: ":x: Une erreur est survenue lors de l'exécution de la tâche.",
@@ -63,6 +67,7 @@ export const runTask = {
 export const reactionRole = {
   settings: {
     name: 'Reaction Roles',
+    category: 'admin',
     command: 'reactionrole',
     description: 'Permet de créer un nouvel espace de reaction role.',
     examples: [
@@ -72,7 +77,7 @@ export const reactionRole = {
     ],
     preconditions: [...basePreconditions, staffRolePrecondition, channelRulesPrecondition(Rules.NoHelpChannel)],
     permissions: ['Staff'],
-  },
+  } as SwanCommandOptions,
   messages: {
     success: "L'espace de RoleReaction a bien été créé. :white_check_mark:",
     embed: {

@@ -1,4 +1,11 @@
+import type { TaskOptions } from '@/app/structures/tasks/Task';
+
 export const forumFeed = {
+  settings: {
+    cron: '*/10 * * * *',
+    category: 'periodic',
+    description: 'Récupère toutes les 10 minutes les derniers sujets du forum et les envoie dans le salon dédié.',
+  } as TaskOptions,
   timeDifference: 600_000,
   dataProvider: 'Automatiquement envoyé depuis Skript-MC',
   embed: {
@@ -38,20 +45,27 @@ export const forumFeed = {
   },
 };
 
-export const helpChannels = {
-  extra: {
-    inactivityTime: 1_200_000,
-    limitMessages: 1,
+export const moderation = {
+  settings: {
+    interval: 10_000,
+    category: 'periodic',
+    description: 'Effectue toutes les 10 secondes des actions de modération internes.',
+  } as TaskOptions,
+};
+
+export const poll = {
+  settings: {
+    interval: 10_000,
+    description: 'Vérifie toutes les 10 secondes le statut des sondages créés et les met à jour.',
   },
-  basic: {
-    inactivityTime: 300_000,
-    limitMessages: 5,
-  },
-  unlockMessage: ":white_check_mark: Les salons d'aide principaux étant actuellement fortement utilisés, ce salon a automatiquement été débloqué.",
-  lockMessage: ":chart_with_downwards_trend: Ce salon est désormais inactif, il a donc automatiquement été fermé.\nSi vous avez besoin d'aide, n'hésitez pas à utiliser les salons {channels}.",
 };
 
 export const presence = {
+  settings: {
+    cron: '* * * * *',
+    category: 'periodic',
+    description: 'Met à jour toutes les minutes le statut de présence de Swan.',
+  } as TaskOptions,
   messages: [
     '{memberCount} membres 🎉',
     '{prefix}aide | Skript-MC',
@@ -59,8 +73,22 @@ export const presence = {
 };
 
 export const skriptReleases = {
+  settings: {
+    cron: '*/10 * * * *',
+    category: 'periodic',
+    immediate: true,
+    description: 'Vérifie toutes les 10 minutes les mises à jour disponibles de Skript et envoie un résumé des changements.',
+  } as TaskOptions,
   releaseAnnouncement: "Une nouvelle version de Skript vient d'être publiée ; vous pouvez la télécharger et consulter les changements ci-dessous.",
   githubEndpoint: '/repos/SkriptLang/Skript/releases',
   dataProvider: 'Données fournies par https://github.com',
   timeDifference: 600_000,
+};
+
+export const suggestions = {
+  settings: {
+    cron: '*/10 * * * *',
+    category: 'periodic',
+    description: 'Synchronise toutes les 10 minutes les suggestions de Skript-MC.',
+  } as TaskOptions,
 };

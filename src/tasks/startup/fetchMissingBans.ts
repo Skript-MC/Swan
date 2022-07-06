@@ -7,8 +7,9 @@ import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import { SanctionTypes } from '@/app/types';
 import { nullop } from '@/app/utils';
+import { fetchMissingBans as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 9 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class FetchMissingBansTask extends Task {
   public override async run(): Promise<void> {
     const bans = await this.container.client.guild.bans.fetch();

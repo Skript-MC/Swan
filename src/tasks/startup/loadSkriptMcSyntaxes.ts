@@ -4,8 +4,9 @@ import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import type { SkriptMcDocumentationFullAddonResponse, SkriptMcDocumentationSyntaxResponse } from '@/app/types';
 import settings from '@/conf/settings';
+import { loadSkriptMcSyntaxes as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 5 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class LoadSkriptMcSyntaxesTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.skriptMcSyntaxes = [];

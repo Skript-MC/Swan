@@ -10,8 +10,9 @@ import Task from '@/app/structures/tasks/Task';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
+import { moderation as config } from '@/conf/tasks/periodic';
 
-@ApplyOptions<TaskOptions>({ interval: 10_000 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class ModerationTask extends Task {
   public override async run(): Promise<void> {
     // Fetch all the sanctions that are not revoked but are expired.

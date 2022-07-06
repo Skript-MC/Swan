@@ -4,8 +4,9 @@ import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import { noop, nullop } from '@/app/utils';
 import settings from '@/conf/settings';
+import { cachePolls as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 7 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class CachePollsTask extends Task {
   public override async run(): Promise<void> {
     const polls = await Poll.find();

@@ -8,12 +8,9 @@ import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
-import { skriptReleases as config } from '@/conf/tasks';
+import { skriptReleases as config } from '@/conf/tasks/periodic';
 
-@ApplyOptions<TaskOptions>({
-  cron: '*/10 * * * *',
-  immediate: true,
-})
+@ApplyOptions<TaskOptions>(config.settings)
 export default class SkriptReleasesTask extends Task {
   public override async run(): Promise<void> {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
@@ -23,7 +20,7 @@ export default class SkriptReleasesTask extends Task {
       repo: 'Skript',
     })
       .catch((err: Error) => {
-        this.container.logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
+        this.container.logger.warn('Could not fetch GitHub\'s endpoint (for Skript\'s infos). Is either the website or the bot down/offline?');
         this.container.logger.info(err.message);
       });
     if (!githubReleases || !githubReleases.data)

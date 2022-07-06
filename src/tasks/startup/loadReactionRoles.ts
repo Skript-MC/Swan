@@ -3,8 +3,9 @@ import ReactionRole from '@/app/models/reactionRole';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import { nullop } from '@/app/utils';
+import { loadReactionRoles as config } from '@/conf/tasks/startup';
 
-@ApplyOptions<TaskOptions>({ startupOrder: 3 })
+@ApplyOptions<TaskOptions>(config.settings)
 export default class LoadReactionRolesTask extends Task {
   public override async run(): Promise<void> {
     // Cache all reaction roles' messages' ids.

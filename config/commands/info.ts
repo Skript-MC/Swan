@@ -1,14 +1,17 @@
+import type { PreconditionEntryResolvable } from '@sapphire/framework';
 import { stripIndent } from 'common-tags';
+import type { SwanCommandOptions } from '@/app/types';
 import { ActivityType, Rules } from '@/app/types';
 import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonInfo = {
   settings: {
     name: 'Informations sur un add-on',
+    category: 'info',
     command: 'addoninfo',
     description: "Permet d'afficher diverses informations sur un addon choisi.",
     examples: ['addoninfo mongosk'],
-  },
+  } as SwanCommandOptions,
   messages: {
     unknownAddon: "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
     searchResults: "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
@@ -34,10 +37,11 @@ export const addonInfo = {
 export const documentation = {
   settings: {
     name: 'Documentation',
+    category: 'info',
     command: 'doc',
     description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
-  },
+  } as SwanCommandOptions,
   messages: {
     unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{articleId}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
     searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
@@ -72,10 +76,11 @@ export const documentation = {
 export const serverInfo = {
   settings: {
     name: 'Informations sur un serveur',
+    category: 'info',
     command: 'server',
     description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
     examples: ['skriptinfo hypixel.net'],
-  },
+  } as SwanCommandOptions,
   messages: {
     embed: {
       title: 'Informations sur {query}',
@@ -98,10 +103,11 @@ export const serverInfo = {
 export const skriptInfo = {
   settings: {
     name: 'Informations sur Skript',
+    category: 'info',
     command: 'skript',
     description: "Permet d'afficher diverses informations sur Skript.",
     examples: ['skriptinfo'],
-  },
+  } as SwanCommandOptions,
   messages: {
     embed: {
       downloadTitle: '📥 Informations sur les Versions',
@@ -131,11 +137,12 @@ export const skriptInfo = {
 export const userInfo = {
   settings: {
     name: 'Informations sur un utilisateur (discord)',
+    category: 'info',
     command: 'userinfo',
     description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
     examples: ['userinfo Romitou'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
-  },
+    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)] as PreconditionEntryResolvable,
+  } as SwanCommandOptions,
   messages: {
     notFound: "Aucun membre n'a été trouvé.",
     embed: {
