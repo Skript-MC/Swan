@@ -13,23 +13,22 @@ export default class FetchMissingBansTask extends Task {
   public override async run(): Promise<void> {
     const bans = await this.container.client.guild.bans.fetch();
     const convictedUsers = await ConvictedUser.find();
+
+    const logs = await this.container.client.guild.fetchAuditLogs({
+      type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
+    });
+
     for (const ban of bans.values()) {
       if (!convictedUsers.some(usr => usr.memberId === ban.user.id)) {
-        const logs = await this.container.client.guild.fetchAuditLogs({
-          type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
-        });
-
         const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
         if (!discordBan)
           continue;
-
 
         const moderator = this.container.client.guild.members.resolve(discordBan.executor)
           ?? await this.container.client.guild.members.fetch(discordBan.executor)
             .catch(nullop);
         if (!moderator)
           continue;
-
 
         const data = new ModerationData()
           .setVictim(ban.user, false)
