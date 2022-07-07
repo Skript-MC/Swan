@@ -1,8 +1,14 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
+import type {
+ ApplicationCommandOptionData,
+  AutocompleteInteraction,
+  Collection,
+  CommandInteraction,
+} from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
+import type Task from '@/app/structures/tasks/Task';
 import { Events } from '@/app/types/sapphire';
 import { searchClosestTask } from '@/app/utils';
 import { runTask as config } from '@/conf/commands/admin';
@@ -20,7 +26,7 @@ export default class RunTaskCommand extends SwanCommand {
   ];
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const tasks = this.container.client.stores.get('tasks');
+    const tasks = this._getExecutableTasks();
     const search = searchClosestTask([...tasks.values()], interaction.options.getString('tâche'));
     await interaction.respond(
       search
@@ -40,7 +46,7 @@ export default class RunTaskCommand extends SwanCommand {
   }
 
   private async _exec(interaction: CommandInteraction, taskName: string): Promise<void> {
-    const tasks = this.container.client.stores.get('tasks');
+    const tasks = this._getExecutableTasks();
     const task = tasks.get(taskName);
     if (!task) {
       await interaction.reply(config.messages.unknownTask);
@@ -51,9 +57,14 @@ export default class RunTaskCommand extends SwanCommand {
       await task.run();
     } catch (error: unknown) {
       this.container.client.emit(Events.TaskError, error as Error, { piece: this });
-      await interaction.reply(config.messages.taskError);
+      await interaction.followUp({ content: config.messages.taskError, ephemeral: true });
       return;
     }
     await interaction.followUp({ content: config.messages.success, ephemeral: true });
+  }
+
+  private _getExecutableTasks(): Collection<string, Task> {
+    return this.container.client.stores.get('tasks')
+      .filter(task => task.startupOrder != null || task.cron != null || task.interval != null);
   }
 }
