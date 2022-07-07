@@ -9,7 +9,7 @@ export const addonPack = {
     name: "Pack d'add-ons",
     category: 'basic',
     command: 'addonPack',
-    description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    description: 'Envoie les versions recommandées de Skript et de ses add-ons.',
     examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   } as SwanCommandOptions,
   messages: {
@@ -22,7 +22,7 @@ export const autoMessage = {
     name: 'Message rapide',
     category: 'basic',
     command: 'auto',
-    description: "Permet d'envoyer rapidement un message prédéfini.",
+    description: 'Envoie rapidement un message rapide prédéfini.',
     examples: ['auto skript-gui', 'automsg 1.8'],
   } as SwanCommandOptions,
   messages: {
@@ -35,7 +35,7 @@ export const errorDetails = {
     name: "Détails d'erreur",
     category: 'basic',
     command: 'error',
-    description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    description: 'Trouve des informations supplémentaires sur une erreur rencontrée avec Skript.',
     examples: ['error Invalid amount and/or placement of double quotes'],
   } as SwanCommandOptions,
   messages: {
@@ -132,7 +132,7 @@ export const move = {
   settings: {
     name: 'Déplacer un message',
     category: 'basic',
-    description: "Permet de déplacer un message d'un salon d'aide à un autre.",
+    description: "Déplace un message d'un salon d'aide à un autre.",
     examples: ['move #skript-2 756858183229636640'],
     preconditions: [...basePreconditions, activeMemberRolePrecondition] as PreconditionEntryResolvable,
     permissions: ['Membre Actif'],
@@ -154,7 +154,7 @@ export const ping = {
     name: 'Ping',
     category: 'basic',
     command: 'ping',
-    description: "Permet de connaître la latence de Swan et de l'API Discord.",
+    description: "Envoie la latence de Swan et de l'API de Discord.",
     examples: ['ping'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   } as SwanCommandOptions,

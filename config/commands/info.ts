@@ -9,7 +9,7 @@ export const addonInfo = {
     name: 'Informations sur un add-on',
     category: 'info',
     command: 'addoninfo',
-    description: "Permet d'afficher diverses informations sur un addon choisi.",
+    description: 'Affiche diverses informations sur un addon choisi.',
     examples: ['addoninfo mongosk'],
   } as SwanCommandOptions,
   messages: {
@@ -39,7 +39,7 @@ export const documentation = {
     name: 'Documentation',
     category: 'info',
     command: 'doc',
-    description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
+    description: "Cherche une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
     examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   } as SwanCommandOptions,
   messages: {
@@ -78,7 +78,7 @@ export const serverInfo = {
     name: 'Informations sur un serveur',
     category: 'info',
     command: 'server',
-    description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
+    description: 'Affiche diverses informations sur un serveur Minecraft, via son adresse.',
     examples: ['skriptinfo hypixel.net'],
   } as SwanCommandOptions,
   messages: {
@@ -105,7 +105,7 @@ export const skriptInfo = {
     name: 'Informations sur Skript',
     category: 'info',
     command: 'skript',
-    description: "Permet d'afficher diverses informations sur Skript.",
+    description: 'Affiche diverses informations sur Skript.',
     examples: ['skriptinfo'],
   } as SwanCommandOptions,
   messages: {
@@ -139,7 +139,7 @@ export const userInfo = {
     name: 'Informations sur un utilisateur (discord)',
     category: 'info',
     command: 'userinfo',
-    description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
+    description: 'Afficher diverses informations sur un membre en particulier du Discord.',
     examples: ['userinfo Romitou'],
     preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)] as PreconditionEntryResolvable,
   } as SwanCommandOptions,
