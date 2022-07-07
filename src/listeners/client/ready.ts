@@ -1,9 +1,9 @@
-import { Listener } from '@sapphire/framework';
 import type SwanClient from '@/app/SwanClient';
+import SwanListener from '@/app/structures/SwanListener';
 import { Events } from '@/app/types/sapphire';
 import settings from '@/conf/settings';
 
-export default class ReadyListener extends Listener {
+export default class ReadyListener extends SwanListener {
   public override async run(): Promise<void> {
     const client = this.container.client as SwanClient;
     client.guild = this.container.client.guilds.resolve(settings.bot.guild)!;

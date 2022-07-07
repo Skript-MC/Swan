@@ -1,14 +1,14 @@
-import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { GuildAuditLogs } from 'discord.js';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import BanAction from '@/app/moderation/actions/BanAction';
 import KickAction from '@/app/moderation/actions/KickAction';
+import SwanListener from '@/app/structures/SwanListener';
 import { SanctionTypes } from '@/app/types';
 import messages from '@/conf/messages';
 
-export default class GuildMemberRemoveListener extends Listener {
+export default class GuildMemberRemoveListener extends SwanListener {
   public override async run(member: GuildMember): Promise<void> {
     const isBanned = await ModerationHelper.isBanned(member.id, false);
     if (isBanned && this.container.client.currentlyBanning.has(member.id))

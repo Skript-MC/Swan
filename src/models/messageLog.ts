@@ -2,11 +2,9 @@ import { model, Schema } from 'mongoose';
 import type { MessageLogDocument, MessageLogModel } from '@/app/types';
 
 const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
-  user: {
-    type: Schema.Types.ObjectId,
+  userId: {
+    type: String,
     required: true,
-    ref: 'DiscordUser',
-    autopopulate: true,
   },
   messageId: {
     type: String,

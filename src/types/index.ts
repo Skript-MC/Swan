@@ -791,7 +791,7 @@ export interface SwanChannelModel extends Model<SwanChannelDocument> {
 
 /** Interface for the "MessageLog"'s mongoose schema */
 export interface MessageLogBase {
-  user: DiscordUserDocument;
+  userId: string;
   messageId: string;
   channelId: string;
   oldContent: string;

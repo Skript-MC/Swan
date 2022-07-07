@@ -1,20 +1,20 @@
-import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
+import { DMChannel } from 'discord.js';
 import ReactionRole from '@/app/models/reactionRole';
+import SwanListener from '@/app/structures/SwanListener';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 
-export default class MessageReactionRemove extends Listener {
+export default class MessageReactionRemove extends SwanListener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.type === 'DM')
+    if (user.bot || reaction.message.channel instanceof DMChannel)
       return;
 
     const message = reaction.message as GuildMessage;
-    if (this.container.client.cache.reactionRolesIds.has(message.id))
-      await this._handleReactionRole(reaction, message, user);
-  }
 
-  private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
+    if (!this.container.client.cache.reactionRolesIds.has(message.id))
+      return;
+
     const document = await ReactionRole.findOne({ messageId: message.id });
     if (!document)
       return;
