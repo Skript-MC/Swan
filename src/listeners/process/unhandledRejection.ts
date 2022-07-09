@@ -1,14 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ListenerOptions } from '@sapphire/framework';
 import { Listener } from '@sapphire/framework';
+import { captureException, flush } from '@sentry/node';
+import settings from '@/conf/settings';
 
 @ApplyOptions<ListenerOptions>({ emitter: process })
 export default class UnhandledRejectionListener extends Listener {
-  public override run(error: Error): void {
+  public override async run(error: Error): Promise<void> {
+    captureException(error);
     this.container.logger.error('Oops, something went wrong with Swan! (unhandledRejection)');
-    if (process.env.NODE_ENV === 'production')
-      throw new Error(error.stack);
-    else
-      this.container.logger.error(error.stack);
+    this.container.logger.error(error.stack);
+    await flush(settings.miscellaneous.sentryFlush);
   }
 }

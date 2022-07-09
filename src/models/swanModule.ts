@@ -1,6 +1,8 @@
 import { model, Schema } from 'mongoose';
 import type { SwanModuleDocument, SwanModuleModel } from '@/app/types';
 
+export const allowedStores = ['commands', 'preconditions', 'tasks', 'listeners', 'interaction-handlers'];
+
 const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   name: {
     type: String,
@@ -8,11 +10,11 @@ const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   },
   store: {
     type: String,
-    enum: ['commands', 'preconditions', 'tasks', 'listeners', 'interaction-handlers'],
+    enum: allowedStores,
     required: true,
   },
   location: new Schema({
-    relative: {
+    full: {
       type: String,
       required: true,
     },

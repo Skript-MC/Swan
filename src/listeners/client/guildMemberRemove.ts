@@ -26,7 +26,7 @@ export default class GuildMemberRemoveListener extends Listener {
       && !lastKick.executor.bot
       && lastKick.createdTimestamp >= Date.now() - 1000) {
       const data = new ModerationData()
-        .setVictim(member)
+        .setVictim(member, false)
         .setReason(lastKick.reason)
         .setType(SanctionTypes.Kick);
       await new KickAction(data).commit();

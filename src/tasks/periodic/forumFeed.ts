@@ -33,7 +33,8 @@ export default class ForumFeedTask extends Task {
     const topics: InvisionFullTopic = await axios.get(
       settings.apis.forum + config.endpoints.forums.topics,
       config.baseAxiosParams,
-    ).then(response => (response.status >= 300 ? null : response.data))
+    )
+      .then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
         this.container.logger.warn("Could not fetch Skript-MC forums (for the forum's feed). Is either the website or the bot down/offline?");
         this.container.logger.info(err.message);
@@ -47,18 +48,24 @@ export default class ForumFeedTask extends Task {
     for (const topic of topics.results) {
       if ((Date.now() - new Date(topic.firstPost.date).getTime()) > config.timeDifference)
         continue;
+
       if (![56, 35, 19, 45, 9, 58, 46, 22, 14, 8, 2, 99, 57, 47, 21, 7, 62, 20, 6, 88, 52, 4].includes(topic.forum.id))
         continue;
+
       const markdown = turndownService.turndown(topic.firstPost.content);
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setAuthor({ name: topic.firstPost.author.name, iconURL: 'https:' + topic.firstPost.author.photoUrl })
+        .setAuthor({
+          name: topic.firstPost.author.name,
+          iconURL: 'https:' + topic.firstPost.author.photoUrl,
+        })
         .setTitle(pupa(config.embed.title, { topic }))
         .setURL(topic.url)
         .setDescription(trimText(markdown, 500))
         .setFooter({ text: config.dataProvider })
         .setTimestamp(new Date(topic.firstPost.date));
-      await channel.send({ embeds: [embed] }).catch(noop);
+      await channel.send({ embeds: [embed] })
+        .catch(noop);
     }
   }
 
@@ -74,7 +81,8 @@ export default class ForumFeedTask extends Task {
         },
         auth: config.baseAxiosParams.auth,
       },
-    ).then(response => (response.status >= 300 ? null : response.data))
+    )
+      .then(response => (response.status >= 300 ? null : response.data))
       .catch((err: Error) => {
         this.container.logger.warn("Could not fetch Skript-MC files endpoint (for the forum's feed). Is either the website or the bot down/offline?");
         this.container.logger.info(err.message);
@@ -89,15 +97,21 @@ export default class ForumFeedTask extends Task {
       const updates: InvisionUpdate[] = await axios.get(
         `${settings.apis.forum}${config.endpoints.files.files}/${resource.id}/history`,
         config.baseAxiosParams,
-      ).then(response => (response.status >= 300 ? null : response.data));
+      )
+        .then(response => (response.status >= 300 ? null : response.data));
       if (!updates || updates.length <= 0)
         continue;
+
       if ((Date.now() - new Date(updates[0].date).getTime()) > config.timeDifference)
         continue;
+
       const markdown = turndownService.turndown(resource.changelog || resource.description);
       const embed = new MessageEmbed()
         .setColor(settings.colors.default)
-        .setAuthor({ name: resource.author.name, iconURL: resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}` })
+        .setAuthor({
+          name: resource.author.name,
+          iconURL: resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}`,
+        })
         .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
         .setURL(resource.url)
         .setDescription(trimText(markdown, 150))
@@ -107,7 +121,8 @@ export default class ForumFeedTask extends Task {
         .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
         .setFooter({ text: config.dataProvider })
         .setTimestamp(new Date(resource.date));
-      await channel.send({ embeds: [embed] }).catch(noop);
+      await channel.send({ embeds: [embed] })
+        .catch(noop);
     }
   }
 }

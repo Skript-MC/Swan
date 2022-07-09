@@ -11,7 +11,8 @@ import settings from '@/conf/settings';
 
 export default class MessageUpdateListener extends Listener {
   public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
-    await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
+    if (oldMessage?.content && !oldMessage.system)
+      await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 
     if (newMessage.author.bot
       || newMessage.system

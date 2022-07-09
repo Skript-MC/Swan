@@ -27,10 +27,16 @@ export default class SuggestionsTask extends Task {
       if (suggestion.discordId) {
         // The suggestion has a discordId, so we need to update the suggestion
         message = await channel.messages.fetch(suggestion.discordId);
-        await message.edit({ embeds: [embed], components: [actions] });
+        await message.edit({
+          embeds: [embed],
+          components: [actions],
+        });
       } else {
         // Send the message and store it
-        message = await channel.send({ embeds: [embed], components: [actions] });
+        message = await channel.send({
+          embeds: [embed],
+          components: [actions],
+        });
         const thread = await message.startThread({
           name: `Suggestion ${suggestion.id} de ${suggestion.user.username}`,
         });

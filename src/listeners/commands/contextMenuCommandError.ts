@@ -6,6 +6,7 @@ import messages from '@/conf/messages';
 
 export default class CommandErrorListener extends Listener<typeof Events.ContextMenuCommandError> {
   public override async run(error: Error, { interaction }: ContextMenuCommandErrorPayload): Promise<void> {
+    captureException(error);
     await interaction.reply(messages.global.oops).catch(noop);
     captureException(error, {
       user: interaction.user,
@@ -16,10 +17,6 @@ export default class CommandErrorListener extends Listener<typeof Events.Context
     });
     this.container.logger.error('Oops, something went wrong with a command!');
     this.container.logger.info(`Command: ${interaction.commandName}`);
-
-    if (process.env.NODE_ENV === 'production')
-      throw new Error(error.stack);
-    else
-      this.container.logger.error(error.stack);
+    this.container.logger.error(error.stack);
   }
 }
