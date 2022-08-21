@@ -34,12 +34,11 @@ export default class ModerationData {
   // TODO: Maybe this should be put in a separate class that acts the same as ModerationData.
   file: { path: string; name: string };
   shouldPurge: boolean;
-  originalWarnId: string;
 
   /**
    * Create moderation data from a message or from individual informations.
    *
-   * @param {Message | TextChannel | AkairoClient} argument
+   * @param {Message | TextChannel} argument
    * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...).
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
@@ -73,7 +72,11 @@ export default class ModerationData {
     this.informations = {};      // The additional information to be given to the sanction model.
     this.file = null;            // File informations if it is a ban.
     this.shouldPurge = false;    // Whether we should purge the messages of the member while hard-banning them.
-    this.originalWarnId = null;  // The ID of the original warn to remove in a `.removewarn`.
+  }
+
+  public setSanctionId(value: string): this {
+    this.sanctionId = value;
+    return this;
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
@@ -125,11 +128,6 @@ export default class ModerationData {
 
   public setShouldPurge(bool: boolean): this {
     this.shouldPurge = bool;
-    return this;
-  }
-
-  public setOriginalWarnId(id: string): this {
-    this.originalWarnId = id;
     return this;
   }
 

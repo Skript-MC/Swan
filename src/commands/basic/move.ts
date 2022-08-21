@@ -12,6 +12,7 @@ import {
   MessageEmbed,
   Permissions,
 } from 'discord.js';
+import { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
@@ -23,6 +24,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class MoveCommand extends SwanCommand {
+  public static commandType = ApplicationCommandTypes.MESSAGE;
+
   public override async contextMenuRun(
     interaction: ContextMenuInteraction,
     _context: ContextMenuCommand.RunContext,

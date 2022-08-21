@@ -1,5 +1,4 @@
 import { GuildMember, User } from 'discord.js';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
@@ -18,12 +17,12 @@ export default class MuteAction extends ModerationAction {
   private async _mute(): Promise<void> {
     // 1. Add to the database
     try {
-      const user = await ConvictedUser.findOneAndUpdate(
-        { memberId: this.data.victim.id },
-        { currentMuteId: this.data.sanctionId },
-        { upsert: true, new: true },
-      );
-      await Sanction.create({ ...this.data.toSchema(), user: user._id });
+      // const user = await ConvictedUser.findOneAndUpdate(
+      //   { memberId: this.data.victim.id },
+      //   { currentMuteId: this.data.sanctionId },
+      //   { upsert: true, new: true },
+      // );
+      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

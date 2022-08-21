@@ -26,26 +26,27 @@ export default class ModerationTask extends Task {
 
     for (const sanction of sanctions) {
       const {
-        memberId,
+        userId,
         type,
         informations,
         sanctionId,
       } = sanction;
 
-      const member = this.container.client.guild.members.cache.get(memberId)
-        ?? (await this.container.client.guild.members.fetch(memberId)
+      const member = this.container.client.guild.members.cache.get(userId)
+        ?? (await this.container.client.guild.members.fetch(userId)
           .catch(noop));
       if (!member)
         continue;
 
       const user = member.user
-        ?? this.container.client.users.resolve(memberId)
-        ?? (await this.container.client.users.fetch(memberId)
+        ?? this.container.client.users.resolve(userId)
+        ?? (await this.container.client.users.fetch(userId)
           .catch(noop));
       if (!user)
         continue;
 
       const data = new ModerationData()
+        .setSanctionId(sanctionId)
         .setVictim(member ?? user, false)
         .setReason(messages.moderation.reasons.autoRevoke);
 
@@ -69,8 +70,7 @@ export default class ModerationTask extends Task {
         }
 
         case SanctionTypes.Warn: {
-          data.setType(SanctionTypes.RemoveWarn)
-            .setOriginalWarnId(sanctionId);
+          data.setType(SanctionTypes.RemoveWarn);
           await new RemoveWarnAction(data).commit();
           break;
         }

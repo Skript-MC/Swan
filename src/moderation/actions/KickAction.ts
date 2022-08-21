@@ -1,5 +1,4 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
@@ -15,11 +14,7 @@ export default class KickAction extends ModerationAction {
   private async _kick(): Promise<void> {
     // 1. Add to the database
     try {
-      const user = await ConvictedUser.findOneOrCreate(
-        { memberId: this.data.victim.id },
-        { memberId: this.data.victim.id },
-      );
-      await Sanction.create({ ...this.data.toSchema(), user: user._id });
+      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

@@ -3,7 +3,6 @@ import {
  Formatters, GuildMember, Permissions, User,
 } from 'discord.js';
 import pupa from 'pupa';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
@@ -20,8 +19,6 @@ export default class BanAction extends ModerationAction {
 
   protected after(): void {
     this.client.currentlyBanning.delete(this.data.victim.id);
-    this.client.cache.convictedUsers
-      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
   protected async exec(): Promise<void> {
@@ -45,8 +42,9 @@ export default class BanAction extends ModerationAction {
     try {
       if (this.updateInfos.isUpdate()) {
         this.client.cache.channelBannedSilentUsers.delete(this.data.victim.id);
+        const ban = await ModerationHelper.getCurrentBan(this.data.victim.id);
         await Sanction.findOneAndUpdate(
-          { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentBanId },
+          { userId: this.data.victim.id, sanctionId: ban.sanctionId },
           {
             $set: {
               duration: this.data.duration,
@@ -65,12 +63,8 @@ export default class BanAction extends ModerationAction {
           },
         );
       } else {
-        const user = await ConvictedUser.findOneAndUpdate(
-          { memberId: this.data.victim.id },
-          { currentBanId: this.data.sanctionId },
-          { upsert: true, new: true },
-        );
-        await Sanction.create({ ...this.data.toSchema(), user: user._id });
+        console.log(this.data.victim.id);
+        await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
@@ -118,7 +112,7 @@ export default class BanAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentBanId },
+        { userId: this.data.victim.id, sanctionId: this.data.sanctionId },
         {
           $set: {
             duration: this.data.duration,
@@ -176,18 +170,13 @@ export default class BanAction extends ModerationAction {
     // 2. Add to the database
     try {
       this.client.cache.channelBannedSilentUsers.add(this.data.victim.id);
-      const user = await ConvictedUser.findOneAndUpdate(
-        { memberId: this.data.victim.id },
-        { currentBanId: this.data.sanctionId },
-        { upsert: true, new: true },
-      );
       await Sanction.create({
         ...this.data.toSchema(),
         informations: {
           ...this.data.informations,
           hasSentMessages: false,
         },
-        user: user._id,
+        userId: this.data.victim.id,
       });
     } catch (unknownError: unknown) {
       this.errorState.addError(

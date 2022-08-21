@@ -2,7 +2,6 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
@@ -48,7 +47,7 @@ export default class RemoveWarnCommand extends SwanCommand {
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const sanctions = await Sanction.find({ memberId: interaction.options.get('membre').value, revoked: false }).catch(nullop);
+    const sanctions = await Sanction.find({ userId: interaction.options.get('membre').value, revoked: false }).catch(nullop);
     await interaction.respond(
       sanctions
         .slice(0, 20)
@@ -70,8 +69,8 @@ export default class RemoveWarnCommand extends SwanCommand {
       return;
     }
 
-    const member = interaction.guild.members.cache.get(warn.memberId)
-      ?? await interaction.guild.members.fetch(warn.memberId).catch(nullop);
+    const member = interaction.guild.members.cache.get(warn.userId)
+      ?? await interaction.guild.members.fetch(warn.userId).catch(nullop);
     if (!member) {
       await interaction.reply(config.messages.memberNotFound);
       return;
@@ -88,17 +87,11 @@ export default class RemoveWarnCommand extends SwanCommand {
     }, 10_000);
 
     try {
-      const convictedUser = await ConvictedUser.findOne({ memberId: member.id });
-      if (!convictedUser || convictedUser.currentWarnCount === 0) {
-        await interaction.reply(config.messages.notWarned);
-        return;
-      }
-
       const data = new ModerationData(interaction)
+        .setSanctionId(warnId)
         .setVictim(member)
         .setReason(reason)
-        .setType(SanctionTypes.RemoveWarn)
-        .setOriginalWarnId(warn.sanctionId);
+        .setType(SanctionTypes.RemoveWarn);
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)

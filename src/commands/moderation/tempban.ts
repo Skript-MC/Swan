@@ -3,37 +3,48 @@ import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } fr
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import MuteAction from '@/app/moderation/actions/MuteAction';
+import BanAction from '@/app/moderation/actions/BanAction';
 import resolveDuration from '@/app/resolvers/duration';
 import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
 import SwanCommand from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
-import { mute as config } from '@/conf/commands/moderation';
+import { ban as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class MuteCommand extends SwanCommand {
+export default class TempBanCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionTypes.USER,
       name: 'membre',
-      description: 'Membre à appliquer la restriction de parole',
+      description: 'Membre à appliquer le bannissement',
       required: true,
     },
     {
       type: ApplicationCommandOptionTypes.STRING,
       name: 'durée',
-      description: 'Durée de la restriction',
+      description: 'Durée du bannissement',
       required: true,
     },
     {
       type: ApplicationCommandOptionTypes.STRING,
       name: 'raison',
-      description: 'Raison de la sanction (sera affichée au membre)',
+      description: "Raison de l'avertissement (sera affiché au membre)",
       required: true,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'autoban',
+      description: "Automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message ?",
+      required: false,
+    },
+    {
+      type: ApplicationCommandOptionTypes.BOOLEAN,
+      name: 'purge',
+      description: 'Supprimer les messages postés par le membre dans les 7 derniers jours ?',
+      required: false,
     },
   ];
 
@@ -52,7 +63,7 @@ export default class MuteCommand extends SwanCommand {
 
     const isForumMod = moderator.roles.highest.id === settings.roles.forumModerator;
 
-    const duration = resolveDuration(interaction.options.getString('durée'), !isForumMod);
+    const duration = resolveDuration(interaction.options.getString('durée'), false);
     if (duration.error || !duration) {
       await interaction.reply(messages.prompt.duration);
       return;
@@ -68,14 +79,19 @@ export default class MuteCommand extends SwanCommand {
 
     await this._exec(
       interaction,
+      interaction.options.getBoolean('autoban'),
+      interaction.options.getBoolean('purge'),
       member.value,
       duration.value,
       interaction.options.getString('raison'),
     );
   }
 
+  // eslint-disable-next-line max-params
   private async _exec(
     interaction: CommandInteraction,
+    autoban: boolean,
+    purge: boolean,
     member: GuildMember,
     duration: number,
     reason: string,
@@ -90,25 +106,29 @@ export default class MuteCommand extends SwanCommand {
       this.container.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
-    if (await ModerationHelper.isBanned(member.id)) {
-      await interaction.reply(messages.global.impossibleBecauseBanned).catch(noop);
-      return;
+    const data = new ModerationData(interaction)
+      .setVictim(member)
+      .setReason(reason)
+      .setShouldPurge(purge);
+
+    if (duration === -1) {
+      data.setDuration(duration, false)
+        .setType(SanctionTypes.Hardban);
+    } else {
+      data.setDuration(duration, true)
+        .setInformations({ shouldAutobanIfNoMessages: autoban })
+        .setType(SanctionTypes.Ban);
     }
 
     try {
-      const data = new ModerationData(interaction)
-        .setVictim(member)
-        .setReason(reason)
-        .setDuration(duration, true)
-        .setType(SanctionTypes.Mute);
-
-      const success = await new MuteAction(data).commit();
+      const success = await new BanAction(data).commit();
       if (success)
         await interaction.reply(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      this.container.logger.error('An unexpected error occurred while muting a member!');
+      this.container.logger.error('An unexpected error occurred while banning a member!');
       this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
+      this.container.logger.info(`Autoban: ${autoban}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.reply(messages.global.oops).catch(noop);
     }

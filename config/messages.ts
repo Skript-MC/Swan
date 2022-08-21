@@ -149,7 +149,7 @@ export default {
       ban: 'Bannissement',
       hardban: 'Bannissement définitif',
       muteUpdate: "Modification du mute des salons d'aide",
-      mute: "Mute des salons d'aide",
+      mute: 'Exclusion',
       kick: 'Expulsion',
       warn: 'Avertissement',
       unban: 'Débannissement',

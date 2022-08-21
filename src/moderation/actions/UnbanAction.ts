@@ -1,5 +1,4 @@
 import { GuildMember, Permissions, User } from 'discord.js';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
@@ -15,8 +14,6 @@ export default class UnbanAction extends ModerationAction {
 
   protected after(): void {
     this.client.currentlyUnbanning.delete(this.data.victim.id);
-    this.client.cache.convictedUsers
-      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
   protected async exec(): Promise<void> {
@@ -25,14 +22,10 @@ export default class UnbanAction extends ModerationAction {
 
   private async _unban(): Promise<void> {
     let ban: SanctionDocument | null = null;
-    // 1. Update the Database
+    // 1. Update the database
     try {
-      const user = await ConvictedUser.findOneAndUpdate({ memberId: this.data.victim.id }, { currentBanId: null });
-      if (!user)
-        throw new TypeError('The user to unban was not found in the database.');
-
       ban = await Sanction.findOneAndUpdate(
-        { sanctionId: user.currentBanId },
+        { sanctionId: this.data.sanctionId },
         {
           $set: { revoked: true },
           $push: {
@@ -49,7 +42,7 @@ export default class UnbanAction extends ModerationAction {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occurred while revoking a ban in the Database')
+          .setMessage('An error occurred while revoking a ban in the database')
           .addDetail('Ban: ID', this.data.sanctionId)
           .addDetail('Victim: ID', this.data.victim.id)
           .addDetail('Unban Reason', this.data.reason),

@@ -7,7 +7,7 @@ import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import type ModerationData from '@/app/moderation/ModerationData';
-import type { BanChannelMessage } from '@/app/types';
+import type { BanChannelMessage, SanctionDocument } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { nullop, prunePseudo } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -144,19 +144,38 @@ export default {
       banTypes.push(SanctionTypes.Hardban);
 
     const banObject = await Sanction.findOne({
-      memberId,
+      userId: memberId,
       revoked: false,
       type: { $in: banTypes },
     });
     return Boolean(banObject);
   },
 
-  async isMuted(memberId: string): Promise<boolean> {
-    const muteObject = await Sanction.findOne({
-      memberId,
+  async getCurrent(memberId: string, sanctionType: SanctionTypes): Promise<SanctionDocument> {
+    return Sanction.findOne({
+      userId: memberId,
       revoked: false,
-      type: SanctionTypes.Mute,
+      type: sanctionType,
     });
-    return Boolean(muteObject);
+  },
+
+  async getCurrentBan(memberId: string): Promise<SanctionDocument> {
+    return await this.getCurrent(memberId, SanctionTypes.Ban);
+  },
+
+  async getCurrentHardban(memberId: string): Promise<SanctionDocument> {
+    return await this.getCurrent(memberId, SanctionTypes.Hardban);
+  },
+
+  async getCurrentMute(memberId: string): Promise<SanctionDocument> {
+    return await this.getCurrent(memberId, SanctionTypes.Mute);
+  },
+
+  async getCurrentWarnCount(memberId: string): Promise<number> {
+    return Sanction.countDocuments({
+      userId: memberId,
+      revoked: false,
+      type: SanctionTypes.Warn,
+    });
   },
 };

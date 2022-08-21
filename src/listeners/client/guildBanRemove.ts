@@ -11,11 +11,12 @@ export default class GuildBanRemoveListener extends SwanListener {
     if (this.container.client.currentlyUnbanning.has(ban.user.id))
       return;
 
-    const isBanned = await ModerationHelper.isBanned(ban.user.id, true);
-    if (!isBanned)
+    const currentHardban = await ModerationHelper.getCurrentHardban(ban.user.id);
+    if (!currentHardban)
       return;
 
     const data = new ModerationData()
+      .setSanctionId(currentHardban.sanctionId)
       .setVictim(ban.user, false)
       .setReason(messages.global.noReason)
       .setType(SanctionTypes.Unban);

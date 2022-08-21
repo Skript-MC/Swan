@@ -20,12 +20,13 @@ const commonMessages = {
     `,
 };
 
+// While ban command has been renamed to tempban, we need to keep the old name for backwards compatibility
 export const ban = {
   settings: {
-    name: 'Ban',
+    name: 'Bannissement temporaire',
     category: 'moderation',
-    command: 'ban',
-    description: 'Applique une restriction du Discord à un membre (= salon des bannis), ou le bannir définitivement.',
+    command: 'tempban',
+    description: 'Applique une restriction du Discord à un membre (= salon des bannis) de façon temporaire.',
     examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
     preconditions: [...basePreconditions, staffRolePrecondition],
   } as SwanCommandOptions,
@@ -36,7 +37,9 @@ export const ban = {
   },
 };
 
-export const hardban = ban;
+export const hardban = {
+  messages: ban.messages,
+};
 
 export const history = {
   settings: {

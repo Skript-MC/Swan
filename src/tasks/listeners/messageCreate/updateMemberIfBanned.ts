@@ -12,7 +12,7 @@ export default class UpdateMemberIfBannedTask extends MessageTask {
   public async runListener(message: Message): Promise<boolean> {
     if (this.container.client.cache.channelBannedSilentUsers.has(message.author.id)) {
       const sanction = await Sanction.findOne({
-        memberId: message.author.id,
+        userId: message.author.id,
         type: SanctionTypes.Ban,
         revoked: false,
       }).catch(nullop);

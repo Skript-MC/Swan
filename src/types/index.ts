@@ -9,6 +9,7 @@ import type {
   Message,
   User,
 } from 'discord.js';
+import type { ApplicationCommandTypes } from 'discord.js/typings/enums';
 import type {
   Document,
   FilterQuery,
@@ -369,6 +370,7 @@ export interface SwanCommandOptions extends CommandOptions {
   category: string;
   permissions?: string[];
   commandOptions?: ApplicationCommandOptionData[];
+  commandType?: ApplicationCommandTypes.MESSAGE | ApplicationCommandTypes.USER;
 }
 
 export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
@@ -621,34 +623,6 @@ export type MessageModel = Model<MessageDocument>;
 
 // #endregion
 
-/* ****************************** */
-/*  ConvictedUser Database Types  */
-/* ****************************** */
-
-// #region ConvictedUser Database Types (VS Code)
-// region ConvictedUser Database Types (JetBrains)
-
-/** Interface for the "ConvictedUser"'s mongoose schema */
-export interface ConvictedUserBase {
-  memberId: string;
-  currentBanId?: string | null;
-  currentMuteId?: string | null;
-  currentWarnCount?: number | null;
-}
-
-/** Interface for the "ConvictedUser"'s mongoose document */
-export interface ConvictedUserDocument extends ConvictedUserBase, Document {}
-
-/** Interface for the "ConvictedUser"'s mongoose model */
-export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
-  findOneOrCreate(
-    condition: FilterQuery<ConvictedUserDocument>,
-    doc: ConvictedUserBase,
-  ): Promise<ConvictedUserDocument>;
-}
-
-// #endregion
-
 /* ************************* */
 /*  Sanction Database Types  */
 /* ************************* */
@@ -668,8 +642,7 @@ export interface SanctionUpdate {
 
 /** Interface for the "Sanction"'s mongoose schema */
 export interface SanctionBase {
-  memberId: string;
-  user: ConvictedUserDocument | Types.ObjectId;
+  userId: string;
   type: SanctionTypes;
   moderator: string;
   start: number;
@@ -687,19 +660,10 @@ export interface SanctionBase {
  * It is not meant to be used, it is just a base which extends document, and modify SanctionBase to use
  * mongoose's types (allow things like .addToSet on the mongoose array)
  */
-interface SanctionBaseDocument extends SanctionBase, Document {
+export interface SanctionDocument extends SanctionBase, Document {
   updates?: Types.Array<SanctionUpdate>;
 }
 
-/** Interface for the "Sanction"'s mongoose document, when the user field is not populated */
-export interface SanctionDocument extends SanctionBaseDocument {
-  user: ConvictedUserDocument['_id'];
-}
-
-/** Interface for the "Sanction"'s mongoose document, when the user field is populated */
-export interface SanctionPopulatedDocument extends SanctionBaseDocument {
-  user: ConvictedUserDocument;
-}
 
 /** Interface for the "Sanction"'s mongoose model */
 export type SanctionModel = Model<SanctionDocument>;
