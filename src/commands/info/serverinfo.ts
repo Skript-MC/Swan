@@ -50,6 +50,7 @@ export default class ServerInfoCommand extends SwanCommand {
       .setColor(settings.colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { query }) })
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
+      .setThumbnail(`${settings.apis.server}/icon/${query}`)
       .setTimestamp();
 
     if (typeof server.online !== 'undefined')

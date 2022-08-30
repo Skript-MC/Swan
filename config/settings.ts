@@ -67,7 +67,7 @@ export default {
     addons: 'https://api.skripttools.net/v4/addons',
     skriptmc: 'https://skript-mc.fr/api',
     forum: 'https://skript-mc.fr/forum/api',
-    server: 'https://api.mcsrvstat.us/2',
+    server: 'https://api.mcsrvstat.us',
     latex: 'https://latex.codecogs.com/png.image?',
   },
   roles: {
