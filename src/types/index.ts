@@ -121,7 +121,7 @@ export interface ServerStatResponse {
   };
   mods?: {
     names: string[];
-    raw: string[];
+    raw: Record<number, string>;
   };
 }
 

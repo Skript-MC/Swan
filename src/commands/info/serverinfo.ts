@@ -50,7 +50,7 @@ export default class ServerInfoCommand extends SwanCommand {
       embed.addField(embedMessages.status, (server.online ? embedMessages.online : embedMessages.offline), true);
     if (server.ip)
       embed.addField(embedMessages.ip, `\`${server.ip}${server.port ? `:${server.port}` : ''}\``, true);
-    if (server.players)
+    if (server.players?.online && server.players?.max)
       embed.addField(embedMessages.players, `${server.players.online}/${server.players.max}`, true);
     if (server.version)
       embed.addField(embedMessages.version, server.version, true);
@@ -58,10 +58,10 @@ export default class ServerInfoCommand extends SwanCommand {
       embed.addField(embedMessages.hostname, server.hostname, true);
     if (server.software)
       embed.addField(embedMessages.software, server.software, true);
-    if (server.plugins)
-      embed.addField(embedMessages.plugins, server.plugins.raw.length.toString(), true);
-    if (server.mods)
-      embed.addField(embedMessages.mods, server.mods.raw.length.toString(), true);
+    if (server.plugins?.names)
+      embed.addField(embedMessages.plugins, server.plugins.names.length.toString(), true);
+    if (server.mods?.names)
+      embed.addField(embedMessages.mods, server.mods.names.length.toString(), true);
 
     await interaction.reply({ embeds: [embed] });
   }
