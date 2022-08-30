@@ -1,3 +1,4 @@
+import { isIP } from 'node:net';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
@@ -30,12 +31,17 @@ export default class ServerInfoCommand extends SwanCommand {
   }
 
   private async _exec(interaction: CommandInteraction, query: string): Promise<void> {
-    const server: ServerStatResponse = await axios(`${settings.apis.server}/${query}`)
+    if (isIP(query.split(':').shift())) {
+      await interaction.reply(config.messages.noIp).catch(noop);
+      return;
+    }
+
+    const server: ServerStatResponse = await axios(`${settings.apis.server}/2/${query}`)
       .then(res => (res.status >= 300 ? null : res.data))
       .catch(nullop);
 
     if (!server) {
-      interaction.reply(config.messages.requestFailed).catch(noop);
+      await interaction.reply(config.messages.requestFailed).catch(noop);
       return;
     }
 

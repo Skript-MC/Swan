@@ -92,6 +92,7 @@ export const serverInfo = {
       footer: 'Exécuté par {member.displayName} | Données fournies par https://api.mcsrcstat.us',
     },
     requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
+    noIp: "Il faut entrer le nom de domaine (`mc.hypixel.net`), pas l'adresse IP !",
   },
 };
 
