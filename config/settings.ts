@@ -26,10 +26,6 @@ export default {
     permanentKeywords: ['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'],
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
-    activeMemberBlacklistedLinks: [
-      'skripthub.net/docs',
-      'docs.skunity.com',
-    ],
     booleanTruths: ['oui', 'o', 'yes', 'y', 'vrai', 'v', 'true', 't', 'on'],
     booleanFalses: ['non', 'no', 'n', 'faux', 'f', 'false', 'off'],
   },
