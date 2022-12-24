@@ -8,7 +8,6 @@ import {
   MessageEmbed,
   Permissions,
 } from 'discord.js';
-import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
 import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
@@ -36,7 +35,6 @@ export default class MessageCreateListener extends Listener {
 
   private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
     yield await this._updateMemberIfBanned(message);
-    yield await this._preventActiveMembersToPostDocLinks(message);
     yield await this._addReactionsInIdeaChannel(message);
     yield await this._handleSuggestion(message);
     yield await this._quoteLinkedMessage(message);
@@ -56,19 +54,6 @@ export default class MessageCreateListener extends Listener {
 
       await Sanction.updateOne({ _id: sanction._id }, { $set: { informations: { hasSentMessages: true } } });
       this.container.client.cache.channelBannedSilentUsers.delete(message.author.id);
-    }
-    return false;
-  }
-
-  private async _preventActiveMembersToPostDocLinks(message: GuildMessage): Promise<boolean> {
-    // Prevent member with the "Active member" role to post the link of a "banned" documentation.
-    if (message.member.roles.cache.has(settings.roles.activeMember)
-      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => message.content.includes(link)))) {
-      await message.delete();
-      const content = (message.content.length + messages.miscellaneous.noDocLink.length) >= MessageLimits.MaximumLength
-        ? trimText(message.content, MessageLimits.MaximumLength - messages.miscellaneous.noDocLink.length - 3)
-        : message.content;
-      await message.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
     }
     return false;
   }

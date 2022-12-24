@@ -1,11 +1,10 @@
-import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
 import MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';
-import { noop, trimText } from '@/app/utils';
+import { noop } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
@@ -18,19 +17,6 @@ export default class MessageUpdateListener extends Listener {
       || newMessage.system
       || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
       return;
-
-    // Prevent active members from posting another documentation than Skript-MC's.
-    if (newMessage.member.roles.cache.has(settings.roles.activeMember)
-      && (settings.miscellaneous.activeMemberBlacklistedLinks.some(link => newMessage.content.includes(link)))) {
-      await newMessage.delete();
-      const finalLength = (oldMessage.content.length + messages.miscellaneous.noDocLink.length);
-      const content = finalLength >= MessageLimits.MaximumLength
-        ? trimText(oldMessage.content, MessageLimits.MaximumLength - messages.miscellaneous.noDocLink.length - 3)
-        : oldMessage.content;
-      await newMessage.author.send(pupa(messages.miscellaneous.noDocLink, { content }));
-
-      return;
-    }
 
     // Check for ghostpings.
     // List of all users that were mentionned in the old message.
