@@ -17,8 +17,7 @@ export default function splitText(text: string, n: number = MessageLimits.Maximu
 
     if ((blocks[index] || '').length + line.length >= n - 2)
       index++;
-    if (!blocks[index])
-      blocks[index] = '';
+    blocks[index] ||= '';
 
     blocks[index] += `${line.slice(0, n - 1)}\n`;
   }

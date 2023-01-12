@@ -20,6 +20,9 @@ module.exports = {
       ignoredTypeNames: ['TextChannel', 'NewsChannel'],
     }],
 
+    // TODO: When we have strictNullChecks enabled in tsconfig, enable this rule
+    '@typescript-eslint/prefer-nullish-coalescing': 'off',
+
     // We don't necessarily want to use `this` in our class methods (such as `Command#exec`),
     // but neither do we want them to be static.
     'class-methods-use-this': 'off',

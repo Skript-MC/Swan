@@ -4,7 +4,7 @@
   "description": "Bot discord de Skript-MC.",
   "main": "./build/src/main.js",
   "scripts": {
-    "build": "rm -rf build && tsc",
+    "build": "tsc",
     "build:win": "rd /s /q \"build\"&& tsc",
     "exec": "node --no-warnings ./build/src/main.js",
     "start": "npm run build && NODE_ENV=production npm run exec",

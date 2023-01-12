@@ -17,7 +17,7 @@ export default {
 
     // Validate the channel and the message ID.
     const channel = container.client.guild.channels.resolve(poll.channelId);
-    if (!channel || !channel.isText())
+    if (!channel?.isText())
       return;
 
     const message = channel?.messages?.resolve(poll.messageId)

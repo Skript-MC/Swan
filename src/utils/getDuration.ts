@@ -80,7 +80,7 @@ export default function getDuration(val: string): number {
       const nextUnit = durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
       const newUnit = durations[nextUnit]?.[0][0];
 
-      if (!groups || !groups.number || (!groups.unit && nextUnit === 0))
+      if (!groups?.number || (!groups.unit && nextUnit === 0))
         throw new TypeError('Value is an invalid duration');
 
       parts.push({ number: groups.number, unit: groups.unit ?? newUnit });

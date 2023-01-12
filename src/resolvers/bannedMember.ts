@@ -25,8 +25,7 @@ export default async function resolveBannedMember(
 
   // Extract the ID from the parameter
   let resolvedPerson: GuildMember | User | undefined;
-  const id = UserOrMemberMentionRegex.exec(parameter)?.groups?.id
-    || SnowflakeRegex.exec(parameter)?.groups?.id;
+  const id = UserOrMemberMentionRegex.exec(parameter)?.groups?.id || SnowflakeRegex.exec(parameter)?.groups?.id;
   // If we found a valid ID, try resolving the User from cache
   if (id) {
     resolvedPerson = resolveUser(id)

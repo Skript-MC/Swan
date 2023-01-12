@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { Endpoints } from '@octokit/types';
 import type { Command, CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';

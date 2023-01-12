@@ -69,7 +69,7 @@ export default class UnbanAction extends ModerationAction {
         if (!channelId)
           return;
         const channel = this.data.guild.channels.resolve(channelId);
-        if (!channel || !channel.isText())
+        if (!channel?.isText())
           return;
 
         const messages = await ModerationHelper.getAllChannelMessages(channel);
