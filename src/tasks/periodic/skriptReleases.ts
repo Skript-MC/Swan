@@ -26,7 +26,7 @@ export default class SkriptReleasesTask extends Task {
         this.container.logger.warn("Could not fetch GitHub's endpoint (for Skript's infos). Is either the website or the bot down/offline?");
         this.container.logger.info(err.message);
       });
-    if (!githubReleases || !githubReleases.data)
+    if (!githubReleases)
       return;
 
     const lastRelease = githubReleases.data[0];
