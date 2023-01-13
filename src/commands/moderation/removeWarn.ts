@@ -1,12 +1,12 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { removeWarn as config } from '@/conf/commands/moderation';
@@ -16,20 +16,20 @@ import messages from '@/conf/messages';
 export default class RemoveWarnCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
       description: 'Révoquer un avertissement de ce membre',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'avertissement',
       description: "Sélectionnez l'avertissement à révoquer",
       required: true,
       autocomplete: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'raison',
       description: "Raison de la révoquation de l'avertissement",
       required: false,
@@ -37,18 +37,18 @@ export default class RemoveWarnCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(
       interaction,
-      interaction.options.getString('avertissement'),
+      interaction.options.getString('avertissement', true),
       interaction.options.getString('raison') ?? messages.global.noReason,
     );
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const sanctions = await Sanction.find({ memberId: interaction.options.get('membre').value, revoked: false }).catch(nullop);
+    const sanctions = await Sanction.find({ memberId: interaction.options.get('membre', true).value, revoked: false }).catch(nullop);
     await interaction.respond(
       sanctions
         .slice(0, 20)
@@ -60,7 +60,7 @@ export default class RemoveWarnCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     warnId: string,
     reason: string,
   ): Promise<void> {

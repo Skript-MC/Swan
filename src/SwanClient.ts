@@ -1,6 +1,6 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
-import { Intents } from 'discord.js';
+import { GatewayIntentBits } from 'discord.js';
 import SwanModule, { allowedStores } from '@/app/models/swanModule';
 import SwanCacheManager from '@/app/structures/SwanCacheManager';
 import SwanLogger from '@/app/structures/SwanLogger';
@@ -21,12 +21,12 @@ export default class SwanClient extends SapphireClient {
       loadDefaultErrorListeners: true,
 
       intents: [
-        Intents.FLAGS.GUILDS, // Get access to channels, create some, pin messages etc.
-        Intents.FLAGS.GUILD_MEMBERS, // Access to GuildMemberAdd/GuildMemberRemove events.
-        Intents.FLAGS.GUILD_BANS, // Access to GuildBanAdd and GuildBanRemove events.
-        Intents.FLAGS.GUILD_PRESENCES, // Access to users' presence (for .userinfo).
-        Intents.FLAGS.GUILD_MESSAGES, // Access to Message, MessageDelete and MessageUpdate events.
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS, // Access to MessageReactionAdd events.
+        GatewayIntentBits.Guilds, // Get access to channels, create some, pin messages etc.
+        GatewayIntentBits.GuildMembers, // Access to GuildMemberAdd/GuildMemberRemove events.
+        GatewayIntentBits.GuildBans, // Access to GuildBanAdd and GuildBanRemove events.
+        GatewayIntentBits.GuildPresences, // Access to users' presence (for .userinfo).
+        GatewayIntentBits.GuildMessages, // Access to Message, MessageDelete and MessageUpdate events.
+        GatewayIntentBits.GuildMessageReactions, // Access to MessageReactionAdd events.
       ],
     });
 

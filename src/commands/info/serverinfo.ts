@@ -1,12 +1,11 @@
 import { isIP } from 'node:net';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
-import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { ServerStatResponse } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
@@ -16,7 +15,7 @@ import settings from '@/conf/settings';
 export default class ServerInfoCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'adresse',
       description: 'Adresse du serveur dont vous souhaitez avoir des informations',
       required: true,
@@ -24,13 +23,13 @@ export default class ServerInfoCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('adresse'));
+    await this._exec(interaction, interaction.options.getString('adresse', true));
   }
 
-  private async _exec(interaction: CommandInteraction, query: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, query: string): Promise<void> {
     if (isIP(query.split(':').shift())) {
       await interaction.reply(config.messages.noIp).catch(noop);
       return;
@@ -46,29 +45,34 @@ export default class ServerInfoCommand extends SwanCommand {
     }
 
     const embedMessages = config.messages.embed;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { query }) })
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
       .setThumbnail(`${settings.apis.server}/icon/${query}`)
       .setTimestamp();
 
-    if (typeof server.online !== 'undefined')
-      embed.addField(embedMessages.status, (server.online ? embedMessages.online : embedMessages.offline), true);
+    if (typeof server.online !== 'undefined') {
+      embed.addFields({
+        name: embedMessages.status,
+        value: (server.online ? embedMessages.online : embedMessages.offline),
+        inline: true,
+      });
+    }
     if (server.ip)
-      embed.addField(embedMessages.ip, `\`${server.ip}${server.port ? `:${server.port}` : ''}\``, true);
+      embed.addFields({ name: embedMessages.ip, value: `\`${server.ip}${server.port ? `:${server.port}` : ''}\``, inline: true });
     if (server.players?.online && server.players?.max)
-      embed.addField(embedMessages.players, `${server.players.online}/${server.players.max}`, true);
+      embed.addFields({ name: embedMessages.players, value: `${server.players.online}/${server.players.max}`, inline: true });
     if (server.version)
-      embed.addField(embedMessages.version, server.version, true);
+      embed.addFields({ name: embedMessages.version, value: server.version, inline: true });
     if (server.hostname)
-      embed.addField(embedMessages.hostname, server.hostname, true);
+      embed.addFields({ name: embedMessages.hostname, value: server.hostname, inline: true });
     if (server.software)
-      embed.addField(embedMessages.software, server.software, true);
+      embed.addFields({ name: embedMessages.software, value: server.software, inline: true });
     if (server.plugins?.names)
-      embed.addField(embedMessages.plugins, server.plugins.names.length.toString(), true);
+      embed.addFields({ name: embedMessages.plugins, value: server.plugins.names.length.toString(), inline: true });
     if (server.mods?.names)
-      embed.addField(embedMessages.mods, server.mods.names.length.toString(), true);
+      embed.addFields({ name: embedMessages.mods, value: server.mods.names.length.toString(), inline: true });
 
     await interaction.reply({ embeds: [embed] });
   }

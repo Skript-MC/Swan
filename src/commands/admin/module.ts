@@ -1,10 +1,10 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanModule from '@/app/models/swanModule';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop, toggleModule } from '@/app/utils';
 import { module as config } from '@/conf/commands/admin';
 
@@ -12,7 +12,7 @@ import { module as config } from '@/conf/commands/admin';
 export default class ModuleCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       choices: [],
       name: 'module',
       description: 'Module à modifier son statut',
@@ -20,7 +20,7 @@ export default class ModuleCommand extends SwanCommand {
       autocomplete: false,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'statut',
       description: 'Faut-il activer ce module ?',
       required: true,
@@ -28,15 +28,19 @@ export default class ModuleCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const moduleName = interaction.options.getString('module');
-    const status = interaction.options.getBoolean('statut');
+    const moduleName = interaction.options.getString('module', true);
+    const status = interaction.options.getBoolean('statut', true);
     await this._exec(interaction, moduleName, status);
   }
 
-  private async _exec(interaction: CommandInteraction, moduleName: string, enabled: boolean): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+    moduleName: string,
+    enabled: boolean,
+  ): Promise<void> {
     const module = await SwanModule.findOne({ name: moduleName });
     if (!module) {
       await interaction.reply(config.messages.noModuleFound).catch(noop);

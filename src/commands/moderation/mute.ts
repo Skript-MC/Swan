@@ -1,13 +1,13 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import MuteAction from '@/app/moderation/actions/MuteAction';
 import resolveDuration from '@/app/resolvers/duration';
 import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { mute as config } from '@/conf/commands/moderation';
@@ -18,19 +18,19 @@ import settings from '@/conf/settings';
 export default class MuteCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
       description: 'Membre à appliquer la restriction de parole',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'durée',
       description: 'Durée de la restriction',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'raison',
       description: 'Raison de la sanction (sera affichée au membre)',
       required: true,
@@ -38,28 +38,28 @@ export default class MuteCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const { client } = this.container;
-    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre', true).id);
     const moderator = await client.guild.members.fetch(interaction.member.user.id);
     const member = resolveSanctionnableMember(victim, moderator);
-    if (member.error) {
+    if (member.isErr()) {
       await interaction.reply(messages.prompt.member);
       return;
     }
 
     const isForumMod = moderator.roles.highest.id === settings.roles.forumModerator;
 
-    const duration = resolveDuration(interaction.options.getString('durée'), !isForumMod);
-    if (duration.error || !duration) {
+    const duration = resolveDuration(interaction.options.getString('durée', true), !isForumMod);
+    if (duration.isErr()) {
       await interaction.reply(messages.prompt.duration);
       return;
     }
 
     const isValid = isForumMod
-      ? (duration.value > 0 && duration.value < settings.moderation.maximumDurationForumModerator)
+      ? (duration.unwrap() > 0 && duration.unwrap() < settings.moderation.maximumDurationForumModerator)
       : true;
     if (!isValid) {
       await interaction.reply(messages.prompt.forumModRestriction);
@@ -68,14 +68,14 @@ export default class MuteCommand extends SwanCommand {
 
     await this._exec(
       interaction,
-      member.value,
-      duration.value,
-      interaction.options.getString('raison'),
+      member.unwrap(),
+      duration.unwrap(),
+      interaction.options.getString('raison', true),
     );
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     member: GuildMember,
     duration: number,
     reason: string,

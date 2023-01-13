@@ -9,7 +9,7 @@ export default class CacheReactionRolesTask extends Task {
     const reactionRoles = await ReactionRole.find();
     for (const element of reactionRoles) {
       const channel = this.container.client.guild.channels.cache.get(element.channelId);
-      if (!channel?.isText())
+      if (!channel?.isTextBased())
         continue;
 
       channel.messages.fetch(element.messageId)

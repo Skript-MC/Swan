@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
@@ -48,10 +48,10 @@ export default class SkriptReleasesTask extends Task {
       return;
 
     const channel = this.container.client.channels.cache.get(settings.channels.skriptTalk);
-    if (!channel?.isText())
+    if (!channel?.isTextBased())
       return;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
       .setAuthor({
         name: lastRelease.author?.login ?? 'SkriptLang',

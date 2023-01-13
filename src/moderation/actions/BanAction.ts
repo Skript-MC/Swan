@@ -1,6 +1,10 @@
 import type { TextChannel } from 'discord.js';
 import {
- Formatters, GuildMember, Permissions, User,
+  GuildMember,
+  PermissionsBitField,
+  time as timeFormatter,
+  TimestampStyles,
+  User,
 } from 'discord.js';
 import pupa from 'pupa';
 import ConvictedUser from '@/app/models/convictedUser';
@@ -88,7 +92,7 @@ export default class BanAction extends ModerationAction {
       const channelId = this.updateInfos.sanctionDocument?.informations?.banChannelId;
       if (channelId) {
         const channel = this.data.guild.channels.resolve(channelId);
-        if (channel?.isText()) {
+        if (channel?.isTextBased()) {
           const allMessages = await ModerationHelper.getAllChannelMessages(channel);
           const fileInfo = await ModerationHelper.getMessageFile(this.data, allMessages);
           this.data.setFile(fileInfo);
@@ -100,7 +104,10 @@ export default class BanAction extends ModerationAction {
 
     // 3. Ban the member
     try {
-      await this.data.victim.member?.ban({ days: this.data.shouldPurge ? 7 : 0, reason: this.data.reason });
+      await this.data.victim.member?.ban({
+        deleteMessageSeconds: this.data.shouldPurge ? 7 * 24 * 60 * 60 : 0,
+        reason: this.data.reason,
+      });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
@@ -109,7 +116,7 @@ export default class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Ban Member Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.BAN_MEMBERS)),
+          .addDetail('Ban Member Permission', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.BanMembers)),
       );
     }
   }
@@ -159,7 +166,7 @@ export default class BanAction extends ModerationAction {
         nameString: this.nameString,
         reason: this.data.reason,
         duration: this.formatDuration(this.data.duration),
-        expiration: Formatters.time(Math.round(this.data.finish / 1000), Formatters.TimestampStyles.LongDateTime),
+        expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
       });
       const message = await channel.send(explanation).catch(noop);
       if (message)
@@ -169,7 +176,7 @@ export default class BanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
-          .addDetail('Manage Channel Permissions', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permissions', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels)),
       );
     }
 
@@ -219,7 +226,7 @@ export default class BanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Role Permissions', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)),
+          .addDetail('Manage Role Permissions', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageRoles)),
       );
     }
   }

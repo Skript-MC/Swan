@@ -1,11 +1,11 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import KickAction from '@/app/moderation/actions/KickAction';
 import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { kick as config } from '@/conf/commands/moderation';
@@ -15,13 +15,13 @@ import messages from '@/conf/messages';
 export default class KickCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
       description: 'Expulser le membre',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'raison',
       description: "Raison de l'expulsion",
       required: true,
@@ -29,22 +29,26 @@ export default class KickCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const { client } = this.container;
-    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre', true).id);
     const moderator = await client.guild.members.fetch(interaction.member.user.id);
     const member = resolveSanctionnableMember(victim, moderator);
-    if (!member.success) {
+    if (member.isErr()) {
       await interaction.reply(messages.prompt.member);
       return;
     }
 
-    await this._exec(interaction, victim, interaction.options.getString('raison'));
+    await this._exec(interaction, victim, interaction.options.getString('raison', true));
   }
 
-  private async _exec(interaction: CommandInteraction, member: GuildMember, reason: string): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+    member: GuildMember,
+    reason: string,
+  ): Promise<void> {
     if (this.container.client.currentlyModerating.has(member.id)) {
       await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
       return;

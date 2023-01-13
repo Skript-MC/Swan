@@ -8,7 +8,7 @@ export default class SyncDatabaseChannelsTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.swanChannels = new Set();
     for (const channel of this.container.client.guild.channels.cache.values()) {
-      if (!channel.isText())
+      if (!channel.isTextBased())
         continue;
 
       const swanChannel = await SwanChannel.findOneOrCreate({

@@ -1,12 +1,18 @@
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type {
- Guild, GuildMember, GuildTextBasedChannel, User,
+  Guild,
+  GuildMember,
+  GuildTextBasedChannel,
+  User,
 } from 'discord.js';
 import { CommandInteraction, Message, TextChannel } from 'discord.js';
 import { nanoid } from 'nanoid';
 import type {
- GuildMessage, ModerationDataResult, PersonInformations, SanctionInformations,
+  GuildMessage,
+  ModerationDataResult,
+  PersonInformations,
+  SanctionInformations,
 } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
@@ -55,7 +61,7 @@ export default class ModerationData {
       this.moderatorId = argument.member.user.id;
     } else {
       this.channel = this.client.cache.channels.log;
-      this.moderatorId = this.client.guild.me.id;
+      this.moderatorId = this.client.guild.members.me.id;
     }
     this.guild = this.channel.guild;
     this.type = null;            // The sanction type (one of the SanctionTypes enum).

@@ -1,9 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { CommandInteraction } from 'discord.js';
-import { Message, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, Message } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { ping as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -11,13 +10,13 @@ import settings from '@/conf/settings';
 @ApplySwanOptions(config)
 export default class PingCommand extends SwanCommand {
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(interaction);
   }
 
-  private async _exec(interaction: CommandInteraction): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     const defer = await interaction.deferReply({ fetchReply: true });
     if (!(defer instanceof Message))
       return;
@@ -31,7 +30,7 @@ export default class PingCommand extends SwanCommand {
       discordIndicator: this._getColorFromPing(discordPing),
     });
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
       .setDescription(description)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })

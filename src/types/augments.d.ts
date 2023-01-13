@@ -7,10 +7,13 @@ import type {
   Result,
 } from '@sapphire/framework';
 import type {
- Guild, GuildMember, GuildTextBasedChannel, User,
+  Guild,
+  GuildMember,
+  GuildTextBasedChannel,
+  User,
 } from 'discord.js';
 import type SwanCacheManager from '@/app/structures/SwanCacheManager';
-import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type TaskStore from '@/app/structures/tasks/TaskStore';
 
 declare module '@sapphire/framework' {
@@ -61,7 +64,7 @@ declare module '@sapphire/framework' {
     checkValidity(): void;
   }
 
-  const enum Identifiers {
+  enum Identifiers {
     PreconditionChannelRules = 'preconditionChannelRules',
     PreconditionNotLoading = 'preconditionNotLoading',
     PreconditionNotRole = 'preconditionNotRole',

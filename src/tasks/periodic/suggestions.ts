@@ -15,7 +15,7 @@ export default class SuggestionsTask extends Task {
     const suggestions = await SuggestionManager.getPendingSuggestions();
 
     const channel = this.container.client.channels.cache.get(settings.channels.suggestions);
-    if (!suggestions || !channel?.isText())
+    if (!suggestions || !channel?.isTextBased())
       return;
 
     for (const suggestion of suggestions) {

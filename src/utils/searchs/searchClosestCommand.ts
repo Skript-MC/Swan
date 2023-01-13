@@ -3,7 +3,7 @@ import { GuildMemberRoleManager } from 'discord.js';
 import type { AutocompleteInteraction } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import type { RolePreconditionContext } from '@/app/preconditions/Role';
-import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SimilarityMatch } from '@/app/types';
 import capitalize from '@/app/utils/capitalize';
 

@@ -2,11 +2,13 @@ import { MessageLimits } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChannelType,
   DMChannel,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-  Permissions,
+  EmbedBuilder,
+  PermissionsBitField,
 } from 'discord.js';
 import Sanction from '@/app/models/sanction';
 import SuggestionManager from '@/app/structures/SuggestionManager';
@@ -19,7 +21,7 @@ import settings from '@/conf/settings';
 export default class MessageCreateListener extends Listener {
   public override async run(message: Message): Promise<void> {
     if (message.content.startsWith(settings.bot.prefix)
-      || message.content.startsWith(message.guild?.me.toString())
+      || message.content.startsWith(message.guild?.members.me.toString())
       || message.author.bot
       || message.system
       || message.channel instanceof DMChannel)
@@ -66,7 +68,7 @@ export default class MessageCreateListener extends Listener {
         await message.react(settings.emojis.no);
       } catch (unknownError: unknown) {
         this.container.logger.error('Unable to add emojis to the idea channel.');
-        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.me?.permissionsIn(message.channel).has(Permissions.FLAGS.ADD_REACTIONS)}`);
+        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.members.me?.permissionsIn(message.channel).has(PermissionsBitField.Flags.AddReactions)}`);
         this.container.logger.info(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
         this.container.logger.info(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
         this.container.logger.info(`Message: ${message.url}`);
@@ -94,7 +96,7 @@ export default class MessageCreateListener extends Listener {
         if (response.suggestion.user.discordId)
           await thread.members.add(response.suggestion.user.discordId);
         await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(settings.colors.success)
           .setTitle(messages.suggestions.published.title)
           .setDescription(messages.suggestions.published.content)
@@ -102,21 +104,21 @@ export default class MessageCreateListener extends Listener {
         await message.author.send({ embeds: [embed] });
         return false;
       } else if (response?.status === 'UNLINKED') {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.unlinked.title)
           .setDescription(messages.suggestions.unlinked.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
-        const actions = new MessageActionRow()
+        const actions = new ActionRowBuilder<ButtonBuilder>()
           .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
               .setURL(response.loginUrl)
-              .setStyle('LINK'),
+              .setStyle(ButtonStyle.Link),
           );
         await message.author.send({ embeds: [embed], components: [actions] });
       } else {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.error.title)
           .setDescription(messages.suggestions.error.content)
@@ -147,14 +149,14 @@ export default class MessageCreateListener extends Listener {
 
     for (const quote of quotes) {
       const channel = await this.container.client.channels.fetch(quote.channelId).catch(nullop);
-      if (!channel?.isText() || channel.type === 'DM')
+      if (channel?.type !== ChannelType.GuildText)
         continue;
 
       const targetedMessage = await channel.messages.fetch(quote.messageId);
       if (!targetedMessage?.content)
         continue;
 
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(settings.colors.default)
         .setAuthor({
           name: `Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`,
@@ -167,7 +169,7 @@ export default class MessageCreateListener extends Listener {
       if (targetedMessage.attachments.size > 0) {
         const attachments = [...targetedMessage.attachments.values()].slice(0, 5);
         for (const [i, attachment] of attachments.entries())
-          embed.addField(`Pièce jointe n°${i}`, attachment.url);
+          embed.addFields({ name: `Pièce jointe n°${i}`, value: attachment.url });
       }
 
       const msg = await message.channel.send({ embeds: [embed] });

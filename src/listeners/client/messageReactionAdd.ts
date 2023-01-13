@@ -12,7 +12,7 @@ import settings from '@/conf/settings';
 
 export default class MessageReactionAddListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.type === 'DM')
+    if (user.bot || reaction.message.channel.isDMBased())
       return;
 
     const message = reaction.message as GuildMessage;

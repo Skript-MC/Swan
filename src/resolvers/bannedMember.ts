@@ -10,13 +10,13 @@ export default async function resolveBannedMember(
 ): Promise<Result<GuildMember | User, 'bannedMemberError'>> {
   // Resolve to member
   const member = await Resolvers.resolveMember(parameter, guild);
-  if (member.success)
-    return ok(member.value);
+  if (member.isOk())
+    return member;
 
   // Resolve to user
   const user = await Resolvers.resolveUser(parameter);
-  if (user.success)
-    return ok(user.value);
+  if (user.isOk())
+    return user;
 
   // Resolve to user, with our own heuristic
   const resolvedUser = resolveUser(parameter);

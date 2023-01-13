@@ -1,12 +1,12 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, GuildMember } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
 import resolveDuration from '@/app/resolvers/duration';
 import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { ban as config } from '@/conf/commands/moderation';
@@ -17,31 +17,31 @@ import settings from '@/conf/settings';
 export default class BanCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
-      description: 'Membre à appliquer le bannissement',
+      description: 'Membre à qui appliquer le bannissement',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'durée',
       description: 'Durée du bannissement',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'raison',
-      description: "Raison de l'avertissement (sera affiché au membre)",
+      description: 'Raison du bannissement (sera affiché au membre)',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'autoban',
       description: "Automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message ?",
       required: false,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'purge',
       description: 'Supprimer les messages postés par le membre dans les 7 derniers jours ?',
       required: false,
@@ -49,28 +49,28 @@ export default class BanCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const { client } = this.container;
-    const victim = await client.guild.members.fetch(interaction.options.getUser('membre').id);
+    const victim = await client.guild.members.fetch(interaction.options.getUser('membre', true).id);
     const moderator = await client.guild.members.fetch(interaction.member.user.id);
     const member = resolveSanctionnableMember(victim, moderator);
-    if (member.error) {
+    if (member.isErr()) {
       await interaction.reply(messages.prompt.member);
       return;
     }
 
     const isForumMod = moderator.roles.highest.id === settings.roles.forumModerator;
 
-    const duration = resolveDuration(interaction.options.getString('durée'), !isForumMod);
-    if (duration.error || !duration) {
+    const duration = resolveDuration(interaction.options.getString('durée', true), !isForumMod);
+    if (duration.isErr()) {
       await interaction.reply(messages.prompt.duration);
       return;
     }
 
     const isValid = isForumMod
-      ? (duration.value > 0 && duration.value < settings.moderation.maximumDurationForumModerator)
+      ? (duration.unwrap() > 0 && duration.unwrap() < settings.moderation.maximumDurationForumModerator)
       : true;
     if (!isValid) {
       await interaction.reply(messages.prompt.forumModRestriction);
@@ -81,21 +81,23 @@ export default class BanCommand extends SwanCommand {
       interaction,
       interaction.options.getBoolean('autoban'),
       interaction.options.getBoolean('purge'),
-      member.value,
-      duration.value,
-      interaction.options.getString('raison'),
+      member.unwrap(),
+      duration.unwrap(),
+      interaction.options.getString('raison', true),
     );
   }
 
   // eslint-disable-next-line max-params
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     autoban: boolean,
     purge: boolean,
     member: GuildMember,
     duration: number,
     reason: string,
   ): Promise<void> {
+    await interaction.deferReply();
+
     if (this.container.client.currentlyModerating.has(member.id)) {
       await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
       return;
@@ -123,7 +125,7 @@ export default class BanCommand extends SwanCommand {
     try {
       const success = await new BanAction(data).commit();
       if (success)
-        await interaction.reply(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while banning a member!');
       this.container.logger.info(`Duration: ${duration}`);

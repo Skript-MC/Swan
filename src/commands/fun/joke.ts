@@ -1,11 +1,10 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
 import { searchClosestMessage } from '@/app/utils';
 import { joke as config } from '@/conf/commands/fun';
@@ -16,7 +15,7 @@ import settings from '@/conf/settings';
 export default class JokeCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'blague',
       description: 'Blague que vous souhaitez envoyer',
       required: false,
@@ -25,13 +24,13 @@ export default class JokeCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(interaction, interaction.options.getString('blague'));
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
     const jokes = await Message.find({ messageType: MessageName.Joke });
     const search = searchClosestMessage(jokes, interaction.options.getString('blague'));
     await interaction.respond(
@@ -44,7 +43,7 @@ export default class JokeCommand extends SwanCommand {
     );
   }
 
-  private async _exec(interaction: CommandInteraction, jokeName: string | null): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, jokeName: string | null): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     let joke;
     if (jokeName) {
@@ -60,7 +59,7 @@ export default class JokeCommand extends SwanCommand {
       return;
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(joke.content)
       .setColor(settings.colors.default)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })

@@ -1,3 +1,3 @@
-export const enum Events {
+export enum Events {
   TaskError = 'taskError',
 }

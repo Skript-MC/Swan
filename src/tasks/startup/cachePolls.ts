@@ -16,15 +16,12 @@ export default class CachePollsTask extends Task {
 
     for (const poll of polls) {
       const channel = this.container.client.channels.resolve(poll.channelId);
-      if (!channel?.isText()) {
+      if (!channel?.isTextBased()) {
         await Poll.findByIdAndRemove(poll._id);
         continue;
       }
 
-      const message = await channel.messages.fetch(poll.messageId, {
-        cache: true,
-        force: true,
-      })
+      const message = await channel.messages.fetch({ message: poll.messageId, cache: true, force: true })
         .catch(nullop);
       if (!message) {
         await Poll.findByIdAndRemove(poll._id);

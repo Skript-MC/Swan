@@ -1,6 +1,6 @@
 import { createClassDecorator, createProxy } from '@sapphire/decorators';
 import type { Ctor } from '@sapphire/utilities';
-import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import settings from '@/conf/settings';
 
 type SwanParams = ConstructorParameters<typeof SwanCommand>;

@@ -1,17 +1,16 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type {
-  ApplicationCommandOptionData,
-  CommandInteraction,
-  EmbedField,
-  User,
+import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  EmbedBuilder,
+  time as timeFormatter,
+  TimestampStyles,
 } from 'discord.js';
-import { Formatters, MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Sanction from '@/app/models/sanction';
 import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { getUsername, toHumanDuration } from '@/app/utils';
@@ -23,7 +22,7 @@ import settings from '@/conf/settings';
 export default class HistoryCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
       description: "Consulter l'historique de ce membre",
       required: true,
@@ -31,13 +30,13 @@ export default class HistoryCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getUser('membre'));
+    await this._exec(interaction, interaction.options.getUser('membre', true));
   }
 
-  private async _exec(interaction: CommandInteraction, user: User): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, user: User): Promise<void> {
     const rawSanctions = await Sanction.find({ memberId: user.id });
     if (rawSanctions.length === 0) {
       await interaction.reply(config.messages.notFound);
@@ -58,7 +57,7 @@ export default class HistoryCommand extends SwanCommand {
     };
 
     const sanctionUrl = settings.moderation.dashboardSanctionLink + user.id;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(pupa(config.messages.title, { name: getUsername(user), sanctions }))
       .setURL(sanctionUrl)
       .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
@@ -77,7 +76,7 @@ export default class HistoryCommand extends SwanCommand {
   private _getSanctionContent(sanction: SanctionDocument): Omit<EmbedField, 'inline'> {
     let sanctionContent = pupa(config.messages.sanctionDescription.content, {
       name: config.messages.sanctionsName[sanction.type],
-      date: Formatters.time(Math.round(sanction.start / 1000), Formatters.TimestampStyles.LongDateTime),
+      date: timeFormatter(Math.round(sanction.start / 1000), TimestampStyles.LongDateTime),
       sanction,
     });
 
@@ -103,7 +102,7 @@ export default class HistoryCommand extends SwanCommand {
           : '\n';
 
         sanctionContent += pupa(config.messages.sanctionDescription.update, {
-          date: Formatters.time(Math.round(update.date / 1000), Formatters.TimestampStyles.LongDateTime),
+          date: timeFormatter(Math.round(update.date / 1000), TimestampStyles.LongDateTime),
           sanction,
           update,
           action: config.messages.updateReasons[update.type],

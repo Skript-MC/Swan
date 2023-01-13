@@ -1,7 +1,12 @@
 import { container } from '@sapphire/framework';
 import axios from 'axios';
 import type { Message } from 'discord.js';
-import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} from 'discord.js';
 import type { PublishResponse, Suggestion, VoteResponse } from '@/app/types';
 import { nullop } from '@/app/utils';
 import settings from '@/conf/settings';
@@ -62,9 +67,9 @@ export default {
     }
   },
 
-  async getSuggestionEmbed(suggestion: Suggestion): Promise<MessageEmbed> {
+  async getSuggestionEmbed(suggestion: Suggestion): Promise<EmbedBuilder> {
     const { client } = container;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(suggestion.status === 1
         ? settings.colors.default
         : suggestion.status === 2
@@ -87,24 +92,24 @@ export default {
 
     // The staff has responded to the suggestion, display the response :D
     if (suggestion.response)
-      embed.addField("📝 Réponse de l'équipe", suggestion.response);
+      embed.addFields({ name: "📝 Réponse de l'équipe", value: suggestion.response });
 
     return embed;
   },
 
-  getSuggestionActions(suggestion: Suggestion): MessageActionRow {
-    return new MessageActionRow()
+  getSuggestionActions(suggestion: Suggestion): ActionRowBuilder<ButtonBuilder> {
+    return new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId('suggestion_upvote')
           .setLabel(`✅ (${suggestion.upVotes})`)
           .setDisabled(suggestion.status !== 1)
-          .setStyle('SECONDARY'),
-        new MessageButton()
+          .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
           .setCustomId('suggestion_downvote')
           .setLabel(`❌ (${suggestion.downVotes})`)
           .setDisabled(suggestion.status !== 1)
-          .setStyle('SECONDARY'),
+          .setStyle(ButtonStyle.Secondary),
       );
   },
 

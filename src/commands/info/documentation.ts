@@ -1,12 +1,11 @@
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
 import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
@@ -18,7 +17,7 @@ const turndownService = new Turndown();
 export default class DocumentationCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'article',
       description: 'Article de la documentation que vous souhaitez envoyer',
       required: true,
@@ -27,14 +26,14 @@ export default class DocumentationCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('article'));
+    await this._exec(interaction, interaction.options.getString('article', true));
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const search = searchClosestArticle(this.container.client.cache.skriptMcSyntaxes, interaction.options.getString('article'));
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
+    const search = searchClosestArticle(this.container.client.cache.skriptMcSyntaxes, interaction.options.getString('article', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -46,7 +45,7 @@ export default class DocumentationCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     articleId: string,
   ): Promise<void> {
     const matchingArticle = this.container.client.cache.skriptMcSyntaxes.find(elt => elt.id.toString() === articleId);
@@ -64,44 +63,46 @@ export default class DocumentationCommand extends SwanCommand {
   }
 
   private async _sendDetail(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     article: SkriptMcDocumentationSyntaxAndAddon,
   ): Promise<void> {
-    const embedMessages = config.messages.embed;
+    const embedMsgs = config.messages.embed;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
-      .setTitle(stripTags(pupa(embedMessages.title, { article })))
+      .setTitle(stripTags(pupa(embedMsgs.title, { article })))
       .setURL(article.documentationUrl)
       .setTimestamp()
       .setDescription(
         trimText(
           turndownService.turndown(
-            pupa(embedMessages.description, {
+            pupa(embedMsgs.description, {
               article: {
                 ...article,
-                content: article.content || embedMessages.noDescription,
+                content: article.content || embedMsgs.noDescription,
               },
             }),
           ), EmbedLimits.MaximumDescriptionLength / 2,
         ),
       )
-      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
+      .setFooter({ text: pupa(embedMsgs.footer, { member: interaction.member }) });
 
     if (article.deprecation) {
-      embed.addField(
-        embedMessages.deprecated,
-        article.deprecationLink ? embedMessages.depreactionReplacement : embedMessages.noReplacement,
-      );
+      embed.addFields({
+        name: embedMsgs.deprecated,
+        value: article.deprecationLink ? embedMsgs.depreactionReplacement : embedMsgs.noReplacement,
+      });
     }
 
     const dependency = article.addon.dependency ? ` (requiert ${article.addon.dependency})` : '';
     const addon = `[${article.addon.name}](${article.addon.documentationUrl})${dependency}`;
 
-    embed.addField(embedMessages.version, article.version, true);
-    embed.addField(embedMessages.addon, addon, true);
-    embed.addField(embedMessages.pattern, pupa(embedMessages.patternContent, { pattern: stripTags(article.pattern) }));
-    embed.addField(embedMessages.example, pupa(embedMessages.exampleContent, { example: stripTags(article.example) }));
+    embed.addFields(
+      { name: embedMsgs.version, value: article.version, inline: true },
+      { name: embedMsgs.addon, value: addon, inline: true },
+      { name: embedMsgs.pattern, value: pupa(embedMsgs.patternContent, { pattern: stripTags(article.pattern) }) },
+      { name: embedMsgs.example, value: pupa(embedMsgs.exampleContent, { example: stripTags(article.example) }) },
+    );
 
     await interaction.reply({ embeds: [embed] });
   }

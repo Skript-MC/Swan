@@ -1,14 +1,11 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type {
- ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel, Role,
-} from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, GuildTextBasedChannel, Role } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ReactionRole from '@/app/models/reactionRole';
 import resolveEmoji from '@/app/resolvers/emoji';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
 import messages from '@/conf/messages';
@@ -18,43 +15,43 @@ import settings from '@/conf/settings';
 export default class ReactionRoleCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.ROLE,
+      type: ApplicationCommandOptionType.Role,
       name: 'rôle',
       description: 'Rôle à distribuer via la réaction',
       required: true,
     },
     // TODO: Use the emoji type when Sapphire will release it
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'émoji',
       description: 'Émoji à utiliser',
       required: false,
     },
     {
-      type: ApplicationCommandOptionTypes.CHANNEL,
+      type: ApplicationCommandOptionType.Channel,
       name: 'salon',
       description: 'Salon dans lequel envoyer le message',
       required: false,
-      channelTypes: [ChannelTypes.GUILD_TEXT],
+      channelTypes: [ChannelType.GuildText],
     },
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const role = interaction.options.getRole('rôle');
+    const role = interaction.options.getRole('rôle', true);
     const givenRole = await interaction.guild.roles.fetch(role.id);
 
     let reaction = interaction.guild.emojis.resolve(settings.emojis.yes).toString();
     const argumentEmoji = interaction.options.getString('émoji');
     if (argumentEmoji) {
       const resolvedEmoji = resolveEmoji(interaction.options.getString('émoji'), interaction.guild);
-      if (resolvedEmoji.error) {
+      if (resolvedEmoji.isErr()) {
         await interaction.reply(config.messages.invalidEmoji);
         return;
       }
-      reaction = resolvedEmoji.value;
+      reaction = resolvedEmoji.unwrap();
     }
 
     const destinationChannel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
@@ -68,18 +65,18 @@ export default class ReactionRoleCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     givenRole: Role,
     reaction: string,
     channel: GuildTextBasedChannel,
   ): Promise<void> {
-    const botMember = this.container.client.guild.me;
+    const botMember = this.container.client.guild.members.me;
     if (!botMember || botMember.roles.highest.position <= givenRole.position) {
       await interaction.reply(config.messages.notEnoughPermissions).catch(noop);
       return;
     }
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle(pupa(config.messages.embed.title, { givenRole }))
       .setDescription(pupa(config.messages.embed.content, { reaction, givenRole }))
       .setColor(settings.colors.default)

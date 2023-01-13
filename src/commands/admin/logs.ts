@@ -1,11 +1,11 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
-import type { ApplicationCommandOptionData, CommandInteraction, GuildTextBasedChannel } from 'discord.js';
-import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, GuildTextBasedChannel } from 'discord.js';
+import { ApplicationCommandOptionType, ChannelType } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import SwanChannel from '@/app/models/swanChannel';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { logs as config } from '@/conf/commands/admin';
 
@@ -13,14 +13,14 @@ import { logs as config } from '@/conf/commands/admin';
 export default class LogsCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.CHANNEL,
+      type: ApplicationCommandOptionType.Channel,
       name: 'salon',
       description: 'Salon à modifier le statut de sauvegarde',
       required: true,
-      channelTypes: [ChannelTypes.GUILD_TEXT],
+      channelTypes: [ChannelType.GuildText],
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'sauvegarde',
       description: 'Faut-il sauvegarder les messages de ce salon ?',
       required: true,
@@ -28,15 +28,19 @@ export default class LogsCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const channel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
-    const logged = interaction.options.getBoolean('sauvegarde');
+    const channel = interaction.options.getChannel('salon', true) as GuildTextBasedChannel;
+    const logged = interaction.options.getBoolean('sauvegarde', true);
     await this._exec(interaction, channel, logged);
   }
 
-  private async _exec(interaction: CommandInteraction, channel: GuildTextBasedChannel, logged: boolean): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+    channel: GuildTextBasedChannel,
+    logged: boolean,
+  ): Promise<void> {
     // TODO(interactions): remove second argument, always show the current state for the given channel, and
     // add a toggle to enable/disable logging for the channel.
     const swanChannel = await SwanChannel.findOne({ channelId: channel.id });

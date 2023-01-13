@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import { Permissions } from 'discord.js';
+import { PermissionsBitField } from 'discord.js';
 import pupa from 'pupa';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import { noop, toValidName } from '@/app/utils';
@@ -34,7 +34,7 @@ export default class GuildMemberAddListener extends Listener {
       } catch (unknownError: unknown) {
         this.container.logger.error('Could not add the mute role to a member.');
         this.container.logger.info(`MuteObject: "${JSON.stringify(isMuted)}"`);
-        this.container.logger.info(`Manager roles permission: ${member.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_ROLES)}`);
+        this.container.logger.info(`Manager roles permission: ${member.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageRoles)}`);
         this.container.logger.error((unknownError as Error).stack);
       }
     }
@@ -60,7 +60,7 @@ export default class GuildMemberAddListener extends Listener {
       this.container.logger.info(`Member's name: "${name}"`);
       this.container.logger.info(`Stripped name: "${strippedName}"`);
       this.container.logger.info(`New name: "${newName}"`);
-      this.container.logger.info(`Change nicknames permission: ${member.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES)}`);
+      this.container.logger.info(`Change nicknames permission: ${member.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageNicknames)}`);
       this.container.logger.error((unknownError as Error).stack);
     }
 

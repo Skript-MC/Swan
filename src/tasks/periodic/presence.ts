@@ -1,6 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { PieceContext } from '@sapphire/pieces';
 import type { PresenceData } from 'discord.js';
+import { ActivityType } from 'discord.js';
 import pupa from 'pupa';
 import Task, { TaskOptions } from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
@@ -28,7 +29,7 @@ export default class PresenceTask extends Task {
             memberCount: this.container.client.guild.memberCount,
             prefix: settings.bot.prefix,
           }),
-          type: 'WATCHING',
+          type: ActivityType.Watching,
         }],
         status: 'online',
       };

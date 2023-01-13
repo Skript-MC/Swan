@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { stripIndent } from 'common-tags';
 import type { Channel, GuildMember, GuildTextBasedChannel } from 'discord.js';
-import { Permissions, TextChannel } from 'discord.js';
+import { ChannelType, PermissionsBitField, TextChannel } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import Sanction from '@/app/models/sanction';
@@ -22,21 +22,21 @@ export default {
       return data.guild.channels.cache.find((chan): chan is TextChannel => filter(chan));
 
     try {
-      return await data.guild.channels.create(
-        channelName,
+      return await data.guild.channels.create<ChannelType.GuildText>(
         {
-          type: 'GUILD_TEXT',
+          name: channelName,
+          type: ChannelType.GuildText,
           topic: `${data.victim.id} - ${pupa(settings.moderation.banChannelTopic, { member: data.victim.member })}`,
           parent: settings.channels.privateChannelsCategory,
           permissionOverwrites: [{
             id: settings.roles.everyone,
-            deny: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.CREATE_INSTANT_INVITE],
+            deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.CreateInstantInvite],
           }, {
             id: settings.roles.staff,
-            allow: [Permissions.FLAGS.VIEW_CHANNEL, Permissions.FLAGS.MANAGE_CHANNELS],
+            allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels],
           }, {
             id: data.victim.id,
-            allow: [Permissions.FLAGS.VIEW_CHANNEL],
+            allow: [PermissionsBitField.Flags.ViewChannel],
           }],
         },
       );
@@ -44,7 +44,7 @@ export default {
       this.container.logger.error(`Could not create the private channel for the ban of ${data.victim.member?.displayName ?? 'Unknown'}.`);
       this.container.logger.info(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
       this.container.logger.info(`Stripped name: "${pseudo}"`);
-      this.container.logger.info(`Create channel permissions: ${data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) ?? 'Unknown'}`);
+      this.container.logger.info(`Create channel permissions: ${data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels) ?? 'Unknown'}`);
       this.container.logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }
@@ -55,7 +55,7 @@ export default {
     let beforeId: string;
 
     while (true) {
-      const messages = await channel.messages.fetch({ limit: 100, before: beforeId }, { cache: false, force: false });
+      const messages = await channel.messages.fetch({ limit: 100, before: beforeId, cache: false });
       if (messages.size === 0)
         break;
 

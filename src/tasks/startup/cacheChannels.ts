@@ -13,11 +13,11 @@ export default class CacheChannelsTask extends Task {
         const channels = channelIdOrIds
           .map(id => this.container.client.guild.channels.cache.get(id))
           .filter(Boolean)
-          .filter(channel => channel.isText()) as GuildTextBasedChannel[];
+          .filter(channel => channel.isTextBased()) as GuildTextBasedChannel[];
         this.container.client.cache.channels[slug as ChannelArraySlugs] = channels;
       } else {
         const channel = this.container.client.guild.channels.cache.get(channelIdOrIds);
-        this.container.client.cache.channels[slug as ChannelSingleSlug] = channel.isText() ? channel : null;
+        this.container.client.cache.channels[slug as ChannelSingleSlug] = channel.isTextBased() ? channel : null;
       }
     }
   }

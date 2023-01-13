@@ -1,8 +1,7 @@
 import type { AsyncPreconditionResult, PreconditionContext } from '@sapphire/framework';
 import { Identifiers, Precondition } from '@sapphire/framework';
-import type { CommandInteraction, ContextMenuInteraction, Interaction } from 'discord.js';
 import { GuildMemberRoleManager } from 'discord.js';
-import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SwanChatInputCommand, SwanContextMenuCommand } from '@/app/types';
 
 export interface RolePreconditionContext extends PreconditionContext {
@@ -11,7 +10,7 @@ export interface RolePreconditionContext extends PreconditionContext {
 
 export default class RolePrecondition extends Precondition {
   public override async contextMenuRun(
-    interaction: ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction,
     command: SwanContextMenuCommand,
     context: RolePreconditionContext,
   ): AsyncPreconditionResult {
@@ -19,7 +18,7 @@ export default class RolePrecondition extends Precondition {
   }
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     command: SwanChatInputCommand,
     context: RolePreconditionContext,
   ): AsyncPreconditionResult {
@@ -27,7 +26,7 @@ export default class RolePrecondition extends Precondition {
   }
 
   private async _check(
-    interaction: Interaction,
+    interaction: SwanCommand.CommandInteraction,
     _command: SwanCommand,
     context: RolePreconditionContext,
   ): AsyncPreconditionResult {

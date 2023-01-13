@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { GuildAuditLogs } from 'discord.js';
+import { AuditLogEvent } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import ModerationData from '@/app/moderation/ModerationData';
 import BanAction from '@/app/moderation/actions/BanAction';
@@ -14,9 +14,7 @@ export default class FetchMissingBansTask extends Task {
     const bans = await this.container.client.guild.bans.fetch();
     const convictedUsers = await ConvictedUser.find();
 
-    const logs = await this.container.client.guild.fetchAuditLogs({
-      type: GuildAuditLogs.Actions.MEMBER_BAN_ADD,
-    });
+    const logs = await this.container.client.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd });
 
     for (const ban of bans.values()) {
       if (!convictedUsers.some(usr => usr.memberId === ban.user.id)) {

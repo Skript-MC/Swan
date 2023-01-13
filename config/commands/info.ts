@@ -1,5 +1,6 @@
 import { stripIndent } from 'common-tags';
-import { ActivityType, Rules } from '@/app/types';
+import { ActivityType } from 'discord.js';
+import { Rules } from '@/app/types';
 import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonInfo = {
@@ -168,12 +169,12 @@ export const userInfo = {
           Statut : {status}
           {presenceDetails}`,
         types: {
-          [ActivityType.PLAYING]: 'Joue à {activity.name}\n',
-          [ActivityType.STREAMING]: 'Est en live\n',
-          [ActivityType.LISTENING]: 'Écoute (sur {activity.name}) :\n',
-          [ActivityType.WATCHING]: 'Regarde : {activity.name}\n',
-          [ActivityType.CUSTOM]: '{activity.name}\n',
-          [ActivityType.COMPETING]: 'En compétition ({activity.name})',
+          [ActivityType.Playing]: 'Joue à {activity.name}\n',
+          [ActivityType.Streaming]: 'Est en live\n',
+          [ActivityType.Listening]: 'Écoute (sur {activity.name}) :\n',
+          [ActivityType.Watching]: 'Regarde : {activity.name}\n',
+          [ActivityType.Custom]: '{activity.name}\n',
+          [ActivityType.Competing]: 'En compétition ({activity.name})',
         },
         details: '↳ {activity.details}\n',
         state: '↳ {activity.state}\n',
