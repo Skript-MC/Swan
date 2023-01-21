@@ -49,7 +49,7 @@ export default class ModerationTask extends Task {
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (type) {
-        case SanctionTypes.Ban: {
+        case SanctionTypes.Ban:
           if (informations?.shouldAutobanIfNoMessages && !sanction.informations.hasSentMessages) {
             data.setReason(messages.moderation.reasons.autoBanInactivity)
               .setType(SanctionTypes.Hardban);
@@ -59,20 +59,17 @@ export default class ModerationTask extends Task {
             await new UnbanAction(data).commit();
           }
           break;
-        }
 
-        case SanctionTypes.Mute: {
+        case SanctionTypes.Mute:
           data.setType(SanctionTypes.Unmute);
           await new UnmuteAction(data).commit();
           break;
-        }
 
-        case SanctionTypes.Warn: {
+        case SanctionTypes.Warn:
           data.setType(SanctionTypes.RemoveWarn)
             .setOriginalWarnId(sanctionId);
           await new RemoveWarnAction(data).commit();
           break;
-        }
 
         default:
           break;

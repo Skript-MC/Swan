@@ -2,9 +2,9 @@ import type { HexColorString } from 'discord.js';
 import type { SwanCommandOptions } from '@/app/types';
 import { basePreconditions } from '@/conf/configUtils';
 
-const skriptHelp = [...process.env.SKRIPT_HELP_CHANNELS.split(',')];
-const skriptExtraHelp = [...process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',')];
-const otherHelp = [...process.env.OTHER_HELP_CHANNELS.split(',')];
+const skriptHelp = process.env.SKRIPT_HELP_CHANNELS.split(',');
+const skriptExtraHelp = process.env.SKRIPT_EXTRA_HELP_CHANNELS.split(',');
+const otherHelp = process.env.OTHER_HELP_CHANNELS.split(',');
 
 export default {
   bot: {
@@ -26,10 +26,6 @@ export default {
     permanentKeywords: ['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'],
     hastebinExtensions: ['.sk', '.yml', '.yaml', '.txt', '.json', '.js', '.ts', '.md', '.java'],
     connectionCheckDuration: 15_000, // 15 seconds in milliseconds
-    activeMemberBlacklistedLinks: [
-      'skripthub.net/docs',
-      'docs.skunity.com',
-    ],
     booleanTruths: ['oui', 'o', 'yes', 'y', 'vrai', 'v', 'true', 't', 'on'],
     booleanFalses: ['non', 'no', 'n', 'faux', 'f', 'false', 'off'],
   },
@@ -67,7 +63,7 @@ export default {
     addons: 'https://api.skripttools.net/v4/addons',
     skriptmc: 'https://skript-mc.fr/api',
     forum: 'https://skript-mc.fr/forum/api',
-    server: 'https://api.mcsrvstat.us/2',
+    server: 'https://api.mcsrvstat.us',
     latex: 'https://latex.codecogs.com/png.image?',
   },
   roles: {

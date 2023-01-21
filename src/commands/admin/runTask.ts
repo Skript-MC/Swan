@@ -1,8 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { Events } from '@/app/types/sapphire';
 import { searchClosestTask } from '@/app/utils';
 import { runTask as config } from '@/conf/commands/admin';
@@ -11,7 +11,7 @@ import { runTask as config } from '@/conf/commands/admin';
 export default class RunTaskCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'tâche',
       description: 'Tâche à exécuter immédiatement',
       required: true,
@@ -21,7 +21,7 @@ export default class RunTaskCommand extends SwanCommand {
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
     const tasks = this.container.client.stores.get('tasks');
-    const search = searchClosestTask([...tasks.values()], interaction.options.getString('tâche'));
+    const search = searchClosestTask([...tasks.values()], interaction.options.getString('tâche', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -33,13 +33,13 @@ export default class RunTaskCommand extends SwanCommand {
   }
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('tâche'));
+    await this._exec(interaction, interaction.options.getString('tâche', true));
   }
 
-  private async _exec(interaction: CommandInteraction, taskName: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, taskName: string): Promise<void> {
     const tasks = this.container.client.stores.get('tasks');
     const task = tasks.get(taskName);
     if (!task) {

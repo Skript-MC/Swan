@@ -6,10 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache
         env:
           cache-name: cache-node-modules
@@ -19,10 +19,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-
 
-      - name: Install Node 14
-        uses: actions/setup-node@v1
+      - name: Install Node 18
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
 
       - name: Install modules
         if: steps.cache.outputs.cache-hit != 'true'

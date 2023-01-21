@@ -1,4 +1,4 @@
-import { GuildMember, Permissions, User } from 'discord.js';
+import { GuildMember, PermissionsBitField, User } from 'discord.js';
 import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
@@ -69,7 +69,7 @@ export default class UnbanAction extends ModerationAction {
         if (!channelId)
           return;
         const channel = this.data.guild.channels.resolve(channelId);
-        if (!channel || !channel.isText())
+        if (!channel?.isTextBased())
           return;
 
         const messages = await ModerationHelper.getAllChannelMessages(channel);
@@ -86,7 +86,7 @@ export default class UnbanAction extends ModerationAction {
           .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
           .addDetail('Victim: User', this.data.victim.user instanceof User)
           .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Channel Permission', this.data.guild.me?.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)),
+          .addDetail('Manage Channel Permission', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels)),
       );
     }
   }

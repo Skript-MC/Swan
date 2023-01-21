@@ -6,7 +6,7 @@ import { noop } from '@/app/utils';
 
 export default class MessageReactionRemove extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.type === 'DM')
+    if (user.bot || reaction.message.channel.isDMBased())
       return;
 
     const message = reaction.message as GuildMessage;

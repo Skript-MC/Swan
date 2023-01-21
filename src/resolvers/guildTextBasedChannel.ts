@@ -1,4 +1,3 @@
-import { isTextBasedChannel } from '@sapphire/discord.js-utilities';
 import type { Result } from '@sapphire/framework';
 import { err, ok, Resolvers } from '@sapphire/framework';
 import type { Guild, GuildTextBasedChannel } from 'discord.js';
@@ -9,7 +8,7 @@ export default function resolveGuildTextBasedChannel(
 ): Result<GuildTextBasedChannel, 'guildTextBasedChannelError'> {
   const resolved = Resolvers.resolveGuildChannel(parameter, guild);
 
-  if (isTextBasedChannel(resolved.value))
-    return ok(resolved.value);
+  if (resolved.unwrap().isTextBased())
+    return ok(resolved.unwrap() as GuildTextBasedChannel);
   return err('guildTextBasedChannelError');
 }

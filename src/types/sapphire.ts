@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
-export const enum Events {
+export enum Events {
   TaskError = 'taskError',
 }

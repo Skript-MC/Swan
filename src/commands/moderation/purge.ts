@@ -1,10 +1,9 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
-import { TextChannel } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, User } from 'discord.js';
+import { ApplicationCommandOptionType, TextChannel } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { purge as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -13,19 +12,19 @@ import settings from '@/conf/settings';
 export default class PurgeCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.NUMBER,
+      type: ApplicationCommandOptionType.Number,
       name: 'nombre',
       description: 'Nombre de messages à supprimer',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
       description: 'Supprimer les messages du membre en question',
       required: false,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'force',
       description: 'Forcer la suppression des messages',
       required: false,
@@ -33,10 +32,10 @@ export default class PurgeCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const amount = interaction.options.getNumber('nombre');
+    const amount = interaction.options.getNumber('nombre', true);
     if (!amount || amount < 0 || amount > settings.moderation.purgeLimit) {
       await interaction.reply(messages.prompt.number);
       return;
@@ -51,7 +50,7 @@ export default class PurgeCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     force: boolean,
     member: User,
     amount: number,

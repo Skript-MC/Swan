@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import { GuildAuditLogs } from 'discord.js';
+import { AuditLogEvent } from 'discord.js';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import BanAction from '@/app/moderation/actions/BanAction';
@@ -15,7 +15,7 @@ export default class GuildMemberRemoveListener extends Listener {
       return;
 
     const kicks = await member.guild.fetchAuditLogs({
-      type: GuildAuditLogs.Actions.MEMBER_KICK,
+      type: AuditLogEvent.MemberKick,
     });
 
     const lastKick = kicks.entries.first();

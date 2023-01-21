@@ -1,3 +1,4 @@
+
 import type { Endpoints } from '@octokit/types';
 import type { Command, CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
@@ -15,7 +16,7 @@ import type {
   Model,
   Types,
 } from 'mongoose';
-import type SwanCommand from '@/app/structures/commands/SwanCommand';
+import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
 
 /* ****************** */
@@ -121,7 +122,7 @@ export interface ServerStatResponse {
   };
   mods?: {
     names: string[];
-    raw: string[];
+    raw: Record<number, string>;
   };
 }
 
@@ -378,16 +379,6 @@ export enum Rules {
   OnlyBotChannel = 1,
   NoHelpChannel = 1 << 1,
   OnlyHelpChannel = 1 << 2,
-}
-
-/** Activity types, with the string as a value */
-export enum ActivityType {
-  PLAYING = 'PLAYING',
-  STREAMING = 'STREAMING',
-  LISTENING = 'LISTENING',
-  WATCHING = 'WATCHING',
-  CUSTOM = 'CUSTOM',
-  COMPETING = 'COMPETING',
 }
 
 /** Represent an addon that matches the requirements, used in commands/addonInfo.ts */

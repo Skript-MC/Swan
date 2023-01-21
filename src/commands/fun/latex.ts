@@ -1,11 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type {
- ApplicationCommandOptionData, CommandInteraction, MessageReaction, User,
-} from 'discord.js';
-import { Message } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
+import { ApplicationCommandOptionType, Message } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import messages from '@/conf/messages';
@@ -15,7 +12,7 @@ import settings from '@/conf/settings';
 export default class LatexCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'équation',
       description: 'Équation à mettre en forme en utilisant LaTeX',
       required: true,
@@ -23,13 +20,13 @@ export default class LatexCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('équation'));
+    await this._exec(interaction, interaction.options.getString('équation', true));
   }
 
-  private async _exec(interaction: CommandInteraction, equation: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, equation: string): Promise<void> {
     const sendMessage = await interaction.reply({
       content: settings.apis.latex + encodeURIComponent(equation),
       fetchReply: true,

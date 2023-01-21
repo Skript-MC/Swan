@@ -1,21 +1,12 @@
 import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
 import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
-import type {
-  ContextMenuInteraction,
-  MessageReaction,
-  TextChannel,
-  User,
-} from 'discord.js';
-import {
-  Message,
-  MessageEmbed,
-  Permissions,
-} from 'discord.js';
+import type { MessageReaction, TextChannel, User } from 'discord.js';
+import { EmbedBuilder, Message, PermissionsBitField } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
 import messages from '@/conf/messages';
@@ -24,7 +15,7 @@ import settings from '@/conf/settings';
 @ApplySwanOptions(config)
 export default class MoveCommand extends SwanCommand {
   public override async contextMenuRun(
-    interaction: ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const message = interaction.options.getMessage('message', true);
@@ -34,7 +25,7 @@ export default class MoveCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: ContextMenuInteraction,
+    interaction: SwanCommand.CommandInteraction,
     targetedMessage: Message,
   ): Promise<void> {
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
@@ -42,7 +33,7 @@ export default class MoveCommand extends SwanCommand {
     const originalChannel = targetedMessage.channel as TextChannel;
     const canMemberWrite = originalChannel
       ?.permissionsFor(member)
-      .has(Permissions.FLAGS.SEND_MESSAGES);
+      .has(PermissionsBitField.Flags.SendMessages);
 
     if (!canMemberWrite) {
       await interaction.reply({ content: messages.prompt.channel, ephemeral: true });
@@ -71,16 +62,16 @@ export default class MoveCommand extends SwanCommand {
     await result.appliedMessage.delete();
 
     const resolvedChannel = resolveGuildTextBasedChannel(result.response.content, interaction.guild);
-    if (resolvedChannel.error)
+    if (resolvedChannel.isErr())
       return;
-    const targetedChannel = resolvedChannel.value;
+    const targetedChannel = resolvedChannel.unwrap();
 
     const canEveryoneWrite = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
-      .has(Permissions.FLAGS.SEND_MESSAGES);
+      .has(PermissionsBitField.Flags.SendMessages);
     const canEveryoneRead = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
-      .has(Permissions.FLAGS.VIEW_CHANNEL);
+      .has(PermissionsBitField.Flags.ViewChannel);
     if (!canEveryoneWrite || !canEveryoneRead || interaction.channel.id === targetedChannel.id) {
       await interaction.followUp(messages.prompt.channel);
       return;
@@ -93,7 +84,7 @@ export default class MoveCommand extends SwanCommand {
       memberDisplayName: interaction.member.user.username,
     });
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
       .setAuthor({
         name: pupa(config.messages.moveTitle, { targetName }),

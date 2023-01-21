@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Permissions } from 'discord.js';
+import { PermissionsBitField } from 'discord.js';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import settings from '@/conf/settings';
@@ -53,33 +53,33 @@ export default class CheckValidityTask extends Task {
     // TODO: Also check for emojis IDs.
 
     // Check client's server-level permissions.
-    const requiredChannelPermissions = new Permissions([
-      'ADD_REACTIONS',
-      'ATTACH_FILES',
-      'MANAGE_MESSAGES',
-      'READ_MESSAGE_HISTORY',
-      'SEND_MESSAGES',
-      'USE_PUBLIC_THREADS',
-      'VIEW_CHANNEL',
+    const requiredChannelPermissions = new PermissionsBitField([
+      PermissionsBitField.Flags.AddReactions,
+      PermissionsBitField.Flags.AttachFiles,
+      PermissionsBitField.Flags.ManageMessages,
+      PermissionsBitField.Flags.ReadMessageHistory,
+      PermissionsBitField.Flags.SendMessages,
+      PermissionsBitField.Flags.CreatePublicThreads,
+      PermissionsBitField.Flags.ViewChannel,
     ]);
-    const requiredGuildPermissions = new Permissions([
+    const requiredGuildPermissions = new PermissionsBitField([
       ...requiredChannelPermissions,
-      'MANAGE_GUILD',
-      'MANAGE_ROLES',
+      PermissionsBitField.Flags.ManageGuild,
+      PermissionsBitField.Flags.ManageRoles,
     ]);
 
-    const guildMissingPerms = guild.me?.permissions.missing(requiredGuildPermissions);
+    const guildMissingPerms = guild.members.me?.permissions.missing(requiredGuildPermissions);
     if (guildMissingPerms.length > 0)
       this.container.logger.warn(`Swan is missing Guild-Level permissions in guild "${guild.name}". Its cumulated roles' permissions does not contain: ${guildMissingPerms.join(', ')}.`);
 
 
     // Check client's channels permissions.
     for (const channel of channels.values()) {
-      if (!channel.isText())
+      if (!channel.isTextBased())
         continue;
 
 
-      const channelMissingPerms = channel.permissionsFor(guild.me)
+      const channelMissingPerms = channel.permissionsFor(guild.members.me)
         .missing(requiredChannelPermissions);
       if (channelMissingPerms.length > 0)
         this.container.logger.warn(`Swan is missing permissions ${channelMissingPerms.join(', ')} in channel "#${channel.name}"`);

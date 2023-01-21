@@ -10,7 +10,7 @@ import messages from '@/conf/messages';
  */
 export default function prunePseudo(member: GuildMember, user: User, id: string): string {
   return (member?.nickname?.replace(/[^a-zA-Z0-9]/gimu, '')
-    || user?.username.replace(/[^a-zA-Z0-9]/gimu, '')
+    || user?.username.replaceAll(/[^a-zA-Z0-9]/gimu, '')
     || id
     || messages.global.unknownName)
     .toLowerCase();

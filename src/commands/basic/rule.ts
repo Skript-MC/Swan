@@ -1,9 +1,9 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
 import { searchClosestMessage } from '@/app/utils';
 import { rule as config } from '@/conf/commands/basic';
@@ -12,7 +12,7 @@ import { rule as config } from '@/conf/commands/basic';
 export default class Rule extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'règle',
       description: 'Règle pré-enregistrée à envoyer',
       required: true,
@@ -21,15 +21,15 @@ export default class Rule extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('règle'));
+    await this._exec(interaction, interaction.options.getString('règle', true));
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
     const messages = await Message.find({ messageType: MessageName.Rule });
-    const search = searchClosestMessage(messages, interaction.options.getString('règle'));
+    const search = searchClosestMessage(messages, interaction.options.getString('règle', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -40,7 +40,7 @@ export default class Rule extends SwanCommand {
     );
   }
 
-  private async _exec(interaction: CommandInteraction, messageName: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, messageName: string): Promise<void> {
     const message = await Message.findOne({ messageType: MessageName.Rule, name: messageName });
     if (!message) {
       await interaction.reply(config.messages.notFound);

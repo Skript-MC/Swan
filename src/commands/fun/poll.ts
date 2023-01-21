@@ -1,14 +1,18 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
-import { Formatters, MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  EmbedBuilder,
+  time as timeFormatter,
+  TimestampStyles,
+} from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Poll from '@/app/models/poll';
 import resolveDuration from '@/app/resolvers/duration';
 import resolveQuotedText from '@/app/resolvers/quotedText';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { QuestionType } from '@/app/types';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
@@ -19,31 +23,31 @@ import settings from '@/conf/settings';
 export default class PollCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'question',
       description: 'Question du sondage',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'réponses',
       description: 'Exemple: "réponse 1" "réponse 2" "réponse 3"',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'durée',
       description: 'Durée du sondage',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'multiple',
       description: 'Peut-on répondre à plusieurs propositions ?',
       required: false,
     },
     {
-      type: ApplicationCommandOptionTypes.BOOLEAN,
+      type: ApplicationCommandOptionType.Boolean,
       name: 'anonyme',
       description: 'Le sondage doit-il être anonyme ?',
       required: false,
@@ -51,34 +55,33 @@ export default class PollCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const anonymous = interaction.options.getBoolean('anonyme');
-
     const multiple = interaction.options.getBoolean('multiple');
 
 
-    const duration = resolveDuration(interaction.options.getString('durée'), false);
-    if (duration.error) {
+    const duration = resolveDuration(interaction.options.getString('durée', true), false);
+    if (duration.isErr()) {
       await interaction.reply(messages.prompt.duration);
       return;
     }
 
-    const question = interaction.options.getString('question');
+    const question = interaction.options.getString('question', true);
 
-    const quotedAnswers = interaction.options.getString('réponses');
+    const quotedAnswers = interaction.options.getString('réponses', true);
     const answers = resolveQuotedText(quotedAnswers);
-    if (answers.error || answers.value.some(answer => answer.length === 0)) {
+    if (answers.isErr() || answers.unwrap().some(answer => answer.length === 0)) {
       await interaction.reply(messages.prompt.pollAnswers);
       return;
     }
 
-    await this._exec(interaction, anonymous, multiple, question, duration.value, answers.value);
+    await this._exec(interaction, anonymous, multiple, question, duration.unwrap(), answers.unwrap());
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     anonymous: boolean,
     multiple: boolean,
     question: string,
@@ -123,16 +126,18 @@ export default class PollCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
     const durationContent = pupa(embedMessages.durationContent, {
       formattedDuration: moment.duration(duration).humanize(),
-      formattedEnd: Formatters.time(finishDate, Formatters.TimestampStyles.LongDateTime),
+      formattedEnd: timeFormatter(finishDate, TimestampStyles.LongDateTime),
     });
 
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member.avatarURL() ?? '' })
-      .addField(embedMessages.question, trimText(question, 1000))
-      .addField(embedMessages.answers, trimText(possibleAnswers, 1000))
-      .addField(embedMessages.duration, durationContent)
+      .addFields(
+        { name: embedMessages.question, value: trimText(question, 1000) },
+        { name: embedMessages.answers, value: trimText(possibleAnswers, 1000) },
+        { name: embedMessages.duration, value: durationContent },
+      )
       .setTimestamp();
 
     if (details.length > 0)

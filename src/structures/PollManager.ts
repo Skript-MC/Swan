@@ -1,4 +1,5 @@
 import { container } from '@sapphire/pieces';
+import { EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Poll from '@/app/models/poll';
 import { QuestionType } from '@/app/types';
@@ -17,7 +18,7 @@ export default {
 
     // Validate the channel and the message ID.
     const channel = container.client.guild.channels.resolve(poll.channelId);
-    if (!channel || !channel.isText())
+    if (!channel?.isTextBased())
       return;
 
     const message = channel?.messages?.resolve(poll.messageId)
@@ -51,10 +52,10 @@ export default {
     }
     results += pupa(messages.poll.totalVoters, { totalVoters });
 
-    const embed = message.embeds[0];
+    const embed = EmbedBuilder.from(message.embeds[0]);
     embed.setColor(settings.colors.success)
       .setTitle(`${messages.poll.pollEnded} ${stopped ? messages.poll.stopped : ''}`)
-      .addField(messages.poll.results, results);
+      .addFields({ name: messages.poll.results, value: results });
 
     await message.reactions.removeAll();
     await message.edit({ embeds: [embed] });

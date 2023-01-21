@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
@@ -42,7 +42,7 @@ export default class ForumFeedTask extends Task {
 
     const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
 
-    if (!topics?.results || !channel?.isText())
+    if (!topics?.results || !channel?.isTextBased())
       return;
 
     for (const topic of topics.results) {
@@ -53,7 +53,7 @@ export default class ForumFeedTask extends Task {
         continue;
 
       const markdown = turndownService.turndown(topic.firstPost.content);
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(settings.colors.default)
         .setAuthor({
           name: topic.firstPost.author.name,
@@ -90,7 +90,7 @@ export default class ForumFeedTask extends Task {
 
     const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
 
-    if (!resources?.results || !channel?.isText())
+    if (!resources?.results || !channel?.isTextBased())
       return;
 
     for (const resource of resources.results) {
@@ -106,7 +106,7 @@ export default class ForumFeedTask extends Task {
         continue;
 
       const markdown = turndownService.turndown(resource.changelog || resource.description);
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(settings.colors.default)
         .setAuthor({
           name: resource.author.name,
@@ -115,9 +115,11 @@ export default class ForumFeedTask extends Task {
         .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
         .setURL(resource.url)
         .setDescription(trimText(markdown, 150))
-        .addField(config.embed.categoryTitle, resource.category.name, true)
-        .addField(config.embed.versionTitle, resource.version, true)
-        .addField(config.embed.ratingTitle, '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, true)
+        .addFields(
+          { name: config.embed.categoryTitle, value: resource.category.name, inline: true },
+          { name: config.embed.versionTitle, value: resource.version, inline: true },
+          { name: config.embed.ratingTitle, value: '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, inline: true },
+        )
         .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
         .setFooter({ text: config.dataProvider })
         .setTimestamp(new Date(resource.date));

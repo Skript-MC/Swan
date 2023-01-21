@@ -1,12 +1,11 @@
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
-import type { ApplicationCommandOptionData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptToolsAddonResponse } from '@/app/types';
 import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
@@ -17,7 +16,7 @@ import settings from '@/conf/settings';
 export default class AddonInfoCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'addon',
       description: 'Addon dont vous souhaitez avoir des informations',
       required: true,
@@ -26,14 +25,14 @@ export default class AddonInfoCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(interaction, interaction.options.getString('addon'));
+    await this._exec(interaction, interaction.options.getString('addon', true));
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const search = searchClosestAddon(this.container.client.cache.addonsVersions, interaction.options.getString('addon'));
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
+    const search = searchClosestAddon(this.container.client.cache.addonsVersions, interaction.options.getString('addon', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -44,7 +43,7 @@ export default class AddonInfoCommand extends SwanCommand {
     );
   }
 
-  private async _exec(interaction: CommandInteraction, addon: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, addon: string): Promise<void> {
     const matchingAddon = this.container.client.cache.addonsVersions.find(elt => elt === addon);
     if (!matchingAddon) {
       await interaction.reply({
@@ -59,7 +58,7 @@ export default class AddonInfoCommand extends SwanCommand {
     await this._sendDetail(interaction, matchingAddon);
   }
 
-  private async _sendDetail(interaction: CommandInteraction, addonFile: string): Promise<void> {
+  private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
     const addon: SkriptToolsAddonResponse = await axios(`${settings.apis.addons}/${addonFile}`)
       .then(res => res?.data?.data)
       .catch((err: Error) => { this.container.logger.error(err.message); });
@@ -71,7 +70,7 @@ export default class AddonInfoCommand extends SwanCommand {
 
     const embedMessages = config.messages.embed;
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(settings.colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
@@ -79,24 +78,29 @@ export default class AddonInfoCommand extends SwanCommand {
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
 
     if (addon.unmaintained)
-      embed.addField(embedMessages.unmaintained, embedMessages.unmaintainedDescription, true);
+      embed.addFields({ name: embedMessages.unmaintained, value: embedMessages.unmaintainedDescription, inline: true });
     if (addon.author)
-      embed.addField(embedMessages.author, addon.author.join(', '), true);
+      embed.addFields({ name: embedMessages.author, value: addon.author.join(', '), inline: true });
     if (addon.version)
-      embed.addField(embedMessages.version, addon.version, true);
+      embed.addFields({ name: embedMessages.version, value: addon.version, inline: true });
     if (addon.download) {
       const content = pupa(embedMessages.downloadDescription, {
         addon,
         size: convertFileSize(Number.parseInt(addon.bytes, 10)),
       });
-      embed.addField(embedMessages.download, content, true);
+      embed.addFields({ name: embedMessages.download, value: content, inline: true });
     }
-    if (addon.sourcecode)
-      embed.addField(embedMessages.sourcecode, pupa(embedMessages.sourcecodeDescription, { addon }), true);
+    if (addon.sourcecode) {
+      embed.addFields({
+        name: embedMessages.sourcecode,
+        value: pupa(embedMessages.sourcecodeDescription, { addon }),
+        inline: true,
+      });
+    }
     if (addon.depend?.depend)
-      embed.addField(embedMessages.depend, addon.depend.depend.join(', '), true);
+      embed.addFields({ name: embedMessages.depend, value: addon.depend.depend.join(', '), inline: true });
     if (addon.depend?.softdepend)
-      embed.addField(embedMessages.softdepend, addon.depend.softdepend.join(', '), true);
+      embed.addFields({ name: embedMessages.softdepend, value: addon.depend.softdepend.join(', '), inline: true });
 
     await interaction.reply({ embeds: [embed] });
   }

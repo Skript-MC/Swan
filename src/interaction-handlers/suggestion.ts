@@ -1,15 +1,20 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { InteractionHandlerOptions, Maybe } from '@sapphire/framework';
+import type { InteractionHandlerOptions, Option } from '@sapphire/framework';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import type { ButtonInteraction } from 'discord.js';
-import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  EmbedBuilder,
+} from 'discord.js';
 import SuggestionManager from '@/app/structures/SuggestionManager';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
 
 @ApplyOptions<InteractionHandlerOptions>({ interactionHandlerType: InteractionHandlerTypes.Button })
 export default class SuggestionHandler extends InteractionHandler {
-  public parse(interaction: ButtonInteraction): Maybe<never> {
+  public parse(interaction: ButtonInteraction): Option<never> {
     if (!interaction.customId.startsWith('suggestion'))
       return this.none();
     return this.some();
@@ -26,42 +31,42 @@ export default class SuggestionHandler extends InteractionHandler {
     const actions = [];
     switch (response?.status) {
       case 'OK':
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
           .setColor(settings.colors.default)
           .setTitle(messages.suggestions.registeredVote.title)
           .setDescription(messages.suggestions.registeredVote.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
         break;
       case 'UNLINKED':
-        actions.push(new MessageActionRow()
+        actions.push(new ActionRowBuilder<ButtonBuilder>()
           .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
               .setURL(response.loginUrl)
-              .setStyle('LINK'),
+              .setStyle(ButtonStyle.Link),
           ));
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.unlinked.title)
           .setDescription(messages.suggestions.unlinked.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
         break;
       case 'ALREADY_VOTED':
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.alreadyVoted.title)
           .setDescription(messages.suggestions.alreadyVoted.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
         break;
       case 'NO_SELFVOTE':
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.selfVote.title)
           .setDescription(messages.suggestions.selfVote.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
         break;
       default:
-        embed = new MessageEmbed()
+        embed = new EmbedBuilder()
           .setColor(settings.colors.error)
           .setTitle(messages.suggestions.error.title)
           .setDescription(messages.suggestions.error.content)
@@ -75,6 +80,6 @@ export default class SuggestionHandler extends InteractionHandler {
       await message.edit({ embeds: [suggestionEmbed], components: [suggestionActions] });
     }
 
-    return interaction.reply({ embeds: [embed], components: actions, ephemeral: true });
+    await interaction.reply({ embeds: [embed], components: actions, ephemeral: true });
   }
 }

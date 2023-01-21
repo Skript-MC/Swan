@@ -2,7 +2,7 @@ import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
-import { Formatters, MessageEmbed } from 'discord.js';
+import { EmbedBuilder, time as timeFormatter, TimestampStyles } from 'discord.js';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
@@ -148,35 +148,44 @@ export default abstract class ModerationAction {
     if (!this.logChannel)
       return;
 
-    const embed = new MessageEmbed()
+    const embedMsgs = messages.moderation.log;
+
+    const embed = new EmbedBuilder()
       .setColor(this.color)
       .setTitle(pupa(messages.moderation.newCase, { action: this }))
       .setTimestamp()
-      .addField(messages.moderation.log.userTitle, `${this.nameString}\n${this.data.victim.id}`, true)
-      .addField(messages.moderation.log.moderatorTitle, `${this.moderatorString}\n${this.data.moderatorId}`, true)
-      .addField(messages.moderation.log.actionTitle, this.action.toString(), true)
-      .addField(
-        messages.moderation.log.reasonTitle,
-        trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
-        true,
+      .addFields(
+        { name: embedMsgs.userTitle, value: `${this.nameString}\n${this.data.victim.id}`, inline: true },
+        { name: embedMsgs.moderatorTitle, value: `${this.moderatorString}\n${this.data.moderatorId}`, inline: true },
+        { name: embedMsgs.actionTitle, value: this.action.toString(), inline: true },
+        {
+          name: embedMsgs.reasonTitle,
+          value: trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
+          inline: true,
+        },
       );
 
     if (this.data.duration && this.data.type !== SanctionTypes.Warn) {
       let content = this.formatDuration(this.data.duration);
       if (this.data?.finish !== -1) {
-        content += pupa(messages.moderation.log.durationDescription, {
-          expiration: Formatters.time(Math.round(this.data.finish / 1000), Formatters.TimestampStyles.LongDateTime),
+        content += pupa(embedMsgs.durationDescription, {
+          expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
         });
       }
-      embed.addField(messages.moderation.log.durationTitle, content, true);
+      embed.addFields({ name: embedMsgs.durationTitle, value: content, inline: true });
     }
-    if (this.data.privateChannel)
-      embed.addField(messages.moderation.log.privateChannelTitle, this.data.privateChannel.toString(), true);
+    if (this.data.privateChannel) {
+      embed.addFields({
+        name: embedMsgs.privateChannelTitle,
+        value: this.data.privateChannel.toString(),
+        inline: true,
+      });
+    }
 
     if (this.data.file)
-      embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogAvailableDescription, true);
+      embed.addFields({ name: embedMsgs.banlogTitle, value: embedMsgs.banlogAvailableDescription, inline: true });
     else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument?.duration !== -1)
-      embed.addField(messages.moderation.log.banlogTitle, messages.moderation.log.banlogUnavailableDescription, true);
+      embed.addFields({ name: embedMsgs.banlogTitle, value: embedMsgs.banlogUnavailableDescription, inline: true });
 
     await this.logChannel.send({ embeds: [embed] });
 

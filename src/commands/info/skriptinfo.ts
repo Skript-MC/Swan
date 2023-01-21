@@ -1,11 +1,10 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction } from 'discord.js';
-import { MessageEmbed } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { skriptInfo as config } from '@/conf/commands/info';
 import settings from '@/conf/settings';
 
@@ -13,7 +12,7 @@ import settings from '@/conf/settings';
 export default class SkriptInfoCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       choices: [
         {
           name: 'Téléchargements',
@@ -31,14 +30,14 @@ export default class SkriptInfoCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(interaction, interaction.options.getString('catégorie'));
   }
 
-  private async _exec(interaction: CommandInteraction, display: string): Promise<void> {
-    const embeds: MessageEmbed[] = [];
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, display: string): Promise<void> {
+    const embeds: EmbedBuilder[] = [];
     // TODO: Refactor this command's usage as it's not very intuitive.
     if (!display || display === 'téléchargements') {
       const { lastPrerelease, lastStableRelease } = this.container.client.cache.github;
@@ -60,7 +59,7 @@ export default class SkriptInfoCommand extends SwanCommand {
       });
 
       embeds.push(
-        new MessageEmbed()
+        new EmbedBuilder()
           .setColor(settings.colors.default)
           .setTitle(config.messages.embed.downloadTitle)
           .setTimestamp()
@@ -71,7 +70,7 @@ export default class SkriptInfoCommand extends SwanCommand {
 
     if (!display || display === 'liens utiles') {
       embeds.push(
-        new MessageEmbed()
+        new EmbedBuilder()
           .setColor(settings.colors.default)
           .setTitle(config.messages.embed.informationsTitle)
           .setTimestamp()

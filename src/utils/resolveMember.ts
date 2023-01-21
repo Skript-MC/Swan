@@ -28,5 +28,5 @@ function checkMember(text: string, member: GuildMember, caseSensitive = false, w
 
 export default function resolveMember(text: string, caseSensitive = false, wholeWord = false): GuildMember {
   const members = container.client.guild.members.cache;
-  return members.get(text) || members.find(member => checkMember(text, member, caseSensitive, wholeWord));
+  return members.get(text) ?? members.find(member => checkMember(text, member, caseSensitive, wholeWord));
 }

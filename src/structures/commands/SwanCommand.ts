@@ -1,10 +1,10 @@
 import type { ApplicationCommandRegistry, PieceContext } from '@sapphire/framework';
 import { Command, RegisterBehavior } from '@sapphire/framework';
-import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, CacheType, CommandInteraction as DjsCommandInteraction } from 'discord.js';
+import { ApplicationCommandType } from 'discord.js';
 import type { SwanCommandOptions } from '@/app/types';
 
-export default abstract class SwanCommand extends Command {
+export abstract class SwanCommand extends Command {
   command = '';
   usage = '';
   description = '';
@@ -12,7 +12,7 @@ export default abstract class SwanCommand extends Command {
   permissions: string[] = [];
   commandOptions: ApplicationCommandOptionData[];
 
-  constructor(context: PieceContext, options: SwanCommandOptions) {
+  constructor(context: PieceContext, options: SwanCommand.Options) {
     super(context, { ...options, name: context.name });
 
     if (options.command)
@@ -34,7 +34,7 @@ export default abstract class SwanCommand extends Command {
   public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
     if (this.supportsChatInputCommands()) {
       registry.registerChatInputCommand({
-        type: ApplicationCommandTypes.CHAT_INPUT,
+        type: ApplicationCommandType.ChatInput,
         name: this.command,
         description: this.description,
         options: this.commandOptions,
@@ -44,7 +44,7 @@ export default abstract class SwanCommand extends Command {
       });
     } else if (this.supportsContextMenuCommands()) {
       registry.registerContextMenuCommand({
-        type: ApplicationCommandTypes.MESSAGE,
+        type: ApplicationCommandType.Message,
         name: this.name,
       }, {
         guildIds: [process.env.GUILD_ID],
@@ -52,4 +52,18 @@ export default abstract class SwanCommand extends Command {
       });
     }
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-namespace, @typescript-eslint/no-redeclare
+export namespace SwanCommand {
+  export type Options = Command.Options & SwanCommandOptions;
+  export type JSON = Command.JSON;
+  export type Context = Command.Context;
+  export type RunInTypes = Command.RunInTypes;
+  export type ChatInputInteraction<Cached extends CacheType = CacheType> = Command.ChatInputCommandInteraction<Cached>;
+  export type ContextMenuInteraction<Cached extends CacheType = CacheType> =
+    Command.ContextMenuCommandInteraction<Cached>;
+  export type AutocompleteInteraction<Cached extends CacheType = CacheType> = Command.AutocompleteInteraction<Cached>;
+  export type CommandInteraction<Cached extends CacheType = CacheType> = DjsCommandInteraction<Cached>;
+  export type Registry = Command.Registry;
 }

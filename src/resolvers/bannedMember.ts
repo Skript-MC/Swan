@@ -10,13 +10,13 @@ export default async function resolveBannedMember(
 ): Promise<Result<GuildMember | User, 'bannedMemberError'>> {
   // Resolve to member
   const member = await Resolvers.resolveMember(parameter, guild);
-  if (member.success)
-    return ok(member.value);
+  if (member.isOk())
+    return member;
 
   // Resolve to user
   const user = await Resolvers.resolveUser(parameter);
-  if (user.success)
-    return ok(user.value);
+  if (user.isOk())
+    return user;
 
   // Resolve to user, with our own heuristic
   const resolvedUser = resolveUser(parameter);
@@ -25,8 +25,7 @@ export default async function resolveBannedMember(
 
   // Extract the ID from the parameter
   let resolvedPerson: GuildMember | User | undefined;
-  const id = UserOrMemberMentionRegex.exec(parameter)?.groups?.id
-    || SnowflakeRegex.exec(parameter)?.groups?.id;
+  const id = UserOrMemberMentionRegex.exec(parameter)?.groups?.id || SnowflakeRegex.exec(parameter)?.groups?.id;
   // If we found a valid ID, try resolving the User from cache
   if (id) {
     resolvedPerson = resolveUser(id)

@@ -1,11 +1,11 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, CommandInteraction, User } from 'discord.js';
-import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
+import type { ApplicationCommandOptionData, User } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
-import SwanCommand from '@/app/structures/commands/SwanCommand';
+import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
@@ -15,32 +15,32 @@ import messages from '@/conf/messages';
 export default class UnbanCommand extends SwanCommand {
   public static commandOptions: ApplicationCommandOptionData[] = [
     {
-      type: ApplicationCommandOptionTypes.USER,
+      type: ApplicationCommandOptionType.User,
       name: 'membre',
-      description: 'Membre à appliquer le bannissement',
+      description: 'Membre à qui supprimer un bannissement en cours',
       required: true,
     },
     {
-      type: ApplicationCommandOptionTypes.STRING,
+      type: ApplicationCommandOptionType.String,
       name: 'raison',
-      description: "Raison de l'avertissement (sera affiché au membre)",
+      description: 'Raison de la suppression du bannissement (sera affiché au membre)',
       required: true,
     },
   ];
 
   public override async chatInputRun(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(
       interaction,
-      interaction.options.getUser('membre'),
-      interaction.options.getString('raison') ?? messages.global.noReason,
+      interaction.options.getUser('membre', true),
+      interaction.options.getString('raison', true),
     );
   }
 
   private async _exec(
-    interaction: CommandInteraction,
+    interaction: SwanCommand.ChatInputInteraction,
     member: User,
     reason: string,
   ): Promise<void> {
