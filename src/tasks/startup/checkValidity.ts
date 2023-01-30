@@ -68,8 +68,8 @@ export default class CheckValidityTask extends Task {
       PermissionsBitField.Flags.ManageRoles,
     ]);
 
-    const guildMissingPerms = guild.members.me?.permissions.missing(requiredGuildPermissions);
-    if (guildMissingPerms.length > 0)
+    const guildMissingPerms = guild.members.me?.permissions?.missing(requiredGuildPermissions);
+    if (guildMissingPerms?.length > 0)
       this.container.logger.warn(`Swan is missing Guild-Level permissions in guild "${guild.name}". Its cumulated roles' permissions does not contain: ${guildMissingPerms.join(', ')}.`);
 
 
