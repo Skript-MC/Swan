@@ -74,7 +74,14 @@ export default class AddonInfoCommand extends SwanCommand {
       .setColor(settings.colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
-      .setDescription(trimText(addon.description || embedMessages.noDescription, EmbedLimits.MaximumDescriptionLength))
+      .setDescription(
+        pupa(embedMessages.description, {
+          description: trimText(
+            addon.description || embedMessages.noDescription,
+            EmbedLimits.MaximumDescriptionLength - embedMessages.description.length,
+          ),
+        }),
+      )
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
 
     if (addon.unmaintained)

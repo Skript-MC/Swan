@@ -17,6 +17,7 @@ export const addonInfo = {
     embed: {
       title: 'Informations sur {addon.plugin}',
       noDescription: 'Aucune description disponible.',
+      description: "{description}\n\n:warning: *Il se peut que ces informations ne soit à jour. Veuillez vérifier par vous-même sur la page officielle de l'addon afin de rester à jour.*",
       author: ':bust_in_silhouette: Auteur(s)',
       version: ':gear: Dernière version',
       download: ':inbox_tray: Lien de téléchargement',

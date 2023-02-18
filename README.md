@@ -44,7 +44,7 @@ Vous pouvez trouver des idées de choses à faire en regardant les projets en co
 ## ℹ️ Informations
 
 Swan est un bot Discord développé en TypeScript (un dérivé de JavaScript avec un typage plus fort). Il utilise la librairie [discord.js](https://npmjs.com/package/discord.js) pour les appels à l'API Discord.
-Depuis la version 2, il utilise également le framework [discord-akairo](https://npmjs.com/package/discord-akairo), par-dessus discord.js.
+Depuis la version 3, il utilise également le framework [Sapphire](https://www.npmjs.com/package/@sapphire/framework), par-dessus discord.js.
 Ce framework sert notamment à gérer les évènements, les commandes et les arguments...
 
 Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter la [License](https://github.com/Skript-MC/Swan/blob/master/LICENSE) (GNU-GPL-v3).
