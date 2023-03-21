@@ -199,7 +199,7 @@ export const statistics = {
       thanksContent: stripIndent`
         <@218505052015296512> : ancien développeur
         <@187971875845046272> : contributions
-        <@173542833364533249> : contributions
+        <@286246590585503745> : contributions
         <@435756597168308225> : contributions
         <@294134773901688833> : contributions
       `,
