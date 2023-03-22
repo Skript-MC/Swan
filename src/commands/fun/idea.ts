@@ -36,7 +36,7 @@ export default class IdeaCommand extends SwanCommand {
       .setColor(settings.colors.default)
       .setAuthor({
         name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
-        iconURL: randomIdea.author.avatarURL() ?? '',
+        iconURL: randomIdea.author.avatarURL(),
       })
       .setDescription(randomIdea.content)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })

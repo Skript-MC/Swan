@@ -160,7 +160,7 @@ export default class MessageCreateListener extends Listener {
         .setColor(settings.colors.default)
         .setAuthor({
           name: `Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`,
-          iconURL: targetedMessage.author.avatarURL() ?? '',
+          iconURL: targetedMessage.author.avatarURL(),
         })
         .setDescription(`${trimText(targetedMessage.content, MessageLimits.MaximumLength - 100)}\n[(lien)](${targetedMessage.url})`)
         .setFooter({ text: `Message cité par ${message.member.displayName}.` });

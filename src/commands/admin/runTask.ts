@@ -51,7 +51,7 @@ export default class RunTaskCommand extends SwanCommand {
       await task.run();
     } catch (error: unknown) {
       this.container.client.emit(Events.TaskError, error as Error, { piece: this });
-      await interaction.reply(config.messages.taskError);
+      await interaction.followUp(config.messages.taskError);
       return;
     }
     await interaction.followUp({ content: config.messages.success, ephemeral: true });

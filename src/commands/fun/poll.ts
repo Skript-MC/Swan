@@ -132,7 +132,7 @@ export default class PollCommand extends SwanCommand {
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
 
     const embed = new EmbedBuilder()
-      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member.avatarURL() ?? '' })
+      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member?.user.avatarURL() })
       .addFields(
         { name: embedMessages.question, value: trimText(question, 1000) },
         { name: embedMessages.answers, value: trimText(possibleAnswers, 1000) },
