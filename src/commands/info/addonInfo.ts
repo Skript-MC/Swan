@@ -32,7 +32,8 @@ export default class AddonInfoCommand extends SwanCommand {
   }
 
   public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
-    const search = searchClosestAddon(this.container.client.cache.addonsVersions, interaction.options.getString('addon', true));
+    const addonNames = Object.keys(this.container.client.cache.skriptToolsAddons);
+    const search = searchClosestAddon(addonNames, interaction.options.getString('addon', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -44,8 +45,8 @@ export default class AddonInfoCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, addon: string): Promise<void> {
-    const matchingAddon = this.container.client.cache.addonsVersions.find(elt => elt === addon);
-    if (!matchingAddon) {
+    const addonVersions = this.container.client.cache.skriptToolsAddons[addon];
+    if (!addonVersions || addonVersions.length === 0) {
       await interaction.reply({
         content: pupa(config.messages.unknownAddon, { addon: trimText(addon, 100) }),
         allowedMentions: {
@@ -55,7 +56,7 @@ export default class AddonInfoCommand extends SwanCommand {
       return;
     }
 
-    await this._sendDetail(interaction, matchingAddon);
+    await this._sendDetail(interaction, addonVersions[addonVersions.length - 1]);
   }
 
   private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
@@ -75,12 +76,10 @@ export default class AddonInfoCommand extends SwanCommand {
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
       .setDescription(
-        pupa(embedMessages.description, {
-          description: trimText(
-            addon.description || embedMessages.noDescription,
-            EmbedLimits.MaximumDescriptionLength - embedMessages.description.length,
-          ),
-        }),
+        trimText(
+          addon.description || embedMessages.noDescription,
+          EmbedLimits.MaximumDescriptionLength,
+        ),
       )
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
 
@@ -104,9 +103,9 @@ export default class AddonInfoCommand extends SwanCommand {
         inline: true,
       });
     }
-    if (addon.depend?.depend)
+    if (addon.depend?.depend?.length > 0)
       embed.addFields({ name: embedMessages.depend, value: addon.depend.depend.join(', '), inline: true });
-    if (addon.depend?.softdepend)
+    if (addon.depend?.softdepend?.length > 0)
       embed.addFields({ name: embedMessages.softdepend, value: addon.depend.softdepend.join(', '), inline: true });
 
     await interaction.reply({ embeds: [embed] });

@@ -54,7 +54,7 @@ export interface SkriptToolsAddonResponse {
 }
 
 /** Represent the object that is returned when calling the skripttools API to get all addons */
-export type SkriptToolsAddonListResponse = Record<string, string[] | null>;
+export type SkriptToolsAddonList = Record<string, string[] | null>;
 
 /**
  * Represent the objects that are in the "articles" array that is returned

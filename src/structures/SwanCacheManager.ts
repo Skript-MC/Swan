@@ -5,6 +5,7 @@ import type {
   GithubPrerelease,
   GithubStableRelease,
   SkriptMcDocumentationSyntaxAndAddon,
+  SkriptToolsAddonList,
   SwanChannelDocument,
 } from '@/app/types';
 
@@ -14,7 +15,7 @@ interface GithubCache {
 }
 
 export default class SwanCacheManager {
-  addonsVersions: string[];
+  skriptToolsAddons: SkriptToolsAddonList;
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: Set<string>;
   reactionRolesIds: Set<string>;
@@ -44,7 +45,7 @@ export default class SwanCacheManager {
       privateChannelsCategory: null,
       forumUpdates: null,
     };
-    this.addonsVersions = [];
+    this.skriptToolsAddons = {};
     this.skriptMcSyntaxes = [];
     this.github = {};
     this.pollMessagesIds = new Set();

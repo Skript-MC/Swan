@@ -12,6 +12,8 @@ import capitalize from '@/app/utils/capitalize';
 export default function searchClosestMessage(entries: string[], wanted: string): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
+    if (!entry)
+      continue;
     // Avoid useless double loop after.
     if (entry === wanted) {
       return [{
