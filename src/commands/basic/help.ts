@@ -5,7 +5,7 @@ import type {
   AutocompleteInteraction,
   BaseApplicationCommandOptionsData,
 } from 'discord.js';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import groupBy from 'lodash.groupby';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
@@ -18,7 +18,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class HelpCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'commande',

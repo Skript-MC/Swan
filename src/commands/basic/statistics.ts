@@ -1,6 +1,7 @@
 import { execSync } from 'node:child_process';
 import type { ChatInputCommand } from '@sapphire/framework';
-import { EmbedBuilder } from 'discord.js';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
@@ -12,6 +13,9 @@ import pkg from '@/root/package.json';
 
 @ApplySwanOptions(config)
 export default class StatisticsCommand extends SwanCommand {
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [];
+
   public override async chatInputRun(
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,

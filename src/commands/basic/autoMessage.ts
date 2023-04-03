@@ -1,6 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Message from '@/app/models/message';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -10,7 +10,8 @@ import { autoMessage as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
 export default class AutoMessageCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'message',

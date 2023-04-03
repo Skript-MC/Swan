@@ -12,6 +12,5 @@ export default function prunePseudo(member: GuildMember, user: User, id: string)
   return (member?.nickname?.replace(/[^a-zA-Z0-9]/gimu, '')
     || user?.username.replaceAll(/[^a-zA-Z0-9]/gimu, '')
     || id
-    || messages.global.unknownName)
-    .toLowerCase();
+    || messages.global.unknownName);
 }

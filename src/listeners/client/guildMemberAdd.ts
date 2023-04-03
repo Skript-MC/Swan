@@ -25,15 +25,15 @@ export default class GuildMemberAddListener extends Listener {
   }
 
   private async _remute(member: GuildMember): Promise<void> {
-    const isMuted = await ModerationHelper.isMuted(member.id);
-    if (isMuted) {
+    const currentMute = await ModerationHelper.getCurrentMute(member.id);
+    if (currentMute) {
       try {
         const muteRole = member.guild.roles.resolve(settings.roles.mute);
         if (muteRole)
           await member.roles.add(muteRole);
       } catch (unknownError: unknown) {
         this.container.logger.error('Could not add the mute role to a member.');
-        this.container.logger.info(`MuteObject: "${JSON.stringify(isMuted)}"`);
+        this.container.logger.info(`MuteObject: "${JSON.stringify(currentMute)}"`);
         this.container.logger.info(`Manager roles permission: ${member.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageRoles)}`);
         this.container.logger.error((unknownError as Error).stack);
       }

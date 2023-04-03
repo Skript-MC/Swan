@@ -1,7 +1,7 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
 import {
-  ApplicationCommandOptionType,
+  ApplicationCommandOptionType, ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
@@ -20,7 +20,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class HistoryCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.User,
       name: 'membre',
@@ -37,7 +38,7 @@ export default class HistoryCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, user: User): Promise<void> {
-    const rawSanctions = await Sanction.find({ memberId: user.id });
+    const rawSanctions = await Sanction.find({ userId: user.id });
     if (rawSanctions.length === 0) {
       await interaction.reply(config.messages.notFound);
       return;
@@ -49,7 +50,7 @@ export default class HistoryCommand extends SwanCommand {
     // Get all the statistics.
     const stats = {
       hardbans: sanctions.filter(s => s.type === SanctionTypes.Hardban).length,
-      bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
+      bans: sanctions.filter(s => s.type === SanctionTypes.TempBan).length,
       mutes: sanctions.filter(s => s.type === SanctionTypes.Mute).length,
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
       currentWarns: sanctions.filter(s => s.type === SanctionTypes.Warn && !s.revoked).length,

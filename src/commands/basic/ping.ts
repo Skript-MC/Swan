@@ -1,5 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import { EmbedBuilder, Message } from 'discord.js';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, Message } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -9,6 +10,9 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class PingCommand extends SwanCommand {
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [];
+
   public override async chatInputRun(
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,

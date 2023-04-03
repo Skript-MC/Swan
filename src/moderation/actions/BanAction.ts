@@ -1,4 +1,6 @@
-import type { TextChannel } from 'discord.js';
+import type {
+  ThreadChannel,
+} from 'discord.js';
 import {
   GuildMember,
   PermissionsBitField,
@@ -7,7 +9,6 @@ import {
   User,
 } from 'discord.js';
 import pupa from 'pupa';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
@@ -24,8 +25,6 @@ export default class BanAction extends ModerationAction {
 
   protected after(): void {
     this.client.currentlyBanning.delete(this.data.victim.id);
-    this.client.cache.convictedUsers
-      .splice(this.client.cache.convictedUsers.findIndex(elt => elt.memberId === this.data.victim.id), 1);
   }
 
   protected async exec(): Promise<void> {
@@ -48,9 +47,8 @@ export default class BanAction extends ModerationAction {
     // 1. Add/Update the database
     try {
       if (this.updateInfos.isUpdate()) {
-        this.client.cache.channelBannedSilentUsers.delete(this.data.victim.id);
         await Sanction.findOneAndUpdate(
-          { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentBanId },
+          { userId: this.data.victim.id, sanctionId: this.data.sanctionId },
           {
             $set: {
               duration: this.data.duration,
@@ -69,12 +67,7 @@ export default class BanAction extends ModerationAction {
           },
         );
       } else {
-        const user = await ConvictedUser.findOneAndUpdate(
-          { memberId: this.data.victim.id },
-          { currentBanId: this.data.sanctionId },
-          { upsert: true, new: true },
-        );
-        await Sanction.create({ ...this.data.toSchema(), user: user._id });
+        await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
@@ -87,25 +80,9 @@ export default class BanAction extends ModerationAction {
       );
     }
 
-    // 2. If it is an update, save the messages
-    if (this.updateInfos.isUpdate()) {
-      const channelId = this.updateInfos.sanctionDocument?.informations?.banChannelId;
-      if (channelId) {
-        const channel = this.data.guild.channels.resolve(channelId);
-        if (channel?.isTextBased()) {
-          const allMessages = await ModerationHelper.getAllChannelMessages(channel);
-          const fileInfo = await ModerationHelper.getMessageFile(this.data, allMessages);
-          this.data.setFile(fileInfo);
-
-          await channel.delete();
-        }
-      }
-    }
-
-    // 3. Ban the member
+    // 2. Ban the member
     try {
       await this.data.victim.member?.ban({
-        deleteMessageSeconds: this.data.shouldPurge ? 7 * 24 * 60 * 60 : 0,
         reason: this.data.reason,
       });
     } catch (unknownError: unknown) {
@@ -125,7 +102,7 @@ export default class BanAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { memberId: this.data.victim.id, sanctionId: this.updateInfos.userDocument.currentBanId },
+        { userId: this.data.victim.id, sanctionId: this.data.sanctionId },
         {
           $set: {
             duration: this.data.duration,
@@ -157,10 +134,9 @@ export default class BanAction extends ModerationAction {
 
   private async _ban(): Promise<void> {
     // 1. Create the private channel
-    let channel: TextChannel;
+    let thread: ThreadChannel;
     try {
-      channel = await ModerationHelper.getOrCreateChannel(this.data);
-      this.data.setInformations({ banChannelId: channel.id });
+      thread = await ModerationHelper.getThread(this.data, true);
 
       const explanation = pupa(messages.moderation.banExplanation, {
         nameString: this.nameString,
@@ -168,7 +144,8 @@ export default class BanAction extends ModerationAction {
         duration: this.formatDuration(this.data.duration),
         expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
       });
-      const message = await channel.send(explanation).catch(noop);
+
+      const message = await thread.send(explanation).catch(noop);
       if (message)
         await message.pin().catch(noop);
     } catch (unknownError: unknown) {
@@ -182,19 +159,9 @@ export default class BanAction extends ModerationAction {
 
     // 2. Add to the database
     try {
-      this.client.cache.channelBannedSilentUsers.add(this.data.victim.id);
-      const user = await ConvictedUser.findOneAndUpdate(
-        { memberId: this.data.victim.id },
-        { currentBanId: this.data.sanctionId },
-        { upsert: true, new: true },
-      );
       await Sanction.create({
         ...this.data.toSchema(),
-        informations: {
-          ...this.data.informations,
-          hasSentMessages: false,
-        },
-        user: user._id,
+        userId: this.data.victim.id,
       });
     } catch (unknownError: unknown) {
       this.errorState.addError(

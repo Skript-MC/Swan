@@ -2,14 +2,17 @@ import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
-import { EmbedBuilder, time as timeFormatter, TimestampStyles } from 'discord.js';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
+import {
+ EmbedBuilder, ThreadChannel, time as timeFormatter, TimestampStyles,
+} from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
 import ErrorState from '@/app/moderation/ErrorState';
 import type ModerationData from '@/app/moderation/ModerationData';
 import ModerationError from '@/app/moderation/ModerationError';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
 import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
@@ -82,7 +85,7 @@ export default abstract class ModerationAction {
 
   protected get action(): string {
     switch (this.data.type) {
-      case SanctionTypes.Ban:
+      case SanctionTypes.TempBan:
         if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.banUpdate;
         return messages.moderation.sanctionNames.ban;
@@ -109,7 +112,7 @@ export default abstract class ModerationAction {
 
   protected get originalAction(): string {
     switch (this.data.type) {
-      case SanctionTypes.Ban:
+      case SanctionTypes.TempBan:
         if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.ban;
         return this.action;
@@ -138,7 +141,16 @@ export default abstract class ModerationAction {
       : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
 
     try {
-      await (this.data.victim.member ?? this.data.victim.user)?.send(message);
+    // If the sanction is a temporary ban, we should notify the victim in his private thread.
+    // We should only notify the victim if the sanction is an update.
+      if (this.data.type === SanctionTypes.TempBan
+        && this.data.victim.member) {
+        const thread = await ModerationHelper.getThread(this.data);
+        if (thread instanceof ThreadChannel)
+          await thread.send(message);
+      } else {
+        await (this.data.victim.member ?? this.data.victim.user)?.send(message).catch(noop);
+      }
     } catch {
       await this.data.channel.send(messages.moderation.memberHasClosedDm).catch(noop);
     }
@@ -182,21 +194,7 @@ export default abstract class ModerationAction {
       });
     }
 
-    if (this.data.file)
-      embed.addFields({ name: embedMsgs.banlogTitle, value: embedMsgs.banlogAvailableDescription, inline: true });
-    else if (this.data.type === SanctionTypes.Unban && this.updateInfos.sanctionDocument?.duration !== -1)
-      embed.addFields({ name: embedMsgs.banlogTitle, value: embedMsgs.banlogUnavailableDescription, inline: true });
-
     await this.logChannel.send({ embeds: [embed] });
-
-    if (this.data.file) {
-      await this.logChannel.send({
-        files: [{
-          attachment: this.data.file.path,
-          name: `${this.data.file.name}.txt`,
-        }],
-      });
-    }
   }
 
   protected abstract before?(): Awaitable<void>;

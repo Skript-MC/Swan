@@ -10,10 +10,8 @@ import {
   EmbedBuilder,
   PermissionsBitField,
 } from 'discord.js';
-import Sanction from '@/app/models/sanction';
 import SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
-import { SanctionTypes } from '@/app/types';
 import { noop, nullop, trimText } from '@/app/utils';
 import messages from '@/conf/messages';
 import settings from '@/conf/settings';
@@ -36,27 +34,10 @@ export default class MessageCreateListener extends Listener {
   }
 
   private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
-    yield await this._updateMemberIfBanned(message);
     yield await this._addReactionsInIdeaChannel(message);
     yield await this._handleSuggestion(message);
     yield await this._quoteLinkedMessage(message);
     yield await this._antispamSnippetsChannel(message);
-    return false;
-  }
-
-  private async _updateMemberIfBanned(message: GuildMessage): Promise<boolean> {
-    if (this.container.client.cache.channelBannedSilentUsers.has(message.author.id)) {
-      const sanction = await Sanction.findOne({
-        memberId: message.author.id,
-        type: SanctionTypes.Ban,
-        revoked: false,
-      }).catch(nullop);
-      if (!sanction || sanction.informations?.banChannelId !== message.channel.id)
-        return false;
-
-      await Sanction.updateOne({ _id: sanction._id }, { $set: { informations: { hasSentMessages: true } } });
-      this.container.client.cache.channelBannedSilentUsers.delete(message.author.id);
-    }
     return false;
   }
 

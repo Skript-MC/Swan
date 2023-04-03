@@ -1,8 +1,16 @@
 import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
 import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
-import type { MessageReaction, TextChannel, User } from 'discord.js';
-import { EmbedBuilder, Message, PermissionsBitField } from 'discord.js';
+import type {
+ ApplicationCommandOptionData, MessageReaction, TextChannel,
+  User,
+} from 'discord.js';
+import {
+  ApplicationCommandType,
+  EmbedBuilder,
+  Message,
+  PermissionsBitField,
+} from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
@@ -14,6 +22,9 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class MoveCommand extends SwanCommand {
+  commandType = ApplicationCommandType.Message;
+  commandOptions: ApplicationCommandOptionData[] = [];
+
   public override async contextMenuRun(
     interaction: SwanCommand.ContextMenuInteraction,
     _context: ContextMenuCommand.RunContext,

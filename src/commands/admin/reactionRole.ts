@@ -1,6 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel, Role } from 'discord.js';
-import { ApplicationCommandOptionType, ChannelType, EmbedBuilder } from 'discord.js';
+import {
+ ApplicationCommandOptionType, ApplicationCommandType, ChannelType, EmbedBuilder,
+} from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ReactionRole from '@/app/models/reactionRole';
@@ -13,7 +15,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class ReactionRoleCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.Role,
       name: 'rôle',

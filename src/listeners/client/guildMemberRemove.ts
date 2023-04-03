@@ -10,8 +10,8 @@ import messages from '@/conf/messages';
 
 export default class GuildMemberRemoveListener extends Listener {
   public override async run(member: GuildMember): Promise<void> {
-    const isBanned = await ModerationHelper.isBanned(member.id, false);
-    if (isBanned && this.container.client.currentlyBanning.has(member.id))
+    const currentBan = await ModerationHelper.getCurrentBan(member.id);
+    if (currentBan && this.container.client.currentlyBanning.has(member.id))
       return;
 
     const kicks = await member.guild.fetchAuditLogs({
@@ -33,7 +33,7 @@ export default class GuildMemberRemoveListener extends Listener {
     }
 
     // Check if they're leaving while being banned
-    if (isBanned) {
+    if (currentBan) {
       const data = new ModerationData()
         .setVictim(member, false)
         .setDuration(-1, false)

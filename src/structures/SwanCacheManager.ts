@@ -1,6 +1,5 @@
 import type {
   CachedChannels,
-  ConvictedUserDocument,
   DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
@@ -25,8 +24,6 @@ export default class SwanCacheManager {
   gitCommit: string;
   discordUsers: DiscordUserDocument[];
   swanChannels: Set<SwanChannelDocument>;
-  convictedUsers: ConvictedUserDocument[];
-  channelBannedSilentUsers: Set<string>;
 
   constructor() {
     this.channels = {
@@ -42,8 +39,8 @@ export default class SwanCacheManager {
       skriptTalk: null,
       creations: null,
       log: null,
-      privateChannelsCategory: null,
       forumUpdates: null,
+      banChannel: null,
     };
     this.skriptToolsAddons = {};
     this.skriptMcSyntaxes = [];
@@ -54,7 +51,5 @@ export default class SwanCacheManager {
     this.gitCommit = '';
     this.discordUsers = [];
     this.swanChannels = new Set();
-    this.convictedUsers = [];
-    this.channelBannedSilentUsers = new Set();
   }
 }
