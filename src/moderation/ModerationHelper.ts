@@ -10,8 +10,7 @@ import settings from '@/conf/settings';
 
 export default {
   async getThread(data: ModerationData, orCreate = false): Promise<ThreadChannel> {
-    const cleanedPseudo = data.victim.member.displayName || data.victim.id;
-    const channelName = `${cleanedPseudo} (${data.sanctionId})`;
+    const channelName = `${data.victim.member.displayName || data.victim.id} (${data.sanctionId})`;
 
     const banChannel = await data.guild.channels.fetch(settings.channels.banChannel) as TextChannel;
 
@@ -33,8 +32,8 @@ export default {
     } catch (unknownError: unknown) {
       container.logger.error(`Could not create the private thread for the ban of ${data.victim.member?.displayName ?? data.victim.id}.`);
       container.logger.info(`Member's name: "${data.victim.member?.displayName ?? 'Unknown'}"`);
-      container.logger.info(`Stripped channel name: "${channelName}"`);
-      container.logger.info(`Create channel permissions: ${data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels) ?? 'Unknown'}`);
+      container.logger.info(`Thread name: "${channelName}"`);
+      container.logger.info(`Create thread permissions: ${data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels) ?? 'Unknown'}`);
       container.logger.error((unknownError as Error).stack);
       throw new Error('Private Channel Creation Failed');
     }
