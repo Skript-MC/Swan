@@ -20,7 +20,7 @@ export default async function searchClosestSanction(
     // Avoid useless double loop after.
     if (user.username === wanted) {
       return [{
-        matchedName: '⭐ ' + user.username + '#' + user.discriminator,
+        matchedName: '⭐ ' + user.tag,
         baseName: entry.userId,
         similarity: 1,
       }];
