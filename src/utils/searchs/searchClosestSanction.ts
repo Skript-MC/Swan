@@ -26,7 +26,7 @@ export default async function searchClosestSanction(
       }];
     }
     matches.push({
-      matchedName: user.username + '#' + user.discriminator,
+      matchedName: user.tag,
       baseName: entry.userId,
       similarity: jaroWinklerDistance(user.username, wanted, { caseSensitive: false }),
     });
