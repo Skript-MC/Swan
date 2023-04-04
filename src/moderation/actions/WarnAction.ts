@@ -17,7 +17,7 @@ export default class WarnAction extends ModerationAction {
       const currentWarnCount = await ModerationHelper.getCurrentWarnCount(this.data.victim.id);
 
       // If they have exceeded the warning limit
-      if (currentWarnCount && currentWarnCount >= settings.moderation.warnLimitBeforeBan) {
+      if (currentWarnCount >= settings.moderation.warnLimitBeforeBan) {
         // 1. Revoke all the current warnings
         await Sanction.updateMany(
           {
