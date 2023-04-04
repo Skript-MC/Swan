@@ -88,7 +88,7 @@ export default abstract class ModerationAction {
       case SanctionTypes.TempBan:
         if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.banUpdate;
-        return messages.moderation.sanctionNames.ban;
+        return messages.moderation.sanctionNames.tempBan;
       case SanctionTypes.Hardban:
         return messages.moderation.sanctionNames.hardban;
       case SanctionTypes.Mute:
@@ -114,14 +114,14 @@ export default abstract class ModerationAction {
     switch (this.data.type) {
       case SanctionTypes.TempBan:
         if (this.updateInfos.isUpdate())
-          return messages.moderation.sanctionNames.ban;
+          return messages.moderation.sanctionNames.tempBan;
         return this.action;
       case SanctionTypes.Mute:
         if (this.updateInfos.isUpdate())
           return messages.moderation.sanctionNames.mute;
         return this.action;
       case SanctionTypes.Unban:
-        return messages.moderation.sanctionNames.ban;
+        return messages.moderation.sanctionNames.tempBan;
       case SanctionTypes.Unmute:
         return messages.moderation.sanctionNames.mute;
       case SanctionTypes.RemoveWarn:

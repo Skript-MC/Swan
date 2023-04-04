@@ -146,7 +146,7 @@ export default {
     },
     sanctionNames: {
       banUpdate: 'Modification du bannissement',
-      ban: 'Bannissement temporaire',
+      tempBan: 'Bannissement temporaire',
       hardban: 'Bannissement définitif',
       muteUpdate: "Modification du mute des salons d'aide",
       mute: 'Mute',
