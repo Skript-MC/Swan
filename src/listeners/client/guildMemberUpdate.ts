@@ -30,7 +30,7 @@ export default class GuildMemberUpdate extends Listener {
       // We are now extra-sure about that is the right update
       const update = updates.entries.filter(u => u.changes?.every(c => c.key === 'communication_disabled_until'
         && (Date.parse(c.new as string) === newMember.communicationDisabledUntilTimestamp
-        || Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp)))
+          || Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp)))
         .first();
 
       if (!update

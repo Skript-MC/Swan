@@ -1,9 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
+import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import type {
-  ApplicationCommandOptionData,
-  AutocompleteInteraction,
-} from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';

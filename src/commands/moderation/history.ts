@@ -1,7 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
 import {
-  ApplicationCommandOptionType, ApplicationCommandType,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
@@ -97,9 +98,9 @@ export default class HistoryCommand extends SwanCommand {
         // If there is a duration update, show it with a nice diff.
         const diff = update.type === SanctionsUpdates.Duration
           ? pupa(config.messages.sanctionDescription.timeDiff, {
-              valueBefore: update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true),
-              valueAfter: update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true),
-            })
+            valueBefore: update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true),
+            valueAfter: update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true),
+          })
           : '\n';
 
         sanctionContent += pupa(config.messages.sanctionDescription.update, {

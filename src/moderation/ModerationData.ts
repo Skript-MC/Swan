@@ -10,14 +10,11 @@ import {
   ChatInputCommandInteraction,
   Message,
   ModalSubmitInteraction,
-  TextChannel, ThreadChannel,
+  TextChannel,
+  ThreadChannel,
 } from 'discord.js';
 import { nanoid } from 'nanoid';
-import type {
-  GuildMessage,
-  ModerationDataResult,
-  PersonInformations,
-} from '@/app/types';
+import type { GuildMessage, ModerationDataResult, PersonInformations } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';

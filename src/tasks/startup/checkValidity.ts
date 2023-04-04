@@ -24,7 +24,7 @@ export default class CheckValidityTask extends Task {
       if (Array.isArray(value)) {
         if (value.length === 0)
           invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-         else if (!value.every(elt => channels.has(elt)))
+        else if (!value.every(elt => channels.has(elt)))
           invalidChannels.push(`One of the id entered for settings.channels.${key} is not a valid channel.`);
       } else if (!value) {
         invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
@@ -46,7 +46,7 @@ export default class CheckValidityTask extends Task {
     for (const [key, value] of Object.entries(settings.roles)) {
       if (!value)
         this.container.logger.warn(`settings.roles.${key} is not set. You may want to fill this field to avoid any error.`);
-       else if (!guild.roles.cache.has(value))
+      else if (!guild.roles.cache.has(value))
         this.container.logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
     }
 

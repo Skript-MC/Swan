@@ -2,7 +2,9 @@ import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js
 import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type {
- ApplicationCommandOptionData, MessageReaction, TextChannel,
+  ApplicationCommandOptionData,
+  MessageReaction,
+  TextChannel,
   User,
 } from 'discord.js';
 import {

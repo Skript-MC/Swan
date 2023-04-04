@@ -4,7 +4,10 @@ import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import {
- EmbedBuilder, ThreadChannel, time as timeFormatter, TimestampStyles,
+ EmbedBuilder,
+  ThreadChannel,
+  time as timeFormatter,
+  TimestampStyles,
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
@@ -33,46 +36,6 @@ export default abstract class ModerationAction {
 
     this.errorState = new ErrorState(this.data.channel || this.logChannel);
     this.updateInfos = new ActionUpdateInformations(this.data);
-  }
-
-  public async commit(): Promise<boolean> {
-    await this.updateInfos.load();
-
-    try {
-      await this.before?.();
-      await this.notify();
-      await this.exec();
-      await this.log();
-      await this.after?.();
-    } catch (unknownError: unknown) {
-      this.errorState.addError(
-        new ModerationError()
-          .from(unknownError as Error)
-          .setMessage('An error occurred while executing a moderation action.')
-          .addDetail('Data', JSON.stringify(this.data.toSchema())),
-      );
-    }
-
-    if (this.errorState.hasError()) {
-      this.errorState.log();
-      return false;
-    }
-    return true;
-  }
-
-  protected formatDuration(duration: number): string {
-    return duration === -1
-      ? messages.moderation.permanent
-      : moment.duration(duration).humanize();
-  }
-
-  protected getFormattedChange(): string {
-    const oldDuration = this.updateInfos.sanctionDocument.duration;
-    const newDuration = this.data.duration;
-    return pupa(messages.moderation.durationChange, {
-      oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
-      newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
-    });
   }
 
   protected get nameString(): string {
@@ -135,14 +98,54 @@ export default abstract class ModerationAction {
     return settings.moderation.colors[this.data.type];
   }
 
+  public async commit(): Promise<boolean> {
+    await this.updateInfos.load();
+
+    try {
+      await this.before?.();
+      await this.notify();
+      await this.exec();
+      await this.log();
+      await this.after?.();
+    } catch (unknownError: unknown) {
+      this.errorState.addError(
+        new ModerationError()
+          .from(unknownError as Error)
+          .setMessage('An error occurred while executing a moderation action.')
+          .addDetail('Data', JSON.stringify(this.data.toSchema())),
+      );
+    }
+
+    if (this.errorState.hasError()) {
+      this.errorState.log();
+      return false;
+    }
+    return true;
+  }
+
+  protected formatDuration(duration: number): string {
+    return duration === -1
+      ? messages.moderation.permanent
+      : moment.duration(duration).humanize();
+  }
+
+  protected getFormattedChange(): string {
+    const oldDuration = this.updateInfos.sanctionDocument.duration;
+    const newDuration = this.data.duration;
+    return pupa(messages.moderation.durationChange, {
+      oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
+      newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
+    });
+  }
+
   protected async notify(): Promise<void> {
     const message = this.updateInfos.isUpdate()
       ? pupa(this.data.config.notificationUpdate, { action: this, change: this.getFormattedChange() })
       : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
 
     try {
-    // If the sanction is a temporary ban, we should notify the victim in his private thread.
-    // We should only notify the victim if the sanction is an update.
+      // If the sanction is a temporary ban, we should notify the victim in his private thread.
+      // We should only notify the victim if the sanction is an update.
       if (this.data.type === SanctionTypes.TempBan
         && this.data.victim.member) {
         const thread = await ModerationHelper.getThread(this.data);

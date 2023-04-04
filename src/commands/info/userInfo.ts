@@ -1,7 +1,10 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
- ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder, Formatters,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+  EmbedBuilder,
+  Formatters,
 } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';

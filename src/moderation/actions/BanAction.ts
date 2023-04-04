@@ -1,6 +1,4 @@
-import type {
-  ThreadChannel,
-} from 'discord.js';
+import type { ThreadChannel } from 'discord.js';
 import {
   GuildMember,
   PermissionsBitField,

@@ -1,7 +1,8 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import {
-  ApplicationCommandOptionType, ApplicationCommandType,
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
