@@ -20,13 +20,13 @@ export default async function searchClosestSanction(
     // Avoid useless double loop after.
     if (user.username === wanted) {
       return [{
-        matchedName: '⭐ ' + user.username + '#' + user.discriminator,
+        matchedName: '⭐ ' + user.tag,
         baseName: entry.userId,
         similarity: 1,
       }];
     }
     matches.push({
-      matchedName: user.username + '#' + user.discriminator,
+      matchedName: user.tag,
       baseName: entry.userId,
       similarity: jaroWinklerDistance(user.username, wanted, { caseSensitive: false }),
     });
