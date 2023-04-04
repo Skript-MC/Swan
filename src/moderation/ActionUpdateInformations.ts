@@ -13,7 +13,7 @@ export default class ActionUpdateInformations {
   }
 
   public async load(): Promise<void> {
-    const currentSanction = await ModerationHelper.getCurrent(this.data.victim.id, this.data.type);
+    const currentSanction = await ModerationHelper.getCurrentSanction(this.data.victim.id, this.data.type);
     if (!currentSanction)
       return;
 

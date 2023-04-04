@@ -50,7 +50,7 @@ export default {
     await Promise.all(removingRoles);
   },
 
-  async getCurrent(memberId: string, sanctionType: SanctionTypes): Promise<SanctionDocument> {
+  async getCurrentSanction(memberId: string, sanctionType: SanctionTypes): Promise<SanctionDocument> {
     return Sanction.findOne({
       userId: memberId,
       revoked: false,
