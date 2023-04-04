@@ -35,7 +35,7 @@ export default class SdbCommand extends SwanCommand {
     const durationInput = new TextInputBuilder()
       .setCustomId('duration')
       .setLabel('Durée du bannissement')
-      .setPlaceholder('1d 2h 3m 4s')
+      .setPlaceholder('1j 2h 3min 4s')
       .setMinLength(1)
       .setMaxLength(100)
       .setStyle(TextInputStyle.Short)
