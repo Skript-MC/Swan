@@ -8,7 +8,6 @@ export { default as inlineCodeList } from './inlineCodeList';
 export { default as isGuildMessage } from './isGuildMessage';
 export { noop, nullop } from './noop';
 export { default as padNumber } from './padNumber';
-export { default as prunePseudo } from './prunePseudo';
 export { default as resolveMember } from './resolveMember';
 export { default as resolveUser } from './resolveUser';
 export { default as searchClosestAddon } from './searchs/searchClosestAddon';

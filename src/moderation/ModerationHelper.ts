@@ -5,12 +5,12 @@ import Sanction from '@/app/models/sanction';
 import type ModerationData from '@/app/moderation/ModerationData';
 import type { SanctionDocument } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
-import { nullop, prunePseudo } from '@/app/utils';
+import { nullop } from '@/app/utils';
 import settings from '@/conf/settings';
 
 export default {
   async getThread(data: ModerationData, orCreate = false): Promise<ThreadChannel> {
-    const cleanedPseudo = prunePseudo(data.victim.member, data.victim.user, data.victim.id);
+    const cleanedPseudo = data.victim.member.displayName || data.victim.id;
     const channelName = `${cleanedPseudo} (${data.sanctionId})`;
 
     const banChannel = await data.guild.channels.fetch(settings.channels.banChannel) as TextChannel;
