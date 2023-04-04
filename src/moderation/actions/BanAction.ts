@@ -1,4 +1,3 @@
-import type { ThreadChannel } from 'discord.js';
 import {
   GuildMember,
   PermissionsBitField,
@@ -132,9 +131,8 @@ export default class BanAction extends ModerationAction {
 
   private async _ban(): Promise<void> {
     // 1. Create the private channel
-    let thread: ThreadChannel;
     try {
-      thread = await ModerationHelper.getThread(this.data, true);
+      const thread = await ModerationHelper.getThread(this.data, true);
 
       const explanation = pupa(messages.moderation.banExplanation, {
         nameString: this.nameString,
