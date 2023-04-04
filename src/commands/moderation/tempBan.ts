@@ -2,7 +2,6 @@ import type { ContextMenuCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
   ActionRowBuilder,
-  ApplicationCommandOptionType,
   ApplicationCommandType,
   ModalBuilder,
   TextInputBuilder,
@@ -23,26 +22,7 @@ import messages from '@/conf/messages';
 @ApplySwanOptions(config)
 export default class SdbCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
-  commandOptions: ApplicationCommandOptionData[] = [
-    {
-      type: ApplicationCommandOptionType.String,
-      name: 'durée',
-      description: 'Durée du bannissement',
-      required: true,
-    },
-    {
-      type: ApplicationCommandOptionType.String,
-      name: 'raison',
-      description: 'Raison du bannissement (sera affiché au membre)',
-      required: true,
-    },
-    {
-      type: ApplicationCommandOptionType.Boolean,
-      name: 'autoban',
-      description: "Automatiquement bannir le membre à la fin de la sanction s'il n'a écrit aucun message ?",
-      required: false,
-    },
-  ];
+  commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
     interaction: SwanCommand.ContextMenuInteraction,

@@ -2,7 +2,6 @@ import type { ContextMenuCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
   ActionRowBuilder,
-  ApplicationCommandOptionType,
   ApplicationCommandType,
   ModalBuilder,
   TextInputBuilder,
@@ -23,20 +22,7 @@ import settings from '@/conf/settings';
 @ApplySwanOptions(config)
 export default class WarnCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
-  commandOptions: ApplicationCommandOptionData[] = [
-    {
-      type: ApplicationCommandOptionType.User,
-      name: 'membre',
-      description: 'Membre à avertir',
-      required: true,
-    },
-    {
-      type: ApplicationCommandOptionType.String,
-      name: 'raison',
-      description: "Raison de l'avertissement (sera affiché au membre)",
-      required: true,
-    },
-  ];
+  commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
     interaction: SwanCommand.ContextMenuInteraction,
