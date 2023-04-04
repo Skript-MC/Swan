@@ -51,7 +51,6 @@ export abstract class SwanCommand extends Command {
   public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
     switch (this.commandType) {
       case ApplicationCommandType.ChatInput:
-        console.log('Registering chat input command', this.command);
         registry.registerChatInputCommand({
           type: ApplicationCommandType.ChatInput,
           name: this.command,
