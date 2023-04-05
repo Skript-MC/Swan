@@ -6,14 +6,15 @@ import type {
   GuildTextBasedChannel,
   User,
 } from 'discord.js';
-import { CommandInteraction, Message, TextChannel } from 'discord.js';
+import {
+  ChatInputCommandInteraction,
+  Message,
+  ModalSubmitInteraction,
+  TextChannel,
+  ThreadChannel,
+} from 'discord.js';
 import { nanoid } from 'nanoid';
-import type {
-  GuildMessage,
-  ModerationDataResult,
-  PersonInformations,
-  SanctionInformations,
-} from '@/app/types';
+import type { GuildMessage, ModerationDataResult, PersonInformations } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';
@@ -33,30 +34,21 @@ export default class ModerationData {
   start: number;
   privateChannel?: TextChannel;
   sanctionId: string;
-  informations: SanctionInformations;
-
-  // These informations don't have much to do with moderation data, they are just used to pass
-  // data from the specific moderation action to the parent class, ModerationAction.
-  // TODO: Maybe this should be put in a separate class that acts the same as ModerationData.
-  file: { path: string; name: string };
-  shouldPurge: boolean;
-  originalWarnId: string;
 
   /**
    * Create moderation data from a message or from individual informations.
    *
-   * @param {Message | TextChannel | AkairoClient} argument
    * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...).
    * * If the argument is a TextChannel, then the channel is used to get all the data.
    * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument?: CommandInteraction | GuildMessage) {
+  constructor(argument?: ChatInputCommandInteraction | GuildMessage | ModalSubmitInteraction) {
     this.client = container.client;
     if (argument instanceof Message) {
       this.channel = argument.channel;
       this.moderatorId = argument.member.id;
-    } else if (argument instanceof CommandInteraction) {
-      if (argument.channel instanceof TextChannel)
+    } else if (argument instanceof ModalSubmitInteraction || argument instanceof ChatInputCommandInteraction) {
+      if (argument.channel instanceof TextChannel || argument.channel instanceof ThreadChannel)
         this.channel = argument.channel;
       this.moderatorId = argument.member.user.id;
     } else {
@@ -76,10 +68,11 @@ export default class ModerationData {
     this.finish = null;          // The finish timestamp.
     this.start = Date.now();     // The start timestamp.
     this.sanctionId = nanoid(8); // The id of the case.
-    this.informations = {};      // The additional information to be given to the sanction model.
-    this.file = null;            // File informations if it is a ban.
-    this.shouldPurge = false;    // Whether we should purge the messages of the member while hard-banning them.
-    this.originalWarnId = null;  // The ID of the original warn to remove in a `.removewarn`.
+  }
+
+  public setSanctionId(id: string): this {
+    this.sanctionId = id;
+    return this;
   }
 
   public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
@@ -119,26 +112,6 @@ export default class ModerationData {
     return this;
   }
 
-  public setInformations(infos: Partial<SanctionInformations>): this {
-    this.informations = { ...this.informations, ...infos };
-    return this;
-  }
-
-  public setFile(fileInfo: { path: string; name: string }): this {
-    this.file = fileInfo;
-    return this;
-  }
-
-  public setShouldPurge(bool: boolean): this {
-    this.shouldPurge = bool;
-    return this;
-  }
-
-  public setOriginalWarnId(id: string): this {
-    this.originalWarnId = id;
-    return this;
-  }
-
   public toSchema(): ModerationDataResult {
     return {
       memberId: this.victim.id,
@@ -149,7 +122,6 @@ export default class ModerationData {
       duration: this.duration,
       reason: this.reason,
       revoked: false,
-      informations: this.informations,
       sanctionId: this.sanctionId,
     };
   }

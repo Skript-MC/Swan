@@ -1,7 +1,7 @@
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
@@ -15,7 +15,8 @@ const turndownService = new Turndown();
 
 @ApplySwanOptions(config)
 export default class DocumentationCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'article',

@@ -2,6 +2,7 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import {
   ApplicationCommandOptionType,
+  ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
@@ -21,7 +22,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class PollCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'question',

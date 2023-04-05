@@ -1,7 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
-import BanAction from '@/app/moderation/actions/BanAction';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
 import UnbanAction from '@/app/moderation/actions/UnbanAction';
 import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
@@ -25,39 +24,33 @@ export default class ModerationTask extends Task {
 
     for (const sanction of sanctions) {
       const {
-        memberId,
+        userId,
         type,
-        informations,
         sanctionId,
       } = sanction;
 
-      const member = this.container.client.guild.members.cache.get(memberId)
-        ?? (await this.container.client.guild.members.fetch(memberId)
+      const member = this.container.client.guild.members.cache.get(userId)
+        ?? (await this.container.client.guild.members.fetch(userId)
           .catch(noop));
       if (!member)
         continue;
 
       const user = member.user
-        ?? this.container.client.users.resolve(memberId)
-        ?? (await this.container.client.users.fetch(memberId)
+        ?? this.container.client.users.resolve(userId)
+        ?? (await this.container.client.users.fetch(userId)
           .catch(noop));
       if (!user)
         continue;
 
       const data = new ModerationData()
+        .setSanctionId(sanctionId)
         .setVictim(member ?? user, false)
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (type) {
-        case SanctionTypes.Ban:
-          if (informations?.shouldAutobanIfNoMessages && !sanction.informations.hasSentMessages) {
-            data.setReason(messages.moderation.reasons.autoBanInactivity)
-              .setType(SanctionTypes.Hardban);
-            await new BanAction(data).commit();
-          } else {
-            data.setType(SanctionTypes.Unban);
-            await new UnbanAction(data).commit();
-          }
+        case SanctionTypes.TempBan:
+          data.setType(SanctionTypes.Unban);
+          await new UnbanAction(data).commit();
           break;
 
         case SanctionTypes.Mute:
@@ -66,8 +59,7 @@ export default class ModerationTask extends Task {
           break;
 
         case SanctionTypes.Warn:
-          data.setType(SanctionTypes.RemoveWarn)
-            .setOriginalWarnId(sanctionId);
+          data.setType(SanctionTypes.RemoveWarn);
           await new RemoveWarnAction(data).commit();
           break;
 

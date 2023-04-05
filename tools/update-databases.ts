@@ -18,8 +18,8 @@ async function start(): Promise<void> {
   });
 
   console.log('Converting...');
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  await Sanction.updateMany({ type: 'ban' }, { 'informations.hasSentMessages': true });
+  await Sanction.updateMany({ type: 'ban' }, { type: 'tempBan' });
+  await Sanction.updateMany({}, { $rename: { memberId: 'userId' } }, { strict: false });
   console.log('Conversion was successful!');
   // eslint-disable-next-line node/no-process-exit
   process.exit(0);

@@ -1,9 +1,8 @@
 import { User } from 'discord.js';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationError from '@/app/moderation/ModerationError';
 import ModerationAction from '@/app/moderation/actions/ModerationAction';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
+import { SanctionsUpdates } from '@/app/types';
 
 export default class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
@@ -14,19 +13,10 @@ export default class RemoveWarnAction extends ModerationAction {
   }
 
   private async _removeWarn(): Promise<void> {
-    // 1. Update the Database
+    // 1. Update the database
     try {
-      await ConvictedUser.findOneAndUpdate(
-        { memberId: this.data.victim.id },
-        { $inc: { currentWarnCount: -1 } },
-      );
       await Sanction.findOneAndUpdate(
-        {
-          memberId: this.data.victim.id,
-          type: SanctionTypes.Warn,
-          revoked: false,
-          sanctionId: this.data.originalWarnId,
-        },
+        { sanctionId: this.data.sanctionId },
         {
           $set: { revoked: true },
           $push: {
@@ -38,13 +28,12 @@ export default class RemoveWarnAction extends ModerationAction {
             },
           },
         },
-        { sort: { start: 'descending' } },
       );
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occurred while revoking a warn in the Database')
+          .setMessage('An error occurred while revoking a warn in the database')
           .addDetail('RemoveWarn ID', this.data.sanctionId)
           .addDetail('Is User', this.data.victim.user instanceof User)
           .addDetail('User ID', this.data.victim.id)

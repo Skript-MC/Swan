@@ -10,17 +10,17 @@ import {
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import ModerationData from '@/app/moderation/ModerationData';
 import ModerationHelper from '@/app/moderation/ModerationHelper';
-import WarnAction from '@/app/moderation/actions/WarnAction';
+import BanAction from '@/app/moderation/actions/BanAction';
+import resolveDuration from '@/app/resolvers/duration';
 import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
-import { warn as config } from '@/conf/commands/moderation';
+import { tempBan as config } from '@/conf/commands/moderation';
 import messages from '@/conf/messages';
-import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class WarnCommand extends SwanCommand {
+export default class SdbCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -29,8 +29,17 @@ export default class WarnCommand extends SwanCommand {
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const modal = new ModalBuilder()
-      .setCustomId('warn')
-      .setTitle('Avertissement');
+      .setCustomId('tempban')
+      .setTitle('Bannissement temporaire');
+
+    const durationInput = new TextInputBuilder()
+      .setCustomId('duration')
+      .setLabel('Durée du bannissement')
+      .setPlaceholder('1j 2h 3min 4s')
+      .setMinLength(1)
+      .setMaxLength(100)
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
 
     const reasonInput = new TextInputBuilder()
       .setLabel('Raison du bannissement')
@@ -39,15 +48,23 @@ export default class WarnCommand extends SwanCommand {
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true);
 
-    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput);
+    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput);
+    const secondRow = new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput);
 
-    modal.addComponents(firstRow);
+    modal.addComponents(firstRow, secondRow);
     await interaction.showModal(modal);
 
     const submitInteraction = await interaction.awaitModalSubmit({
       filter: i => i.user.id === interaction.user.id,
       time: 30_000,
     });
+
+    const reason = submitInteraction.fields.getTextInputValue('reason');
+    const duration = resolveDuration(submitInteraction.fields.getTextInputValue('duration'), false);
+    if (duration.isErr()) {
+      await interaction.reply({ content: messages.prompt.duration, ephemeral: true });
+      return;
+    }
 
     const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
     const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId);
@@ -60,13 +77,15 @@ export default class WarnCommand extends SwanCommand {
     await this._exec(
       submitInteraction,
       victim.unwrap(),
-      submitInteraction.fields.getTextInputValue('reason'),
+      duration.unwrap(),
+      reason,
     );
   }
 
   private async _exec(
     interaction: SwanCommand.ModalSubmitInteraction,
     member: GuildMember,
+    duration: number,
     reason: string,
   ): Promise<void> {
     await interaction.deferReply({ ephemeral: true });
@@ -81,24 +100,24 @@ export default class WarnCommand extends SwanCommand {
       this.container.client.currentlyModerating.delete(member.id);
     }, 10_000);
 
-    const currentBan = await ModerationHelper.getCurrentBan(member.id);
-    if (currentBan) {
-      await interaction.followUp(messages.global.impossibleBecauseBanned).catch(noop);
-      return;
-    }
+    const data = new ModerationData(interaction)
+      .setType(SanctionTypes.TempBan)
+      .setDuration(duration, true)
+      .setVictim(member)
+      .setReason(reason);
+
+    // If there's a current ban, we set the sanctionId to the current ban's sanctionId
+    const currentTempBan = await ModerationHelper.getCurrentBan(member.id);
+    if (currentTempBan)
+      data.setSanctionId(currentTempBan.sanctionId);
 
     try {
-      const data = new ModerationData(interaction)
-        .setVictim(member)
-        .setReason(reason)
-        .setDuration(settings.moderation.warnDuration * 1000, true)
-        .setType(SanctionTypes.Warn);
-
-      const success = await new WarnAction(data).commit();
+      const success = await new BanAction(data).commit();
       if (success)
         await interaction.followUp(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
-      this.container.logger.error('An unexpected error occurred while warning a member!');
+      this.container.logger.error('An unexpected error occurred while banning a member!');
+      this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.followUp(messages.global.oops).catch(noop);

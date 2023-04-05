@@ -15,8 +15,6 @@ export default function ApplySwanOptions(config: { settings: object }): ClassDec
           ...settings.globalCommandsOptions,
           ...baseOptions,
           ...config.settings,
-          // @ts-expect-error commandOptions is a static property of SwanCommand
-          commandOptions: target.commandOptions,
         }),
     }));
 }

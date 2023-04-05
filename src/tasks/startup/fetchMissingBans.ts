@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { AuditLogEvent } from 'discord.js';
-import ConvictedUser from '@/app/models/convictedUser';
 import ModerationData from '@/app/moderation/ModerationData';
+import ModerationHelper from '@/app/moderation/ModerationHelper';
 import BanAction from '@/app/moderation/actions/BanAction';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
@@ -12,12 +12,11 @@ import { nullop } from '@/app/utils';
 export default class FetchMissingBansTask extends Task {
   public override async run(): Promise<void> {
     const bans = await this.container.client.guild.bans.fetch();
-    const convictedUsers = await ConvictedUser.find();
-
     const logs = await this.container.client.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd });
 
     for (const ban of bans.values()) {
-      if (!convictedUsers.some(usr => usr.memberId === ban.user.id)) {
+      const currentHardban = await ModerationHelper.getCurrentHardban(ban.user.id);
+      if (!currentHardban) {
         const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
         if (!discordBan)
           continue;

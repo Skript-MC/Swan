@@ -11,8 +11,8 @@ export default class GuildBanRemoveListener extends Listener {
     if (this.container.client.currentlyUnbanning.has(ban.user.id))
       return;
 
-    const isBanned = await ModerationHelper.isBanned(ban.user.id, true);
-    if (!isBanned)
+    const currentHardban = await ModerationHelper.getCurrentHardban(ban.user.id);
+    if (!currentHardban)
       return;
 
     const data = new ModerationData()
