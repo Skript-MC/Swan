@@ -58,15 +58,15 @@ export default {
   },
 
   async getCurrentBan(memberId: string): Promise<SanctionDocument> {
-    return await this.getCurrent(memberId, SanctionTypes.TempBan);
+    return await this.getCurrentSanction(memberId, SanctionTypes.TempBan);
   },
 
   async getCurrentHardban(memberId: string): Promise<SanctionDocument> {
-    return await this.getCurrent(memberId, SanctionTypes.Hardban);
+    return await this.getCurrentSanction(memberId, SanctionTypes.Hardban);
   },
 
   async getCurrentMute(memberId: string): Promise<SanctionDocument> {
-    return await this.getCurrent(memberId, SanctionTypes.Mute);
+    return await this.getCurrentSanction(memberId, SanctionTypes.Mute);
   },
 
   async getCurrentWarnCount(memberId: string): Promise<number> {
