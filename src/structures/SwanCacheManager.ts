@@ -1,10 +1,10 @@
 import type {
   CachedChannels,
-  ConvictedUserDocument,
   DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
   SkriptMcDocumentationSyntaxAndAddon,
+  SkriptToolsAddonList,
   SwanChannelDocument,
 } from '@/app/types';
 
@@ -14,7 +14,7 @@ interface GithubCache {
 }
 
 export default class SwanCacheManager {
-  addonsVersions: string[];
+  skriptToolsAddons: SkriptToolsAddonList;
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: Set<string>;
   reactionRolesIds: Set<string>;
@@ -24,8 +24,6 @@ export default class SwanCacheManager {
   gitCommit: string;
   discordUsers: DiscordUserDocument[];
   swanChannels: Set<SwanChannelDocument>;
-  convictedUsers: ConvictedUserDocument[];
-  channelBannedSilentUsers: Set<string>;
 
   constructor() {
     this.channels = {
@@ -41,10 +39,10 @@ export default class SwanCacheManager {
       skriptTalk: null,
       creations: null,
       log: null,
-      privateChannelsCategory: null,
       forumUpdates: null,
+      banChannel: null,
     };
-    this.addonsVersions = [];
+    this.skriptToolsAddons = {};
     this.skriptMcSyntaxes = [];
     this.github = {};
     this.pollMessagesIds = new Set();
@@ -53,7 +51,5 @@ export default class SwanCacheManager {
     this.gitCommit = '';
     this.discordUsers = [];
     this.swanChannels = new Set();
-    this.convictedUsers = [];
-    this.channelBannedSilentUsers = new Set();
   }
 }

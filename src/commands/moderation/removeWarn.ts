@@ -1,8 +1,7 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
-import ConvictedUser from '@/app/models/convictedUser';
 import Sanction from '@/app/models/sanction';
 import ModerationData from '@/app/moderation/ModerationData';
 import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
@@ -14,7 +13,8 @@ import messages from '@/conf/messages';
 
 @ApplySwanOptions(config)
 export default class RemoveWarnCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.User,
       name: 'membre',
@@ -31,7 +31,7 @@ export default class RemoveWarnCommand extends SwanCommand {
     {
       type: ApplicationCommandOptionType.String,
       name: 'raison',
-      description: "Raison de la révoquation de l'avertissement",
+      description: "Raison de la révocation de l'avertissement",
       required: false,
     },
   ];
@@ -48,7 +48,10 @@ export default class RemoveWarnCommand extends SwanCommand {
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
-    const sanctions = await Sanction.find({ memberId: interaction.options.get('membre', true).value, revoked: false }).catch(nullop);
+    const sanctions = await Sanction.find({
+      userId: interaction.options.get('membre', true).value,
+      revoked: false,
+    }).catch(nullop);
     await interaction.respond(
       sanctions
         .slice(0, 20)
@@ -64,21 +67,23 @@ export default class RemoveWarnCommand extends SwanCommand {
     warnId: string,
     reason: string,
   ): Promise<void> {
+    await interaction.deferReply({ ephemeral: true });
+
     const warn = await Sanction.findOne({ sanctionId: warnId, revoked: false }).catch(nullop);
     if (!warn) {
-      await interaction.reply(config.messages.invalidWarnId).catch(noop);
+      await interaction.followUp(config.messages.invalidWarnId).catch(noop);
       return;
     }
 
-    const member = interaction.guild.members.cache.get(warn.memberId)
-      ?? await interaction.guild.members.fetch(warn.memberId).catch(nullop);
+    const member = interaction.guild.members.cache.get(warn.userId)
+      ?? await interaction.guild.members.fetch(warn.userId).catch(nullop);
     if (!member) {
-      await interaction.reply(config.messages.memberNotFound);
+      await interaction.followUp(config.messages.memberNotFound);
       return;
     }
 
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await interaction.reply(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
       return;
     }
 
@@ -88,26 +93,20 @@ export default class RemoveWarnCommand extends SwanCommand {
     }, 10_000);
 
     try {
-      const convictedUser = await ConvictedUser.findOne({ memberId: member.id });
-      if (!convictedUser || convictedUser.currentWarnCount === 0) {
-        await interaction.reply(config.messages.notWarned);
-        return;
-      }
-
       const data = new ModerationData(interaction)
+        .setSanctionId(warn.sanctionId)
         .setVictim(member)
         .setReason(reason)
-        .setType(SanctionTypes.RemoveWarn)
-        .setOriginalWarnId(warn.sanctionId);
+        .setType(SanctionTypes.RemoveWarn);
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)
-        await interaction.reply(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success).catch(noop);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while removing a warn from member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.reply(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops).catch(noop);
     }
   }
 }

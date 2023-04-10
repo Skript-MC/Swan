@@ -1,6 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -9,7 +9,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class EightBallCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'question',

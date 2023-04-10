@@ -3,7 +3,7 @@ import type { Endpoints } from '@octokit/types';
 import type { Command, CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
 import type {
-  ApplicationCommandOptionData,
+  ApplicationCommandType,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
@@ -14,7 +14,6 @@ import type {
   Document,
   FilterQuery,
   Model,
-  Types,
 } from 'mongoose';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type settings from '@/conf/settings';
@@ -54,7 +53,7 @@ export interface SkriptToolsAddonResponse {
 }
 
 /** Represent the object that is returned when calling the skripttools API to get all addons */
-export type SkriptToolsAddonListResponse = Record<string, string[] | null>;
+export type SkriptToolsAddonList = Record<string, string[] | null>;
 
 /**
  * Represent the objects that are in the "articles" array that is returned
@@ -368,7 +367,7 @@ export interface SwanCommandOptions extends CommandOptions {
   command: string;
   examples: string[];
   permissions?: string[];
-  commandOptions: ApplicationCommandOptionData[];
+  contextType: ApplicationCommandType.Message | ApplicationCommandType.User;
 }
 
 export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
@@ -424,7 +423,7 @@ export interface BanChannelMessage {
 }
 
 /** The sanctions types that we track in the ConvictedUser database */
-export type TrackedSanctionTypes = SanctionTypes.Ban | SanctionTypes.Hardban | SanctionTypes.Mute;
+export type TrackedSanctionTypes = SanctionTypes.Hardban | SanctionTypes.Mute | SanctionTypes.TempBan;
 
 /** The name of the fields of the TrackedSanctionTypes */
 export type TrackedFieldNames = 'currentBanId' | 'currentMuteId';
@@ -434,13 +433,6 @@ export interface PersonInformations {
   id?: string;
   user?: User;
   member?: GuildMember;
-}
-
-/** Extra sanctions informations in SanctionDocument#informations */
-export interface SanctionInformations {
-  shouldAutobanIfNoMessages?: boolean;
-  banChannelId?: string;
-  hasSentMessages?: boolean;
 }
 
 /** The object returned by ModerationData#toSchema */
@@ -453,7 +445,6 @@ export interface ModerationDataResult {
   duration: number;
   reason: string;
   revoked: boolean;
-  informations: SanctionInformations;
   sanctionId: string;
 }
 
@@ -480,7 +471,7 @@ export interface ModerationDataResult {
 /** Different types of possible sanctions */
 export enum SanctionTypes {
   Hardban = 'hardban',
-  Ban = 'ban',
+  TempBan = 'tempBan',
   Mute = 'mute',
   Warn = 'warn',
   Kick = 'kick',
@@ -609,34 +600,6 @@ export type MessageModel = Model<MessageDocument>;
 
 // #endregion
 
-/* ****************************** */
-/*  ConvictedUser Database Types  */
-/* ****************************** */
-
-// #region ConvictedUser Database Types (VS Code)
-// region ConvictedUser Database Types (JetBrains)
-
-/** Interface for the "ConvictedUser"'s mongoose schema */
-export interface ConvictedUserBase {
-  memberId: string;
-  currentBanId?: string | null;
-  currentMuteId?: string | null;
-  currentWarnCount?: number | null;
-}
-
-/** Interface for the "ConvictedUser"'s mongoose document */
-export interface ConvictedUserDocument extends ConvictedUserBase, Document {}
-
-/** Interface for the "ConvictedUser"'s mongoose model */
-export interface ConvictedUserModel extends Model<ConvictedUserDocument> {
-  findOneOrCreate(
-    condition: FilterQuery<ConvictedUserDocument>,
-    doc: ConvictedUserBase,
-  ): Promise<ConvictedUserDocument>;
-}
-
-// #endregion
-
 /* ************************* */
 /*  Sanction Database Types  */
 /* ************************* */
@@ -654,10 +617,11 @@ export interface SanctionUpdate {
   reason: string;
 }
 
-/** Interface for the "Sanction"'s mongoose schema */
-export interface SanctionBase {
-  memberId: string;
-  user: ConvictedUserDocument | Types.ObjectId;
+/**
+ * Interface for the "Sanction"'s mongoose document.
+ */
+export interface SanctionDocument extends Document {
+  userId: string;
   type: SanctionTypes;
   moderator: string;
   start: number;
@@ -666,27 +630,7 @@ export interface SanctionBase {
   reason: string;
   revoked?: boolean;
   sanctionId: string;
-  informations?: SanctionInformations;
   updates?: SanctionUpdate[];
-}
-
-/**
- * Interface for the "Sanction"'s mongoose document.
- * It is not meant to be used, it is just a base which extends document, and modify SanctionBase to use
- * mongoose's types (allow things like .addToSet on the mongoose array)
- */
-interface SanctionBaseDocument extends SanctionBase, Document {
-  updates?: Types.Array<SanctionUpdate>;
-}
-
-/** Interface for the "Sanction"'s mongoose document, when the user field is not populated */
-export interface SanctionDocument extends SanctionBaseDocument {
-  user: ConvictedUserDocument['_id'];
-}
-
-/** Interface for the "Sanction"'s mongoose document, when the user field is populated */
-export interface SanctionPopulatedDocument extends SanctionBaseDocument {
-  user: ConvictedUserDocument;
 }
 
 /** Interface for the "Sanction"'s mongoose model */

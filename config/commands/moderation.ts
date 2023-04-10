@@ -20,22 +20,28 @@ const commonMessages = {
     `,
 };
 
-export const ban = {
+export const tempBan = {
   settings: {
-    name: 'Ban',
-    command: 'ban',
-    description: 'Appliquer une restriction du Discord à un membre (= salon des bannis), ou le bannir définitivement.',
-    examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure... -a -p'],
+    name: 'Bannissement temporaire',
+    command: 'tempban',
+    description: 'Appliquer un bannissement temporaire à un membre du Discord, créant un salon des bannis.',
+    examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure...'],
     preconditions: [...basePreconditions, staffRolePrecondition],
   },
+  messages: {
+    notification: commonMessages.creationNotification(true),
+    notificationUpdate: commonMessages.notificationUpdate,
+    success: 'Membre temporairement banni avec succès !',
+  },
+};
+
+export const hardban = {
   messages: {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre banni avec succès !',
   },
 };
-
-export const hardban = ban;
 
 export const history = {
   settings: {
@@ -53,7 +59,7 @@ export const history = {
     overflowDescription: "Toutes les sanctions de l'utilisateur n'ont pas pu être affichées. Vous pouvez toutes les consulter sur le [panel de gestion]({url})",
     sanctionsName: {
       hardban: ':bomb: Bannissement définitif',
-      ban: ':hammer: Bannissement',
+      tempBan: ':hammer: Bannissement temporaire',
       unban: ':white_check_mark: Débannissement',
       mute: ':mute: Mute',
       unmute: ':loud_sound: Unmute',
@@ -63,7 +69,7 @@ export const history = {
     },
     overview: stripIndent`
       :bomb: Bannissements définitifs : {stats.hardbans}
-      :hammer: Bannissements : {stats.bans}
+      :hammer: Bannissement temporaires : {stats.bans}
       :mute: Mutes : {stats.mutes}
       :door: Kicks : {stats.kicks}
       :stop_sign: Avertissements totaux : {stats.warns}

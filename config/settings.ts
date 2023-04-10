@@ -46,7 +46,7 @@ export default {
       warn: '#ffe200' as HexColorString,
       kick: '#ff6b61' as HexColorString,
       mute: '#8100eb' as HexColorString,
-      ban: '#cc3300' as HexColorString,
+      tempBan: '#cc3300' as HexColorString,
       hardban: '#000000' as HexColorString,
       unban: '#1fc622' as HexColorString,
       unmute: '#1fc622' as HexColorString,
@@ -87,8 +87,8 @@ export default {
     skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
     creations: process.env.SKRIPT_CREATIONS_CHANNEL,
     log: process.env.LOG_CHANNEL,
-    privateChannelsCategory: process.env.PRIVATE_CHANNEL_CATEGORY,
     forumUpdates: process.env.FORUM_FEED_CHANNEL,
+    banChannel: process.env.BAN_CHANNEL,
   },
   emojis: {
     yes: process.env.YES_EMOJI || '✅',

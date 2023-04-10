@@ -2,6 +2,7 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
 import {
   ApplicationCommandOptionType,
+  ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
@@ -20,7 +21,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class HistoryCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.User,
       name: 'membre',
@@ -37,7 +39,7 @@ export default class HistoryCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, user: User): Promise<void> {
-    const rawSanctions = await Sanction.find({ memberId: user.id });
+    const rawSanctions = await Sanction.find({ userId: user.id });
     if (rawSanctions.length === 0) {
       await interaction.reply(config.messages.notFound);
       return;
@@ -49,7 +51,7 @@ export default class HistoryCommand extends SwanCommand {
     // Get all the statistics.
     const stats = {
       hardbans: sanctions.filter(s => s.type === SanctionTypes.Hardban).length,
-      bans: sanctions.filter(s => s.type === SanctionTypes.Ban).length,
+      bans: sanctions.filter(s => s.type === SanctionTypes.TempBan).length,
       mutes: sanctions.filter(s => s.type === SanctionTypes.Mute).length,
       kicks: sanctions.filter(s => s.type === SanctionTypes.Kick).length,
       currentWarns: sanctions.filter(s => s.type === SanctionTypes.Warn && !s.revoked).length,
@@ -96,9 +98,9 @@ export default class HistoryCommand extends SwanCommand {
         // If there is a duration update, show it with a nice diff.
         const diff = update.type === SanctionsUpdates.Duration
           ? pupa(config.messages.sanctionDescription.timeDiff, {
-              valueBefore: update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true),
-              valueAfter: update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true),
-            })
+            valueBefore: update.valueBefore ? toHumanDuration(update.valueBefore) : messages.global.unknown(true),
+            valueAfter: update.valueAfter ? toHumanDuration(update.valueAfter) : messages.global.unknown(true),
+          })
           : '\n';
 
         sanctionContent += pupa(config.messages.sanctionDescription.update, {

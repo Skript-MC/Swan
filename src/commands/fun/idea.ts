@@ -1,5 +1,6 @@
 import type { ChatInputCommand } from '@sapphire/framework';
-import { EmbedBuilder } from 'discord.js';
+import type { ApplicationCommandOptionData } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import ApplySwanOptions from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -9,6 +10,9 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class IdeaCommand extends SwanCommand {
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [];
+
   public override async chatInputRun(
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
@@ -36,7 +40,7 @@ export default class IdeaCommand extends SwanCommand {
       .setColor(settings.colors.default)
       .setAuthor({
         name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
-        iconURL: randomIdea.author.avatarURL() ?? '',
+        iconURL: randomIdea.author.avatarURL(),
       })
       .setDescription(randomIdea.content)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })

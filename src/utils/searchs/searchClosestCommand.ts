@@ -1,6 +1,6 @@
 import { PreconditionContainerSingle } from '@sapphire/framework';
-import { GuildMemberRoleManager } from 'discord.js';
 import type { AutocompleteInteraction } from 'discord.js';
+import { GuildMemberRoleManager } from 'discord.js';
 import jaroWinklerDistance from 'jaro-winkler';
 import type { RolePreconditionContext } from '@/app/preconditions/Role';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';

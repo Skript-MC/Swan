@@ -27,6 +27,7 @@ export default class SwanClient extends SapphireClient {
         GatewayIntentBits.GuildPresences, // Access to users' presence (for .userinfo).
         GatewayIntentBits.GuildMessages, // Access to Message, MessageDelete and MessageUpdate events.
         GatewayIntentBits.GuildMessageReactions, // Access to MessageReactionAdd events.
+        GatewayIntentBits.MessageContent, // Access to messages' content.
       ],
     });
 

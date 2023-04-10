@@ -1,12 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
 import { EmbedBuilder } from 'discord.js';
+import he from 'he';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
 import Task from '@/app/structures/tasks/Task';
 import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '@/app/types';
-import { noop, trimText } from '@/app/utils';
+import { trimText } from '@/app/utils';
 import settings from '@/conf/settings';
 import { forumFeed as config } from '@/conf/tasks';
 
@@ -57,15 +58,16 @@ export default class ForumFeedTask extends Task {
         .setColor(settings.colors.default)
         .setAuthor({
           name: topic.firstPost.author.name,
-          iconURL: 'https:' + topic.firstPost.author.photoUrl,
+          iconURL: topic.firstPost.author.photoUrlIsDefault
+            ? null
+            : this._ensureHttpScheme(topic.firstPost.author.photoUrl),
         })
         .setTitle(pupa(config.embed.title, { topic }))
         .setURL(topic.url)
         .setDescription(trimText(markdown, 500))
         .setFooter({ text: config.dataProvider })
         .setTimestamp(new Date(topic.firstPost.date));
-      await channel.send({ embeds: [embed] })
-        .catch(noop);
+      await channel.send({ embeds: [embed] });
     }
   }
 
@@ -110,21 +112,27 @@ export default class ForumFeedTask extends Task {
         .setColor(settings.colors.default)
         .setAuthor({
           name: resource.author.name,
-          iconURL: resource.author.photoUrlIsDefault ? '' : `https:${resource.author.photoUrl}`,
+          iconURL: resource.author.photoUrlIsDefault ? null : this._ensureHttpScheme(resource.author.photoUrl),
         })
         .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
         .setURL(resource.url)
         .setDescription(trimText(markdown, 150))
         .addFields(
-          { name: config.embed.categoryTitle, value: resource.category.name, inline: true },
+          { name: config.embed.categoryTitle, value: he.unescape(resource.category.name), inline: true },
           { name: config.embed.versionTitle, value: resource.version, inline: true },
           { name: config.embed.ratingTitle, value: '⭐'.repeat(Math.round(resource.rating)) || config.embed.noRating, inline: true },
         )
-        .setThumbnail(resource.primaryScreenshotThumb ? `https:${resource.primaryScreenshotThumb.url}` : '')
+        .setThumbnail(resource.primaryScreenshot
+          ? this._ensureHttpScheme(resource.primaryScreenshot.url)
+          : null)
         .setFooter({ text: config.dataProvider })
         .setTimestamp(new Date(resource.date));
-      await channel.send({ embeds: [embed] })
-        .catch(noop);
+
+      await channel.send({ embeds: [embed] });
     }
+  }
+
+  private _ensureHttpScheme(url: string): string {
+    return url.startsWith('https://') ? url : `https://${url}`;
   }
 }

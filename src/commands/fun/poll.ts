@@ -2,6 +2,7 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import {
   ApplicationCommandOptionType,
+  ApplicationCommandType,
   EmbedBuilder,
   time as timeFormatter,
   TimestampStyles,
@@ -21,7 +22,8 @@ import settings from '@/conf/settings';
 
 @ApplySwanOptions(config)
 export default class PollCommand extends SwanCommand {
-  public static commandOptions: ApplicationCommandOptionData[] = [
+  commandType = ApplicationCommandType.ChatInput;
+  commandOptions: ApplicationCommandOptionData[] = [
     {
       type: ApplicationCommandOptionType.String,
       name: 'question',
@@ -132,7 +134,7 @@ export default class PollCommand extends SwanCommand {
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
 
     const embed = new EmbedBuilder()
-      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member.avatarURL() ?? '' })
+      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member?.user.avatarURL() })
       .addFields(
         { name: embedMessages.question, value: trimText(question, 1000) },
         { name: embedMessages.answers, value: trimText(possibleAnswers, 1000) },
