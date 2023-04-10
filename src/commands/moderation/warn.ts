@@ -28,6 +28,19 @@ export default class WarnCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
+    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
+    if (!potentialVictim) {
+      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      return;
+    }
+
+    const victim = resolveSanctionnableMember(potentialVictim, moderator);
+    if (victim.isErr()) {
+      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      return;
+    }
+
     const modal = new ModalBuilder()
       .setCustomId('warn')
       .setTitle('Avertissement');
@@ -48,14 +61,6 @@ export default class WarnCommand extends SwanCommand {
       filter: i => i.user.id === interaction.user.id,
       time: 30_000,
     });
-
-    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
-    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId);
-    const victim = resolveSanctionnableMember(potentialVictim, moderator);
-    if (victim.isErr()) {
-      await interaction.reply(messages.prompt.member);
-      return;
-    }
 
     await this._exec(
       submitInteraction,

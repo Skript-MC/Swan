@@ -28,6 +28,19 @@ export default class SdbCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
+    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
+    if (!potentialVictim) {
+      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      return;
+    }
+
+    const victim = resolveSanctionnableMember(potentialVictim, moderator);
+    if (victim.isErr()) {
+      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      return;
+    }
+
     const modal = new ModalBuilder()
       .setCustomId('tempban')
       .setTitle('Bannissement temporaire');
@@ -62,15 +75,7 @@ export default class SdbCommand extends SwanCommand {
     const reason = submitInteraction.fields.getTextInputValue('reason');
     const duration = resolveDuration(submitInteraction.fields.getTextInputValue('duration'), false);
     if (duration.isErr()) {
-      await interaction.reply({ content: messages.prompt.duration, ephemeral: true });
-      return;
-    }
-
-    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
-    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId);
-    const victim = resolveSanctionnableMember(potentialVictim, moderator);
-    if (victim.isErr()) {
-      await interaction.reply(messages.prompt.member);
+      await submitInteraction.reply({ content: messages.prompt.duration, ephemeral: true });
       return;
     }
 
