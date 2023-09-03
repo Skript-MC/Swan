@@ -1,4 +1,4 @@
-import jaroWinklerDistance from 'jaro-winkler';
+import { distance } from 'fastest-levenshtein';
 import type { MessageDocument } from '@/app/types';
 
 /**
@@ -14,9 +14,9 @@ export function searchMessageSimilarity(entries: MessageDocument[], wanted: stri
     if (entry.aliases.includes(wanted) || entry.name === wanted)
       return entry;
     for (const alias of entry.aliases) {
-      const distance = jaroWinklerDistance(alias, wanted, { caseSensitive: false });
-      if (distance >= 0.7)
-        search.push([entry, distance]);
+      const ltDistance = distance(alias.toLowerCase(), wanted.toLowerCase());
+      if (ltDistance >= 0.7)
+        search.push([entry, ltDistance]);
     }
   }
   search.sort((a, b) => b[1] - a[1]);

@@ -1,4 +1,4 @@
-import jaroWinklerDistance from 'jaro-winkler';
+import { distance } from 'fastest-levenshtein';
 import type { MessageDocument, SimilarityMatch } from '@/app/types';
 import { capitalize } from '@/app/utils/capitalize';
 
@@ -23,7 +23,7 @@ export function searchClosestMessage(entries: MessageDocument[], wanted: string)
     matches.push({
       matchedName: capitalize(entry.name),
       baseName: entry.name,
-      similarity: jaroWinklerDistance(entry.name, wanted, { caseSensitive: false }),
+      similarity: distance(entry.name.toLowerCase(), wanted.toLowerCase()),
     });
   }
   if (matches.length <= 0)

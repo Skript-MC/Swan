@@ -1,5 +1,5 @@
 import { container } from '@sapphire/pieces';
-import jaroWinklerDistance from 'jaro-winkler';
+import { distance } from 'fastest-levenshtein';
 import type { SanctionDocument, SimilarityMatch } from '@/app/types';
 
 /**
@@ -28,7 +28,7 @@ export async function searchClosestSanction(
     matches.push({
       matchedName: user.tag,
       baseName: entry.userId,
-      similarity: jaroWinklerDistance(user.username, wanted, { caseSensitive: false }),
+      similarity: distance(user.username.toLowerCase(), wanted.toLowerCase()),
     });
   }
   if (matches.length <= 0)

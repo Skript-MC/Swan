@@ -1,7 +1,7 @@
 import { PreconditionContainerSingle } from '@sapphire/framework';
 import type { AutocompleteInteraction } from 'discord.js';
 import { GuildMemberRoleManager } from 'discord.js';
-import jaroWinklerDistance from 'jaro-winkler';
+import { distance } from 'fastest-levenshtein';
 import type { RolePreconditionContext } from '@/app/preconditions/Role';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SimilarityMatch } from '@/app/types';
@@ -48,7 +48,7 @@ export function searchClosestCommand(
     matches.push({
       matchedName: capitalize(entry.command) + ' — ' + capitalize(entry.name),
       baseName: entry.name,
-      similarity: jaroWinklerDistance(entry.command, wanted, { caseSensitive: false }),
+      similarity: distance(entry.command.toLowerCase(), wanted.toLowerCase()),
     });
   }
   if (matches.length <= 0)

@@ -1,4 +1,4 @@
-import jaroWinklerDistance from 'jaro-winkler';
+import { distance } from 'fastest-levenshtein';
 import type { SimilarityMatch } from '@/app/types';
 import { capitalize } from '@/app/utils/capitalize';
 
@@ -25,7 +25,7 @@ export function searchClosestAddon(entries: string[], wanted: string): Similarit
     matches.push({
       matchedName: capitalize(entry.split(' ').shift()!),
       baseName: entry,
-      similarity: jaroWinklerDistance(entry.split(' ').shift()!, wanted, { caseSensitive: false }),
+      similarity: distance(entry.split(' ').shift()!.toLowerCase(), wanted.toLowerCase()),
     });
   }
   if (matches.length <= 0)
