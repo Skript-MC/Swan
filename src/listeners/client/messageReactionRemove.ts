@@ -1,10 +1,10 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import ReactionRole from '@/app/models/reactionRole';
+import { ReactionRole } from '@/app/models/reactionRole';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 
-export default class MessageReactionRemove extends Listener {
+export class MessageReactionRemove extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
     if (user.bot || reaction.message.channel.isDMBased())
       return;

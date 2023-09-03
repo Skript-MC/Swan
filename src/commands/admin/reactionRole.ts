@@ -7,17 +7,17 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import ReactionRole from '@/app/models/reactionRole';
-import resolveEmoji from '@/app/resolvers/emoji';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { ReactionRole } from '@/app/models/reactionRole';
+import { resolveEmoji } from '@/app/resolvers/emoji';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors, emojis } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class ReactionRoleCommand extends SwanCommand {
+export class ReactionRoleCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -49,7 +49,7 @@ export default class ReactionRoleCommand extends SwanCommand {
     const role = interaction.options.getRole('rôle', true);
     const givenRole = await interaction.guild.roles.fetch(role.id);
 
-    let reaction = interaction.guild.emojis.resolve(settings.emojis.yes).toString();
+    let reaction = interaction.guild.emojis.resolve(emojis.yes).toString();
     const argumentEmoji = interaction.options.getString('émoji');
     if (argumentEmoji) {
       const resolvedEmoji = resolveEmoji(interaction.options.getString('émoji'), interaction.guild);
@@ -85,7 +85,7 @@ export default class ReactionRoleCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setTitle(pupa(config.messages.embed.title, { givenRole }))
       .setDescription(pupa(config.messages.embed.content, { reaction, givenRole }))
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setFooter({ text: config.messages.embed.footer.text, iconURL: config.messages.embed.footer.icon });
 
     const sendMessage = await channel.send({ embeds: [embed] });

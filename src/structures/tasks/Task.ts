@@ -18,14 +18,14 @@ import { Events } from '@/app/types/sapphire';
  * @ApplyOptions<TaskOptions>({ interval: 10_000 })
  * // or a cron
  * @ApplyOptions<TaskOptions>({ cron: '* * * * *' })
- * export default class MyTask extends Task {
+ * export class MyTask extends Task {
  *   public run(): void {
  *     this.container.logger.info('Task ran!');
  *   }
  * }
  * ```
  */
-export default abstract class Task extends Piece {
+export abstract class Task extends Piece {
   public readonly interval?: number;
   public readonly cron?: string;
   public readonly immediate: boolean;

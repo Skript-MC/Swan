@@ -1,7 +1,7 @@
 import jaroWinklerDistance from 'jaro-winkler';
-import type Task from '@/app/structures/tasks/Task';
+import type { Task } from '@/app/structures/tasks/Task';
 import type { SimilarityMatch } from '@/app/types';
-import capitalize from '@/app/utils/capitalize';
+import { capitalize } from '@/app/utils/capitalize';
 
 /**
  * Find the closest Task given an array of Tasks and a query string.
@@ -10,7 +10,7 @@ import capitalize from '@/app/utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default function searchClosestMessage(entries: Task[], wanted: string): SimilarityMatch[] {
+export function searchClosestTask(entries: Task[], wanted: string): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.

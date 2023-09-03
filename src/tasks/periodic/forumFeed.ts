@@ -5,10 +5,10 @@ import he from 'he';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '@/app/types';
 import { trimText } from '@/app/utils';
-import settings from '@/conf/settings';
+import { apis, channels, colors } from '@/conf/settings';
 import { forumFeed as config } from '@/conf/tasks';
 
 const turndownService = new Turndown()
@@ -23,7 +23,7 @@ const turndownService = new Turndown()
   });
 
 @ApplyOptions<TaskOptions>({ cron: '*/10 * * * *' })
-export default class ForumFeedTask extends Task {
+export class ForumFeedTask extends Task {
   public override async run(): Promise<void> {
     await this._checkTopics();
     await this._checkFiles();
@@ -32,7 +32,7 @@ export default class ForumFeedTask extends Task {
   private async _checkTopics(): Promise<void> {
     // Check if new topic has been posted by fetching all the latest, and filtering by date.
     const topics: InvisionFullTopic = await axios.get(
-      settings.apis.forum + config.endpoints.forums.topics,
+      apis.forum + config.endpoints.forums.topics,
       config.baseAxiosParams,
     )
       .then(response => (response.status >= 300 ? null : response.data))
@@ -41,7 +41,7 @@ export default class ForumFeedTask extends Task {
         this.container.logger.info(err.message);
       });
 
-    const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.container.client.channels.cache.get(channels.forumUpdates);
 
     if (!topics?.results || !channel?.isTextBased())
       return;
@@ -55,7 +55,7 @@ export default class ForumFeedTask extends Task {
 
       const markdown = turndownService.turndown(topic.firstPost.content);
       const embed = new EmbedBuilder()
-        .setColor(settings.colors.default)
+        .setColor(colors.default)
         .setAuthor({
           name: topic.firstPost.author.name,
           iconURL: topic.firstPost.author.photoUrlIsDefault
@@ -74,7 +74,7 @@ export default class ForumFeedTask extends Task {
   private async _checkFiles(): Promise<void> {
     // Check if new resource has been posted by fetching all the latest, and filtering by date.
     const resources: InvisionFullResource = await axios.get(
-      settings.apis.forum + config.endpoints.files.files,
+      apis.forum + config.endpoints.files.files,
       {
         params: {
           ...config.baseAxiosParams.params,
@@ -90,14 +90,14 @@ export default class ForumFeedTask extends Task {
         this.container.logger.info(err.message);
       });
 
-    const channel = this.container.client.channels.cache.get(settings.channels.forumUpdates);
+    const channel = this.container.client.channels.cache.get(channels.forumUpdates);
 
     if (!resources?.results || !channel?.isTextBased())
       return;
 
     for (const resource of resources.results) {
       const updates: InvisionUpdate[] = await axios.get(
-        `${settings.apis.forum}${config.endpoints.files.files}/${resource.id}/history`,
+        `${apis.forum}${config.endpoints.files.files}/${resource.id}/history`,
         config.baseAxiosParams,
       )
         .then(response => (response.status >= 300 ? null : response.data));
@@ -109,7 +109,7 @@ export default class ForumFeedTask extends Task {
 
       const markdown = turndownService.turndown(resource.changelog || resource.description);
       const embed = new EmbedBuilder()
-        .setColor(settings.colors.default)
+        .setColor(colors.default)
         .setAuthor({
           name: resource.author.name,
           iconURL: resource.author.photoUrlIsDefault ? null : this._ensureHttpScheme(resource.author.photoUrl),

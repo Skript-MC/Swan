@@ -1,16 +1,16 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
-import Poll from '@/app/models/poll';
-import ReactionRole from '@/app/models/reactionRole';
-import PollManager from '@/app/structures/PollManager';
+import { Poll } from '@/app/models/poll';
+import { ReactionRole } from '@/app/models/reactionRole';
+import * as PollManager from '@/app/structures/PollManager';
 import type { GuildMessage } from '@/app/types';
 import { QuestionType } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { channels, emojis, miscellaneous } from '@/conf/settings';
 
-export default class MessageReactionAddListener extends Listener {
+export class MessageReactionAddListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
     if (user.bot || reaction.message.channel.isDMBased())
       return;
@@ -19,7 +19,7 @@ export default class MessageReactionAddListener extends Listener {
 
     if (this.container.client.cache.pollMessagesIds.has(message.id))
       await this._handlePoll(reaction, message, user);
-    else if (settings.channels.idea === message.channel.id)
+    else if (channels.idea === message.channel.id)
       await this._handleSuggestion(reaction, message, user);
     else if (this.container.client.cache.reactionRolesIds.has(message.id))
       await this._handleReactionRole(reaction, message, user);
@@ -29,14 +29,14 @@ export default class MessageReactionAddListener extends Listener {
     const reactionIs = (r: MessageReaction, target: string): boolean => (r.emoji.id ?? r.emoji.name) === target;
 
     // Remove the first reaction if the user change its mind.
-    if (reactionIs(reaction, settings.emojis.yes)) {
+    if (reactionIs(reaction, emojis.yes)) {
       // If we clicked "yes" but already voted "no", then we remove the "no"
-      const reactors = message.reactions.cache.find(r => reactionIs(r, settings.emojis.no))?.users;
+      const reactors = message.reactions.cache.find(r => reactionIs(r, emojis.no))?.users;
       if (reactors?.cache.get(user.id))
         await reactors.remove(user);
-    } else if (reactionIs(reaction, settings.emojis.no)) {
+    } else if (reactionIs(reaction, emojis.no)) {
       // If we clicked "no" but already voted "yes", then we remove the "yes"
-      const reactors = message.reactions.cache.find(r => reactionIs(r, settings.emojis.yes))?.users;
+      const reactors = message.reactions.cache.find(r => reactionIs(r, emojis.yes))?.users;
       if (reactors?.cache.get(user.id))
         await reactors.remove(user);
     }
@@ -47,7 +47,7 @@ export default class MessageReactionAddListener extends Listener {
     if (!poll)
       return;
 
-    const { pollReactions } = settings.miscellaneous;
+    const { pollReactions } = miscellaneous;
 
     // Whether they react with the appropriate "answer reaction" for this poll
     if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name))

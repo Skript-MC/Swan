@@ -1,5 +1,5 @@
 import he from 'he';
 
-export default function stripTags(str: string): string {
+export function stripTags(str: string): string {
   return he.unescape(str.replaceAll(/<[^>]*>/g, ''));
 }

@@ -18,9 +18,9 @@ import type { GuildMessage, ModerationDataResult, PersonInformations } from '@/a
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
-export default class ModerationData {
+export class ModerationData {
   moderatorId: string;
   guild: Guild;
   client: SapphireClient;

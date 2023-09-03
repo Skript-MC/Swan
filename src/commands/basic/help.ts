@@ -8,16 +8,16 @@ import type {
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import groupBy from 'lodash.groupby';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import resolveCommand from '@/app/resolvers/command';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { resolveCommand } from '@/app/resolvers/command';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { capitalize, inlineCodeList, searchClosestCommand } from '@/app/utils';
 import { help as config } from '@/conf/commands/basic';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { bot, colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class HelpCommand extends SwanCommand {
+export class HelpCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -52,14 +52,14 @@ export default class HelpCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, command: SwanCommand | null): Promise<void> {
-    const embed = new EmbedBuilder().setColor(settings.colors.default);
+    const embed = new EmbedBuilder().setColor(colors.default);
 
     if (command) {
       const information = config.messages.commandInfo;
       embed.setTitle(pupa(information.title, { name: capitalize(command.name) }))
-        .setDescription(pupa(command.description, { prefix: settings.bot.prefix }))
+        .setDescription(pupa(command.description, { prefix: bot.prefix }))
         .addFields(
-          { name: information.usage, value: `\`${settings.bot.prefix}${this._buildCommandUsage(command)}\`` },
+          { name: information.usage, value: `\`${bot.prefix}${this._buildCommandUsage(command)}\`` },
           {
             name: information.usableBy,
             value: command.permissions.length > 0 ? command.permissions.join(', ') : messages.global.everyone,
@@ -73,7 +73,7 @@ export default class HelpCommand extends SwanCommand {
       const amount = this.container.stores.get('commands').size;
 
       embed.setTitle(pupa(information.title, { amount }))
-        .setDescription(pupa(information.description, { helpCommand: `${settings.bot.prefix}help <commande>` }));
+        .setDescription(pupa(information.description, { helpCommand: `${bot.prefix}help <commande>` }));
 
       const categories = await this._getPossibleCategories(interaction);
 

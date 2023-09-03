@@ -16,7 +16,7 @@ import type {
   Model,
 } from 'mongoose';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type settings from '@/conf/settings';
+import type { channels } from '@/conf/settings';
 
 /* ****************** */
 /*  API Result Types  */
@@ -390,10 +390,10 @@ export interface MatchingAddon {
 export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
 
 /** Union type of all the channel we cache */
-export type ChannelSlug = keyof typeof settings.channels;
+export type ChannelSlug = keyof typeof channels;
 
 /** All properties containing a array of channels */
-export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptExtraHelp' | 'skriptHelp';
+export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptHelp';
 
 /** All properties containing a single channel */
 export type ChannelSingleSlug = Exclude<ChannelSlug, ChannelArraySlugs>;

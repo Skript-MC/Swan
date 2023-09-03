@@ -4,13 +4,13 @@ import { GuildMemberRoleManager } from 'discord.js';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SwanChatInputCommand, SwanContextMenuCommand } from '@/app/types';
 import { Rules } from '@/app/types';
-import settings from '@/conf/settings';
+import { channels } from '@/conf/settings';
 
 export interface ChannelRulesPreconditionContext extends PreconditionContext {
   rules: number;
 }
 
-export default class ChannelRulesPrecondition extends Precondition {
+export class ChannelRulesPrecondition extends Precondition {
   public override contextMenuRun(
     interaction: SwanCommand.ContextMenuInteraction,
     command: SwanContextMenuCommand,
@@ -39,16 +39,16 @@ export default class ChannelRulesPrecondition extends Precondition {
       return this.ok();
 
     // If the command is forbidden in help channels.
-    if (context.rules & Rules.NoHelpChannel && settings.channels.help.includes(interaction.channel.id))
+    if (context.rules & Rules.NoHelpChannel && channels.help.includes(interaction.channel.id))
       return this.error({ identifier: Identifiers.PreconditionChannelRules, message: 'Command is forbidden in help channels' });
 
     // If the command has to be executed in the bot channel.
-    if (context.rules & Rules.OnlyBotChannel && interaction.channel.id !== settings.channels.bot)
+    if (context.rules & Rules.OnlyBotChannel && interaction.channel.id !== channels.bot)
       return this.error({ identifier: Identifiers.PreconditionChannelRules, message: 'Command has to be run in bot channel' });
 
     // If the command only works in the help channels.
-    const isHelpOrBotChannel = settings.channels.help.includes(interaction.channel.id)
-      || interaction.channel.id === settings.channels.bot;
+    const isHelpOrBotChannel = channels.help.includes(interaction.channel.id)
+      || interaction.channel.id === channels.bot;
     if (context.rules & Rules.OnlyHelpChannel && !isHelpOrBotChannel)
       return this.error({ identifier: Identifiers.PreconditionChannelRules, message: 'Command has to be run in help or bot channel' });
 

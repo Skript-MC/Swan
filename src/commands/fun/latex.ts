@@ -1,15 +1,15 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, Message } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { apis, emojis } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class LatexCommand extends SwanCommand {
+export class LatexCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -29,17 +29,17 @@ export default class LatexCommand extends SwanCommand {
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, equation: string): Promise<void> {
     const sendMessage = await interaction.reply({
-      content: settings.apis.latex + encodeURIComponent(equation),
+      content: apis.latex + encodeURIComponent(equation),
       fetchReply: true,
     });
     if (!(sendMessage instanceof Message))
       return;
-    await sendMessage.react(settings.emojis.remove).catch(noop);
+    await sendMessage.react(emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector({
         filter: (reaction: MessageReaction, user: User) => user.id === interaction.member.user.id
           && !user.bot
-          && (reaction.emoji.id ?? reaction.emoji.name) === settings.emojis.remove,
+          && (reaction.emoji.id ?? reaction.emoji.name) === emojis.remove,
       }).on('collect', async () => {
         try {
           collector.stop();

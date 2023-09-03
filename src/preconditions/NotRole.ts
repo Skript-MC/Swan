@@ -8,7 +8,7 @@ export interface NotRoleContext extends PreconditionContext {
   role: string;
 }
 
-export default class NotRolePrecondition extends Precondition {
+export class NotRolePrecondition extends Precondition {
   public override async contextMenuRun(
     interaction: SwanCommand.ContextMenuInteraction,
     command: SwanContextMenuCommand,

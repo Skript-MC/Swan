@@ -1,6 +1,6 @@
 import jaroWinklerDistance from 'jaro-winkler';
 import type { MessageDocument, SimilarityMatch } from '@/app/types';
-import capitalize from '@/app/utils/capitalize';
+import { capitalize } from '@/app/utils/capitalize';
 
 /**
  * Find the closest MessageDocument given an array of MessageDocument and a query string.
@@ -9,7 +9,7 @@ import capitalize from '@/app/utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default function searchClosestMessage(entries: MessageDocument[], wanted: string): SimilarityMatch[] {
+export function searchClosestMessage(entries: MessageDocument[], wanted: string): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.

@@ -8,12 +8,12 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from 'discord.js';
-import SuggestionManager from '@/app/structures/SuggestionManager';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as SuggestionManager from '@/app/structures/SuggestionManager';
+import * as messages from '@/conf/messages';
+import { bot, colors } from '@/conf/settings';
 
 @ApplyOptions<InteractionHandlerOptions>({ interactionHandlerType: InteractionHandlerTypes.Button })
-export default class SuggestionHandler extends InteractionHandler {
+export class SuggestionHandler extends InteractionHandler {
   public parse(interaction: ButtonInteraction): Option<never> {
     if (!interaction.customId.startsWith('suggestion'))
       return this.none();
@@ -32,10 +32,10 @@ export default class SuggestionHandler extends InteractionHandler {
     switch (response?.status) {
       case 'OK':
         embed = new EmbedBuilder()
-          .setColor(settings.colors.default)
+          .setColor(colors.default)
           .setTitle(messages.suggestions.registeredVote.title)
           .setDescription(messages.suggestions.registeredVote.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         break;
       case 'UNLINKED':
         actions.push(new ActionRowBuilder<ButtonBuilder>()
@@ -46,31 +46,31 @@ export default class SuggestionHandler extends InteractionHandler {
               .setStyle(ButtonStyle.Link),
           ));
         embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.unlinked.title)
           .setDescription(messages.suggestions.unlinked.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         break;
       case 'ALREADY_VOTED':
         embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.alreadyVoted.title)
           .setDescription(messages.suggestions.alreadyVoted.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         break;
       case 'NO_SELFVOTE':
         embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.selfVote.title)
           .setDescription(messages.suggestions.selfVote.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         break;
       default:
         embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.error.title)
           .setDescription(messages.suggestions.error.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
     }
     if (response?.suggestion) {
       const message = await interaction.channel.messages.fetch(interaction.message.id);

@@ -2,14 +2,14 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, User } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, TextChannel } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { purge as config } from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { moderation, roles } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class PurgeCommand extends SwanCommand {
+export class PurgeCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -37,7 +37,7 @@ export default class PurgeCommand extends SwanCommand {
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const amount = interaction.options.getNumber('nombre', true);
-    if (!amount || amount < 0 || amount > settings.moderation.purgeLimit) {
+    if (!amount || amount < 0 || amount > moderation.purgeLimit) {
       await interaction.reply(messages.prompt.number);
       return;
     }
@@ -64,7 +64,7 @@ export default class PurgeCommand extends SwanCommand {
     const allMessages = await interaction.channel.messages.fetch({ limit: amount });
     const msgs = allMessages
       .filter(msg => (member ? msg.author.id === member.id : true))
-      .filter(msg => (force || !msg.member?.roles.cache.has(settings.roles.staff)));
+      .filter(msg => (force || !msg.member?.roles.cache.has(roles.staff)));
     const deletedMessages = await channel.bulkDelete(msgs, true);
 
     await interaction.reply(pupa(config.messages.success, { deletedMessages }));

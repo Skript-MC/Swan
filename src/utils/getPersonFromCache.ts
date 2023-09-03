@@ -1,7 +1,7 @@
 import type { GuildMember, User } from 'discord.js';
 import type { PersonInformations } from '@/app/types';
-import resolveMember from './resolveMember';
-import resolveUser from './resolveUser';
+import { resolveMember } from './resolveMember';
+import { resolveUser } from './resolveUser';
 
 /**
  * Get the id, the member and the user of a person from the cache.
@@ -11,7 +11,7 @@ import resolveUser from './resolveUser';
  * @returns PersonInformations
  * @throws {TypeError} - If not enough data was gathered, it will throw a TypeError
  */
-export default function getPersonFromCache(
+export function getPersonFromCache(
   personResolvable: GuildMember | User | string,
   resolveMemberAndUser = true,
 ): PersonInformations {

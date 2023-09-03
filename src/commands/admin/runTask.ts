@@ -1,14 +1,14 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { Events } from '@/app/types/sapphire';
 import { searchClosestTask } from '@/app/utils';
 import { runTask as config } from '@/conf/commands/admin';
 
 @ApplySwanOptions(config)
-export default class RunTaskCommand extends SwanCommand {
+export class RunTaskCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

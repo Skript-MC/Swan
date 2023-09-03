@@ -1,17 +1,17 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import Poll from '@/app/models/poll';
+import { Poll } from '@/app/models/poll';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import { noop, nullop } from '@/app/utils';
-import settings from '@/conf/settings';
+import { miscellaneous } from '@/conf/settings';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 7 })
-export default class CachePollsTask extends Task {
+export class CachePollsTask extends Task {
   public override async run(): Promise<void> {
     const polls = await Poll.find();
     const cacheReactions = new Set([
-      ...settings.miscellaneous.pollReactions.yesno,
-      ...settings.miscellaneous.pollReactions.multiple,
+      ...miscellaneous.pollReactions.yesno,
+      ...miscellaneous.pollReactions.multiple,
     ]);
 
     for (const poll of polls) {

@@ -2,20 +2,20 @@ import { Listener } from '@sapphire/framework';
 import type { MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
-import MessageLogManager from '@/app/structures/MessageLogManager';
+import * as MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { emojis, roles } from '@/conf/settings';
 
-export default class MessageUpdateListener extends Listener {
+export class MessageUpdateListener extends Listener {
   public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
     if (oldMessage?.content && !oldMessage.system)
       await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 
     if (newMessage.author.bot
       || newMessage.system
-      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(settings.roles.staff)!.position)
+      || newMessage.member.roles.highest.position >= newMessage.guild.roles.cache.get(roles.staff)!.position)
       return;
 
     // Check for ghostpings.
@@ -68,10 +68,10 @@ export default class MessageUpdateListener extends Listener {
     if (severalPeopleAffected)
       return;
 
-    await botNotificationMessage.react(settings.emojis.remove).catch(noop);
+    await botNotificationMessage.react(emojis.remove).catch(noop);
     const collector = botNotificationMessage
       .createReactionCollector({
-        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
+        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
           && (user.id === deletedMentions[0].id)
           && !user.bot,
       }).on('collect', async () => {

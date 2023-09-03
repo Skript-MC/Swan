@@ -23,7 +23,7 @@ function checkUser(text: string, user: User, caseSensitive = false, wholeWord = 
     || (username === text.split('#')[0] && discrim === text.split('#')[1]);
 }
 
-export default function resolveUser(text: string, caseSensitive = false, wholeWord = false): User {
+export function resolveUser(text: string, caseSensitive = false, wholeWord = false): User {
   const users = container.client.users.cache;
   return users.get(text) ?? users.find(user => checkUser(text, user, caseSensitive, wholeWord));
 }

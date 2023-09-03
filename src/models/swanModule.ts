@@ -29,4 +29,4 @@ const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   },
 });
 
-export default model<SwanModuleDocument, SwanModuleModel>('SwanModule', SwanModuleSchema);
+export const SwanModule = model<SwanModuleDocument, SwanModuleModel>('SwanModule', SwanModuleSchema);

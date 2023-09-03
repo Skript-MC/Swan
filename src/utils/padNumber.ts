@@ -3,6 +3,6 @@
  * @param {number} x - The number to pad.
  * @returns string
  */
-export default function padNumber(x: number): string {
+export function padNumber(x: number): string {
   return (x.toString().length < 2 ? `0${x}` : x).toString();
 }

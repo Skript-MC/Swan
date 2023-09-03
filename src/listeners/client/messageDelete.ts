@@ -2,13 +2,13 @@ import { Listener } from '@sapphire/framework';
 import type { Message, MessageReaction } from 'discord.js';
 import { DMChannel, User } from 'discord.js';
 import pupa from 'pupa';
-import MessageLogManager from '@/app/structures/MessageLogManager';
+import * as MessageLogManager from '@/app/structures/MessageLogManager';
 import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { emojis, roles } from '@/conf/settings';
 
-export default class MessageDeleteListener extends Listener {
+export class MessageDeleteListener extends Listener {
   public override async run(globalMessage: Message): Promise<void> {
     if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
       return;
@@ -19,7 +19,7 @@ export default class MessageDeleteListener extends Listener {
 
     if (message.author.bot
       || message.system
-      || message.member.roles.highest.position >= message.guild.roles.cache.get(settings.roles.staff)!.position)
+      || message.member.roles.highest.position >= message.guild.roles.cache.get(roles.staff)!.position)
       return;
 
     // List of all the usernames that were mentionned in the deleted message.
@@ -55,10 +55,10 @@ export default class MessageDeleteListener extends Listener {
     if (severalPeopleAffected)
       return;
 
-    await botNotificationMessage.react(settings.emojis.remove).catch(noop);
+    await botNotificationMessage.react(emojis.remove).catch(noop);
     const collector = botNotificationMessage
       .createReactionCollector({
-        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
+        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
           && (user.id === message.mentions.users.first()!.id)
           && !user.bot,
       }).on('collect', async () => {

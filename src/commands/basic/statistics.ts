@@ -4,15 +4,15 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { statistics as config } from '@/conf/commands/basic';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { bot, colors } from '@/conf/settings';
 import pkg from '@/root/package.json';
 
 @ApplySwanOptions(config)
-export default class StatisticsCommand extends SwanCommand {
+export class StatisticsCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -28,9 +28,9 @@ export default class StatisticsCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
     const commitHash = this._getGitRev();
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
-      .setAuthor({ name: config.messages.embed.title, iconURL: settings.bot.avatar })
-      .setDescription(pupa(config.messages.embed.description, { prefix: settings.bot.prefix }))
+      .setColor(colors.default)
+      .setAuthor({ name: config.messages.embed.title, iconURL: bot.avatar })
+      .setDescription(pupa(config.messages.embed.description, { prefix: bot.prefix }))
       .addFields(
         {
           name: embedMessages.version,

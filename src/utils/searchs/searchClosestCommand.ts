@@ -5,7 +5,7 @@ import jaroWinklerDistance from 'jaro-winkler';
 import type { RolePreconditionContext } from '@/app/preconditions/Role';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SimilarityMatch } from '@/app/types';
-import capitalize from '@/app/utils/capitalize';
+import { capitalize } from '@/app/utils/capitalize';
 
 /**
  * Find the closest SwanCommand given an array of SwanCommand and a query string.
@@ -15,7 +15,7 @@ import capitalize from '@/app/utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default function searchClosestMessage(
+export function searchClosestCommand(
   entries: SwanCommand[],
   interaction: AutocompleteInteraction,
   wanted: string,

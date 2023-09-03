@@ -6,7 +6,7 @@ import { MessageLimits } from '@sapphire/discord-utilities';
  * @param {number} n - The size of each array. Defaults to @sapphire/discord-utilities/MessageLimits.MaximumLength
  * @returns string[]
  */
-export default function splitText(text: string, n: number = MessageLimits.MaximumLength): string[] {
+export function splitText(text: string, n: number = MessageLimits.MaximumLength): string[] {
   const blocks: string[] = [];
   const lines = text.split(/\n/g);
   let index = 0;

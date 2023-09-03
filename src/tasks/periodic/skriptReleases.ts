@@ -3,18 +3,18 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import { EmbedBuilder } from 'discord.js';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { channels, colors } from '@/conf/settings';
 import { skriptReleases as config } from '@/conf/tasks';
 
 @ApplyOptions<TaskOptions>({
   cron: '*/10 * * * *',
   immediate: true,
 })
-export default class SkriptReleasesTask extends Task {
+export class SkriptReleasesTask extends Task {
   public override async run(): Promise<void> {
     // Fetch new Skript's releases from GitHub, and post to discord if there's a new one.
     const octokit = new Octokit();
@@ -47,12 +47,12 @@ export default class SkriptReleasesTask extends Task {
     if ((Date.now() - new Date(lastRelease.published_at).getTime()) > config.timeDifference)
       return;
 
-    const channel = this.container.client.channels.cache.get(settings.channels.skriptTalk);
+    const channel = this.container.client.channels.cache.get(channels.skriptTalk);
     if (!channel?.isTextBased())
       return;
 
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setAuthor({
         name: lastRelease.author?.login ?? 'SkriptLang',
         iconURL: lastRelease.author?.avatar_url,

@@ -21,4 +21,4 @@ const ReactionRoleSchema = new Schema<ReactionRoleDocument, ReactionRoleModel>({
   },
 });
 
-export default model<ReactionRoleDocument, ReactionRoleModel>('ReactionRole', ReactionRoleSchema);
+export const ReactionRole = model<ReactionRoleDocument, ReactionRoleModel>('ReactionRole', ReactionRoleSchema);

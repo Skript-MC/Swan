@@ -1,9 +1,9 @@
 import { GuildMember, User } from 'discord.js';
-import Sanction from '@/app/models/sanction';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationAction from '@/app/moderation/actions/ModerationAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
 
-export default class MuteAction extends ModerationAction {
+export class MuteAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 

@@ -44,4 +44,4 @@ const PollSchema = new Schema<PollDocument, PollModel>({
   },
 });
 
-export default model<PollDocument, PollModel>('Poll', PollSchema);
+export const Poll = model<PollDocument, PollModel>('Poll', PollSchema);

@@ -1,12 +1,12 @@
 import { Listener } from '@sapphire/framework';
-import type SwanClient from '@/app/SwanClient';
+import type { SwanClient } from '@/app/SwanClient';
 import { Events } from '@/app/types/sapphire';
-import settings from '@/conf/settings';
+import { bot } from '@/conf/settings';
 
-export default class ReadyListener extends Listener {
+export class ReadyListener extends Listener {
   public override async run(): Promise<void> {
     const client = this.container.client as SwanClient;
-    client.guild = this.container.client.guilds.resolve(settings.bot.guild)!;
+    client.guild = this.container.client.guilds.resolve(bot.guild)!;
     if (!client.guild)
       throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
 

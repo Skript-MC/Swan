@@ -2,9 +2,9 @@ import type { ChatInputCommandErrorPayload, Events } from '@sapphire/framework';
 import { Listener } from '@sapphire/framework';
 import { captureException } from '@sentry/node';
 import { noop } from '@/app/utils';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
-export default class CommandErrorListener extends Listener<typeof Events.ChatInputCommandError> {
+export class CommandErrorListener extends Listener<typeof Events.ChatInputCommandError> {
   public override async run(error: Error, { interaction }: ChatInputCommandErrorPayload): Promise<void> {
     captureException(error);
     await interaction.reply(messages.global.oops).catch(noop);

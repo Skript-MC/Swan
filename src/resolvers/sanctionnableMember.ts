@@ -2,7 +2,7 @@ import type { Result } from '@sapphire/framework';
 import { err, ok } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 
-export default function resolveSanctionnableMember(
+export function resolveSanctionnableMember(
   member: GuildMember,
   moderator: GuildMember,
 ): Result<GuildMember, 'sanctionnableMemberError'> {

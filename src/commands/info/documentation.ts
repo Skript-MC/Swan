@@ -4,17 +4,17 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
 import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
 import { documentation as config } from '@/conf/commands/info';
-import settings from '@/conf/settings';
+import { colors } from '@/conf/settings';
 
 const turndownService = new Turndown();
 
 @ApplySwanOptions(config)
-export default class DocumentationCommand extends SwanCommand {
+export class DocumentationCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -70,7 +70,7 @@ export default class DocumentationCommand extends SwanCommand {
     const embedMsgs = config.messages.embed;
 
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setTitle(stripTags(pupa(embedMsgs.title, { article })))
       .setURL(article.documentationUrl)
       .setTimestamp()

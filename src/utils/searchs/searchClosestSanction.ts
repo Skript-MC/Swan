@@ -9,7 +9,7 @@ import type { SanctionDocument, SimilarityMatch } from '@/app/types';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default async function searchClosestSanction(
+export async function searchClosestSanction(
   entries: SanctionDocument[],
   wanted: string,
 ): Promise<SimilarityMatch[]> {

@@ -1,10 +1,10 @@
 import { User } from 'discord.js';
-import Sanction from '@/app/models/sanction';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationAction from '@/app/moderation/actions/ModerationAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 
-export default class RemoveWarnAction extends ModerationAction {
+export class RemoveWarnAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 

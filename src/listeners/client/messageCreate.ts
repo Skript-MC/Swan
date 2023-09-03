@@ -10,15 +10,21 @@ import {
   EmbedBuilder,
   PermissionsBitField,
 } from 'discord.js';
-import SuggestionManager from '@/app/structures/SuggestionManager';
+import * as SuggestionManager from '@/app/structures/SuggestionManager';
 import type { GuildMessage } from '@/app/types';
 import { noop, nullop, trimText } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import {
+  bot,
+  channels,
+  colors,
+  emojis,
+  roles,
+} from '@/conf/settings';
 
-export default class MessageCreateListener extends Listener {
+export class MessageCreateListener extends Listener {
   public override async run(message: Message): Promise<void> {
-    if (message.content.startsWith(settings.bot.prefix)
+    if (message.content.startsWith(bot.prefix)
       || message.content.startsWith(message.guild?.members.me.toString())
       || message.author.bot
       || message.system
@@ -43,15 +49,15 @@ export default class MessageCreateListener extends Listener {
 
   private async _addReactionsInIdeaChannel(message: GuildMessage): Promise<boolean> {
     // Add reactions in the Idea channel.
-    if (message.channel.id === settings.channels.idea) {
+    if (message.channel.id === channels.idea) {
       try {
-        await message.react(settings.emojis.yes);
-        await message.react(settings.emojis.no);
+        await message.react(emojis.yes);
+        await message.react(emojis.no);
       } catch (unknownError: unknown) {
         this.container.logger.error('Unable to add emojis to the idea channel.');
         this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.members.me?.permissionsIn(message.channel).has(PermissionsBitField.Flags.AddReactions)}`);
-        this.container.logger.info(`Emojis added: "${settings.emojis.yes}" + "${settings.emojis.no}"`);
-        this.container.logger.info(`Idea channel ID/Current channel ID: ${settings.channels.idea}/${message.channel.id} (same=${settings.channels.idea === message.channel.id})`);
+        this.container.logger.info(`Emojis added: "${emojis.yes}" + "${emojis.no}"`);
+        this.container.logger.info(`Idea channel ID/Current channel ID: ${channels.idea}/${message.channel.id} (same=${channels.idea === message.channel.id})`);
         this.container.logger.info(`Message: ${message.url}`);
         this.container.logger.error((unknownError as Error).stack);
       }
@@ -61,7 +67,7 @@ export default class MessageCreateListener extends Listener {
 
   private async _handleSuggestion(message: GuildMessage): Promise<boolean> {
     // Send embed and add reactions in the Suggestion channel.
-    if (message.channel.id === settings.channels.suggestions) {
+    if (message.channel.id === channels.suggestions) {
       await message.delete();
       const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
       if (response?.status === 'PUBLISHED') {
@@ -78,18 +84,18 @@ export default class MessageCreateListener extends Listener {
           await thread.members.add(response.suggestion.user.discordId);
         await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
         const embed = new EmbedBuilder()
-          .setColor(settings.colors.success)
+          .setColor(colors.success)
           .setTitle(messages.suggestions.published.title)
           .setDescription(messages.suggestions.published.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         await message.author.send({ embeds: [embed] });
         return false;
       } else if (response?.status === 'UNLINKED') {
         const embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.unlinked.title)
           .setDescription(messages.suggestions.unlinked.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         const actions = new ActionRowBuilder<ButtonBuilder>()
           .addComponents(
             new ButtonBuilder()
@@ -100,10 +106,10 @@ export default class MessageCreateListener extends Listener {
         await message.author.send({ embeds: [embed], components: [actions] });
       } else {
         const embed = new EmbedBuilder()
-          .setColor(settings.colors.error)
+          .setColor(colors.error)
           .setTitle(messages.suggestions.error.title)
           .setDescription(messages.suggestions.error.content)
-          .setFooter({ text: messages.suggestions.brand, iconURL: settings.bot.avatar });
+          .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         await message.author.send({ embeds: [embed] });
       }
     }
@@ -112,7 +118,7 @@ export default class MessageCreateListener extends Listener {
 
   private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
     // Disable quotes for commands
-    if (message.content.startsWith(settings.bot.prefix))
+    if (message.content.startsWith(bot.prefix))
       return false;
 
     // Quote a linked message.
@@ -138,7 +144,7 @@ export default class MessageCreateListener extends Listener {
         continue;
 
       const embed = new EmbedBuilder()
-        .setColor(settings.colors.default)
+        .setColor(colors.default)
         .setAuthor({
           name: `Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`,
           iconURL: targetedMessage.author.avatarURL(),
@@ -157,22 +163,22 @@ export default class MessageCreateListener extends Listener {
       const collector = msg
         .createReactionCollector({
           filter: (reaction, user) => user.id === message.author.id
-            && (reaction.emoji.id || reaction.emoji.name) === settings.emojis.remove
+            && (reaction.emoji.id || reaction.emoji.name) === emojis.remove
             && !user.bot,
         }).on('collect', async () => {
           await msg.delete().catch(noop);
           collector.stop();
         });
 
-      await msg.react(settings.emojis.remove);
+      await msg.react(emojis.remove);
     }
     return false;
   }
 
   private async _antispamSnippetsChannel(message: GuildMessage): Promise<boolean> {
     // We prevent people from spamming unnecessarily the Snippets channel.
-    if (message.channel.id === settings.channels.snippets
-      && !message.member.roles.cache.has(settings.roles.staff)) {
+    if (message.channel.id === channels.snippets
+      && !message.member.roles.cache.has(roles.staff)) {
       // We check that they are not the author of the last message in case they exceed the 2.000 chars limit
       // and they want to add details or informations.
       try {

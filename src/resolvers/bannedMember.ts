@@ -4,7 +4,7 @@ import { ok, Resolvers } from '@sapphire/framework';
 import type { Guild, GuildMember, User } from 'discord.js';
 import { nullop, resolveUser } from '@/app/utils';
 
-export default async function resolveBannedMember(
+export async function resolveBannedMember(
   parameter: string,
   guild: Guild,
 ): Promise<Result<GuildMember | User, 'bannedMemberError'>> {

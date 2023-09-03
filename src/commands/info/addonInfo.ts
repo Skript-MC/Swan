@@ -4,16 +4,16 @@ import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptToolsAddonResponse } from '@/app/types';
 import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
 import { addonInfo as config } from '@/conf/commands/info';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { apis, colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class AddonInfoCommand extends SwanCommand {
+export class AddonInfoCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -57,11 +57,11 @@ export default class AddonInfoCommand extends SwanCommand {
       return;
     }
 
-    await this._sendDetail(interaction, addonVersions[addonVersions.length - 1]);
+    await this._sendDetail(interaction, addonVersions.at(-1));
   }
 
   private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
-    const addon: SkriptToolsAddonResponse = await axios(`${settings.apis.addons}/${addonFile}`)
+    const addon: SkriptToolsAddonResponse = await axios(`${apis.addons}/${addonFile}`)
       .then(res => res?.data?.data)
       .catch((err: Error) => { this.container.logger.error(err.message); });
 
@@ -73,7 +73,7 @@ export default class AddonInfoCommand extends SwanCommand {
     const embedMessages = config.messages.embed;
 
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
       .setDescription(

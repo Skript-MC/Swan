@@ -4,6 +4,6 @@
  * @param {number} size - The maximum allowed size.
  * @returns string
  */
-export default function trimText(text: string, size: number): string {
+export function trimText(text: string, size: number): string {
   return text.length > size ? `${text.slice(0, size - 3)}...` : text;
 }

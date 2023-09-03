@@ -7,20 +7,20 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import BanAction from '@/app/moderation/actions/BanAction';
-import resolveDuration from '@/app/resolvers/duration';
-import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { BanAction } from '@/app/moderation/actions/BanAction';
+import { resolveDuration } from '@/app/resolvers/duration';
+import { resolveSanctionnableMember } from '@/app/resolvers/sanctionnableMember';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { tempBan as config } from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
 @ApplySwanOptions(config)
-export default class SdbCommand extends SwanCommand {
+export class SdbCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
   commandOptions: ApplicationCommandOptionData[] = [];
 

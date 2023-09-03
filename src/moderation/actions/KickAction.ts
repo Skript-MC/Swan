@@ -1,9 +1,9 @@
 import { GuildMember, PermissionsBitField, User } from 'discord.js';
-import Sanction from '@/app/models/sanction';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationAction from '@/app/moderation/actions/ModerationAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
 
-export default class KickAction extends ModerationAction {
+export class KickAction extends ModerationAction {
   protected before: undefined;
   protected after: undefined;
 

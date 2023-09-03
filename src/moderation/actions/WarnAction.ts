@@ -1,15 +1,15 @@
 import { GuildMember, User } from 'discord.js';
-import Sanction from '@/app/models/sanction';
-import ModerationData from '@/app/moderation/ModerationData';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import BanAction from '@/app/moderation/actions/BanAction';
-import ModerationAction from '@/app/moderation/actions/ModerationAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { BanAction } from '@/app/moderation/actions/BanAction';
+import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { moderation } from '@/conf/settings';
 
-export default class WarnAction extends ModerationAction {
+export class WarnAction extends ModerationAction {
   protected before: undefined;
 
   protected async after(): Promise<void> {
@@ -17,7 +17,7 @@ export default class WarnAction extends ModerationAction {
       const currentWarnCount = await ModerationHelper.getCurrentWarnCount(this.data.victim.id);
 
       // If they have exceeded the warning limit
-      if (currentWarnCount >= settings.moderation.warnLimitBeforeBan) {
+      if (currentWarnCount >= moderation.warnLimitBeforeBan) {
         // 1. Revoke all the current warnings
         await Sanction.updateMany(
           {
@@ -42,7 +42,7 @@ export default class WarnAction extends ModerationAction {
         const data = new ModerationData()
           .setVictim(this.data.victim.member ?? this.data.victim.user, false)
           .setReason(messages.moderation.reasons.autoBanWarnLimitExceeded)
-          .setDuration(settings.moderation.warnLimitBanDuration * 1000, true)
+          .setDuration(moderation.warnLimitBanDuration * 1000, true)
           .setType(SanctionTypes.TempBan);
 
         await new BanAction(data).commit();

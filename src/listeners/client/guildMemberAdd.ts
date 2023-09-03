@@ -3,10 +3,10 @@ import type { GuildMember } from 'discord.js';
 import { PermissionsBitField } from 'discord.js';
 import pupa from 'pupa';
 import { noop, toValidName } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { miscellaneous } from '@/conf/settings';
 
-export default class GuildMemberAddListener extends Listener {
+export class GuildMemberAddListener extends Listener {
   public override async run(member: GuildMember): Promise<void> {
     await this._greet(member);
     await this._rename(member);
@@ -28,7 +28,7 @@ export default class GuildMemberAddListener extends Listener {
     if (strippedName === name)
       return;
 
-    const requiredPercentage = settings.miscellaneous.validNamePercentage;
+    const requiredPercentage = miscellaneous.validNamePercentage;
 
     // If the percentage of correct name >= required percentage.
     const newName = Math.round((strippedName.length / name.length) * 100) >= requiredPercentage

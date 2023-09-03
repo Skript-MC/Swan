@@ -1,16 +1,16 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
-import settings from '@/conf/settings';
+import { Task } from '@/app/structures/tasks/Task';
+import { apis } from '@/conf/settings';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 4 })
-export default class LoadSkriptMcSyntaxesTask extends Task {
+export class LoadSkriptMcSyntaxesTask extends Task {
   public override async run(): Promise<void> {
     // Fetch all addons' versions from their APIs, and add them to the array, to make it easier to fetch
     // them later (becase we need their versions in the URL to fetch them.)
     try {
-      this.container.client.cache.skriptToolsAddons = await axios.get(settings.apis.addons)
+      this.container.client.cache.skriptToolsAddons = await axios.get(apis.addons)
         .then(res => res?.data?.data);
     } catch (unknownError: unknown) {
       this.container.logger.error("Could not load SkriptTool's addons:");

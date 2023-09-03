@@ -2,7 +2,7 @@ import path from 'node:path';
 import { container } from '@sapphire/pieces';
 import type { SwanModuleDocument } from '@/app/types';
 
-export default async function toggleModule(module: SwanModuleDocument, shouldEnabled: boolean): Promise<void> {
+export async function toggleModule(module: SwanModuleDocument, shouldEnabled: boolean): Promise<void> {
   const store = container.stores.get(module.store);
   const isEnabled = Boolean(store.get(module.name)?.enabled);
 

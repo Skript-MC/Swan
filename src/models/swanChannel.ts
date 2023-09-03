@@ -33,4 +33,4 @@ ChannelSchema.statics.findOneOrCreate = async function (
   return result ?? await this.create(doc);
 };
 
-export default model<SwanChannelDocument, SwanChannelModel>('SwanChannel', ChannelSchema);
+export const SwanChannel = model<SwanChannelDocument, SwanChannelModel>('SwanChannel', ChannelSchema);

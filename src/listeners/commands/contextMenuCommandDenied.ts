@@ -1,8 +1,8 @@
 import type { ContextMenuCommandDeniedPayload, Events, UserError } from '@sapphire/framework';
 import { Listener, PreconditionError } from '@sapphire/framework';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
-export default class ContextMenuCommandDenied extends Listener<typeof Events.ContextMenuCommandDenied> {
+export class ContextMenuCommandDenied extends Listener<typeof Events.ContextMenuCommandDenied> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async run(error: UserError & { context: any }, payload: ContextMenuCommandDeniedPayload): Promise<void> {
     if (error.context?.silent)

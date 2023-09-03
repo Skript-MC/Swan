@@ -72,4 +72,4 @@ const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
   }],
 });
 
-export default model<SanctionDocument, SanctionModel>('Sanction', SanctionSchema);
+export const Sanction = model<SanctionDocument, SanctionModel>('Sanction', SanctionSchema);

@@ -11,7 +11,7 @@ const units = [
  * @param {number} size - The size to convert.
  * @returns string
  */
-export default function convertFileSize(size: number): string {
+export function convertFileSize(size: number): string {
   size = Math.abs(size);
 
   for (let i = 1; i < units.length; i++) {

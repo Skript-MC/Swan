@@ -13,13 +13,12 @@ interface GithubCache {
   lastStableRelease?: GithubStableRelease;
 }
 
-export default class SwanCacheManager {
+export class SwanCacheManager {
   skriptToolsAddons: SkriptToolsAddonList;
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[];
   pollMessagesIds: Set<string>;
   reactionRolesIds: Set<string>;
   channels: CachedChannels;
-  // Modules: AkairoModule[];
   github: GithubCache;
   gitCommit: string;
   discordUsers: DiscordUserDocument[];
@@ -33,7 +32,6 @@ export default class SwanCacheManager {
       main: null,
       snippets: null,
       skriptHelp: null,
-      skriptExtraHelp: null,
       otherHelp: null,
       help: null,
       skriptTalk: null,

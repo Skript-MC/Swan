@@ -9,19 +9,19 @@ import {
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import Poll from '@/app/models/poll';
-import resolveDuration from '@/app/resolvers/duration';
-import resolveQuotedText from '@/app/resolvers/quotedText';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { Poll } from '@/app/models/poll';
+import { resolveDuration } from '@/app/resolvers/duration';
+import { resolveQuotedText } from '@/app/resolvers/quotedText';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { QuestionType } from '@/app/types';
 import { trimText } from '@/app/utils';
 import { poll as config } from '@/conf/commands/fun';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors, miscellaneous } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class PollCommand extends SwanCommand {
+export class PollCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -63,7 +63,6 @@ export default class PollCommand extends SwanCommand {
     const anonymous = interaction.options.getBoolean('anonyme');
     const multiple = interaction.options.getBoolean('multiple');
 
-
     const duration = resolveDuration(interaction.options.getString('durée', true), false);
     if (duration.isErr()) {
       await interaction.reply(messages.prompt.duration);
@@ -82,6 +81,7 @@ export default class PollCommand extends SwanCommand {
     await this._exec(interaction, anonymous, multiple, question, duration.unwrap(), answers.unwrap());
   }
 
+  // eslint-disable-next-line max-params
   private async _exec(
     interaction: SwanCommand.ChatInputInteraction,
     anonymous: boolean,
@@ -111,7 +111,7 @@ export default class PollCommand extends SwanCommand {
     } else {
       for (const [i, answer] of answers.entries()) {
         possibleAnswers += pupa(config.messages.answersDisplayCustom, {
-          reaction: settings.miscellaneous.pollReactions.multiple[i],
+          reaction: miscellaneous.pollReactions.multiple[i],
           answer,
         });
       }
@@ -152,21 +152,21 @@ export default class PollCommand extends SwanCommand {
     // Add the reactions, depending on if there are choices, or if it is a Yes/No question.
     const possibleReactions: string[] = [];
     if (questionType === QuestionType.Yesno) {
-      for (const r of settings.miscellaneous.pollReactions.yesno) {
+      for (const r of miscellaneous.pollReactions.yesno) {
         await pollMessage.react(r);
         possibleReactions.push(r);
       }
     } else {
       for (let i = 0; i < answers.length; i++) {
-        await pollMessage.react(settings.miscellaneous.pollReactions.multiple[i]);
-        possibleReactions.push(settings.miscellaneous.pollReactions.multiple[i]);
+        await pollMessage.react(miscellaneous.pollReactions.multiple[i]);
+        possibleReactions.push(miscellaneous.pollReactions.multiple[i]);
       }
     }
 
-    for (const reac of settings.miscellaneous.pollReactions.specials)
+    for (const reac of miscellaneous.pollReactions.specials)
       await pollMessage.react(reac);
 
-    embed.setColor(settings.colors.default);
+    embed.setColor(colors.default);
     await pollMessage.edit({ embeds: [embed] });
 
     // Create the objects with the votes, that has the reaction as a key, and the list of user IDs as a value.

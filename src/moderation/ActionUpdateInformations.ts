@@ -1,9 +1,9 @@
-import Sanction from '@/app/models/sanction';
-import type ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
+import { Sanction } from '@/app/models/sanction';
+import type { ModerationData } from '@/app/moderation/ModerationData';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
 import type { SanctionDocument } from '@/app/types';
 
-export default class ActionUpdateInformations {
+export class ActionUpdateInformations {
   data: ModerationData;
   sanctionDocument: SanctionDocument | null;
 

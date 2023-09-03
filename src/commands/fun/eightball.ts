@@ -2,13 +2,13 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { eightBall as config } from '@/conf/commands/fun';
-import settings from '@/conf/settings';
+import { colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class EightBallCommand extends SwanCommand {
+export class EightBallCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -31,7 +31,7 @@ export default class EightBallCommand extends SwanCommand {
     const pool = config.messages[isAffirmative ? 'affirmative' : 'negative'];
     const answer = pool[Math.floor(Math.random() * pool.length)];
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setTimestamp()
       .setTitle(interaction.options.getString('question', true))
       .setDescription(answer)

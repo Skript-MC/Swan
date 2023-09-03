@@ -3,7 +3,7 @@
  * @param {string} str - The string to strip.
  * @returns string
  */
-export default function toValidName(str: string): string {
+export function toValidName(str: string): string {
   const valid: string[] = [];
   for (let i = 0; i < str.length; i++) {
     const char = str[i];

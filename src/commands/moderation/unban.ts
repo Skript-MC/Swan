@@ -1,20 +1,20 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import Sanction from '@/app/models/sanction';
-import ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import UnbanAction from '@/app/moderation/actions/UnbanAction';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
-import searchClosestSanction from '@/app/utils/searchs/searchClosestSanction';
+import { searchClosestSanction } from '@/app/utils/searchs/searchClosestSanction';
 import { unban as config } from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
 @ApplySwanOptions(config)
-export default class UnbanCommand extends SwanCommand {
+export class UnbanCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

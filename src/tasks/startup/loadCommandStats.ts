@@ -1,12 +1,12 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Query } from 'mongoose';
-import CommandStat from '@/app/models/commandStat';
+import { CommandStat } from '@/app/models/commandStat';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import type { CommandStatDocument } from '@/app/types';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 2 })
-export default class LoadCommandStatsTask extends Task {
+export class LoadCommandStatsTask extends Task {
   public override async run(): Promise<void> {
     // Add all needed commands not present in the DB, to DB.
     const commandIds = [...this.container.stores.get('commands')
@@ -17,7 +17,6 @@ export default class LoadCommandStatsTask extends Task {
     const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
-
 
     try {
       await Promise.all(documents);

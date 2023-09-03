@@ -32,4 +32,4 @@ const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
   },
 });
 
-export default model<MessageLogDocument, MessageLogModel>('MessageLog', MessageLogSchema);
+export const MessageLog = model<MessageLogDocument, MessageLogModel>('MessageLog', MessageLogSchema);

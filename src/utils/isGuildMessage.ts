@@ -7,6 +7,6 @@ import type { GuildMessage } from '../types';
  * @param message The message to check
  * @returns Whether the message is a guild message
  */
-export default function isGuildMessage(message: Message | PartialMessage): message is GuildMessage {
+export function isGuildMessage(message: Message | PartialMessage): message is GuildMessage {
   return isGuildBasedChannel(message.channel);
 }

@@ -27,4 +27,4 @@ DiscordUserSchema.statics.findOneOrCreate = async function (
   return result ?? this.create(doc);
 };
 
-export default model<DiscordUserDocument, DiscordUserModel>('DiscordUser', DiscordUserSchema);
+export const DiscordUser = model<DiscordUserDocument, DiscordUserModel>('DiscordUser', DiscordUserSchema);

@@ -1,19 +1,19 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import { GatewayIntentBits } from 'discord.js';
-import SwanModule, { allowedStores } from '@/app/models/swanModule';
-import SwanCacheManager from '@/app/structures/SwanCacheManager';
-import SwanLogger from '@/app/structures/SwanLogger';
-import TaskStore from '@/app/structures/tasks/TaskStore';
+import { allowedStores, SwanModule } from '@/app/models/swanModule';
+import { SwanCacheManager } from '@/app/structures/SwanCacheManager';
+import { SwanLogger } from '@/app/structures/SwanLogger';
+import { TaskStore } from '@/app/structures/tasks/TaskStore';
 import type { SwanModuleDocument } from '@/app/types';
-import settings from '@/conf/settings';
+import { bot } from '@/conf/settings';
 
-export default class SwanClient extends SapphireClient {
+export class SwanClient extends SapphireClient {
   constructor() {
     super({
       caseInsensitiveCommands: true,
       caseInsensitivePrefixes: true,
-      defaultPrefix: settings.bot.prefix,
+      defaultPrefix: bot.prefix,
       logger: {
         level: LogLevel.Info,
         instance: new SwanLogger(),

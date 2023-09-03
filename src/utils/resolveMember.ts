@@ -26,7 +26,7 @@ function checkMember(text: string, member: GuildMember, caseSensitive = false, w
     || ((username === text.split('#')[0] || displayName === text.split('#')[0]) && discrim === text.split('#')[1]);
 }
 
-export default function resolveMember(text: string, caseSensitive = false, wholeWord = false): GuildMember {
+export function resolveMember(text: string, caseSensitive = false, wholeWord = false): GuildMember {
   const members = container.client.guild.members.cache;
   return members.get(text) ?? members.find(member => checkMember(text, member, caseSensitive, wholeWord));
 }

@@ -4,24 +4,24 @@ import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
 import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
 import {
- EmbedBuilder,
+  EmbedBuilder,
   ThreadChannel,
   time as timeFormatter,
   TimestampStyles,
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import ActionUpdateInformations from '@/app/moderation/ActionUpdateInformations';
-import ErrorState from '@/app/moderation/ErrorState';
-import type ModerationData from '@/app/moderation/ModerationData';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
+import { ActionUpdateInformations } from '@/app/moderation/ActionUpdateInformations';
+import { ErrorState } from '@/app/moderation/ErrorState';
+import type { ModerationData } from '@/app/moderation/ModerationData';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
 import { SanctionTypes } from '@/app/types';
 import { noop, trimText } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { moderation } from '@/conf/settings';
 
-export default abstract class ModerationAction {
+export abstract class ModerationAction {
   data: ModerationData;
   client: SapphireClient;
   logChannel: GuildTextBasedChannel;
@@ -95,7 +95,7 @@ export default abstract class ModerationAction {
   }
 
   protected get color(): HexColorString {
-    return settings.moderation.colors[this.data.type];
+    return moderation.colors[this.data.type];
   }
 
   public async commit(): Promise<boolean> {

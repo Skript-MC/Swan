@@ -1,15 +1,15 @@
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import Message from '@/app/models/message';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { Message } from '@/app/models/message';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
 import { searchMessageSimilarity } from '@/app/utils';
 import { errorDetails as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
-export default class ErrorDetailsCommand extends SwanCommand {
+export class ErrorDetailsCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

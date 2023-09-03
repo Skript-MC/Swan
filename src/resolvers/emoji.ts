@@ -5,7 +5,7 @@ import { isNullish } from '@sapphire/utilities';
 import type { Guild } from 'discord.js';
 import nodeEmoji from 'node-emoji';
 
-export default function resolveEmoji(parameter: string, guild: Guild): Result<string, 'emojiError'> {
+export function resolveEmoji(parameter: string, guild: Guild): Result<string, 'emojiError'> {
   if (!parameter)
     return err('emojiError');
 

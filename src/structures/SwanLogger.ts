@@ -3,7 +3,7 @@ import { Logger } from '@sapphire/plugin-logger';
 import type { SeverityLevel } from '@sentry/node';
 import { captureMessage } from '@sentry/node';
 
-export default class SwanLogger extends Logger {
+export class SwanLogger extends Logger {
   public trace(...values: readonly unknown[]): void {
     // Disabled: this.sendLogToSentry(Severity.Log, values);
     this.write(LogLevel.Trace, ...values);

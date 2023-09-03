@@ -1,6 +1,6 @@
 import jaroWinklerDistance from 'jaro-winkler';
 import type { SimilarityMatch, SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import capitalize from '@/app/utils/capitalize';
+import { capitalize } from '@/app/utils/capitalize';
 
 function getCategoryColor(category: string): string {
   switch (category) {
@@ -26,7 +26,7 @@ function getCategoryColor(category: string): string {
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export default function searchClosestArticle(
+export function searchClosestArticle(
   entries: SkriptMcDocumentationSyntaxAndAddon[],
   wanted: string,
 ): SimilarityMatch[] {

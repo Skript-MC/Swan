@@ -1,15 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { AuditLogEvent } from 'discord.js';
-import ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import BanAction from '@/app/moderation/actions/BanAction';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { BanAction } from '@/app/moderation/actions/BanAction';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import { SanctionTypes } from '@/app/types';
 import { nullop } from '@/app/utils';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 9 })
-export default class FetchMissingBansTask extends Task {
+export class FetchMissingBansTask extends Task {
   public override async run(): Promise<void> {
     const bans = await this.container.client.guild.bans.fetch();
     const logs = await this.container.client.guild.fetchAuditLogs({ type: AuditLogEvent.MemberBanAdd });

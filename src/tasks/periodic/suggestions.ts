@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import SuggestionManager from '@/app/structures/SuggestionManager';
+import * as SuggestionManager from '@/app/structures/SuggestionManager';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
-import settings from '@/conf/settings';
+import { Task } from '@/app/structures/tasks/Task';
+import { channels } from '@/conf/settings';
 
 @ApplyOptions<TaskOptions>({ cron: '*/20 * * * *' })
-export default class SuggestionsTask extends Task {
+export class SuggestionsTask extends Task {
   public override async run(): Promise<void> {
     await this._syncSuggestions();
   }
@@ -14,7 +14,7 @@ export default class SuggestionsTask extends Task {
     // Get all the suggestions waiting to be sent/updated
     const suggestions = await SuggestionManager.getPendingSuggestions();
 
-    const channel = this.container.client.channels.cache.get(settings.channels.suggestions);
+    const channel = this.container.client.channels.cache.get(channels.suggestions);
     if (!suggestions || !channel?.isTextBased())
       return;
 

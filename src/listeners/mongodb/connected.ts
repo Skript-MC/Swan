@@ -4,7 +4,7 @@ import { Listener } from '@sapphire/framework';
 import mongoose from 'mongoose';
 
 @ApplyOptions<ListenerOptions>({ emitter: mongoose.connection })
-export default class MongodbConnectedListener extends Listener {
+export class MongodbConnectedListener extends Listener {
   public override run(): void {
     this.container.logger.info('MongoDB is connected!');
   }

@@ -7,20 +7,20 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import ModerationData from '@/app/moderation/ModerationData';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import WarnAction from '@/app/moderation/actions/WarnAction';
-import resolveSanctionnableMember from '@/app/resolvers/sanctionnableMember';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { WarnAction } from '@/app/moderation/actions/WarnAction';
+import { resolveSanctionnableMember } from '@/app/resolvers/sanctionnableMember';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
 import { warn as config } from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { moderation } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class WarnCommand extends SwanCommand {
+export class WarnCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -96,7 +96,7 @@ export default class WarnCommand extends SwanCommand {
       const data = new ModerationData(interaction)
         .setVictim(member)
         .setReason(reason)
-        .setDuration(settings.moderation.warnDuration * 1000, true)
+        .setDuration(moderation.warnDuration * 1000, true)
         .setType(SanctionTypes.Warn);
 
       const success = await new WarnAction(data).commit();

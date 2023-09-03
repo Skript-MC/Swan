@@ -2,14 +2,14 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder, Message } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { ping as config } from '@/conf/commands/basic';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class PingCommand extends SwanCommand {
+export class PingCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -35,7 +35,7 @@ export default class PingCommand extends SwanCommand {
     });
 
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setDescription(description)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();

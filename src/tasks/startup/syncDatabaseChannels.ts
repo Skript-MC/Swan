@@ -1,10 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import SwanChannel from '@/app/models/swanChannel';
+import { SwanChannel } from '@/app/models/swanChannel';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 10 })
-export default class SyncDatabaseChannelsTask extends Task {
+export class SyncDatabaseChannelsTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.swanChannels = new Set();
     for (const channel of this.container.client.guild.channels.cache.values()) {

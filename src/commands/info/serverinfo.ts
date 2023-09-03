@@ -4,15 +4,15 @@ import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { ServerStatResponse } from '@/app/types';
 import { noop, nullop } from '@/app/utils';
 import { serverInfo as config } from '@/conf/commands/info';
-import settings from '@/conf/settings';
+import { apis, colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class ServerInfoCommand extends SwanCommand {
+export class ServerInfoCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -36,7 +36,7 @@ export default class ServerInfoCommand extends SwanCommand {
       return;
     }
 
-    const server: ServerStatResponse = await axios(`${settings.apis.server}/2/${query}`)
+    const server: ServerStatResponse = await axios(`${apis.server}/2/${query}`)
       .then(res => (res.status >= 300 ? null : res.data))
       .catch(nullop);
 
@@ -47,10 +47,10 @@ export default class ServerInfoCommand extends SwanCommand {
 
     const embedMessages = config.messages.embed;
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { query }) })
       .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
-      .setThumbnail(`${settings.apis.server}/icon/${query}`)
+      .setThumbnail(`${apis.server}/icon/${query}`)
       .setTimestamp();
 
     if (typeof server.online !== 'undefined') {

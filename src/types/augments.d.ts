@@ -12,9 +12,9 @@ import type {
   GuildTextBasedChannel,
   User,
 } from 'discord.js';
-import type SwanCacheManager from '@/app/structures/SwanCacheManager';
+import type { SwanCacheManager } from '@/app/structures/SwanCacheManager';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type TaskStore from '@/app/structures/tasks/TaskStore';
+import type { TaskStore } from '@/app/structures/tasks/TaskStore';
 
 declare module '@sapphire/framework' {
   interface StoreRegistryEntries {

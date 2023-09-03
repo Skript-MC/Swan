@@ -14,16 +14,16 @@ import {
   PermissionsBitField,
 } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import resolveGuildTextBasedChannel from '@/app/resolvers/guildTextBasedChannel';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { resolveGuildTextBasedChannel } from '@/app/resolvers/guildTextBasedChannel';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors, emojis } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class MoveCommand extends SwanCommand {
+export class MoveCommand extends SwanCommand {
   commandType = ApplicationCommandType.Message;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -98,7 +98,7 @@ export default class MoveCommand extends SwanCommand {
     });
 
     const embed = new EmbedBuilder()
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setAuthor({
         name: pupa(config.messages.moveTitle, { targetName }),
         iconURL: targetedMessage.author.displayAvatarURL(),
@@ -109,7 +109,7 @@ export default class MoveCommand extends SwanCommand {
           targetName,
           sourceChannel: targetedMessage.channel,
           targetChannel: targetedChannel,
-          emoji: interaction.guild.emojis.resolve(settings.emojis.remove) ?? settings.emojis.remove,
+          emoji: interaction.guild.emojis.resolve(emojis.remove) ?? emojis.remove,
         }),
       );
 
@@ -120,7 +120,7 @@ export default class MoveCommand extends SwanCommand {
       await interaction.followUp(successMessage);
 
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
-      await informationEmbed.react(settings.emojis.remove).catch(noop);
+      await informationEmbed.react(emojis.remove).catch(noop);
 
       const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
       if (targetedMessage.content.length > 2000)
@@ -129,7 +129,7 @@ export default class MoveCommand extends SwanCommand {
 
       const collector = informationEmbed
         .createReactionCollector({
-          filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === settings.emojis.remove
+          filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
             && (user.id === interaction.user.id || user.id === targetedMessage.author?.id)
             && !user.bot,
         }).on('collect', async () => {

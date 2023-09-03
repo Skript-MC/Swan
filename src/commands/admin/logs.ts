@@ -3,14 +3,14 @@ import { isNullish } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import SwanChannel from '@/app/models/swanChannel';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { SwanChannel } from '@/app/models/swanChannel';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { logs as config } from '@/conf/commands/admin';
 
 @ApplySwanOptions(config)
-export default class LogsCommand extends SwanCommand {
+export class LogsCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

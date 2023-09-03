@@ -3,13 +3,13 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { skriptInfo as config } from '@/conf/commands/info';
-import settings from '@/conf/settings';
+import { colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class SkriptInfoCommand extends SwanCommand {
+export class SkriptInfoCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -61,7 +61,7 @@ export default class SkriptInfoCommand extends SwanCommand {
 
       embeds.push(
         new EmbedBuilder()
-          .setColor(settings.colors.default)
+          .setColor(colors.default)
           .setTitle(config.messages.embed.downloadTitle)
           .setTimestamp()
           .setDescription(downloadDescription)
@@ -72,7 +72,7 @@ export default class SkriptInfoCommand extends SwanCommand {
     if (!display || display === 'liens utiles') {
       embeds.push(
         new EmbedBuilder()
-          .setColor(settings.colors.default)
+          .setColor(colors.default)
           .setTitle(config.messages.embed.informationsTitle)
           .setTimestamp()
           .setDescription(config.messages.embed.information)

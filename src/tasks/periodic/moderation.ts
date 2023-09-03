@@ -1,17 +1,17 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import Sanction from '@/app/models/sanction';
-import ModerationData from '@/app/moderation/ModerationData';
-import RemoveWarnAction from '@/app/moderation/actions/RemoveWarnAction';
-import UnbanAction from '@/app/moderation/actions/UnbanAction';
-import UnmuteAction from '@/app/moderation/actions/UnmuteAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationData } from '@/app/moderation/ModerationData';
+import { RemoveWarnAction } from '@/app/moderation/actions/RemoveWarnAction';
+import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
+import { UnmuteAction } from '@/app/moderation/actions/UnmuteAction';
 import type { TaskOptions } from '@/app/structures/tasks/Task';
-import Task from '@/app/structures/tasks/Task';
+import { Task } from '@/app/structures/tasks/Task';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';
-import messages from '@/conf/messages';
+import * as messages from '@/conf/messages';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
-export default class ModerationTask extends Task {
+export class ModerationTask extends Task {
   public override async run(): Promise<void> {
     // Fetch all the sanctions that are not revoked but are expired.
     const sanctions = await Sanction.find({

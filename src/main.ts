@@ -1,5 +1,4 @@
 import '@sapphire/plugin-logger/register';
-import 'core-js/proposals/collection-methods';
 import 'dotenv/config';
 import 'module-alias/register';
 import 'reflect-metadata';
@@ -8,8 +7,8 @@ import 'source-map-support/register';
 import * as Sentry from '@sentry/node';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import SwanClient from '@/app/SwanClient';
-import settings from '@/conf/settings';
+import { SwanClient } from '@/app/SwanClient';
+import { miscellaneous } from '@/conf/settings';
 
 // We configure momentjs to be stricter on date rounding.
 moment.locale('fr');
@@ -42,7 +41,7 @@ async function bootstrap(): Promise<void> {
       client.logger.error('Swan connection failed: the bot was not ready after 15s. Crashing.');
       process.exit(1); // eslint-disable-line node/no-process-exit
     }
-  }, settings.miscellaneous.connectionCheckDuration);
+  }, miscellaneous.connectionCheckDuration);
 
   if (process.env.NODE_ENV !== 'development' && process.env.SENTRY_TOKEN) {
     client.logger.info('Initializing Sentry...');

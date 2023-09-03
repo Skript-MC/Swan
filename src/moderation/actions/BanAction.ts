@@ -6,16 +6,16 @@ import {
   User,
 } from 'discord.js';
 import pupa from 'pupa';
-import Sanction from '@/app/models/sanction';
-import ModerationError from '@/app/moderation/ModerationError';
-import ModerationHelper from '@/app/moderation/ModerationHelper';
-import ModerationAction from '@/app/moderation/actions/ModerationAction';
+import { Sanction } from '@/app/models/sanction';
+import { ModerationError } from '@/app/moderation/ModerationError';
+import * as ModerationHelper from '@/app/moderation/ModerationHelper';
+import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '@/app/types';
 import { noop } from '@/app/utils';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { roles } from '@/conf/settings';
 
-export default class BanAction extends ModerationAction {
+export class BanAction extends ModerationAction {
   protected before(): void {
     this.client.currentlyBanning.add(this.data.victim.id);
   }
@@ -172,7 +172,7 @@ export default class BanAction extends ModerationAction {
 
     // 3. Add needed roles
     try {
-      const role = this.data.guild.roles.resolve(settings.roles.ban);
+      const role = this.data.guild.roles.resolve(roles.ban);
       if (role) {
         if (this.data.victim.member) {
           await ModerationHelper.removeAllRoles(this.data.victim.member);

@@ -2,17 +2,17 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import Message from '@/app/models/message';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { Message } from '@/app/models/message';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
 import { searchClosestMessage } from '@/app/utils';
 import { joke as config } from '@/conf/commands/fun';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class JokeCommand extends SwanCommand {
+export class JokeCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -62,7 +62,7 @@ export default class JokeCommand extends SwanCommand {
 
     const embed = new EmbedBuilder()
       .setDescription(joke.content)
-      .setColor(settings.colors.default)
+      .setColor(colors.default)
       .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 

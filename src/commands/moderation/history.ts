@@ -8,19 +8,19 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import ApplySwanOptions from '@/app/decorators/swanOptions';
-import Sanction from '@/app/models/sanction';
-import PaginatedMessageEmbedFields from '@/app/structures/PaginatedMessageEmbedFields';
+import { ApplySwanOptions } from '@/app/decorators/swanOptions';
+import { Sanction } from '@/app/models/sanction';
+import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SanctionDocument } from '@/app/types';
 import { SanctionsUpdates, SanctionTypes } from '@/app/types';
 import { getUsername, toHumanDuration } from '@/app/utils';
 import { history as config } from '@/conf/commands/moderation';
-import messages from '@/conf/messages';
-import settings from '@/conf/settings';
+import * as messages from '@/conf/messages';
+import { colors, moderation } from '@/conf/settings';
 
 @ApplySwanOptions(config)
-export default class HistoryCommand extends SwanCommand {
+export class HistoryCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -58,12 +58,12 @@ export default class HistoryCommand extends SwanCommand {
       warns: sanctions.filter(s => s.type === SanctionTypes.Warn).length,
     };
 
-    const sanctionUrl = settings.moderation.dashboardSanctionLink + user.id;
+    const sanctionUrl = moderation.dashboardSanctionLink + user.id;
     const embed = new EmbedBuilder()
       .setTitle(pupa(config.messages.title, { name: getUsername(user), sanctions }))
       .setURL(sanctionUrl)
-      .setDescription(pupa(config.messages.overview, { stats, warnLimit: settings.moderation.warnLimitBeforeBan }))
-      .setColor(settings.colors.default)
+      .setDescription(pupa(config.messages.overview, { stats, warnLimit: moderation.warnLimitBeforeBan }))
+      .setColor(colors.default)
       .setTimestamp();
 
     const allowedUser = await this.container.client.users.fetch(interaction.member.user.id);
