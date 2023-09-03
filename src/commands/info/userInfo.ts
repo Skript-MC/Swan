@@ -4,7 +4,8 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   EmbedBuilder,
-  Formatters,
+  time,
+  TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
 import { ApplySwanOptions } from '@/app/decorators/swanOptions';
@@ -53,8 +54,8 @@ export class UserInfoCommand extends SwanCommand {
         presenceDetails += pupa(embedConfig.presence.state, { activity });
 
       if (activity.timestamps) {
-        const time = Formatters.time(activity.timestamps.start, Formatters.TimestampStyles.RelativeTime);
-        presenceDetails += pupa(embedConfig.presence.timestamps, { time });
+        const formattedTime = time(activity.timestamps.start, TimestampStyles.RelativeTime);
+        presenceDetails += pupa(embedConfig.presence.timestamps, { time: formattedTime });
       }
     }
 
@@ -67,11 +68,11 @@ export class UserInfoCommand extends SwanCommand {
     });
     const namesContent = pupa(embedConfig.names.content, { member });
     const createdContent = pupa(embedConfig.created.content, {
-      creation: Formatters.time(member.user.createdAt, Formatters.TimestampStyles.LongDateTime),
+      creation: time(member.user.createdAt, TimestampStyles.LongDateTime),
     });
     const joinedContent = pupa(embedConfig.joined.content,
       member.joinedTimestamp
-        ? { joined: Formatters.time(new Date(member.joinedTimestamp), Formatters.TimestampStyles.LongDateTime) }
+        ? { joined: time(new Date(member.joinedTimestamp), TimestampStyles.LongDateTime) }
         : { joined: messages.global.unknown(true) });
     const rolesContent = member.roles.cache.size - 1 === 0
       ? embedConfig.roles.noRole

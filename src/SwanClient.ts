@@ -23,7 +23,7 @@ export class SwanClient extends SapphireClient {
       intents: [
         GatewayIntentBits.Guilds, // Get access to channels, create some, pin messages etc.
         GatewayIntentBits.GuildMembers, // Access to GuildMemberAdd/GuildMemberRemove events.
-        GatewayIntentBits.GuildBans, // Access to GuildBanAdd and GuildBanRemove events.
+        GatewayIntentBits.GuildModeration, // Access to GuildBanAdd and GuildBanRemove events.
         GatewayIntentBits.GuildPresences, // Access to users' presence (for .userinfo).
         GatewayIntentBits.GuildMessages, // Access to Message, MessageDelete and MessageUpdate events.
         GatewayIntentBits.GuildMessageReactions, // Access to MessageReactionAdd events.

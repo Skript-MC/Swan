@@ -125,7 +125,9 @@ export class MoveCommand extends SwanCommand {
       const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
       if (targetedMessage.content.length > 2000)
         await targetedChannel.send(targetedMessage.content.slice(2000, 4000));
-      targetedMessage.attachments.forEach(async attachment => targetedChannel.send(attachment.url));
+
+      for (const { url } of targetedMessage.attachments.values())
+        await targetedChannel.send(url);
 
       const collector = informationEmbed
         .createReactionCollector({

@@ -10,7 +10,9 @@ export class LoadPollsTask extends Task {
     // Cache all polls' messages' ids.
     const polls = await Poll.find()
       .catch(nullop);
-    if (polls)
-      polls.forEach(({ messageId }) => this.container.client.cache.pollMessagesIds.add(messageId));
+    if (polls) {
+      for (const { messageId } of polls)
+        this.container.client.cache.pollMessagesIds.add(messageId);
+    }
   }
 }

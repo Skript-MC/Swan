@@ -10,7 +10,9 @@ export class LoadReactionRolesTask extends Task {
     // Cache all reaction roles' messages' ids.
     const reactionRoles = await ReactionRole.find()
       .catch(nullop);
-    if (reactionRoles)
-      reactionRoles.forEach(({ messageId }) => this.container.client.cache.reactionRolesIds.add(messageId));
+    if (reactionRoles) {
+      for (const { messageId } of reactionRoles)
+        this.container.client.cache.reactionRolesIds.add(messageId);
+    }
   }
 }

@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'deprecation'],
   extends: ['noftalint/typescript'],
   ignorePatterns: ['node_modules/', 'build/'],
   reportUnusedDisableDirectives: true,
@@ -9,27 +9,21 @@ module.exports = {
     project: './tsconfig.eslint.json',
   },
   rules: {
+    'deprecation/deprecation': 'warn',
+
     // It cannot resolve TypeScript's path aliases. See https://github.com/mysticatea/eslint-plugin-node/issues/233
     'node/no-missing-import': 'off',
-    // It doesn't work with TypeScript
-    'import/no-import-module-exports': 'off',
 
-    // @typescript-eslint can't find the `.toString()` method for these types, but it
-    // does exists as it is inherited from the `Channel` class.
+    // @typescript-eslint doesn't support mixins and cannot find the `.toString()` methods
     '@typescript-eslint/no-base-to-string': ['error', {
-      ignoredTypeNames: ['TextChannel', 'NewsChannel'],
+      ignoredTypeNames: ['TextChannel'],
     }],
 
     // TODO: When we have strictNullChecks enabled in tsconfig, enable this rule
     '@typescript-eslint/prefer-nullish-coalescing': 'off',
 
-    // We don't necessarily want to use `this` in our class methods (such as `Command#exec`),
-    // but neither do we want them to be static.
-    'class-methods-use-this': 'off',
-
-    // Even though `Array#forEach()` should be avoided, let's  wait until we have an answer on this one
-    // https://github.com/sindresorhus/eslint-plugin-unicorn/issues/1093
-    'unicorn/no-array-for-each': 'off',
+    // We cannot use ESM as typescript has very bad support (path aliases, source maps, adding .js to imports…)
+    'unicorn/prefer-top-level-await': 'off',
 
     // Because discord.js is promised base, we use a lot of promises in loops/callbacks that needs
     // be resolved before continuing! (i.e to send reactions or messages in the right order).
@@ -37,16 +31,12 @@ module.exports = {
   },
   settings: {
     'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
+      '@typescript-eslint/parser': ['.ts'],
     },
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
       },
     },
-  },
-  globals: {
-    Generator: true,
-    AsyncGenerator: true,
   },
 };
