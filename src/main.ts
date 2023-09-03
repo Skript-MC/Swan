@@ -33,7 +33,7 @@ async function bootstrap(): Promise<void> {
     await client.login(process.env.DISCORD_TOKEN);
   } catch (error: unknown) {
     client.logger.fatal(error as Error);
-    client.destroy();
+    await client.destroy();
     throw (error as Error);
   }
 

@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "es2021",
+    "target": "es2022",
     "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts", "tools/**/*.ts"],

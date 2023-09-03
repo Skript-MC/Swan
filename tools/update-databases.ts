@@ -3,7 +3,7 @@ import 'module-alias/register';
 import 'dotenv/config';
 
 import mongoose from 'mongoose';
-import Sanction from '../src/models/sanction';
+import { Sanction } from '../src/models/sanction';
 
 async function start(): Promise<void> {
   console.log('Connecting to database...');

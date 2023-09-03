@@ -8,8 +8,6 @@ declare namespace NodeJS {
     }] */
     NODE_ENV: string;
 
-    BOT_PREFIX: string;
-
     DISCORD_TOKEN: string;
     SENTRY_TOKEN: string;
     SKRIPTMC_DOCUMENTATION_TOKEN: string;
@@ -33,10 +31,9 @@ declare namespace NodeJS {
     SNIPPETS_CHANNEL: string;
     SKRIPT_CREATIONS_CHANNEL: string;
     SKRIPT_HELP_CHANNELS: string;
-    SKRIPT_EXTRA_HELP_CHANNELS: string;
     OTHER_HELP_CHANNELS: string;
     LOG_CHANNEL: string;
-    PRIVATE_CHANNEL_CATEGORY: string;
+    BAN_CHANNEL: string;
     MAIN_CHANNEL: string;
     FORUM_FEED_CHANNEL: string;
 
