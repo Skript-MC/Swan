@@ -10,19 +10,19 @@ import { noop, nullop } from '@/app/utils';
 import * as messages from '@/conf/messages';
 import { channels, emojis, miscellaneous } from '@/conf/settings';
 
+type PollAnswer = [reactionName: string, votersIds: string[]];
+
 export class MessageReactionAddListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.isDMBased())
+    if (user.bot || !reaction.message.inGuild())
       return;
 
-    const message = reaction.message as GuildMessage;
-
-    if (this.container.client.cache.pollMessagesIds.has(message.id))
-      await this._handlePoll(reaction, message, user);
-    else if (channels.idea === message.channel.id)
-      await this._handleSuggestion(reaction, message, user);
-    else if (this.container.client.cache.reactionRolesIds.has(message.id))
-      await this._handleReactionRole(reaction, message, user);
+    if (this.container.client.cache.pollMessagesIds.has(reaction.message.id))
+      await this._handlePoll(reaction, reaction.message, user);
+    else if (channels.idea === reaction.message.channel.id)
+      await this._handleSuggestion(reaction, reaction.message, user);
+    else if (this.container.client.cache.reactionRolesIds.has(reaction.message.id))
+      await this._handleReactionRole(reaction, reaction.message, user);
   }
 
   private async _handleSuggestion(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
@@ -53,8 +53,6 @@ export class MessageReactionAddListener extends Listener {
     if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name))
       || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name))) {
       // Find the reaction they chose before (undefined if they never answered).
-      type PollAnswer = [reactionName: string, votersIds: string[]];
-
       const previousUserVote = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.
         .find((entry: PollAnswer) => (entry[1].includes(user.id) ? entry : null))

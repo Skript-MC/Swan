@@ -7,7 +7,7 @@ import { MuteAction } from '@/app/moderation/actions/MuteAction';
 import { UnmuteAction } from '@/app/moderation/actions/UnmuteAction';
 import { SanctionTypes } from '@/app/types';
 
-export class GuildMemberUpdate extends Listener {
+export class GuildMemberUpdateListener extends Listener {
   public override async run(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
     if (oldMember.user.bot)
       return;
@@ -17,43 +17,42 @@ export class GuildMemberUpdate extends Listener {
     const isRevokedMute = oldMember.communicationDisabledUntilTimestamp
       && !newMember.communicationDisabledUntilTimestamp;
 
-    if (isNewMute || isRevokedMute) {
-      const data = new ModerationData()
-        .setVictim(newMember, false)
-        .setDuration(newMember.communicationDisabledUntilTimestamp - Date.now(), true)
-        .setType(SanctionTypes.Mute);
+    if (!isNewMute && !isRevokedMute)
+      return;
 
-      const updates = await newMember.guild.fetchAuditLogs({
-        type: AuditLogEvent.MemberUpdate,
-      });
+    const data = new ModerationData()
+      .setVictim(newMember, false)
+      .setDuration(newMember.communicationDisabledUntilTimestamp - Date.now(), true)
+      .setType(SanctionTypes.Mute);
 
-      // We are now extra-sure about that is the right update
-      const update = updates.entries.filter(u => u.changes?.every(c => c.key === 'communication_disabled_until'
-        && (Date.parse(c.new as string) === newMember.communicationDisabledUntilTimestamp
-          || Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp)))
-        .first();
+    const updates = await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate });
 
-      if (!update
-        || update.target.id !== newMember.id
-        || update.executor.bot
-        || update.createdTimestamp <= Date.now() - 1000)
+    // We are now extra-sure about that is the right update
+    const update = updates.entries.filter(u => u.changes?.every(c => c.key === 'communication_disabled_until'
+      && (Date.parse(c.new as string) === newMember.communicationDisabledUntilTimestamp
+        || Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp)))
+      .first();
+
+    if (!update
+      || update.target.id !== newMember.id
+      || update.executor.bot
+      || update.createdTimestamp <= Date.now() - 1000)
+      return;
+
+    data.setReason(update.reason)
+      .setModeratorId(update.executor.id);
+
+    if (isNewMute) {
+      data.setType(SanctionTypes.Mute);
+      await new MuteAction(data).commit();
+    } else if (isRevokedMute) {
+      const currentMute = await ModerationHelper.getCurrentMute(newMember.id);
+      if (!currentMute)
         return;
 
-      data.setReason(update.reason)
-        .setModeratorId(update.executor.id);
-
-      if (isNewMute) {
-        data.setType(SanctionTypes.Mute);
-        await new MuteAction(data).commit();
-      } else if (isRevokedMute) {
-        const currentMute = await ModerationHelper.getCurrentMute(newMember.id);
-        if (!currentMute)
-          return;
-
-        data.setSanctionId(currentMute.sanctionId)
-          .setType(SanctionTypes.Unmute);
-        await new UnmuteAction(data).commit();
-      }
+      data.setSanctionId(currentMute.sanctionId)
+        .setType(SanctionTypes.Unmute);
+      await new UnmuteAction(data).commit();
     }
   }
 }

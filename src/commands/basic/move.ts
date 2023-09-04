@@ -15,7 +15,7 @@ import {
 } from 'discord.js';
 import pupa from 'pupa';
 import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { resolveGuildTextBasedChannel } from '@/app/resolvers/guildTextBasedChannel';
+import { resolveGuildTextBasedChannel } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { move as config } from '@/conf/commands/basic';

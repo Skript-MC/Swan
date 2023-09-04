@@ -7,7 +7,6 @@ export const global = {
       :warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.
       > (Cc: <@188341077902753794>, <@191495299884122112>)`
     : ":warning: Oups... Quelque chose s'est mal passé en réalisant cette action. Il se peut qu'elle ne se soit pas complètement terminée, voire pas commencée.",
-  insufficientClientPermissions: "Je n'ai pas les permissions Discord nécessaires pour exécuter la commande {command.details.name}. (Permissions manquantes : {permissions})",
   memberTooPowerful: "Je ne peux pas effectuer cette action pour ce membre ! Il se peut qu'il ait des permissions supérieures ou égales aux tiennes.",
   dmAreClosed: "{member}, je ne peux pas t'envoyer les informations car tes messages privés sont restreints ! Pense bien à les activer :)",
   unknownName: 'Pseudo inconnu',
@@ -32,34 +31,10 @@ export const errors = {
 
 export const miscellaneous = {
   noDescription: 'Aucune description disponible.',
-  noDocLink: stripIndent`
-    Tu ne peux pas poster ce lien ! Utilise plutôt la commande de documentation de Swan.
-    Si la documentation de Skript-MC est incomplète, demande l'accès en écriture à Vengelis afin de l'améliorer.
-    Voici ton message, si tu souhaites le récupérer : \`\`\`
-    {content}
-    \`\`\`
-  `,
   noSpam: "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
-  invalidMessage: 'Ton message ne respecte pas le règlement du salon {message.channel}, il a donc été supprimé. Tu peux réessayer ou contacter un modérateur Discord pour en savoir plus.',
   wrongUserInteractionReply: 'Tu ne peux pas cliquer sur ces boutons, ils sont réservés à {user}.',
-  commandSuggestion: "Je n'ai pas trouvé de commande qui correspond à {commandName}... :confused: Voulais tu dire {commandList} ?\n:information_source: Clique sur les réactions pour lancer la commande associée.",
   ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {user.username}. :innocent:',
   ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {user.username}. :innocent:',
-  separator: ' • ',
-  renamed: stripIndent`
-    Ton pseudonyme contenait des caractères spéciaux, donc je me suis permis de te les retirer (voire de te renommer complètement), pour que ce soit plus simple de te mentionner. J'espère que mes modifications te plairont.
-    Si malheureusement ce n'est pas le cas, tu peux demander à un modérateur Discord (pseudonymes vert clair) pour être renommé.`,
-  renameList: [
-    'Arachnoïde',
-    'Banjo',
-    'Bizu',
-    'Boulet',
-    'Licorne',
-    'Quiche',
-    'Saperlipopette',
-    'Tarentule',
-    'Tarte',
-  ],
   greetings: [
     '{member} arrive, faites comme si vous étiez occupés ! :books:',
     "Aujourd'hui, nous accueillons {member} !",
@@ -82,36 +57,11 @@ export const miscellaneous = {
 } as const;
 
 export const prompt = {
-  footer: '\n*Tape "retour" pour annuler cette commande.*',
-  timeout: 'Temps écoulé !',
-  ended: "Tu as fait trop d'erreurs...",
-  canceled: 'Commande annulée !',
-  cancelWord: 'retour',
-  stopWord: 'stop',
-
-  addon: "Le nom d'addon donné est invalide.",
   channel: 'Le salon donné est invalide.',
-  code: 'Le code donné est invalide.',
-  differentHelpChannel: "Le salon donné est invalide. Le salon d'origine ou de destination n'est pas un salon d'aide, ou c'est le même salon.",
   duration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.',
-  forumModRestriction: 'Vous ne pouvez pas appliquer une sanction dont la durée est supérieure à 2 jours.',
-  equation: "L'équation donnée est invalide.",
-  keywords: 'Les mots clé donnés sont invalides.',
-  member: "Le membre donné est invalide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo, avec ou sans le discriminant (#XXXX).",
-  message: 'Le message donné est invalide.',
-  messageName: 'Le nom de message donné est invalide.',
-  minecraftVersion: 'La version de Minecraft donnée est invalide.',
+  member: "Le membre donné est invalide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo.",
   number: 'Le nombre donné est invalide.',
   pollAnswers: 'Le sondage et/ou les réponses données sont invalides.',
-  pollDuration: 'La durée donnée est invalide. Tu peux par exemple entrer `1s` pour 1 seconde, `1min` pour 1 minute et `1j` pour 1 jour. Tu peux également combiner ces durées ensemble : `5j15min300s` ou `1h30` sont par exemple des durées valides.\n:warning: La durée ne peut pas excéder 7 jours !',
-  question: 'La question donnée est invalide.',
-  reason: 'La raison donnée est invalide.',
-  role: 'Le rôle donné est invalide.',
-  ruleName: 'Le nom de règle donné est invalide.',
-  serverAdress: "L'adresse de serveur donnée est invalide.",
-  skriptError: "L'erreur donnée est invalide.",
-  user: "L'utilisateur donné est invalide. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo, avec ou sans le discriminant (#XXXX).",
-  warnId: "L'identifiant de warn donné est invalide.",
 } as const;
 
 export const moderation = {

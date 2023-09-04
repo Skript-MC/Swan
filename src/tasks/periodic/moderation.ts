@@ -23,11 +23,7 @@ export class ModerationTask extends Task {
     });
 
     for (const sanction of sanctions) {
-      const {
-        userId,
-        type,
-        sanctionId,
-      } = sanction;
+      const { userId, type, sanctionId } = sanction;
 
       const member = this.container.client.guild.members.cache.get(userId)
         ?? (await this.container.client.guild.members.fetch(userId)

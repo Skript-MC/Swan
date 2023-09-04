@@ -1,20 +1,16 @@
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type {
+  ChatInputCommandInteraction,
   Guild,
   GuildMember,
   GuildTextBasedChannel,
-  User,
-} from 'discord.js';
-import {
-  ChatInputCommandInteraction,
-  Message,
   ModalSubmitInteraction,
   TextChannel,
-  ThreadChannel,
+  User,
 } from 'discord.js';
 import { nanoid } from 'nanoid';
-import type { GuildMessage, ModerationDataResult, PersonInformations } from '@/app/types';
+import type { ModerationDataResult, PersonInformations } from '@/app/types';
 import { SanctionTypes } from '@/app/types';
 import { getPersonFromCache } from '@/app/utils';
 import * as configs from '@/conf/commands/moderation';
@@ -37,24 +33,11 @@ export class ModerationData {
 
   /**
    * Create moderation data from a message or from individual informations.
-   *
-   * * If the argument is of type Message, then it is used to get all the data (moderator, guild, client, channel...).
-   * * If the argument is a TextChannel, then the channel is used to get all the data.
-   * * If the argument is a AkairoClient, then the channel is set to the log channel and it is used to get all the data.
    */
-  constructor(argument?: ChatInputCommandInteraction | GuildMessage | ModalSubmitInteraction) {
+  constructor(argument?: ChatInputCommandInteraction | ModalSubmitInteraction) {
     this.client = container.client;
-    if (argument instanceof Message) {
-      this.channel = argument.channel;
-      this.moderatorId = argument.member.id;
-    } else if (argument instanceof ModalSubmitInteraction || argument instanceof ChatInputCommandInteraction) {
-      if (argument.channel instanceof TextChannel || argument.channel instanceof ThreadChannel)
-        this.channel = argument.channel;
-      this.moderatorId = argument.member.user.id;
-    } else {
-      this.channel = this.client.cache.channels.log;
-      this.moderatorId = this.client.guild.members.me.id;
-    }
+    this.channel = argument?.channel ?? this.client.cache.channels.log;
+    this.moderatorId = argument?.member.user.id ?? this.client.guild.members.me.id;
     this.guild = this.channel.guild;
     this.type = null;            // The sanction type (one of the SanctionTypes enum).
     this.config = null;          // The configuration of the action (all the messages).
@@ -107,8 +90,7 @@ export class ModerationData {
   }
 
   public setChannel(channel: TextChannel): this {
-    if (channel instanceof TextChannel)
-      this.channel = channel;
+    this.channel = channel;
     return this;
   }
 

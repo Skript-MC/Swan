@@ -30,7 +30,6 @@ export class StatisticsCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({ name: config.messages.embed.title, iconURL: bot.avatar })
-      .setDescription(pupa(config.messages.embed.description, { prefix: bot.prefix }))
       .addFields(
         {
           name: embedMessages.version,

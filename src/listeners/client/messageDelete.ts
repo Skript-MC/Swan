@@ -1,19 +1,17 @@
 import { Listener } from '@sapphire/framework';
-import type { Message, MessageReaction } from 'discord.js';
-import { DMChannel, User } from 'discord.js';
+import type { Message } from 'discord.js';
+import { User } from 'discord.js';
 import pupa from 'pupa';
 import * as MessageLogManager from '@/app/structures/MessageLogManager';
-import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 import * as messages from '@/conf/messages';
 import { emojis, roles } from '@/conf/settings';
 
 export class MessageDeleteListener extends Listener {
-  public override async run(globalMessage: Message): Promise<void> {
-    if (globalMessage.channel instanceof DMChannel || !globalMessage.member)
+  public override async run(message: Message): Promise<void> {
+    if (!message.inGuild() || !message.member)
       return;
 
-    const message = globalMessage as GuildMessage;
     if (message?.content && !message.system)
       await MessageLogManager.saveMessageDelete(this.container.client.cache, message);
 
@@ -58,7 +56,7 @@ export class MessageDeleteListener extends Listener {
     await botNotificationMessage.react(emojis.remove).catch(noop);
     const collector = botNotificationMessage
       .createReactionCollector({
-        filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
+        filter: (reaction, user) => (reaction.emoji.id ?? reaction.emoji.name) === emojis.remove
           && (user.id === message.mentions.users.first()!.id)
           && !user.bot,
       }).on('collect', async () => {

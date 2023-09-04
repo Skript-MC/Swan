@@ -76,11 +76,7 @@ export class ForumFeedTask extends Task {
     const resources: InvisionFullResource = await axios.get(
       apis.forum + config.endpoints.files.files,
       {
-        params: {
-          ...config.baseAxiosParams.params,
-          categories: '22,5,20,19,18,17,16,15,14,13,12,11,10,9,8,7,21,6,4,33,3,28,27',
-          // TODO: Remove category filter when it'll be possible
-        },
+        params: config.baseAxiosParams.params,
         auth: config.baseAxiosParams.auth,
       },
     )

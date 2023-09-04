@@ -11,7 +11,7 @@ import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { ModerationData } from '@/app/moderation/ModerationData';
 import * as ModerationHelper from '@/app/moderation/ModerationHelper';
 import { WarnAction } from '@/app/moderation/actions/WarnAction';
-import { resolveSanctionnableMember } from '@/app/resolvers/sanctionnableMember';
+import { resolveSanctionnableMember } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
 import { noop } from '@/app/utils';

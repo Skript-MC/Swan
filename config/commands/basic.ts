@@ -38,31 +38,6 @@ export const errorDetails = {
   },
 };
 
-export const help = {
-  settings: {
-    name: 'Aide',
-    command: 'help',
-    description: 'Affiche la liste des commandes disponibles ou des informations précises sur une commande spécifique.',
-    examples: ['help', 'aide ping'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
-  },
-  messages: {
-    commandInfo: {
-      title: ':star: Commande "{name}"',
-      usage: '❯ Utilisation',
-      usableBy: '❯ Utilisable par',
-      aliases: '❯ Aliases',
-      examples: '❯ Exemples',
-    },
-    commandsList: {
-      title: 'Commandes de Swan ({amount})',
-      description: "Faites `{helpCommand}` pour avoir plus d'informations sur une commande.",
-      category: '❯ {categoryName}',
-    },
-    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
-  },
-};
-
 export const links = {
   settings: {
     name: 'Liens',
@@ -184,7 +159,6 @@ export const statistics = {
   messages: {
     embed: {
       title: 'Statistiques de Swan',
-      description: 'Le préfixe est `{prefix}`. Faites `{prefix}aide` pour avoir la liste des commandes.',
       version: '❯ Version',
       versionContent: stripIndent`
         Version : {version}

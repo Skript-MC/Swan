@@ -145,9 +145,9 @@ export const userInfo = {
       names: {
         title: '❯ Noms',
         content: `
-          Pseudo : {member.user.username}
+          Nom d'utilisateur : {member.user.tag}
+          Pseudo : {member.user.globalName}
           Surnom : {member.displayName}
-          Discriminant : \`{member.user.discriminator}\`
           Identifiant : \`{member.id}\``,
       },
       created: {
