@@ -8,14 +8,15 @@ export class CommandDeniedListener extends Listener<typeof Events.ChatInputComma
     if (error.context?.silent)
       return;
 
-    if (error instanceof PreconditionError) {
-      const errorKey = Object.keys(messages.errors.precondition).includes(error.identifier)
-        ? error.identifier as keyof typeof messages.errors.precondition
-        : 'unknownError';
+    if (!(error instanceof PreconditionError))
+      return;
 
-      const content = messages.errors.precondition[errorKey];
-      if (typeof content === 'string')
-        await payload.interaction.reply({ content, ephemeral: true });
-    }
+    const errorKey = Object.keys(messages.errors.precondition).includes(error.identifier)
+      ? error.identifier as keyof typeof messages.errors.precondition
+      : 'unknownError';
+
+    const content = messages.errors.precondition[errorKey];
+    if (typeof content === 'string')
+      await payload.interaction.reply({ content, ephemeral: true });
   }
 }

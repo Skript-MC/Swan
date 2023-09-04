@@ -9,7 +9,7 @@ import {
 import pupa from 'pupa';
 import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { ReactionRole } from '@/app/models/reactionRole';
-import { resolveEmoji } from '@/app/resolvers/emoji';
+import { resolveEmoji } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { reactionRole as config } from '@/conf/commands/admin';
@@ -26,7 +26,6 @@ export class ReactionRoleCommand extends SwanCommand {
       description: 'Rôle à distribuer via la réaction',
       required: true,
     },
-    // TODO: Use the emoji type when Sapphire will release it
     {
       type: ApplicationCommandOptionType.String,
       name: 'émoji',

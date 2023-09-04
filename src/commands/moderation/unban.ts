@@ -8,8 +8,7 @@ import * as ModerationHelper from '@/app/moderation/ModerationHelper';
 import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import { searchClosestSanction } from '@/app/utils/searchs/searchClosestSanction';
+import { noop, searchClosestSanction } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
 import * as messages from '@/conf/messages';
 

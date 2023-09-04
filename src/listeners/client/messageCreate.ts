@@ -1,4 +1,4 @@
-import { MessageLimits } from '@sapphire/discord-utilities';
+import { MessageLimits, MessageLinkRegex as rawMessageLinkRegex } from '@sapphire/discord-utilities';
 import { Listener } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import {
@@ -6,7 +6,6 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
-  DMChannel,
   EmbedBuilder,
   PermissionsBitField,
 } from 'discord.js';
@@ -22,32 +21,28 @@ import {
   roles,
 } from '@/conf/settings';
 
+const MessageLinkRegex = new RegExp(rawMessageLinkRegex.source.slice(1, -1), 'gimu');
+interface MessageLinkMatch {
+  guildId: string;
+  channelId: string;
+  messageId: string;
+}
+
 export class MessageCreateListener extends Listener {
   public override async run(message: Message): Promise<void> {
-    if (message.content.startsWith(bot.prefix)
-      || message.content.startsWith(message.guild?.members.me.toString())
+    if (message.content.startsWith(message.guild?.members.me.toString())
       || message.author.bot
       || message.system
-      || message.channel instanceof DMChannel)
+      || !message.inGuild())
       return;
 
-    // Run all needed tasks, and stop when there is either no more tasks or one returned true (= wants to stop).
-    let task: { done?: boolean; value: boolean } = { done: false, value: false };
-    const tasks = this._getTasks(message as GuildMessage);
-
-    while (!task.done && !task.value)
-      task = await tasks.next();
+    await this._addReactionsInIdeaChannel(message);
+    await this._handleSuggestion(message);
+    await this._quoteLinkedMessage(message);
+    await this._antispamSnippetsChannel(message);
   }
 
-  private async * _getTasks(message: GuildMessage): AsyncGenerator<boolean, boolean> {
-    yield await this._addReactionsInIdeaChannel(message);
-    yield await this._handleSuggestion(message);
-    yield await this._quoteLinkedMessage(message);
-    yield await this._antispamSnippetsChannel(message);
-    return false;
-  }
-
-  private async _addReactionsInIdeaChannel(message: GuildMessage): Promise<boolean> {
+  private async _addReactionsInIdeaChannel(message: GuildMessage): Promise<void> {
     // Add reactions in the Idea channel.
     if (message.channel.id === channels.idea) {
       try {
@@ -62,13 +57,13 @@ export class MessageCreateListener extends Listener {
         this.container.logger.error((unknownError as Error).stack);
       }
     }
-    return false;
   }
 
-  private async _handleSuggestion(message: GuildMessage): Promise<boolean> {
+  private async _handleSuggestion(message: GuildMessage): Promise<void> {
     // Send embed and add reactions in the Suggestion channel.
     if (message.channel.id === channels.suggestions) {
       await message.delete();
+
       const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
       if (response?.status === 'PUBLISHED') {
         const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
@@ -77,25 +72,29 @@ export class MessageCreateListener extends Listener {
           embeds: [suggestionEmbed],
           components: [suggestionActions],
         });
+
         const thread = await suggestionMessage.startThread({
           name: `Suggestion ${response.suggestion.id} de ${response.suggestion.user.username}`,
         });
+
         if (response.suggestion.user.discordId)
           await thread.members.add(response.suggestion.user.discordId);
+
         await SuggestionManager.suggestionCallback(response.suggestion, suggestionMessage);
+
         const embed = new EmbedBuilder()
           .setColor(colors.success)
           .setTitle(messages.suggestions.published.title)
           .setDescription(messages.suggestions.published.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         await message.author.send({ embeds: [embed] });
-        return false;
       } else if (response?.status === 'UNLINKED') {
         const embed = new EmbedBuilder()
           .setColor(colors.error)
           .setTitle(messages.suggestions.unlinked.title)
           .setDescription(messages.suggestions.unlinked.content)
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
+
         const actions = new ActionRowBuilder<ButtonBuilder>()
           .addComponents(
             new ButtonBuilder()
@@ -113,26 +112,15 @@ export class MessageCreateListener extends Listener {
         await message.author.send({ embeds: [embed] });
       }
     }
-    return false;
   }
 
-  private async _quoteLinkedMessage(message: GuildMessage): Promise<boolean> {
-    // Disable quotes for commands
-    if (message.content.startsWith(bot.prefix))
-      return false;
-
+  private async _quoteLinkedMessage(message: GuildMessage): Promise<void> {
     // Quote a linked message.
-    const linkRegex = new RegExp(`https://(?:ptb.|canary.)?discord(?:app)?.com/channels/${message.guild.id}/(\\d{18})/(\\d{18})`, 'imu');
-    if (!linkRegex.test(message.content))
-      return false;
-
-    const quotes: Array<{ channelId: string; messageId: string }> = [];
-    let text = message.content;
-    while (linkRegex.test(text)) {
-      const [full, channelId, messageId] = linkRegex.exec(text)!;
-      quotes.push({ channelId, messageId });
-      text = text.replace(full, '');
-    }
+    const found = message.content.matchAll(MessageLinkRegex);
+    // TODO: Unique by messageId.
+    const quotes = [...found]
+      .map(match => match.groups as unknown as MessageLinkMatch)
+      .filter(match => match.guildId === message.guild.id);
 
     for (const quote of quotes) {
       const channel = await this.container.client.channels.fetch(quote.channelId).catch(nullop);
@@ -156,7 +144,7 @@ export class MessageCreateListener extends Listener {
       if (targetedMessage.attachments.size > 0) {
         const attachments = [...targetedMessage.attachments.values()].slice(0, 5);
         for (const [i, attachment] of attachments.entries())
-          embed.addFields({ name: `Pièce jointe n°${i}`, value: attachment.url });
+          embed.addFields({ name: `Pièce jointe n°${i + 1}`, value: attachment.url });
       }
 
       const msg = await message.channel.send({ embeds: [embed] });
@@ -172,10 +160,9 @@ export class MessageCreateListener extends Listener {
 
       await msg.react(emojis.remove);
     }
-    return false;
   }
 
-  private async _antispamSnippetsChannel(message: GuildMessage): Promise<boolean> {
+  private async _antispamSnippetsChannel(message: GuildMessage): Promise<void> {
     // We prevent people from spamming unnecessarily the Snippets channel.
     if (message.channel.id === channels.snippets
       && !message.member.roles.cache.has(roles.staff)) {
@@ -192,6 +179,5 @@ export class MessageCreateListener extends Listener {
         }
       } catch { /* Ignored */ }
     }
-    return false;
   }
 }

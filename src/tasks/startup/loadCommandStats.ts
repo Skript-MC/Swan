@@ -9,12 +9,10 @@ import type { CommandStatDocument } from '@/app/types';
 export class LoadCommandStatsTask extends Task {
   public override async run(): Promise<void> {
     // Add all needed commands not present in the DB, to DB.
-    const commandIds = [...this.container.stores.get('commands')
-      .values()]
+    const commandIds = [...this.container.stores.get('commands').values()]
       .map(cmd => cmd.name);
 
-    // FIXME: Chances are I'm doing something wrong here. This might be done in a more elegant way.
-    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
+    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 

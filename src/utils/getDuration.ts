@@ -1,4 +1,4 @@
-export interface DurationPart {
+interface DurationPart {
   number: string;
   unit: string;
 }

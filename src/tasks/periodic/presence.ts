@@ -4,10 +4,9 @@ import type { PresenceData } from 'discord.js';
 import { ActivityType } from 'discord.js';
 import pupa from 'pupa';
 import { Task, TaskOptions } from '@/app/structures/tasks/Task';
-import { bot } from '@/conf/settings';
 import { presence as config } from '@/conf/tasks';
 
-@ApplyOptions<TaskOptions>({ cron: '* * * * *' })
+@ApplyOptions<TaskOptions>({ cron: '* * * * *', immediate: true })
 export class PresenceTask extends Task {
   activities: Generator<PresenceData, never>;
 
@@ -25,11 +24,9 @@ export class PresenceTask extends Task {
     while (true) {
       yield {
         activities: [{
-          name: pupa(config.messages[i], {
-            memberCount: this.container.client.guild.memberCount,
-            prefix: bot.prefix,
-          }),
-          type: ActivityType.Watching,
+          type: ActivityType.Custom,
+          name: 'custom',
+          state: pupa(config.messages[i], { memberCount: this.container.client.guild.memberCount }),
         }],
         status: 'online',
       };

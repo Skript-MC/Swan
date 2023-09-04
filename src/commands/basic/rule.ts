@@ -9,7 +9,7 @@ import { searchClosestMessage } from '@/app/utils';
 import { rule as config } from '@/conf/commands/basic';
 
 @ApplySwanOptions(config)
-export class Rule extends SwanCommand {
+export class RuleCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

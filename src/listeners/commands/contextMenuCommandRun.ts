@@ -2,8 +2,8 @@ import { Listener } from '@sapphire/framework';
 import { CommandStat } from '@/app/models/commandStat';
 import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
 
-export class ChatInputCommandRun extends Listener {
-  public override async run(interaction: SwanCommand.ChatInputInteraction, command: SwanCommand): Promise<void> {
+export class ContextMenuCommandRunListener extends Listener {
+  public override async run(interaction: SwanCommand.ContextMenuInteraction, command: SwanCommand): Promise<void> {
     try {
       await CommandStat.findOneAndUpdate({ commandId: command.name }, { $inc: { uses: 1 } });
     } catch (unknownError: unknown) {

@@ -14,10 +14,7 @@ export class GuildMemberRemoveListener extends Listener {
     if (currentBan && this.container.client.currentlyBanning.has(member.id))
       return;
 
-    const kicks = await member.guild.fetchAuditLogs({
-      type: AuditLogEvent.MemberKick,
-    });
-
+    const kicks = await member.guild.fetchAuditLogs({ type: AuditLogEvent.MemberKick });
     const lastKick = kicks.entries.first();
 
     // Check if they've been kicked

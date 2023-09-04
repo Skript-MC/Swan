@@ -1,15 +1,17 @@
 import { Listener } from '@sapphire/framework';
-import type { MessageReaction } from 'discord.js';
+import type { Message, MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
 import * as MessageLogManager from '@/app/structures/MessageLogManager';
-import type { GuildMessage } from '@/app/types';
 import { noop } from '@/app/utils';
 import * as messages from '@/conf/messages';
 import { emojis, roles } from '@/conf/settings';
 
 export class MessageUpdateListener extends Listener {
-  public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
+  public override async run(oldMessage: Message, newMessage: Message): Promise<void> {
+    if (!oldMessage.inGuild() || !oldMessage.member || !newMessage.inGuild() || !newMessage.member)
+      return;
+
     if (oldMessage?.content && !oldMessage.system)
       await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 

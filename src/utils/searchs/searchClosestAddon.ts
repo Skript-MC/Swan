@@ -14,23 +14,27 @@ export function searchClosestAddon(entries: string[], wanted: string): Similarit
   for (const entry of entries) {
     if (!entry)
       continue;
+
+    const name = entry.split(' ').shift()!;
     // Avoid useless double loop after.
     if (entry === wanted) {
       return [{
-        matchedName: '⭐ ' + capitalize(entry.split(' ').shift()!),
+        matchedName: `⭐ ${capitalize(name)}`,
         baseName: entry,
-        similarity: 1,
+        distance: 0,
       }];
     }
     matches.push({
-      matchedName: capitalize(entry.split(' ').shift()!),
+      matchedName: capitalize(name),
       baseName: entry,
-      similarity: distance(entry.split(' ').shift()!.toLowerCase(), wanted.toLowerCase()),
+      distance: distance(name.toLowerCase(), wanted.toLowerCase()),
     });
   }
+
   if (matches.length <= 0)
     return [];
-  matches.sort((a, b) => b.similarity - a.similarity);
-  matches[0].matchedName = '⭐ ' + matches[0].matchedName;
+
+    matches.sort((a, b) => a.distance - b.distance);
+  matches[0].matchedName = `⭐ ${matches[0].matchedName}`;
   return matches;
 }

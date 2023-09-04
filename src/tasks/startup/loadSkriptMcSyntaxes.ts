@@ -26,10 +26,7 @@ export class LoadSkriptMcSyntaxesTask extends Task {
 
         const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(syntax.name);
         if (result?.groups) {
-          const {
-            englishName,
-            frenchName,
-          } = result.groups;
+          const { englishName, frenchName } = result.groups;
           if (englishName && frenchName) {
             syntax.englishName = englishName;
             syntax.frenchName = frenchName;

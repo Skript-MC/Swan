@@ -9,8 +9,7 @@ export class GuildBanAddListener extends Listener {
     if (this.container.client.currentlyBanning.has(ban.user.id))
       return;
 
-    const victim = this.container.client.users.resolve(ban.user.id)
-      ?? await this.container.client.users.fetch(ban.user.id);
+    const victim = await this.container.client.users.fetch(ban.user.id);
     if (!victim)
       return;
 
