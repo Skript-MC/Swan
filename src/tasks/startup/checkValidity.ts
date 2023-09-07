@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { PermissionsBitField } from 'discord.js';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { channels, roles } from '@/conf/settings';
+import { channels, roles } from '#config/settings';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 11 })
 export class CheckValidityTask extends Task {

@@ -8,15 +8,15 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { BanAction } from '@/app/moderation/actions/BanAction';
-import { resolveDuration, resolveSanctionnableMember } from '@/app/resolvers';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import { tempBan as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
+import { tempBan as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { BanAction } from '#moderation/actions/BanAction';
+import { resolveDuration, resolveSanctionnableMember } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { SanctionTypes } from '#types/index';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class SdbCommand extends SwanCommand {

@@ -1,8 +1,8 @@
 import { User } from 'discord.js';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
-import { SanctionsUpdates } from '@/app/types';
+import { Sanction } from '#models/sanction';
+import { ModerationError } from '#moderation/ModerationError';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
+import { SanctionsUpdates } from '#types/index';
 
 export class UnmuteAction extends ModerationAction {
   protected before: undefined;

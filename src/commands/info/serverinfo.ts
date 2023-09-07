@@ -5,11 +5,11 @@ import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { ServerStatResponse } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import { serverInfo as config } from '@/conf/commands/info';
-import { apis, colors } from '@/conf/settings';
+import { serverInfo as config } from '#config/commands/info';
+import { apis, colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { ServerStatResponse } from '#types/index';
+import { noop, nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ServerInfoCommand extends SwanCommand {

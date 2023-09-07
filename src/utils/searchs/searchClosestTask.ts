@@ -1,7 +1,7 @@
 import { distance } from 'fastest-levenshtein';
-import type { Task } from '@/app/structures/tasks/Task';
-import type { SimilarityMatch } from '@/app/types';
-import { capitalize } from '@/app/utils/capitalize';
+import type { Task } from '#structures/tasks/Task';
+import type { SimilarityMatch } from '#types/index';
+import { capitalize } from '#utils/capitalize';
 
 /**
  * Find the closest Task given an array of Tasks and a query string.

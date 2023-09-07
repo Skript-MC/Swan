@@ -2,14 +2,14 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { RemoveWarnAction } from '@/app/moderation/actions/RemoveWarnAction';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import { removeWarn as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
+import { removeWarn as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { Sanction } from '#models/sanction';
+import { ModerationData } from '#moderation/ModerationData';
+import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { SanctionTypes } from '#types/index';
+import { noop, nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class RemoveWarnCommand extends SwanCommand {

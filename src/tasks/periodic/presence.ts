@@ -3,8 +3,8 @@ import { PieceContext } from '@sapphire/pieces';
 import type { PresenceData } from 'discord.js';
 import { ActivityType } from 'discord.js';
 import pupa from 'pupa';
-import { Task, TaskOptions } from '@/app/structures/tasks/Task';
-import { presence as config } from '@/conf/tasks';
+import { presence as config } from '#config/tasks';
+import { Task, TaskOptions } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ cron: '* * * * *', immediate: true })
 export class PresenceTask extends Task {

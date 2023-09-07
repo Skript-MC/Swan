@@ -2,10 +2,10 @@ import { Listener } from '@sapphire/framework';
 import type { Message, MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
-import * as MessageLogManager from '@/app/structures/MessageLogManager';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { emojis, roles } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { emojis, roles } from '#config/settings';
+import * as MessageLogManager from '#structures/MessageLogManager';
+import { noop } from '#utils/index';
 
 export class MessageUpdateListener extends Listener {
   public override async run(oldMessage: Message, newMessage: Message): Promise<void> {

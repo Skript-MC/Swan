@@ -1,11 +1,11 @@
 import { GuildMember, PermissionsBitField, User } from 'discord.js';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
-import type { SanctionDocument } from '@/app/types';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
+import { Sanction } from '#models/sanction';
+import { ModerationError } from '#moderation/ModerationError';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
+import type { SanctionDocument } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { noop } from '#utils/index';
 
 export class UnbanAction extends ModerationAction {
   protected before(): void {

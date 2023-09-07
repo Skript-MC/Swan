@@ -3,10 +3,10 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, User } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, TextChannel } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { purge as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
-import { moderation, roles } from '@/conf/settings';
+import { purge as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { moderation, roles } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class PurgeCommand extends SwanCommand {

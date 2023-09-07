@@ -1,8 +1,8 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import pupa from 'pupa';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { noop } from '#utils/index';
 
 export class GuildMemberAddListener extends Listener {
   public override async run(member: GuildMember): Promise<void> {

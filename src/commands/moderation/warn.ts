@@ -8,16 +8,16 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { WarnAction } from '@/app/moderation/actions/WarnAction';
-import { resolveSanctionnableMember } from '@/app/resolvers';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import { warn as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
-import { moderation } from '@/conf/settings';
+import { warn as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { moderation } from '#config/settings';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { WarnAction } from '#moderation/actions/WarnAction';
+import { resolveSanctionnableMember } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { SanctionTypes } from '#types/index';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class WarnCommand extends SwanCommand {

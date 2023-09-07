@@ -1,15 +1,19 @@
+/* eslint-disable import/no-commonjs, @typescript-eslint/naming-convention */
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'deprecation'],
   extends: ['noftalint/typescript'],
-  ignorePatterns: ['node_modules/', 'build/'],
+  ignorePatterns: ['node_modules/', 'dist/'],
   reportUnusedDisableDirectives: true,
   parserOptions: {
     project: './tsconfig.eslint.json',
+    sourceType: 'module',
   },
   rules: {
     'deprecation/deprecation': 'warn',
+    'import/no-deprecated': 'off',
 
     // It cannot resolve TypeScript's path aliases. See https://github.com/mysticatea/eslint-plugin-node/issues/233
     'node/no-missing-import': 'off',
@@ -36,6 +40,7 @@ module.exports = {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
+        project: './tsconfig.eslint.json',
       },
     },
   },

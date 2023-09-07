@@ -1,11 +1,11 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { AuditLogEvent } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { MuteAction } from '@/app/moderation/actions/MuteAction';
-import { UnmuteAction } from '@/app/moderation/actions/UnmuteAction';
-import { SanctionTypes } from '@/app/types';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { MuteAction } from '#moderation/actions/MuteAction';
+import { UnmuteAction } from '#moderation/actions/UnmuteAction';
+import { SanctionTypes } from '#types/index';
 
 export class GuildMemberUpdateListener extends Listener {
   public override async run(oldMember: GuildMember, newMember: GuildMember): Promise<void> {

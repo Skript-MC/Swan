@@ -1,13 +1,13 @@
 import { GuildMember, User } from 'discord.js';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { BanAction } from '@/app/moderation/actions/BanAction';
-import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import * as messages from '@/conf/messages';
-import { moderation } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { moderation } from '#config/settings';
+import { Sanction } from '#models/sanction';
+import { ModerationData } from '#moderation/ModerationData';
+import { ModerationError } from '#moderation/ModerationError';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { BanAction } from '#moderation/actions/BanAction';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
 
 export class WarnAction extends ModerationAction {
   protected before: undefined;

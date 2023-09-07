@@ -1,14 +1,14 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
-import { Poll } from '@/app/models/poll';
-import { ReactionRole } from '@/app/models/reactionRole';
-import * as PollManager from '@/app/structures/PollManager';
-import type { GuildMessage } from '@/app/types';
-import { QuestionType } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { channels, emojis, miscellaneous } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { channels, emojis, miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import { ReactionRole } from '#models/reactionRole';
+import * as PollManager from '#structures/PollManager';
+import type { GuildMessage } from '#types/index';
+import { QuestionType } from '#types/index';
+import { noop, nullop } from '#utils/index';
 
 type PollAnswer = [reactionName: string, votersIds: string[]];
 

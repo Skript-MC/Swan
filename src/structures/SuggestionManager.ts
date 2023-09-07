@@ -7,9 +7,9 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from 'discord.js';
-import type { PublishResponse, Suggestion, VoteResponse } from '@/app/types';
-import { nullop } from '@/app/utils';
-import { apis, colors } from '@/conf/settings';
+import { apis, colors } from '#config/settings';
+import type { PublishResponse, Suggestion, VoteResponse } from '#types/index';
+import { nullop } from '#utils/index';
 
 const token = `api_key=${process.env.SKRIPTMC_DOCUMENTATION_TOKEN}`;
 
@@ -63,6 +63,8 @@ export function getSuggestionStatus(status: number): string {
       return '🛠️ Suggestion appliquée';
     case 4:
       return '❌ Suggestion refusée';
+    default:
+      throw new Error(`Invalid suggestion status: ${status}`);
   }
 }
 

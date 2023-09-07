@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { SwanChannel } from '@/app/models/swanChannel';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
+import { SwanChannel } from '#models/swanChannel';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 10 })
 export class SyncDatabaseChannelsTask extends Task {

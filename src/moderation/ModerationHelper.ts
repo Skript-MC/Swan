@@ -1,12 +1,12 @@
 import { container } from '@sapphire/pieces';
 import type { GuildMember, TextChannel } from 'discord.js';
 import { ChannelType, PermissionsBitField, ThreadChannel } from 'discord.js';
-import { Sanction } from '@/app/models/sanction';
-import type { ModerationData } from '@/app/moderation/ModerationData';
-import type { SanctionDocument } from '@/app/types';
-import { SanctionTypes } from '@/app/types';
-import { nullop } from '@/app/utils';
-import { channels } from '@/conf/settings';
+import { channels } from '#config/settings';
+import { Sanction } from '#models/sanction';
+import type { ModerationData } from '#moderation/ModerationData';
+import type { SanctionDocument } from '#types/index';
+import { SanctionTypes } from '#types/index';
+import { nullop } from '#utils/index';
 
 export async function getThread(data: ModerationData, orCreate = false): Promise<ThreadChannel> {
   const channelName = `${data.victim.member.displayName || data.victim.id} (${data.sanctionId})`;

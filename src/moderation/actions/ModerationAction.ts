@@ -11,15 +11,15 @@ import {
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { ActionUpdateInformations } from '@/app/moderation/ActionUpdateInformations';
-import { ErrorState } from '@/app/moderation/ErrorState';
-import type { ModerationData } from '@/app/moderation/ModerationData';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { SanctionTypes } from '@/app/types';
-import { noop, trimText } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { moderation } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { moderation } from '#config/settings';
+import { ActionUpdateInformations } from '#moderation/ActionUpdateInformations';
+import { ErrorState } from '#moderation/ErrorState';
+import type { ModerationData } from '#moderation/ModerationData';
+import { ModerationError } from '#moderation/ModerationError';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { SanctionTypes } from '#types/index';
+import { noop, trimText } from '#utils/index';
 
 export abstract class ModerationAction {
   data: ModerationData;

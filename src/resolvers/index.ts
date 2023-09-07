@@ -1,6 +1,6 @@
-export { resolveCommand } from './command';
-export { resolveDuration } from './duration';
-export { resolveEmoji } from './emoji';
-export { resolveGuildTextBasedChannel } from './guildTextBasedChannel';
-export { resolveQuotedText } from './quotedText';
-export { resolveSanctionnableMember } from './sanctionnableMember';
+export { resolveCommand } from '#resolvers/command';
+export { resolveDuration } from '#resolvers/duration';
+export { resolveEmoji } from '#resolvers/emoji';
+export { resolveGuildTextBasedChannel } from '#resolvers/guildTextBasedChannel';
+export { resolveQuotedText } from '#resolvers/quotedText';
+export { resolveSanctionnableMember } from '#resolvers/sanctionnableMember';

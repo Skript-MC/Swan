@@ -10,8 +10,8 @@ import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import type { APIEmbed, EmbedField, JSONEncodable } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { colors } from '#config/settings';
 
 type EmbedFields = Array<Omit<EmbedField, 'inline'>>;
 

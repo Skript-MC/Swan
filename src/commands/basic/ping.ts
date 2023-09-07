@@ -3,10 +3,10 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder, Message } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { ping as config } from '@/conf/commands/basic';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import { ping as config } from '#config/commands/basic';
+import * as messages from '#config/messages';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class PingCommand extends SwanCommand {

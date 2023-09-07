@@ -1,6 +1,6 @@
 import type { ContextMenuCommandDeniedPayload, Events, UserError } from '@sapphire/framework';
 import { Listener, PreconditionError } from '@sapphire/framework';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
 
 export class ContextMenuCommandDeniedListener extends Listener<typeof Events.ContextMenuCommandDenied> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

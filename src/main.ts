@@ -1,14 +1,14 @@
 import '@sapphire/plugin-logger/register';
 import 'dotenv/config';
-import 'module-alias/register';
+// Import 'module-alias/register';
 import 'reflect-metadata';
-import 'source-map-support/register';
+// Import 'source-map-support/register';
 
 import * as Sentry from '@sentry/node';
 import moment from 'moment';
 import mongoose from 'mongoose';
-import { SwanClient } from '@/app/SwanClient';
-import { miscellaneous } from '@/conf/settings';
+import { SwanClient } from '#app/SwanClient';
+import { miscellaneous } from '#config/settings';
 
 // We configure momentjs to be stricter on date rounding.
 moment.locale('fr');

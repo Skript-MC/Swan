@@ -1,6 +1,6 @@
 import { distance } from 'fastest-levenshtein';
-import type { SimilarityMatch } from '@/app/types';
-import { capitalize } from '@/app/utils/capitalize';
+import type { SimilarityMatch } from '#types/index';
+import { capitalize } from '#utils/capitalize';
 
 /**
  * Find the closest addon given an array of addons and a query string.

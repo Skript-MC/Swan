@@ -1,6 +1,6 @@
 import { distance } from 'fastest-levenshtein';
-import type { SimilarityMatch, SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import { capitalize } from '@/app/utils/capitalize';
+import type { SimilarityMatch, SkriptMcDocumentationSyntaxAndAddon } from '#types/index';
+import { capitalize } from '#utils/capitalize';
 
 const categoryColorMap = {
   evenements: '🔴',

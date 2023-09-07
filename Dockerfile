@@ -30,7 +30,7 @@ COPY package*.json ./
 RUN ["npm", "install"]
 
 # Copy build output and configurations
-COPY --from=build /app/build ./build
+COPY --from=build /app/dist ./dist
 
 # Defining the entry command
-CMD ["node", "--no-warnings", "./build/src/main.js"]
+CMD ["node", "--no-warnings", "./dist/src/main.js"]

@@ -9,10 +9,10 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { userInfo as config } from '@/conf/commands/info';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import { userInfo as config } from '#config/commands/info';
+import * as messages from '#config/messages';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class UserInfoCommand extends SwanCommand {

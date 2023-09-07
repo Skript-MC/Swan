@@ -4,17 +4,18 @@ import { EmbedBuilder } from 'discord.js';
 import he from 'he';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '@/app/types';
-import { trimText } from '@/app/utils';
-import { apis, channels, colors } from '@/conf/settings';
-import { forumFeed as config } from '@/conf/tasks';
+import { apis, channels, colors } from '#config/settings';
+import { forumFeed as config } from '#config/tasks';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '#types/index';
+import { trimText } from '#utils/index';
 
 const turndownService = new Turndown()
   .addRule('code', {
     filter: 'pre',
     replacement: (_content, node) => {
+      /* global Element  */
       const { className } = node as Element;
       const language = new RegExp(/lang-(?<lang>\S+)/).exec(className)?.groups?.lang;
       const code = node.textContent;

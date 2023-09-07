@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Poll } from '@/app/models/poll';
-import * as PollManager from '@/app/structures/PollManager';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
+import { Poll } from '#models/poll';
+import * as PollManager from '#structures/PollManager';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class PollTask extends Task {

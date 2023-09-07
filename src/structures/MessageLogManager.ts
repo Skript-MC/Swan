@@ -1,8 +1,8 @@
 import type { Message, User } from 'discord.js';
-import { DiscordUser } from '@/app/models/discordUser';
-import { MessageLog } from '@/app/models/messageLog';
-import type { SwanCacheManager } from '@/app/structures/SwanCacheManager';
-import type { DiscordUserDocument } from '@/app/types';
+import { DiscordUser } from '#models/discordUser';
+import { MessageLog } from '#models/messageLog';
+import type { SwanCacheManager } from '#structures/SwanCacheManager';
+import type { DiscordUserDocument } from '#types/index';
 
 export function shouldSaveMessage(cache: SwanCacheManager, message: Message): boolean {
   return [...cache.swanChannels].some(swanChannel => swanChannel.logged

@@ -8,13 +8,13 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ReactionRole } from '@/app/models/reactionRole';
-import { resolveEmoji } from '@/app/resolvers';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { reactionRole as config } from '@/conf/commands/admin';
-import * as messages from '@/conf/messages';
-import { colors, emojis } from '@/conf/settings';
+import { reactionRole as config } from '#config/commands/admin';
+import * as messages from '#config/messages';
+import { colors, emojis } from '#config/settings';
+import { ReactionRole } from '#models/reactionRole';
+import { resolveEmoji } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ReactionRoleCommand extends SwanCommand {
@@ -59,7 +59,7 @@ export class ReactionRoleCommand extends SwanCommand {
       reaction = resolvedEmoji.unwrap();
     }
 
-    const destinationChannel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
+    const destinationChannel = interaction.options.getChannel('salon')! as GuildTextBasedChannel;
 
     await this._exec(
       interaction,

@@ -2,11 +2,11 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, Message } from 'discord.js';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { latex as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { apis, emojis } from '@/conf/settings';
+import { latex as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { apis, emojis } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LatexCommand extends SwanCommand {

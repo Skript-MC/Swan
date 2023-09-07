@@ -1,5 +1,5 @@
 import type { HexColorString } from 'discord.js';
-import type { SwanCommandOptions } from '@/app/types';
+import type { SwanCommandOptions } from '#types/index';
 
 const skriptHelp = process.env.SKRIPT_HELP_CHANNELS.split(',');
 const otherHelp = process.env.OTHER_HELP_CHANNELS.split(',');

@@ -5,12 +5,12 @@ import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SkriptToolsAddonResponse } from '@/app/types';
-import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
-import { addonInfo as config } from '@/conf/commands/info';
-import * as messages from '@/conf/messages';
-import { apis, colors } from '@/conf/settings';
+import { addonInfo as config } from '#config/commands/info';
+import * as messages from '#config/messages';
+import { apis, colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SkriptToolsAddonResponse } from '#types/index';
+import { convertFileSize, searchClosestAddon, trimText } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class AddonInfoCommand extends SwanCommand {

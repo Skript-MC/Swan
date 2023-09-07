@@ -5,11 +5,11 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
-import { documentation as config } from '@/conf/commands/info';
-import { colors } from '@/conf/settings';
+import { documentation as config } from '#config/commands/info';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SkriptMcDocumentationSyntaxAndAddon } from '#types/index';
+import { searchClosestArticle, stripTags, trimText } from '#utils/index';
 
 const turndownService = new Turndown();
 

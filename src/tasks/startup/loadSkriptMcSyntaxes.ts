@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { SkriptMcDocumentationFullAddonResponse, SkriptMcDocumentationSyntaxResponse } from '@/app/types';
-import { apis } from '@/conf/settings';
+import { apis } from '#config/settings';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { SkriptMcDocumentationFullAddonResponse, SkriptMcDocumentationSyntaxResponse } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 5 })
 export class LoadSkriptMcSyntaxesTask extends Task {

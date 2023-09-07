@@ -1,8 +1,8 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import { ReactionRole } from '@/app/models/reactionRole';
-import type { GuildMessage } from '@/app/types';
-import { noop } from '@/app/utils';
+import { ReactionRole } from '#models/reactionRole';
+import type { GuildMessage } from '#types/index';
+import { noop } from '#utils/index';
 
 export class MessageReactionRemoveListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
