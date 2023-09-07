@@ -3,9 +3,9 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { eightBall as config } from '@/conf/commands/fun';
-import { colors } from '@/conf/settings';
+import { eightBall as config } from '#config/commands/fun';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class EightBallCommand extends SwanCommand {

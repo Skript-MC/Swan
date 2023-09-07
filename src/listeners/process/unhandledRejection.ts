@@ -2,7 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ListenerOptions } from '@sapphire/framework';
 import { Listener } from '@sapphire/framework';
 import { captureException, flush } from '@sentry/node';
-import { miscellaneous } from '@/conf/settings';
+import { miscellaneous } from '#config/settings';
 
 @ApplyOptions<ListenerOptions>({ emitter: process })
 export class UnhandledRejectionListener extends Listener {

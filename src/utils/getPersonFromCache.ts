@@ -1,7 +1,7 @@
 import type { GuildMember, User } from 'discord.js';
-import type { PersonInformations } from '@/app/types';
-import { resolveMember } from './resolveMember';
-import { resolveUser } from './resolveUser';
+import type { PersonInformations } from '#types/index';
+import { resolveMember } from '#utils/resolveMember';
+import { resolveUser } from '#utils/resolveUser';
 
 /**
  * Get the id, the member and the user of a person from the cache.

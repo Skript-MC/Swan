@@ -4,10 +4,10 @@ import { isNullish } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
 import pupa from 'pupa';
-import { SwanChannel } from '@/app/models/swanChannel';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { logs as config } from '@/conf/commands/admin';
+import { logs as config } from '#config/commands/admin';
+import { SwanChannel } from '#models/swanChannel';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LogsCommand extends SwanCommand {

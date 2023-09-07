@@ -2,11 +2,11 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { Message } from '@/app/models/message';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { MessageName } from '@/app/types';
-import { searchClosestMessage } from '@/app/utils';
-import { rule as config } from '@/conf/commands/basic';
+import { rule as config } from '#config/commands/basic';
+import { Message } from '#models/message';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { MessageName } from '#types/index';
+import { searchClosestMessage } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class RuleCommand extends SwanCommand {

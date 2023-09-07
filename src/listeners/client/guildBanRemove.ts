@@ -1,10 +1,10 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildBan } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
-import { SanctionTypes } from '@/app/types';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { UnbanAction } from '#moderation/actions/UnbanAction';
+import { SanctionTypes } from '#types/index';
 
 export class GuildBanRemoveListener extends Listener {
   public override async run(ban: GuildBan): Promise<void> {

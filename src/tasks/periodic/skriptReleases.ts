@@ -2,13 +2,13 @@ import { Octokit } from '@octokit/rest';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import { EmbedBuilder } from 'discord.js';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { GithubPrerelease, GithubStableRelease } from '@/app/types';
-import { noop, trimText } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { channels, colors } from '@/conf/settings';
-import { skriptReleases as config } from '@/conf/tasks';
+import * as messages from '#config/messages';
+import { channels, colors } from '#config/settings';
+import { skriptReleases as config } from '#config/tasks';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { GithubPrerelease, GithubStableRelease } from '#types/index';
+import { noop, trimText } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({
   cron: '*/10 * * * *',

@@ -4,9 +4,9 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { skriptInfo as config } from '@/conf/commands/info';
-import { colors } from '@/conf/settings';
+import { skriptInfo as config } from '#config/commands/info';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class SkriptInfoCommand extends SwanCommand {

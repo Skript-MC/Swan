@@ -3,10 +3,10 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import pupa from 'pupa';
-import { SwanModule } from '@/app/models/swanModule';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop, toggleModule } from '@/app/utils';
-import { module as config } from '@/conf/commands/admin';
+import { module as config } from '#config/commands/admin';
+import { SwanModule } from '#models/swanModule';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { noop, toggleModule } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ModuleCommand extends SwanCommand {

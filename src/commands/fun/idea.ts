@@ -3,10 +3,10 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { idea as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import { idea as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class IdeaCommand extends SwanCommand {

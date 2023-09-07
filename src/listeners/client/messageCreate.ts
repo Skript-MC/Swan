@@ -9,17 +9,17 @@ import {
   EmbedBuilder,
   PermissionsBitField,
 } from 'discord.js';
-import * as SuggestionManager from '@/app/structures/SuggestionManager';
-import type { GuildMessage } from '@/app/types';
-import { noop, nullop, trimText } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
 import {
   bot,
   channels,
   colors,
   emojis,
   roles,
-} from '@/conf/settings';
+} from '#config/settings';
+import * as SuggestionManager from '#structures/SuggestionManager';
+import type { GuildMessage } from '#types/index';
+import { noop, nullop, trimText } from '#utils/index';
 
 const MessageLinkRegex = new RegExp(rawMessageLinkRegex.source.slice(1, -1), 'gimu');
 interface MessageLinkMatch {

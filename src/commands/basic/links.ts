@@ -3,10 +3,10 @@ import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { links as config } from '@/conf/commands/basic';
-import { colors } from '@/conf/settings';
+import { links as config } from '#config/commands/basic';
+import { colors } from '#config/settings';
+import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LinksCommand extends SwanCommand {

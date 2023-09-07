@@ -1,8 +1,8 @@
 import { container } from '@sapphire/pieces';
 import type { GuildTextBasedChannel } from 'discord.js';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { ModerationError } from '#moderation/ModerationError';
+import { noop } from '#utils/index';
 
 export class ErrorState {
   channel: GuildTextBasedChannel;

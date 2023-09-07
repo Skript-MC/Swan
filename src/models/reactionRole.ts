@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { ReactionRoleDocument, ReactionRoleModel } from '@/app/types';
+import type { ReactionRoleDocument, ReactionRoleModel } from '#types/index';
 
 const ReactionRoleSchema = new Schema<ReactionRoleDocument, ReactionRoleModel>({
   messageId: {

@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Query } from 'mongoose';
-import { CommandStat } from '@/app/models/commandStat';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { CommandStatDocument } from '@/app/types';
+import { CommandStat } from '#models/commandStat';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { CommandStatDocument } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 2 })
 export class LoadCommandStatsTask extends Task {

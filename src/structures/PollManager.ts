@@ -1,11 +1,11 @@
 import { container } from '@sapphire/pieces';
 import { EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { Poll } from '@/app/models/poll';
-import { QuestionType } from '@/app/types';
-import { nullop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { colors, miscellaneous } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { colors, miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import { QuestionType } from '#types/index';
+import { nullop } from '#utils/index';
 
 export async function end(pollId: string, stopped = false): Promise<void> {
   // Remove the poll from the database and the cache.

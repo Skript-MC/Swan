@@ -10,14 +10,14 @@ import {
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { Poll } from '@/app/models/poll';
-import { resolveDuration, resolveQuotedText } from '@/app/resolvers';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { QuestionType } from '@/app/types';
-import { trimText } from '@/app/utils';
-import { poll as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { colors, miscellaneous } from '@/conf/settings';
+import { poll as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { colors, miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import { resolveDuration, resolveQuotedText } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { QuestionType } from '#types/index';
+import { trimText } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class PollCommand extends SwanCommand {

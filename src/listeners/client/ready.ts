@@ -1,7 +1,7 @@
 import { Listener } from '@sapphire/framework';
-import type { SwanClient } from '@/app/SwanClient';
-import { Events } from '@/app/types/sapphire';
-import { bot } from '@/conf/settings';
+import type { SwanClient } from '#app/SwanClient';
+import { bot } from '#config/settings';
+import { Events } from '#types/sapphire';
 
 export class ReadyListener extends Listener {
   public override async run(): Promise<void> {

@@ -14,7 +14,7 @@ import type {
   UserApplicationCommandData,
 } from 'discord.js';
 import { ApplicationCommandType, PermissionFlagsBits } from 'discord.js';
-import type { SwanCommandOptions } from '@/app/types';
+import type { SwanCommandOptions } from '#types/index';
 
 const REGISTRY_OPTIONS: ApplicationCommandRegistryRegisterOptions = {
   guildIds: [process.env.GUILD_ID],

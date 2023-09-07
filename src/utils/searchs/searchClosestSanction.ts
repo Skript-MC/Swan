@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
 import { distance } from 'fastest-levenshtein';
-import type { SanctionDocument, SimilarityMatch } from '@/app/types';
+import type { SanctionDocument, SimilarityMatch } from '#types/index';
 
 /**
  * Find the closest sanction given an array of sanctions and a query string.

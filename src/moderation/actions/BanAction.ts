@@ -6,14 +6,14 @@ import {
   User,
 } from 'discord.js';
 import pupa from 'pupa';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { ModerationAction } from '@/app/moderation/actions/ModerationAction';
-import { SanctionsUpdates } from '@/app/types';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { roles } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { roles } from '#config/settings';
+import { Sanction } from '#models/sanction';
+import { ModerationError } from '#moderation/ModerationError';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
+import { SanctionsUpdates } from '#types/index';
+import { noop } from '#utils/index';
 
 export class BanAction extends ModerationAction {
   protected before(): void {

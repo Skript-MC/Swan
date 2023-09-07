@@ -1,0 +1,30 @@
+{
+	"extends": "@sapphire/ts-config",
+	"compilerOptions": {
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": false,
+		"experimentalDecorators": true,
+		"incremental": false,
+		"lib": ["ESNext"],
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+		"noImplicitOverride": true,
+    "allowUnreachableCode": false,
+    "emitDecoratorMetadata": true,
+    "module": "ES2022",
+		"paths": {
+      "#app/*": ["./src/*.js"],
+      "#config/*": ["./config/*.js"],
+      "#models/*": ["./src/models/*.js"],
+      "#moderation/*": ["./src/moderation/*.js"],
+      "#resolvers/*": ["./src/resolvers/*.js"],
+      "#structures/*": ["./src/structures/*.js"],
+      "#types/*": ["./src/types/*.js"],
+      "#utils/*": ["./src/utils/*.js"]
+		},
+    "skipLibCheck": true,
+    // TODO: Turn on (remove it, as it is inherited from @sapphire/ts-config)
+    "strict": false
+	},
+  "exclude": ["node_modules", "dist"],
+}

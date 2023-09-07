@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { SwanModuleDocument, SwanModuleModel } from '@/app/types';
+import type { SwanModuleDocument, SwanModuleModel } from '#types/index';
 
 export const allowedStores = ['commands', 'preconditions', 'tasks', 'listeners', 'interaction-handlers'];
 

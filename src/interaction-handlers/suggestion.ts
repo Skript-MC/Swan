@@ -8,13 +8,13 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from 'discord.js';
-import * as SuggestionManager from '@/app/structures/SuggestionManager';
-import * as messages from '@/conf/messages';
-import { bot, colors } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { bot, colors } from '#config/settings';
+import * as SuggestionManager from '#structures/SuggestionManager';
 
 @ApplyOptions<InteractionHandlerOptions>({ interactionHandlerType: InteractionHandlerTypes.Button })
 export class SuggestionHandler extends InteractionHandler {
-  public parse(interaction: ButtonInteraction): Option<never> {
+  public override parse(interaction: ButtonInteraction): Option<never> {
     if (!interaction.customId.startsWith('suggestion'))
       return this.none();
     return this.some();

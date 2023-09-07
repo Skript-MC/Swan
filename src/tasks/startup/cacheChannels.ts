@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { GuildTextBasedChannel } from 'discord.js';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { ChannelArraySlugs, ChannelSingleSlug } from '@/app/types';
-import { channels } from '@/conf/settings';
+import { channels } from '#config/settings';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { ChannelArraySlugs, ChannelSingleSlug } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 6 })
 export class CacheChannelsTask extends Task {

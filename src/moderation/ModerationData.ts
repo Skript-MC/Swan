@@ -10,11 +10,11 @@ import type {
   User,
 } from 'discord.js';
 import { nanoid } from 'nanoid';
-import type { ModerationDataResult, PersonInformations } from '@/app/types';
-import { SanctionTypes } from '@/app/types';
-import { getPersonFromCache } from '@/app/utils';
-import * as configs from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
+import * as configs from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import type { ModerationDataResult, PersonInformations } from '#types/index';
+import { SanctionTypes } from '#types/index';
+import { getPersonFromCache } from '#utils/index';
 
 export class ModerationData {
   moderatorId: string;

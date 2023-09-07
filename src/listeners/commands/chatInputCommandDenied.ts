@@ -1,6 +1,6 @@
 import type { ChatInputCommandDeniedPayload, Events, UserError } from '@sapphire/framework';
 import { Listener, PreconditionError } from '@sapphire/framework';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
 
 export class CommandDeniedListener extends Listener<typeof Events.ChatInputCommandDenied> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

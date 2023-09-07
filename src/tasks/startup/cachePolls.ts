@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Poll } from '@/app/models/poll';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { noop, nullop } from '@/app/utils';
-import { miscellaneous } from '@/conf/settings';
+import { miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import { noop, nullop } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 7 })
 export class CachePollsTask extends Task {

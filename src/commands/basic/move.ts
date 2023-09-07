@@ -15,12 +15,12 @@ import {
   PermissionsBitField,
 } from 'discord.js';
 import pupa from 'pupa';
-import { resolveGuildTextBasedChannel } from '@/app/resolvers';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { move as config } from '@/conf/commands/basic';
-import * as messages from '@/conf/messages';
-import { colors, emojis } from '@/conf/settings';
+import { move as config } from '#config/commands/basic';
+import * as messages from '#config/messages';
+import { colors, emojis } from '#config/settings';
+import { resolveGuildTextBasedChannel } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class MoveCommand extends SwanCommand {

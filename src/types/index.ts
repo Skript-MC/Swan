@@ -10,7 +10,7 @@ import type {
   User,
 } from 'discord.js';
 import type { Document, FilterQuery, Model } from 'mongoose';
-import type { channels } from '@/conf/settings';
+import type { channels } from '#config/settings';
 
 /* ****************** */
 /*  API Result Types  */

@@ -1,14 +1,14 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { RemoveWarnAction } from '@/app/moderation/actions/RemoveWarnAction';
-import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
-import { UnmuteAction } from '@/app/moderation/actions/UnmuteAction';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { Sanction } from '#models/sanction';
+import { ModerationData } from '#moderation/ModerationData';
+import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
+import { UnbanAction } from '#moderation/actions/UnbanAction';
+import { UnmuteAction } from '#moderation/actions/UnmuteAction';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import { SanctionTypes } from '#types/index';
+import { noop } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class ModerationTask extends Task {

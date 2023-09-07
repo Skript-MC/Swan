@@ -1,6 +1,6 @@
 import { distance } from 'fastest-levenshtein';
-import type { MessageDocument, SimilarityMatch } from '@/app/types';
-import { capitalize } from '@/app/utils/capitalize';
+import type { MessageDocument, SimilarityMatch } from '#types/index';
+import { capitalize } from '#utils/capitalize';
 
 /**
  * Find the closest MessageDocument given an array of MessageDocument and a query string.

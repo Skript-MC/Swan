@@ -1,8 +1,8 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildBan } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { BanAction } from '@/app/moderation/actions/BanAction';
-import { SanctionTypes } from '@/app/types';
+import { ModerationData } from '#moderation/ModerationData';
+import { BanAction } from '#moderation/actions/BanAction';
+import { SanctionTypes } from '#types/index';
 
 export class GuildBanAddListener extends Listener {
   public override async run(ban: GuildBan): Promise<void> {

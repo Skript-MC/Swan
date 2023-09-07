@@ -9,15 +9,15 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import { Sanction } from '@/app/models/sanction';
-import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SanctionDocument } from '@/app/types';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import { getUsername, toHumanDuration } from '@/app/utils';
-import { history as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
-import { colors, moderation } from '@/conf/settings';
+import { history as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { colors, moderation } from '#config/settings';
+import { Sanction } from '#models/sanction';
+import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SanctionDocument } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { getUsername, toHumanDuration } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class HistoryCommand extends SwanCommand {

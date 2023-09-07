@@ -2,10 +2,10 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { Events } from '@/app/types/sapphire';
-import { searchClosestTask } from '@/app/utils';
-import { runTask as config } from '@/conf/commands/admin';
+import { runTask as config } from '#config/commands/admin';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { Events } from '#types/sapphire';
+import { searchClosestTask } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class RunTaskCommand extends SwanCommand {

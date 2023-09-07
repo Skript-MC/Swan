@@ -1,5 +1,5 @@
 import { distance } from 'fastest-levenshtein';
-import type { MessageDocument } from '@/app/types';
+import type { MessageDocument } from '#types/index';
 
 /**
  * Find the most similar MessageDocument given an array of MessageDocument and a query string.
