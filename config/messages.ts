@@ -19,12 +19,8 @@ export const global = {
 
 export const errors = {
   precondition: {
-    [Identifiers.PreconditionRole]: ":x: Aïe, tu n'as pas la permission de faire cela :confused:",
-    [Identifiers.PreconditionNotRole]: ":x: Aïe, tu n'as pas le droit d'exécuter cette commande :confused:",
     [Identifiers.PreconditionNotLoading]: 'Attends un peu, le temps que je finisse de me réveiller...',
-    [Identifiers.PreconditionChannelRules]: ':x: Aïe, cette commande est désactivée dans ce salon :confused:',
     [Identifiers.PreconditionRunIn]: ':x: Aïe, cette commande ne peut être utilisée ici :confused:',
-    [Identifiers.PreconditionCooldown]: 'Pas si vite ! Cette commande est sous cooldown, attendez un peu avant de la réutiliser.',
     unknownError: "Une pré-condition de commande inconnue t'empêche d'effectuer cette action.",
   },
 } as const;

@@ -3,10 +3,10 @@ import type { Endpoints } from '@octokit/types';
 import type { CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
 import type {
-  ApplicationCommandType,
   GuildMember,
   GuildTextBasedChannel,
   Message,
+  PermissionResolvable,
   User,
 } from 'discord.js';
 import type { Document, FilterQuery, Model } from 'mongoose';
@@ -359,9 +359,8 @@ export interface PublishResponse extends SuggestionResponse {
 /** Options for the SwanCommand class */
 export interface SwanCommandOptions extends CommandOptions {
   command: string;
-  examples: string[];
-  permissions?: string[];
-  contextType: ApplicationCommandType.Message | ApplicationCommandType.User;
+  dmPermission?: boolean;
+  defaultMemberPermissions?: PermissionResolvable;
 }
 
 /** Enforces that the message is cached in a guild */

@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
 import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
@@ -14,7 +15,6 @@ import {
   PermissionsBitField,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { resolveGuildTextBasedChannel } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
@@ -22,7 +22,7 @@ import { move as config } from '@/conf/commands/basic';
 import * as messages from '@/conf/messages';
 import { colors, emojis } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class MoveCommand extends SwanCommand {
   commandType = ApplicationCommandType.Message;
   commandOptions: ApplicationCommandOptionData[] = [];

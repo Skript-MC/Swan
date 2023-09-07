@@ -1,13 +1,9 @@
 import { stripIndent } from 'common-tags';
-import { Rules } from '@/app/types';
-import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const eightBall = {
   settings: {
-    name: '8 Ball',
     command: '8ball',
     description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
-    examples: ['8ball Dis moi mon beau miroir, suis-je le plus beau ?'],
   },
   messages: {
     footer: 'Exécuté par {member.displayName}',
@@ -62,11 +58,8 @@ export const eightBall = {
 
 export const idea = {
   settings: {
-    name: 'Idée',
     command: 'idea',
     description: "Permet d'envoyer une idée de script aléatoire à réaliser parmi celles dans le salon des idées.",
-    examples: ['idea', 'idée'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
@@ -76,11 +69,8 @@ export const idea = {
 
 export const joke = {
   settings: {
-    name: 'Blague',
     command: 'joke',
     description: 'Envoie une blague aléatoirement, généralement drôle mais pas forcément.',
-    examples: ['joke', 'blague'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",
@@ -89,20 +79,16 @@ export const joke = {
 
 export const latex = {
   settings: {
-    name: 'Latex',
     command: 'latex',
     description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
-    examples: ['latex x = \\frac{4}{5}+\\pi\\Omega\\int_{2\\pi}^{\\infty}{5\\left\\(\\\\frac{\\tau+3}{2}\\right\\)d\\omega}'],
   },
   messages: {},
 };
 
 export const poll = {
   settings: {
-    name: 'Sondage',
     command: 'poll',
     description: 'Permet de lancer un sondage par lequel on peut répondre par une réponse personnalisée.',
-    examples: ['poll 10m "votre sondage" "réponse 1" "réponse 2" "réponse 3" "réponse 4"', 'vote 10m Votre sondage ou on peut répondre uniquement par Oui et Non', 'sondage 10m "votre sondage" -a -m "réponse 1" "réponse 2"'],
   },
   messages: {
     success: 'Le sondage a été créé avec succès.',

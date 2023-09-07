@@ -44,10 +44,7 @@ declare module '@sapphire/framework' {
 
   interface Preconditions {
     /* eslint-disable @typescript-eslint/naming-convention */
-    ChannelRules: { rules: number };
     NotLoading: never;
-    NotRole: { role: string };
-    Role: { role: string };
     /* eslint-enable @typescript-eslint/naming-convention */
   }
 
@@ -65,10 +62,7 @@ declare module '@sapphire/framework' {
   }
 
   enum Identifiers {
-    PreconditionChannelRules = 'preconditionChannelRules',
     PreconditionNotLoading = 'preconditionNotLoading',
-    PreconditionNotRole = 'preconditionNotRole',
-    PreconditionRole = 'preconditionRole',
   }
 
   interface ArgType {

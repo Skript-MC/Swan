@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
 import {
@@ -8,7 +9,6 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { Sanction } from '@/app/models/sanction';
 import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -19,7 +19,7 @@ import { history as config } from '@/conf/commands/moderation';
 import * as messages from '@/conf/messages';
 import { colors, moderation } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class HistoryCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

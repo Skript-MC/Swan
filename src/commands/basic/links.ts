@@ -1,14 +1,14 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { links as config } from '@/conf/commands/basic';
 import { colors } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class LinksCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];

@@ -1,14 +1,10 @@
 import { stripIndent } from 'common-tags';
 import { ActivityType } from 'discord.js';
-import { Rules } from '@/app/types';
-import { basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonInfo = {
   settings: {
-    name: 'Informations sur un add-on',
     command: 'addoninfo',
     description: "Permet d'afficher diverses informations sur un addon choisi.",
-    examples: ['addoninfo mongosk'],
   },
   messages: {
     unknownAddon: "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
@@ -34,10 +30,8 @@ export const addonInfo = {
 
 export const documentation = {
   settings: {
-    name: 'Documentation',
     command: 'doc',
     description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
-    examples: ['documentation join', 'documentation tablist --cat=effets --addon=skbee'],
   },
   messages: {
     unknownSyntax: "Désolé, mais je ne trouve pas la syntaxe `{articleId}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
@@ -72,10 +66,8 @@ export const documentation = {
 
 export const serverInfo = {
   settings: {
-    name: 'Informations sur un serveur',
     command: 'server',
     description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
-    examples: ['skriptinfo hypixel.net'],
   },
   messages: {
     embed: {
@@ -99,10 +91,8 @@ export const serverInfo = {
 
 export const skriptInfo = {
   settings: {
-    name: 'Informations sur Skript',
     command: 'skript',
     description: "Permet d'afficher diverses informations sur Skript.",
-    examples: ['skriptinfo'],
   },
   messages: {
     embed: {
@@ -132,11 +122,8 @@ export const skriptInfo = {
 
 export const userInfo = {
   settings: {
-    name: 'Informations sur un utilisateur (discord)',
     command: 'userinfo',
     description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
-    examples: ['userinfo Romitou'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     notFound: "Aucun membre n'a été trouvé.",

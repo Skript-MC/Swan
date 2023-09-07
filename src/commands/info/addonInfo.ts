@@ -1,10 +1,10 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptToolsAddonResponse } from '@/app/types';
 import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
@@ -12,7 +12,7 @@ import { addonInfo as config } from '@/conf/commands/info';
 import * as messages from '@/conf/messages';
 import { apis, colors } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class AddonInfoCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
@@ -7,7 +8,6 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { ModerationData } from '@/app/moderation/ModerationData';
 import * as ModerationHelper from '@/app/moderation/ModerationHelper';
 import { WarnAction } from '@/app/moderation/actions/WarnAction';
@@ -19,7 +19,7 @@ import { warn as config } from '@/conf/commands/moderation';
 import * as messages from '@/conf/messages';
 import { moderation } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class WarnCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
   commandOptions: ApplicationCommandOptionData[] = [];

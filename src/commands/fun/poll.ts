@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import {
@@ -9,7 +10,6 @@ import {
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { Poll } from '@/app/models/poll';
 import { resolveDuration, resolveQuotedText } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -19,7 +19,7 @@ import { poll as config } from '@/conf/commands/fun';
 import * as messages from '@/conf/messages';
 import { colors, miscellaneous } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class PollCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
