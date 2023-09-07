@@ -1,14 +1,14 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, Message } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { noop } from '@/app/utils';
 import { latex as config } from '@/conf/commands/fun';
 import * as messages from '@/conf/messages';
 import { apis, emojis } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class LatexCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

@@ -1,14 +1,14 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { Message } from '@/app/models/message';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { MessageName } from '@/app/types';
 import { searchClosestMessage } from '@/app/utils';
 import { autoMessage as config } from '@/conf/commands/basic';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class AutoMessageCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

@@ -1,6 +1,5 @@
 import type { HexColorString } from 'discord.js';
 import type { SwanCommandOptions } from '@/app/types';
-import { basePreconditions } from '@/conf/configUtils';
 
 const skriptHelp = process.env.SKRIPT_HELP_CHANNELS.split(',');
 const otherHelp = process.env.OTHER_HELP_CHANNELS.split(',');
@@ -24,7 +23,7 @@ export const miscellaneous = {
 } satisfies Record<string, unknown>;
 
 export const globalCommandsOptions = {
-  preconditions: basePreconditions,
+  preconditions: ['NotLoading'],
 } as Partial<SwanCommandOptions>;
 
 export const moderation = {

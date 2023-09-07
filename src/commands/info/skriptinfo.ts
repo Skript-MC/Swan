@@ -1,14 +1,14 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import semver from 'semver';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { skriptInfo as config } from '@/conf/commands/info';
 import { colors } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class SkriptInfoCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

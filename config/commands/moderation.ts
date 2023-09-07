@@ -1,5 +1,5 @@
 import { stripIndent } from 'common-tags';
-import { basePreconditions, staffRolePrecondition } from '@/conf/configUtils';
+import { PermissionFlagsBits } from 'discord.js';
 
 const commonMessages = {
   creationNotification: (showDuration: boolean): string => stripIndent`
@@ -22,11 +22,9 @@ const commonMessages = {
 
 export const tempBan = {
   settings: {
-    name: 'Bannissement temporaire',
-    command: 'tempban',
+    command: 'Bannissement temporaire',
     description: 'Appliquer un bannissement temporaire à un membre du Discord, créant un salon des bannis.',
-    examples: ["ban @WeeskyBDW 3j t'es paumé !", 'ban 1h @Vengelis La vie est dure...'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
+    defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   },
   messages: {
     notification: commonMessages.creationNotification(true),
@@ -45,11 +43,9 @@ export const hardban = {
 
 export const history = {
   settings: {
-    name: 'Historique',
     command: 'history',
     description: "Permet de voir l'historique des sanctions d'un utilisateur.",
-    examples: ['history carlodrift'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
+    defaultMemberPermissions: PermissionFlagsBits.ViewAuditLog,
   },
   messages: {
     sentInDm: "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
@@ -101,12 +97,9 @@ export const history = {
 
 export const kick = {
   settings: {
-    name: 'Expulsion',
     command: 'kick',
     description: "Permet d'expulser un membre du serveur.",
-    examples: ['kick tutur Vade retro !'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
+    defaultMemberPermissions: PermissionFlagsBits.KickMembers,
   },
   messages: {
     notification: commonMessages.creationNotification(false),
@@ -115,30 +108,17 @@ export const kick = {
 };
 
 export const mute = {
-  settings: {
-    name: 'Mute',
-    command: 'mute',
-    description: 'Appliquer une restriction de la parole à un membre (= timeout).',
-    usage: 'mute <@mention | pseudo | ID> <durée> <raison>',
-    examples: ['mute @Xamez chuuuut'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
-  },
   messages: {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
-    success: 'Membre rendu muet avec succès !',
   },
 };
 
 export const purge = {
   settings: {
-    name: 'Purge',
     command: 'purge',
     description: "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
-    examples: ['purge 10 -f', 'purge @membre 40'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
+    defaultMemberPermissions: PermissionFlagsBits.ManageMessages,
   },
   messages: {
     success: "J'ai bien supprimé {deletedMessages.size} messages.",
@@ -147,12 +127,9 @@ export const purge = {
 
 export const removeWarn = {
   settings: {
-    name: "Suppression d'avertissement",
     command: 'removewarn',
     description: "Permet de révoquer le dernier avertissement d'un membre.",
-    examples: ['removewarn noftaly désolé je me suis trompé', 'removewarn @Rémi'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
+    defaultMemberPermissions: PermissionFlagsBits.ModerateMembers,
   },
   messages: {
     notification: commonMessages.revocationNotification,
@@ -165,12 +142,9 @@ export const removeWarn = {
 
 export const unban = {
   settings: {
-    name: 'Unban',
     command: 'unban',
     description: "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
-    examples: ['unban @WeeskyBDW', 'unban @Vengelis désolé !'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
+    defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   },
   messages: {
     notification: commonMessages.revocationNotification,
@@ -180,29 +154,16 @@ export const unban = {
 };
 
 export const unmute = {
-  settings: {
-    name: 'Unmute',
-    command: 'unmute',
-    description: "Permet de retirer un mute d'un membre du Discord.",
-    examples: ['unmute @Vengelis désolé !'],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
-  },
   messages: {
     notification: commonMessages.revocationNotification,
-    notMuted: "Cet utilisateur n'est pas muet.",
-    success: 'Utilisateur dé-mute avec succès !',
   },
 };
 
 export const warn = {
   settings: {
-    name: 'Avertissement',
-    command: 'warn',
+    command: 'Avertissement',
     description: "Permet d'avertir un membre pour une raison donnée.",
-    examples: ["warn @Rémi Il faut penser à respecter le modèle d'aide !"],
-    preconditions: [...basePreconditions, staffRolePrecondition],
-    permissions: ['Staff'],
+    defaultMemberPermissions: PermissionFlagsBits.ModerateMembers,
   },
   messages: {
     notFound: "Aucun membre n'a été trouvé.",

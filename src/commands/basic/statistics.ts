@@ -1,17 +1,17 @@
 import { execSync } from 'node:child_process';
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import { statistics as config } from '@/conf/commands/basic';
 import * as messages from '@/conf/messages';
 import { bot, colors } from '@/conf/settings';
 import pkg from '@/root/package.json';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class StatisticsCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];

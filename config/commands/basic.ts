@@ -1,13 +1,9 @@
 import { stripIndent } from 'common-tags';
-import { Rules } from '@/app/types';
-import { activeMemberRolePrecondition, basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
-    name: "Pack d'add-ons",
     command: 'addonPack',
     description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
-    examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
   messages: {
     notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
@@ -16,10 +12,8 @@ export const addonPack = {
 
 export const autoMessage = {
   settings: {
-    name: 'Message rapide',
     command: 'auto',
     description: "Permet d'envoyer rapidement un message prédéfini.",
-    examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
     notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
@@ -28,10 +22,8 @@ export const autoMessage = {
 
 export const errorDetails = {
   settings: {
-    name: "Détails d'erreur",
     command: 'error',
     description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
-    examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
@@ -40,10 +32,8 @@ export const errorDetails = {
 
 export const links = {
   settings: {
-    name: 'Liens',
     command: 'links',
     description: 'Affiche la liste des liens utiles concernant Skript.',
-    examples: ['links'],
   },
   messages: {
     selectMenuItemDescription: 'Page {pageIndex}',
@@ -98,11 +88,8 @@ export const links = {
 
 export const move = {
   settings: {
-    name: 'Déplacer un message',
+    command: 'Déplacer un message',
     description: "Permet de déplacer un message d'un salon d'aide à un autre.",
-    examples: ['move #skript-2 756858183229636640'],
-    preconditions: [...basePreconditions, activeMemberRolePrecondition],
-    permissions: ['Membre Actif'],
   },
   messages: {
     successfullyMoved: ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
@@ -118,11 +105,8 @@ export const move = {
 
 export const ping = {
   settings: {
-    name: 'Ping',
     command: 'ping',
     description: "Permet de connaître la latence de Swan et de l'API Discord.",
-    examples: ['ping'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -136,10 +120,8 @@ export const ping = {
 
 export const rule = {
   settings: {
-    name: 'Règles',
     command: 'rule',
     description: 'Affiche une règle prédéfinie.',
-    examples: ['regle mentions', 'regle 2'],
   },
   messages: {
     notFound: "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
@@ -150,11 +132,8 @@ export const rule = {
 
 export const statistics = {
   settings: {
-    name: 'Statistiques',
     command: 'statistics',
     description: 'Affiche des statistiques et diverses informations sur Swan.',
-    examples: ['stats'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {

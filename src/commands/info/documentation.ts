@@ -1,10 +1,10 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
 import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
 import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
@@ -13,7 +13,7 @@ import { colors } from '@/conf/settings';
 
 const turndownService = new Turndown();
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class DocumentationCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

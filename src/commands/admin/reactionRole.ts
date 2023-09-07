@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel, Role } from 'discord.js';
 import {
@@ -7,7 +8,6 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { ReactionRole } from '@/app/models/reactionRole';
 import { resolveEmoji } from '@/app/resolvers';
 import { SwanCommand } from '@/app/structures/commands/SwanCommand';
@@ -16,7 +16,7 @@ import { reactionRole as config } from '@/conf/commands/admin';
 import * as messages from '@/conf/messages';
 import { colors, emojis } from '@/conf/settings';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class ReactionRoleCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [

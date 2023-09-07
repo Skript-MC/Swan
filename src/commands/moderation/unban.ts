@@ -1,7 +1,7 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
 import { Sanction } from '@/app/models/sanction';
 import { ModerationData } from '@/app/moderation/ModerationData';
 import * as ModerationHelper from '@/app/moderation/ModerationHelper';
@@ -12,7 +12,7 @@ import { noop, searchClosestSanction } from '@/app/utils';
 import { unban as config } from '@/conf/commands/moderation';
 import * as messages from '@/conf/messages';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class UnbanCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
