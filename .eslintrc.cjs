@@ -5,7 +5,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'deprecation'],
   extends: ['noftalint/typescript'],
-  ignorePatterns: ['node_modules/', 'dist/'],
+  ignorePatterns: ['node_modules/', 'dist/', 'tools/'],
   reportUnusedDisableDirectives: true,
   parserOptions: {
     project: './tsconfig.eslint.json',

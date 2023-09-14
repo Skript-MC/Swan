@@ -21,8 +21,8 @@
     "start": "node --enable-source-maps ./dist/src/main.js",
     "dev": "tsup --watch --onSuccess \"npm start\"",
     "typecheck": "tsc -p tsconfig.base.json",
-    "tools:update-databases": "tsc && node ./dist/tools/update-databases.js",
-    "tools:remove-commands": "tsc && node ./dist/tools/remove-commands.js",
+    "tools:update-databases": "node tools/update-databases.js",
+    "tools:remove-commands": "node tools/remove-commands.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
