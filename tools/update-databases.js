@@ -1,11 +1,7 @@
-import 'source-map-support/register';
-import 'module-alias/register';
 import 'dotenv/config';
-
 import mongoose from 'mongoose';
-import { Sanction } from '../src/models/sanction';
 
-async function start(): Promise<void> {
+async function start() {
   console.log('Connecting to database...');
 
   await mongoose.connect(process.env.MONGO_URI);
@@ -16,6 +12,8 @@ async function start(): Promise<void> {
     console.error('MongoDB connection error. Please make sure MongoDB is running.');
     throw err;
   });
+
+  const Sanction = mongoose.model('Sanction');
 
   console.log('Converting...');
   await Sanction.updateMany({ type: 'ban' }, { type: 'tempBan' });

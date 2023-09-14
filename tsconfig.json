@@ -5,5 +5,5 @@
 		"rootDir": ".",
 		"baseUrl": "."
 	},
-	"include": ["src/**/*.ts", "tools/**/*.ts", "typings/**/*.d.ts"]
+	"include": ["src/**/*.ts", "typings/**/*.d.ts"]
 }
