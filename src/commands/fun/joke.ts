@@ -12,6 +12,7 @@ import { searchClosestMessage } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class JokeCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

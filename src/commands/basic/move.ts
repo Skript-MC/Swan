@@ -28,17 +28,15 @@ export class MoveCommand extends SwanCommand {
   commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
-    interaction: SwanCommand.ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const message = interaction.options.getMessage('message', true);
-    if (!(message instanceof Message))
-      return;
     await this._exec(interaction, message);
   }
 
   private async _exec(
-    interaction: SwanCommand.CommandInteraction,
+    interaction: SwanCommand.CommandInteraction<'cached'>,
     targetedMessage: Message,
   ): Promise<void> {
     const member = await this.container.client.guild.members.fetch(interaction.member.user.id);

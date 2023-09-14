@@ -37,7 +37,7 @@ export class RemoveWarnCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(
@@ -47,7 +47,7 @@ export class RemoveWarnCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const sanctions = await Sanction.find({
       userId: interaction.options.get('membre', true).value,
       revoked: false,

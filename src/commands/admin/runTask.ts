@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
+import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import { runTask as config } from '#config/commands/admin';
 import { SwanCommand } from '#structures/commands/SwanCommand';
@@ -9,6 +9,7 @@ import { searchClosestTask } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class RunTaskCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -20,7 +21,7 @@ export class RunTaskCommand extends SwanCommand {
     },
   ];
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
     const tasks = this.container.client.stores.get('tasks');
     const search = searchClosestTask([...tasks.values()], interaction.options.getString('tâche', true));
     await interaction.respond(

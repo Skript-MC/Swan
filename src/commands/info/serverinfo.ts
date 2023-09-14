@@ -13,6 +13,7 @@ import { noop, nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ServerInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

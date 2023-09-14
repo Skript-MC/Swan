@@ -21,6 +21,7 @@ import { trimText } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class PollCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

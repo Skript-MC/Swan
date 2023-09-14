@@ -42,7 +42,7 @@ export class ReactionRoleCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const role = interaction.options.getRole('rôle', true);

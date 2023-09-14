@@ -10,6 +10,7 @@ import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class SkriptInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -37,7 +38,7 @@ export class SkriptInfoCommand extends SwanCommand {
     await this._exec(interaction, interaction.options.getString('catégorie'));
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction, display: string): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, display: string | null): Promise<void> {
     const embeds: EmbedBuilder[] = [];
     // TODO: Refactor this command's usage as it's not very intuitive.
     if (!display || display === 'téléchargements') {
