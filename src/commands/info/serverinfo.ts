@@ -49,7 +49,7 @@ export class ServerInfoCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { query }) })
-      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
+      .setFooter({ text: embedMessages.footer })
       .setThumbnail(`${apis.server}/icon/${query}`)
       .setTimestamp();
 

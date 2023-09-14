@@ -2,9 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
-import pupa from 'pupa';
 import { joke as config } from '#config/commands/fun';
-import * as messages from '#config/messages';
 import { colors } from '#config/settings';
 import { Message } from '#models/message';
 import { SwanCommand } from '#structures/commands/SwanCommand';
@@ -64,7 +62,6 @@ export class JokeCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setDescription(joke.content)
       .setColor(colors.default)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });

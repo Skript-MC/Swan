@@ -6,7 +6,6 @@ export const eightBall = {
     description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
   },
   messages: {
-    footer: 'Exécuté par {member.displayName}',
     affirmative: [
       'Oui.',
       'Oui ! 🥳',

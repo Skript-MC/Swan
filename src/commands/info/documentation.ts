@@ -86,7 +86,7 @@ export class DocumentationCommand extends SwanCommand {
           ), EmbedLimits.MaximumDescriptionLength / 2,
         ),
       )
-      .setFooter({ text: pupa(embedMsgs.footer, { member: interaction.member }) });
+      .setFooter({ text: embedMsgs.footer });
 
     if (article.deprecation) {
       embed.addFields({

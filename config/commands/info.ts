@@ -23,7 +23,7 @@ export const addonInfo = {
       softdepend: ':link: Dépendances facultatives',
       unmaintained: ':warning: Addon abandonné',
       unmaintainedDescription: "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser.",
-      footer: 'Exécuté par {member.displayName} | Données fournies par https://skripttools.net',
+      footer: 'Données fournies par https://skripttools.net',
     },
   },
 };
@@ -59,7 +59,7 @@ export const documentation = {
         {example}
         \`\`\`
       `,
-      footer: 'Exécuté par {member.displayName} | Données fournies par https://skript-mc.fr/api',
+      footer: 'Données fournies par https://skript-mc.fr/api',
     },
   },
 };
@@ -82,7 +82,7 @@ export const serverInfo = {
       software: ':pager: Software',
       plugins: ':toolbox: Plugins',
       mods: ':toolbox: Mods',
-      footer: 'Exécuté par {member.displayName} | Données fournies par https://api.mcsrcstat.us',
+      footer: 'Données fournies par https://api.mcsrcstat.us',
     },
     requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
     noIp: "Il faut entrer le nom de domaine (`mc.hypixel.net`), pas l'adresse IP !",
@@ -115,7 +115,7 @@ export const skriptInfo = {
         [Dernière version stable : {latestStable.tag_name}]({latestStable.html_url})
       `,
       versionsWithoutPrerelease: '[Dernière version : {latestStable.tag_name}]({latestStable.html_url})',
-      footer: 'Exécuté par {member.displayName} | Données fournies par https://github.com',
+      footer: 'Données fournies par https://github.com',
     },
   },
 };

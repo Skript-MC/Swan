@@ -65,7 +65,7 @@ export class SkriptInfoCommand extends SwanCommand {
           .setTitle(config.messages.embed.downloadTitle)
           .setTimestamp()
           .setDescription(downloadDescription)
-          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
+          .setFooter({ text: config.messages.embed.footer }),
       );
     }
 
@@ -76,7 +76,7 @@ export class SkriptInfoCommand extends SwanCommand {
           .setTitle(config.messages.embed.informationsTitle)
           .setTimestamp()
           .setDescription(config.messages.embed.information)
-          .setFooter({ text: pupa(config.messages.embed.footer, { member: interaction.member }) }),
+          .setFooter({ text: config.messages.embed.footer }),
       );
     }
 
