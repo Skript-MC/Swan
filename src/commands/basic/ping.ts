@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandType, EmbedBuilder, Message } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import { ping as config } from '#config/commands/basic';
 import { colors } from '#config/settings';
@@ -9,6 +9,7 @@ import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class PingCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -21,8 +22,6 @@ export class PingCommand extends SwanCommand {
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     const defer = await interaction.deferReply({ fetchReply: true });
-    if (!(defer instanceof Message))
-      return;
     const swanPing = (defer.editedAt ?? defer.createdAt).getTime() - (interaction.createdAt).getTime();
     const discordPing = Math.round(this.container.client.ws.ping);
 

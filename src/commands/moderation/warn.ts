@@ -25,7 +25,7 @@ export class WarnCommand extends SwanCommand {
   commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
-    interaction: SwanCommand.ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
@@ -70,7 +70,7 @@ export class WarnCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: SwanCommand.ModalSubmitInteraction,
+    interaction: SwanCommand.ModalSubmitInteraction<'cached'>,
     member: GuildMember,
     reason: string,
   ): Promise<void> {

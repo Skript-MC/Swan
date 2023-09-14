@@ -16,6 +16,7 @@ import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class UserInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

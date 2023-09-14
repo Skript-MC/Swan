@@ -10,6 +10,7 @@ import { noop, toggleModule } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ModuleCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

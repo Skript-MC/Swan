@@ -14,6 +14,7 @@ import { convertFileSize, searchClosestAddon, trimText } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class AddonInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {

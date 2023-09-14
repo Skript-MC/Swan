@@ -24,7 +24,7 @@ export class SdbCommand extends SwanCommand {
   commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
-    interaction: SwanCommand.ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
@@ -87,7 +87,7 @@ export class SdbCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: SwanCommand.ModalSubmitInteraction,
+    interaction: SwanCommand.ModalSubmitInteraction<'cached'>,
     member: GuildMember,
     duration: number,
     reason: string,

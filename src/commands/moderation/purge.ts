@@ -33,7 +33,7 @@ export class PurgeCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const amount = interaction.options.getNumber('nombre', true);
@@ -44,17 +44,17 @@ export class PurgeCommand extends SwanCommand {
 
     await this._exec(
       interaction,
+      amount,
       interaction.options.getBoolean('force'),
       interaction.options.getUser('membre'),
-      amount,
     );
   }
 
   private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    force: boolean,
-    member: User,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     amount: number,
+    force: boolean | null | undefined = false,
+    member: User | null | undefined = null,
   ): Promise<void> {
     const channel = await this.container.client.channels.fetch(interaction.channel.id);
     if (!(channel instanceof TextChannel))

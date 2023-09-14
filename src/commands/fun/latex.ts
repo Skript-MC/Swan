@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType, Message } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import { latex as config } from '#config/commands/fun';
 import * as messages from '#config/messages';
 import { apis, emojis } from '#config/settings';
@@ -10,6 +10,7 @@ import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LatexCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -32,8 +33,6 @@ export class LatexCommand extends SwanCommand {
       content: apis.latex + encodeURIComponent(equation),
       fetchReply: true,
     });
-    if (!(sendMessage instanceof Message))
-      return;
     await sendMessage.react(emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector({

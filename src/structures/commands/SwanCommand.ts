@@ -25,6 +25,7 @@ export abstract class SwanCommand extends Command {
   public command: string;
   public dmPermission: boolean;
   public defaultMemberPermissions: PermissionResolvable;
+  protected canRunInDM = false;
 
   abstract commandOptions: ApplicationCommandOptionData[];
   abstract commandType: ApplicationCommandType;
@@ -37,12 +38,15 @@ export abstract class SwanCommand extends Command {
     });
 
     this.command = options.command;
-    this.description = options.description;
+    this.description = options.description ?? 'Commande de Swan';
     this.dmPermission = options.dmPermission ?? false;
     this.defaultMemberPermissions = options.defaultMemberPermissions ?? PermissionFlagsBits.SendMessages;
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
+    if (!this.canRunInDM && this.dmPermission)
+      throw new Error(`Command ${this.name} can't be run in DM but has dmPermission set to true`);
+
     switch (this.commandType) {
       case ApplicationCommandType.ChatInput:
         registry.registerChatInputCommand({

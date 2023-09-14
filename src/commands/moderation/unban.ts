@@ -32,7 +32,7 @@ export class UnbanCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(
@@ -42,7 +42,7 @@ export class UnbanCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const activeBans = await Sanction.find({ revoked: false, type: SanctionTypes.TempBan });
     const search = await searchClosestSanction(activeBans, interaction.options.getString('membre'));
     await interaction.respond(
@@ -56,7 +56,7 @@ export class UnbanCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     memberId: string,
     reason: string,
   ): Promise<void> {

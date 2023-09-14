@@ -11,6 +11,7 @@ import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class StatisticsCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];
 
