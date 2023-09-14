@@ -16,7 +16,7 @@ export class GuildBanRemoveListener extends Listener {
       return;
 
     const data = new ModerationData()
-      .setVictim(ban.user, false)
+      .setVictim({ id: ban.user.id, name: ban.user.displayName })
       .setReason(messages.global.noReason)
       .setType(SanctionTypes.Unban);
 

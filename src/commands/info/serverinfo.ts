@@ -32,7 +32,7 @@ export class ServerInfoCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, query: string): Promise<void> {
-    if (isIP(query.split(':').shift())) {
+    if (isIP(query.split(':').shift()!)) {
       await interaction.reply(config.messages.noIp).catch(noop);
       return;
     }

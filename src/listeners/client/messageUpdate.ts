@@ -60,7 +60,7 @@ export class MessageUpdateListener extends Listener {
         mentions: deletedMentions
           .map(mention => (mention instanceof User ? mention.username : mention.name))
           .join(', '),
-        user: newMessage.member.user,
+        user: newMessage.author,
       }),
     ).catch(noop);
     if (!botNotificationMessage)

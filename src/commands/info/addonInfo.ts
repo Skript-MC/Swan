@@ -58,7 +58,7 @@ export class AddonInfoCommand extends SwanCommand {
       return;
     }
 
-    await this._sendDetail(interaction, addonVersions.at(-1));
+    await this._sendDetail(interaction, addonVersions.at(-1)!);
   }
 
   private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
@@ -105,9 +105,9 @@ export class AddonInfoCommand extends SwanCommand {
         inline: true,
       });
     }
-    if (addon.depend?.depend?.length > 0)
+    if (addon.depend?.depend && addon.depend.depend.length > 0)
       embed.addFields({ name: embedMessages.depend, value: addon.depend.depend.join(', '), inline: true });
-    if (addon.depend?.softdepend?.length > 0)
+    if (addon.depend?.softdepend && addon.depend.softdepend.length > 0)
       embed.addFields({ name: embedMessages.softdepend, value: addon.depend.softdepend.join(', '), inline: true });
 
     await interaction.reply({ embeds: [embed] });

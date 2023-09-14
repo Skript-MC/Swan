@@ -16,7 +16,7 @@ export class PresenceTask extends Task {
   }
 
   public override run(): void {
-    this.container.client.user.setPresence(this.activities.next().value);
+    this.container.client.user?.setPresence(this.activities.next().value);
   }
 
   private * _getActivity(): Generator<PresenceData, never> {

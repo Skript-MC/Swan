@@ -8,7 +8,6 @@ import { UnmuteAction } from '#moderation/actions/UnmuteAction';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import { SanctionTypes } from '#types/index';
-import { noop } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class ModerationTask extends Task {
@@ -25,22 +24,14 @@ export class ModerationTask extends Task {
     for (const sanction of sanctions) {
       const { userId, type, sanctionId } = sanction;
 
-      const member = this.container.client.guild.members.cache.get(userId)
-        ?? (await this.container.client.guild.members.fetch(userId)
-          .catch(noop));
-      if (!member)
-        continue;
-
-      const user = member.user
-        ?? this.container.client.users.resolve(userId)
-        ?? (await this.container.client.users.fetch(userId)
-          .catch(noop));
-      if (!user)
+      const person = await this.container.client.guild.members.fetch(userId).catch(null)
+        ?? await this.container.client.users.fetch(userId).catch(null);
+      if (!person)
         continue;
 
       const data = new ModerationData()
         .setSanctionId(sanctionId)
-        .setVictim(member ?? user, false)
+        .setVictim({ id: person.id, name: person.displayName })
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (type) {

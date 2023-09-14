@@ -27,7 +27,7 @@ export class SdbCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
     const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
     if (!potentialVictim) {
       await interaction.reply({ content: messages.prompt.member, ephemeral: true });
@@ -107,7 +107,7 @@ export class SdbCommand extends SwanCommand {
     const data = new ModerationData(interaction)
       .setType(SanctionTypes.TempBan)
       .setDuration(duration, true)
-      .setVictim(member)
+      .setVictim({ id: member.id, name: member.displayName })
       .setReason(reason);
 
     // If there's a current ban, we set the sanctionId to the current ban's sanctionId

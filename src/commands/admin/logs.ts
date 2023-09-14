@@ -54,7 +54,7 @@ export class LogsCommand extends SwanCommand {
     if (isNullish(logged)) {
       const result = await SwanChannel.findOne({ channelId: channel.id });
       void interaction.reply(
-        pupa(config.messages.loggingStatus, { status: this._getStatus(result.logged) }),
+        pupa(config.messages.loggingStatus, { status: this._getStatus(result?.logged ?? false) }),
       );
       return;
     }

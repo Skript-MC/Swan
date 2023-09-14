@@ -20,11 +20,6 @@ export class GuildMemberUpdateListener extends Listener {
     if (!isNewMute && !isRevokedMute)
       return;
 
-    const data = new ModerationData()
-      .setVictim(newMember, false)
-      .setDuration(newMember.communicationDisabledUntilTimestamp - Date.now(), true)
-      .setType(SanctionTypes.Mute);
-
     const updates = await newMember.guild.fetchAuditLogs({ type: AuditLogEvent.MemberUpdate });
 
     // We are now extra-sure about that is the right update
@@ -33,13 +28,18 @@ export class GuildMemberUpdateListener extends Listener {
         || Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp)))
       .first();
 
-    if (!update
+    if (!update?.target
+      || !update.executor
       || update.target.id !== newMember.id
       || update.executor.bot
       || update.createdTimestamp <= Date.now() - 1000)
       return;
 
-    data.setReason(update.reason)
+    const data = new ModerationData()
+      .setVictim({ id: newMember.id, name: newMember.displayName })
+      .setDuration(newMember.communicationDisabledUntilTimestamp! - Date.now(), true)
+      .setType(SanctionTypes.Mute)
+      .setReason(update.reason)
       .setModeratorId(update.executor.id);
 
     if (isNewMute) {

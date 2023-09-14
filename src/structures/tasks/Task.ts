@@ -31,8 +31,8 @@ export abstract class Task extends Piece {
   public readonly immediate: boolean;
   public readonly startupOrder?: number;
 
-  private _scheduleInterval: NodeJS.Timeout;
-  private _scheduleCron: cron.ScheduledTask;
+  private _scheduleInterval: NodeJS.Timeout | undefined;
+  private _scheduleCron: cron.ScheduledTask | undefined;
   private readonly _callback: (() => Promise<void>) | null;
 
   constructor(context: Piece.Context, options: TaskOptions) {

@@ -1,3 +1,5 @@
+import type { AxiosRequestConfig } from 'axios';
+
 export const forumFeed = {
   timeDifference: 600_000,
   dataProvider: 'Automatiquement envoyé depuis Skript-MC',
@@ -22,9 +24,9 @@ export const forumFeed = {
     },
     auth: {
       username: process.env.SKRIPTMC_FORUM_TOKEN,
-      password: null as string, // 'null as string' because if it is not null, then we want it to be a string.
+      password: null as unknown as string,
     },
-  },
+  } satisfies AxiosRequestConfig,
   endpoints: {
     files: {
       files: '/downloads/files',

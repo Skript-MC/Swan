@@ -1,4 +1,3 @@
-import { User } from 'discord.js';
 import { Sanction } from '#models/sanction';
 import { ModerationError } from '#moderation/ModerationError';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
@@ -35,8 +34,7 @@ export class UnmuteAction extends ModerationAction {
           .from(unknownError as Error)
           .setMessage('An error occurred while revoking a mute in the database')
           .addDetail('Unmute ID', this.data.sanctionId)
-          .addDetail('Is User', this.data.victim.user instanceof User)
-          .addDetail('User ID', this.data.victim.id)
+          .addDetail('Victim ID', this.data.victimId)
           .addDetail('Unmute Reason', this.data.reason),
       );
     }

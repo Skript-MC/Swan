@@ -5,7 +5,7 @@ import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import { idea as config } from '#config/commands/fun';
 import * as messages from '#config/messages';
-import { colors } from '#config/settings';
+import { channels, colors } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
@@ -23,7 +23,9 @@ export class IdeaCommand extends SwanCommand {
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
-    const channel = this.container.client.cache.channels.idea;
+    const channel = await this.container.client.guild.channels.fetch(channels.idea);
+    if (!channel || !channel.isTextBased())
+      return;
 
     const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) {

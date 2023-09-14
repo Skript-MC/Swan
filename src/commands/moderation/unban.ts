@@ -27,7 +27,7 @@ export class UnbanCommand extends SwanCommand {
       type: ApplicationCommandOptionType.String,
       name: 'raison',
       description: 'Raison du dé-bannissement (sera affiché au membre)',
-      required: true,
+      required: false,
     },
   ];
 
@@ -37,14 +37,14 @@ export class UnbanCommand extends SwanCommand {
   ): Promise<void> {
     await this._exec(
       interaction,
-      interaction.options.getString('membre'),
+      interaction.options.getString('membre', true),
       interaction.options.getString('raison') ?? messages.global.noReason,
     );
   }
 
   public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const activeBans = await Sanction.find({ revoked: false, type: SanctionTypes.TempBan });
-    const search = await searchClosestSanction(activeBans, interaction.options.getString('membre'));
+    const search = await searchClosestSanction(activeBans, interaction.options.getString('membre', true));
     await interaction.respond(
       search
         .slice(0, 20)
@@ -82,7 +82,7 @@ export class UnbanCommand extends SwanCommand {
 
       const data = new ModerationData(interaction)
         .setSanctionId(currentBan.sanctionId)
-        .setVictim(member, false)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(reason)
         .setType(SanctionTypes.Unban);
 

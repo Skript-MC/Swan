@@ -12,7 +12,7 @@ export class LoadCommandStatsTask extends Task {
     const commandIds = [...this.container.stores.get('commands').values()]
       .map(cmd => cmd.name);
 
-    const documents: Array<Query<CommandStatDocument, CommandStatDocument>> = [];
+    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
     for (const commandId of commandIds)
       documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
 

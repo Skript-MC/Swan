@@ -13,7 +13,7 @@ export const logs = {
     on: 'activée :white_check_mark:',
     off: 'désactivée :x:',
   },
-};
+} as const;
 
 export const module = {
   settings: {
@@ -35,7 +35,7 @@ export const module = {
     success: 'Le module a bien été {status}.',
     confirmationPrompt: 'Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.',
   },
-};
+} as const;
 
 export const runTask = {
   settings: {
@@ -48,7 +48,7 @@ export const runTask = {
     taskError: ":x: Une erreur est survenue lors de l'exécution de la tâche.",
     success: ':white_check_mark: Opération effectuée avec succès !',
   },
-};
+} as const;
 
 export const reactionRole = {
   settings: {
@@ -68,5 +68,6 @@ export const reactionRole = {
     },
     notEnoughPermissions: "Erreur ! Je n'ai pas la permission d'agir sur un rôle aussi puissant !",
     invalidEmoji: "Je n'arrive pas à récupérer cet emoji...",
+    invalidRole: "Je n'arrive pas à récupérer ce rôle...",
   },
-};
+} as const;

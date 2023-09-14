@@ -54,16 +54,16 @@ export class RemoveWarnCommand extends SwanCommand {
     }).catch(nullop);
     await interaction.respond(
       sanctions
-        .slice(0, 20)
+        ?.slice(0, 20)
         .map(entry => ({
           name: entry.sanctionId + ' — ' + entry.reason,
           value: entry.sanctionId,
-        })),
+        })) ?? [],
     );
   }
 
   private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     warnId: string,
     reason: string,
   ): Promise<void> {
@@ -95,7 +95,7 @@ export class RemoveWarnCommand extends SwanCommand {
     try {
       const data = new ModerationData(interaction)
         .setSanctionId(warn.sanctionId)
-        .setVictim(member)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(reason)
         .setType(SanctionTypes.RemoveWarn);
 

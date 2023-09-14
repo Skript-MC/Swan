@@ -4,6 +4,7 @@ import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type {
   ApplicationCommandOptionData,
+  Message,
   MessageReaction,
   TextChannel,
   User,
@@ -11,8 +12,7 @@ import type {
 import {
   ApplicationCommandType,
   EmbedBuilder,
-  Message,
-  PermissionsBitField,
+  PermissionFlagsBits,
 } from 'discord.js';
 import pupa from 'pupa';
 import { move as config } from '#config/commands/basic';
@@ -39,12 +39,12 @@ export class MoveCommand extends SwanCommand {
     interaction: SwanCommand.CommandInteraction<'cached'>,
     targetedMessage: Message,
   ): Promise<void> {
-    const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const member = await this.container.client.guild.members.fetch(interaction.user.id);
 
     const originalChannel = targetedMessage.channel as TextChannel;
     const canMemberWrite = originalChannel
       ?.permissionsFor(member)
-      .has(PermissionsBitField.Flags.SendMessages);
+      .has(PermissionFlagsBits.SendMessages);
 
     if (!canMemberWrite) {
       await interaction.reply({ content: messages.prompt.channel, ephemeral: true });
@@ -67,23 +67,29 @@ export class MoveCommand extends SwanCommand {
       { explicitReturn: true },
     );
     const result = await handler.run(
-      interaction.channel,
-      interaction.member.user as User,
+      interaction.channel!,
+      interaction.user,
     ) as IMessagePrompterExplicitMessageReturn;
     await result.appliedMessage.delete();
+    if (!result.response) {
+      await interaction.followUp(messages.prompt.channel);
+      return;
+    }
 
     const resolvedChannel = resolveGuildTextBasedChannel(result.response.content, interaction.guild);
-    if (resolvedChannel.isErr())
+    if (resolvedChannel.isErr()) {
+      await interaction.followUp(messages.prompt.channel);
       return;
+    }
     const targetedChannel = resolvedChannel.unwrap();
 
     const canEveryoneWrite = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
-      .has(PermissionsBitField.Flags.SendMessages);
+      .has(PermissionFlagsBits.SendMessages);
     const canEveryoneRead = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
-      .has(PermissionsBitField.Flags.ViewChannel);
-    if (!canEveryoneWrite || !canEveryoneRead || interaction.channel.id === targetedChannel.id) {
+      .has(PermissionFlagsBits.ViewChannel);
+    if (!canEveryoneWrite || !canEveryoneRead || interaction.channel!.id === targetedChannel.id) {
       await interaction.followUp(messages.prompt.channel);
       return;
     }
@@ -92,7 +98,7 @@ export class MoveCommand extends SwanCommand {
     const successMessage = pupa(config.messages.successfullyMoved, {
       targetName,
       targetChannel: targetedChannel,
-      memberDisplayName: interaction.member.user.username,
+      memberDisplayName: interaction.user.username,
     });
 
     const embed = new EmbedBuilder()

@@ -60,8 +60,8 @@ export class PollCommand extends SwanCommand {
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const anonymous = interaction.options.getBoolean('anonyme');
-    const multiple = interaction.options.getBoolean('multiple');
+    const anonymous = interaction.options.getBoolean('anonyme') ?? false;
+    const multiple = interaction.options.getBoolean('multiple') ?? false;
 
     const duration = resolveDuration(interaction.options.getString('durée', true), false);
     if (duration.isErr()) {
@@ -131,10 +131,13 @@ export class PollCommand extends SwanCommand {
       formattedEnd: timeFormatter(finishDate, TimestampStyles.LongDateTime),
     });
 
-    const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const member = await this.container.client.guild.members.fetch(interaction.user.id);
 
     const embed = new EmbedBuilder()
-      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member?.user.avatarURL() })
+      .setAuthor({
+        name: pupa(embedMessages.author, { member }),
+        iconURL: member.displayAvatarURL(),
+      })
       .addFields(
         { name: embedMessages.question, value: trimText(question, 1000) },
         { name: embedMessages.answers, value: trimText(possibleAnswers, 1000) },
@@ -145,7 +148,7 @@ export class PollCommand extends SwanCommand {
     if (details.length > 0)
       embed.setDescription(details.join('\n'));
 
-    const pollMessage = await interaction.channel.send({ embeds: [embed] });
+    const pollMessage = await interaction.channel!.send({ embeds: [embed] });
 
     await interaction.reply({ content: config.messages.success, ephemeral: true });
 
@@ -179,7 +182,7 @@ export class PollCommand extends SwanCommand {
     await Poll.create({
       messageId: pollMessage.id,
       memberId: member.id,
-      channelId: interaction.channel.id,
+      channelId: interaction.channelId,
       finish: finishDate.getTime(),
       duration,
       questionType,

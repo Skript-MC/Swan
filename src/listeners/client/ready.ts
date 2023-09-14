@@ -19,7 +19,7 @@ export class ReadyListener extends Listener {
 
     this.container.logger.info('Loading startup tasks...');
     const tasks = taskStore.filter(task => task.enabled && Number.isInteger(task.startupOrder))
-      .sort((a, b) => a.startupOrder - b.startupOrder);
+      .sort((a, b) => a.startupOrder! - b.startupOrder!);
     for (const [taskName, task] of tasks) {
       this.container.logger.info(`Run startup task ${taskName}...`);
       try {

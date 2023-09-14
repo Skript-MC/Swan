@@ -15,7 +15,7 @@ export class SyncDatabaseChannelsTask extends Task {
         channelId: channel.id,
       }, {
         channelId: channel.id,
-        categoryId: channel.parentId,
+        categoryId: channel.parentId!,
         name: channel.name,
         logged: false,
       });

@@ -1,4 +1,5 @@
-import { GuildMember, PermissionsBitField, User } from 'discord.js';
+import { container } from '@sapphire/pieces';
+import { PermissionFlagsBits } from 'discord.js';
 import { Sanction } from '#models/sanction';
 import { ModerationError } from '#moderation/ModerationError';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
@@ -14,30 +15,26 @@ export class KickAction extends ModerationAction {
   private async _kick(): Promise<void> {
     // 1. Add to the database
     try {
-      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
+      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victimId });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occurred while inserting kick to database')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id),
+          .addDetail('Victim ID', this.data.victimId),
       );
     }
 
     // 2. Kick the member
     try {
-      await this.data.victim.member?.kick(this.data.reason);
+      await container.client.guild.members.kick(this.data.victimId, this.data.reason);
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to kick a GuildMember')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Kick Member Permission', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.KickMembers)),
+          .addDetail('Victim ID', this.data.victimId)
+          .addDetail('Kick Member Permission', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)),
       );
     }
   }

@@ -67,7 +67,7 @@ export class HistoryCommand extends SwanCommand {
       .setColor(colors.default)
       .setTimestamp();
 
-    const allowedUser = await this.container.client.users.fetch(interaction.member.user.id);
+    const allowedUser = await this.container.client.users.fetch(interaction.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(embed)
       .setItems(fields)

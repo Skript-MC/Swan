@@ -18,12 +18,13 @@ export class GuildMemberRemoveListener extends Listener {
     const lastKick = kicks.entries.first();
 
     // Check if they've been kicked
-    if (lastKick
+    if (lastKick?.target
+      && lastKick.executor
       && lastKick.target.id === member.id
       && !lastKick.executor.bot
       && lastKick.createdTimestamp >= Date.now() - 1000) {
       const data = new ModerationData()
-        .setVictim(member, false)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(lastKick.reason)
         .setType(SanctionTypes.Kick);
       await new KickAction(data).commit();
@@ -32,7 +33,7 @@ export class GuildMemberRemoveListener extends Listener {
     // Check if they're leaving while being banned
     if (currentBan) {
       const data = new ModerationData()
-        .setVictim(member, false)
+        .setVictim({ id: member.id, name: member.displayName })
         .setDuration(-1, false)
         .setReason(messages.moderation.reasons.leaveBan)
         .setType(SanctionTypes.Hardban);

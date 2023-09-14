@@ -47,11 +47,15 @@ export class ReactionRoleCommand extends SwanCommand {
   ): Promise<void> {
     const role = interaction.options.getRole('rôle', true);
     const givenRole = await interaction.guild.roles.fetch(role.id);
+    if (!givenRole) {
+      await interaction.reply(config.messages.invalidRole);
+      return;
+    }
 
-    let reaction = interaction.guild.emojis.resolve(emojis.yes).toString();
+    let reaction = (interaction.guild.emojis.resolve(emojis.yes) ?? emojis.yes).toString();
     const argumentEmoji = interaction.options.getString('émoji');
     if (argumentEmoji) {
-      const resolvedEmoji = resolveEmoji(interaction.options.getString('émoji'), interaction.guild);
+      const resolvedEmoji = resolveEmoji(argumentEmoji, interaction.guild);
       if (resolvedEmoji.isErr()) {
         await interaction.reply(config.messages.invalidEmoji);
         return;

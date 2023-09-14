@@ -11,8 +11,10 @@ export function resolveEmoji(parameter: string, guild: Guild): Result<string, 'e
   if (!parameter)
     return err('emojiError');
 
+  const regexResult = EmojiRegex.exec(parameter)?.[3];
+
   const emoji = nodeEmoji.find(parameter)?.emoji
-    || guild.emojis.cache.get(EmojiRegex.exec(parameter)?.[3])?.toString()
+    || (regexResult && guild.emojis.cache.get(regexResult)?.toString())
     || parameter.match(regex)?.[0];
   if (isNullish(emoji))
     return err('emojiError');

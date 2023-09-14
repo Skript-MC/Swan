@@ -53,7 +53,7 @@ export const eightBall = {
         'NoooooN',
     ],
   },
-};
+} as const;
 
 export const idea = {
   settings: {
@@ -64,7 +64,7 @@ export const idea = {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
     ideaTitle: 'Idée de {name} :',
   },
-};
+} as const;
 
 export const joke = {
   settings: {
@@ -74,7 +74,7 @@ export const joke = {
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",
   },
-};
+} as const;
 
 export const latex = {
   settings: {
@@ -82,7 +82,7 @@ export const latex = {
     description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
   },
   messages: {},
-};
+} as const;
 
 export const poll = {
   settings: {
@@ -108,4 +108,4 @@ export const poll = {
       durationContent: 'Ce vote dure {formattedDuration} (fini {formattedEnd})',
     },
   },
-};
+} as const;
