@@ -28,10 +28,8 @@ export class CachePollsTask extends Task {
         continue;
       }
       for (const reaction of message.reactions.cache.values()) {
-        if (cacheReactions.has(reaction.emoji.name)) {
-          await reaction.users.fetch()
-            .catch(noop);
-        }
+        if (reaction.emoji.name && cacheReactions.has(reaction.emoji.name))
+          await reaction.users.fetch().catch(noop);
       }
     }
   }

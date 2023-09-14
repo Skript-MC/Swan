@@ -22,7 +22,7 @@ export class LinksCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
-    const user = await this.container.client.users.fetch(interaction.member.user.id);
+    const user = await this.container.client.users.fetch(interaction.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(new EmbedBuilder().setColor(colors.default))
       .setItems(config.messages.embed.fields)

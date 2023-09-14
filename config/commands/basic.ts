@@ -8,7 +8,7 @@ export const addonPack = {
   messages: {
     notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
-};
+} as const;
 
 export const autoMessage = {
   settings: {
@@ -18,7 +18,7 @@ export const autoMessage = {
   messages: {
     notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
-};
+} as const;
 
 export const errorDetails = {
   settings: {
@@ -28,7 +28,7 @@ export const errorDetails = {
   messages: {
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
-};
+} as const;
 
 export const links = {
   settings: {
@@ -84,7 +84,7 @@ export const links = {
       ],
     },
   },
-};
+} as const;
 
 export const move = {
   settings: {
@@ -101,7 +101,7 @@ export const move = {
     question: 'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
-};
+} as const;
 
 export const ping = {
   settings: {
@@ -116,7 +116,7 @@ export const ping = {
       :globe_with_meridians: API Discord : {discordPing} ms {discordIndicator}
     `,
   },
-};
+} as const;
 
 export const rule = {
   settings: {
@@ -128,7 +128,7 @@ export const rule = {
     noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },
-};
+} as const;
 
 export const statistics = {
   settings: {
@@ -160,4 +160,4 @@ export const statistics = {
       bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
   },
-};
+} as const;

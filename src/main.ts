@@ -1,8 +1,6 @@
 import '@sapphire/plugin-logger/register';
 import 'dotenv/config';
-// Import 'module-alias/register';
 import 'reflect-metadata';
-// Import 'source-map-support/register';
 
 import * as Sentry from '@sentry/node';
 import moment from 'moment';

@@ -81,13 +81,13 @@ export async function getSuggestionEmbed(suggestion: Suggestion): Promise<EmbedB
     .setTitle(`Suggestion de ${suggestion.user.username}`)
     .setURL(`https://skript-mc.fr/suggestions#${suggestion.id}`)
     .setDescription(suggestion.description)
-    .setFooter({ text: this.getSuggestionStatus(suggestion.status) })
+    .setFooter({ text: getSuggestionStatus(suggestion.status) })
     .setTimestamp(new Date(suggestion.created_at));
 
   // If the user has linked his Discord account, add more cool data :)
   if (suggestion.user.discordId) {
     const suggestionUser = await client.users.fetch(suggestion.user.discordId);
-    embed.setFooter({ text: this.getSuggestionStatus(suggestion.status), iconURL: suggestionUser.avatarURL() })
+    embed.setFooter({ text: getSuggestionStatus(suggestion.status), iconURL: suggestionUser.displayAvatarURL() })
       .setTitle(`Suggestion de ${suggestion.user.username} (${suggestionUser.tag})`);
   }
 

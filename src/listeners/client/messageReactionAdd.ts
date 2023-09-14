@@ -50,8 +50,8 @@ export class MessageReactionAddListener extends Listener {
     const { pollReactions } = miscellaneous;
 
     // Whether they react with the appropriate "answer reaction" for this poll
-    if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name))
-      || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name))) {
+    if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name!))
+      || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name!))) {
       // Find the reaction they chose before (undefined if they never answered).
       const previousUserVote = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.

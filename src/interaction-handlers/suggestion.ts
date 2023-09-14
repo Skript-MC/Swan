@@ -42,7 +42,7 @@ export class SuggestionHandler extends InteractionHandler {
           .addComponents(
             new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
-              .setURL(response.loginUrl)
+              .setURL(response.loginUrl ?? 'https://skript-mc.fr/suggestions')
               .setStyle(ButtonStyle.Link),
           ));
         embed = new EmbedBuilder()
@@ -73,7 +73,7 @@ export class SuggestionHandler extends InteractionHandler {
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
     }
     if (response?.suggestion) {
-      const message = await interaction.channel.messages.fetch(interaction.message.id);
+      const message = await interaction.channel!.messages.fetch(interaction.message.id);
       // Get the new embed and actions for this suggestion
       const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
       const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);

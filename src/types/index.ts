@@ -1,16 +1,8 @@
-
 import type { Endpoints } from '@octokit/types';
 import type { CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
-import type {
-  GuildMember,
-  GuildTextBasedChannel,
-  Message,
-  PermissionResolvable,
-  User,
-} from 'discord.js';
+import type { Message, PermissionResolvable } from 'discord.js';
 import type { Document, FilterQuery, Model } from 'mongoose';
-import type { channels } from '#config/settings';
 
 /* ****************** */
 /*  API Result Types  */
@@ -366,17 +358,6 @@ export interface SwanCommandOptions extends CommandOptions {
 /** Enforces that the message is cached in a guild */
 export type GuildMessage = Message<true>;
 
-/** All properties containing a array of channels */
-export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptHelp';
-
-/** All properties containing a single channel */
-export type ChannelSingleSlug = Exclude<keyof typeof channels, ChannelArraySlugs>;
-
-/** Record of all the channel we cache internally */
-export type CachedChannels =
-  & Record<ChannelArraySlugs, GuildTextBasedChannel[]>
-  & Record<ChannelSingleSlug, GuildTextBasedChannel>;
-
 // #endregion
 
 /* ************************** */
@@ -385,13 +366,6 @@ export type CachedChannels =
 
 // #region Various Moderation Types (VS Code)
 // region Various Moderation Types (JetBrains)
-
-/** Represent the victim object of ModerationData#victim */
-export interface PersonInformations {
-  id?: string;
-  user?: User;
-  member?: GuildMember;
-}
 
 /** The object returned by ModerationData#toSchema */
 export interface ModerationDataResult {

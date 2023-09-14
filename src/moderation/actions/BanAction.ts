@@ -1,10 +1,5 @@
-import {
-  GuildMember,
-  PermissionsBitField,
-  time as timeFormatter,
-  TimestampStyles,
-  User,
-} from 'discord.js';
+import { container } from '@sapphire/pieces';
+import { PermissionFlagsBits, time as timeFormatter, TimestampStyles } from 'discord.js';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { roles } from '#config/settings';
@@ -13,15 +8,15 @@ import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '#types/index';
-import { noop } from '#utils/index';
+import { noop, nullop } from '#utils/index';
 
 export class BanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyBanning.add(this.data.victim.id);
+    this.client.currentlyBanning.add(this.data.victimId);
   }
 
   protected after(): void {
-    this.client.currentlyBanning.delete(this.data.victim.id);
+    this.client.currentlyBanning.delete(this.data.victimId);
   }
 
   protected async exec(): Promise<void> {
@@ -37,7 +32,9 @@ export class BanAction extends ModerationAction {
   }
 
   private async _hardban(): Promise<void> {
-    await (this.data.victim.member ?? this.data.victim.user)
+    const victim = await container.client.guild.members.fetch(this.data.victimId).catch(nullop)
+      ?? await container.client.users.fetch(this.data.victimId).catch(nullop);
+    await victim
       ?.send('https://tenor.com/view/cosmic-ban-ban-hammer-gif-14966695')
       .catch(noop);
 
@@ -45,7 +42,7 @@ export class BanAction extends ModerationAction {
     try {
       if (this.updateInfos.isUpdate()) {
         await Sanction.findOneAndUpdate(
-          { userId: this.data.victim.id, sanctionId: this.data.sanctionId },
+          { userId: this.data.victimId, sanctionId: this.data.sanctionId },
           {
             $set: {
               duration: this.data.duration,
@@ -64,33 +61,27 @@ export class BanAction extends ModerationAction {
           },
         );
       } else {
-        await Sanction.create({ ...this.data.toSchema(), userId: this.data.victim.id });
+        await Sanction.create({ ...this.data.toSchema(), userId: this.data.victimId });
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occurred while inserting ban to database')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id),
+          .addDetail('Victim: ID', this.data.victimId),
       );
     }
 
     // 2. Ban the member
     try {
-      await this.data.victim.member?.ban({
-        reason: this.data.reason,
-      });
+      await container.client.guild.members.ban(this.data.victimId, { reason: this.data.reason });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to ban a GuildMember')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Ban Member Permission', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.BanMembers)),
+          .addDetail('Victim ID', this.data.victimId)
+          .addDetail('Ban Member Permission', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)),
       );
     }
   }
@@ -99,18 +90,18 @@ export class BanAction extends ModerationAction {
     // Update the database
     try {
       await Sanction.findOneAndUpdate(
-        { userId: this.data.victim.id, sanctionId: this.data.sanctionId },
+        { userId: this.data.victimId, sanctionId: this.data.sanctionId },
         {
           $set: {
             duration: this.data.duration,
-            finish: this.updateInfos.sanctionDocument.start + this.data.duration,
+            finish: this.updateInfos.sanctionDocument!.start + this.data.duration,
           },
           $push: {
             updates: {
               date: this.data.start,
               moderator: this.data.moderatorId,
               type: SanctionsUpdates.Duration,
-              valueBefore: this.updateInfos.sanctionDocument.duration,
+              valueBefore: this.updateInfos.sanctionDocument!.duration,
               valueAfter: this.data.duration,
               reason: this.data.reason,
             },
@@ -122,15 +113,32 @@ export class BanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occurred while inserting ban to database')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id),
+          .addDetail('Victim ID', this.data.victimId),
       );
     }
   }
 
   private async _ban(): Promise<void> {
-    // 1. Create the private channel
+    // 1. Add needed roles
+    try {
+      const role = container.client.guild.roles.resolve(roles.ban);
+      if (role) {
+        const member = await container.client.guild.members.fetch(this.data.victimId);
+        await member.roles.set([role]);
+      } else {
+        throw new TypeError('Unable to resolve the ban role.');
+      }
+    } catch (unknownError: unknown) {
+      this.errorState.addError(
+        new ModerationError()
+          .from(unknownError as Error)
+          .setMessage('Swan does not have sufficient permissions to edit GuildMember roles')
+          .addDetail('Victim ID', this.data.victimId)
+          .addDetail('Manage Role Permissions', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.ManageRoles)),
+      );
+    }
+
+    // 2. Create the private channel
     try {
       const thread = await ModerationHelper.getThread(this.data, true);
 
@@ -149,47 +157,25 @@ export class BanAction extends ModerationAction {
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('Swan does not have sufficient permissions to create/get a TextChannel')
-          .addDetail('Manage Channel Permissions', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels)),
+          .addDetail('Manage Channels Permissions', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.ManageChannels))
+          .addDetail('Manage Threads Permissions', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.ManageThreads))
+          .addDetail('Create Private Threads Permissions', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.CreatePrivateThreads))
+          .addDetail('Send Messages In Threads Permissions', container.client.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessagesInThreads)),
       );
     }
 
-    // 2. Add to the database
+    // 3. Add to the database
     try {
       await Sanction.create({
         ...this.data.toSchema(),
-        userId: this.data.victim.id,
+        userId: this.data.victimId,
       });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
           .setMessage('An error occurred while inserting ban to database')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id),
-      );
-    }
-
-    // 3. Add needed roles
-    try {
-      const role = this.data.guild.roles.resolve(roles.ban);
-      if (role) {
-        if (this.data.victim.member) {
-          await ModerationHelper.removeAllRoles(this.data.victim.member);
-          await this.data.victim.member.roles.add(role);
-        }
-      } else {
-        throw new TypeError('Unable to resolve the ban role.');
-      }
-    } catch (unknownError: unknown) {
-      this.errorState.addError(
-        new ModerationError()
-          .from(unknownError as Error)
-          .setMessage('Swan does not have sufficient permissions to edit GuildMember roles')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Role Permissions', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageRoles)),
+          .addDetail('Victim ID', this.data.victimId),
       );
     }
   }

@@ -1,19 +1,19 @@
-import { GuildMember, PermissionsBitField, User } from 'discord.js';
+import { container } from '@sapphire/pieces';
 import { Sanction } from '#models/sanction';
 import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
 import type { SanctionDocument } from '#types/index';
 import { SanctionsUpdates, SanctionTypes } from '#types/index';
-import { noop } from '#utils/index';
+import { noop, nullop } from '#utils/index';
 
 export class UnbanAction extends ModerationAction {
   protected before(): void {
-    this.client.currentlyUnbanning.add(this.data.victim.id);
+    this.client.currentlyUnbanning.add(this.data.victimId);
   }
 
   protected after(): void {
-    this.client.currentlyUnbanning.delete(this.data.victim.id);
+    this.client.currentlyUnbanning.delete(this.data.victimId);
   }
 
   protected async exec(): Promise<void> {
@@ -44,29 +44,27 @@ export class UnbanAction extends ModerationAction {
           .from(unknownError as Error)
           .setMessage('An error occurred while revoking a ban in the database')
           .addDetail('Ban: ID', this.data.sanctionId)
-          .addDetail('Victim: ID', this.data.victim.id)
+          .addDetail('Victim ID', this.data.victimId)
           .addDetail('Unban Reason', this.data.reason),
       );
     }
 
     // 2. Unban (hard-unban or remove roles)
     try {
-      if (ban?.type === SanctionTypes.Hardban || !this.data.victim.member) {
-        const isHardbanned = await this.data.guild.bans.fetch(this.data.victim.id).catch(noop);
+      const member = await container.client.guild.members.fetch(this.data.victimId).catch(nullop);
+      if (ban?.type === SanctionTypes.Hardban || !member) {
+        const isHardbanned = await container.client.guild.bans.fetch(this.data.victimId).catch(noop);
         if (isHardbanned)
-          await this.data.guild.members.unban(this.data.victim.id, this.data.reason);
+          await container.client.guild.members.unban(this.data.victimId, this.data.reason);
       } else {
-        await ModerationHelper.removeAllRoles(this.data.victim.member);
+        await member.roles.set([]);
       }
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage('An error occurred while fetching ban/unbanning/fetching messages/removing channel')
-          .addDetail('Victim: GuildMember', this.data.victim.member instanceof GuildMember)
-          .addDetail('Victim: User', this.data.victim.user instanceof User)
-          .addDetail('Victim: ID', this.data.victim.id)
-          .addDetail('Manage Channel Permission', this.data.guild.members.me?.permissions.has(PermissionsBitField.Flags.ManageChannels)),
+          .setMessage('An error occurred while fetching ban/unbanning')
+          .addDetail('Victim ID', this.data.victimId),
       );
     }
 

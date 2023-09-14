@@ -9,14 +9,14 @@ export class GuildBanAddListener extends Listener {
     if (this.container.client.currentlyBanning.has(ban.user.id))
       return;
 
-    const victim = await this.container.client.users.fetch(ban.user.id);
-    if (!victim)
+    const user = await this.container.client.users.fetch(ban.user.id);
+    if (!user)
       return;
 
     const { reason } = await ban.guild.bans.fetch(ban.user.id);
 
     const data = new ModerationData()
-      .setVictim(victim, false)
+      .setVictim({ id: user.id, name: user.displayName })
       .setDuration(-1, false)
       .setReason(reason)
       .setType(SanctionTypes.Hardban);

@@ -60,7 +60,7 @@ export class ForumFeedTask extends Task {
         .setAuthor({
           name: topic.firstPost.author.name,
           iconURL: topic.firstPost.author.photoUrlIsDefault
-            ? null
+            ? undefined // eslint-disable-line no-undefined
             : this._ensureHttpScheme(topic.firstPost.author.photoUrl),
         })
         .setTitle(pupa(config.embed.title, { topic }))
@@ -109,7 +109,8 @@ export class ForumFeedTask extends Task {
         .setColor(colors.default)
         .setAuthor({
           name: resource.author.name,
-          iconURL: resource.author.photoUrlIsDefault ? null : this._ensureHttpScheme(resource.author.photoUrl),
+          // eslint-disable-next-line no-undefined
+          iconURL: resource.author.photoUrlIsDefault ? undefined : this._ensureHttpScheme(resource.author.photoUrl),
         })
         .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
         .setURL(resource.url)

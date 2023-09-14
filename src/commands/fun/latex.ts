@@ -36,7 +36,7 @@ export class LatexCommand extends SwanCommand {
     await sendMessage.react(emojis.remove).catch(noop);
     const collector = sendMessage
       .createReactionCollector({
-        filter: (reaction: MessageReaction, user: User) => user.id === interaction.member.user.id
+        filter: (reaction: MessageReaction, user: User) => user.id === interaction.user.id
           && !user.bot
           && (reaction.emoji.id ?? reaction.emoji.name) === emojis.remove,
       }).on('collect', async () => {

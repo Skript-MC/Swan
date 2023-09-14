@@ -28,7 +28,7 @@ export class WarnCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
     const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
     if (!potentialVictim) {
       await interaction.reply({ content: messages.prompt.member, ephemeral: true });
@@ -94,7 +94,7 @@ export class WarnCommand extends SwanCommand {
 
     try {
       const data = new ModerationData(interaction)
-        .setVictim(member)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(reason)
         .setDuration(moderation.warnDuration * 1000, true)
         .setType(SanctionTypes.Warn);

@@ -18,7 +18,7 @@ const commonMessages = {
     **Motif :** {action.data.reason}.
     **Changement :** {change}.
     `,
-};
+} as const;
 
 export const tempBan = {
   settings: {
@@ -31,7 +31,7 @@ export const tempBan = {
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre temporairement banni avec succès !',
   },
-};
+} as const;
 
 export const hardban = {
   messages: {
@@ -39,7 +39,7 @@ export const hardban = {
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre banni avec succès !',
   },
-};
+} as const;
 
 export const history = {
   settings: {
@@ -93,7 +93,7 @@ export const history = {
       revoked: 'a révoqué la sanction',
     },
   },
-};
+} as const;
 
 export const kick = {
   settings: {
@@ -105,14 +105,14 @@ export const kick = {
     notification: commonMessages.creationNotification(false),
     success: 'Membre expulsé avec succès !',
   },
-};
+} as const;
 
 export const mute = {
   messages: {
     notification: commonMessages.creationNotification(true),
     notificationUpdate: commonMessages.notificationUpdate,
   },
-};
+} as const;
 
 export const purge = {
   settings: {
@@ -123,7 +123,7 @@ export const purge = {
   messages: {
     success: "J'ai bien supprimé {deletedMessages.size} messages.",
   },
-};
+} as const;
 
 export const removeWarn = {
   settings: {
@@ -138,7 +138,7 @@ export const removeWarn = {
     notWarned: "Ce membre n'a aucun avertissement en cours.",
     invalidWarnId: "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
   },
-};
+} as const;
 
 export const unban = {
   settings: {
@@ -151,13 +151,13 @@ export const unban = {
     notBanned: "Cet utilisateur n'est pas banni.",
     success: 'Utilisateur débanni avec succès !',
   },
-};
+} as const;
 
 export const unmute = {
   messages: {
     notification: commonMessages.revocationNotification,
   },
-};
+} as const;
 
 export const warn = {
   settings: {
@@ -172,4 +172,4 @@ export const warn = {
     success: 'Membre averti avec succès !',
     banSuccess: "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
   },
-};
+} as const;

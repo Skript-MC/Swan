@@ -1,56 +1,48 @@
-import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type {
   ChatInputCommandInteraction,
   Guild,
-  GuildMember,
   GuildTextBasedChannel,
   ModalSubmitInteraction,
-  TextChannel,
-  User,
 } from 'discord.js';
 import { nanoid } from 'nanoid';
 import * as configs from '#config/commands/moderation';
 import * as messages from '#config/messages';
-import type { ModerationDataResult, PersonInformations } from '#types/index';
+import type { ModerationDataResult } from '#types/index';
 import { SanctionTypes } from '#types/index';
-import { getPersonFromCache } from '#utils/index';
 
 export class ModerationData {
-  moderatorId: string;
-  guild: Guild;
-  client: SapphireClient;
-  channel: GuildTextBasedChannel;
-  type?: SanctionTypes;
-  config?: Record<string, string>;
-  victim: PersonInformations;
-  reason: string;
-  duration?: number | null;
-  finish?: number | null;
-  start: number;
-  privateChannel?: TextChannel;
-  sanctionId: string;
+  public channel: GuildTextBasedChannel | null;
+  public moderatorId: string;
+  public guild: Guild;
+  public reason: string;
+  public start: number;
+  public sanctionId: string;
+  // @ts-expect-error: TS is right but changing this would require a lot of work, which isn't needed because it
+  // works in its current state (the setters are always correctly called). Also the whole moderation system needs a
+  // general lift up and this would probably be trashed anyway.
+  public type: SanctionTypes;
+  // @ts-expect-error: ditto
+  public config: Record<string, string>;
+  // @ts-expect-error: ditto
+  public duration: number;
+  // @ts-expect-error: ditto
+  public finish: number;
+  // @ts-expect-error: ditto
+  public victimId: string;
+  // @ts-expect-error: ditto
+  public victimName: string;
 
   /**
    * Create moderation data from a message or from individual informations.
    */
-  constructor(argument?: ChatInputCommandInteraction | ModalSubmitInteraction) {
-    this.client = container.client;
-    this.channel = argument?.channel ?? this.client.cache.channels.log;
-    this.moderatorId = argument?.member.user.id ?? this.client.guild.members.me.id;
-    this.guild = this.channel.guild;
-    this.type = null;            // The sanction type (one of the SanctionTypes enum).
-    this.config = null;          // The configuration of the action (all the messages).
-    this.victim = {              // The victim of the case. It contains an ID, a User and a GuildMember.
-      id: null,
-      user: null,
-      member: null,
-    };
-    this.reason = messages.global.noReason; // The reason.
-    this.duration = null;        // The duration.
-    this.finish = null;          // The finish timestamp.
-    this.start = Date.now();     // The start timestamp.
-    this.sanctionId = nanoid(8); // The id of the case.
+  constructor(interaction?: ChatInputCommandInteraction<'cached'> | ModalSubmitInteraction<'cached'>) {
+    this.channel = interaction?.channel ?? null;
+    this.moderatorId = interaction?.user.id ?? container.client.guild.members.me!.id;
+    this.guild = interaction?.guild ?? container.client.guild;
+    this.reason = messages.global.noReason;
+    this.start = Date.now();
+    this.sanctionId = nanoid(8);
   }
 
   public setSanctionId(id: string): this {
@@ -58,8 +50,9 @@ export class ModerationData {
     return this;
   }
 
-  public setVictim(personResolvable: GuildMember | User, resolveMemberAndUser = true): this {
-    this.victim = getPersonFromCache(personResolvable, resolveMemberAndUser);
+  public setVictim({ id, name }: { id: string; name: string }): this {
+    this.victimId = id;
+    this.victimName = name;
     return this;
   }
 
@@ -89,14 +82,9 @@ export class ModerationData {
     return this;
   }
 
-  public setChannel(channel: TextChannel): this {
-    this.channel = channel;
-    return this;
-  }
-
   public toSchema(): ModerationDataResult {
     return {
-      memberId: this.victim.id,
+      memberId: this.victimId,
       type: this.type,
       moderator: this.moderatorId,
       start: this.start,

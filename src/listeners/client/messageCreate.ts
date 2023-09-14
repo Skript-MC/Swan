@@ -7,7 +7,8 @@ import {
   ButtonStyle,
   ChannelType,
   EmbedBuilder,
-  PermissionsBitField,
+  MessageFlags,
+  PermissionFlagsBits,
 } from 'discord.js';
 import * as messages from '#config/messages';
 import {
@@ -30,10 +31,10 @@ interface MessageLinkMatch {
 
 export class MessageCreateListener extends Listener {
   public override async run(message: Message): Promise<void> {
-    if (message.content.startsWith(message.guild?.members.me.toString())
+    if (!message.inGuild()
+      || message.content.startsWith(message.guild.members.me!.toString())
       || message.author.bot
-      || message.system
-      || !message.inGuild())
+      || message.system)
       return;
 
     await this._addReactionsInIdeaChannel(message);
@@ -50,7 +51,7 @@ export class MessageCreateListener extends Listener {
         await message.react(emojis.no);
       } catch (unknownError: unknown) {
         this.container.logger.error('Unable to add emojis to the idea channel.');
-        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.members.me?.permissionsIn(message.channel).has(PermissionsBitField.Flags.AddReactions)}`);
+        this.container.logger.info(`Has "ADD_REACTION" permission: ${message.guild.members.me?.permissionsIn(message.channel).has(PermissionFlagsBits.AddReactions)}`);
         this.container.logger.info(`Emojis added: "${emojis.yes}" + "${emojis.no}"`);
         this.container.logger.info(`Idea channel ID/Current channel ID: ${channels.idea}/${message.channel.id} (same=${channels.idea === message.channel.id})`);
         this.container.logger.info(`Message: ${message.url}`);
@@ -65,7 +66,7 @@ export class MessageCreateListener extends Listener {
       await message.delete();
 
       const response = await SuggestionManager.publishSuggestion(message.content, message.author.id);
-      if (response?.status === 'PUBLISHED') {
+      if (response?.status === 'PUBLISHED' && response.suggestion) {
         const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
         const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);
         const suggestionMessage = await message.channel.send({
@@ -99,7 +100,7 @@ export class MessageCreateListener extends Listener {
           .addComponents(
             new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
-              .setURL(response.loginUrl)
+              .setURL(response.loginUrl ?? 'https://skript-mc.fr/suggestions/')
               .setStyle(ButtonStyle.Link),
           );
         await message.author.send({ embeds: [embed], components: [actions] });
@@ -146,7 +147,10 @@ export class MessageCreateListener extends Listener {
           embed.addFields({ name: `Pièce jointe n°${i + 1}`, value: attachment.url });
       }
 
-      const msg = await message.channel.send({ embeds: [embed] });
+      const msg = await message.reply({
+        embeds: [embed],
+        flags: MessageFlags.SuppressNotifications,
+      });
       const collector = msg
         .createReactionCollector({
           filter: (reaction, user) => user.id === message.author.id
@@ -164,17 +168,18 @@ export class MessageCreateListener extends Listener {
   private async _antispamSnippetsChannel(message: GuildMessage): Promise<void> {
     // We prevent people from spamming unnecessarily the Snippets channel.
     if (message.channel.id === channels.snippets
-      && !message.member.roles.cache.has(roles.staff)) {
+      && !message.member!.roles.cache.has(roles.staff)) {
       // We check that they are not the author of the last message in case they exceed the 2.000 chars limit
       // and they want to add details or informations.
       try {
         const previousAuthorId = await message.channel.messages
-          .fetch({ before: message.channel.lastMessageId, limit: 1 })
+          // eslint-disable-next-line no-undefined
+          .fetch({ before: message.channel.lastMessageId ?? undefined, limit: 1 })
           .then(elt => elt.first()?.author.id);
         if (previousAuthorId !== message.author.id && !/```(?:.|\n)*```/gmu.test(message.content)) {
           await message.delete();
-          await message.member.send(messages.miscellaneous.noSpam);
-          await message.member.send(message.content);
+          await message.member!.send(messages.miscellaneous.noSpam);
+          await message.member!.send(message.content);
         }
       } catch { /* Ignored */ }
     }

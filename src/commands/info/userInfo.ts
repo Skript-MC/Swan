@@ -54,7 +54,7 @@ export class UserInfoCommand extends SwanCommand {
       if (activity.state)
         presenceDetails += pupa(embedConfig.presence.state, { activity });
 
-      if (activity.timestamps) {
+      if (activity.timestamps?.start) {
         const formattedTime = time(activity.timestamps.start, TimestampStyles.RelativeTime);
         presenceDetails += pupa(embedConfig.presence.timestamps, { time: formattedTime });
       }

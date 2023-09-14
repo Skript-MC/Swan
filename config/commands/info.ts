@@ -26,7 +26,7 @@ export const addonInfo = {
       footer: 'Données fournies par https://skripttools.net',
     },
   },
-};
+} as const;
 
 export const documentation = {
   settings: {
@@ -62,7 +62,7 @@ export const documentation = {
       footer: 'Données fournies par https://skript-mc.fr/api',
     },
   },
-};
+} as const;
 
 export const serverInfo = {
   settings: {
@@ -87,7 +87,7 @@ export const serverInfo = {
     requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
     noIp: "Il faut entrer le nom de domaine (`mc.hypixel.net`), pas l'adresse IP !",
   },
-};
+} as const;
 
 export const skriptInfo = {
   settings: {
@@ -118,7 +118,7 @@ export const skriptInfo = {
       footer: 'Données fournies par https://github.com',
     },
   },
-};
+} as const;
 
 export const userInfo = {
   settings: {
@@ -176,4 +176,4 @@ export const userInfo = {
       },
     },
   },
-};
+} as const;

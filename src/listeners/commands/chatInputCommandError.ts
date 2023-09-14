@@ -11,7 +11,7 @@ export class CommandErrorListener extends Listener<typeof Events.ChatInputComman
     captureException(error, {
       user: interaction.user,
       extra: {
-        command: interaction.command.toJSON(),
+        command: interaction.command?.toJSON(),
         stacktrace: error.stack,
       },
     });

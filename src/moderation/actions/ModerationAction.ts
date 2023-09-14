@@ -2,48 +2,46 @@ import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
-import type { GuildTextBasedChannel, HexColorString } from 'discord.js';
+import type { HexColorString } from 'discord.js';
 import {
   EmbedBuilder,
-  ThreadChannel,
   time as timeFormatter,
   TimestampStyles,
+  userMention,
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
-import { moderation } from '#config/settings';
+import { channels, moderation } from '#config/settings';
 import { ActionUpdateInformations } from '#moderation/ActionUpdateInformations';
 import { ErrorState } from '#moderation/ErrorState';
 import type { ModerationData } from '#moderation/ModerationData';
 import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
 import { SanctionTypes } from '#types/index';
-import { noop, trimText } from '#utils/index';
+import { noop, nullop, trimText } from '#utils/index';
 
 export abstract class ModerationAction {
-  data: ModerationData;
-  client: SapphireClient;
-  logChannel: GuildTextBasedChannel;
+  public data: ModerationData;
+  public client: SapphireClient;
 
-  errorState: ErrorState;
-  updateInfos: ActionUpdateInformations;
+  public errorState: ErrorState;
+  public updateInfos: ActionUpdateInformations;
 
   constructor(data: ModerationData) {
     this.data = data;
     this.client = container.client;
-    this.logChannel = this.client.cache.channels.log;
 
-    this.errorState = new ErrorState(this.data.channel || this.logChannel);
+    this.errorState = new ErrorState();
     this.updateInfos = new ActionUpdateInformations(this.data);
   }
 
   protected get nameString(): string {
-    return this.data.victim?.user ? ('<@' + this.data.victim.user.id + '>') : messages.global.unknownName;
+    return userMention(this.data.victimId);
   }
 
   protected get moderatorString(): string {
-    return this.data.moderatorId ? ('<@' + this.data.moderatorId + '>') : messages.global.unknownName;
+    return userMention(this.data.moderatorId);
   }
 
   protected get action(): string {
@@ -117,7 +115,7 @@ export abstract class ModerationAction {
     }
 
     if (this.errorState.hasError()) {
-      this.errorState.log();
+      await this.errorState.log();
       return false;
     }
     return true;
@@ -130,7 +128,7 @@ export abstract class ModerationAction {
   }
 
   protected getFormattedChange(): string {
-    const oldDuration = this.updateInfos.sanctionDocument.duration;
+    const oldDuration = this.updateInfos.sanctionDocument!.duration;
     const newDuration = this.data.duration;
     return pupa(messages.moderation.durationChange, {
       oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
@@ -146,21 +144,23 @@ export abstract class ModerationAction {
     try {
       // If the sanction is a temporary ban, we should notify the victim in his private thread.
       // We should only notify the victim if the sanction is an update.
-      if (this.data.type === SanctionTypes.TempBan
-        && this.data.victim.member) {
+      if (this.data.type === SanctionTypes.TempBan) {
         const thread = await ModerationHelper.getThread(this.data);
-        if (thread instanceof ThreadChannel)
+        if (thread.isThread())
           await thread.send(message);
       } else {
-        await (this.data.victim.member ?? this.data.victim.user)?.send(message).catch(noop);
+        const victim = await container.client.guild.members.fetch(this.data.victimId).catch(nullop)
+          ?? await container.client.users.fetch(this.data.victimId).catch(nullop);
+        await victim?.send(message).catch(noop);
       }
     } catch {
-      await this.data.channel.send(messages.moderation.memberHasClosedDm).catch(noop);
+      await this.data.channel?.send(messages.moderation.memberHasClosedDm).catch(noop);
     }
   }
 
   protected async log(): Promise<void> {
-    if (!this.logChannel)
+    const channel = await container.client.guild.channels.fetch(channels.log);
+    if (!channel || !channel.isTextBased())
       return;
 
     const embedMsgs = messages.moderation.log;
@@ -170,7 +170,7 @@ export abstract class ModerationAction {
       .setTitle(pupa(messages.moderation.newCase, { action: this }))
       .setTimestamp()
       .addFields(
-        { name: embedMsgs.userTitle, value: `${this.nameString}\n${this.data.victim.id}`, inline: true },
+        { name: embedMsgs.userTitle, value: `${this.nameString}\n${this.data.victimId}`, inline: true },
         { name: embedMsgs.moderatorTitle, value: `${this.moderatorString}\n${this.data.moderatorId}`, inline: true },
         { name: embedMsgs.actionTitle, value: this.action.toString(), inline: true },
         {
@@ -189,15 +189,8 @@ export abstract class ModerationAction {
       }
       embed.addFields({ name: embedMsgs.durationTitle, value: content, inline: true });
     }
-    if (this.data.privateChannel) {
-      embed.addFields({
-        name: embedMsgs.privateChannelTitle,
-        value: this.data.privateChannel.toString(),
-        inline: true,
-      });
-    }
 
-    await this.logChannel.send({ embeds: [embed] });
+    await channel.send({ embeds: [embed] });
   }
 
   protected abstract before?(): Awaitable<void>;

@@ -44,7 +44,7 @@ export async function end(pollId: string, stopped = false): Promise<void> {
       results += pupa(messages.poll.resultCustomLine, {
         reaction: reac,
         amount: poll.votes[reac].length,
-        answer: poll.customAnswers[i],
+        answer: poll.customAnswers![i],
         percentage: Math.round((100 * poll.votes[reac].length) / totalVoters || 0),
       });
     }

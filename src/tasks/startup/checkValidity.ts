@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { PermissionsBitField } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 import { channels, roles } from '#config/settings';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
@@ -50,23 +50,19 @@ export class CheckValidityTask extends Task {
     // TODO: Also check for emojis IDs.
 
     // Check client's server-level permissions.
-    const requiredChannelPermissions = new PermissionsBitField([
-      PermissionsBitField.Flags.AddReactions,
-      PermissionsBitField.Flags.AttachFiles,
-      PermissionsBitField.Flags.ManageMessages,
-      PermissionsBitField.Flags.ReadMessageHistory,
-      PermissionsBitField.Flags.SendMessages,
-      PermissionsBitField.Flags.CreatePublicThreads,
-      PermissionsBitField.Flags.ViewChannel,
-    ]);
-    const requiredGuildPermissions = new PermissionsBitField([
-      ...requiredChannelPermissions,
-      PermissionsBitField.Flags.ManageGuild,
-      PermissionsBitField.Flags.ManageRoles,
-    ]);
+    const requiredChannelPermissions = PermissionFlagsBits.AddReactions
+      | PermissionFlagsBits.AttachFiles
+      | PermissionFlagsBits.ManageMessages
+      | PermissionFlagsBits.ReadMessageHistory
+      | PermissionFlagsBits.SendMessages
+      | PermissionFlagsBits.CreatePublicThreads
+      | PermissionFlagsBits.ViewChannel;
+    const requiredGuildPermissions = requiredChannelPermissions
+      | PermissionFlagsBits.ManageGuild
+      | PermissionFlagsBits.ManageRoles;
 
-    const guildMissingPerms = guild.members.me?.permissions?.missing(requiredGuildPermissions);
-    if (guildMissingPerms?.length > 0)
+    const guildMissingPerms = guild.members.me!.permissions.missing(requiredGuildPermissions);
+    if (guildMissingPerms.length > 0)
       this.container.logger.warn(`Swan is missing Guild-Level permissions in guild "${guild.name}". Its cumulated roles' permissions does not contain: ${guildMissingPerms.join(', ')}.`);
 
     // Check client's channels permissions.
@@ -74,7 +70,7 @@ export class CheckValidityTask extends Task {
       if (!channel.isTextBased())
         continue;
 
-      const channelMissingPerms = channel.permissionsFor(guild.members.me)
+      const channelMissingPerms = channel.permissionsFor(guild.members.me!)
         .missing(requiredChannelPermissions);
       if (channelMissingPerms.length > 0)
         this.container.logger.warn(`Swan is missing permissions ${channelMissingPerms.join(', ')} in channel "#${channel.name}"`);
