@@ -6,7 +6,6 @@ import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import { statistics as config } from '#config/commands/basic';
-import * as messages from '#config/messages';
 import { bot, colors } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 
@@ -50,7 +49,6 @@ export class StatisticsCommand extends SwanCommand {
           inline: true,
         },
       )
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });

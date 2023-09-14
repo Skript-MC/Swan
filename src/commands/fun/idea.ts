@@ -40,10 +40,9 @@ export class IdeaCommand extends SwanCommand {
       .setColor(colors.default)
       .setAuthor({
         name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
-        iconURL: randomIdea.author.avatarURL(),
+        iconURL: randomIdea.author.displayAvatarURL(),
       })
       .setDescription(randomIdea.content)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp(randomIdea.createdAt);
 
     await interaction.reply({ embeds: [embed] });

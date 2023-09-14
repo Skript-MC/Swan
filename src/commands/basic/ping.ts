@@ -4,7 +4,6 @@ import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder, Message } from 'discord.js';
 import pupa from 'pupa';
 import { ping as config } from '#config/commands/basic';
-import * as messages from '#config/messages';
 import { colors } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 
@@ -37,7 +36,6 @@ export class PingCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setDescription(description)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp();
 
     await interaction.followUp({ embeds: [embed] });

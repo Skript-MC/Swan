@@ -2,7 +2,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
-import pupa from 'pupa';
 import { eightBall as config } from '#config/commands/fun';
 import { colors } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
@@ -34,8 +33,7 @@ export class EightBallCommand extends SwanCommand {
       .setColor(colors.default)
       .setTimestamp()
       .setTitle(interaction.options.getString('question', true))
-      .setDescription(answer)
-      .setFooter({ text: pupa(config.messages.footer, { member: interaction.member }) });
+      .setDescription(answer);
     await interaction.reply({ embeds: [embed] });
   }
 }

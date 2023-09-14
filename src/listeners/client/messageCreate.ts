@@ -135,10 +135,9 @@ export class MessageCreateListener extends Listener {
         .setColor(colors.default)
         .setAuthor({
           name: `Message de ${targetedMessage.member?.displayName ?? targetedMessage.author.username}`,
-          iconURL: targetedMessage.author.avatarURL(),
+          iconURL: targetedMessage.author.displayAvatarURL(),
         })
-        .setDescription(`${trimText(targetedMessage.content, MessageLimits.MaximumLength - 100)}\n[(lien)](${targetedMessage.url})`)
-        .setFooter({ text: `Message cité par ${message.member.displayName}.` });
+        .setDescription(`${trimText(targetedMessage.content, MessageLimits.MaximumLength - 100)}\n[(lien)](${targetedMessage.url})`);
 
       // We add all attachments if needed.
       if (targetedMessage.attachments.size > 0) {

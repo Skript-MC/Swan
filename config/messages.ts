@@ -14,7 +14,6 @@ export const global = {
   unknown: (feminine = false): string => `Inconnu${feminine ? 'e' : ''}`,
   noReason: 'Aucune raison spécifiée.',
   impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
-  executedBy: 'Exécuté par {member.displayName}',
 } as const;
 
 export const errors = {
@@ -88,7 +87,6 @@ export const moderation = {
     reasonTitle: ':label: Raison',
     durationTitle: ':stopwatch: Durée',
     durationDescription: '\nExpire {expiration}',
-    privateChannelTitle: ':speech_left: Salon privé',
     banlogTitle: ':scroll: Historique des messages',
     banlogAvailableDescription: 'Disponible ci-dessous',
     banlogUnavailableDescription: 'Indisponible',

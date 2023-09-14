@@ -82,7 +82,7 @@ export class AddonInfoCommand extends SwanCommand {
           EmbedLimits.MaximumDescriptionLength,
         ),
       )
-      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
+      .setFooter({ text: embedMessages.footer });
 
     if (addon.unmaintained)
       embed.addFields({ name: embedMessages.unmaintained, value: embedMessages.unmaintainedDescription, inline: true });
