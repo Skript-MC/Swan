@@ -1,6 +1,6 @@
 import type { Result } from '@sapphire/framework';
 import { ok } from '@sapphire/framework';
-import { extractQuotedText } from '@/app/utils';
+import { extractQuotedText } from '#utils/index';
 
 export function resolveQuotedText(parameter: string): Result<string[], 'quotedTextError'> {
   const parsed = extractQuotedText(parameter);

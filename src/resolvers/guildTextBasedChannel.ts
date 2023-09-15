@@ -6,9 +6,9 @@ export function resolveGuildTextBasedChannel(
   parameter: string,
   guild: Guild,
 ): Result<GuildTextBasedChannel, 'guildTextBasedChannelError'> {
-  const resolved = Resolvers.resolveGuildChannel(parameter, guild);
+  const resolved = Resolvers.resolveGuildChannel(parameter, guild).unwrap();
 
-  if (resolved.unwrap().isTextBased())
-    return ok(resolved.unwrap() as GuildTextBasedChannel);
+  if (resolved.isTextBased())
+    return ok(resolved);
   return err('guildTextBasedChannelError');
 }

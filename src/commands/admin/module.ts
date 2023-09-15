@@ -1,15 +1,16 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanModule } from '@/app/models/swanModule';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop, toggleModule } from '@/app/utils';
-import { module as config } from '@/conf/commands/admin';
+import { module as config } from '#config/commands/admin';
+import { SwanModule } from '#models/swanModule';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { toggleModule } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class ModuleCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -44,7 +45,7 @@ export class ModuleCommand extends SwanCommand {
   ): Promise<void> {
     const module = await SwanModule.findOne({ name: moduleName });
     if (!module) {
-      await interaction.reply(config.messages.noModuleFound).catch(noop);
+      await interaction.reply(config.messages.noModuleFound);
       return;
     }
 
@@ -54,7 +55,7 @@ export class ModuleCommand extends SwanCommand {
     await toggleModule(module, enabled);
     await SwanModule.findOneAndUpdate({ name: module.name }, { enabled });
 
-    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) })).catch(noop);
+    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) }));
   }
 
   private _getStatus(status: boolean): string {

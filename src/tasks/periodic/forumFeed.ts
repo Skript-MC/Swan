@@ -4,17 +4,18 @@ import { EmbedBuilder } from 'discord.js';
 import he from 'he';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '@/app/types';
-import { trimText } from '@/app/utils';
-import { apis, channels, colors } from '@/conf/settings';
-import { forumFeed as config } from '@/conf/tasks';
+import { apis, channels, colors } from '#config/settings';
+import { forumFeed as config } from '#config/tasks';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { InvisionFullResource, InvisionFullTopic, InvisionUpdate } from '#types/index';
+import { trimText } from '#utils/index';
 
 const turndownService = new Turndown()
   .addRule('code', {
     filter: 'pre',
     replacement: (_content, node) => {
+      /* global Element  */
       const { className } = node as Element;
       const language = new RegExp(/lang-(?<lang>\S+)/).exec(className)?.groups?.lang;
       const code = node.textContent;
@@ -59,7 +60,7 @@ export class ForumFeedTask extends Task {
         .setAuthor({
           name: topic.firstPost.author.name,
           iconURL: topic.firstPost.author.photoUrlIsDefault
-            ? null
+            ? undefined // eslint-disable-line no-undefined
             : this._ensureHttpScheme(topic.firstPost.author.photoUrl),
         })
         .setTitle(pupa(config.embed.title, { topic }))
@@ -76,11 +77,7 @@ export class ForumFeedTask extends Task {
     const resources: InvisionFullResource = await axios.get(
       apis.forum + config.endpoints.files.files,
       {
-        params: {
-          ...config.baseAxiosParams.params,
-          categories: '22,5,20,19,18,17,16,15,14,13,12,11,10,9,8,7,21,6,4,33,3,28,27',
-          // TODO: Remove category filter when it'll be possible
-        },
+        params: config.baseAxiosParams.params,
         auth: config.baseAxiosParams.auth,
       },
     )
@@ -112,7 +109,8 @@ export class ForumFeedTask extends Task {
         .setColor(colors.default)
         .setAuthor({
           name: resource.author.name,
-          iconURL: resource.author.photoUrlIsDefault ? null : this._ensureHttpScheme(resource.author.photoUrl),
+          // eslint-disable-next-line no-undefined
+          iconURL: resource.author.photoUrlIsDefault ? undefined : this._ensureHttpScheme(resource.author.photoUrl),
         })
         .setTitle(trimText(pupa(resource.changelog ? config.embed.update : config.embed.post, { resource }), 250))
         .setURL(resource.url)

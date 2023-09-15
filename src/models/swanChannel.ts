@@ -1,6 +1,6 @@
 import type { FilterQuery } from 'mongoose';
 import { model, Schema } from 'mongoose';
-import type { SwanChannelBase, SwanChannelDocument, SwanChannelModel } from '@/app/types';
+import type { SwanChannelBase, SwanChannelDocument, SwanChannelModel } from '#types/index';
 
 const ChannelSchema = new Schema<SwanChannelDocument, SwanChannelModel>({
   channelId: {

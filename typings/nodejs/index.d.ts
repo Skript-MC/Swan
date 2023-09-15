@@ -18,20 +18,13 @@ declare namespace NodeJS {
     GUILD_ID: string;
 
     STAFF_ROLE: string;
-    FORUM_MODERATOR_ROLE: string;
     EVERYONE_ROLE: string;
-    ACTIVE_MEMBER_ROLE: string;
     BAN_ROLE: string;
-    MUTE_ROLE: string;
 
     SKRIPT_TALK_CHANNEL: string;
     IDEA_CHANNEL: string;
     SUGGESTIONS_CHANNEL: string;
-    BOT_CHANNEL: string;
     SNIPPETS_CHANNEL: string;
-    SKRIPT_CREATIONS_CHANNEL: string;
-    SKRIPT_HELP_CHANNELS: string;
-    OTHER_HELP_CHANNELS: string;
     LOG_CHANNEL: string;
     BAN_CHANNEL: string;
     MAIN_CHANNEL: string;

@@ -1,17 +1,10 @@
 import { container } from '@sapphire/pieces';
-import type { GuildTextBasedChannel } from 'discord.js';
-import { ModerationError } from '@/app/moderation/ModerationError';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { channels } from '#config/settings';
+import { ModerationError } from '#moderation/ModerationError';
 
 export class ErrorState {
-  channel: GuildTextBasedChannel;
-  errors: ModerationError[];
-
-  constructor(channel: GuildTextBasedChannel) {
-    this.channel = channel;
-    this.errors = [];
-  }
+  errors: ModerationError[] = [];
 
   public addError(error: ModerationError): void {
     this.errors.push(error);
@@ -21,11 +14,14 @@ export class ErrorState {
     return this.errors.length > 0;
   }
 
-  public log(): void {
+  public async log(): Promise<void> {
     if (!this.hasError())
       return;
 
-    void this.channel.send(messages.global.oops).catch(noop);
+    const channel = await container.client.guild.channels.fetch(channels.log);
+    if (channel?.isTextBased())
+      await channel.send(messages.global.oops);
+
     for (const error of this.errors) {
       container.logger.error(error.message);
       if (error instanceof ModerationError) {

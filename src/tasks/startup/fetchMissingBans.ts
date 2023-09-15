@@ -1,12 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { AuditLogEvent } from 'discord.js';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { BanAction } from '@/app/moderation/actions/BanAction';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { SanctionTypes } from '@/app/types';
-import { nullop } from '@/app/utils';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { BanAction } from '#moderation/actions/BanAction';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import { SanctionTypes } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 9 })
 export class FetchMissingBansTask extends Task {
@@ -17,20 +16,18 @@ export class FetchMissingBansTask extends Task {
     for (const ban of bans.values()) {
       const currentHardban = await ModerationHelper.getCurrentHardban(ban.user.id);
       if (!currentHardban) {
-        const discordBan = logs.entries.find(entry => entry.target.id === ban.user.id);
+        const discordBan = logs.entries.find(entry => entry.target?.id === ban.user.id);
         if (!discordBan)
           continue;
 
-        const moderator = this.container.client.guild.members.resolve(discordBan.executor)
-          ?? await this.container.client.guild.members.fetch(discordBan.executor)
-            .catch(nullop);
-        if (!moderator)
+        const moderatorId = discordBan.executor?.id;
+        if (!moderatorId)
           continue;
 
         const data = new ModerationData()
-          .setVictim(ban.user, false)
+          .setVictim({ id: ban.user.id, name: ban.user.displayName })
           .setReason(ban.reason)
-          .setModeratorId(moderator.id)
+          .setModeratorId(moderatorId)
           .setDuration(-1, false)
           .setType(SanctionTypes.Hardban);
         try {

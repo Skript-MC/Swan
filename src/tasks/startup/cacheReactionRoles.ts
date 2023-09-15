@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { ReactionRole } from '@/app/models/reactionRole';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
+import { ReactionRole } from '#models/reactionRole';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 8 })
 export class CacheReactionRolesTask extends Task {

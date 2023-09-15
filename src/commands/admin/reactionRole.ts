@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel, Role } from 'discord.js';
 import {
@@ -7,16 +8,14 @@ import {
   EmbedBuilder,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { ReactionRole } from '@/app/models/reactionRole';
-import { resolveEmoji } from '@/app/resolvers/emoji';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { reactionRole as config } from '@/conf/commands/admin';
-import * as messages from '@/conf/messages';
-import { colors, emojis } from '@/conf/settings';
+import { reactionRole as config } from '#config/commands/admin';
+import * as messages from '#config/messages';
+import { colors, emojis } from '#config/settings';
+import { ReactionRole } from '#models/reactionRole';
+import { resolveEmoji } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class ReactionRoleCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
@@ -26,7 +25,6 @@ export class ReactionRoleCommand extends SwanCommand {
       description: 'Rôle à distribuer via la réaction',
       required: true,
     },
-    // TODO: Use the emoji type when Sapphire will release it
     {
       type: ApplicationCommandOptionType.String,
       name: 'émoji',
@@ -43,16 +41,20 @@ export class ReactionRoleCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     const role = interaction.options.getRole('rôle', true);
     const givenRole = await interaction.guild.roles.fetch(role.id);
+    if (!givenRole) {
+      await interaction.reply(config.messages.invalidRole);
+      return;
+    }
 
-    let reaction = interaction.guild.emojis.resolve(emojis.yes).toString();
+    let reaction = (interaction.guild.emojis.resolve(emojis.yes) ?? emojis.yes).toString();
     const argumentEmoji = interaction.options.getString('émoji');
     if (argumentEmoji) {
-      const resolvedEmoji = resolveEmoji(interaction.options.getString('émoji'), interaction.guild);
+      const resolvedEmoji = resolveEmoji(argumentEmoji, interaction.guild);
       if (resolvedEmoji.isErr()) {
         await interaction.reply(config.messages.invalidEmoji);
         return;
@@ -60,7 +62,7 @@ export class ReactionRoleCommand extends SwanCommand {
       reaction = resolvedEmoji.unwrap();
     }
 
-    const destinationChannel = interaction.options.getChannel('salon') as GuildTextBasedChannel;
+    const destinationChannel = interaction.options.getChannel('salon')! as GuildTextBasedChannel;
 
     await this._exec(
       interaction,
@@ -78,7 +80,7 @@ export class ReactionRoleCommand extends SwanCommand {
   ): Promise<void> {
     const botMember = this.container.client.guild.members.me;
     if (!botMember || botMember.roles.highest.position <= givenRole.position) {
-      await interaction.reply(config.messages.notEnoughPermissions).catch(noop);
+      await interaction.reply(config.messages.notEnoughPermissions);
       return;
     }
 
@@ -92,7 +94,7 @@ export class ReactionRoleCommand extends SwanCommand {
     try {
       await sendMessage.react(reaction);
     } catch {
-      interaction.reply(messages.global.oops).catch(noop);
+      await interaction.reply(messages.global.oops);
       return;
     }
 
@@ -104,7 +106,7 @@ export class ReactionRoleCommand extends SwanCommand {
     };
 
     this.container.client.cache.reactionRolesIds.add(document.messageId);
-    await ReactionRole.create(document).catch(noop);
+    await ReactionRole.create(document);
 
     await interaction.reply(config.messages.success);
   }

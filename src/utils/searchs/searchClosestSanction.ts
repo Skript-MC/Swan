@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
 import { distance } from 'fastest-levenshtein';
-import type { SanctionDocument, SimilarityMatch } from '@/app/types';
+import type { SanctionDocument, SimilarityMatch } from '#types/index';
 
 /**
  * Find the closest sanction given an array of sanctions and a query string.
@@ -20,20 +20,22 @@ export async function searchClosestSanction(
     // Avoid useless double loop after.
     if (user.username === wanted) {
       return [{
-        matchedName: '⭐ ' + user.tag,
+        matchedName: `⭐ ${user.tag}`,
         baseName: entry.userId,
-        similarity: 1,
+        distance: 0,
       }];
     }
     matches.push({
       matchedName: user.tag,
       baseName: entry.userId,
-      similarity: distance(user.username.toLowerCase(), wanted.toLowerCase()),
+      distance: distance(user.username.toLowerCase(), wanted.toLowerCase()),
     });
   }
+
   if (matches.length <= 0)
     return [];
-  matches.sort((a, b) => b.similarity - a.similarity);
-  matches[0].matchedName = '⭐ ' + matches[0].matchedName;
+
+    matches.sort((a, b) => a.distance - b.distance);
+  matches[0].matchedName = `⭐ ${matches[0].matchedName}`;
   return matches;
 }

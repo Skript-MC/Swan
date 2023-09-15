@@ -1,7 +1,7 @@
 import type { IPieceError } from '@sapphire/framework';
 import { Piece } from '@sapphire/framework';
 import cron from 'node-cron';
-import { Events } from '@/app/types/sapphire';
+import { Events } from '#types/sapphire';
 
 /**
  * The base task class. This class is abstract and is to be extended by subclasses, which should implement the methods.
@@ -31,8 +31,8 @@ export abstract class Task extends Piece {
   public readonly immediate: boolean;
   public readonly startupOrder?: number;
 
-  private _scheduleInterval: NodeJS.Timeout;
-  private _scheduleCron: cron.ScheduledTask;
+  private _scheduleInterval: NodeJS.Timeout | undefined;
+  private _scheduleCron: cron.ScheduledTask | undefined;
   private readonly _callback: (() => Promise<void>) | null;
 
   constructor(context: Piece.Context, options: TaskOptions) {
@@ -45,7 +45,7 @@ export abstract class Task extends Piece {
     this._callback = this._run.bind(this);
   }
 
-  public onLoad(): void {
+  public override onLoad(): void {
     if (!this._callback)
       return;
 
@@ -58,14 +58,14 @@ export abstract class Task extends Piece {
       void this._callback();
   }
 
-  public onUnload(): void {
+  public override onUnload(): void {
     if (this._scheduleInterval)
       clearInterval(this._scheduleInterval);
     if (this._scheduleCron)
       this._scheduleCron.stop();
   }
 
-  public toJSON(): Piece.JSON & { interval: number | undefined; cron: string | undefined } {
+  public override toJSON(): Piece.JSON & { interval: number | undefined; cron: string | undefined } {
     return {
       ...super.toJSON(),
       interval: this.interval,

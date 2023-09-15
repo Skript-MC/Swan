@@ -1,17 +1,15 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
-import { ReactionRole } from '@/app/models/reactionRole';
-import type { GuildMessage } from '@/app/types';
-import { noop } from '@/app/utils';
+import { ReactionRole } from '#models/reactionRole';
+import type { GuildMessage } from '#types/index';
 
-export class MessageReactionRemove extends Listener {
+export class MessageReactionRemoveListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.isDMBased())
+    if (user.bot || !reaction.message.inGuild())
       return;
 
-    const message = reaction.message as GuildMessage;
-    if (this.container.client.cache.reactionRolesIds.has(message.id))
-      await this._handleReactionRole(reaction, message, user);
+    if (this.container.client.cache.reactionRolesIds.has(reaction.message.id))
+      await this._handleReactionRole(reaction, reaction.message, user);
   }
 
   private async _handleReactionRole(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
@@ -20,7 +18,7 @@ export class MessageReactionRemove extends Listener {
       return;
     const emoji = document.reaction;
     if (reaction.emoji.toString() !== emoji) {
-      reaction.remove().catch(noop);
+      await reaction.remove();
       return;
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
@@ -34,6 +32,6 @@ export class MessageReactionRemove extends Listener {
       return;
     }
     if (member.roles.cache.get(givenRole.id))
-      member.roles.remove(givenRole).catch(noop);
+      await member.roles.remove(givenRole);
   }
 }

@@ -1,6 +1,6 @@
 import type { FilterQuery } from 'mongoose';
 import { model, Schema } from 'mongoose';
-import type { DiscordUserBase, DiscordUserDocument, DiscordUserModel } from '@/app/types';
+import type { DiscordUserBase, DiscordUserDocument, DiscordUserModel } from '#types/index';
 
 const DiscordUserSchema = new Schema<DiscordUserDocument, DiscordUserModel>({
   userId: {

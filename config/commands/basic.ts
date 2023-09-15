@@ -1,74 +1,39 @@
 import { stripIndent } from 'common-tags';
-import { Rules } from '@/app/types';
-import { activeMemberRolePrecondition, basePreconditions, channelRulesPrecondition } from '@/conf/configUtils';
 
 export const addonPack = {
   settings: {
-    name: "Pack d'add-ons",
     command: 'addonPack',
     description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
-    examples: ['addonPack 1.16.4', 'addonPack 1.13'],
   },
   messages: {
     notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
-};
+} as const;
 
 export const autoMessage = {
   settings: {
-    name: 'Message rapide',
     command: 'auto',
     description: "Permet d'envoyer rapidement un message prédéfini.",
-    examples: ['auto skript-gui', 'automsg 1.8'],
   },
   messages: {
     notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
-};
+} as const;
 
 export const errorDetails = {
   settings: {
-    name: "Détails d'erreur",
     command: 'error',
     description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
-    examples: ['error Invalid amount and/or placement of double quotes'],
   },
   messages: {
     notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
-};
-
-export const help = {
-  settings: {
-    name: 'Aide',
-    command: 'help',
-    description: 'Affiche la liste des commandes disponibles ou des informations précises sur une commande spécifique.',
-    examples: ['help', 'aide ping'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
-  },
-  messages: {
-    commandInfo: {
-      title: ':star: Commande "{name}"',
-      usage: '❯ Utilisation',
-      usableBy: '❯ Utilisable par',
-      aliases: '❯ Aliases',
-      examples: '❯ Exemples',
-    },
-    commandsList: {
-      title: 'Commandes de Swan ({amount})',
-      description: "Faites `{helpCommand}` pour avoir plus d'informations sur une commande.",
-      category: '❯ {categoryName}',
-    },
-    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
-  },
-};
+} as const;
 
 export const links = {
   settings: {
-    name: 'Liens',
     command: 'links',
     description: 'Affiche la liste des liens utiles concernant Skript.',
-    examples: ['links'],
   },
   messages: {
     selectMenuItemDescription: 'Page {pageIndex}',
@@ -119,15 +84,12 @@ export const links = {
       ],
     },
   },
-};
+} as const;
 
 export const move = {
   settings: {
-    name: 'Déplacer un message',
+    command: 'Déplacer un message',
     description: "Permet de déplacer un message d'un salon d'aide à un autre.",
-    examples: ['move #skript-2 756858183229636640'],
-    preconditions: [...basePreconditions, activeMemberRolePrecondition],
-    permissions: ['Membre Actif'],
   },
   messages: {
     successfullyMoved: ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
@@ -139,15 +101,12 @@ export const move = {
     question: 'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
     emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
-};
+} as const;
 
 export const ping = {
   settings: {
-    name: 'Ping',
     command: 'ping',
     description: "Permet de connaître la latence de Swan et de l'API Discord.",
-    examples: ['ping'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     firstMessage: ':incoming_envelope: Calcul en cours...',
@@ -157,34 +116,28 @@ export const ping = {
       :globe_with_meridians: API Discord : {discordPing} ms {discordIndicator}
     `,
   },
-};
+} as const;
 
 export const rule = {
   settings: {
-    name: 'Règles',
     command: 'rule',
     description: 'Affiche une règle prédéfinie.',
-    examples: ['regle mentions', 'regle 2'],
   },
   messages: {
     notFound: "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
     noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },
-};
+} as const;
 
 export const statistics = {
   settings: {
-    name: 'Statistiques',
     command: 'statistics',
     description: 'Affiche des statistiques et diverses informations sur Swan.',
-    examples: ['stats'],
-    preconditions: [...basePreconditions, channelRulesPrecondition(Rules.NoHelpChannel)],
   },
   messages: {
     embed: {
       title: 'Statistiques de Swan',
-      description: 'Le préfixe est `{prefix}`. Faites `{prefix}aide` pour avoir la liste des commandes.',
       version: '❯ Version',
       versionContent: stripIndent`
         Version : {version}
@@ -207,4 +160,4 @@ export const statistics = {
       bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
   },
-};
+} as const;

@@ -1,8 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import * as SuggestionManager from '@/app/structures/SuggestionManager';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { channels } from '@/conf/settings';
+import { channels } from '#config/settings';
+import * as SuggestionManager from '#structures/SuggestionManager';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import type { GuildMessage } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ cron: '*/20 * * * *' })
 export class SuggestionsTask extends Task {
@@ -15,7 +16,7 @@ export class SuggestionsTask extends Task {
     const suggestions = await SuggestionManager.getPendingSuggestions();
 
     const channel = this.container.client.channels.cache.get(channels.suggestions);
-    if (!suggestions || !channel?.isTextBased())
+    if (!suggestions || !channel?.isTextBased() || channel.isDMBased())
       return;
 
     for (const suggestion of suggestions) {
@@ -23,7 +24,7 @@ export class SuggestionsTask extends Task {
       const embed = await SuggestionManager.getSuggestionEmbed(suggestion);
       const actions = SuggestionManager.getSuggestionActions(suggestion);
 
-      let message;
+      let message: GuildMessage;
       if (suggestion.discordId) {
         // The suggestion has a discordId, so we need to update the suggestion
         message = await channel.messages.fetch(suggestion.discordId);

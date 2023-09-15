@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
@@ -8,14 +9,14 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { userInfo as config } from '@/conf/commands/info';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import { userInfo as config } from '#config/commands/info';
+import * as messages from '#config/messages';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class UserInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -53,7 +54,7 @@ export class UserInfoCommand extends SwanCommand {
       if (activity.state)
         presenceDetails += pupa(embedConfig.presence.state, { activity });
 
-      if (activity.timestamps) {
+      if (activity.timestamps?.start) {
         const formattedTime = time(activity.timestamps.start, TimestampStyles.RelativeTime);
         presenceDetails += pupa(embedConfig.presence.timestamps, { time: formattedTime });
       }
@@ -84,8 +85,7 @@ export class UserInfoCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({ name: pupa(embedConfig.title, { member }) })
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
-      .setThumbnail(member.user.displayAvatarURL())
+      .setThumbnail(member.displayAvatarURL())
       .setTimestamp()
       .addFields(
         { name: embedConfig.names.title, value: namesContent, inline: false },

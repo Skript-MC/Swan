@@ -1,14 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { RemoveWarnAction } from '@/app/moderation/actions/RemoveWarnAction';
-import { UnbanAction } from '@/app/moderation/actions/UnbanAction';
-import { UnmuteAction } from '@/app/moderation/actions/UnmuteAction';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
-import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
+import * as messages from '#config/messages';
+import { Sanction } from '#models/sanction';
+import { ModerationData } from '#moderation/ModerationData';
+import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
+import { UnbanAction } from '#moderation/actions/UnbanAction';
+import { UnmuteAction } from '#moderation/actions/UnmuteAction';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
+import { SanctionTypes } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class ModerationTask extends Task {
@@ -23,28 +22,16 @@ export class ModerationTask extends Task {
     });
 
     for (const sanction of sanctions) {
-      const {
-        userId,
-        type,
-        sanctionId,
-      } = sanction;
+      const { userId, type, sanctionId } = sanction;
 
-      const member = this.container.client.guild.members.cache.get(userId)
-        ?? (await this.container.client.guild.members.fetch(userId)
-          .catch(noop));
-      if (!member)
-        continue;
-
-      const user = member.user
-        ?? this.container.client.users.resolve(userId)
-        ?? (await this.container.client.users.fetch(userId)
-          .catch(noop));
-      if (!user)
+      const person = await this.container.client.guild.members.fetch(userId).catch(null)
+        ?? await this.container.client.users.fetch(userId).catch(null);
+      if (!person)
         continue;
 
       const data = new ModerationData()
         .setSanctionId(sanctionId)
-        .setVictim(member ?? user, false)
+        .setVictim({ id: person.id, name: person.displayName })
         .setReason(messages.moderation.reasons.autoRevoke);
 
       switch (type) {

@@ -1,15 +1,16 @@
 import { Listener } from '@sapphire/framework';
-import type { MessageReaction } from 'discord.js';
+import type { Message, MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
-import * as MessageLogManager from '@/app/structures/MessageLogManager';
-import type { GuildMessage } from '@/app/types';
-import { noop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { emojis, roles } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { emojis, roles } from '#config/settings';
+import * as MessageLogManager from '#structures/MessageLogManager';
 
 export class MessageUpdateListener extends Listener {
-  public override async run(oldMessage: GuildMessage, newMessage: GuildMessage): Promise<void> {
+  public override async run(oldMessage: Message, newMessage: Message): Promise<void> {
+    if (!oldMessage.inGuild() || !oldMessage.member || !newMessage.inGuild() || !newMessage.member)
+      return;
+
     if (oldMessage?.content && !oldMessage.system)
       await MessageLogManager.saveMessageEdit(this.container.client.cache, oldMessage, newMessage);
 
@@ -58,9 +59,9 @@ export class MessageUpdateListener extends Listener {
         mentions: deletedMentions
           .map(mention => (mention instanceof User ? mention.username : mention.name))
           .join(', '),
-        user: newMessage.member.user,
+        user: newMessage.author,
       }),
-    ).catch(noop);
+    );
     if (!botNotificationMessage)
       return;
 
@@ -68,7 +69,7 @@ export class MessageUpdateListener extends Listener {
     if (severalPeopleAffected)
       return;
 
-    await botNotificationMessage.react(emojis.remove).catch(noop);
+    await botNotificationMessage.react(emojis.remove);
     const collector = botNotificationMessage
       .createReactionCollector({
         filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
@@ -76,7 +77,7 @@ export class MessageUpdateListener extends Listener {
           && !user.bot,
       }).on('collect', async () => {
         collector.stop();
-        await botNotificationMessage.delete().catch(noop);
+        await botNotificationMessage.delete();
       });
   }
 }

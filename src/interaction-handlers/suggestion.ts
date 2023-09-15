@@ -8,13 +8,13 @@ import {
   ButtonStyle,
   EmbedBuilder,
 } from 'discord.js';
-import * as SuggestionManager from '@/app/structures/SuggestionManager';
-import * as messages from '@/conf/messages';
-import { bot, colors } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { bot, colors } from '#config/settings';
+import * as SuggestionManager from '#structures/SuggestionManager';
 
 @ApplyOptions<InteractionHandlerOptions>({ interactionHandlerType: InteractionHandlerTypes.Button })
 export class SuggestionHandler extends InteractionHandler {
-  public parse(interaction: ButtonInteraction): Option<never> {
+  public override parse(interaction: ButtonInteraction): Option<never> {
     if (!interaction.customId.startsWith('suggestion'))
       return this.none();
     return this.some();
@@ -42,7 +42,7 @@ export class SuggestionHandler extends InteractionHandler {
           .addComponents(
             new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
-              .setURL(response.loginUrl)
+              .setURL(response.loginUrl ?? 'https://skript-mc.fr/suggestions')
               .setStyle(ButtonStyle.Link),
           ));
         embed = new EmbedBuilder()
@@ -73,7 +73,7 @@ export class SuggestionHandler extends InteractionHandler {
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
     }
     if (response?.suggestion) {
-      const message = await interaction.channel.messages.fetch(interaction.message.id);
+      const message = await interaction.channel!.messages.fetch(interaction.message.id);
       // Get the new embed and actions for this suggestion
       const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
       const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);

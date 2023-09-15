@@ -1,16 +1,16 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
 import type { ApplicationCommandOptionData, GuildTextBasedChannel } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanChannel } from '@/app/models/swanChannel';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { logs as config } from '@/conf/commands/admin';
+import { logs as config } from '#config/commands/admin';
+import { SwanChannel } from '#models/swanChannel';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class LogsCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -46,14 +46,14 @@ export class LogsCommand extends SwanCommand {
     // add a toggle to enable/disable logging for the channel.
     const swanChannel = await SwanChannel.findOne({ channelId: channel.id });
     if (!swanChannel) {
-      void interaction.reply(config.messages.noChannelFound).catch(noop);
+      await interaction.reply(config.messages.noChannelFound);
       return;
     }
 
     if (isNullish(logged)) {
       const result = await SwanChannel.findOne({ channelId: channel.id });
-      void interaction.reply(
-        pupa(config.messages.loggingStatus, { status: this._getStatus(result.logged) }),
+      await interaction.reply(
+        pupa(config.messages.loggingStatus, { status: this._getStatus(result?.logged ?? false) }),
       );
       return;
     }
@@ -64,7 +64,7 @@ export class LogsCommand extends SwanCommand {
     else
       this.container.client.cache.swanChannels.add(swanChannel);
 
-    void interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) })).catch(noop);
+    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) }));
   }
 
   private _getStatus(status: boolean): string {

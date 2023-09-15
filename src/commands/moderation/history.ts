@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, EmbedField, User } from 'discord.js';
 import {
@@ -8,19 +9,19 @@ import {
   TimestampStyles,
 } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { Sanction } from '@/app/models/sanction';
-import { PaginatedMessageEmbedFields } from '@/app/structures/PaginatedMessageEmbedFields';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SanctionDocument } from '@/app/types';
-import { SanctionsUpdates, SanctionTypes } from '@/app/types';
-import { getUsername, toHumanDuration } from '@/app/utils';
-import { history as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
-import { colors, moderation } from '@/conf/settings';
+import { history as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { colors, moderation } from '#config/settings';
+import { Sanction } from '#models/sanction';
+import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SanctionDocument } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { getUsername, toHumanDuration } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class HistoryCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -66,7 +67,7 @@ export class HistoryCommand extends SwanCommand {
       .setColor(colors.default)
       .setTimestamp();
 
-    const allowedUser = await this.container.client.users.fetch(interaction.member.user.id);
+    const allowedUser = await this.container.client.users.fetch(interaction.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(embed)
       .setItems(fields)

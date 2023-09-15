@@ -1,17 +1,17 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { Sanction } from '@/app/models/sanction';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import { RemoveWarnAction } from '@/app/moderation/actions/RemoveWarnAction';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import { removeWarn as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
+import { removeWarn as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { Sanction } from '#models/sanction';
+import { ModerationData } from '#moderation/ModerationData';
+import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { SanctionTypes } from '#types/index';
+import { nullop } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class RemoveWarnCommand extends SwanCommand {
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
@@ -37,7 +37,7 @@ export class RemoveWarnCommand extends SwanCommand {
   ];
 
   public override async chatInputRun(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
     await this._exec(
@@ -47,23 +47,23 @@ export class RemoveWarnCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction): Promise<void> {
+  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const sanctions = await Sanction.find({
       userId: interaction.options.get('membre', true).value,
       revoked: false,
     }).catch(nullop);
     await interaction.respond(
       sanctions
-        .slice(0, 20)
+        ?.slice(0, 20)
         .map(entry => ({
           name: entry.sanctionId + ' — ' + entry.reason,
           value: entry.sanctionId,
-        })),
+        })) ?? [],
     );
   }
 
   private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
+    interaction: SwanCommand.ChatInputInteraction<'cached'>,
     warnId: string,
     reason: string,
   ): Promise<void> {
@@ -71,7 +71,7 @@ export class RemoveWarnCommand extends SwanCommand {
 
     const warn = await Sanction.findOne({ sanctionId: warnId, revoked: false }).catch(nullop);
     if (!warn) {
-      await interaction.followUp(config.messages.invalidWarnId).catch(noop);
+      await interaction.followUp(config.messages.invalidWarnId);
       return;
     }
 
@@ -83,7 +83,7 @@ export class RemoveWarnCommand extends SwanCommand {
     }
 
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated);
       return;
     }
 
@@ -95,18 +95,18 @@ export class RemoveWarnCommand extends SwanCommand {
     try {
       const data = new ModerationData(interaction)
         .setSanctionId(warn.sanctionId)
-        .setVictim(member)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(reason)
         .setType(SanctionTypes.RemoveWarn);
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)
-        await interaction.followUp(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while removing a warn from member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.followUp(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops);
     }
   }
 }

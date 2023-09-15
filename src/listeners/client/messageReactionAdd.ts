@@ -1,28 +1,28 @@
 import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import pupa from 'pupa';
-import { Poll } from '@/app/models/poll';
-import { ReactionRole } from '@/app/models/reactionRole';
-import * as PollManager from '@/app/structures/PollManager';
-import type { GuildMessage } from '@/app/types';
-import { QuestionType } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import * as messages from '@/conf/messages';
-import { channels, emojis, miscellaneous } from '@/conf/settings';
+import * as messages from '#config/messages';
+import { channels, emojis, miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import { ReactionRole } from '#models/reactionRole';
+import * as PollManager from '#structures/PollManager';
+import type { GuildMessage } from '#types/index';
+import { QuestionType } from '#types/index';
+import { noop, nullop } from '#utils/index';
+
+type PollAnswer = [reactionName: string, votersIds: string[]];
 
 export class MessageReactionAddListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
-    if (user.bot || reaction.message.channel.isDMBased())
+    if (user.bot || !reaction.message.inGuild())
       return;
 
-    const message = reaction.message as GuildMessage;
-
-    if (this.container.client.cache.pollMessagesIds.has(message.id))
-      await this._handlePoll(reaction, message, user);
-    else if (channels.idea === message.channel.id)
-      await this._handleSuggestion(reaction, message, user);
-    else if (this.container.client.cache.reactionRolesIds.has(message.id))
-      await this._handleReactionRole(reaction, message, user);
+    if (this.container.client.cache.pollMessagesIds.has(reaction.message.id))
+      await this._handlePoll(reaction, reaction.message, user);
+    else if (channels.idea === reaction.message.channel.id)
+      await this._handleSuggestion(reaction, reaction.message, user);
+    else if (this.container.client.cache.reactionRolesIds.has(reaction.message.id))
+      await this._handleReactionRole(reaction, reaction.message, user);
   }
 
   private async _handleSuggestion(reaction: MessageReaction, message: GuildMessage, user: User): Promise<void> {
@@ -50,11 +50,9 @@ export class MessageReactionAddListener extends Listener {
     const { pollReactions } = miscellaneous;
 
     // Whether they react with the appropriate "answer reaction" for this poll
-    if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name))
-      || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name))) {
+    if ((poll.questionType === QuestionType.Yesno && pollReactions.yesno.includes(emoji.name!))
+      || (poll.questionType === QuestionType.Choice && pollReactions.multiple.includes(emoji.name!))) {
       // Find the reaction they chose before (undefined if they never answered).
-      type PollAnswer = [reactionName: string, votersIds: string[]];
-
       const previousUserVote = Object.entries(poll.votes)
         // We find all the entries where the user id is in the votersIds array.
         .find((entry: PollAnswer) => (entry[1].includes(user.id) ? entry : null))
@@ -83,9 +81,11 @@ export class MessageReactionAddListener extends Listener {
         );
       }
 
-      message.reactions.cache
-        .filter(r => r.users.cache.has(user.id) && r.emoji.name !== emoji.name)
-        .map(r => void r.users.remove(user.id).catch(noop));
+      await Promise.allSettled(
+        message.reactions.cache
+          .filter(r => r.users.cache.has(user.id) && r.emoji.name !== emoji.name)
+          .map(async r => r.users.remove(user.id)),
+      );
       if (poll.anonymous)
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
@@ -123,7 +123,7 @@ export class MessageReactionAddListener extends Listener {
     }
     const emoji = document.reaction;
     if (reaction.emoji.toString() !== emoji) {
-      reaction.remove().catch(noop);
+      await reaction.remove();
       return;
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
@@ -137,6 +137,6 @@ export class MessageReactionAddListener extends Listener {
       return;
     }
     if (!member.roles.cache.get(givenRole.id))
-      member.roles.add(givenRole).catch(noop);
+      await member.roles.add(givenRole);
   }
 }

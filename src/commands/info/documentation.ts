@@ -1,20 +1,21 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SkriptMcDocumentationSyntaxAndAddon } from '@/app/types';
-import { searchClosestArticle, stripTags, trimText } from '@/app/utils';
-import { documentation as config } from '@/conf/commands/info';
-import { colors } from '@/conf/settings';
+import { documentation as config } from '#config/commands/info';
+import { colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SkriptMcDocumentationSyntaxAndAddon } from '#types/index';
+import { searchClosestArticle, stripTags, trimText } from '#utils/index';
 
 const turndownService = new Turndown();
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class DocumentationCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -86,7 +87,7 @@ export class DocumentationCommand extends SwanCommand {
           ), EmbedLimits.MaximumDescriptionLength / 2,
         ),
       )
-      .setFooter({ text: pupa(embedMsgs.footer, { member: interaction.member }) });
+      .setFooter({ text: embedMsgs.footer });
 
     if (article.deprecation) {
       embed.addFields({

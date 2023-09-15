@@ -1,15 +1,16 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { idea as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { colors } from '@/conf/settings';
+import { idea as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { channels, colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class IdeaCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [];
 
@@ -22,7 +23,9 @@ export class IdeaCommand extends SwanCommand {
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
-    const channel = this.container.client.cache.channels.idea;
+    const channel = await this.container.client.guild.channels.fetch(channels.idea);
+    if (!channel || !channel.isTextBased())
+      return;
 
     const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) {
@@ -40,10 +43,9 @@ export class IdeaCommand extends SwanCommand {
       .setColor(colors.default)
       .setAuthor({
         name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
-        iconURL: randomIdea.author.avatarURL(),
+        iconURL: randomIdea.author.displayAvatarURL(),
       })
       .setDescription(randomIdea.content)
-      .setFooter({ text: pupa(messages.global.executedBy, { member: interaction.member }) })
       .setTimestamp(randomIdea.createdAt);
 
     await interaction.reply({ embeds: [embed] });

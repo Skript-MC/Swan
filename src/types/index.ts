@@ -1,22 +1,8 @@
-
 import type { Endpoints } from '@octokit/types';
-import type { Command, CommandOptions } from '@sapphire/framework';
+import type { CommandOptions } from '@sapphire/framework';
 import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
-import type {
-  ApplicationCommandType,
-  Guild,
-  GuildMember,
-  GuildTextBasedChannel,
-  Message,
-  User,
-} from 'discord.js';
-import type {
-  Document,
-  FilterQuery,
-  Model,
-} from 'mongoose';
-import type { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { channels } from '@/conf/settings';
+import type { Message, PermissionResolvable } from 'discord.js';
+import type { Document, FilterQuery, Model } from 'mongoose';
 
 /* ****************** */
 /*  API Result Types  */
@@ -27,8 +13,8 @@ import type { channels } from '@/conf/settings';
 
 /** Types for the Github API's releases endpoint */
 type RawGithubReleaseResponse = Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
+type GithubRelease = RawGithubReleaseResponse['data'][0];
 
-export type GithubRelease = RawGithubReleaseResponse['data'][0];
 export type GithubPrerelease = GithubRelease & { prerelease: true };
 export type GithubStableRelease = GithubRelease & { prerelease: false };
 
@@ -365,43 +351,12 @@ export interface PublishResponse extends SuggestionResponse {
 /** Options for the SwanCommand class */
 export interface SwanCommandOptions extends CommandOptions {
   command: string;
-  examples: string[];
-  permissions?: string[];
-  contextType: ApplicationCommandType.Message | ApplicationCommandType.User;
+  dmPermission?: boolean;
+  defaultMemberPermissions?: PermissionResolvable;
 }
 
-export type SwanChatInputCommand = Required<Pick<Command, 'chatInputRun'>> & SwanCommand;
-export type SwanContextMenuCommand = Required<Pick<Command, 'contextMenuRun'>> & SwanCommand;
-
-/** Types of rules for where a command can be executed */
-export enum Rules {
-  OnlyBotChannel = 1,
-  NoHelpChannel = 1 << 1,
-  OnlyHelpChannel = 1 << 2,
-}
-
-/** Represent an addon that matches the requirements, used in commands/addonInfo.ts */
-export interface MatchingAddon {
-  file: string;
-  name: string;
-}
-
-/** Enforces that message.channel is a TextChannel or NewsChannel, not a DMChannel. */
-export type GuildMessage = Message & { channel: GuildTextBasedChannel; member: GuildMember; guild: Guild };
-
-/** Union type of all the channel we cache */
-export type ChannelSlug = keyof typeof channels;
-
-/** All properties containing a array of channels */
-export type ChannelArraySlugs = 'help' | 'otherHelp' | 'skriptHelp';
-
-/** All properties containing a single channel */
-export type ChannelSingleSlug = Exclude<ChannelSlug, ChannelArraySlugs>;
-
-/** Record of all the channel we cache internally */
-export type CachedChannels =
-  & Record<ChannelArraySlugs, GuildTextBasedChannel[]>
-  & Record<ChannelSingleSlug, GuildTextBasedChannel>;
+/** Enforces that the message is cached in a guild */
+export type GuildMessage = Message<true>;
 
 // #endregion
 
@@ -411,29 +366,6 @@ export type CachedChannels =
 
 // #region Various Moderation Types (VS Code)
 // region Various Moderation Types (JetBrains)
-
-export interface BanChannelMessage {
-  id: string;
-  content: string;
-  authorName: string;
-  authorId: string;
-  sentAt: number;
-  edited?: number | null;
-  attachments: Array<{ name: string; url: string }>;
-}
-
-/** The sanctions types that we track in the ConvictedUser database */
-export type TrackedSanctionTypes = SanctionTypes.Hardban | SanctionTypes.Mute | SanctionTypes.TempBan;
-
-/** The name of the fields of the TrackedSanctionTypes */
-export type TrackedFieldNames = 'currentBanId' | 'currentMuteId';
-
-/** Represent the victim object of ModerationData#victim */
-export interface PersonInformations {
-  id?: string;
-  user?: User;
-  member?: GuildMember;
-}
 
 /** The object returned by ModerationData#toSchema */
 export interface ModerationDataResult {
@@ -752,7 +684,7 @@ export type MessageLogModel = Model<MessageLogDocument>;
 export interface SimilarityMatch {
   matchedName: string;
   baseName: string;
-  similarity: number;
+  distance: number;
 }
 
 // #endregion

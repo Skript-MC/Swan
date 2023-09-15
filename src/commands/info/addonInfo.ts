@@ -1,19 +1,20 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { SkriptToolsAddonResponse } from '@/app/types';
-import { convertFileSize, searchClosestAddon, trimText } from '@/app/utils';
-import { addonInfo as config } from '@/conf/commands/info';
-import * as messages from '@/conf/messages';
-import { apis, colors } from '@/conf/settings';
+import { addonInfo as config } from '#config/commands/info';
+import * as messages from '#config/messages';
+import { apis, colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { SkriptToolsAddonResponse } from '#types/index';
+import { convertFileSize, searchClosestAddon, trimText } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class AddonInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -57,7 +58,7 @@ export class AddonInfoCommand extends SwanCommand {
       return;
     }
 
-    await this._sendDetail(interaction, addonVersions.at(-1));
+    await this._sendDetail(interaction, addonVersions.at(-1)!);
   }
 
   private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
@@ -82,7 +83,7 @@ export class AddonInfoCommand extends SwanCommand {
           EmbedLimits.MaximumDescriptionLength,
         ),
       )
-      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) });
+      .setFooter({ text: embedMessages.footer });
 
     if (addon.unmaintained)
       embed.addFields({ name: embedMessages.unmaintained, value: embedMessages.unmaintainedDescription, inline: true });
@@ -104,9 +105,9 @@ export class AddonInfoCommand extends SwanCommand {
         inline: true,
       });
     }
-    if (addon.depend?.depend?.length > 0)
+    if (addon.depend?.depend && addon.depend.depend.length > 0)
       embed.addFields({ name: embedMessages.depend, value: addon.depend.depend.join(', '), inline: true });
-    if (addon.depend?.softdepend?.length > 0)
+    if (addon.depend?.softdepend && addon.depend.softdepend.length > 0)
       embed.addFields({ name: embedMessages.softdepend, value: addon.depend.softdepend.join(', '), inline: true });
 
     await interaction.reply({ embeds: [embed] });

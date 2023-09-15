@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import { captureException } from '@sentry/node';
-import type { TaskErrorPayload } from '@/app/structures/tasks/Task';
+import type { TaskErrorPayload } from '#structures/tasks/Task';
 
 export class TaskErrorListener extends Listener {
   public override run(error: Error, { piece: task }: TaskErrorPayload): void {

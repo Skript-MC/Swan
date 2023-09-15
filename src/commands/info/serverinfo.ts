@@ -1,18 +1,19 @@
 import { isIP } from 'node:net';
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import type { ServerStatResponse } from '@/app/types';
-import { noop, nullop } from '@/app/utils';
-import { serverInfo as config } from '@/conf/commands/info';
-import { apis, colors } from '@/conf/settings';
+import { serverInfo as config } from '#config/commands/info';
+import { apis, colors } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import type { ServerStatResponse } from '#types/index';
+import { nullop } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class ServerInfoCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -31,8 +32,8 @@ export class ServerInfoCommand extends SwanCommand {
   }
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, query: string): Promise<void> {
-    if (isIP(query.split(':').shift())) {
-      await interaction.reply(config.messages.noIp).catch(noop);
+    if (isIP(query.split(':').shift()!)) {
+      await interaction.reply(config.messages.noIp);
       return;
     }
 
@@ -41,7 +42,7 @@ export class ServerInfoCommand extends SwanCommand {
       .catch(nullop);
 
     if (!server) {
-      await interaction.reply(config.messages.requestFailed).catch(noop);
+      await interaction.reply(config.messages.requestFailed);
       return;
     }
 
@@ -49,7 +50,7 @@ export class ServerInfoCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { query }) })
-      .setFooter({ text: pupa(embedMessages.footer, { member: interaction.member }) })
+      .setFooter({ text: embedMessages.footer })
       .setThumbnail(`${apis.server}/icon/${query}`)
       .setTimestamp();
 

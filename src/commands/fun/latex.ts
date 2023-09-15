@@ -1,15 +1,15 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, MessageReaction, User } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType, Message } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { noop } from '@/app/utils';
-import { latex as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { apis, emojis } from '@/conf/settings';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
+import { latex as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { apis, emojis } from '#config/settings';
+import { SwanCommand } from '#structures/commands/SwanCommand';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class LatexCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -32,12 +32,10 @@ export class LatexCommand extends SwanCommand {
       content: apis.latex + encodeURIComponent(equation),
       fetchReply: true,
     });
-    if (!(sendMessage instanceof Message))
-      return;
-    await sendMessage.react(emojis.remove).catch(noop);
+    await sendMessage.react(emojis.remove);
     const collector = sendMessage
       .createReactionCollector({
-        filter: (reaction: MessageReaction, user: User) => user.id === interaction.member.user.id
+        filter: (reaction: MessageReaction, user: User) => user.id === interaction.user.id
           && !user.bot
           && (reaction.emoji.id ?? reaction.emoji.name) === emojis.remove,
       }).on('collect', async () => {
@@ -45,7 +43,7 @@ export class LatexCommand extends SwanCommand {
           collector.stop();
           await sendMessage.delete();
         } catch {
-          await interaction.reply(messages.global.oops).catch(noop);
+          await interaction.reply(messages.global.oops);
         }
       });
   }

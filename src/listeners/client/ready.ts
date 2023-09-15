@@ -1,7 +1,7 @@
 import { Listener } from '@sapphire/framework';
-import type { SwanClient } from '@/app/SwanClient';
-import { Events } from '@/app/types/sapphire';
-import { bot } from '@/conf/settings';
+import type { SwanClient } from '#app/SwanClient';
+import { bot } from '#config/settings';
+import { Events } from '#types/sapphire';
 
 export class ReadyListener extends Listener {
   public override async run(): Promise<void> {
@@ -19,7 +19,7 @@ export class ReadyListener extends Listener {
 
     this.container.logger.info('Loading startup tasks...');
     const tasks = taskStore.filter(task => task.enabled && Number.isInteger(task.startupOrder))
-      .sort((a, b) => a.startupOrder - b.startupOrder);
+      .sort((a, b) => a.startupOrder! - b.startupOrder!);
     for (const [taskName, task] of tasks) {
       this.container.logger.info(`Run startup task ${taskName}...`);
       try {

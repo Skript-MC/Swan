@@ -9,9 +9,12 @@ import type {
   CacheType,
   CommandInteraction as DjsCommandInteraction,
   ModalSubmitInteraction as DjsModalSubmitInteraction,
+  MessageApplicationCommandData,
+  PermissionResolvable,
+  UserApplicationCommandData,
 } from 'discord.js';
-import { ApplicationCommandType } from 'discord.js';
-import type { SwanCommandOptions } from '@/app/types';
+import { ApplicationCommandType, PermissionFlagsBits } from 'discord.js';
+import type { SwanCommandOptions } from '#types/index';
 
 const REGISTRY_OPTIONS: ApplicationCommandRegistryRegisterOptions = {
   guildIds: [process.env.GUILD_ID],
@@ -19,56 +22,49 @@ const REGISTRY_OPTIONS: ApplicationCommandRegistryRegisterOptions = {
 };
 
 export abstract class SwanCommand extends Command {
-  commandName = '';
-  command = '';
-  usage = '';
-  description = '';
-  examples: string[] = [];
-  permissions: string[] = [];
+  public command: string;
+  public dmPermission: boolean;
+  public defaultMemberPermissions: PermissionResolvable;
+  protected canRunInDM = false;
 
   abstract commandOptions: ApplicationCommandOptionData[];
   abstract commandType: ApplicationCommandType;
 
   constructor(context: PieceContext, options: SwanCommand.Options) {
-    super(context, { ...options, name: context.name });
+    super(context, {
+      ...options,
+      name: options.command,
+      description: options.description,
+    });
 
-    if (options.name)
-      this.commandName = options.name;
-
-    if (options.command)
-      this.command = options.command;
-
-    if (options.description)
-      this.description = options.description;
-
-    if (options.examples.length > 0)
-      this.examples = options.examples;
-
-    if (options.permissions?.length > 0)
-      this.permissions = options.permissions;
+    this.command = options.command;
+    this.description = options.description ?? 'Commande de Swan';
+    this.dmPermission = options.dmPermission ?? false;
+    this.defaultMemberPermissions = options.defaultMemberPermissions ?? PermissionFlagsBits.SendMessages;
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
+    if (!this.canRunInDM && this.dmPermission)
+      throw new Error(`Command ${this.name} can't be run in DM but has dmPermission set to true`);
+
     switch (this.commandType) {
       case ApplicationCommandType.ChatInput:
         registry.registerChatInputCommand({
-          type: ApplicationCommandType.ChatInput,
           name: this.command,
           description: this.description,
           options: this.commandOptions,
+          dmPermission: this.dmPermission,
+          defaultMemberPermissions: this.defaultMemberPermissions,
         }, REGISTRY_OPTIONS);
         break;
+
       case ApplicationCommandType.User:
-        registry.registerContextMenuCommand({
-          type: ApplicationCommandType.User,
-          name: this.commandName,
-        }, REGISTRY_OPTIONS);
-        break;
       case ApplicationCommandType.Message:
         registry.registerContextMenuCommand({
-          type: ApplicationCommandType.Message,
-          name: this.commandName,
-        }, REGISTRY_OPTIONS);
+          type: this.commandType,
+          name: this.command,
+        } as MessageApplicationCommandData | UserApplicationCommandData, REGISTRY_OPTIONS);
+        break;
     }
   }
 }

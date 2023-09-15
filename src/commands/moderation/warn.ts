@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
 import {
@@ -7,29 +8,28 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import { WarnAction } from '@/app/moderation/actions/WarnAction';
-import { resolveSanctionnableMember } from '@/app/resolvers/sanctionnableMember';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { SanctionTypes } from '@/app/types';
-import { noop } from '@/app/utils';
-import { warn as config } from '@/conf/commands/moderation';
-import * as messages from '@/conf/messages';
-import { moderation } from '@/conf/settings';
+import { warn as config } from '#config/commands/moderation';
+import * as messages from '#config/messages';
+import { moderation } from '#config/settings';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import { WarnAction } from '#moderation/actions/WarnAction';
+import { resolveSanctionnableMember } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { SanctionTypes } from '#types/index';
+import { nullop } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class WarnCommand extends SwanCommand {
   commandType = ApplicationCommandType.User;
   commandOptions: ApplicationCommandOptionData[] = [];
 
   public override async contextMenuRun(
-    interaction: SwanCommand.ContextMenuInteraction,
+    interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const moderator = await this.container.client.guild.members.fetch(interaction.member.user.id);
-    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
+    const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
+    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(nullop);
     if (!potentialVictim) {
       await interaction.reply({ content: messages.prompt.member, ephemeral: true });
       return;
@@ -70,14 +70,14 @@ export class WarnCommand extends SwanCommand {
   }
 
   private async _exec(
-    interaction: SwanCommand.ModalSubmitInteraction,
+    interaction: SwanCommand.ModalSubmitInteraction<'cached'>,
     member: GuildMember,
     reason: string,
   ): Promise<void> {
     await interaction.deferReply({ ephemeral: true });
 
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated);
       return;
     }
 
@@ -88,25 +88,25 @@ export class WarnCommand extends SwanCommand {
 
     const currentBan = await ModerationHelper.getCurrentBan(member.id);
     if (currentBan) {
-      await interaction.followUp(messages.global.impossibleBecauseBanned).catch(noop);
+      await interaction.followUp(messages.global.impossibleBecauseBanned);
       return;
     }
 
     try {
       const data = new ModerationData(interaction)
-        .setVictim(member)
+        .setVictim({ id: member.id, name: member.displayName })
         .setReason(reason)
         .setDuration(moderation.warnDuration * 1000, true)
         .setType(SanctionTypes.Warn);
 
       const success = await new WarnAction(data).commit();
       if (success)
-        await interaction.followUp(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while warning a member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.followUp(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops);
     }
   }
 }

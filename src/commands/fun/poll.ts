@@ -1,3 +1,4 @@
+import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
 import {
@@ -9,19 +10,18 @@ import {
 } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
-import { ApplySwanOptions } from '@/app/decorators/swanOptions';
-import { Poll } from '@/app/models/poll';
-import { resolveDuration } from '@/app/resolvers/duration';
-import { resolveQuotedText } from '@/app/resolvers/quotedText';
-import { SwanCommand } from '@/app/structures/commands/SwanCommand';
-import { QuestionType } from '@/app/types';
-import { trimText } from '@/app/utils';
-import { poll as config } from '@/conf/commands/fun';
-import * as messages from '@/conf/messages';
-import { colors, miscellaneous } from '@/conf/settings';
+import { poll as config } from '#config/commands/fun';
+import * as messages from '#config/messages';
+import { colors, miscellaneous } from '#config/settings';
+import { Poll } from '#models/poll';
+import { resolveDuration, resolveQuotedText } from '#resolvers/index';
+import { SwanCommand } from '#structures/commands/SwanCommand';
+import { QuestionType } from '#types/index';
+import { trimText } from '#utils/index';
 
-@ApplySwanOptions(config)
+@ApplyOptions<SwanCommand.Options>(config.settings)
 export class PollCommand extends SwanCommand {
+  override canRunInDM = true;
   commandType = ApplicationCommandType.ChatInput;
   commandOptions: ApplicationCommandOptionData[] = [
     {
@@ -60,8 +60,8 @@ export class PollCommand extends SwanCommand {
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const anonymous = interaction.options.getBoolean('anonyme');
-    const multiple = interaction.options.getBoolean('multiple');
+    const anonymous = interaction.options.getBoolean('anonyme') ?? false;
+    const multiple = interaction.options.getBoolean('multiple') ?? false;
 
     const duration = resolveDuration(interaction.options.getString('durée', true), false);
     if (duration.isErr()) {
@@ -131,10 +131,13 @@ export class PollCommand extends SwanCommand {
       formattedEnd: timeFormatter(finishDate, TimestampStyles.LongDateTime),
     });
 
-    const member = await this.container.client.guild.members.fetch(interaction.member.user.id);
+    const member = await this.container.client.guild.members.fetch(interaction.user.id);
 
     const embed = new EmbedBuilder()
-      .setAuthor({ name: pupa(embedMessages.author, { member }), iconURL: member?.user.avatarURL() })
+      .setAuthor({
+        name: pupa(embedMessages.author, { member }),
+        iconURL: member.displayAvatarURL(),
+      })
       .addFields(
         { name: embedMessages.question, value: trimText(question, 1000) },
         { name: embedMessages.answers, value: trimText(possibleAnswers, 1000) },
@@ -145,7 +148,7 @@ export class PollCommand extends SwanCommand {
     if (details.length > 0)
       embed.setDescription(details.join('\n'));
 
-    const pollMessage = await interaction.channel.send({ embeds: [embed] });
+    const pollMessage = await interaction.channel!.send({ embeds: [embed] });
 
     await interaction.reply({ content: config.messages.success, ephemeral: true });
 
@@ -179,7 +182,7 @@ export class PollCommand extends SwanCommand {
     await Poll.create({
       messageId: pollMessage.id,
       memberId: member.id,
-      channelId: interaction.channel.id,
+      channelId: interaction.channelId,
       finish: finishDate.getTime(),
       duration,
       questionType,

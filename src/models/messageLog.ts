@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { MessageLogDocument, MessageLogModel } from '@/app/types';
+import type { MessageLogDocument, MessageLogModel } from '#types/index';
 
 const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
   user: {

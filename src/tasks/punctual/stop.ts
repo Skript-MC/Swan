@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { TaskOptions } from '@/app/structures/tasks/Task';
-import { Task } from '@/app/structures/tasks/Task';
+import type { TaskOptions } from '#structures/tasks/Task';
+import { Task } from '#structures/tasks/Task';
 
 @ApplyOptions<TaskOptions>({})
 export class StopTask extends Task {

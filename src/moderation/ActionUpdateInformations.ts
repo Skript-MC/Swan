@@ -1,7 +1,7 @@
-import { Sanction } from '@/app/models/sanction';
-import type { ModerationData } from '@/app/moderation/ModerationData';
-import * as ModerationHelper from '@/app/moderation/ModerationHelper';
-import type { SanctionDocument } from '@/app/types';
+import { Sanction } from '#models/sanction';
+import type { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
+import type { SanctionDocument } from '#types/index';
 
 export class ActionUpdateInformations {
   data: ModerationData;
@@ -13,18 +13,18 @@ export class ActionUpdateInformations {
   }
 
   public async load(): Promise<void> {
-    const currentSanction = await ModerationHelper.getCurrentSanction(this.data.victim.id, this.data.type);
+    const currentSanction = await ModerationHelper.getCurrentSanction(this.data.victimId, this.data.type);
     if (!currentSanction)
       return;
 
     this.sanctionDocument = await Sanction.findOne({
-      userId: this.data.victim.id,
+      userId: this.data.victimId,
       revoked: false,
       sanctionId: currentSanction.sanctionId,
     });
   }
 
-  public isUpdate(): boolean {
+  public isUpdate(): this is ActionUpdateInformations & { sanctionDocument: SanctionDocument } {
     return Boolean(this.sanctionDocument);
   }
 }
