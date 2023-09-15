@@ -1,6 +1,4 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { IMessagePrompterExplicitMessageReturn } from '@sapphire/discord.js-utilities';
-import { MessagePrompter } from '@sapphire/discord.js-utilities';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type {
   ApplicationCommandOptionData,
@@ -9,18 +7,14 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import {
-  ApplicationCommandType,
-  EmbedBuilder,
-  PermissionFlagsBits,
-} from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import pupa from 'pupa';
 import { move as config } from '#config/commands/basic';
 import * as messages from '#config/messages';
 import { colors, emojis } from '#config/settings';
 import { resolveGuildTextBasedChannel } from '#resolvers/index';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop } from '#utils/index';
+import { noop, nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class MoveCommand extends SwanCommand {
@@ -60,25 +54,25 @@ export class MoveCommand extends SwanCommand {
     }
 
     await interaction.deferReply({});
+    await interaction.followUp(config.messages.question);
 
-    const handler = new MessagePrompter(
-      config.messages.question,
-      'message',
-      { explicitReturn: true },
-    );
-    const result = await handler.run(
-      interaction.channel!,
-      interaction.user,
-    ) as IMessagePrompterExplicitMessageReturn;
-    await result.appliedMessage.delete();
-    if (!result.response) {
-      await interaction.followUp(messages.prompt.channel);
+    const result = await interaction.channel!.awaitMessages({
+      filter: (m: Message) => m.author.id === interaction.user.id,
+      max: 1,
+      time: 30_000,
+      errors: ['time'],
+    })
+    .then(collected => collected.first())
+    .catch(nullop);
+
+    if (!result) {
+      await interaction.editReply(messages.prompt.timeout);
       return;
     }
 
-    const resolvedChannel = resolveGuildTextBasedChannel(result.response.content, interaction.guild);
+    const resolvedChannel = resolveGuildTextBasedChannel(result.content, interaction.guild);
     if (resolvedChannel.isErr()) {
-      await interaction.followUp(messages.prompt.channel);
+      await interaction.editReply(messages.prompt.channel);
       return;
     }
     const targetedChannel = resolvedChannel.unwrap();
@@ -90,7 +84,7 @@ export class MoveCommand extends SwanCommand {
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
       .has(PermissionFlagsBits.ViewChannel);
     if (!canEveryoneWrite || !canEveryoneRead || interaction.channel!.id === targetedChannel.id) {
-      await interaction.followUp(messages.prompt.channel);
+      await interaction.editReply(messages.prompt.channel);
       return;
     }
 
@@ -120,8 +114,8 @@ export class MoveCommand extends SwanCommand {
     try {
       // Remove all messages from prompts, as well as messages from the user.
       await targetedMessage.delete();
-      await result.response.delete();
-      await interaction.followUp(successMessage);
+      await result.delete();
+      await interaction.editReply(successMessage);
 
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(emojis.remove).catch(noop);
@@ -144,7 +138,7 @@ export class MoveCommand extends SwanCommand {
             await informationEmbed.delete();
             await repostMessage.delete();
           } catch {
-            await interaction.followUp(messages.global.oops).catch(noop);
+            await interaction.editReply(messages.global.oops).catch(noop);
           }
         });
     } catch (unknownError: unknown) {

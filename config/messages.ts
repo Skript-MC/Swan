@@ -57,6 +57,7 @@ export const prompt = {
   member: "Le membre donné est invalide, il se peut qu'il ne soit pas sur le Discord ou que tu aies fait une faute de frappe. Tu peux le mentionner, entrer son identifiant discord, ou simplement son pseudo.",
   number: 'Le nombre donné est invalide.',
   pollAnswers: 'Le sondage et/ou les réponses données sont invalides.',
+  timeout: 'Tu as mis trop de temps à répondre, la commande a été annulée.',
 } as const;
 
 export const moderation = {
