@@ -8,7 +8,7 @@ import { skriptReleases as config } from '#config/tasks';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import type { GithubPrerelease, GithubStableRelease } from '#types/index';
-import { noop, trimText } from '#utils/index';
+import { trimText } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({
   cron: '*/10 * * * *',
@@ -68,7 +68,6 @@ export class SkriptReleasesTask extends Task {
     await channel.send({
       content: config.releaseAnnouncement,
       embeds: [embed],
-    })
-      .catch(noop);
+    });
   }
 }

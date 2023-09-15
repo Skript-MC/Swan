@@ -14,7 +14,6 @@ import { colors, emojis } from '#config/settings';
 import { ReactionRole } from '#models/reactionRole';
 import { resolveEmoji } from '#resolvers/index';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ReactionRoleCommand extends SwanCommand {
@@ -81,7 +80,7 @@ export class ReactionRoleCommand extends SwanCommand {
   ): Promise<void> {
     const botMember = this.container.client.guild.members.me;
     if (!botMember || botMember.roles.highest.position <= givenRole.position) {
-      await interaction.reply(config.messages.notEnoughPermissions).catch(noop);
+      await interaction.reply(config.messages.notEnoughPermissions);
       return;
     }
 
@@ -95,7 +94,7 @@ export class ReactionRoleCommand extends SwanCommand {
     try {
       await sendMessage.react(reaction);
     } catch {
-      interaction.reply(messages.global.oops).catch(noop);
+      await interaction.reply(messages.global.oops);
       return;
     }
 
@@ -107,7 +106,7 @@ export class ReactionRoleCommand extends SwanCommand {
     };
 
     this.container.client.cache.reactionRolesIds.add(document.messageId);
-    await ReactionRole.create(document).catch(noop);
+    await ReactionRole.create(document);
 
     await interaction.reply(config.messages.success);
   }

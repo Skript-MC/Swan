@@ -9,7 +9,7 @@ import { ModerationData } from '#moderation/ModerationData';
 import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';
-import { noop, nullop } from '#utils/index';
+import { nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class RemoveWarnCommand extends SwanCommand {
@@ -71,7 +71,7 @@ export class RemoveWarnCommand extends SwanCommand {
 
     const warn = await Sanction.findOne({ sanctionId: warnId, revoked: false }).catch(nullop);
     if (!warn) {
-      await interaction.followUp(config.messages.invalidWarnId).catch(noop);
+      await interaction.followUp(config.messages.invalidWarnId);
       return;
     }
 
@@ -83,7 +83,7 @@ export class RemoveWarnCommand extends SwanCommand {
     }
 
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated);
       return;
     }
 
@@ -101,12 +101,12 @@ export class RemoveWarnCommand extends SwanCommand {
 
       const success = await new RemoveWarnAction(data).commit();
       if (success)
-        await interaction.followUp(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while removing a warn from member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.followUp(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops);
     }
   }
 }

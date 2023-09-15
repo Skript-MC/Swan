@@ -7,7 +7,6 @@ import pupa from 'pupa';
 import { logs as config } from '#config/commands/admin';
 import { SwanChannel } from '#models/swanChannel';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LogsCommand extends SwanCommand {
@@ -47,13 +46,13 @@ export class LogsCommand extends SwanCommand {
     // add a toggle to enable/disable logging for the channel.
     const swanChannel = await SwanChannel.findOne({ channelId: channel.id });
     if (!swanChannel) {
-      void interaction.reply(config.messages.noChannelFound).catch(noop);
+      await interaction.reply(config.messages.noChannelFound);
       return;
     }
 
     if (isNullish(logged)) {
       const result = await SwanChannel.findOne({ channelId: channel.id });
-      void interaction.reply(
+      await interaction.reply(
         pupa(config.messages.loggingStatus, { status: this._getStatus(result?.logged ?? false) }),
       );
       return;
@@ -65,7 +64,7 @@ export class LogsCommand extends SwanCommand {
     else
       this.container.client.cache.swanChannels.add(swanChannel);
 
-    void interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) })).catch(noop);
+    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) }));
   }
 
   private _getStatus(status: boolean): string {

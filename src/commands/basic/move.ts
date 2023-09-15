@@ -14,7 +14,7 @@ import * as messages from '#config/messages';
 import { colors, emojis } from '#config/settings';
 import { resolveGuildTextBasedChannel } from '#resolvers/index';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop, nullop } from '#utils/index';
+import { nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class MoveCommand extends SwanCommand {
@@ -62,9 +62,8 @@ export class MoveCommand extends SwanCommand {
       time: 30_000,
       errors: ['time'],
     })
-    .then(collected => collected.first())
-    .catch(nullop);
-
+      .then(collected => collected.first())
+      .catch(nullop);
     if (!result) {
       await interaction.editReply(messages.prompt.timeout);
       return;
@@ -118,7 +117,7 @@ export class MoveCommand extends SwanCommand {
       await interaction.editReply(successMessage);
 
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
-      await informationEmbed.react(emojis.remove).catch(noop);
+      await informationEmbed.react(emojis.remove);
 
       const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
       if (targetedMessage.content.length > 2000)
@@ -138,11 +137,11 @@ export class MoveCommand extends SwanCommand {
             await informationEmbed.delete();
             await repostMessage.delete();
           } catch {
-            await interaction.editReply(messages.global.oops).catch(noop);
+            await interaction.editReply(messages.global.oops);
           }
         });
     } catch (unknownError: unknown) {
-      await targetedMessage.member?.send(config.messages.emergency).catch(noop);
+      await targetedMessage.member?.send(config.messages.emergency);
       await targetedMessage.member?.send(`\`${targetedMessage.content.slice(0, 2000)}\``);
       if (targetedMessage.content.length > 2000)
         await targetedMessage.member?.send(`\`${targetedMessage.content.slice(2000, 4000)}\``);

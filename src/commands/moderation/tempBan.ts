@@ -16,7 +16,7 @@ import { BanAction } from '#moderation/actions/BanAction';
 import { resolveDuration, resolveSanctionnableMember } from '#resolvers/index';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';
-import { noop } from '#utils/index';
+import { nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class SdbCommand extends SwanCommand {
@@ -28,7 +28,7 @@ export class SdbCommand extends SwanCommand {
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
     const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
-    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(noop);
+    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(nullop);
     if (!potentialVictim) {
       await interaction.reply({ content: messages.prompt.member, ephemeral: true });
       return;
@@ -95,7 +95,7 @@ export class SdbCommand extends SwanCommand {
     await interaction.deferReply({ ephemeral: true });
 
     if (this.container.client.currentlyModerating.has(member.id)) {
-      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated);
       return;
     }
 
@@ -118,13 +118,13 @@ export class SdbCommand extends SwanCommand {
     try {
       const success = await new BanAction(data).commit();
       if (success)
-        await interaction.followUp(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while banning a member!');
       this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.followUp(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops);
     }
   }
 }

@@ -154,7 +154,7 @@ export abstract class ModerationAction {
         await victim?.send(message).catch(noop);
       }
     } catch {
-      await this.data.channel?.send(messages.moderation.memberHasClosedDm).catch(noop);
+      await this.data.channel?.send(messages.moderation.memberHasClosedDm);
     }
   }
 

@@ -2,7 +2,6 @@ import { container } from '@sapphire/pieces';
 import * as messages from '#config/messages';
 import { channels } from '#config/settings';
 import { ModerationError } from '#moderation/ModerationError';
-import { noop } from '#utils/index';
 
 export class ErrorState {
   errors: ModerationError[] = [];
@@ -21,7 +20,7 @@ export class ErrorState {
 
     const channel = await container.client.guild.channels.fetch(channels.log);
     if (channel?.isTextBased())
-      channel.send(messages.global.oops).catch(noop);
+      await channel.send(messages.global.oops);
 
     for (const error of this.errors) {
       container.logger.error(error.message);

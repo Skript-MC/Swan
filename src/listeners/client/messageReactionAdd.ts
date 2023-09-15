@@ -81,9 +81,11 @@ export class MessageReactionAddListener extends Listener {
         );
       }
 
-      message.reactions.cache
-        .filter(r => r.users.cache.has(user.id) && r.emoji.name !== emoji.name)
-        .map(r => void r.users.remove(user.id).catch(noop));
+      await Promise.allSettled(
+        message.reactions.cache
+          .filter(r => r.users.cache.has(user.id) && r.emoji.name !== emoji.name)
+          .map(async r => r.users.remove(user.id)),
+      );
       if (poll.anonymous)
         await users.remove(user);
     } else if (pollReactions.specials[1] === emoji.name && user.id === poll.memberId) {
@@ -121,7 +123,7 @@ export class MessageReactionAddListener extends Listener {
     }
     const emoji = document.reaction;
     if (reaction.emoji.toString() !== emoji) {
-      reaction.remove().catch(noop);
+      await reaction.remove();
       return;
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
@@ -135,6 +137,6 @@ export class MessageReactionAddListener extends Listener {
       return;
     }
     if (!member.roles.cache.get(givenRole.id))
-      member.roles.add(givenRole).catch(noop);
+      await member.roles.add(givenRole);
   }
 }

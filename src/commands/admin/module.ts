@@ -6,7 +6,7 @@ import pupa from 'pupa';
 import { module as config } from '#config/commands/admin';
 import { SwanModule } from '#models/swanModule';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop, toggleModule } from '#utils/index';
+import { toggleModule } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ModuleCommand extends SwanCommand {
@@ -45,7 +45,7 @@ export class ModuleCommand extends SwanCommand {
   ): Promise<void> {
     const module = await SwanModule.findOne({ name: moduleName });
     if (!module) {
-      await interaction.reply(config.messages.noModuleFound).catch(noop);
+      await interaction.reply(config.messages.noModuleFound);
       return;
     }
 
@@ -55,7 +55,7 @@ export class ModuleCommand extends SwanCommand {
     await toggleModule(module, enabled);
     await SwanModule.findOneAndUpdate({ name: module.name }, { enabled });
 
-    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) })).catch(noop);
+    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) }));
   }
 
   private _getStatus(status: boolean): string {
