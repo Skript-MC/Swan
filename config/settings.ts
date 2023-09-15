@@ -1,9 +1,6 @@
 import type { HexColorString } from 'discord.js';
 import type { SwanCommandOptions } from '#types/index';
 
-const skriptHelp = process.env.SKRIPT_HELP_CHANNELS.split(',');
-const otherHelp = process.env.OTHER_HELP_CHANNELS.split(',');
-
 export const bot = {
   avatar: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
   guild: process.env.GUILD_ID,
@@ -61,24 +58,16 @@ export const apis = {
 
 export const roles = {
   staff: process.env.STAFF_ROLE,
-  forumModerator: process.env.FORUM_MODERATOR_ROLE,
   everyone: process.env.EVERYONE_ROLE,
-  activeMember: process.env.ACTIVE_MEMBER_ROLE,
   ban: process.env.BAN_ROLE,
-  mute: process.env.MUTE_ROLE,
 } as const;
 
 export const channels = {
   idea: process.env.IDEA_CHANNEL,
   suggestions: process.env.SUGGESTIONS_CHANNEL,
-  bot: process.env.BOT_CHANNEL,
   main: process.env.MAIN_CHANNEL,
   snippets: process.env.SNIPPETS_CHANNEL,
-  skriptHelp,
-  otherHelp,
-  help: [...skriptHelp, ...otherHelp],
   skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
-  creations: process.env.SKRIPT_CREATIONS_CHANNEL,
   log: process.env.LOG_CHANNEL,
   forumUpdates: process.env.FORUM_FEED_CHANNEL,
   banChannel: process.env.BAN_CHANNEL,
