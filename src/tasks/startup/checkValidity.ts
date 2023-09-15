@@ -19,16 +19,10 @@ export class CheckValidityTask extends Task {
     const cachedChannels = guild.channels.cache;
     const invalidChannels: string[] = [];
     for (const [key, value] of Object.entries(channels)) {
-      if (Array.isArray(value)) {
-        if (value.length === 0)
-          invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-        else if (!value.every(elt => cachedChannels.has(elt)))
-          invalidChannels.push(`One of the id entered for settings.channels.${key} is not a valid channel.`);
-      } else if (!value) {
+      if (!value)
         invalidChannels.push(`settings.channels.${key} is not set. You may want to fill this field to avoid any error.`);
-      } else if (!cachedChannels.has(value)) {
+      else if (!cachedChannels.has(value))
         invalidChannels.push(`The id entered for settings.channels.${key} is not a valid channel.`);
-      }
     }
     if (invalidChannels.length > 0) {
       this.container.logger.error('Configured channels are invalid:');
