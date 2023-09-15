@@ -10,7 +10,7 @@ import * as ModerationHelper from '#moderation/ModerationHelper';
 import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';
-import { noop, searchClosestSanction } from '#utils/index';
+import { searchClosestSanction } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class UnbanCommand extends SwanCommand {
@@ -63,7 +63,7 @@ export class UnbanCommand extends SwanCommand {
     await interaction.deferReply({ ephemeral: true });
 
     if (this.container.client.currentlyModerating.has(memberId)) {
-      await interaction.followUp(messages.moderation.alreadyModerated).catch(noop);
+      await interaction.followUp(messages.moderation.alreadyModerated);
       return;
     }
 
@@ -88,12 +88,12 @@ export class UnbanCommand extends SwanCommand {
 
       const success = await new UnbanAction(data).commit();
       if (success)
-        await interaction.followUp(config.messages.success).catch(noop);
+        await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
       this.container.logger.error('An unexpected error occurred while unbanning a member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
-      await interaction.followUp(messages.global.oops).catch(noop);
+      await interaction.followUp(messages.global.oops);
     }
   }
 }

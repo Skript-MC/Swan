@@ -9,7 +9,7 @@ import { serverInfo as config } from '#config/commands/info';
 import { apis, colors } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import type { ServerStatResponse } from '#types/index';
-import { noop, nullop } from '#utils/index';
+import { nullop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class ServerInfoCommand extends SwanCommand {
@@ -33,7 +33,7 @@ export class ServerInfoCommand extends SwanCommand {
 
   private async _exec(interaction: SwanCommand.ChatInputInteraction, query: string): Promise<void> {
     if (isIP(query.split(':').shift()!)) {
-      await interaction.reply(config.messages.noIp).catch(noop);
+      await interaction.reply(config.messages.noIp);
       return;
     }
 
@@ -42,7 +42,7 @@ export class ServerInfoCommand extends SwanCommand {
       .catch(nullop);
 
     if (!server) {
-      await interaction.reply(config.messages.requestFailed).catch(noop);
+      await interaction.reply(config.messages.requestFailed);
       return;
     }
 

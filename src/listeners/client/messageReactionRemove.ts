@@ -2,7 +2,6 @@ import { Listener } from '@sapphire/framework';
 import type { MessageReaction, User } from 'discord.js';
 import { ReactionRole } from '#models/reactionRole';
 import type { GuildMessage } from '#types/index';
-import { noop } from '#utils/index';
 
 export class MessageReactionRemoveListener extends Listener {
   public override async run(reaction: MessageReaction, user: User): Promise<void> {
@@ -19,7 +18,7 @@ export class MessageReactionRemoveListener extends Listener {
       return;
     const emoji = document.reaction;
     if (reaction.emoji.toString() !== emoji) {
-      reaction.remove().catch(noop);
+      await reaction.remove();
       return;
     }
     const givenRole = message.guild.roles.cache.get(document.givenRoleId);
@@ -33,6 +32,6 @@ export class MessageReactionRemoveListener extends Listener {
       return;
     }
     if (member.roles.cache.get(givenRole.id))
-      member.roles.remove(givenRole).catch(noop);
+      await member.roles.remove(givenRole);
   }
 }

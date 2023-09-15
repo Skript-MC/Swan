@@ -20,7 +20,7 @@ import {
 } from '#config/settings';
 import * as SuggestionManager from '#structures/SuggestionManager';
 import type { GuildMessage } from '#types/index';
-import { noop, nullop, trimText } from '#utils/index';
+import { nullop, trimText } from '#utils/index';
 
 const MessageLinkRegex = new RegExp(rawMessageLinkRegex.source.slice(1, -1), 'gimu');
 interface MessageLinkMatch {
@@ -157,7 +157,7 @@ export class MessageCreateListener extends Listener {
             && (reaction.emoji.id || reaction.emoji.name) === emojis.remove
             && !user.bot,
         }).on('collect', async () => {
-          await msg.delete().catch(noop);
+          await msg.delete();
           collector.stop();
         });
 

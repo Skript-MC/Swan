@@ -5,7 +5,6 @@ import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { emojis, roles } from '#config/settings';
 import * as MessageLogManager from '#structures/MessageLogManager';
-import { noop } from '#utils/index';
 
 export class MessageUpdateListener extends Listener {
   public override async run(oldMessage: Message, newMessage: Message): Promise<void> {
@@ -62,7 +61,7 @@ export class MessageUpdateListener extends Listener {
           .join(', '),
         user: newMessage.author,
       }),
-    ).catch(noop);
+    );
     if (!botNotificationMessage)
       return;
 
@@ -70,7 +69,7 @@ export class MessageUpdateListener extends Listener {
     if (severalPeopleAffected)
       return;
 
-    await botNotificationMessage.react(emojis.remove).catch(noop);
+    await botNotificationMessage.react(emojis.remove);
     const collector = botNotificationMessage
       .createReactionCollector({
         filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
@@ -78,7 +77,7 @@ export class MessageUpdateListener extends Listener {
           && !user.bot,
       }).on('collect', async () => {
         collector.stop();
-        await botNotificationMessage.delete().catch(noop);
+        await botNotificationMessage.delete();
       });
   }
 }

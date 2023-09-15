@@ -149,7 +149,7 @@ export class BanAction extends ModerationAction {
         expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
       });
 
-      const message = await thread.send(explanation).catch(noop);
+      const message = await thread.send(explanation);
       if (message)
         await message.pin().catch(noop);
     } catch (unknownError: unknown) {

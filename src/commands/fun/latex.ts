@@ -6,7 +6,6 @@ import { latex as config } from '#config/commands/fun';
 import * as messages from '#config/messages';
 import { apis, emojis } from '#config/settings';
 import { SwanCommand } from '#structures/commands/SwanCommand';
-import { noop } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LatexCommand extends SwanCommand {
@@ -33,7 +32,7 @@ export class LatexCommand extends SwanCommand {
       content: apis.latex + encodeURIComponent(equation),
       fetchReply: true,
     });
-    await sendMessage.react(emojis.remove).catch(noop);
+    await sendMessage.react(emojis.remove);
     const collector = sendMessage
       .createReactionCollector({
         filter: (reaction: MessageReaction, user: User) => user.id === interaction.user.id
@@ -44,7 +43,7 @@ export class LatexCommand extends SwanCommand {
           collector.stop();
           await sendMessage.delete();
         } catch {
-          await interaction.reply(messages.global.oops).catch(noop);
+          await interaction.reply(messages.global.oops);
         }
       });
   }

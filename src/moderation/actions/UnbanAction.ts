@@ -5,7 +5,7 @@ import * as ModerationHelper from '#moderation/ModerationHelper';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
 import type { SanctionDocument } from '#types/index';
 import { SanctionsUpdates, SanctionTypes } from '#types/index';
-import { noop, nullop } from '#utils/index';
+import { nullop } from '#utils/index';
 
 export class UnbanAction extends ModerationAction {
   protected before(): void {
@@ -53,7 +53,7 @@ export class UnbanAction extends ModerationAction {
     try {
       const member = await container.client.guild.members.fetch(this.data.victimId).catch(nullop);
       if (ban?.type === SanctionTypes.Hardban || !member) {
-        const isHardbanned = await container.client.guild.bans.fetch(this.data.victimId).catch(noop);
+        const isHardbanned = await container.client.guild.bans.fetch(this.data.victimId).catch(nullop);
         if (isHardbanned)
           await container.client.guild.members.unban(this.data.victimId, this.data.reason);
       } else {
