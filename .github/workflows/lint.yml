@@ -28,5 +28,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      # Rule `import/resolver` requires the project to be built. Go figure.
+      - name: Build
+        run: npm run build
+
       - name: Run ESLint
         run: npm run lint
