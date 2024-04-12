@@ -464,43 +464,6 @@ export type SwanModuleModel = Model<SwanModuleDocument>;
 
 // #endregion
 
-/* ********************* */
-/*  Poll Database Types  */
-/* ********************* */
-
-// #region Poll Database Types (VS Code)
-// region Poll Database Types (JetBrains)
-
-/** The different question types available for the poll command */
-export enum QuestionType {
-  Yesno,
-  Choice,
-}
-
-/** Interface for the "Poll"'s mongoose schema */
-export interface PollBase {
-  messageId: string;
-  memberId: string;
-  channelId: string;
-  finish: number;
-  duration: number;
-  questionType: QuestionType;
-  // Object of reaction's name (i.e. "2⃣'"), with the array of ids of users whom choose this answer.
-  votes: Record<string, string[]>;
-  question: string;
-  customAnswers?: string[];
-  anonymous: boolean;
-  multiple: boolean;
-}
-
-/** Interface for the "Poll"'s mongoose document */
-export interface PollDocument extends PollBase, Document {}
-
-/** Interface for the "Poll"'s mongoose model */
-export type PollModel = Model<PollDocument>;
-
-// #endregion
-
 /* ************************ */
 /*  Message Database Types  */
 /* ************************ */
