@@ -1,7 +1,6 @@
 import type {
   ApplicationCommandRegistry,
   ApplicationCommandRegistryRegisterOptions,
-  PieceContext,
 } from '@sapphire/framework';
 import { Command, RegisterBehavior } from '@sapphire/framework';
 import type {
@@ -30,7 +29,7 @@ export abstract class SwanCommand extends Command {
   abstract commandOptions: ApplicationCommandOptionData[];
   abstract commandType: ApplicationCommandType;
 
-  constructor(context: PieceContext, options: SwanCommand.Options) {
+  constructor(context: Command.LoaderContext, options: SwanCommand.Options) {
     super(context, {
       ...options,
       name: options.command,

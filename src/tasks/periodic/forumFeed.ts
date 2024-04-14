@@ -16,7 +16,7 @@ const turndownService = new Turndown()
     filter: 'pre',
     replacement: (_content, node) => {
       /* global Element  */
-      const { className } = node as Element;
+      const className = (node as Element).className as string;
       const language = new RegExp(/lang-(?<lang>\S+)/).exec(className)?.groups?.lang;
       const code = node.textContent;
       return `\n\`\`\`${language}\n${code}\n\`\`\``;
