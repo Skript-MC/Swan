@@ -49,7 +49,7 @@ export class RemoveWarnCommand extends SwanCommand {
 
   public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const sanctions = await Sanction.find({
-      userId: interaction.options.get('membre', true).value,
+      userId: interaction.options.get('membre', true).value as string,
       revoked: false,
     }).catch(nullop);
     await interaction.respond(
