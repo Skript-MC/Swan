@@ -19,11 +19,13 @@ export async function searchClosestSanction(
 
     // Avoid useless double loop after.
     if (user.username === wanted) {
-      return [{
-        matchedName: `⭐ ${user.tag}`,
-        baseName: entry.userId,
-        distance: 0,
-      }];
+      return [
+        {
+          matchedName: `⭐ ${user.tag}`,
+          baseName: entry.userId,
+          distance: 0,
+        },
+      ];
     }
     matches.push({
       matchedName: user.tag,
@@ -32,10 +34,9 @@ export async function searchClosestSanction(
     });
   }
 
-  if (matches.length <= 0)
-    return [];
+  if (matches.length <= 0) return [];
 
-    matches.sort((a, b) => a.distance - b.distance);
+  matches.sort((a, b) => a.distance - b.distance);
   matches[0].matchedName = `⭐ ${matches[0].matchedName}`;
   return matches;
 }

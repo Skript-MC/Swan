@@ -8,7 +8,9 @@ export class MuteAction extends ModerationAction {
 
   protected async exec(): Promise<void> {
     if (!this.data.duration)
-      throw new TypeError('Unexpected missing property: data.duration is not set.');
+      throw new TypeError(
+        'Unexpected missing property: data.duration is not set.',
+      );
 
     await this._mute();
   }
@@ -16,7 +18,10 @@ export class MuteAction extends ModerationAction {
   private async _mute(): Promise<void> {
     // Add to the database
     try {
-      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victimId });
+      await Sanction.create({
+        ...this.data.toSchema(),
+        userId: this.data.victimId,
+      });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

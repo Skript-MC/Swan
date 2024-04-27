@@ -1,7 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from 'discord.js';
 import pupa from 'pupa';
 import { module as config } from '#config/commands/admin';
 import { SwanModule } from '#models/swanModule';
@@ -55,7 +58,9 @@ export class ModuleCommand extends SwanCommand {
     await toggleModule(module, enabled);
     await SwanModule.findOneAndUpdate({ name: module.name }, { enabled });
 
-    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(enabled) }));
+    await interaction.reply(
+      pupa(config.messages.success, { status: this._getStatus(enabled) }),
+    );
   }
 
   private _getStatus(status: boolean): string {

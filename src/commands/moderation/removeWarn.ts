@@ -1,7 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
+import type {
+  ApplicationCommandOptionData,
+  AutocompleteInteraction,
+} from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from 'discord.js';
 import { removeWarn as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
@@ -47,18 +53,18 @@ export class RemoveWarnCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
+  public override async autocompleteRun(
+    interaction: AutocompleteInteraction<'cached'>,
+  ): Promise<void> {
     const sanctions = await Sanction.find({
       userId: interaction.options.get('membre', true).value as string,
       revoked: false,
     }).catch(nullop);
     await interaction.respond(
-      sanctions
-        ?.slice(0, 20)
-        .map(entry => ({
-          name: entry.sanctionId + ' — ' + entry.reason,
-          value: entry.sanctionId,
-        })) ?? [],
+      sanctions?.slice(0, 20).map((entry) => ({
+        name: `${entry.sanctionId} — ${entry.reason}`,
+        value: entry.sanctionId,
+      })) ?? [],
     );
   }
 
@@ -69,14 +75,18 @@ export class RemoveWarnCommand extends SwanCommand {
   ): Promise<void> {
     await interaction.deferReply({ ephemeral: true });
 
-    const warn = await Sanction.findOne({ sanctionId: warnId, revoked: false }).catch(nullop);
+    const warn = await Sanction.findOne({
+      sanctionId: warnId,
+      revoked: false,
+    }).catch(nullop);
     if (!warn) {
       await interaction.followUp(config.messages.invalidWarnId);
       return;
     }
 
-    const member = interaction.guild.members.cache.get(warn.userId)
-      ?? await interaction.guild.members.fetch(warn.userId).catch(nullop);
+    const member =
+      interaction.guild.members.cache.get(warn.userId) ??
+      (await interaction.guild.members.fetch(warn.userId).catch(nullop));
     if (!member) {
       await interaction.followUp(config.messages.memberNotFound);
       return;
@@ -100,10 +110,11 @@ export class RemoveWarnCommand extends SwanCommand {
         .setType(SanctionTypes.RemoveWarn);
 
       const success = await new RemoveWarnAction(data).commit();
-      if (success)
-        await interaction.followUp(config.messages.success);
+      if (success) await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
-      this.container.logger.error('An unexpected error occurred while removing a warn from member!');
+      this.container.logger.error(
+        'An unexpected error occurred while removing a warn from member!',
+      );
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.followUp(messages.global.oops);

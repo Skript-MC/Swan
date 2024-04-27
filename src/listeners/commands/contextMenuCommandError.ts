@@ -1,11 +1,19 @@
-import type { ContextMenuCommandErrorPayload, Events } from '@sapphire/framework';
+import type {
+  ContextMenuCommandErrorPayload,
+  Events,
+} from '@sapphire/framework';
 import { Listener } from '@sapphire/framework';
 import { captureException } from '@sentry/node';
 import * as messages from '#config/messages';
 import { noop } from '#utils/index';
 
-export class CommandErrorListener extends Listener<typeof Events.ContextMenuCommandError> {
-  public override async run(error: Error, { interaction }: ContextMenuCommandErrorPayload): Promise<void> {
+export class CommandErrorListener extends Listener<
+  typeof Events.ContextMenuCommandError
+> {
+  public override async run(
+    error: Error,
+    { interaction }: ContextMenuCommandErrorPayload,
+  ): Promise<void> {
     captureException(error);
     await interaction.reply(messages.global.oops).catch(noop);
     captureException(error, {

@@ -12,7 +12,10 @@ export class NotLoadingPrecondition extends Precondition {
 
   private _check(): PreconditionResult {
     return this.container.client.isLoading
-      ? this.error({ identifier: Identifiers.PreconditionNotLoading, message: 'Bot is still loading' })
+      ? this.error({
+          identifier: Identifiers.PreconditionNotLoading,
+          message: 'Bot is still loading',
+        })
       : this.ok();
   }
 }

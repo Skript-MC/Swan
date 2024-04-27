@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import type { ReactionRoleDocument, ReactionRoleModel } from '#types/index';
 
 const ReactionRoleSchema = new Schema<ReactionRoleDocument, ReactionRoleModel>({
@@ -21,4 +21,7 @@ const ReactionRoleSchema = new Schema<ReactionRoleDocument, ReactionRoleModel>({
   },
 });
 
-export const ReactionRole = model<ReactionRoleDocument, ReactionRoleModel>('ReactionRole', ReactionRoleSchema);
+export const ReactionRole = model<ReactionRoleDocument, ReactionRoleModel>(
+  'ReactionRole',
+  ReactionRoleSchema,
+);

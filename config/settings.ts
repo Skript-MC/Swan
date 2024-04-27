@@ -2,7 +2,8 @@ import type { HexColorString } from 'discord.js';
 import type { SwanCommandOptions } from '#types/index';
 
 export const bot = {
-  avatar: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
+  avatar:
+    'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
   guild: process.env.GUILD_ID,
 } as const;
 
@@ -11,11 +12,38 @@ export const miscellaneous = {
   maxPollDuration: 60 * 60 * 24 * 7 * 1000, // 7 days in seconds
   pollReactions: {
     yesno: ['✅', '❌'],
-    multiple: ['1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟', '🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭'],
+    multiple: [
+      '1⃣',
+      '2⃣',
+      '3⃣',
+      '4⃣',
+      '5⃣',
+      '6⃣',
+      '7⃣',
+      '8⃣',
+      '9⃣',
+      '🔟',
+      '🇦',
+      '🇧',
+      '🇨',
+      '🇩',
+      '🇪',
+      '🇫',
+      '🇬',
+      '🇭',
+    ],
     specials: ['ℹ', '🛑'],
   },
   durationFormat: '[le] DD/MM/YYYY [à] HH:mm:ss',
-  permanentKeywords: ['def', 'déf', 'definitif', 'définitif', 'perm', 'perma', 'permanent'],
+  permanentKeywords: [
+    'def',
+    'déf',
+    'definitif',
+    'définitif',
+    'perm',
+    'perma',
+    'permanent',
+  ],
   connectionCheckDuration: 15_000, // 15 seconds in milliseconds
 } satisfies Record<string, unknown>;
 

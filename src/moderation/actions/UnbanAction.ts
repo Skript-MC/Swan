@@ -4,7 +4,7 @@ import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
 import type { SanctionDocument } from '#types/index';
-import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { SanctionTypes, SanctionsUpdates } from '#types/index';
 import { nullop } from '#utils/index';
 
 export class UnbanAction extends ModerationAction {
@@ -51,11 +51,18 @@ export class UnbanAction extends ModerationAction {
 
     // 2. Unban (hard-unban or remove roles)
     try {
-      const member = await container.client.guild.members.fetch(this.data.victimId).catch(nullop);
+      const member = await container.client.guild.members
+        .fetch(this.data.victimId)
+        .catch(nullop);
       if (ban?.type === SanctionTypes.Hardban || !member) {
-        const isHardbanned = await container.client.guild.bans.fetch(this.data.victimId).catch(nullop);
+        const isHardbanned = await container.client.guild.bans
+          .fetch(this.data.victimId)
+          .catch(nullop);
         if (isHardbanned)
-          await container.client.guild.members.unban(this.data.victimId, this.data.reason);
+          await container.client.guild.members.unban(
+            this.data.victimId,
+            this.data.reason,
+          );
       } else {
         await member.roles.set([]);
       }

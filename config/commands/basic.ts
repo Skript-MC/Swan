@@ -3,10 +3,12 @@ import { stripIndent } from 'common-tags';
 export const addonPack = {
   settings: {
     command: 'addonPack',
-    description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    description:
+      "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
   },
   messages: {
-    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
+    notFound:
+      "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
 } as const;
 
@@ -16,17 +18,20 @@ export const autoMessage = {
     description: "Permet d'envoyer rapidement un message prédéfini.",
   },
   messages: {
-    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
+    notFound:
+      "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
 } as const;
 
 export const errorDetails = {
   settings: {
     command: 'error',
-    description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    description:
+      'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
   },
   messages: {
-    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
+    notFound:
+      "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 } as const;
 
@@ -48,38 +53,52 @@ export const links = {
       fields: [
         {
           name: ':books: Documentation Skript de SkriptMC : https://bit.ly/2KSZ6pN',
-          value: "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
-        }, {
+          value:
+            "Documentation sur Skript, réalisée et maintenue par la communauté de Skript-MC. Elle est en français et en constante amélioration. Si tu as une suggestion ou si tu vois une erreur, n'hésite pas à nous en faire part !",
+        },
+        {
           name: ':books: Documentation Skript officielle : https://bit.ly/2VUGZ3W',
-          value: 'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
+          value:
+            'Documentation de Skript officielle. Elle est en anglais mais plus complète. Elle contient toutes les syntaxes utilisables dans la dernière version de Skript.',
         },
         {
           name: ':books: Documentation addons de SkriptMC : https://bit.ly/2viSqq8',
-          value: 'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
-        }, {
+          value:
+            'Documentation des addons, réalisée et maintenue par la communauté de Skript-MC. Elle ne contient pas encore tous les addons, mais elle est en français et en constante amélioration !',
+        },
+        {
           name: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
-          value: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
+          value:
+            'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
         },
         {
           name: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
-          value: 'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
-        }, {
+          value:
+            'Lien officiel de téléchargement des dernières versions de Skript. La dernière version de Skript ne supporte que les dernières versions de Minecraft à partir de la 1.9.',
+        },
+        {
           name: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-          value: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
+          value:
+            'Lien de téléchargement des dernières versions de tous les addons de Skript.',
         },
         {
           name: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
           value: 'Lien officiel de ce Discord.',
-        }, {
+        },
+        {
           name: ':speech_left: Discord Skript Chat : https://discord.gg/V4qFVnh',
-          value: "Lien du Discord \"Skript Chat\", le serveur Discord officiel de Skript. Tu peux y demander de l'aide en anglais, que ce soit sur Skript ou sur des addons.",
+          value:
+            'Lien du Discord "Skript Chat", le serveur Discord officiel de Skript. Tu peux y demander de l\'aide en anglais, que ce soit sur Skript ou sur des addons.',
         },
         {
           name: ':speech_balloon: Forum Skript-MC : https://skript-mc.fr',
-          value: "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
-        }, {
+          value:
+            "Forum français de Skript-MC. Tu peux y demander des scripts, de l'aide sur Skript, Java ou vos serveurs, discuter avec des membres de la communauté ou mettre en ligne tes meilleurs projets !",
+        },
+        {
           name: ':computer: GitHub de Skript : https://bit.ly/2W0EJrU',
-          value: 'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
+          value:
+            'GitHub officiel du projet Skript. Tu peux y consulter son développement, y signaler des problèmes ou y contribuer.',
         },
       ],
     },
@@ -92,14 +111,17 @@ export const move = {
     description: "Permet de déplacer un message d'un salon d'aide à un autre.",
   },
   messages: {
-    successfullyMoved: ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
+    successfullyMoved:
+      ':twisted_rightwards_arrows: {targetName}, ton message a été déplacé vers {targetChannel} par {memberDisplayName}.',
     moveTitle: 'Message de {targetName}',
     moveInfo: stripIndent`
       {memberDisplayName} à déplacé un message de {targetName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
-    question: 'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
-    emergency: "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
+    question:
+      'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
+    emergency:
+      "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
 } as const;
 
@@ -124,7 +146,8 @@ export const rule = {
     description: 'Affiche une règle prédéfinie.',
   },
   messages: {
-    notFound: "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
+    notFound:
+      "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
     noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },
@@ -157,7 +180,8 @@ export const statistics = {
         <@294134773901688833> : contributions
       `,
       bugs: 'Support',
-      bugsContent: 'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
+      bugsContent:
+        'Tu peux reporter les bugs ou problèmes que tu trouves, ou les suggestions que tu as sur le [GitHub](<{url}>). Tu peux aussi venir discuter avec nous sur le [Discord](<https://discord.gg/njSgX3w>) de Swan.',
     },
   },
 } as const;

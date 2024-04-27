@@ -6,12 +6,10 @@ import { SanctionTypes } from '#types/index';
 
 export class GuildBanAddListener extends Listener {
   public override async run(ban: GuildBan): Promise<void> {
-    if (this.container.client.currentlyBanning.has(ban.user.id))
-      return;
+    if (this.container.client.currentlyBanning.has(ban.user.id)) return;
 
     const user = await this.container.client.users.fetch(ban.user.id);
-    if (!user)
-      return;
+    if (!user) return;
 
     const { reason } = await ban.guild.bans.fetch(ban.user.id);
 

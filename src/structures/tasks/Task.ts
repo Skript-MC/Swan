@@ -46,26 +46,25 @@ export abstract class Task extends Piece {
   }
 
   public override onLoad(): void {
-    if (!this._callback)
-      return;
+    if (!this._callback) return;
 
     if (this.interval)
       this._scheduleInterval = setInterval(this._callback, this.interval);
     else if (this.cron)
       this._scheduleCron = cron.schedule(this.cron, this._callback);
 
-    if (this.immediate)
-      void this._callback();
+    if (this.immediate) void this._callback();
   }
 
   public override onUnload(): void {
-    if (this._scheduleInterval)
-      clearInterval(this._scheduleInterval);
-    if (this._scheduleCron)
-      this._scheduleCron.stop();
+    if (this._scheduleInterval) clearInterval(this._scheduleInterval);
+    if (this._scheduleCron) this._scheduleCron.stop();
   }
 
-  public override toJSON(): Piece.JSON & { interval: number | undefined; cron: string | undefined } {
+  public override toJSON(): Piece.JSON & {
+    interval: number | undefined;
+    cron: string | undefined;
+  } {
     return {
       ...super.toJSON(),
       interval: this.interval,
@@ -77,7 +76,9 @@ export abstract class Task extends Piece {
     try {
       await this.run();
     } catch (error: unknown) {
-      this.container.client.emit(Events.TaskError, error as Error, { piece: this });
+      this.container.client.emit(Events.TaskError, error as Error, {
+        piece: this,
+      });
     }
   }
 
@@ -89,10 +90,18 @@ interface BaseTaskOptions extends Piece.Options {
 }
 
 export type TaskOptions =
-  | BaseTaskOptions & { cron: string } & { interval?: never } & { startupOrder?: never }
-  | BaseTaskOptions & { cron?: never } & { interval: number } & { startupOrder?: never }
-  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder: number }
-  | BaseTaskOptions & { cron?: never } & { interval?: never } & { startupOrder?: never };
+  | (BaseTaskOptions & { cron: string } & { interval?: never } & {
+      startupOrder?: never;
+    })
+  | (BaseTaskOptions & { cron?: never } & { interval: number } & {
+      startupOrder?: never;
+    })
+  | (BaseTaskOptions & { cron?: never } & { interval?: never } & {
+      startupOrder: number;
+    })
+  | (BaseTaskOptions & { cron?: never } & { interval?: never } & {
+      startupOrder?: never;
+    });
 
 export interface TaskErrorPayload extends IPieceError {
   piece: Task;

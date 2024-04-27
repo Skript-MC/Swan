@@ -9,11 +9,11 @@ enum Durations {
   /* eslint-disable no-multi-spaces, @typescript-eslint/prefer-literal-enum-member */
   Second = 1,
   Minute = 1 * 60,
-  Hour   = 1 * 60 * 60,
-  Day    = 1 * 60 * 60 * 24,
-  Week   = 1 * 60 * 60 * 24 * 7,
-  Month  = 1 * 60 * 60 * 24 * 30,
-  Year   = 1 * 60 * 60 * 24 * 365,
+  Hour = 1 * 60 * 60,
+  Day = 1 * 60 * 60 * 24,
+  Week = 1 * 60 * 60 * 24 * 7,
+  Month = 1 * 60 * 60 * 24 * 30,
+  Year = 1 * 60 * 60 * 24 * 365,
 }
 
 function tokenize(str: string): string[] {
@@ -37,25 +37,40 @@ function tokenize(str: string): string[] {
     }
   }
 
-  if (buf.length > 0)
-    units.push(buf.trim());
+  if (buf.length > 0) units.push(buf.trim());
   return units;
 }
 
 const durations: Array<[values: string[], multiplier: Durations]> = [
-  [['years', 'year', 'y', 'annees', 'années', 'annee', 'année', 'ans', 'an', 'a'], Durations.Year],
+  [
+    [
+      'years',
+      'year',
+      'y',
+      'annees',
+      'années',
+      'annee',
+      'année',
+      'ans',
+      'an',
+      'a',
+    ],
+    Durations.Year,
+  ],
   [['months', 'month', 'mois', 'mo'], Durations.Month],
   [['weeks', 'week', 'w', 'semaines', 'semaine', 'sem'], Durations.Week],
   [['days', 'day', 'd', 'jours', 'jour', 'j'], Durations.Day],
   [['hours', 'hour', 'heures', 'heure', 'hrs', 'hr', 'h'], Durations.Hour],
   [['minutes', 'minute', 'mins', 'min', 'm'], Durations.Minute],
-  [['seconds', 'second', 'secondes', 'seconde', 'secs', 'sec', 's'], Durations.Second],
+  [
+    ['seconds', 'second', 'secondes', 'seconde', 'secs', 'sec', 's'],
+    Durations.Second,
+  ],
 ];
 
 function convert(num: number, type: string): number {
   const multiplier = durations.find(([values]) => values.includes(type))?.[1];
-  if (multiplier)
-    return num * multiplier;
+  if (multiplier) return num * multiplier;
 
   throw new TypeError(`Invalid duration unit: ${type}`);
 }
@@ -77,7 +92,8 @@ export function getDuration(val: string): number {
       const groups = REGEX.exec(token)?.groups;
 
       const previousUnit = parts[i - 1]?.unit;
-      const nextUnit = durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
+      const nextUnit =
+        durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
       const newUnit = durations[nextUnit]?.[0][0];
 
       if (!groups?.number || (!groups.unit && nextUnit === 0))

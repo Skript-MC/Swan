@@ -3,7 +3,10 @@ import { err, ok } from '@sapphire/framework';
 import { miscellaneous } from '#config/settings';
 import { getDuration } from '#utils/index';
 
-export function resolveDuration(parameter: string, allowPermanent = false): Result<number, 'durationError'> {
+export function resolveDuration(
+  parameter: string,
+  allowPermanent = false,
+): Result<number, 'durationError'> {
   if (allowPermanent && miscellaneous.permanentKeywords.includes(parameter))
     return ok(-1);
 

@@ -28,16 +28,26 @@ export class WarnCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
-    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(nullop);
+    const moderator = await this.container.client.guild.members.fetch(
+      interaction.user.id,
+    );
+    const potentialVictim = await this.container.client.guild.members
+      .fetch(interaction.targetId)
+      .catch(nullop);
     if (!potentialVictim) {
-      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      await interaction.reply({
+        content: messages.prompt.member,
+        ephemeral: true,
+      });
       return;
     }
 
     const victim = resolveSanctionnableMember(potentialVictim, moderator);
     if (victim.isErr()) {
-      await interaction.reply({ content: messages.prompt.member, ephemeral: true });
+      await interaction.reply({
+        content: messages.prompt.member,
+        ephemeral: true,
+      });
       return;
     }
 
@@ -52,13 +62,15 @@ export class WarnCommand extends SwanCommand {
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true);
 
-    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput);
+    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(
+      reasonInput,
+    );
 
     modal.addComponents(firstRow);
     await interaction.showModal(modal);
 
     const submitInteraction = await interaction.awaitModalSubmit({
-      filter: i => i.user.id === interaction.user.id,
+      filter: (i) => i.user.id === interaction.user.id,
       time: 30_000,
     });
 
@@ -100,10 +112,11 @@ export class WarnCommand extends SwanCommand {
         .setType(SanctionTypes.Warn);
 
       const success = await new WarnAction(data).commit();
-      if (success)
-        await interaction.followUp(config.messages.success);
+      if (success) await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
-      this.container.logger.error('An unexpected error occurred while warning a member!');
+      this.container.logger.error(
+        'An unexpected error occurred while warning a member!',
+      );
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.followUp(messages.global.oops);

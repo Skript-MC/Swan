@@ -5,8 +5,8 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   EmbedBuilder,
-  time,
   TimestampStyles,
+  time,
 } from 'discord.js';
 import pupa from 'pupa';
 import { userInfo as config } from '#config/commands/info';
@@ -40,13 +40,18 @@ export class UserInfoCommand extends SwanCommand {
     await this._exec(interaction, member);
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction, member: GuildMember): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+    member: GuildMember,
+  ): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
     const activity = member.presence?.activities[0];
     if (activity) {
-      presenceDetails = pupa(embedConfig.presence.types[activity.type], { activity });
+      presenceDetails = pupa(embedConfig.presence.types[activity.type], {
+        activity,
+      });
 
       if (activity.details)
         presenceDetails += pupa(embedConfig.presence.details, { activity });
@@ -55,13 +60,19 @@ export class UserInfoCommand extends SwanCommand {
         presenceDetails += pupa(embedConfig.presence.state, { activity });
 
       if (activity.timestamps?.start) {
-        const formattedTime = time(activity.timestamps.start, TimestampStyles.RelativeTime);
-        presenceDetails += pupa(embedConfig.presence.timestamps, { time: formattedTime });
+        const formattedTime = time(
+          activity.timestamps.start,
+          TimestampStyles.RelativeTime,
+        );
+        presenceDetails += pupa(embedConfig.presence.timestamps, {
+          time: formattedTime,
+        });
       }
     }
 
-    const roles = [...member.roles.cache.values()]
-      .filter(role => role.name !== '@everyone');
+    const roles = [...member.roles.cache.values()].filter(
+      (role) => role.name !== '@everyone',
+    );
 
     const presenceContent = pupa(embedConfig.presence.content, {
       status: embedConfig.presence.status[member.presence?.status ?? 'offline'],
@@ -71,16 +82,24 @@ export class UserInfoCommand extends SwanCommand {
     const createdContent = pupa(embedConfig.created.content, {
       creation: time(member.user.createdAt, TimestampStyles.LongDateTime),
     });
-    const joinedContent = pupa(embedConfig.joined.content,
+    const joinedContent = pupa(
+      embedConfig.joined.content,
       member.joinedTimestamp
-        ? { joined: time(new Date(member.joinedTimestamp), TimestampStyles.LongDateTime) }
-        : { joined: messages.global.unknown(true) });
-    const rolesContent = member.roles.cache.size - 1 === 0
-      ? embedConfig.roles.noRole
-      : pupa(embedConfig.roles.content, {
-        amount: member.roles.cache.size - 1,
-        roles: roles.join(', '),
-      });
+        ? {
+            joined: time(
+              new Date(member.joinedTimestamp),
+              TimestampStyles.LongDateTime,
+            ),
+          }
+        : { joined: messages.global.unknown(true) },
+    );
+    const rolesContent =
+      member.roles.cache.size - 1 === 0
+        ? embedConfig.roles.noRole
+        : pupa(embedConfig.roles.content, {
+            amount: member.roles.cache.size - 1,
+            roles: roles.join(', '),
+          });
 
     const embed = new EmbedBuilder()
       .setColor(colors.default)
@@ -89,10 +108,18 @@ export class UserInfoCommand extends SwanCommand {
       .setTimestamp()
       .addFields(
         { name: embedConfig.names.title, value: namesContent, inline: false },
-        { name: embedConfig.created.title, value: createdContent, inline: true },
+        {
+          name: embedConfig.created.title,
+          value: createdContent,
+          inline: true,
+        },
         { name: embedConfig.joined.title, value: joinedContent, inline: true },
         { name: embedConfig.roles.title, value: rolesContent, inline: false },
-        { name: embedConfig.presence.title, value: presenceContent, inline: true },
+        {
+          name: embedConfig.presence.title,
+          value: presenceContent,
+          inline: true,
+        },
       );
 
     await interaction.reply({ embeds: [embed] });

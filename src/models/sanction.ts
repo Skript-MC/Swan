@@ -1,7 +1,7 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { nanoid } from 'nanoid';
 import type { SanctionDocument, SanctionModel } from '#types/index';
-import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { SanctionTypes, SanctionsUpdates } from '#types/index';
 
 const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
   userId: {
@@ -44,32 +44,37 @@ const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
     default: (): string => nanoid(8),
     index: true,
   },
-  updates: [{
-    date: {
-      type: Number,
-      required: true,
-      default: Date.now(),
+  updates: [
+    {
+      date: {
+        type: Number,
+        required: true,
+        default: Date.now(),
+      },
+      moderator: {
+        type: String,
+        required: true,
+      },
+      type: {
+        type: String,
+        required: true,
+        enum: SanctionsUpdates,
+      },
+      valueBefore: {
+        type: Number,
+      },
+      valueAfter: {
+        type: Number,
+      },
+      reason: {
+        type: String,
+        required: true,
+      },
     },
-    moderator: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      required: true,
-      enum: SanctionsUpdates,
-    },
-    valueBefore: {
-      type: Number,
-    },
-    valueAfter: {
-      type: Number,
-    },
-    reason: {
-      type: String,
-      required: true,
-    },
-  }],
+  ],
 });
 
-export const Sanction = model<SanctionDocument, SanctionModel>('Sanction', SanctionSchema);
+export const Sanction = model<SanctionDocument, SanctionModel>(
+  'Sanction',
+  SanctionSchema,
+);

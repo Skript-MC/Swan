@@ -1,6 +1,10 @@
 import type { FilterQuery } from 'mongoose';
-import { model, Schema } from 'mongoose';
-import type { DiscordUserBase, DiscordUserDocument, DiscordUserModel } from '#types/index';
+import { Schema, model } from 'mongoose';
+import type {
+  DiscordUserBase,
+  DiscordUserDocument,
+  DiscordUserModel,
+} from '#types/index';
 
 const DiscordUserSchema = new Schema<DiscordUserDocument, DiscordUserModel>({
   userId: {
@@ -27,4 +31,7 @@ DiscordUserSchema.statics.findOneOrCreate = async function (
   return result ?? this.create(doc);
 };
 
-export const DiscordUser = model<DiscordUserDocument, DiscordUserModel>('DiscordUser', DiscordUserSchema);
+export const DiscordUser = model<DiscordUserDocument, DiscordUserModel>(
+  'DiscordUser',
+  DiscordUserSchema,
+);

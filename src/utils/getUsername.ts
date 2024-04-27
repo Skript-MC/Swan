@@ -9,8 +9,7 @@ import { GuildMember } from 'discord.js';
 export function getUsername(user: GuildMember | User | string): string {
   return typeof user === 'string'
     ? user
-    : (user instanceof GuildMember
+    : user instanceof GuildMember
       ? user.displayName
-      : user.username
-    );
+      : user.username;
 }

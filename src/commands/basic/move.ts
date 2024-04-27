@@ -7,7 +7,11 @@ import type {
   TextChannel,
   User,
 } from 'discord.js';
-import { ApplicationCommandType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
+import {
+  ApplicationCommandType,
+  EmbedBuilder,
+  PermissionFlagsBits,
+} from 'discord.js';
 import pupa from 'pupa';
 import { move as config } from '#config/commands/basic';
 import * as messages from '#config/messages';
@@ -33,7 +37,9 @@ export class MoveCommand extends SwanCommand {
     interaction: SwanCommand.CommandInteraction<'cached'>,
     targetedMessage: Message,
   ): Promise<void> {
-    const member = await this.container.client.guild.members.fetch(interaction.user.id);
+    const member = await this.container.client.guild.members.fetch(
+      interaction.user.id,
+    );
 
     const originalChannel = targetedMessage.channel as TextChannel;
     const canMemberWrite = originalChannel
@@ -41,35 +47,46 @@ export class MoveCommand extends SwanCommand {
       .has(PermissionFlagsBits.SendMessages);
 
     if (!canMemberWrite) {
-      await interaction.reply({ content: messages.prompt.channel, ephemeral: true });
+      await interaction.reply({
+        content: messages.prompt.channel,
+        ephemeral: true,
+      });
       return;
     }
 
     const hasRole = targetedMessage.member
-      ? targetedMessage.member.roles.highest.position >= member.roles.highest.position
+      ? targetedMessage.member.roles.highest.position >=
+        member.roles.highest.position
       : false;
     if (hasRole) {
-      await interaction.reply({ content: messages.global.memberTooPowerful, ephemeral: true });
+      await interaction.reply({
+        content: messages.global.memberTooPowerful,
+        ephemeral: true,
+      });
       return;
     }
 
     await interaction.deferReply({});
     await interaction.followUp(config.messages.question);
 
-    const result = await interaction.channel!.awaitMessages({
-      filter: (m: Message) => m.author.id === interaction.user.id,
-      max: 1,
-      time: 30_000,
-      errors: ['time'],
-    })
-      .then(collected => collected.first())
+    const result = await interaction.channel
+      ?.awaitMessages({
+        filter: (m: Message) => m.author.id === interaction.user.id,
+        max: 1,
+        time: 30_000,
+        errors: ['time'],
+      })
+      .then((collected) => collected.first())
       .catch(nullop);
     if (!result) {
       await interaction.editReply(messages.prompt.timeout);
       return;
     }
 
-    const resolvedChannel = resolveGuildTextBasedChannel(result.content, interaction.guild);
+    const resolvedChannel = resolveGuildTextBasedChannel(
+      result.content,
+      interaction.guild,
+    );
     if (resolvedChannel.isErr()) {
       await interaction.editReply(messages.prompt.channel);
       return;
@@ -82,12 +99,19 @@ export class MoveCommand extends SwanCommand {
     const canEveryoneRead = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
       .has(PermissionFlagsBits.ViewChannel);
-    if (!canEveryoneWrite || !canEveryoneRead || interaction.channel!.id === targetedChannel.id) {
+    if (
+      !canEveryoneWrite ||
+      !canEveryoneRead ||
+      interaction.channel?.id === targetedChannel.id
+    ) {
       await interaction.editReply(messages.prompt.channel);
       return;
     }
 
-    const targetName = targetedMessage.member?.displayName ?? targetedMessage.author.username ?? 'Inconnu';
+    const targetName =
+      targetedMessage.member?.displayName ??
+      targetedMessage.author.username ??
+      'Inconnu';
     const successMessage = pupa(config.messages.successfullyMoved, {
       targetName,
       targetChannel: targetedChannel,
@@ -106,7 +130,8 @@ export class MoveCommand extends SwanCommand {
           targetName,
           sourceChannel: targetedMessage.channel,
           targetChannel: targetedChannel,
-          emoji: interaction.guild.emojis.resolve(emojis.remove) ?? emojis.remove,
+          emoji:
+            interaction.guild.emojis.resolve(emojis.remove) ?? emojis.remove,
         }),
       );
 
@@ -119,7 +144,9 @@ export class MoveCommand extends SwanCommand {
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(emojis.remove);
 
-      const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
+      const repostMessage = await targetedChannel.send(
+        targetedMessage.content.slice(0, 2000),
+      );
       if (targetedMessage.content.length > 2000)
         await targetedChannel.send(targetedMessage.content.slice(2000, 4000));
 
@@ -128,10 +155,13 @@ export class MoveCommand extends SwanCommand {
 
       const collector = informationEmbed
         .createReactionCollector({
-          filter: (r: MessageReaction, user: User) => (r.emoji.id ?? r.emoji.name) === emojis.remove
-            && (user.id === interaction.user.id || user.id === targetedMessage.author?.id)
-            && !user.bot,
-        }).on('collect', async () => {
+          filter: (r: MessageReaction, user: User) =>
+            (r.emoji.id ?? r.emoji.name) === emojis.remove &&
+            (user.id === interaction.user.id ||
+              user.id === targetedMessage.author?.id) &&
+            !user.bot,
+        })
+        .on('collect', async () => {
           try {
             collector.stop();
             await informationEmbed.delete();
@@ -142,10 +172,14 @@ export class MoveCommand extends SwanCommand {
         });
     } catch (unknownError: unknown) {
       await targetedMessage.member?.send(config.messages.emergency);
-      await targetedMessage.member?.send(`\`${targetedMessage.content.slice(0, 2000)}\``);
+      await targetedMessage.member?.send(
+        `\`${targetedMessage.content.slice(0, 2000)}\``,
+      );
       if (targetedMessage.content.length > 2000)
-        await targetedMessage.member?.send(`\`${targetedMessage.content.slice(2000, 4000)}\``);
-      throw (unknownError as Error);
+        await targetedMessage.member?.send(
+          `\`${targetedMessage.content.slice(2000, 4000)}\``,
+        );
+      throw unknownError as Error;
     }
   }
 }

@@ -34,7 +34,10 @@ export class SwanLogger extends Logger {
     this.write(LogLevel.Fatal, ...values);
   }
 
-  public sendLogToSentry(level: SeverityLevel, ...values: readonly unknown[]): void {
+  public sendLogToSentry(
+    level: SeverityLevel,
+    ...values: readonly unknown[]
+  ): void {
     captureMessage(values.join('\n'), level);
   }
 }

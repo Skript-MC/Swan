@@ -36,9 +36,16 @@ export class ModerationData {
   /**
    * Create moderation data from a message or from individual informations.
    */
-  constructor(interaction?: ChatInputCommandInteraction<'cached'> | ModalSubmitInteraction<'cached'>) {
+  constructor(
+    interaction?:
+      | ChatInputCommandInteraction<'cached'>
+      | ModalSubmitInteraction<'cached'>,
+  ) {
     this.channel = interaction?.channel ?? null;
-    this.moderatorId = interaction?.user.id ?? container.client.guild.members.me!.id;
+    const moderatorId =
+      interaction?.user.id ?? container.client.guild.members.me?.id;
+    if (!moderatorId) throw new Error('No moderator ID found.');
+    this.moderatorId = moderatorId;
     this.guild = interaction?.guild ?? container.client.guild;
     this.reason = messages.global.noReason;
     this.start = Date.now();
@@ -59,8 +66,7 @@ export class ModerationData {
   public setType(type: SanctionTypes): this {
     this.type = type;
     this.config = configs[this.type].messages;
-    if (this.type === SanctionTypes.Hardban)
-      this.setDuration(-1, false);
+    if (this.type === SanctionTypes.Hardban) this.setDuration(-1, false);
     return this;
   }
 
@@ -70,15 +76,13 @@ export class ModerationData {
   }
 
   public setReason(reason?: string | null): this {
-    if (reason)
-      this.reason = reason;
+    if (reason) this.reason = reason;
     return this;
   }
 
   public setDuration(duration: number, computeFinishTimestamp: boolean): this {
     this.duration = duration;
-    if (computeFinishTimestamp)
-      this.finish = this.start + duration;
+    if (computeFinishTimestamp) this.finish = this.start + duration;
     return this;
   }
 

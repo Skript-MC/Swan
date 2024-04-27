@@ -1,8 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import { isNullish } from '@sapphire/utilities';
-import type { ApplicationCommandOptionData, GuildTextBasedChannel } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType, ChannelType } from 'discord.js';
+import type {
+  ApplicationCommandOptionData,
+  GuildTextBasedChannel,
+} from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+  ChannelType,
+} from 'discord.js';
 import pupa from 'pupa';
 import { logs as config } from '#config/commands/admin';
 import { SwanChannel } from '#models/swanChannel';
@@ -32,7 +39,10 @@ export class LogsCommand extends SwanCommand {
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    const channel = interaction.options.getChannel('salon', true) as GuildTextBasedChannel;
+    const channel = interaction.options.getChannel(
+      'salon',
+      true,
+    ) as GuildTextBasedChannel;
     const logged = interaction.options.getBoolean('sauvegarde', true);
     await this._exec(interaction, channel, logged);
   }
@@ -53,7 +63,9 @@ export class LogsCommand extends SwanCommand {
     if (isNullish(logged)) {
       const result = await SwanChannel.findOne({ channelId: channel.id });
       await interaction.reply(
-        pupa(config.messages.loggingStatus, { status: this._getStatus(result?.logged ?? false) }),
+        pupa(config.messages.loggingStatus, {
+          status: this._getStatus(result?.logged ?? false),
+        }),
       );
       return;
     }
@@ -61,10 +73,11 @@ export class LogsCommand extends SwanCommand {
     await SwanChannel.findOneAndUpdate({ channelId: channel.id }, { logged });
     if (swanChannel.logged && !logged)
       this.container.client.cache.swanChannels.delete(swanChannel);
-    else
-      this.container.client.cache.swanChannels.add(swanChannel);
+    else this.container.client.cache.swanChannels.add(swanChannel);
 
-    await interaction.reply(pupa(config.messages.success, { status: this._getStatus(logged) }));
+    await interaction.reply(
+      pupa(config.messages.success, { status: this._getStatus(logged) }),
+    );
   }
 
   private _getStatus(status: boolean): string {

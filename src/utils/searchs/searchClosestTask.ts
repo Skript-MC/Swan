@@ -10,16 +10,21 @@ import { capitalize } from '#utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export function searchClosestTask(entries: Task[], wanted: string): SimilarityMatch[] {
+export function searchClosestTask(
+  entries: Task[],
+  wanted: string,
+): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.
     if (entry.name === wanted) {
-      return [{
-        matchedName: `⭐ ${capitalize(entry.name)}`,
-        baseName: entry.name,
-        distance: 0,
-      }];
+      return [
+        {
+          matchedName: `⭐ ${capitalize(entry.name)}`,
+          baseName: entry.name,
+          distance: 0,
+        },
+      ];
     }
     matches.push({
       matchedName: capitalize(entry.name),
@@ -28,8 +33,7 @@ export function searchClosestTask(entries: Task[], wanted: string): SimilarityMa
     });
   }
 
-  if (matches.length <= 0)
-    return [];
+  if (matches.length <= 0) return [];
 
   matches.sort((a, b) => a.distance - b.distance);
   matches[0].matchedName = `⭐ ${matches[0].matchedName}`;

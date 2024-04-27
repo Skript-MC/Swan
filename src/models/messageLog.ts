@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import type { MessageLogDocument, MessageLogModel } from '#types/index';
 
 const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
@@ -32,4 +32,7 @@ const MessageLogSchema = new Schema<MessageLogDocument, MessageLogModel>({
   },
 });
 
-export const MessageLog = model<MessageLogDocument, MessageLogModel>('MessageLog', MessageLogSchema);
+export const MessageLog = model<MessageLogDocument, MessageLogModel>(
+  'MessageLog',
+  MessageLogSchema,
+);

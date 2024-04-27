@@ -20,9 +20,13 @@ export class PingCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+  ): Promise<void> {
     const defer = await interaction.deferReply({ fetchReply: true });
-    const swanPing = (defer.editedAt ?? defer.createdAt).getTime() - (interaction.createdAt).getTime();
+    const swanPing =
+      (defer.editedAt ?? defer.createdAt).getTime() -
+      interaction.createdAt.getTime();
     const discordPing = Math.round(this.container.client.ws.ping);
 
     const description = pupa(config.messages.secondMessage, {
@@ -41,12 +45,9 @@ export class PingCommand extends SwanCommand {
   }
 
   private _getColorFromPing(ping: number): string {
-    if (ping > 600)
-      return ':red_circle:';
-    if (ping > 400)
-      return ':orange_circle:';
-    if (ping > 200)
-      return ':yellow_circle:';
+    if (ping > 600) return ':red_circle:';
+    if (ping > 400) return ':orange_circle:';
+    if (ping > 200) return ':yellow_circle:';
     return ':green_circle:';
   }
 }

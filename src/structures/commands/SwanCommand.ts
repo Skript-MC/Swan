@@ -39,30 +39,41 @@ export abstract class SwanCommand extends Command {
     this.command = options.command;
     this.description = options.description ?? 'Commande de Swan';
     this.dmPermission = options.dmPermission ?? false;
-    this.defaultMemberPermissions = options.defaultMemberPermissions ?? PermissionFlagsBits.SendMessages;
+    this.defaultMemberPermissions =
+      options.defaultMemberPermissions ?? PermissionFlagsBits.SendMessages;
   }
 
-  public override registerApplicationCommands(registry: ApplicationCommandRegistry): void {
+  public override registerApplicationCommands(
+    registry: ApplicationCommandRegistry,
+  ): void {
     if (!this.canRunInDM && this.dmPermission)
-      throw new Error(`Command ${this.name} can't be run in DM but has dmPermission set to true`);
+      throw new Error(
+        `Command ${this.name} can't be run in DM but has dmPermission set to true`,
+      );
 
     switch (this.commandType) {
       case ApplicationCommandType.ChatInput:
-        registry.registerChatInputCommand({
-          name: this.command,
-          description: this.description,
-          options: this.commandOptions,
-          dmPermission: this.dmPermission,
-          defaultMemberPermissions: this.defaultMemberPermissions,
-        }, REGISTRY_OPTIONS);
+        registry.registerChatInputCommand(
+          {
+            name: this.command,
+            description: this.description,
+            options: this.commandOptions,
+            dmPermission: this.dmPermission,
+            defaultMemberPermissions: this.defaultMemberPermissions,
+          },
+          REGISTRY_OPTIONS,
+        );
         break;
 
       case ApplicationCommandType.User:
       case ApplicationCommandType.Message:
-        registry.registerContextMenuCommand({
-          type: this.commandType,
-          name: this.command,
-        } as MessageApplicationCommandData | UserApplicationCommandData, REGISTRY_OPTIONS);
+        registry.registerContextMenuCommand(
+          {
+            type: this.commandType,
+            name: this.command,
+          } as MessageApplicationCommandData | UserApplicationCommandData,
+          REGISTRY_OPTIONS,
+        );
         break;
     }
   }
@@ -74,12 +85,17 @@ export namespace SwanCommand {
   export type JSON = Command.JSON;
   export type Context = Command.Context;
   export type RunInTypes = Command.RunInTypes;
-  export type ChatInputInteraction<Cached extends CacheType = CacheType> = Command.ChatInputCommandInteraction<Cached>;
-  export type MessageInteraction<Cached extends CacheType = CacheType> = Command.ContextMenuCommandInteraction<Cached>;
+  export type ChatInputInteraction<Cached extends CacheType = CacheType> =
+    Command.ChatInputCommandInteraction<Cached>;
+  export type MessageInteraction<Cached extends CacheType = CacheType> =
+    Command.ContextMenuCommandInteraction<Cached>;
   export type ContextMenuInteraction<Cached extends CacheType = CacheType> =
     Command.ContextMenuCommandInteraction<Cached>;
-  export type AutocompleteInteraction<Cached extends CacheType = CacheType> = Command.AutocompleteInteraction<Cached>;
-  export type CommandInteraction<Cached extends CacheType = CacheType> = DjsCommandInteraction<Cached>;
-  export type ModalSubmitInteraction<Cached extends CacheType = CacheType> = DjsModalSubmitInteraction<Cached>;
+  export type AutocompleteInteraction<Cached extends CacheType = CacheType> =
+    Command.AutocompleteInteraction<Cached>;
+  export type CommandInteraction<Cached extends CacheType = CacheType> =
+    DjsCommandInteraction<Cached>;
+  export type ModalSubmitInteraction<Cached extends CacheType = CacheType> =
+    DjsModalSubmitInteraction<Cached>;
   export type Registry = Command.Registry;
 }

@@ -21,11 +21,14 @@ export class IdeaCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+  ): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
-    const channel = await this.container.client.guild.channels.fetch(channels.idea);
-    if (!channel || !channel.isTextBased())
-      return;
+    const channel = await this.container.client.guild.channels.fetch(
+      channels.idea,
+    );
+    if (!channel || !channel.isTextBased()) return;
 
     const ideas = await channel.messages.fetch().catch(console.error);
     if (!ideas) {
@@ -42,7 +45,9 @@ export class IdeaCommand extends SwanCommand {
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({
-        name: pupa(config.messages.ideaTitle, { name: randomIdea.member?.displayName ?? messages.global.unknownName }),
+        name: pupa(config.messages.ideaTitle, {
+          name: randomIdea.member?.displayName ?? messages.global.unknownName,
+        }),
         iconURL: randomIdea.author.displayAvatarURL(),
       })
       .setDescription(randomIdea.content)

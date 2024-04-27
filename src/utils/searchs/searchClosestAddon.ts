@@ -9,20 +9,26 @@ import { capitalize } from '#utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export function searchClosestAddon(entries: string[], wanted: string): SimilarityMatch[] {
+export function searchClosestAddon(
+  entries: string[],
+  wanted: string,
+): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
-    if (!entry)
-      continue;
+    if (!entry) continue;
 
-    const name = entry.split(' ').shift()!;
+    const name = entry.split(' ').shift();
+    if (!name) continue;
+
     // Avoid useless double loop after.
     if (entry === wanted) {
-      return [{
-        matchedName: `⭐ ${capitalize(name)}`,
-        baseName: entry,
-        distance: 0,
-      }];
+      return [
+        {
+          matchedName: `⭐ ${capitalize(name)}`,
+          baseName: entry,
+          distance: 0,
+        },
+      ];
     }
     matches.push({
       matchedName: capitalize(name),
@@ -31,10 +37,9 @@ export function searchClosestAddon(entries: string[], wanted: string): Similarit
     });
   }
 
-  if (matches.length <= 0)
-    return [];
+  if (matches.length <= 0) return [];
 
-    matches.sort((a, b) => a.distance - b.distance);
+  matches.sort((a, b) => a.distance - b.distance);
   matches[0].matchedName = `⭐ ${matches[0].matchedName}`;
   return matches;
 }
