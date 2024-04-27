@@ -1,6 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { InteractionHandlerOptions, Option } from '@sapphire/framework';
-import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
+import {
+  InteractionHandler,
+  InteractionHandlerTypes,
+} from '@sapphire/framework';
 import type { ButtonInteraction } from 'discord.js';
 import {
   ActionRowBuilder,
@@ -12,11 +15,12 @@ import * as messages from '#config/messages';
 import { bot, colors } from '#config/settings';
 import * as SuggestionManager from '#structures/SuggestionManager';
 
-@ApplyOptions<InteractionHandlerOptions>({ interactionHandlerType: InteractionHandlerTypes.Button })
+@ApplyOptions<InteractionHandlerOptions>({
+  interactionHandlerType: InteractionHandlerTypes.Button,
+})
 export class SuggestionHandler extends InteractionHandler {
   public override parse(interaction: ButtonInteraction): Option<never> {
-    if (!interaction.customId.startsWith('suggestion'))
-      return this.none();
+    if (!interaction.customId.startsWith('suggestion')) return this.none();
     return this.some();
   }
 
@@ -27,7 +31,7 @@ export class SuggestionHandler extends InteractionHandler {
       interaction.user.id,
     );
 
-    let embed;
+    let embed: EmbedBuilder;
     const actions = [];
     switch (response?.status) {
       case 'OK':
@@ -38,13 +42,14 @@ export class SuggestionHandler extends InteractionHandler {
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
         break;
       case 'UNLINKED':
-        actions.push(new ActionRowBuilder<ButtonBuilder>()
-          .addComponents(
+        actions.push(
+          new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
               .setURL(response.loginUrl ?? 'https://skript-mc.fr/suggestions')
               .setStyle(ButtonStyle.Link),
-          ));
+          ),
+        );
         embed = new EmbedBuilder()
           .setColor(colors.error)
           .setTitle(messages.suggestions.unlinked.title)
@@ -73,13 +78,26 @@ export class SuggestionHandler extends InteractionHandler {
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
     }
     if (response?.suggestion) {
-      const message = await interaction.channel!.messages.fetch(interaction.message.id);
+      const message = await interaction.channel?.messages.fetch(
+        interaction.message.id,
+      );
       // Get the new embed and actions for this suggestion
-      const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
-      const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);
-      await message.edit({ embeds: [suggestionEmbed], components: [suggestionActions] });
+      const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(
+        response.suggestion,
+      );
+      const suggestionActions = SuggestionManager.getSuggestionActions(
+        response.suggestion,
+      );
+      await message?.edit({
+        embeds: [suggestionEmbed],
+        components: [suggestionActions],
+      });
     }
 
-    await interaction.reply({ embeds: [embed], components: actions, ephemeral: true });
+    await interaction.reply({
+      embeds: [embed],
+      components: actions,
+      ephemeral: true,
+    });
   }
 }

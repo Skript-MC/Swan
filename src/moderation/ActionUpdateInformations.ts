@@ -13,9 +13,11 @@ export class ActionUpdateInformations {
   }
 
   public async load(): Promise<void> {
-    const currentSanction = await ModerationHelper.getCurrentSanction(this.data.victimId, this.data.type);
-    if (!currentSanction)
-      return;
+    const currentSanction = await ModerationHelper.getCurrentSanction(
+      this.data.victimId,
+      this.data.type,
+    );
+    if (!currentSanction) return;
 
     this.sanctionDocument = await Sanction.findOne({
       userId: this.data.victimId,
@@ -24,7 +26,9 @@ export class ActionUpdateInformations {
     });
   }
 
-  public isUpdate(): this is ActionUpdateInformations & { sanctionDocument: SanctionDocument } {
+  public isUpdate(): this is ActionUpdateInformations & {
+    sanctionDocument: SanctionDocument;
+  } {
     return Boolean(this.sanctionDocument);
   }
 }

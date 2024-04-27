@@ -1,7 +1,13 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import type { SwanModuleDocument, SwanModuleModel } from '#types/index';
 
-export const allowedStores = ['commands', 'preconditions', 'tasks', 'listeners', 'interaction-handlers'];
+export const allowedStores = [
+  'commands',
+  'preconditions',
+  'tasks',
+  'listeners',
+  'interaction-handlers',
+];
 
 const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   name: {
@@ -29,4 +35,7 @@ const SwanModuleSchema = new Schema<SwanModuleDocument, SwanModuleModel>({
   },
 });
 
-export const SwanModule = model<SwanModuleDocument, SwanModuleModel>('SwanModule', SwanModuleSchema);
+export const SwanModule = model<SwanModuleDocument, SwanModuleModel>(
+  'SwanModule',
+  SwanModuleSchema,
+);

@@ -21,15 +21,19 @@ export class LinksCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+  ): Promise<void> {
     const user = await this.container.client.users.fetch(interaction.user.id);
     await new PaginatedMessageEmbedFields()
       .setTemplate(new EmbedBuilder().setColor(colors.default))
       .setItems(config.messages.embed.fields)
       .setItemsPerPage(2)
-      .setSelectMenuOptions(pageIndex => ({
+      .setSelectMenuOptions((pageIndex) => ({
         label: config.messages.embed.summary[pageIndex - 1],
-        description: pupa(config.messages.selectMenuItemDescription, { pageIndex }),
+        description: pupa(config.messages.selectMenuItemDescription, {
+          pageIndex,
+        }),
       }))
       .make()
       .run(interaction, user);

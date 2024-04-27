@@ -9,12 +9,21 @@ import type { CommandStatDocument } from '#types/index';
 export class LoadCommandStatsTask extends Task {
   public override async run(): Promise<void> {
     // Add all needed commands not present in the DB, to DB.
-    const commandIds = [...this.container.stores.get('commands').values()]
-      .map(cmd => cmd.name);
+    const commandIds = [...this.container.stores.get('commands').values()].map(
+      (cmd) => cmd.name,
+    );
 
-    const documents: Array<Query<CommandStatDocument | null, CommandStatDocument>> = [];
+    const documents: Array<
+      Query<CommandStatDocument | null, CommandStatDocument>
+    > = [];
     for (const commandId of commandIds)
-      documents.push(CommandStat.findOneAndUpdate({ commandId }, { commandId }, { upsert: true }));
+      documents.push(
+        CommandStat.findOneAndUpdate(
+          { commandId },
+          { commandId },
+          { upsert: true },
+        ),
+      );
 
     try {
       await Promise.all(documents);

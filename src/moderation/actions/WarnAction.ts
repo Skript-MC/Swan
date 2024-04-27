@@ -6,14 +6,16 @@ import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
 import { BanAction } from '#moderation/actions/BanAction';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
-import { SanctionsUpdates, SanctionTypes } from '#types/index';
+import { SanctionTypes, SanctionsUpdates } from '#types/index';
 
 export class WarnAction extends ModerationAction {
   protected before: undefined;
 
   protected async after(): Promise<void> {
     try {
-      const currentWarnCount = await ModerationHelper.getCurrentWarnCount(this.data.victimId);
+      const currentWarnCount = await ModerationHelper.getCurrentWarnCount(
+        this.data.victimId,
+      );
 
       // If they have exceeded the warning limit
       if (currentWarnCount >= moderation.warnLimitBeforeBan) {
@@ -63,7 +65,10 @@ export class WarnAction extends ModerationAction {
   private async _warn(): Promise<void> {
     // Add to the database
     try {
-      await Sanction.create({ ...this.data.toSchema(), userId: this.data.victimId });
+      await Sanction.create({
+        ...this.data.toSchema(),
+        userId: this.data.victimId,
+      });
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()

@@ -22,7 +22,9 @@ export class StatisticsCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
+  private async _exec(
+    interaction: SwanCommand.ChatInputInteraction,
+  ): Promise<void> {
     const totalCommands = this.container.stores.get('commands').size;
     const embedMessages = config.messages.embed;
     const commitHash = this._getGitRev();
@@ -35,18 +37,43 @@ export class StatisticsCommand extends SwanCommand {
           name: embedMessages.version,
           value: pupa(embedMessages.versionContent, {
             version: commitTag,
-            commitLink: `[${commitHash.slice(0, 7)}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
+            commitLink: `[${commitHash.slice(
+              0,
+              7,
+            )}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
           }),
           inline: true,
         },
-        { name: embedMessages.memory, value: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`, inline: true },
-        { name: embedMessages.uptime, value: moment.duration(this.container.client.uptime).humanize(), inline: true },
-        { name: embedMessages.commands, value: totalCommands.toString(), inline: true },
-        { name: embedMessages.developers, value: embedMessages.developersContent, inline: true },
-        { name: embedMessages.thanks, value: embedMessages.thanksContent, inline: true },
+        {
+          name: embedMessages.memory,
+          value: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB`,
+          inline: true,
+        },
+        {
+          name: embedMessages.uptime,
+          value: moment.duration(this.container.client.uptime).humanize(),
+          inline: true,
+        },
+        {
+          name: embedMessages.commands,
+          value: totalCommands.toString(),
+          inline: true,
+        },
+        {
+          name: embedMessages.developers,
+          value: embedMessages.developersContent,
+          inline: true,
+        },
+        {
+          name: embedMessages.thanks,
+          value: embedMessages.thanksContent,
+          inline: true,
+        },
         {
           name: embedMessages.bugs,
-          value: pupa(embedMessages.bugsContent, { url: 'https://github.com/Skript-MC/Swan/issues/new' }),
+          value: pupa(embedMessages.bugsContent, {
+            url: 'https://github.com/Skript-MC/Swan/issues/new',
+          }),
           inline: true,
         },
       )

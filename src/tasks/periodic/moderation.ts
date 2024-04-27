@@ -24,10 +24,10 @@ export class ModerationTask extends Task {
     for (const sanction of sanctions) {
       const { userId, type, sanctionId } = sanction;
 
-      const person = await this.container.client.guild.members.fetch(userId).catch(null)
-        ?? await this.container.client.users.fetch(userId).catch(null);
-      if (!person)
-        continue;
+      const person =
+        (await this.container.client.guild.members.fetch(userId).catch(null)) ??
+        (await this.container.client.users.fetch(userId).catch(null));
+      if (!person) continue;
 
       const data = new ModerationData()
         .setSanctionId(sanctionId)

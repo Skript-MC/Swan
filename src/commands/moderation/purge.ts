@@ -1,7 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, User } from 'discord.js';
-import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from 'discord.js';
 import pupa from 'pupa';
 import { purge as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
@@ -56,15 +59,16 @@ export class PurgeCommand extends SwanCommand {
     force: boolean | null | undefined = false,
     member: User | null | undefined = null,
   ): Promise<void> {
-    const channel = interaction.channel ?? await this.container.client.channels.fetch(interaction.channelId);
-    if (!channel || !channel.isTextBased() || channel.isDMBased())
-      return;
+    const channel =
+      interaction.channel ??
+      (await this.container.client.channels.fetch(interaction.channelId));
+    if (!channel || !channel.isTextBased() || channel.isDMBased()) return;
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
     const allMessages = await channel.messages.fetch({ limit: amount });
     const msgs = allMessages
-      .filter(msg => (member ? msg.author.id === member.id : true))
-      .filter(msg => (force || !msg.member?.roles.cache.has(roles.staff)));
+      .filter((msg) => (member ? msg.author.id === member.id : true))
+      .filter((msg) => force || !msg.member?.roles.cache.has(roles.staff));
     const deletedMessages = await channel.bulkDelete(msgs, true);
 
     await interaction.reply(pupa(config.messages.success, { deletedMessages }));

@@ -15,12 +15,10 @@ export class ErrorState {
   }
 
   public async log(): Promise<void> {
-    if (!this.hasError())
-      return;
+    if (!this.hasError()) return;
 
     const channel = await container.client.guild.channels.fetch(channels.log);
-    if (channel?.isTextBased())
-      await channel.send(messages.global.oops);
+    if (channel?.isTextBased()) await channel.send(messages.global.oops);
 
     for (const error of this.errors) {
       container.logger.error(error.message);

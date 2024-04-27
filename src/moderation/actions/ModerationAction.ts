@@ -5,8 +5,8 @@ import type { Awaitable } from '@sapphire/utilities';
 import type { HexColorString } from 'discord.js';
 import {
   EmbedBuilder,
-  time as timeFormatter,
   TimestampStyles,
+  time as timeFormatter,
   userMention,
 } from 'discord.js';
 import moment from 'moment';
@@ -67,7 +67,9 @@ export abstract class ModerationAction {
       case SanctionTypes.RemoveWarn:
         return messages.moderation.sanctionNames.removeWarn;
       default:
-        throw new Error(`Received unexpected moderation type: ${this.data.type}`);
+        throw new Error(
+          `Received unexpected moderation type: ${this.data.type}`,
+        );
     }
   }
 
@@ -128,29 +130,43 @@ export abstract class ModerationAction {
   }
 
   protected getFormattedChange(): string {
-    const oldDuration = this.updateInfos.sanctionDocument!.duration;
+    const oldDuration = this.updateInfos.sanctionDocument?.duration;
     const newDuration = this.data.duration;
     return pupa(messages.moderation.durationChange, {
-      oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
-      newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
+      oldDuration: oldDuration
+        ? this.formatDuration(oldDuration)
+        : messages.global.unknown(true),
+      newDuration: newDuration
+        ? this.formatDuration(newDuration)
+        : messages.global.unknown(true),
     });
   }
 
   protected async notify(): Promise<void> {
     const message = this.updateInfos.isUpdate()
-      ? pupa(this.data.config.notificationUpdate, { action: this, change: this.getFormattedChange() })
-      : pupa(this.data.config.notification, { action: this, duration: this.formatDuration(this.data.duration) });
+      ? pupa(this.data.config.notificationUpdate, {
+          action: this,
+          change: this.getFormattedChange(),
+        })
+      : pupa(this.data.config.notification, {
+          action: this,
+          duration: this.formatDuration(this.data.duration),
+        });
 
     try {
       // If the sanction is a temporary ban, we should notify the victim in his private thread.
       // We should only notify the victim if the sanction is an update.
       if (this.data.type === SanctionTypes.TempBan) {
         const thread = await ModerationHelper.getThread(this.data);
-        if (thread.isThread())
-          await thread.send(message);
+        if (thread.isThread()) await thread.send(message);
       } else {
-        const victim = await container.client.guild.members.fetch(this.data.victimId).catch(nullop)
-          ?? await container.client.users.fetch(this.data.victimId).catch(nullop);
+        const victim =
+          (await container.client.guild.members
+            .fetch(this.data.victimId)
+            .catch(nullop)) ??
+          (await container.client.users
+            .fetch(this.data.victimId)
+            .catch(nullop));
         await victim?.send(message).catch(noop);
       }
     } catch {
@@ -160,8 +176,7 @@ export abstract class ModerationAction {
 
   protected async log(): Promise<void> {
     const channel = await container.client.guild.channels.fetch(channels.log);
-    if (!channel || !channel.isTextBased())
-      return;
+    if (!channel || !channel.isTextBased()) return;
 
     const embedMsgs = messages.moderation.log;
 
@@ -170,12 +185,27 @@ export abstract class ModerationAction {
       .setTitle(pupa(messages.moderation.newCase, { action: this }))
       .setTimestamp()
       .addFields(
-        { name: embedMsgs.userTitle, value: `${this.nameString}\n${this.data.victimId}`, inline: true },
-        { name: embedMsgs.moderatorTitle, value: `${this.moderatorString}\n${this.data.moderatorId}`, inline: true },
-        { name: embedMsgs.actionTitle, value: this.action.toString(), inline: true },
+        {
+          name: embedMsgs.userTitle,
+          value: `${this.nameString}\n${this.data.victimId}`,
+          inline: true,
+        },
+        {
+          name: embedMsgs.moderatorTitle,
+          value: `${this.moderatorString}\n${this.data.moderatorId}`,
+          inline: true,
+        },
+        {
+          name: embedMsgs.actionTitle,
+          value: this.action.toString(),
+          inline: true,
+        },
         {
           name: embedMsgs.reasonTitle,
-          value: trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
+          value: trimText(
+            this.data.reason.toString(),
+            EmbedLimits.MaximumFieldValueLength,
+          ),
           inline: true,
         },
       );
@@ -184,10 +214,17 @@ export abstract class ModerationAction {
       let content = this.formatDuration(this.data.duration);
       if (this.data?.finish !== -1) {
         content += pupa(embedMsgs.durationDescription, {
-          expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
+          expiration: timeFormatter(
+            Math.round(this.data.finish / 1000),
+            TimestampStyles.LongDateTime,
+          ),
         });
       }
-      embed.addFields({ name: embedMsgs.durationTitle, value: content, inline: true });
+      embed.addFields({
+        name: embedMsgs.durationTitle,
+        value: content,
+        inline: true,
+      });
     }
 
     await channel.send({ embeds: [embed] });

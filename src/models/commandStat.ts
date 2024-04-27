@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import type { CommandStatDocument, CommandStatModel } from '#types/index';
 
 const CommandStatSchema = new Schema<CommandStatDocument, CommandStatModel>({
@@ -14,4 +14,7 @@ const CommandStatSchema = new Schema<CommandStatDocument, CommandStatModel>({
   },
 });
 
-export const CommandStat = model<CommandStatDocument, CommandStatModel>('CommandStat', CommandStatSchema);
+export const CommandStat = model<CommandStatDocument, CommandStatModel>(
+  'CommandStat',
+  CommandStatSchema,
+);

@@ -15,9 +15,10 @@ export class SuggestionsTask extends Task {
     // Get all the suggestions waiting to be sent/updated
     const suggestions = await SuggestionManager.getPendingSuggestions();
 
-    const channel = this.container.client.channels.cache.get(channels.suggestions);
-    if (!suggestions || !channel?.isTextBased() || channel.isDMBased())
-      return;
+    const channel = this.container.client.channels.cache.get(
+      channels.suggestions,
+    );
+    if (!suggestions || !channel?.isTextBased() || channel.isDMBased()) return;
 
     for (const suggestion of suggestions) {
       // Get embed and actions for this suggestion

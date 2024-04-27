@@ -6,7 +6,10 @@ export function resolveSanctionnableMember(
   member: GuildMember,
   moderator: GuildMember,
 ): Result<GuildMember, 'sanctionnableMemberError'> {
-  if (member.id !== moderator.id && member.roles.highest.position < moderator.roles.highest.position)
+  if (
+    member.id !== moderator.id &&
+    member.roles.highest.position < moderator.roles.highest.position
+  )
     return ok(member);
   return err('sanctionnableMemberError');
 }

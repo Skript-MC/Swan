@@ -1,6 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type { ApplicationCommandOptionData, GuildTextBasedChannel, Role } from 'discord.js';
+import type {
+  ApplicationCommandOptionData,
+  GuildTextBasedChannel,
+  Role,
+} from 'discord.js';
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
@@ -51,7 +55,9 @@ export class ReactionRoleCommand extends SwanCommand {
       return;
     }
 
-    let reaction = (interaction.guild.emojis.resolve(emojis.yes) ?? emojis.yes).toString();
+    let reaction = (
+      interaction.guild.emojis.resolve(emojis.yes) ?? emojis.yes
+    ).toString();
     const argumentEmoji = interaction.options.getString('émoji');
     if (argumentEmoji) {
       const resolvedEmoji = resolveEmoji(argumentEmoji, interaction.guild);
@@ -62,7 +68,9 @@ export class ReactionRoleCommand extends SwanCommand {
       reaction = resolvedEmoji.unwrap();
     }
 
-    const destinationChannel = interaction.options.getChannel('salon')! as GuildTextBasedChannel;
+    const destinationChannel = interaction.options.getChannel(
+      'salon',
+    ) as GuildTextBasedChannel;
 
     await this._exec(
       interaction,
@@ -86,9 +94,14 @@ export class ReactionRoleCommand extends SwanCommand {
 
     const embed = new EmbedBuilder()
       .setTitle(pupa(config.messages.embed.title, { givenRole }))
-      .setDescription(pupa(config.messages.embed.content, { reaction, givenRole }))
+      .setDescription(
+        pupa(config.messages.embed.content, { reaction, givenRole }),
+      )
       .setColor(colors.default)
-      .setFooter({ text: config.messages.embed.footer.text, iconURL: config.messages.embed.footer.icon });
+      .setFooter({
+        text: config.messages.embed.footer.text,
+        iconURL: config.messages.embed.footer.icon,
+      });
 
     const sendMessage = await channel.send({ embeds: [embed] });
     try {

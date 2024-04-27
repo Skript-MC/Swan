@@ -13,7 +13,9 @@ import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { colors } from '#config/settings';
 
-type EmbedFields = Array<Omit<EmbedField, 'inline'>> | ReadonlyArray<Omit<EmbedField, 'inline'>>;
+type EmbedFields =
+  | Array<Omit<EmbedField, 'inline'>>
+  | ReadonlyArray<Omit<EmbedField, 'inline'>>;
 
 export class PaginatedMessageEmbedFields extends PaginatedMessage {
   private _embedTemplate: APIEmbed = {};
@@ -23,7 +25,7 @@ export class PaginatedMessageEmbedFields extends PaginatedMessage {
 
   constructor(options?: PaginatedMessageOptions) {
     super(options);
-    this.setWrongUserInteractionReply(user => ({
+    this.setWrongUserInteractionReply((user) => ({
       content: pupa(messages.miscellaneous.wrongUserInteractionReply, { user }),
       ephemeral: true,
       allowedMentions: { users: [], roles: [] },
@@ -57,8 +59,7 @@ export class PaginatedMessageEmbedFields extends PaginatedMessage {
       const clonedTemplate = EmbedBuilder.from({ ...template, fields: [] });
       const fieldsClone = this._embedTemplate.fields ?? [];
 
-      if (!template.color)
-        clonedTemplate.setColor(colors.default);
+      if (!template.color) clonedTemplate.setColor(colors.default);
 
       const data = this._paginateArray(this._items, i, this._itemsPerPage);
       this.addPage({
@@ -67,7 +68,11 @@ export class PaginatedMessageEmbedFields extends PaginatedMessage {
     }
   }
 
-  private _paginateArray(items: EmbedFields, currentPage: number, perPageItems: number): EmbedFields {
+  private _paginateArray(
+    items: EmbedFields,
+    currentPage: number,
+    perPageItems: number,
+  ): EmbedFields {
     const offset = currentPage * perPageItems;
     return items.slice(offset, offset + perPageItems);
   }

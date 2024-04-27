@@ -8,17 +8,19 @@ export class SyncDatabaseChannelsTask extends Task {
   public override async run(): Promise<void> {
     this.container.client.cache.swanChannels = new Set();
     for (const channel of this.container.client.guild.channels.cache.values()) {
-      if (!channel.isTextBased())
-        continue;
+      if (!channel.isTextBased() || !channel.parentId) continue;
 
-      const swanChannel = await SwanChannel.findOneOrCreate({
-        channelId: channel.id,
-      }, {
-        channelId: channel.id,
-        categoryId: channel.parentId!,
-        name: channel.name,
-        logged: false,
-      });
+      const swanChannel = await SwanChannel.findOneOrCreate(
+        {
+          channelId: channel.id,
+        },
+        {
+          channelId: channel.id,
+          categoryId: channel.parentId,
+          name: channel.name,
+          logged: false,
+        },
+      );
       this.container.client.cache.swanChannels.add(swanChannel);
     }
   }
