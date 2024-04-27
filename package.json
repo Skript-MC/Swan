@@ -20,7 +20,7 @@
     "watch": "tsup --watch",
     "start": "node --enable-source-maps ./dist/src/main.js",
     "dev": "tsup --watch --onSuccess \"npm start\"",
-    "typecheck": "tsc -p tsconfig.base.json",
+    "typecheck": "tsc -p tsconfig.json",
     "tools:update-databases": "node tools/update-databases.js",
     "tools:remove-commands": "node tools/remove-commands.js",
     "lint": "biome lint .",
