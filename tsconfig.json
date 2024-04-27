@@ -1,9 +1,38 @@
 {
-	"extends": "./tsconfig.base.json",
+	"extends": "@sapphire/ts-config",
 	"compilerOptions": {
-		"outDir": "./dist",
-		"rootDir": ".",
-		"baseUrl": "."
+    // Strict type and code checking
+		"allowUnusedLabels": false,
+		"exactOptionalPropertyTypes": false,
+		"noImplicitOverride": true,
+    "allowUnreachableCode": false,
+
+    // Decorators
+		"experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // Bundling
+		"incremental": false,
+		"lib": ["ESNext"],
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+    "module": "ES2022",
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+
+    // Paths
+		"paths": {
+      "#app/*": ["./src/*.js"],
+      "#config/*": ["./config/*.js"],
+      "#models/*": ["./src/models/*.js"],
+      "#moderation/*": ["./src/moderation/*.js"],
+      "#resolvers/*": ["./src/resolvers/*.js"],
+      "#structures/*": ["./src/structures/*.js"],
+      "#types/*": ["./src/types/*.js"],
+      "#utils/*": ["./src/utils/*.js"]
+		},
 	},
-	"include": ["src/**/*.ts", "typings/**/*.d.ts"]
+  "exclude": ["node_modules", "dist"],
 }
