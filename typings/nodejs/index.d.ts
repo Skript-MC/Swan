@@ -1,11 +1,5 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    /* eslint @typescript-eslint/naming-convention: ["error", {
-      selector: 'memberLike',
-      format: ['UPPER_CASE'],
-      leadingUnderscore: 'forbid',
-      trailingUnderscore: 'forbid',
-    }] */
     NODE_ENV: string;
 
     DISCORD_TOKEN: string;
@@ -25,7 +19,8 @@ declare namespace NodeJS {
     IDEA_CHANNEL: string;
     SUGGESTIONS_CHANNEL: string;
     SNIPPETS_CHANNEL: string;
-    LOG_CHANNEL: string;
+    SANCTION_LOG_CHANNEL: string;
+    DISCORD_LOG_CHANNEL: string;
     BAN_CHANNEL: string;
     MAIN_CHANNEL: string;
     FORUM_FEED_CHANNEL: string;

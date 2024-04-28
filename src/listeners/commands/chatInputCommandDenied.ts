@@ -10,7 +10,6 @@ import * as messages from '#config/messages';
 export class CommandDeniedListener extends Listener<
   typeof Events.ChatInputCommandDenied
 > {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async run(
     error: UserError & { context: ChatInputCommandContext },
     payload: ChatInputCommandDeniedPayload,

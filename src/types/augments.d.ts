@@ -8,9 +8,7 @@ declare module '@sapphire/framework' {
   }
 
   interface Preconditions {
-    /* eslint-disable @typescript-eslint/naming-convention */
     NotLoading: never;
-    /* eslint-enable @typescript-eslint/naming-convention */
   }
 
   interface SapphireClient {

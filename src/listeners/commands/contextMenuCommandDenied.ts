@@ -10,7 +10,6 @@ import * as messages from '#config/messages';
 export class ContextMenuCommandDeniedListener extends Listener<
   typeof Events.ContextMenuCommandDenied
 > {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async run(
     error: UserError & { context: ContextMenuCommandContext },
     payload: ContextMenuCommandDeniedPayload,

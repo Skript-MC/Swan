@@ -6,7 +6,6 @@ interface DurationPart {
 const REGEX = /^(?<number>\d+) ?(?<unit>[a-z]+)?$/i;
 
 enum Durations {
-  /* eslint-disable no-multi-spaces, @typescript-eslint/prefer-literal-enum-member */
   Second = 1,
   Minute = 1 * 60,
   Hour = 1 * 60 * 60,

@@ -79,7 +79,6 @@ export abstract class SwanCommand extends Command {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace, @typescript-eslint/no-redeclare
 export namespace SwanCommand {
   export type Options = Command.Options & SwanCommandOptions;
   export type JSON = Command.JSON;
