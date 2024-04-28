@@ -15,7 +15,6 @@ interface GithubCache {
 export class SwanCacheManager {
   skriptToolsAddons: SkriptToolsAddonList = {};
   skriptMcSyntaxes: SkriptMcDocumentationSyntaxAndAddon[] = [];
-  reactionRolesIds = new Set<string>();
 
   github: GithubCache = {};
   gitCommit = '';
