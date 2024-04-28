@@ -96,7 +96,8 @@ export const channels = {
   main: process.env.MAIN_CHANNEL,
   snippets: process.env.SNIPPETS_CHANNEL,
   skriptTalk: process.env.SKRIPT_TALK_CHANNEL,
-  log: process.env.LOG_CHANNEL,
+  sanctionLog: process.env.SANCTION_LOG_CHANNEL,
+  discordLog: process.env.DISCORD_LOG_CHANNEL,
   forumUpdates: process.env.FORUM_FEED_CHANNEL,
   banChannel: process.env.BAN_CHANNEL,
 } satisfies Record<string, string[] | string>;

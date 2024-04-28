@@ -1,20 +1,46 @@
 import { Listener } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import {
+  type BaseGuildTextChannel,
+  EmbedBuilder,
+  type Message,
+} from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
-import { emojis, roles } from '#config/settings';
-import * as MessageLogManager from '#structures/MessageLogManager';
+import { channels, colors, emojis, roles } from '#config/settings';
+import { escapeCode, noop } from '#utils/index';
 
 export class MessageDeleteListener extends Listener {
   public override async run(message: Message): Promise<void> {
     if (!message.inGuild() || !message.member) return;
 
-    if (message?.content && !message.system)
-      await MessageLogManager.saveMessageDelete(
-        this.container.client.cache,
-        message,
+    if (message?.content && !message.system) {
+      const logChannel = await this.container.client.channels.fetch(
+        channels.discordLog,
       );
+      if (logChannel) {
+        const embed = new EmbedBuilder()
+          .setDescription(
+            `
+            🗑 Message envoyé par <@${message.author.id}> supprimé dans <#${
+              message.channel.id
+            }>.
+            \n\`\`\`${escapeCode(message.content)}\`\`\`
+            `,
+          )
+          .setColor(colors.default)
+          .setAuthor({
+            name: `${message.author.tag} (${message.author.id})`,
+            iconURL: message.author.displayAvatarURL(),
+          })
+          .setFooter({ text: `ID du message: ${message.id}` });
+        await (logChannel as BaseGuildTextChannel)
+          .send({
+            embeds: [embed],
+          })
+          .catch(noop);
+      }
+    }
 
     if (
       message.author.bot ||

@@ -1,5 +1,6 @@
 export { capitalize } from '#utils/capitalize';
 export { convertFileSize } from '#utils/convertFileSize';
+export { escapeCode } from '#utils/escapeCode';
 export { extractQuotedText } from '#utils/extractQuotedText';
 export { getDuration } from '#utils/getDuration';
 export { getUsername } from '#utils/getUsername';
