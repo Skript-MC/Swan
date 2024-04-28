@@ -1,11 +1,9 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import { GatewayIntentBits } from 'discord.js';
-import { SwanModule, allowedStores } from '#models/swanModule';
 import { SwanCacheManager } from '#structures/SwanCacheManager';
 import { SwanLogger } from '#structures/SwanLogger';
 import { TaskStore } from '#structures/tasks/TaskStore';
-import type { SwanModuleDocument } from '#types/index';
 
 export class SwanClient extends SapphireClient {
   constructor() {
@@ -40,33 +38,5 @@ export class SwanClient extends SapphireClient {
     this.currentlyBanning = new Set();
     this.currentlyUnbanning = new Set();
     this.currentlyModerating = new Set();
-  }
-
-  public async refreshPieces(force = false): Promise<void> {
-    let modules: SwanModuleDocument[] = [];
-    if (force) await SwanModule.deleteMany({});
-    else modules = await SwanModule.find({});
-
-    for (const [storeName, store] of this.stores) {
-      if (!allowedStores.includes(storeName)) continue;
-      for (const piece of store.values()) {
-        const module = modules.find(
-          (mod) => mod.name === piece.name && mod.store === storeName,
-        );
-        if (module && !module.enabled) {
-          await store.unload(piece.name);
-          this.logger.info(
-            `Disabling module "${piece.name}" (from ${storeName})`,
-          );
-        } else if (!module) {
-          await SwanModule.create({
-            name: piece.name,
-            store: storeName,
-            location: piece.location,
-            enabled: true,
-          });
-        }
-      }
-    }
   }
 }

@@ -14,9 +14,6 @@ export class ReadyListener extends Listener {
       );
     client.guild = guild;
 
-    this.container.logger.info('Loading pieces from database...');
-    await client.refreshPieces();
-
     const taskStore = this.container.client.stores.get('tasks');
     if (!taskStore) throw new TypeError('Expected taskStore to be defined.');
 

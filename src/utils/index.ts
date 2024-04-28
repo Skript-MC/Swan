@@ -12,6 +12,5 @@ export { searchClosestMessage } from '#utils/searchs/searchClosestMessage';
 export { searchClosestTask } from '#utils/searchs/searchClosestTask';
 export { searchMessageSimilarity } from '#utils/searchs/searchMessageSimilarity';
 export { stripTags } from '#utils/stripTags';
-export { toggleModule } from '#utils/toggleModule';
 export { toHumanDuration } from '#utils/toHumanDuration';
 export { trimText } from '#utils/trimText';
