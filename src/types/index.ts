@@ -1,8 +1,7 @@
 import type { Endpoints } from '@octokit/types';
 import type { CommandOptions } from '@sapphire/framework';
-import type { PieceLocation, StoreRegistryEntries } from '@sapphire/pieces';
 import type { Message, PermissionResolvable } from 'discord.js';
-import type { Document, FilterQuery, Model } from 'mongoose';
+import type { Document, Model } from 'mongoose';
 
 /* ****************** */
 /*  API Result Types  */
@@ -450,29 +449,6 @@ export type CommandStatModel = Model<CommandStatDocument>;
 
 // #endregion
 
-/* **************************** */
-/*     Module Database Types    */
-/* **************************** */
-
-// #region Module Database Types (VS Code)
-// region Module Database Types (JetBrains)
-
-/** Interface for the "Module"'s mongoose schema */
-export interface SwanModuleBase {
-  name: string;
-  store: keyof StoreRegistryEntries;
-  location: PieceLocation;
-  enabled: boolean;
-}
-
-/** Interface for the "Module"'s mongoose document */
-export interface SwanModuleDocument extends SwanModuleBase, Document {}
-
-/** Interface for the "Module"'s mongoose model */
-export type SwanModuleModel = Model<SwanModuleDocument>;
-
-// #endregion
-
 /* ************************ */
 /*  Message Database Types  */
 /* ************************ */
@@ -539,109 +515,6 @@ export interface SanctionDocument extends Document {
 
 /** Interface for the "Sanction"'s mongoose model */
 export type SanctionModel = Model<SanctionDocument>;
-
-// #endregion
-
-/* ***************************** */
-/*  ReactionRole Database Types  */
-/* ***************************** */
-
-// #region ReactionRole Database Types (VS Code)
-// region ReactionRole Database Types (JetBrains)
-
-/** Interface for the "ReactionRole"'s mongoose schema */
-export interface ReactionRoleBase {
-  messageId: string;
-  channelId: string;
-  givenRoleId: string;
-  reaction: string;
-}
-
-/** Interface for the "ReactionRole"'s mongoose document */
-export interface ReactionRoleDocument extends ReactionRoleBase, Document {}
-
-/** Interface for the "ReactionRole"'s mongoose model */
-export type ReactionRoleModel = Model<ReactionRoleDocument>;
-
-// #endregion
-
-/* ****************************** */
-/*   DiscordUser Database Types   */
-/* ****************************** */
-
-// #region DiscordUser Database Types (VS Code)
-// region DiscordUser Database Types (JetBrains)
-
-/** Interface for the "DiscordUser"'s mongoose schema */
-export interface DiscordUserBase {
-  userId: string;
-  username: string;
-  avatarUrl?: string | null;
-}
-
-/** Interface for the "DiscordUser"'s mongoose document */
-export interface DiscordUserDocument extends DiscordUserBase, Document {}
-
-/** Interface for the "DiscordUser"'s mongoose model */
-export interface DiscordUserModel extends Model<DiscordUserDocument> {
-  findOneOrCreate(
-    condition: FilterQuery<DiscordUserDocument>,
-    doc: DiscordUserBase,
-  ): Promise<DiscordUserDocument>;
-}
-
-// #endregion
-
-/* ****************************** */
-/*   Channel Database Types   */
-/* ****************************** */
-
-// #region Channel Database Types (VS Code)
-// region Channel Database Types (JetBrains)
-
-/** Interface for the "Channel"'s mongoose schema */
-export interface SwanChannelBase {
-  channelId: string;
-  categoryId: string;
-  name: string;
-  logged: boolean;
-}
-
-/** Interface for the "Channel"'s mongoose document */
-export interface SwanChannelDocument extends SwanChannelBase, Document {}
-
-/** Interface for the "Channel"'s mongoose model */
-export interface SwanChannelModel extends Model<SwanChannelDocument> {
-  findOneOrCreate(
-    condition: FilterQuery<SwanChannelDocument>,
-    doc: SwanChannelBase,
-  ): Promise<SwanChannelDocument>;
-}
-
-// #endregion
-
-/* ****************************** */
-/*   MessageLog Database Types   */
-/* ****************************** */
-
-// #region MessageLog Database Types (VS Code)
-// region MessageLog Database Types (JetBrains)
-
-/** Interface for the "MessageLog"'s mongoose schema */
-export interface MessageLogBase {
-  user: DiscordUserDocument;
-  messageId: string;
-  channelId: string;
-  oldContent: string;
-  editions: string[];
-  newContent?: string | null;
-}
-
-/** Interface for the "MessageLog"'s mongoose document */
-export interface MessageLogDocument extends MessageLogBase, Document {}
-
-/** Interface for the "MessageLog"'s mongoose model */
-export type MessageLogModel = Model<MessageLogDocument>;
 
 // #endregion
 

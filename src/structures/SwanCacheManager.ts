@@ -1,10 +1,8 @@
 import type {
-  DiscordUserDocument,
   GithubPrerelease,
   GithubStableRelease,
   SkriptMcDocumentationSyntaxAndAddon,
   SkriptToolsAddonList,
-  SwanChannelDocument,
 } from '#types/index';
 
 interface GithubCache {
@@ -19,6 +17,4 @@ export class SwanCacheManager {
   github: GithubCache = {};
   gitCommit = '';
   gitTag = '';
-  discordUsers: DiscordUserDocument[] = [];
-  swanChannels = new Set<SwanChannelDocument>();
 }
