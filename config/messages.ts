@@ -165,7 +165,7 @@ export const suggestions = {
   unlinked: {
     title: '🔗 Liaison requise',
     content:
-      "Il semblerait que votre compte Discord ne corresponde à aucun compte Skript-MC. Pour pouvoir bénéficier des intégrations sur notre serveur Discord, il est nécessaire de lier votre compte Discord à votre compte Skript-MC.\n\nNos lutins vous ont préparé un lien magique : il ne vous suffit plus qu'à vous connecter à votre compte Skript-MC, et vous bénéficierez des intégrations sur notre serveur Discord.",
+      'Il semblerait que votre compte Discord ne corresponde à aucun compte Skript-MC. Pour pouvoir bénéficier des intégrations sur notre serveur Discord, il est nécessaire de lier votre compte Discord à votre compte Skript-MC. Rendez-vous sur votre [espace utilisateur Skript-MC](https://skript-mc.fr/account/discord/) pour réaliser la lisaison.',
   },
   alreadyVoted: {
     title: 'Vote déjà comptabilisé',

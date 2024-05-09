@@ -46,7 +46,7 @@ export class SuggestionHandler extends InteractionHandler {
           new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder()
               .setLabel(messages.suggestions.loginButton)
-              .setURL(response.loginUrl ?? 'https://skript-mc.fr/suggestions')
+              .setURL('https://skript-mc.fr/account/discord/')
               .setStyle(ButtonStyle.Link),
           ),
         );
