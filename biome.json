@@ -10,7 +10,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 80
+    "lineWidth": 120
   },
   "linter": {
     "enabled": true,
@@ -27,12 +27,7 @@
       "quoteStyle": "single",
       "quoteProperties": "asNeeded",
       "semicolons": "always",
-      "trailingComma": "all"
-    }
-  },
-  "json": {
-    "formatter": {
-      "trailingCommas": "none"
+      "trailingCommas": "all"
     }
   }
 }
