@@ -5,7 +5,14 @@ import * as messages from '#config/messages';
 import { channels } from '#config/settings';
 
 export class GuildMemberAddListener extends Listener {
+  private deduplication = new Set<string>();
+
   public override async run(member: GuildMember): Promise<void> {
+    if (this.deduplication.has(member.id)) return;
+
+    this.deduplication.add(member.id);
+    setTimeout(() => this.deduplication.delete(member.id), 60_000);
+
     await this._greet(member);
   }
 
