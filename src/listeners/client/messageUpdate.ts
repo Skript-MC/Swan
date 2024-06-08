@@ -1,10 +1,5 @@
 import { Listener } from '@sapphire/framework';
-import {
-  type BaseGuildTextChannel,
-  EmbedBuilder,
-  type Message,
-  type MessageReaction,
-} from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder, type Message, type MessageReaction } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
@@ -12,22 +7,11 @@ import { channels, colors, emojis, roles } from '#config/settings';
 import { escapeCode, noop } from '#utils/index';
 
 export class MessageUpdateListener extends Listener {
-  public override async run(
-    oldMessage: Message,
-    newMessage: Message,
-  ): Promise<void> {
-    if (
-      !oldMessage.inGuild() ||
-      !oldMessage.member ||
-      !newMessage.inGuild() ||
-      !newMessage.member
-    )
-      return;
+  public override async run(oldMessage: Message, newMessage: Message): Promise<void> {
+    if (!oldMessage.inGuild() || !oldMessage.member || !newMessage.inGuild() || !newMessage.member) return;
 
     if (oldMessage?.content && !oldMessage.system) {
-      const logChannel = await this.container.client.channels.fetch(
-        channels.discordLog,
-      );
+      const logChannel = await this.container.client.channels.fetch(channels.discordLog);
       if (logChannel) {
         const embed = new EmbedBuilder()
           .setDescription(
@@ -62,8 +46,7 @@ export class MessageUpdateListener extends Listener {
     if (
       newMessage.author.bot ||
       newMessage.system ||
-      newMessage.member.roles.highest.position >=
-        (newMessage.guild.roles.cache.get(roles.staff)?.position || 0)
+      newMessage.member.roles.highest.position >= (newMessage.guild.roles.cache.get(roles.staff)?.position || 0)
     )
       return;
 
@@ -88,20 +71,15 @@ export class MessageUpdateListener extends Listener {
 
     // Filter out all the mentions that were in the previous message *and* in the new message.
     const deletedMentions = oldMentions.filter(
-      (oldMention) =>
-        !newMentions.some((newMention) => oldMention.id === newMention.id),
+      (oldMention) => !newMentions.some((newMention) => oldMention.id === newMention.id),
     );
     if (deletedMentions.length === 0) return;
 
     // Gt all the deleted role menttions
     const deletedRoleMentions = oldRoleMentions.filter(
-      (oldRoleMention) =>
-        !newRoleMentions.some(
-          (newRoleMention) => oldRoleMention.id === newRoleMention.id,
-        ),
+      (oldRoleMention) => !newRoleMentions.some((newRoleMention) => oldRoleMention.id === newRoleMention.id),
     );
-    const severalPeopleAffected =
-      deletedMentions.length > 1 || deletedRoleMentions.length > 0;
+    const severalPeopleAffected = deletedMentions.length > 1 || deletedRoleMentions.length > 0;
 
     // Choose the message (plural if multiple people (or a role) were ghost-ping)
     const baseMessage = severalPeopleAffected
@@ -111,9 +89,7 @@ export class MessageUpdateListener extends Listener {
     const botNotificationMessage = await newMessage.channel.send(
       pupa(baseMessage, {
         mentions: deletedMentions
-          .map((mention) =>
-            mention instanceof User ? mention.username : mention.name,
-          )
+          .map((mention) => (mention instanceof User ? mention.username : mention.name))
           .join(', '),
         user: newMessage.author,
       }),
@@ -127,9 +103,7 @@ export class MessageUpdateListener extends Listener {
     const collector = botNotificationMessage
       .createReactionCollector({
         filter: (r: MessageReaction, user: User) =>
-          (r.emoji.id ?? r.emoji.name) === emojis.remove &&
-          user.id === deletedMentions[0].id &&
-          !user.bot,
+          (r.emoji.id ?? r.emoji.name) === emojis.remove && user.id === deletedMentions[0].id && !user.bot,
       })
       .on('collect', async () => {
         collector.stop();

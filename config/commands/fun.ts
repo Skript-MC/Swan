@@ -3,8 +3,7 @@ import { stripIndent } from 'common-tags';
 export const eightBall = {
   settings: {
     command: '8ball',
-    description:
-      'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
+    description: 'Répond à toutes vos questions, même les plus compliquées ! Réponse sûre garantie à 7%.',
   },
   messages: {
     affirmative: [
@@ -59,8 +58,7 @@ export const eightBall = {
 export const idea = {
   settings: {
     command: 'idea',
-    description:
-      "Permet d'envoyer une idée de script aléatoire à réaliser parmi celles dans le salon des idées.",
+    description: "Permet d'envoyer une idée de script aléatoire à réaliser parmi celles dans le salon des idées.",
   },
   messages: {
     noIdeaFound: "Je n'ai trouvé aucune idée dans le salon !",
@@ -71,8 +69,7 @@ export const idea = {
 export const joke = {
   settings: {
     command: 'joke',
-    description:
-      'Envoie une blague aléatoirement, généralement drôle mais pas forcément.',
+    description: 'Envoie une blague aléatoirement, généralement drôle mais pas forcément.',
   },
   messages: {
     notFound: "Aucune blague correspondante à votre recherche n'a été trouvée.",
@@ -82,8 +79,7 @@ export const joke = {
 export const latex = {
   settings: {
     command: 'latex',
-    description:
-      'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
+    description: 'Permet de mettre en forme une équation grâce au moteur mathématique LaTeX.',
   },
   messages: {},
 } as const;
@@ -91,15 +87,12 @@ export const latex = {
 export const poll = {
   settings: {
     command: 'poll',
-    description:
-      'Permet de lancer un sondage par lequel on peut répondre par une réponse personnalisée.',
+    description: 'Permet de lancer un sondage par lequel on peut répondre par une réponse personnalisée.',
   },
   messages: {
     success: 'Le sondage a été créé avec succès.',
-    notEnoughAnswers:
-      "Tu n'as entré qu'une seule réponse. Ré-exécute la commande avec plusieurs réponses !",
-    tooManyAnswers:
-      'Tu as entré trop de réponses. Ré-exécute la commande avec au maximum 18 réponses.',
+    notEnoughAnswers: "Tu n'as entré qu'une seule réponse. Ré-exécute la commande avec plusieurs réponses !",
+    tooManyAnswers: 'Tu as entré trop de réponses. Ré-exécute la commande avec au maximum 18 réponses.',
     answersDisplayYesno: stripIndent`
       :white_check_mark: Oui
       :x: Non

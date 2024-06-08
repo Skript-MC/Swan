@@ -20,8 +20,7 @@ export const forumFeed = {
       sortBy: 'updated', // Sort by updates, also including new contents
       sortDir: 'desc', // Get most recent updates or new contents
       // TODO: Remove category filter when it'll be possible
-      categories:
-        '22,5,20,19,18,17,16,15,14,13,12,11,10,9,8,7,21,6,4,33,3,28,27',
+      categories: '22,5,20,19,18,17,16,15,14,13,12,11,10,9,8,7,21,6,4,33,3,28,27',
     },
     auth: {
       username: process.env.SKRIPTMC_FORUM_TOKEN,
@@ -44,11 +43,7 @@ export const forumFeed = {
 } as const;
 
 export const presence = {
-  messages: [
-    '{memberCount} membres 🎉',
-    'Bienvenue sur Skript-MC',
-    'https://skript-mc.fr',
-  ],
+  messages: ['{memberCount} membres 🎉', 'Bienvenue sur Skript-MC', 'https://skript-mc.fr'],
 };
 
 export const skriptReleases = {

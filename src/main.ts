@@ -18,9 +18,7 @@ moment.relativeTimeThreshold('s', 55);
 moment.relativeTimeThreshold('ss', 3);
 
 if (!process.env.DISCORD_TOKEN) {
-  console.error(
-    'Discord token was not set in the environment variables (DISCORD_TOKEN)',
-  );
+  console.error('Discord token was not set in the environment variables (DISCORD_TOKEN)');
   throw new Error('Unable to load Swan, stopping.');
 }
 
@@ -38,9 +36,7 @@ async function bootstrap(): Promise<void> {
 
   setTimeout(() => {
     if (client.readyAt === null) {
-      client.logger.error(
-        'Swan connection failed: the bot was not ready after 15s. Crashing.',
-      );
+      client.logger.error('Swan connection failed: the bot was not ready after 15s. Crashing.');
       process.exit(1); // eslint-disable-line node/no-process-exit
     }
   }, miscellaneous.connectionCheckDuration);

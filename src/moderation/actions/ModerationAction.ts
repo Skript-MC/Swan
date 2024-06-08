@@ -3,12 +3,7 @@ import type { SapphireClient } from '@sapphire/framework';
 import { container } from '@sapphire/pieces';
 import type { Awaitable } from '@sapphire/utilities';
 import type { HexColorString } from 'discord.js';
-import {
-  EmbedBuilder,
-  TimestampStyles,
-  time as timeFormatter,
-  userMention,
-} from 'discord.js';
+import { EmbedBuilder, TimestampStyles, time as timeFormatter, userMention } from 'discord.js';
 import moment from 'moment';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
@@ -47,14 +42,12 @@ export abstract class ModerationAction {
   protected get action(): string {
     switch (this.data.type) {
       case SanctionTypes.TempBan:
-        if (this.updateInfos.isUpdate())
-          return messages.moderation.sanctionNames.banUpdate;
+        if (this.updateInfos.isUpdate()) return messages.moderation.sanctionNames.banUpdate;
         return messages.moderation.sanctionNames.tempBan;
       case SanctionTypes.Hardban:
         return messages.moderation.sanctionNames.hardban;
       case SanctionTypes.Mute:
-        if (this.updateInfos.isUpdate())
-          return messages.moderation.sanctionNames.muteUpdate;
+        if (this.updateInfos.isUpdate()) return messages.moderation.sanctionNames.muteUpdate;
         return messages.moderation.sanctionNames.mute;
       case SanctionTypes.Kick:
         return messages.moderation.sanctionNames.kick;
@@ -67,21 +60,17 @@ export abstract class ModerationAction {
       case SanctionTypes.RemoveWarn:
         return messages.moderation.sanctionNames.removeWarn;
       default:
-        throw new Error(
-          `Received unexpected moderation type: ${this.data.type}`,
-        );
+        throw new Error(`Received unexpected moderation type: ${this.data.type}`);
     }
   }
 
   protected get originalAction(): string {
     switch (this.data.type) {
       case SanctionTypes.TempBan:
-        if (this.updateInfos.isUpdate())
-          return messages.moderation.sanctionNames.tempBan;
+        if (this.updateInfos.isUpdate()) return messages.moderation.sanctionNames.tempBan;
         return this.action;
       case SanctionTypes.Mute:
-        if (this.updateInfos.isUpdate())
-          return messages.moderation.sanctionNames.mute;
+        if (this.updateInfos.isUpdate()) return messages.moderation.sanctionNames.mute;
         return this.action;
       case SanctionTypes.Unban:
         return messages.moderation.sanctionNames.tempBan;
@@ -124,21 +113,15 @@ export abstract class ModerationAction {
   }
 
   protected formatDuration(duration: number): string {
-    return duration === -1
-      ? messages.moderation.permanent
-      : moment.duration(duration).humanize();
+    return duration === -1 ? messages.moderation.permanent : moment.duration(duration).humanize();
   }
 
   protected getFormattedChange(): string {
     const oldDuration = this.updateInfos.sanctionDocument?.duration;
     const newDuration = this.data.duration;
     return pupa(messages.moderation.durationChange, {
-      oldDuration: oldDuration
-        ? this.formatDuration(oldDuration)
-        : messages.global.unknown(true),
-      newDuration: newDuration
-        ? this.formatDuration(newDuration)
-        : messages.global.unknown(true),
+      oldDuration: oldDuration ? this.formatDuration(oldDuration) : messages.global.unknown(true),
+      newDuration: newDuration ? this.formatDuration(newDuration) : messages.global.unknown(true),
     });
   }
 
@@ -161,12 +144,8 @@ export abstract class ModerationAction {
         if (thread.isThread()) await thread.send(message);
       } else {
         const victim =
-          (await container.client.guild.members
-            .fetch(this.data.victimId)
-            .catch(nullop)) ??
-          (await container.client.users
-            .fetch(this.data.victimId)
-            .catch(nullop));
+          (await container.client.guild.members.fetch(this.data.victimId).catch(nullop)) ??
+          (await container.client.users.fetch(this.data.victimId).catch(nullop));
         await victim?.send(message).catch(noop);
       }
     } catch {
@@ -175,9 +154,7 @@ export abstract class ModerationAction {
   }
 
   protected async log(): Promise<void> {
-    const channel = await container.client.guild.channels.fetch(
-      channels.sanctionLog,
-    );
+    const channel = await container.client.guild.channels.fetch(channels.sanctionLog);
     if (!channel || !channel.isTextBased()) return;
 
     const embedMsgs = messages.moderation.log;
@@ -204,10 +181,7 @@ export abstract class ModerationAction {
         },
         {
           name: embedMsgs.reasonTitle,
-          value: trimText(
-            this.data.reason.toString(),
-            EmbedLimits.MaximumFieldValueLength,
-          ),
+          value: trimText(this.data.reason.toString(), EmbedLimits.MaximumFieldValueLength),
           inline: true,
         },
       );
@@ -216,10 +190,7 @@ export abstract class ModerationAction {
       let content = this.formatDuration(this.data.duration);
       if (this.data?.finish !== -1) {
         content += pupa(embedMsgs.durationDescription, {
-          expiration: timeFormatter(
-            Math.round(this.data.finish / 1000),
-            TimestampStyles.LongDateTime,
-          ),
+          expiration: timeFormatter(Math.round(this.data.finish / 1000), TimestampStyles.LongDateTime),
         });
       }
       embed.addFields({

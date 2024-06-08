@@ -14,7 +14,4 @@ const CommandStatSchema = new Schema<CommandStatDocument, CommandStatModel>({
   },
 });
 
-export const CommandStat = model<CommandStatDocument, CommandStatModel>(
-  'CommandStat',
-  CommandStatSchema,
-);
+export const CommandStat = model<CommandStatDocument, CommandStatModel>('CommandStat', CommandStatSchema);

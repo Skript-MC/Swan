@@ -13,9 +13,7 @@ export class WarnAction extends ModerationAction {
 
   protected async after(): Promise<void> {
     try {
-      const currentWarnCount = await ModerationHelper.getCurrentWarnCount(
-        this.data.victimId,
-      );
+      const currentWarnCount = await ModerationHelper.getCurrentWarnCount(this.data.victimId);
 
       // If they have exceeded the warning limit
       if (currentWarnCount >= moderation.warnLimitBeforeBan) {

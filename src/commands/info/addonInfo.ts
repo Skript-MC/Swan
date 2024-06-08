@@ -3,11 +3,7 @@ import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import { addonInfo as config } from '#config/commands/info';
 import * as messages from '#config/messages';
@@ -37,16 +33,9 @@ export class AddonInfoCommand extends SwanCommand {
     await this._exec(interaction, interaction.options.getString('addon', true));
   }
 
-  public override async autocompleteRun(
-    interaction: SwanCommand.AutocompleteInteraction,
-  ): Promise<void> {
-    const addonNames = Object.keys(
-      this.container.client.cache.skriptToolsAddons,
-    );
-    const search = searchClosestAddon(
-      addonNames,
-      interaction.options.getString('addon', true),
-    );
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
+    const addonNames = Object.keys(this.container.client.cache.skriptToolsAddons);
+    const search = searchClosestAddon(addonNames, interaction.options.getString('addon', true));
     await interaction.respond(
       search.slice(0, 20).map((entry) => ({
         name: entry.matchedName,
@@ -55,10 +44,7 @@ export class AddonInfoCommand extends SwanCommand {
     );
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    addon: string,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, addon: string): Promise<void> {
     const addonVersions = this.container.client.cache.skriptToolsAddons[addon];
     if (!addonVersions || addonVersions.length === 0) {
       await interaction.reply({
@@ -81,13 +67,8 @@ export class AddonInfoCommand extends SwanCommand {
     await this._sendDetail(interaction, addonVersion);
   }
 
-  private async _sendDetail(
-    interaction: SwanCommand.ChatInputInteraction,
-    addonFile: string,
-  ): Promise<void> {
-    const addon: SkriptToolsAddonResponse = await axios(
-      `${apis.addons}/${addonFile}`,
-    )
+  private async _sendDetail(interaction: SwanCommand.ChatInputInteraction, addonFile: string): Promise<void> {
+    const addon: SkriptToolsAddonResponse = await axios(`${apis.addons}/${addonFile}`)
       .then((res) => res?.data?.data)
       .catch((err: Error) => {
         this.container.logger.error(err.message);
@@ -104,12 +85,7 @@ export class AddonInfoCommand extends SwanCommand {
       .setColor(colors.default)
       .setAuthor({ name: pupa(embedMessages.title, { addon }) })
       .setTimestamp()
-      .setDescription(
-        trimText(
-          addon.description || embedMessages.noDescription,
-          EmbedLimits.MaximumDescriptionLength,
-        ),
-      )
+      .setDescription(trimText(addon.description || embedMessages.noDescription, EmbedLimits.MaximumDescriptionLength))
       .setFooter({ text: embedMessages.footer });
 
     if (addon.unmaintained)

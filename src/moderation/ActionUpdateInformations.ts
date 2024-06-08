@@ -13,10 +13,7 @@ export class ActionUpdateInformations {
   }
 
   public async load(): Promise<void> {
-    const currentSanction = await ModerationHelper.getCurrentSanction(
-      this.data.victimId,
-      this.data.type,
-    );
+    const currentSanction = await ModerationHelper.getCurrentSanction(this.data.victimId, this.data.type);
     if (!currentSanction) return;
 
     this.sanctionDocument = await Sanction.findOne({

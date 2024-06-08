@@ -11,8 +11,7 @@ import type { Document, Model } from 'mongoose';
 // region API Result Types (JetBrains)
 
 /** Types for the Github API's releases endpoint */
-type RawGithubReleaseResponse =
-  Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
+type RawGithubReleaseResponse = Endpoints['GET /repos/{owner}/{repo}/releases']['response'];
 type GithubRelease = RawGithubReleaseResponse['data'][0];
 
 export type GithubPrerelease = GithubRelease & { prerelease: true };
@@ -55,13 +54,7 @@ export interface SkriptMcDocumentationSyntaxResponse {
   version: string;
   example: string;
   pattern: string;
-  category:
-    | 'conditions'
-    | 'effets'
-    | 'evenements'
-    | 'expressions'
-    | 'fonctions'
-    | 'types';
+  category: 'conditions' | 'effets' | 'evenements' | 'expressions' | 'fonctions' | 'types';
   documentationUrl: string;
   deprecation?: string | null;
   deprecationLink?: string | null;
@@ -71,12 +64,8 @@ export interface SkriptMcDocumentationSyntaxResponse {
  * Represent the objects that are in the "articles" array that is returned
  * when calling the Skript-MC's API when requesting a specific addon.
  */
-export interface SkriptMcDocumentationSyntaxAndAddon
-  extends Omit<SkriptMcDocumentationSyntaxResponse, 'addon'> {
-  addon: Pick<
-    SkriptMcDocumentationAddonResponse,
-    'dependency' | 'documentationUrl' | 'name'
-  >;
+export interface SkriptMcDocumentationSyntaxAndAddon extends Omit<SkriptMcDocumentationSyntaxResponse, 'addon'> {
+  addon: Pick<SkriptMcDocumentationAddonResponse, 'dependency' | 'documentationUrl' | 'name'>;
 }
 
 /** Represent the object that is returned by the Skript-MC's API for addons, without the syntax list */
@@ -131,8 +120,7 @@ export interface InvisionCategory {
 }
 
 /** Represent the object that is returned by the Skript-MC's API for addons */
-export interface SkriptMcDocumentationFullAddonResponse
-  extends SkriptMcDocumentationAddonResponse {
+export interface SkriptMcDocumentationFullAddonResponse extends SkriptMcDocumentationAddonResponse {
   articles: SkriptMcDocumentationSyntaxResponse[];
 }
 

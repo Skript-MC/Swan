@@ -21,13 +21,9 @@ export class IdeaCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
-    const channel = await this.container.client.guild.channels.fetch(
-      channels.idea,
-    );
+    const channel = await this.container.client.guild.channels.fetch(channels.idea);
     if (!channel || !channel.isTextBased()) return;
 
     const ideas = await channel.messages.fetch().catch(console.error);

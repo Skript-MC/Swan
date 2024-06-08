@@ -7,22 +7,13 @@ import type { ModerationData } from '#moderation/ModerationData';
 import type { SanctionDocument } from '#types/index';
 import { SanctionTypes } from '#types/index';
 
-export async function getThread(
-  data: ModerationData,
-  orCreate = false,
-): Promise<ThreadChannel> {
+export async function getThread(data: ModerationData, orCreate = false): Promise<ThreadChannel> {
   const channelName = `${data.victimName} (${data.sanctionId})`;
 
-  const banChannel = (await container.client.guild.channels.fetch(
-    channels.banChannel,
-  )) as TextChannel;
+  const banChannel = (await container.client.guild.channels.fetch(channels.banChannel)) as TextChannel;
 
   const existingChannel = container.client.guild.channels.cache.find(
-    (thread) =>
-      thread.isThread() &&
-      thread.parentId === banChannel.id &&
-      !thread.archived &&
-      !thread.locked,
+    (thread) => thread.isThread() && thread.parentId === banChannel.id && !thread.archived && !thread.locked,
   );
   if (!orCreate || existingChannel) return existingChannel as ThreadChannel;
 
@@ -37,15 +28,11 @@ export async function getThread(
     await thread.members.add(data.victimId);
     return thread;
   } catch (unknownError: unknown) {
-    container.logger.error(
-      `Could not create the private thread for the ban of ${data.victimId}.`,
-    );
+    container.logger.error(`Could not create the private thread for the ban of ${data.victimId}.`);
     container.logger.info(`Thread name: "${channelName}"`);
     container.logger.info(
       `Create thread permissions: ${
-        container.client.guild.members.me?.permissions.has(
-          PermissionFlagsBits.ManageChannels,
-        ) ?? 'Unknown'
+        container.client.guild.members.me?.permissions.has(PermissionFlagsBits.ManageChannels) ?? 'Unknown'
       }`,
     );
     container.logger.error((unknownError as Error).stack);
@@ -64,21 +51,15 @@ export async function getCurrentSanction(
   });
 }
 
-export async function getCurrentBan(
-  memberId: string,
-): Promise<SanctionDocument | null> {
+export async function getCurrentBan(memberId: string): Promise<SanctionDocument | null> {
   return await getCurrentSanction(memberId, SanctionTypes.TempBan);
 }
 
-export async function getCurrentHardban(
-  memberId: string,
-): Promise<SanctionDocument | null> {
+export async function getCurrentHardban(memberId: string): Promise<SanctionDocument | null> {
   return await getCurrentSanction(memberId, SanctionTypes.Hardban);
 }
 
-export async function getCurrentMute(
-  memberId: string,
-): Promise<SanctionDocument | null> {
+export async function getCurrentMute(memberId: string): Promise<SanctionDocument | null> {
   return await getCurrentSanction(memberId, SanctionTypes.Mute);
 }
 

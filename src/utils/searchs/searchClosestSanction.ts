@@ -9,10 +9,7 @@ import type { SanctionDocument, SimilarityMatch } from '#types/index';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export async function searchClosestSanction(
-  entries: SanctionDocument[],
-  wanted: string,
-): Promise<SimilarityMatch[]> {
+export async function searchClosestSanction(entries: SanctionDocument[], wanted: string): Promise<SimilarityMatch[]> {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     const user = await container.client.users.fetch(entry.userId);

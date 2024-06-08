@@ -7,10 +7,7 @@ export class MuteAction extends ModerationAction {
   protected after: undefined;
 
   protected async exec(): Promise<void> {
-    if (!this.data.duration)
-      throw new TypeError(
-        'Unexpected missing property: data.duration is not set.',
-      );
+    if (!this.data.duration) throw new TypeError('Unexpected missing property: data.duration is not set.');
 
     await this._mute();
   }

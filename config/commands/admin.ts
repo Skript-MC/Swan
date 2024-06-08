@@ -3,15 +3,13 @@ import { PermissionFlagsBits } from 'discord.js';
 export const logs = {
   settings: {
     command: 'logs',
-    description:
-      "Permet d'activer ou de désactiver la sauvegarde des messages de certains salons.",
+    description: "Permet d'activer ou de désactiver la sauvegarde des messages de certains salons.",
     defaultMemberPermissions: PermissionFlagsBits.ModerateMembers,
   },
   messages: {
     noChannelFound:
       ":x: Aucun salon n'a été trouvé. Vérifiez que vous l'avez correctement mentionné et essayez de rafraîchir le cache.",
-    loggingStatus:
-      'Actuellement, la sauvegarde des messages dans ce salon est {status}.',
+    loggingStatus: 'Actuellement, la sauvegarde des messages dans ce salon est {status}.',
     success: 'La sauvegarde des messages de ce salon a bien été {status}.',
     on: 'activée :white_check_mark:',
     off: 'désactivée :x:',
@@ -38,8 +36,7 @@ export const module = {
     off: 'désactivé :x:',
     cannotBeDisabled: ':x: Ce module ne peut pas être désactivé.',
     success: 'Le module a bien été {status}.',
-    confirmationPrompt:
-      'Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.',
+    confirmationPrompt: 'Êtes-vous sûr de désactiver ce module ? Il ne pourra être réactivé que depuis le panel.',
   },
 } as const;
 
@@ -66,15 +63,13 @@ export const reactionRole = {
     success: "L'espace de RoleReaction a bien été créé. :white_check_mark:",
     embed: {
       title: 'Obtenir le rôle {givenRole.name}',
-      content:
-        'Cliquez sur la réaction {reaction} pour obtenir le rôle {givenRole}',
+      content: 'Cliquez sur la réaction {reaction} pour obtenir le rôle {givenRole}',
       footer: {
         icon: 'https://raw.githubusercontent.com/Skript-MC/Swan/01f67192c18107a2f9a47beb4f7a082ac63696be/assets/logo.png',
         text: 'Skript-MC',
       },
     },
-    notEnoughPermissions:
-      "Erreur ! Je n'ai pas la permission d'agir sur un rôle aussi puissant !",
+    notEnoughPermissions: "Erreur ! Je n'ai pas la permission d'agir sur un rôle aussi puissant !",
     invalidEmoji: "Je n'arrive pas à récupérer cet emoji...",
     invalidRole: "Je n'arrive pas à récupérer ce rôle...",
   },

@@ -1,13 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-  EmbedBuilder,
-  TimestampStyles,
-  time,
-} from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder, TimestampStyles, time } from 'discord.js';
 import pupa from 'pupa';
 import { userInfo as config } from '#config/commands/info';
 import * as messages from '#config/messages';
@@ -40,10 +34,7 @@ export class UserInfoCommand extends SwanCommand {
     await this._exec(interaction, member);
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    member: GuildMember,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, member: GuildMember): Promise<void> {
     const embedConfig = config.messages.embed;
 
     let presenceDetails = '';
@@ -53,26 +44,19 @@ export class UserInfoCommand extends SwanCommand {
         activity,
       });
 
-      if (activity.details)
-        presenceDetails += pupa(embedConfig.presence.details, { activity });
+      if (activity.details) presenceDetails += pupa(embedConfig.presence.details, { activity });
 
-      if (activity.state)
-        presenceDetails += pupa(embedConfig.presence.state, { activity });
+      if (activity.state) presenceDetails += pupa(embedConfig.presence.state, { activity });
 
       if (activity.timestamps?.start) {
-        const formattedTime = time(
-          activity.timestamps.start,
-          TimestampStyles.RelativeTime,
-        );
+        const formattedTime = time(activity.timestamps.start, TimestampStyles.RelativeTime);
         presenceDetails += pupa(embedConfig.presence.timestamps, {
           time: formattedTime,
         });
       }
     }
 
-    const roles = [...member.roles.cache.values()].filter(
-      (role) => role.name !== '@everyone',
-    );
+    const roles = [...member.roles.cache.values()].filter((role) => role.name !== '@everyone');
 
     const presenceContent = pupa(embedConfig.presence.content, {
       status: embedConfig.presence.status[member.presence?.status ?? 'offline'],
@@ -86,10 +70,7 @@ export class UserInfoCommand extends SwanCommand {
       embedConfig.joined.content,
       member.joinedTimestamp
         ? {
-            joined: time(
-              new Date(member.joinedTimestamp),
-              TimestampStyles.LongDateTime,
-            ),
+            joined: time(new Date(member.joinedTimestamp), TimestampStyles.LongDateTime),
           }
         : { joined: messages.global.unknown(true) },
     );

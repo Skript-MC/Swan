@@ -3,11 +3,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import axios from 'axios';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import { serverInfo as config } from '#config/commands/info';
 import { apis, colors } from '#config/settings';
@@ -23,8 +19,7 @@ export class ServerInfoCommand extends SwanCommand {
     {
       type: ApplicationCommandOptionType.String,
       name: 'adresse',
-      description:
-        'Adresse du serveur dont vous souhaitez avoir des informations',
+      description: 'Adresse du serveur dont vous souhaitez avoir des informations',
       required: true,
     },
   ];
@@ -33,16 +28,10 @@ export class ServerInfoCommand extends SwanCommand {
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(
-      interaction,
-      interaction.options.getString('adresse', true),
-    );
+    await this._exec(interaction, interaction.options.getString('adresse', true));
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    query: string,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, query: string): Promise<void> {
     const ip = query.split(':').shift();
     if (ip && isIP(ip)) {
       await interaction.reply(config.messages.noIp);

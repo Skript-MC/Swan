@@ -1,13 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ContextMenuCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData, GuildMember } from 'discord.js';
-import {
-  ActionRowBuilder,
-  ApplicationCommandType,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-} from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { tempBan as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { ModerationData } from '#moderation/ModerationData';
@@ -27,12 +21,8 @@ export class SdbCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const moderator = await this.container.client.guild.members.fetch(
-      interaction.user.id,
-    );
-    const potentialVictim = await this.container.client.guild.members
-      .fetch(interaction.targetId)
-      .catch(nullop);
+    const moderator = await this.container.client.guild.members.fetch(interaction.user.id);
+    const potentialVictim = await this.container.client.guild.members.fetch(interaction.targetId).catch(nullop);
     if (!potentialVictim) {
       await interaction.reply({
         content: messages.prompt.member,
@@ -50,9 +40,7 @@ export class SdbCommand extends SwanCommand {
       return;
     }
 
-    const modal = new ModalBuilder()
-      .setCustomId('tempban')
-      .setTitle('Bannissement temporaire');
+    const modal = new ModalBuilder().setCustomId('tempban').setTitle('Bannissement temporaire');
 
     const durationInput = new TextInputBuilder()
       .setCustomId('duration')
@@ -70,12 +58,8 @@ export class SdbCommand extends SwanCommand {
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true);
 
-    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(
-      durationInput,
-    );
-    const secondRow = new ActionRowBuilder<TextInputBuilder>().addComponents(
-      reasonInput,
-    );
+    const firstRow = new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput);
+    const secondRow = new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput);
 
     modal.addComponents(firstRow, secondRow);
     await interaction.showModal(modal);
@@ -86,10 +70,7 @@ export class SdbCommand extends SwanCommand {
     });
 
     const reason = submitInteraction.fields.getTextInputValue('reason');
-    const duration = resolveDuration(
-      submitInteraction.fields.getTextInputValue('duration'),
-      false,
-    );
+    const duration = resolveDuration(submitInteraction.fields.getTextInputValue('duration'), false);
     if (duration.isErr()) {
       await submitInteraction.reply({
         content: messages.prompt.duration,
@@ -98,12 +79,7 @@ export class SdbCommand extends SwanCommand {
       return;
     }
 
-    await this._exec(
-      submitInteraction,
-      victim.unwrap(),
-      duration.unwrap(),
-      reason,
-    );
+    await this._exec(submitInteraction, victim.unwrap(), duration.unwrap(), reason);
   }
 
   private async _exec(
@@ -138,9 +114,7 @@ export class SdbCommand extends SwanCommand {
       const success = await new BanAction(data).commit();
       if (success) await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
-      this.container.logger.error(
-        'An unexpected error occurred while banning a member!',
-      );
+      this.container.logger.error('An unexpected error occurred while banning a member!');
       this.container.logger.info(`Duration: ${duration}`);
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);

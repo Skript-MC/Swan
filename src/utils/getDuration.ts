@@ -41,30 +41,13 @@ function tokenize(str: string): string[] {
 }
 
 const durations: Array<[values: string[], multiplier: Durations]> = [
-  [
-    [
-      'years',
-      'year',
-      'y',
-      'annees',
-      'années',
-      'annee',
-      'année',
-      'ans',
-      'an',
-      'a',
-    ],
-    Durations.Year,
-  ],
+  [['years', 'year', 'y', 'annees', 'années', 'annee', 'année', 'ans', 'an', 'a'], Durations.Year],
   [['months', 'month', 'mois', 'mo'], Durations.Month],
   [['weeks', 'week', 'w', 'semaines', 'semaine', 'sem'], Durations.Week],
   [['days', 'day', 'd', 'jours', 'jour', 'j'], Durations.Day],
   [['hours', 'hour', 'heures', 'heure', 'hrs', 'hr', 'h'], Durations.Hour],
   [['minutes', 'minute', 'mins', 'min', 'm'], Durations.Minute],
-  [
-    ['seconds', 'second', 'secondes', 'seconde', 'secs', 'sec', 's'],
-    Durations.Second,
-  ],
+  [['seconds', 'second', 'secondes', 'seconde', 'secs', 'sec', 's'], Durations.Second],
 ];
 
 function convert(num: number, type: string): number {
@@ -91,12 +74,10 @@ export function getDuration(val: string): number {
       const groups = REGEX.exec(token)?.groups;
 
       const previousUnit = parts[i - 1]?.unit;
-      const nextUnit =
-        durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
+      const nextUnit = durations.findIndex(([values]) => values.includes(previousUnit)) + 1;
       const newUnit = durations[nextUnit]?.[0][0];
 
-      if (!groups?.number || (!groups.unit && nextUnit === 0))
-        throw new TypeError('Value is an invalid duration');
+      if (!groups?.number || (!groups.unit && nextUnit === 0)) throw new TypeError('Value is an invalid duration');
 
       parts.push({ number: groups.number, unit: groups.unit ?? newUnit });
     }

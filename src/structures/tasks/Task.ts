@@ -48,10 +48,8 @@ export abstract class Task extends Piece {
   public override onLoad(): void {
     if (!this._callback) return;
 
-    if (this.interval)
-      this._scheduleInterval = setInterval(this._callback, this.interval);
-    else if (this.cron)
-      this._scheduleCron = cron.schedule(this.cron, this._callback);
+    if (this.interval) this._scheduleInterval = setInterval(this._callback, this.interval);
+    else if (this.cron) this._scheduleCron = cron.schedule(this.cron, this._callback);
 
     if (this.immediate) void this._callback();
   }

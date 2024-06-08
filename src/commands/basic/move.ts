@@ -1,17 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ContextMenuCommand } from '@sapphire/framework';
-import type {
-  ApplicationCommandOptionData,
-  Message,
-  MessageReaction,
-  TextChannel,
-  User,
-} from 'discord.js';
-import {
-  ApplicationCommandType,
-  EmbedBuilder,
-  PermissionFlagsBits,
-} from 'discord.js';
+import type { ApplicationCommandOptionData, Message, MessageReaction, TextChannel, User } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import pupa from 'pupa';
 import { move as config } from '#config/commands/basic';
 import * as messages from '#config/messages';
@@ -33,18 +23,11 @@ export class MoveCommand extends SwanCommand {
     await this._exec(interaction, message);
   }
 
-  private async _exec(
-    interaction: SwanCommand.CommandInteraction<'cached'>,
-    targetedMessage: Message,
-  ): Promise<void> {
-    const member = await this.container.client.guild.members.fetch(
-      interaction.user.id,
-    );
+  private async _exec(interaction: SwanCommand.CommandInteraction<'cached'>, targetedMessage: Message): Promise<void> {
+    const member = await this.container.client.guild.members.fetch(interaction.user.id);
 
     const originalChannel = targetedMessage.channel as TextChannel;
-    const canMemberWrite = originalChannel
-      ?.permissionsFor(member)
-      .has(PermissionFlagsBits.SendMessages);
+    const canMemberWrite = originalChannel?.permissionsFor(member).has(PermissionFlagsBits.SendMessages);
 
     if (!canMemberWrite) {
       await interaction.reply({
@@ -55,8 +38,7 @@ export class MoveCommand extends SwanCommand {
     }
 
     const hasRole = targetedMessage.member
-      ? targetedMessage.member.roles.highest.position >=
-        member.roles.highest.position
+      ? targetedMessage.member.roles.highest.position >= member.roles.highest.position
       : false;
     if (hasRole) {
       await interaction.reply({
@@ -83,10 +65,7 @@ export class MoveCommand extends SwanCommand {
       return;
     }
 
-    const resolvedChannel = resolveGuildTextBasedChannel(
-      result.content,
-      interaction.guild,
-    );
+    const resolvedChannel = resolveGuildTextBasedChannel(result.content, interaction.guild);
     if (resolvedChannel.isErr()) {
       await interaction.editReply(messages.prompt.channel);
       return;
@@ -99,19 +78,12 @@ export class MoveCommand extends SwanCommand {
     const canEveryoneRead = targetedChannel
       ?.permissionsFor(targetedChannel.guild.roles.everyone)
       .has(PermissionFlagsBits.ViewChannel);
-    if (
-      !canEveryoneWrite ||
-      !canEveryoneRead ||
-      interaction.channel?.id === targetedChannel.id
-    ) {
+    if (!canEveryoneWrite || !canEveryoneRead || interaction.channel?.id === targetedChannel.id) {
       await interaction.editReply(messages.prompt.channel);
       return;
     }
 
-    const targetName =
-      targetedMessage.member?.displayName ??
-      targetedMessage.author.username ??
-      'Inconnu';
+    const targetName = targetedMessage.member?.displayName ?? targetedMessage.author.username ?? 'Inconnu';
     const successMessage = pupa(config.messages.successfullyMoved, {
       targetName,
       targetChannel: targetedChannel,
@@ -130,8 +102,7 @@ export class MoveCommand extends SwanCommand {
           targetName,
           sourceChannel: targetedMessage.channel,
           targetChannel: targetedChannel,
-          emoji:
-            interaction.guild.emojis.resolve(emojis.remove) ?? emojis.remove,
+          emoji: interaction.guild.emojis.resolve(emojis.remove) ?? emojis.remove,
         }),
       );
 
@@ -144,21 +115,16 @@ export class MoveCommand extends SwanCommand {
       const informationEmbed = await targetedChannel.send({ embeds: [embed] });
       await informationEmbed.react(emojis.remove);
 
-      const repostMessage = await targetedChannel.send(
-        targetedMessage.content.slice(0, 2000),
-      );
-      if (targetedMessage.content.length > 2000)
-        await targetedChannel.send(targetedMessage.content.slice(2000, 4000));
+      const repostMessage = await targetedChannel.send(targetedMessage.content.slice(0, 2000));
+      if (targetedMessage.content.length > 2000) await targetedChannel.send(targetedMessage.content.slice(2000, 4000));
 
-      for (const { url } of targetedMessage.attachments.values())
-        await targetedChannel.send(url);
+      for (const { url } of targetedMessage.attachments.values()) await targetedChannel.send(url);
 
       const collector = informationEmbed
         .createReactionCollector({
           filter: (r: MessageReaction, user: User) =>
             (r.emoji.id ?? r.emoji.name) === emojis.remove &&
-            (user.id === interaction.user.id ||
-              user.id === targetedMessage.author?.id) &&
+            (user.id === interaction.user.id || user.id === targetedMessage.author?.id) &&
             !user.bot,
         })
         .on('collect', async () => {
@@ -172,13 +138,9 @@ export class MoveCommand extends SwanCommand {
         });
     } catch (unknownError: unknown) {
       await targetedMessage.member?.send(config.messages.emergency);
-      await targetedMessage.member?.send(
-        `\`${targetedMessage.content.slice(0, 2000)}\``,
-      );
+      await targetedMessage.member?.send(`\`${targetedMessage.content.slice(0, 2000)}\``);
       if (targetedMessage.content.length > 2000)
-        await targetedMessage.member?.send(
-          `\`${targetedMessage.content.slice(2000, 4000)}\``,
-        );
+        await targetedMessage.member?.send(`\`${targetedMessage.content.slice(2000, 4000)}\``);
       throw unknownError as Error;
     }
   }

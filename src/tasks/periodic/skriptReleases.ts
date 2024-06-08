@@ -36,27 +36,17 @@ export class SkriptReleasesTask extends Task {
 
     // We updated the cache of the releases with the one we just fetched.
     this.container.client.cache.github = {
-      lastPrerelease: githubReleases.data.find(
-        (release): release is GithubPrerelease => release.prerelease,
-      ),
-      lastStableRelease: githubReleases.data.find(
-        (release): release is GithubStableRelease => !release.prerelease,
-      ),
+      lastPrerelease: githubReleases.data.find((release): release is GithubPrerelease => release.prerelease),
+      lastStableRelease: githubReleases.data.find((release): release is GithubStableRelease => !release.prerelease),
     };
 
     // We can't know if we've already posted it, so we don't post anything to prevent from spamming unnecessarily.
     if (!lastRelease.published_at) return;
 
     // If the release was not posted within the time window (refresh-rate), stop.
-    if (
-      Date.now() - new Date(lastRelease.published_at).getTime() >
-      config.timeDifference
-    )
-      return;
+    if (Date.now() - new Date(lastRelease.published_at).getTime() > config.timeDifference) return;
 
-    const channel = this.container.client.channels.cache.get(
-      channels.skriptTalk,
-    );
+    const channel = this.container.client.channels.cache.get(channels.skriptTalk);
     if (!channel?.isTextBased()) return;
 
     const embed = new EmbedBuilder()
@@ -68,10 +58,7 @@ export class SkriptReleasesTask extends Task {
       .setTitle(`${lastRelease.name} (${lastRelease.tag_name})`)
       .setURL(lastRelease.html_url)
       .setDescription(
-        trimText(
-          lastRelease.body || messages.miscellaneous.noDescription,
-          EmbedLimits.MaximumDescriptionLength,
-        ),
+        trimText(lastRelease.body || messages.miscellaneous.noDescription, EmbedLimits.MaximumDescriptionLength),
       )
       .setFooter({ text: `${config.dataProvider} (#${lastRelease.id})` })
       .setTimestamp(new Date(lastRelease.published_at));

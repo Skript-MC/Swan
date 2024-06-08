@@ -9,10 +9,7 @@ const regex =
   // biome-ignore lint/suspicious/noMisleadingCharacterClass:
   /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}\u{1F1E6}-\u{1F1FF}]/gu;
 
-export function resolveEmoji(
-  parameter: string,
-  guild: Guild,
-): Result<string, 'emojiError'> {
+export function resolveEmoji(parameter: string, guild: Guild): Result<string, 'emojiError'> {
   if (!parameter) return err('emojiError');
 
   const regexResult = EmojiRegex.exec(parameter)?.[3];

@@ -20,13 +20,9 @@ export class PingCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     const defer = await interaction.deferReply({ fetchReply: true });
-    const swanPing =
-      (defer.editedAt ?? defer.createdAt).getTime() -
-      interaction.createdAt.getTime();
+    const swanPing = (defer.editedAt ?? defer.createdAt).getTime() - interaction.createdAt.getTime();
     const discordPing = Math.round(this.container.client.ws.ping);
 
     const description = pupa(config.messages.secondMessage, {
@@ -36,10 +32,7 @@ export class PingCommand extends SwanCommand {
       discordIndicator: this._getColorFromPing(discordPing),
     });
 
-    const embed = new EmbedBuilder()
-      .setColor(colors.default)
-      .setDescription(description)
-      .setTimestamp();
+    const embed = new EmbedBuilder().setColor(colors.default).setDescription(description).setTimestamp();
 
     await interaction.followUp({ embeds: [embed] });
   }

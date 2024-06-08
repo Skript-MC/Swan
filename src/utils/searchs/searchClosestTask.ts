@@ -10,10 +10,7 @@ import { capitalize } from '#utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export function searchClosestTask(
-  entries: Task[],
-  wanted: string,
-): SimilarityMatch[] {
+export function searchClosestTask(entries: Task[], wanted: string): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     // Avoid useless double loop after.

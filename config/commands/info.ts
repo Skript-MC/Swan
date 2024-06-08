@@ -9,8 +9,7 @@ export const addonInfo = {
   messages: {
     unknownAddon:
       "Désolé, mais je ne trouve pas l'addon `{addon}`... Es-tu sûr qu'il est disponible sur skripttools (<https://skripttools.net/addons?q={addon}>) ?",
-    searchResults:
-      "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
+    searchResults: "{matchingAddons.length} addons trouvés pour la recherche `{addon}`. Quel addon t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
       title: 'Informations sur {addon.plugin}',
@@ -24,8 +23,7 @@ export const addonInfo = {
       depend: ':link: Dépendances obligatoires',
       softdepend: ':link: Dépendances facultatives',
       unmaintained: ':warning: Addon abandonné',
-      unmaintainedDescription:
-        "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser.",
+      unmaintainedDescription: "Cet addon a été abandonné par son auteur ! Il est fortement déconseillé de l'utiliser.",
       footer: 'Données fournies par https://skripttools.net',
     },
   },
@@ -34,22 +32,18 @@ export const addonInfo = {
 export const documentation = {
   settings: {
     command: 'doc',
-    description:
-      "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
+    description: "Permet de chercher une syntaxe de Skript ou d'un addon de la documentation de Skript-MC.",
   },
   messages: {
     unknownSyntax:
       "Désolé, mais je ne trouve pas la syntaxe `{articleId}`... Elle n'existe peut être pas, ou n'est simplement pas répertoriée sur la documentation de Skript-MC (<https://skript-mc.fr/documentation/skript/>).",
-    searchResults:
-      "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
+    searchResults: "{matchingSyntaxes.length} syntaxes trouvées pour la recherche `{syntax}`. Laquelle t'intéresse ?",
     more: '\n...et {amount} de plus...',
     embed: {
       title: '{article.name} ({article.category} — #{article.id})',
       description: '{article.content}',
-      deprecated:
-        ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
-      depreactionReplacement:
-        'Tu peux utiliser [cette syntaxe]({article.deprecationLink}) pour la remplacer.',
+      deprecated: ":warning: Cette syntaxe est dépréciée, il ne faut plus l'utiliser !",
+      depreactionReplacement: 'Tu peux utiliser [cette syntaxe]({article.deprecationLink}) pour la remplacer.',
       noReplacement: 'Pas de remplacement disponible.',
       noDescription: 'Aucune description disponible.',
       version: ':bookmark: À partir de la version',
@@ -75,8 +69,7 @@ export const documentation = {
 export const serverInfo = {
   settings: {
     command: 'server',
-    description:
-      "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
+    description: "Permet d'afficher diverses informations sur un serveur Minecraft, selon son adresse.",
   },
   messages: {
     embed: {
@@ -93,8 +86,7 @@ export const serverInfo = {
       mods: ':toolbox: Mods',
       footer: 'Données fournies par https://api.mcsrcstat.us',
     },
-    requestFailed:
-      "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
+    requestFailed: "Aïe, je n'arrive pas à reconnaître cette adresse ou à récupérer ses données...",
     noIp: "Il faut entrer le nom de domaine (`mc.hypixel.net`), pas l'adresse IP !",
   },
 } as const;
@@ -124,8 +116,7 @@ export const skriptInfo = {
 
         [Dernière version stable : {latestStable.tag_name}]({latestStable.html_url})
       `,
-      versionsWithoutPrerelease:
-        '[Dernière version : {latestStable.tag_name}]({latestStable.html_url})',
+      versionsWithoutPrerelease: '[Dernière version : {latestStable.tag_name}]({latestStable.html_url})',
       footer: 'Données fournies par https://github.com',
     },
   },
@@ -134,8 +125,7 @@ export const skriptInfo = {
 export const userInfo = {
   settings: {
     command: 'userinfo',
-    description:
-      "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
+    description: "Permet d'afficher diverses informations sur un membre en particulier du Discord.",
   },
   messages: {
     notFound: "Aucun membre n'a été trouvé.",

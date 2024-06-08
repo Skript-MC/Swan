@@ -22,9 +22,7 @@ export class StatisticsCommand extends SwanCommand {
     await this._exec(interaction);
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction): Promise<void> {
     const totalCommands = this.container.stores.get('commands').size;
     const embedMessages = config.messages.embed;
     const commitHash = this._getGitRev();
@@ -37,10 +35,7 @@ export class StatisticsCommand extends SwanCommand {
           name: embedMessages.version,
           value: pupa(embedMessages.versionContent, {
             version: commitTag,
-            commitLink: `[${commitHash.slice(
-              0,
-              7,
-            )}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
+            commitLink: `[${commitHash.slice(0, 7)}](https://github.com/Skript-MC/Swan/commit/${commitHash})`,
           }),
           inline: true,
         },
@@ -83,8 +78,7 @@ export class StatisticsCommand extends SwanCommand {
   }
 
   private _getGitRev(): string {
-    if (this.container.client.cache.gitCommit)
-      return this.container.client.cache.gitCommit;
+    if (this.container.client.cache.gitCommit) return this.container.client.cache.gitCommit;
 
     const rev = execSync('git rev-parse HEAD').toString().trim();
     this.container.client.cache.gitCommit = rev;
@@ -92,8 +86,7 @@ export class StatisticsCommand extends SwanCommand {
   }
 
   private _getGitTag(): string {
-    if (this.container.client.cache.gitTag)
-      return this.container.client.cache.gitTag;
+    if (this.container.client.cache.gitTag) return this.container.client.cache.gitTag;
 
     const tag = execSync('git describe --tags --abbrev=0').toString().trim();
     this.container.client.cache.gitTag = tag;

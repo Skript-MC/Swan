@@ -8,18 +8,13 @@ import { UnmuteAction } from '#moderation/actions/UnmuteAction';
 import { SanctionTypes } from '#types/index';
 
 export class GuildMemberUpdateListener extends Listener {
-  public override async run(
-    oldMember: GuildMember,
-    newMember: GuildMember,
-  ): Promise<void> {
+  public override async run(oldMember: GuildMember, newMember: GuildMember): Promise<void> {
     if (oldMember.user.bot) return;
 
     const isNewMute =
-      newMember.communicationDisabledUntilTimestamp &&
-      newMember.communicationDisabledUntilTimestamp >= Date.now();
+      newMember.communicationDisabledUntilTimestamp && newMember.communicationDisabledUntilTimestamp >= Date.now();
     const isRevokedMute =
-      oldMember.communicationDisabledUntilTimestamp &&
-      !newMember.communicationDisabledUntilTimestamp;
+      oldMember.communicationDisabledUntilTimestamp && !newMember.communicationDisabledUntilTimestamp;
 
     if (!isNewMute && !isRevokedMute) return;
 
@@ -33,10 +28,8 @@ export class GuildMemberUpdateListener extends Listener {
         u.changes?.every(
           (c) =>
             c.key === 'communication_disabled_until' &&
-            (Date.parse(c.new as string) ===
-              newMember.communicationDisabledUntilTimestamp ||
-              Date.parse(c.old as string) ===
-                oldMember.communicationDisabledUntilTimestamp),
+            (Date.parse(c.new as string) === newMember.communicationDisabledUntilTimestamp ||
+              Date.parse(c.old as string) === oldMember.communicationDisabledUntilTimestamp),
         ),
       )
       .first();
@@ -52,10 +45,7 @@ export class GuildMemberUpdateListener extends Listener {
 
     const data = new ModerationData()
       .setVictim({ id: newMember.id, name: newMember.displayName })
-      .setDuration(
-        (newMember.communicationDisabledUntilTimestamp || 0) - Date.now(),
-        true,
-      )
+      .setDuration((newMember.communicationDisabledUntilTimestamp || 0) - Date.now(), true)
       .setType(SanctionTypes.Mute)
       .setReason(update.reason)
       .setModeratorId(update.executor.id);

@@ -8,10 +8,7 @@ export class ReadyListener extends Listener {
     const client = this.container.client as SwanClient;
 
     const guild = this.container.client.guilds.resolve(bot.guild);
-    if (!guild)
-      throw new TypeError(
-        'Expected SwanClient.guild to be defined after resolving.',
-      );
+    if (!guild) throw new TypeError('Expected SwanClient.guild to be defined after resolving.');
     client.guild = guild;
 
     const taskStore = this.container.client.stores.get('tasks');

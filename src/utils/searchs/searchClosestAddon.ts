@@ -9,10 +9,7 @@ import { capitalize } from '#utils/capitalize';
  * @param {string} wanted - The query string to search for.
  * @returns SimilarityMatch[]
  */
-export function searchClosestAddon(
-  entries: string[],
-  wanted: string,
-): SimilarityMatch[] {
+export function searchClosestAddon(entries: string[], wanted: string): SimilarityMatch[] {
   const matches: SimilarityMatch[] = [];
   for (const entry of entries) {
     if (!entry) continue;

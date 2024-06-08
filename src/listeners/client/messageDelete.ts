@@ -1,9 +1,5 @@
 import { Listener } from '@sapphire/framework';
-import {
-  type BaseGuildTextChannel,
-  EmbedBuilder,
-  type Message,
-} from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder, type Message } from 'discord.js';
 import { User } from 'discord.js';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
@@ -15,16 +11,12 @@ export class MessageDeleteListener extends Listener {
     if (!message.inGuild() || !message.member) return;
 
     if (message?.content && !message.system) {
-      const logChannel = await this.container.client.channels.fetch(
-        channels.discordLog,
-      );
+      const logChannel = await this.container.client.channels.fetch(channels.discordLog);
       if (logChannel) {
         const embed = new EmbedBuilder()
           .setDescription(
             `
-            🗑 Message envoyé par <@${message.author.id}> supprimé dans <#${
-              message.channel.id
-            }>.
+            🗑 Message envoyé par <@${message.author.id}> supprimé dans <#${message.channel.id}>.
             \n\`\`\`${escapeCode(message.content)}\`\`\`
             `,
           )
@@ -45,15 +37,12 @@ export class MessageDeleteListener extends Listener {
     if (
       message.author.bot ||
       message.system ||
-      message.member.roles.highest.position >=
-        (message.guild.roles.cache.get(roles.staff)?.position || 0)
+      message.member.roles.highest.position >= (message.guild.roles.cache.get(roles.staff)?.position || 0)
     )
       return;
 
     // List of all the usernames that were mentionned in the deleted message.
-    const userMentions = [...message.mentions.users.values()].filter(
-      (usr) => !usr.bot && usr.id !== message.author.id,
-    );
+    const userMentions = [...message.mentions.users.values()].filter((usr) => !usr.bot && usr.id !== message.author.id);
     // List of all the roles name's that were mentionned in the deleted message.
     const roleMentions = [...message.mentions.roles.values()];
     // List of usernames / roles name's that were mentionned.
@@ -63,19 +52,14 @@ export class MessageDeleteListener extends Listener {
     if (mentions.length === 0) return;
 
     // Choose the message (plural if multiple people (or a role) were ghost-ping)
-    const severalPeopleAffected =
-      mentions.length > 1 || roleMentions.length > 0;
+    const severalPeopleAffected = mentions.length > 1 || roleMentions.length > 0;
     const baseMessage = severalPeopleAffected
       ? messages.miscellaneous.ghostPingPlural
       : messages.miscellaneous.ghostPingSingular;
 
     const botNotificationMessage = await message.channel.send(
       pupa(baseMessage, {
-        mentions: mentions
-          .map((mention) =>
-            mention instanceof User ? mention.username : mention.name,
-          )
-          .join(', '),
+        mentions: mentions.map((mention) => (mention instanceof User ? mention.username : mention.name)).join(', '),
         user: message.author,
       }),
     );

@@ -4,13 +4,8 @@ import { captureException } from '@sentry/node';
 import * as messages from '#config/messages';
 import { noop } from '#utils/index';
 
-export class CommandErrorListener extends Listener<
-  typeof Events.ChatInputCommandError
-> {
-  public override async run(
-    error: Error,
-    { interaction }: ChatInputCommandErrorPayload,
-  ): Promise<void> {
+export class CommandErrorListener extends Listener<typeof Events.ChatInputCommandError> {
+  public override async run(error: Error, { interaction }: ChatInputCommandErrorPayload): Promise<void> {
     captureException(error);
     await interaction.reply(messages.global.oops).catch(noop);
     captureException(error, {

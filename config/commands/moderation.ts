@@ -23,8 +23,7 @@ const commonMessages = {
 export const tempBan = {
   settings: {
     command: 'Bannissement temporaire',
-    description:
-      'Appliquer un bannissement temporaire à un membre du Discord, créant un salon des bannis.',
+    description: 'Appliquer un bannissement temporaire à un membre du Discord, créant un salon des bannis.',
     defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   },
   messages: {
@@ -49,10 +48,8 @@ export const history = {
     defaultMemberPermissions: PermissionFlagsBits.ViewAuditLog,
   },
   messages: {
-    sentInDm:
-      "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
-    notFound:
-      "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
+    sentInDm: "L'historique des sanctions de l'utilisateur t'a bien été envoyé en privé !",
+    notFound: "Je n'ai pas pu trouver d'historique correspondant à cet utilisateur !",
     title: "**__Sanctions de l'utilisateur {name}__** ({sanctions.length})",
     overflowTitle: '...et {overflowed} de plus...',
     overflowDescription:
@@ -83,8 +80,7 @@ export const history = {
       `,
       duration: '\n    __Durée :__ {duration}',
       modifications: '    __Modification{plural} :__\n',
-      update:
-        '    - {date}, <@{sanction.moderator}> {action} (motif : {update.reason})',
+      update: '    - {date}, <@{sanction.moderator}> {action} (motif : {update.reason})',
       timeDiff: stripIndent`
 
         \`\`\`diff
@@ -122,8 +118,7 @@ export const mute = {
 export const purge = {
   settings: {
     command: 'purge',
-    description:
-      "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
+    description: "Permet de supprimer plusieurs messages d'un salon ou d'un membre en particulier.",
     defaultMemberPermissions: PermissionFlagsBits.ManageMessages,
   },
   messages: {
@@ -142,16 +137,14 @@ export const removeWarn = {
     success: 'Avertissement révoqué avec succès !',
     memberNotFound: "Je n'ai pas réussi à trouver ce membre...",
     notWarned: "Ce membre n'a aucun avertissement en cours.",
-    invalidWarnId:
-      "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
+    invalidWarnId: "Cet identifiant n'est pas valide. Est-ce bien un avertissement ? N'est-il pas révoqué ?",
   },
 } as const;
 
 export const unban = {
   settings: {
     command: 'unban',
-    description:
-      "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
+    description: "Permet de retirer une restriction Discord d'un membre, ou le débannir s'il est banni définitivement.",
     defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   },
   messages: {
@@ -178,7 +171,6 @@ export const warn = {
     notification: commonMessages.creationNotification(false),
     notificationUpdate: commonMessages.notificationUpdate,
     success: 'Membre averti avec succès !',
-    banSuccess:
-      "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
+    banSuccess: "C'est le deuxième avertissement pour ce membre, il a donc été banni 4 jours !",
   },
 } as const;

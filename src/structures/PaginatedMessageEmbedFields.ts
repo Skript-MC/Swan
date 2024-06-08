@@ -13,9 +13,7 @@ import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { colors } from '#config/settings';
 
-type EmbedFields =
-  | Array<Omit<EmbedField, 'inline'>>
-  | ReadonlyArray<Omit<EmbedField, 'inline'>>;
+type EmbedFields = Array<Omit<EmbedField, 'inline'>> | ReadonlyArray<Omit<EmbedField, 'inline'>>;
 
 export class PaginatedMessageEmbedFields extends PaginatedMessage {
   private _embedTemplate: APIEmbed = {};
@@ -68,11 +66,7 @@ export class PaginatedMessageEmbedFields extends PaginatedMessage {
     }
   }
 
-  private _paginateArray(
-    items: EmbedFields,
-    currentPage: number,
-    perPageItems: number,
-  ): EmbedFields {
+  private _paginateArray(items: EmbedFields, currentPage: number, perPageItems: number): EmbedFields {
     const offset = currentPage * perPageItems;
     return items.slice(offset, offset + perPageItems);
   }

@@ -1,12 +1,7 @@
 import { container } from '@sapphire/framework';
 import axios from 'axios';
 import type { Message } from 'discord.js';
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-} from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
 import { apis, colors } from '#config/settings';
 import type { PublishResponse, Suggestion, VoteResponse } from '#types/index';
 import { nullop } from '#utils/index';
@@ -27,10 +22,7 @@ export async function getSuggestion(messageId: string): Promise<Suggestion> {
     .catch(nullop);
 }
 
-export async function suggestionCallback(
-  suggestion: Suggestion,
-  message: Message,
-): Promise<void> {
+export async function suggestionCallback(suggestion: Suggestion, message: Message): Promise<void> {
   await axios
     .post(`${apis.skriptmc}/suggestions/callback?${token}`, {
       suggestionId: suggestion.id,
@@ -39,10 +31,7 @@ export async function suggestionCallback(
     .catch(nullop);
 }
 
-export async function publishSuggestion(
-  description: string,
-  discordId: string,
-): Promise<PublishResponse> {
+export async function publishSuggestion(description: string, discordId: string): Promise<PublishResponse> {
   const response = await axios
     .post(
       `${apis.skriptmc}/suggestions/publish?${token}`,
@@ -58,11 +47,7 @@ export async function publishSuggestion(
   return response?.data;
 }
 
-export async function suggestionVote(
-  messageId: string,
-  upVote: boolean,
-  discordId: string,
-): Promise<VoteResponse> {
+export async function suggestionVote(messageId: string, upVote: boolean, discordId: string): Promise<VoteResponse> {
   const response = await axios
     .post(
       `${apis.skriptmc}/suggestions/vote?${token}`,
@@ -94,9 +79,7 @@ export function getSuggestionStatus(status: number): string {
   }
 }
 
-export async function getSuggestionEmbed(
-  suggestion: Suggestion,
-): Promise<EmbedBuilder> {
+export async function getSuggestionEmbed(suggestion: Suggestion): Promise<EmbedBuilder> {
   const { client } = container;
   const embed = new EmbedBuilder()
     .setColor(
@@ -122,9 +105,7 @@ export async function getSuggestionEmbed(
         text: getSuggestionStatus(suggestion.status),
         iconURL: suggestionUser.displayAvatarURL(),
       })
-      .setTitle(
-        `Suggestion de ${suggestion.user.username} (${suggestionUser.tag})`,
-      );
+      .setTitle(`Suggestion de ${suggestion.user.username} (${suggestionUser.tag})`);
   }
 
   // The staff has responded to the suggestion, display the response :D
@@ -137,9 +118,7 @@ export async function getSuggestionEmbed(
   return embed;
 }
 
-export function getSuggestionActions(
-  suggestion: Suggestion,
-): ActionRowBuilder<ButtonBuilder> {
+export function getSuggestionActions(suggestion: Suggestion): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId('suggestion_upvote')

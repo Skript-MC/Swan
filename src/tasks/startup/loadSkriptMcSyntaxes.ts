@@ -3,10 +3,7 @@ import axios from 'axios';
 import { apis } from '#config/settings';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
-import type {
-  SkriptMcDocumentationFullAddonResponse,
-  SkriptMcDocumentationSyntaxResponse,
-} from '#types/index';
+import type { SkriptMcDocumentationFullAddonResponse, SkriptMcDocumentationSyntaxResponse } from '#types/index';
 
 @ApplyOptions<TaskOptions>({ startupOrder: 5 })
 export class LoadSkriptMcSyntaxesTask extends Task {
@@ -25,14 +22,10 @@ export class LoadSkriptMcSyntaxesTask extends Task {
       ).then((res) => res?.data);
 
       for (const syntax of allSyntaxes) {
-        const addon = allAddons.find(
-          (adn) => adn.name.toLowerCase() === syntax.addon.toLowerCase(),
-        );
+        const addon = allAddons.find((adn) => adn.name.toLowerCase() === syntax.addon.toLowerCase());
         if (!addon) continue;
 
-        const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(
-          syntax.name,
-        );
+        const result = /(?<englishName>.+) \((?<frenchName>.*?)\)/g.exec(syntax.name);
         if (result?.groups) {
           const { englishName, frenchName } = result.groups;
           if (englishName && frenchName) {
@@ -51,9 +44,7 @@ export class LoadSkriptMcSyntaxesTask extends Task {
         this.container.client.cache.skriptMcSyntaxes.push(syntaxWithAddon);
       }
     } catch (unknownError: unknown) {
-      this.container.logger.error(
-        "Could not fetch Skript-MC's addons/syntaxes:",
-      );
+      this.container.logger.error("Could not fetch Skript-MC's addons/syntaxes:");
       this.container.logger.error((unknownError as Error).stack);
     }
   }

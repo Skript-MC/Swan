@@ -25,18 +25,14 @@ export class CheckValidityTask extends Task {
           `settings.channels.${key} is not set. You may want to fill this field to avoid any error.`,
         );
       else if (!cachedChannels.has(value))
-        invalidChannels.push(
-          `The id entered for settings.channels.${key} is not a valid channel.`,
-        );
+        invalidChannels.push(`The id entered for settings.channels.${key} is not a valid channel.`);
     }
     if (invalidChannels.length > 0) {
       this.container.logger.error('Configured channels are invalid:');
       for (const error of invalidChannels) this.container.logger.info(error);
 
       if (process.env.NODE_ENV === 'production')
-        throw new Error(
-          'Please fill correctly the configuration to start the bot.',
-        );
+        throw new Error('Please fill correctly the configuration to start the bot.');
     }
 
     // Check roles IDs.
@@ -46,9 +42,7 @@ export class CheckValidityTask extends Task {
           `settings.roles.${key} is not set. You may want to fill this field to avoid any error.`,
         );
       else if (!guild.roles.cache.has(value))
-        this.container.logger.warn(
-          `The id entered for settings.roles.${key} is not a valid role.`,
-        );
+        this.container.logger.warn(`The id entered for settings.roles.${key} is not a valid role.`);
     }
 
     // TODO: Also check for emojis IDs.
@@ -63,20 +57,14 @@ export class CheckValidityTask extends Task {
       PermissionFlagsBits.CreatePublicThreads |
       PermissionFlagsBits.ViewChannel;
     const requiredGuildPermissions =
-      requiredChannelPermissions |
-      PermissionFlagsBits.ManageGuild |
-      PermissionFlagsBits.ManageRoles;
+      requiredChannelPermissions | PermissionFlagsBits.ManageGuild | PermissionFlagsBits.ManageRoles;
 
-    const guildMissingPerms = guild.members.me?.permissions.missing(
-      requiredGuildPermissions,
-    );
+    const guildMissingPerms = guild.members.me?.permissions.missing(requiredGuildPermissions);
     if (guildMissingPerms && guildMissingPerms.length > 0)
       this.container.logger.warn(
         `Swan is missing Guild-Level permissions in guild "${
           guild.name
-        }". Its cumulated roles' permissions does not contain: ${guildMissingPerms.join(
-          ', ',
-        )}.`,
+        }". Its cumulated roles' permissions does not contain: ${guildMissingPerms.join(', ')}.`,
       );
 
     // Check client's channels permissions.
@@ -84,14 +72,10 @@ export class CheckValidityTask extends Task {
     for (const channel of cachedChannels.values()) {
       if (!channel.isTextBased()) continue;
 
-      const channelMissingPerms = channel
-        .permissionsFor(guild.members.me)
-        .missing(requiredChannelPermissions);
+      const channelMissingPerms = channel.permissionsFor(guild.members.me).missing(requiredChannelPermissions);
       if (channelMissingPerms.length > 0)
         this.container.logger.warn(
-          `Swan is missing permissions ${channelMissingPerms.join(
-            ', ',
-          )} in channel "#${channel.name}"`,
+          `Swan is missing permissions ${channelMissingPerms.join(', ')} in channel "#${channel.name}"`,
         );
     }
   }

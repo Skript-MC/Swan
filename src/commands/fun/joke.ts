@@ -1,11 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import { joke as config } from '#config/commands/fun';
 import { colors } from '#config/settings';
 import { Message } from '#models/message';
@@ -35,15 +31,10 @@ export class JokeCommand extends SwanCommand {
     await this._exec(interaction, interaction.options.getString('blague'));
   }
 
-  public override async autocompleteRun(
-    interaction: SwanCommand.AutocompleteInteraction,
-  ): Promise<void> {
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
     const jokes = await Message.find({ messageType: MessageName.Joke });
     // If we are running the autocomplete command, we can assume that the user has already typed something in "blague"
-    const search = searchClosestMessage(
-      jokes,
-      interaction.options.getString('blague', true),
-    );
+    const search = searchClosestMessage(jokes, interaction.options.getString('blague', true));
     await interaction.respond(
       search.slice(0, 20).map((entry) => ({
         name: entry.matchedName,
@@ -52,10 +43,7 @@ export class JokeCommand extends SwanCommand {
     );
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    jokeName: string | null,
-  ): Promise<void> {
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, jokeName: string | null): Promise<void> {
     // TODO(interactions): Add a "rerun" button. Increment the command's usage count.
     let joke: MessageDocument | null = null;
     if (jokeName) {
@@ -68,9 +56,7 @@ export class JokeCommand extends SwanCommand {
         messageType: MessageName.Joke,
       });
       const random = Math.floor(Math.random() * jokeCount);
-      joke = await Message.findOne({ messageType: MessageName.Joke }).skip(
-        random,
-      );
+      joke = await Message.findOne({ messageType: MessageName.Joke }).skip(random);
     }
 
     if (!joke?.content) {
@@ -78,10 +64,7 @@ export class JokeCommand extends SwanCommand {
       return;
     }
 
-    const embed = new EmbedBuilder()
-      .setDescription(joke.content)
-      .setColor(colors.default)
-      .setTimestamp();
+    const embed = new EmbedBuilder().setDescription(joke.content).setColor(colors.default).setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
   }

@@ -8,7 +8,5 @@ import * as messages from '#config/messages';
  * @returns string
  */
 export function toHumanDuration(ms: number): string {
-  return ms === -1
-    ? messages.moderation.permanent
-    : moment.duration(ms).humanize();
+  return ms === -1 ? messages.moderation.permanent : moment.duration(ms).humanize();
 }

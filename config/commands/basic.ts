@@ -3,12 +3,10 @@ import { stripIndent } from 'common-tags';
 export const addonPack = {
   settings: {
     command: 'addonPack',
-    description:
-      "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
+    description: "Permet de connaître les versions recommandées de Skript et de ses add-ons d'une version.",
   },
   messages: {
-    notFound:
-      "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
+    notFound: "Désolé, je n'ai pas trouvé de pack d'add-on pour cette version. Réessaie avec une autre version !",
   },
 } as const;
 
@@ -18,20 +16,17 @@ export const autoMessage = {
     description: "Permet d'envoyer rapidement un message prédéfini.",
   },
   messages: {
-    notFound:
-      "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
+    notFound: "Aucun message n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
   },
 } as const;
 
 export const errorDetails = {
   settings: {
     command: 'error',
-    description:
-      'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
+    description: 'Permet de trouver des informations supplémentaires sur une erreur rencontrée avec Skript.',
   },
   messages: {
-    notFound:
-      "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
+    notFound: "Je n'ai pas pu trouver d'information sur ton erreur. Réessaye uniquement avec le début de l'erreur !",
   },
 } as const;
 
@@ -68,8 +63,7 @@ export const links = {
         },
         {
           name: ':books: Documentation des addons : https://bit.ly/2UTSlJ6',
-          value:
-            'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
+          value: 'Documentation rédigée en anglais, mais contenant la quasi-totalité des addons disponibles.',
         },
         {
           name: ':inbox_tray: Téléchargement de Skript : https://bit.ly/2TMxYNm',
@@ -78,8 +72,7 @@ export const links = {
         },
         {
           name: ':inbox_tray: Téléchargement des addons : https://bit.ly/2XvahGH',
-          value:
-            'Lien de téléchargement des dernières versions de tous les addons de Skript.',
+          value: 'Lien de téléchargement des dernières versions de tous les addons de Skript.',
         },
         {
           name: ':speech_left: Discord Skript-MC : https://discord.com/invite/J3NSGaE',
@@ -118,8 +111,7 @@ export const move = {
       {memberDisplayName} à déplacé un message de {targetName}, depuis {sourceChannel} vers {targetChannel}.
       En cas d'erreur, réagissez avec {emoji} pour supprimer ce re-post.
     `,
-    question:
-      'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
+    question: 'Mentionnez le salon dans lequel vous souhaitez déplacer ce message.',
     emergency:
       "Une erreur s'est produite lors du déplacement de ton message dans les salons d'aide. Il se peut que ton message ait été totalement supprimé, alors le voici, si tu veux le reposter :)",
   },
@@ -146,8 +138,7 @@ export const rule = {
     description: 'Affiche une règle prédéfinie.',
   },
   messages: {
-    notFound:
-      "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
+    notFound: "Aucune règle n'existe avec ce nom... Aide-toi de l'autocomplétion de la commande \\:)",
     noRules: "Aucune règle n'a été rentrée dans la base de données.",
     list: 'Liste des règles :\n{list}',
   },

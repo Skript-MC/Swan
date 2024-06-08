@@ -1,10 +1,5 @@
 import { container } from '@sapphire/pieces';
-import type {
-  ChatInputCommandInteraction,
-  Guild,
-  GuildTextBasedChannel,
-  ModalSubmitInteraction,
-} from 'discord.js';
+import type { ChatInputCommandInteraction, Guild, GuildTextBasedChannel, ModalSubmitInteraction } from 'discord.js';
 import { nanoid } from 'nanoid';
 import * as configs from '#config/commands/moderation';
 import * as messages from '#config/messages';
@@ -36,14 +31,9 @@ export class ModerationData {
   /**
    * Create moderation data from a message or from individual informations.
    */
-  constructor(
-    interaction?:
-      | ChatInputCommandInteraction<'cached'>
-      | ModalSubmitInteraction<'cached'>,
-  ) {
+  constructor(interaction?: ChatInputCommandInteraction<'cached'> | ModalSubmitInteraction<'cached'>) {
     this.channel = interaction?.channel ?? null;
-    const moderatorId =
-      interaction?.user.id ?? container.client.guild.members.me?.id;
+    const moderatorId = interaction?.user.id ?? container.client.guild.members.me?.id;
     if (!moderatorId) throw new Error('No moderator ID found.');
     this.moderatorId = moderatorId;
     this.guild = interaction?.guild ?? container.client.guild;

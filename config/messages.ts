@@ -16,18 +16,14 @@ export const global = {
   everyone: 'Tout le monde',
   unknown: (feminine = false): string => `Inconnu${feminine ? 'e' : ''}`,
   noReason: 'Aucune raison spécifiée.',
-  impossibleBecauseBanned:
-    "Impossible d'effectuer cette action car le membre est banni.",
+  impossibleBecauseBanned: "Impossible d'effectuer cette action car le membre est banni.",
 } as const;
 
 export const errors = {
   precondition: {
-    [Identifiers.PreconditionNotLoading]:
-      'Attends un peu, le temps que je finisse de me réveiller...',
-    [Identifiers.PreconditionRunIn]:
-      ':x: Aïe, cette commande ne peut être utilisée ici :confused:',
-    unknownError:
-      "Une pré-condition de commande inconnue t'empêche d'effectuer cette action.",
+    [Identifiers.PreconditionNotLoading]: 'Attends un peu, le temps que je finisse de me réveiller...',
+    [Identifiers.PreconditionRunIn]: ':x: Aïe, cette commande ne peut être utilisée ici :confused:',
+    unknownError: "Une pré-condition de commande inconnue t'empêche d'effectuer cette action.",
   },
 } as const;
 
@@ -35,12 +31,9 @@ export const miscellaneous = {
   noDescription: 'Aucune description disponible.',
   noSpam:
     "Merci d'éviter les messages inutiles dans le salon des snippets. Ton message ne contient aucun bloc de code... Comment veux-tu partager ton script sans bloc de code ? Si tu ne sais pas comment faire, regarde ici : <https://support.discord.com/hc/fr/articles/210298617>.",
-  wrongUserInteractionReply:
-    'Tu ne peux pas cliquer sur ces boutons, ils sont réservés à {user}.',
-  ghostPingSingular:
-    ':warning: {mentions}, tu as été ghost-ping par {user.username}. :innocent:',
-  ghostPingPlural:
-    ':warning: {mentions}, vous avez été ghost-ping par {user.username}. :innocent:',
+  wrongUserInteractionReply: 'Tu ne peux pas cliquer sur ces boutons, ils sont réservés à {user}.',
+  ghostPingSingular: ':warning: {mentions}, tu as été ghost-ping par {user.username}. :innocent:',
+  ghostPingPlural: ':warning: {mentions}, vous avez été ghost-ping par {user.username}. :innocent:',
   greetings: [
     '{member} arrive, faites comme si vous étiez occupés ! :books:',
     "Aujourd'hui, nous accueillons {member} !",

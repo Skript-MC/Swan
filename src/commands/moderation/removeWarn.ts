@@ -1,13 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type {
-  ApplicationCommandOptionData,
-  AutocompleteInteraction,
-} from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-} from 'discord.js';
+import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import { removeWarn as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
@@ -53,9 +47,7 @@ export class RemoveWarnCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(
-    interaction: AutocompleteInteraction<'cached'>,
-  ): Promise<void> {
+  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const sanctions = await Sanction.find({
       userId: interaction.options.get('membre', true).value as string,
       revoked: false,
@@ -112,9 +104,7 @@ export class RemoveWarnCommand extends SwanCommand {
       const success = await new RemoveWarnAction(data).commit();
       if (success) await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
-      this.container.logger.error(
-        'An unexpected error occurred while removing a warn from member!',
-      );
+      this.container.logger.error('An unexpected error occurred while removing a warn from member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.followUp(messages.global.oops);

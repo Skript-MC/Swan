@@ -24,7 +24,4 @@ const MessageSchema = new Schema<MessageDocument, MessageModel>({
   },
 });
 
-export const Message = model<MessageDocument, MessageModel>(
-  'Message',
-  MessageSchema,
-);
+export const Message = model<MessageDocument, MessageModel>('Message', MessageSchema);

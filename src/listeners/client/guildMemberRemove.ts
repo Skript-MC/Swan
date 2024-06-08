@@ -11,8 +11,7 @@ import { SanctionTypes } from '#types/index';
 export class GuildMemberRemoveListener extends Listener {
   public override async run(member: GuildMember): Promise<void> {
     const currentBan = await ModerationHelper.getCurrentBan(member.id);
-    if (currentBan && this.container.client.currentlyBanning.has(member.id))
-      return;
+    if (currentBan && this.container.client.currentlyBanning.has(member.id)) return;
 
     const kicks = await member.guild.fetchAuditLogs({
       type: AuditLogEvent.MemberKick,

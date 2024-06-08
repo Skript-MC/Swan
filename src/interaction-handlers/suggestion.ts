@@ -1,16 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { InteractionHandlerOptions, Option } from '@sapphire/framework';
-import {
-  InteractionHandler,
-  InteractionHandlerTypes,
-} from '@sapphire/framework';
+import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import type { ButtonInteraction } from 'discord.js';
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-} from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
 import * as messages from '#config/messages';
 import { bot, colors } from '#config/settings';
 import * as SuggestionManager from '#structures/SuggestionManager';
@@ -78,16 +70,10 @@ export class SuggestionHandler extends InteractionHandler {
           .setFooter({ text: messages.suggestions.brand, iconURL: bot.avatar });
     }
     if (response?.suggestion) {
-      const message = await interaction.channel?.messages.fetch(
-        interaction.message.id,
-      );
+      const message = await interaction.channel?.messages.fetch(interaction.message.id);
       // Get the new embed and actions for this suggestion
-      const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(
-        response.suggestion,
-      );
-      const suggestionActions = SuggestionManager.getSuggestionActions(
-        response.suggestion,
-      );
+      const suggestionEmbed = await SuggestionManager.getSuggestionEmbed(response.suggestion);
+      const suggestionActions = SuggestionManager.getSuggestionActions(response.suggestion);
       await message?.edit({
         embeds: [suggestionEmbed],
         components: [suggestionActions],

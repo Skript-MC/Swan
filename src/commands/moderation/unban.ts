@@ -1,13 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { ChatInputCommand } from '@sapphire/framework';
-import type {
-  ApplicationCommandOptionData,
-  AutocompleteInteraction,
-} from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-} from 'discord.js';
+import type { ApplicationCommandOptionData, AutocompleteInteraction } from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js';
 import { unban as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
@@ -48,17 +42,12 @@ export class UnbanCommand extends SwanCommand {
     );
   }
 
-  public override async autocompleteRun(
-    interaction: AutocompleteInteraction<'cached'>,
-  ): Promise<void> {
+  public override async autocompleteRun(interaction: AutocompleteInteraction<'cached'>): Promise<void> {
     const activeBans = await Sanction.find({
       revoked: false,
       type: SanctionTypes.TempBan,
     });
-    const search = await searchClosestSanction(
-      activeBans,
-      interaction.options.getString('membre', true),
-    );
+    const search = await searchClosestSanction(activeBans, interaction.options.getString('membre', true));
     await interaction.respond(
       search.slice(0, 20).map((entry) => ({
         name: entry.matchedName,
@@ -101,9 +90,7 @@ export class UnbanCommand extends SwanCommand {
       const success = await new UnbanAction(data).commit();
       if (success) await interaction.followUp(config.messages.success);
     } catch (unknownError: unknown) {
-      this.container.logger.error(
-        'An unexpected error occurred while unbanning a member!',
-      );
+      this.container.logger.error('An unexpected error occurred while unbanning a member!');
       this.container.logger.info(`Parsed member: ${member}`);
       this.container.logger.info((unknownError as Error).stack, true);
       await interaction.followUp(messages.global.oops);

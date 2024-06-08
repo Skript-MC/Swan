@@ -1,8 +1,5 @@
 import { distance } from 'fastest-levenshtein';
-import type {
-  SimilarityMatch,
-  SkriptMcDocumentationSyntaxAndAddon,
-} from '#types/index';
+import type { SimilarityMatch, SkriptMcDocumentationSyntaxAndAddon } from '#types/index';
 import { capitalize } from '#utils/capitalize';
 
 const categoryColorMap = {
@@ -30,15 +27,10 @@ export function searchClosestArticle(
     // Avoid useless double loop after.
     matches.push({
       matchedName: capitalize(
-        `${categoryColorMap[entry.category]} ${entry.addon.name} — ${
-          entry.englishName ?? entry.name
-        }`,
+        `${categoryColorMap[entry.category]} ${entry.addon.name} — ${entry.englishName ?? entry.name}`,
       ),
       baseName: entry.id.toString(),
-      distance: distance(
-        (entry.englishName ?? entry.name).toLowerCase(),
-        wanted.toLowerCase(),
-      ),
+      distance: distance((entry.englishName ?? entry.name).toLowerCase(), wanted.toLowerCase()),
     });
   }
 

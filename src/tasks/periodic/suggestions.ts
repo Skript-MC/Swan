@@ -15,9 +15,7 @@ export class SuggestionsTask extends Task {
     // Get all the suggestions waiting to be sent/updated
     const suggestions = await SuggestionManager.getPendingSuggestions();
 
-    const channel = this.container.client.channels.cache.get(
-      channels.suggestions,
-    );
+    const channel = this.container.client.channels.cache.get(channels.suggestions);
     if (!suggestions || !channel?.isTextBased() || channel.isDMBased()) return;
 
     for (const suggestion of suggestions) {
@@ -42,8 +40,7 @@ export class SuggestionsTask extends Task {
         const thread = await message.startThread({
           name: `Suggestion ${suggestion.id} de ${suggestion.user.username}`,
         });
-        if (suggestion.user.discordId)
-          await thread.members.add(suggestion.user.discordId);
+        if (suggestion.user.discordId) await thread.members.add(suggestion.user.discordId);
       }
 
       // Acknowledge the suggestion update

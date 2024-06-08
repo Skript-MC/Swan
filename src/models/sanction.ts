@@ -74,7 +74,4 @@ const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
   ],
 });
 
-export const Sanction = model<SanctionDocument, SanctionModel>(
-  'Sanction',
-  SanctionSchema,
-);
+export const Sanction = model<SanctionDocument, SanctionModel>('Sanction', SanctionSchema);

@@ -10,9 +10,7 @@ export class GuildBanRemoveListener extends Listener {
   public override async run(ban: GuildBan): Promise<void> {
     if (this.container.client.currentlyUnbanning.has(ban.user.id)) return;
 
-    const currentHardban = await ModerationHelper.getCurrentHardban(
-      ban.user.id,
-    );
+    const currentHardban = await ModerationHelper.getCurrentHardban(ban.user.id);
     if (!currentHardban) return;
 
     const data = new ModerationData()

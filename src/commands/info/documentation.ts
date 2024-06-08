@@ -2,11 +2,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord-utilities';
 import type { ChatInputCommand } from '@sapphire/framework';
 import type { ApplicationCommandOptionData } from 'discord.js';
-import {
-  ApplicationCommandOptionType,
-  ApplicationCommandType,
-  EmbedBuilder,
-} from 'discord.js';
+import { ApplicationCommandOptionType, ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import { documentation as config } from '#config/commands/info';
@@ -35,15 +31,10 @@ export class DocumentationCommand extends SwanCommand {
     interaction: SwanCommand.ChatInputInteraction,
     _context: ChatInputCommand.RunContext,
   ): Promise<void> {
-    await this._exec(
-      interaction,
-      interaction.options.getString('article', true),
-    );
+    await this._exec(interaction, interaction.options.getString('article', true));
   }
 
-  public override async autocompleteRun(
-    interaction: SwanCommand.AutocompleteInteraction,
-  ): Promise<void> {
+  public override async autocompleteRun(interaction: SwanCommand.AutocompleteInteraction): Promise<void> {
     const search = searchClosestArticle(
       this.container.client.cache.skriptMcSyntaxes,
       interaction.options.getString('article', true),
@@ -56,13 +47,8 @@ export class DocumentationCommand extends SwanCommand {
     );
   }
 
-  private async _exec(
-    interaction: SwanCommand.ChatInputInteraction,
-    articleId: string,
-  ): Promise<void> {
-    const matchingArticle = this.container.client.cache.skriptMcSyntaxes.find(
-      (elt) => elt.id.toString() === articleId,
-    );
+  private async _exec(interaction: SwanCommand.ChatInputInteraction, articleId: string): Promise<void> {
+    const matchingArticle = this.container.client.cache.skriptMcSyntaxes.find((elt) => elt.id.toString() === articleId);
     if (!matchingArticle) {
       await interaction.reply({
         content: pupa(config.messages.unknownSyntax, {
@@ -107,15 +93,11 @@ export class DocumentationCommand extends SwanCommand {
     if (article.deprecation) {
       embed.addFields({
         name: embedMsgs.deprecated,
-        value: article.deprecationLink
-          ? embedMsgs.depreactionReplacement
-          : embedMsgs.noReplacement,
+        value: article.deprecationLink ? embedMsgs.depreactionReplacement : embedMsgs.noReplacement,
       });
     }
 
-    const dependency = article.addon.dependency
-      ? ` (requiert ${article.addon.dependency})`
-      : '';
+    const dependency = article.addon.dependency ? ` (requiert ${article.addon.dependency})` : '';
     const addon = `[${article.addon.name}](${article.addon.documentationUrl})${dependency}`;
 
     embed.addFields(

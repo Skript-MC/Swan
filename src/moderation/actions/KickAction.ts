@@ -30,23 +30,16 @@ export class KickAction extends ModerationAction {
 
     // 2. Kick the member
     try {
-      await container.client.guild.members.kick(
-        this.data.victimId,
-        this.data.reason,
-      );
+      await container.client.guild.members.kick(this.data.victimId, this.data.reason);
     } catch (unknownError: unknown) {
       this.errorState.addError(
         new ModerationError()
           .from(unknownError as Error)
-          .setMessage(
-            'Swan does not have sufficient permissions to kick a GuildMember',
-          )
+          .setMessage('Swan does not have sufficient permissions to kick a GuildMember')
           .addDetail('Victim ID', this.data.victimId)
           .addDetail(
             'Kick Member Permission',
-            container.client.guild.members.me?.permissions.has(
-              PermissionFlagsBits.KickMembers,
-            ),
+            container.client.guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers),
           ),
       );
     }
