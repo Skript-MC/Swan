@@ -19,8 +19,8 @@ export class MoveCommand extends SwanCommand {
     interaction: SwanCommand.ContextMenuInteraction<'cached'>,
     _context: ContextMenuCommand.RunContext,
   ): Promise<void> {
-    const message = interaction.options.getMessage('message', true);
-    await this._exec(interaction, message);
+    if (interaction.isMessageContextMenuCommand()) await this._exec(interaction, interaction.targetMessage);
+    else throw new Error('This command can only be run in a message context menu.');
   }
 
   private async _exec(interaction: SwanCommand.CommandInteraction<'cached'>, targetedMessage: Message): Promise<void> {
