@@ -1,6 +1,6 @@
 {
   "name": "swan",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Bot discord de Skript-MC.",
   "main": "dist/src/main.js",
   "type": "module",
@@ -29,7 +29,10 @@
     "check": "biome check .",
     "check:fix": "biome check --apply ."
   },
-  "authors": ["noftaly (@noftaly)", "Romitou (@romitou)"],
+  "authors": [
+    "noftaly (@noftaly)",
+    "Romitou (@romitou)"
+  ],
   "contributors": [
     "Olyno (@olyno)",
     "WeeskyBDW (@weeskybdw)",
