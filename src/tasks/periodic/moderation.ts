@@ -8,7 +8,7 @@ import { UnmuteAction } from '#moderation/actions/UnmuteAction';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import { SanctionTypes } from '#types/index';
-import { nullop } from '../../utils';
+import { nullop } from '#utils/index';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class ModerationTask extends Task {
