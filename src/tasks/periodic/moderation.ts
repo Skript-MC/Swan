@@ -8,6 +8,7 @@ import { UnmuteAction } from '#moderation/actions/UnmuteAction';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import { SanctionTypes } from '#types/index';
+import { nullop } from '../../utils';
 
 @ApplyOptions<TaskOptions>({ interval: 10_000 })
 export class ModerationTask extends Task {
@@ -25,8 +26,8 @@ export class ModerationTask extends Task {
       const { userId, type, sanctionId } = sanction;
 
       const person =
-        (await this.container.client.guild.members.fetch(userId).catch(null)) ??
-        (await this.container.client.users.fetch(userId).catch(null));
+        (await this.container.client.guild.members.fetch(userId).catch(nullop)) ??
+        (await this.container.client.users.fetch(userId).catch(nullop));
       if (!person) continue;
 
       const data = new ModerationData()
