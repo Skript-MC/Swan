@@ -1,4 +1,8 @@
-import type { ApplicationCommandRegistry, ApplicationCommandRegistryRegisterOptions } from '@sapphire/framework';
+import {
+  ApplicationCommandRegistries,
+  ApplicationCommandRegistry,
+  ApplicationCommandRegistryRegisterOptions
+} from '@sapphire/framework';
 import { Command, RegisterBehavior } from '@sapphire/framework';
 import type {
   ApplicationCommandOptionData,
@@ -14,8 +18,9 @@ import type { SwanCommandOptions } from '#types/index';
 
 const REGISTRY_OPTIONS: ApplicationCommandRegistryRegisterOptions = {
   guildIds: [process.env.GUILD_ID],
-  behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 };
+
+ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
 
 export abstract class SwanCommand extends Command {
   public command: string;
