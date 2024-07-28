@@ -1,5 +1,5 @@
 import type { ApplicationCommandRegistry } from '@sapphire/framework';
-import { Command, RegisterBehavior, ApplicationCommandRegistries } from '@sapphire/framework';
+import { ApplicationCommandRegistries, Command, RegisterBehavior } from '@sapphire/framework';
 import type {
   ApplicationCommandOptionData,
   CacheType,
@@ -43,25 +43,21 @@ export abstract class SwanCommand extends Command {
 
     switch (this.commandType) {
       case ApplicationCommandType.ChatInput:
-        registry.registerChatInputCommand(
-          {
-            name: this.command,
-            description: this.description,
-            options: this.commandOptions,
-            dmPermission: this.dmPermission,
-            defaultMemberPermissions: this.defaultMemberPermissions,
-          },
-        );
+        registry.registerChatInputCommand({
+          name: this.command,
+          description: this.description,
+          options: this.commandOptions,
+          dmPermission: this.dmPermission,
+          defaultMemberPermissions: this.defaultMemberPermissions,
+        });
         break;
 
       case ApplicationCommandType.User:
       case ApplicationCommandType.Message:
-        registry.registerContextMenuCommand(
-          {
-            type: this.commandType,
-            name: this.command,
-          } as MessageApplicationCommandData | UserApplicationCommandData,
-        );
+        registry.registerContextMenuCommand({
+          type: this.commandType,
+          name: this.command,
+        } as MessageApplicationCommandData | UserApplicationCommandData);
         break;
     }
   }
