@@ -1,9 +1,5 @@
-import {
-  ApplicationCommandRegistries,
-  ApplicationCommandRegistry,
-  ApplicationCommandRegistryRegisterOptions
-} from '@sapphire/framework';
-import { Command, RegisterBehavior } from '@sapphire/framework';
+import type { ApplicationCommandRegistry } from '@sapphire/framework';
+import { Command, RegisterBehavior, ApplicationCommandRegistries } from '@sapphire/framework';
 import type {
   ApplicationCommandOptionData,
   CacheType,
@@ -16,11 +12,8 @@ import type {
 import { ApplicationCommandType, PermissionFlagsBits } from 'discord.js';
 import type { SwanCommandOptions } from '#types/index';
 
-const REGISTRY_OPTIONS: ApplicationCommandRegistryRegisterOptions = {
-  guildIds: [process.env.GUILD_ID],
-};
-
 ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.BulkOverwrite);
+ApplicationCommandRegistries.setDefaultGuildIds([process.env.GUILD_ID]);
 
 export abstract class SwanCommand extends Command {
   public command: string;
@@ -58,7 +51,6 @@ export abstract class SwanCommand extends Command {
             dmPermission: this.dmPermission,
             defaultMemberPermissions: this.defaultMemberPermissions,
           },
-          REGISTRY_OPTIONS,
         );
         break;
 
@@ -69,7 +61,6 @@ export abstract class SwanCommand extends Command {
             type: this.commandType,
             name: this.command,
           } as MessageApplicationCommandData | UserApplicationCommandData,
-          REGISTRY_OPTIONS,
         );
         break;
     }
