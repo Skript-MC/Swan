@@ -5,14 +5,7 @@ import * as messages from '#config/messages';
 import { channels } from '#config/settings';
 
 export class GuildMemberAddListener extends Listener {
-  private deduplication = new Set<string>();
-
   public override async run(member: GuildMember): Promise<void> {
-    if (this.deduplication.has(member.id)) return;
-
-    this.deduplication.add(member.id);
-    setTimeout(() => this.deduplication.delete(member.id), 60_000);
-
     await this._greet(member);
   }
 
@@ -24,6 +17,11 @@ export class GuildMemberAddListener extends Listener {
     if (!channel || !channel.isTextBased()) return;
 
     const content = pupa(randomMessage, { member });
-    await channel.send(content);
+
+    // Keep welcome sends idempotent.
+    const joinedTimestamp = member.joinedTimestamp ?? Date.now();
+    const nonce = `${member.id}:${joinedTimestamp}`;
+
+    await channel.send({ content, nonce, enforceNonce: true });
   }
 }
