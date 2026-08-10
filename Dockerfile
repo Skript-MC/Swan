@@ -1,4 +1,4 @@
-FROM node:20-alpine3.17 AS build
+FROM node:22-alpine AS build
 
 # Defining the work directory
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN ["npm", "run", "build"]
 
 
-FROM node:20-alpine3.17
+FROM node:22-alpine
 
 # Defining the work directory
 WORKDIR /app
