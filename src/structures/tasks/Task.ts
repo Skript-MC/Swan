@@ -1,6 +1,7 @@
 import type { IPieceError } from '@sapphire/framework';
 import { Piece } from '@sapphire/framework';
 import cron from 'node-cron';
+import type { ScheduledTask } from 'node-cron';
 import { Events } from '#types/sapphire';
 
 /**
@@ -32,7 +33,7 @@ export abstract class Task extends Piece {
   public readonly startupOrder?: number;
 
   private _scheduleInterval: NodeJS.Timeout | undefined;
-  private _scheduleCron: cron.ScheduledTask | undefined;
+  private _scheduleCron: ScheduledTask | undefined;
   private readonly _callback: (() => Promise<void>) | null;
 
   constructor(context: Piece.Context, options: TaskOptions) {

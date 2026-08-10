@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { InteractionHandlerOptions, Option } from '@sapphire/framework';
+import type { InteractionHandlerOptions } from '@sapphire/framework';
 import { InteractionHandler, InteractionHandlerTypes } from '@sapphire/framework';
 import type { ButtonInteraction } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
@@ -11,7 +11,7 @@ import * as SuggestionManager from '#structures/SuggestionManager';
   interactionHandlerType: InteractionHandlerTypes.Button,
 })
 export class SuggestionHandler extends InteractionHandler {
-  public override parse(interaction: ButtonInteraction): Option<never> {
+  public override parse(interaction: ButtonInteraction) {
     if (!interaction.customId.startsWith('suggestion')) return this.none();
     return this.some();
   }

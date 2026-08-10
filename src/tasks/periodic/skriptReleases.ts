@@ -36,8 +36,8 @@ export class SkriptReleasesTask extends Task {
 
     // We updated the cache of the releases with the one we just fetched.
     this.container.client.cache.github = {
-      lastPrerelease: githubReleases.data.find((release): release is GithubPrerelease => release.prerelease),
-      lastStableRelease: githubReleases.data.find((release): release is GithubStableRelease => !release.prerelease),
+      lastPrerelease: githubReleases.data.find((release) => release.prerelease) as GithubPrerelease | undefined,
+      lastStableRelease: githubReleases.data.find((release) => !release.prerelease) as GithubStableRelease | undefined,
     };
 
     // We can't know if we've already posted it, so we don't post anything to prevent from spamming unnecessarily.
