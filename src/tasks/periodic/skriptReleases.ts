@@ -47,7 +47,7 @@ export class SkriptReleasesTask extends Task {
     if (Date.now() - new Date(lastRelease.published_at).getTime() > config.timeDifference) return;
 
     const channel = this.container.client.channels.cache.get(channels.skriptTalk);
-    if (!channel?.isTextBased()) return;
+    if (!channel?.isTextBased() || channel.isDMBased()) return;
 
     const embed = new EmbedBuilder()
       .setColor(colors.default)

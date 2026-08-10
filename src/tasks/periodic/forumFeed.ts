@@ -43,7 +43,7 @@ export class ForumFeedTask extends Task {
 
     const channel = this.container.client.channels.cache.get(channels.forumUpdates);
 
-    if (!topics?.results || !channel?.isTextBased()) return;
+    if (!topics?.results || !channel?.isTextBased() || channel.isDMBased()) return;
 
     for (const topic of topics.results) {
       if (Date.now() - new Date(topic.firstPost.date).getTime() > config.timeDifference) continue;
@@ -86,7 +86,7 @@ export class ForumFeedTask extends Task {
 
     const channel = this.container.client.channels.cache.get(channels.forumUpdates);
 
-    if (!resources?.results || !channel?.isTextBased()) return;
+    if (!resources?.results || !channel?.isTextBased() || channel.isDMBased()) return;
 
     for (const resource of resources.results) {
       const updates: InvisionUpdate[] = await axios
