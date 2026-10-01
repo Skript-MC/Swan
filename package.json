@@ -69,7 +69,7 @@
     "dotenv": "^17.4.2",
     "fastest-levenshtein": "^1.0.16",
     "he": "^1.2.0",
-    "moment": "^2.30.1",
+    "moment": "^2.31.0",
     "mongoose": "^9.9.1",
     "mongoose-autopopulate": "^1.2.1",
     "nanoid": "^6.0.1",
