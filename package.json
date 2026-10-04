@@ -63,7 +63,7 @@
     "@sapphire/plugin-logger": "^4.1.0",
     "@sapphire/utilities": "^3.18.2",
     "@sentry/node": "^10.70.0",
-    "axios": "^1.19.0",
+    "axios": "^1.20.0",
     "common-tags": "^1.8.2",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
