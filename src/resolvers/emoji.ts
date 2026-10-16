@@ -6,7 +6,7 @@ import type { Guild } from 'discord.js';
 import * as nodeEmoji from 'node-emoji';
 
 const regex =
-  // biome-ignore lint/suspicious/noMisleadingCharacterClass:
+  // biome-ignore lint/suspicious/noMisleadingCharacterClass: skin tone modifiers are matched as standalone code points on purpose
   /[\p{Extended_Pictographic}\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}\u{1F1E6}-\u{1F1FF}]/gu;
 
 export function resolveEmoji(parameter: string, guild: Guild): Result<string, 'emojiError'> {

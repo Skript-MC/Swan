@@ -6,14 +6,13 @@
 
 ## 🚀 Installation
 
-- Installez [Node.js](https://nodejs.org/fr/) sur votre machine. Il vous faudra Node.js 12 ou supérieur.
+- Installez [Node.js](https://nodejs.org/fr/) sur votre machine. Il vous faudra Node.js 22.18 ou supérieur.
 - Téléchargez la [dernière version stable](https://github.com/Skript-MC/Swan/releases/latest), ou clonez ce dépôt pour tester les dernières modifications.
 - Pensez à avoir une base de donnée MongoDB, le plus simple serait en local.
 - Copiez le fichier `.env.example` vers `.env` et remplissez-le.
 - Sur le [Portail des développeurs Discord](https://discord.com/developers/applications), activez les options `Server Members Intent` et `Presence Intent` de l'application.
 - Exécutez la commande `npm i` pour installer les dépendances nécessaires.
-- C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.\
-⚠️ Si vous êtes sur windows, il faudra utiliser `npm run dev:win` ou `npm start:win` pour que les commandes fonctionnent.
+- C'est parti ! Exécutez la commande `npm run dev` *(ou `npm start` en production)* pour démarrer Swan.
 
 ## 🔍 Rapport de bug et suggestions
 
@@ -32,9 +31,9 @@ Nos Pull Request (PR) sont ouvertes à toute contribution ! Vous pouvez [créer 
 Voici quelques informations utiles avant de créer une Pull Request :
 
 - 🔀 Faites vos modifications sur une nouvelle branche ! Ce sera plus simple ensuite pour tenir votre PR à jour.
-- 🏷️ Créez votre PR vers la branche `v2` uniquement.
+- 🏷️ Créez votre PR vers la branche `dev` uniquement.
 - 📦 Ajoutez le moins de dépendances possible.
-- 🚨 Respectez les règles ESLint ; vous pouvez vérifier avec la commande `npm run lint`.
+- 🚨 Respectez les règles Biome ; vous pouvez vérifier avec la commande `npm run check`.
 - ⚡️ Vérifiez qu'aucune vulnérabilité n'est présente ; via la commande `npm audit`.
 - ✅ Pensez bien à tester votre nouvelle fonctionnalité, autant que possible !
 
@@ -54,7 +53,6 @@ Vous pouvez utiliser le bot pour votre propre serveur à condition de respecter 
 - **`assets` :** 🏞 Dossier où se trouvent les images utilisées.
 - **`dist`** *(pas sur GitHub)* **:** 🏗 Dossier où se trouve le code transpilé de Swan, après avoir lancé `npm run build` (ou `npm start`).
 - **`config` :** 📑 Dossier où se trouvent tous les fichiers de configuration de Swan.
-- **`patches` :** 🩹 Dossier où se trouvent les patches des librairies (le script `post-install` modifie leur code directement dans `node_modules`).
 - **`src` :** 💻
   - **`commands` :** 💬 Dossier où se trouvent toutes les commandes, rangées dans des sous-dossiers correspondant à leurs catégories.
   - **`inhibitors` :** ⚙️ Fichiers exécutés avant qu'un message soit envoyé au `commandHandler`.

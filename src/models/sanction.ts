@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { nanoid } from 'nanoid';
 import type { SanctionDocument, SanctionModel } from '#types/index';
-import { SanctionTypes, SanctionsUpdates } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
 
 const SanctionSchema = new Schema<SanctionDocument, SanctionModel>({
   userId: {

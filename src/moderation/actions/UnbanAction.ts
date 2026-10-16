@@ -1,10 +1,10 @@
 import { container } from '@sapphire/pieces';
 import { Sanction } from '#models/sanction';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
 import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { ModerationAction } from '#moderation/actions/ModerationAction';
 import type { SanctionDocument } from '#types/index';
-import { SanctionTypes, SanctionsUpdates } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
 import { nullop } from '#utils/index';
 
 export class UnbanAction extends ModerationAction {

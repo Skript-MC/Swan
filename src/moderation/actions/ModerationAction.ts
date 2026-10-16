@@ -155,7 +155,7 @@ export abstract class ModerationAction {
 
   protected async log(): Promise<void> {
     const channel = await container.client.guild.channels.fetch(channels.sanctionLog);
-    if (!channel || !channel.isTextBased()) return;
+    if (!channel?.isTextBased()) return;
 
     const embedMsgs = messages.moderation.log;
 

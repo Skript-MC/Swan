@@ -5,9 +5,9 @@ import { ActionRowBuilder, ApplicationCommandType, ModalBuilder, TextInputBuilde
 import { warn as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { moderation } from '#config/settings';
+import { WarnAction } from '#moderation/actions/WarnAction';
 import { ModerationData } from '#moderation/ModerationData';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { WarnAction } from '#moderation/actions/WarnAction';
 import { resolveSanctionnableMember } from '#resolvers/index';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';

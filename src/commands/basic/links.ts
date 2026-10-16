@@ -5,8 +5,8 @@ import { ApplicationCommandType, EmbedBuilder } from 'discord.js';
 import pupa from 'pupa';
 import { links as config } from '#config/commands/basic';
 import { colors } from '#config/settings';
-import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
 import { SwanCommand } from '#structures/commands/SwanCommand';
+import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)
 export class LinksCommand extends SwanCommand {

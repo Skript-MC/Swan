@@ -1,8 +1,8 @@
 import { container } from '@sapphire/pieces';
 import { PermissionFlagsBits } from 'discord.js';
 import { Sanction } from '#models/sanction';
-import { ModerationError } from '#moderation/ModerationError';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
+import { ModerationError } from '#moderation/ModerationError';
 
 export class KickAction extends ModerationAction {
   protected before: undefined;
