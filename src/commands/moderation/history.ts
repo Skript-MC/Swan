@@ -13,10 +13,10 @@ import { history as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { colors, moderation } from '#config/settings';
 import { Sanction } from '#models/sanction';
-import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
 import { SwanCommand } from '#structures/commands/SwanCommand';
+import { PaginatedMessageEmbedFields } from '#structures/PaginatedMessageEmbedFields';
 import type { SanctionDocument } from '#types/index';
-import { SanctionTypes, SanctionsUpdates } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
 import { getUsername, toHumanDuration } from '#utils/index';
 
 @ApplyOptions<SwanCommand.Options>(config.settings)

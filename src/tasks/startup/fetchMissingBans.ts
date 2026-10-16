@@ -1,8 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { AuditLogEvent } from 'discord.js';
+import { BanAction } from '#moderation/actions/BanAction';
 import { ModerationData } from '#moderation/ModerationData';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { BanAction } from '#moderation/actions/BanAction';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import { SanctionTypes } from '#types/index';

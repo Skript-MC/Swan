@@ -4,9 +4,9 @@ import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { roles } from '#config/settings';
 import { Sanction } from '#models/sanction';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
 import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { ModerationAction } from '#moderation/actions/ModerationAction';
 import { SanctionsUpdates } from '#types/index';
 import { noop, nullop } from '#utils/index';
 

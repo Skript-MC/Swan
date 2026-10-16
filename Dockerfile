@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 # Defining the work directory
 WORKDIR /app
@@ -8,7 +8,7 @@ ENV NODE_ENV=development
 
 # Copying package files and install dependencies
 COPY package*.json ./
-RUN ["npm", "install"]
+RUN ["npm", "ci"]
 
 # Copying all other files
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 RUN ["npm", "run", "build"]
 
 
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Defining the work directory
 WORKDIR /app
@@ -27,7 +27,7 @@ ENV NODE_ENV=production
 
 # Copying package files and install dependencies
 COPY package*.json ./
-RUN ["npm", "install"]
+RUN ["npm", "ci"]
 
 # Copy build output and configurations
 COPY --from=build /app/dist ./dist

@@ -1,7 +1,7 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildBan } from 'discord.js';
-import { ModerationData } from '#moderation/ModerationData';
 import { BanAction } from '#moderation/actions/BanAction';
+import { ModerationData } from '#moderation/ModerationData';
 import { SanctionTypes } from '#types/index';
 
 export class GuildBanAddListener extends Listener {

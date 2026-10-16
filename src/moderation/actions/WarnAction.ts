@@ -1,12 +1,12 @@
 import * as messages from '#config/messages';
 import { moderation } from '#config/settings';
 import { Sanction } from '#models/sanction';
+import { BanAction } from '#moderation/actions/BanAction';
+import { ModerationAction } from '#moderation/actions/ModerationAction';
 import { ModerationData } from '#moderation/ModerationData';
 import { ModerationError } from '#moderation/ModerationError';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { BanAction } from '#moderation/actions/BanAction';
-import { ModerationAction } from '#moderation/actions/ModerationAction';
-import { SanctionTypes, SanctionsUpdates } from '#types/index';
+import { SanctionsUpdates, SanctionTypes } from '#types/index';
 
 export class WarnAction extends ModerationAction {
   protected before: undefined;

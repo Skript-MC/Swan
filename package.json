@@ -24,10 +24,10 @@
     "tools:update-databases": "node tools/update-databases.js",
     "tools:remove-commands": "node tools/remove-commands.js",
     "lint": "biome lint .",
-    "lint:fix": "biome lint --apply .",
+    "lint:fix": "biome lint --write .",
     "format": "biome format . --write",
     "check": "biome check .",
-    "check:fix": "biome check --apply ."
+    "check:fix": "biome check --write ."
   },
   "authors": [
     "noftaly (@noftaly)",
@@ -42,7 +42,7 @@
   ],
   "license": "GPL-3.0-only",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.18.0"
   },
   "homepage": "https://github.com/Skript-MC/Swan#readme",
   "bugs": {
@@ -58,21 +58,21 @@
     "@sapphire/decorators": "^6.2.0",
     "@sapphire/discord-utilities": "^4.0.0",
     "@sapphire/discord.js-utilities": "^7.3.3",
-    "@sapphire/framework": "^5.5.0",
+    "@sapphire/framework": "^5.5.1",
     "@sapphire/pieces": "^4.4.1",
     "@sapphire/plugin-logger": "^4.1.0",
-    "@sapphire/utilities": "^3.18.2",
-    "@sentry/node": "^10.70.0",
-    "axios": "^1.19.0",
+    "@sapphire/utilities": "^3.18.3",
+    "@sentry/node": "^11.8.0",
+    "axios": "^1.20.0",
     "common-tags": "^1.8.2",
     "discord.js": "^14.27.0",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.8",
     "fastest-levenshtein": "^1.0.16",
-    "he": "^1.2.0",
-    "moment": "^2.30.1",
-    "mongoose": "^9.9.1",
+    "he": "^2.0.0",
+    "moment": "^2.31.0",
+    "mongoose": "^9.11.2",
     "mongoose-autopopulate": "^1.2.1",
-    "nanoid": "^6.0.1",
+    "nanoid": "^6.0.2",
     "node-cron": "^4.6.0",
     "node-emoji": "^2.2.0",
     "pupa": "^3.3.0",
@@ -81,15 +81,15 @@
     "turndown": "^7.2.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@sapphire/ts-config": "^5.0.1",
+    "@biomejs/biome": "^2.5.15",
+    "@sapphire/ts-config": "^5.0.3",
     "@types/common-tags": "^1.8.4",
     "@types/he": "^1.2.3",
-    "@types/node": "^20.19.29",
-    "@types/semver": "^7.5.8",
-    "@types/turndown": "^5.0.4",
+    "@types/node": "^22.20.5",
+    "@types/semver": "^7.8.0",
+    "@types/turndown": "^5.0.6",
     "rimraf": "^6.1.3",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2"
   }
 }

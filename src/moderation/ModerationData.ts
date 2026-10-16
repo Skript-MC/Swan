@@ -55,6 +55,7 @@ export class ModerationData {
 
   public setType(type: SanctionTypes): this {
     this.type = type;
+    // biome-ignore lint/performance/noDynamicNamespaceImportAccess: the project is not bundled, tree shaking does not apply
     this.config = configs[this.type].messages;
     if (this.type === SanctionTypes.Hardban) this.setDuration(-1, false);
     return this;

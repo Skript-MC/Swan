@@ -14,7 +14,7 @@ export class GuildMemberAddListener extends Listener {
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
     const channel = await this.container.client.guild.channels.fetch(channels.main);
-    if (!channel || !channel.isTextBased()) return;
+    if (!channel?.isTextBased()) return;
 
     const content = pupa(randomMessage, { member });
 

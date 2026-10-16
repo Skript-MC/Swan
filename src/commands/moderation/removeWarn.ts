@@ -5,8 +5,8 @@ import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js
 import { removeWarn as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
-import { ModerationData } from '#moderation/ModerationData';
 import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
+import { ModerationData } from '#moderation/ModerationData';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';
 import { nullop } from '#utils/index';

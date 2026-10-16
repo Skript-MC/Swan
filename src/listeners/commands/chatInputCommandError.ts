@@ -9,7 +9,7 @@ export class CommandErrorListener extends Listener<typeof Events.ChatInputComman
     captureException(error);
     await interaction.reply(messages.global.oops).catch(noop);
     captureException(error, {
-      user: interaction.user,
+      user: { id: interaction.user.id, username: interaction.user.username },
       extra: {
         command: interaction.command?.toJSON(),
         stacktrace: error.stack,

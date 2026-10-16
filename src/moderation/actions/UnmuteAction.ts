@@ -1,6 +1,6 @@
 import { Sanction } from '#models/sanction';
-import { ModerationError } from '#moderation/ModerationError';
 import { ModerationAction } from '#moderation/actions/ModerationAction';
+import { ModerationError } from '#moderation/ModerationError';
 import { SanctionsUpdates } from '#types/index';
 
 export class UnmuteAction extends ModerationAction {
