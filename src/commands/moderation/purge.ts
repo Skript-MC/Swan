@@ -57,7 +57,7 @@ export class PurgeCommand extends SwanCommand {
     member: User | null | undefined = null,
   ): Promise<void> {
     const channel = interaction.channel ?? (await this.container.client.channels.fetch(interaction.channelId));
-    if (!channel || !channel.isTextBased() || channel.isDMBased()) return;
+    if (!channel?.isTextBased() || channel.isDMBased()) return;
 
     // Fetch all the requested messages and filter out unwanted ones (from staff or not from the targeted user).
     const allMessages = await channel.messages.fetch({ limit: amount });

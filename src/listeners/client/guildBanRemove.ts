@@ -1,9 +1,9 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildBan } from 'discord.js';
 import * as messages from '#config/messages';
+import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { ModerationData } from '#moderation/ModerationData';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { SanctionTypes } from '#types/index';
 
 export class GuildBanRemoveListener extends Listener {

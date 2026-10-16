@@ -1,10 +1,10 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { AuditLogEvent } from 'discord.js';
-import { ModerationData } from '#moderation/ModerationData';
-import * as ModerationHelper from '#moderation/ModerationHelper';
 import { MuteAction } from '#moderation/actions/MuteAction';
 import { UnmuteAction } from '#moderation/actions/UnmuteAction';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
 import { SanctionTypes } from '#types/index';
 
 export class GuildMemberUpdateListener extends Listener {

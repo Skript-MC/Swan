@@ -1,6 +1,5 @@
 import { Listener } from '@sapphire/framework';
-import { type BaseGuildTextChannel, EmbedBuilder, type Message } from 'discord.js';
-import { User } from 'discord.js';
+import { type BaseGuildTextChannel, EmbedBuilder, type Message, User } from 'discord.js';
 import pupa from 'pupa';
 import * as messages from '#config/messages';
 import { channels, colors, emojis, roles } from '#config/settings';

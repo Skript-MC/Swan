@@ -1,5 +1,5 @@
 import type { Result } from '@sapphire/framework';
-import { Resolvers, err, ok } from '@sapphire/framework';
+import { err, ok, Resolvers } from '@sapphire/framework';
 import type { Guild, GuildTextBasedChannel } from 'discord.js';
 
 export function resolveGuildTextBasedChannel(

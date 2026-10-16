@@ -14,13 +14,12 @@ export class GuildMemberAddListener extends Listener {
     const randomMessage = greetings[Math.floor(Math.random() * greetings.length)];
 
     const channel = await this.container.client.guild.channels.fetch(channels.main);
-    if (!channel || !channel.isTextBased()) return;
+    if (!channel?.isTextBased()) return;
 
     const content = pupa(randomMessage, { member });
 
-    // Keep welcome sends idempotent.
-    const joinedTimestamp = member.joinedTimestamp ?? Date.now();
-    const nonce = `${member.id}:${joinedTimestamp}`;
+    // Keep welcome sends idempotent. Discord rejects nonces longer than 25 characters, so we only use the member ID.
+    const nonce = member.id;
 
     await channel.send({ content, nonce, enforceNonce: true });
   }

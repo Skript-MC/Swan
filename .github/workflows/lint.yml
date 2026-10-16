@@ -2,7 +2,7 @@ name: Lint
 on: [push]
 jobs:
   lint:
-    name: ESLint
+    name: Biome
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -19,18 +19,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-
 
-      - name: Install Node 20
+      - name: Install Node 24
         uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install modules
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-
-      # Rule `import/resolver` requires the project to be built. Go figure.
-      - name: Build
-        run: npm run build
 
       - name: Run Biome checks
         run: npm run check

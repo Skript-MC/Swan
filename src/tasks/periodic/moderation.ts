@@ -1,10 +1,10 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
-import { ModerationData } from '#moderation/ModerationData';
 import { RemoveWarnAction } from '#moderation/actions/RemoveWarnAction';
 import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { UnmuteAction } from '#moderation/actions/UnmuteAction';
+import { ModerationData } from '#moderation/ModerationData';
 import type { TaskOptions } from '#structures/tasks/Task';
 import { Task } from '#structures/tasks/Task';
 import { SanctionTypes } from '#types/index';

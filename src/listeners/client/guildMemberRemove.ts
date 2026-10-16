@@ -2,10 +2,10 @@ import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { AuditLogEvent } from 'discord.js';
 import * as messages from '#config/messages';
-import { ModerationData } from '#moderation/ModerationData';
-import * as ModerationHelper from '#moderation/ModerationHelper';
 import { BanAction } from '#moderation/actions/BanAction';
 import { KickAction } from '#moderation/actions/KickAction';
+import { ModerationData } from '#moderation/ModerationData';
+import * as ModerationHelper from '#moderation/ModerationHelper';
 import { SanctionTypes } from '#types/index';
 
 export class GuildMemberRemoveListener extends Listener {

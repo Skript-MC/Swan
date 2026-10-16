@@ -49,6 +49,16 @@ export class SkriptReleasesTask extends Task {
     const channel = this.container.client.channels.cache.get(channels.skriptTalk);
     if (!channel?.isTextBased() || channel.isDMBased()) return;
 
+    // The immediate run at startup and the cron runs can overlap the same time window: check if it was already posted.
+    const footer = `${config.dataProvider} (#${lastRelease.id})`;
+    const recentMessages = await channel.messages.fetch({ limit: 50 });
+    const alreadyPosted = recentMessages.some(
+      (message) =>
+        message.author.id === this.container.client.user?.id &&
+        message.embeds.some((embed) => embed.footer?.text === footer),
+    );
+    if (alreadyPosted) return;
+
     const embed = new EmbedBuilder()
       .setColor(colors.default)
       .setAuthor({
@@ -60,12 +70,14 @@ export class SkriptReleasesTask extends Task {
       .setDescription(
         trimText(lastRelease.body || messages.miscellaneous.noDescription, EmbedLimits.MaximumDescriptionLength),
       )
-      .setFooter({ text: `${config.dataProvider} (#${lastRelease.id})` })
+      .setFooter({ text: footer })
       .setTimestamp(new Date(lastRelease.published_at));
 
     await channel.send({
       content: config.releaseAnnouncement,
       embeds: [embed],
+      nonce: `release-${lastRelease.id}`,
+      enforceNonce: true,
     });
   }
 }

@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import axios from 'axios';
 import { EmbedBuilder } from 'discord.js';
-import he from 'he';
+import * as he from 'he';
 import pupa from 'pupa';
 import Turndown from 'turndown';
 import { apis, channels, colors } from '#config/settings';

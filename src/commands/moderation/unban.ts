@@ -5,9 +5,9 @@ import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord.js
 import { unban as config } from '#config/commands/moderation';
 import * as messages from '#config/messages';
 import { Sanction } from '#models/sanction';
+import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { ModerationData } from '#moderation/ModerationData';
 import * as ModerationHelper from '#moderation/ModerationHelper';
-import { UnbanAction } from '#moderation/actions/UnbanAction';
 import { SwanCommand } from '#structures/commands/SwanCommand';
 import { SanctionTypes } from '#types/index';
 import { searchClosestSanction } from '#utils/index';
